@@ -9,7 +9,7 @@ import net.minecraft.util.Vec3;
 import net.minecraftforge.event.ForgeSubscribe;
 import resonant.api.explosion.ExplosionEvent.DoExplosionEvent;
 import resonantinduction.atomic.Atomic;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 /** Atomic Science Event Handling. */
 public class FulminationHandler
@@ -47,7 +47,7 @@ public class FulminationHandler
                         if (!tileEntity.isInvalid())
                         {
                             Vector3 tileDiDian = new Vector3(tileEntity);
-                            tileDiDian.translate(0.5f);
+                            tileDiDian.add(0.5f);
                             double juLi = tileDiDian.distance(new Vector3(evt.x, evt.y, evt.z));
 
                             if (juLi <= evt.iExplosion.getRadius() && juLi > 0)

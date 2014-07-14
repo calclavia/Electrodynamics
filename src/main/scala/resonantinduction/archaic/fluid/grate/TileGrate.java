@@ -6,12 +6,12 @@ import java.util.HashMap;
 import java.util.PriorityQueue;
 
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -23,7 +23,7 @@ import resonant.lib.utility.FluidUtility;
 import resonantinduction.core.Reference;
 import resonantinduction.core.grid.fluid.FluidPressureNode;
 import resonantinduction.core.grid.fluid.TilePressureNode;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -35,7 +35,7 @@ public class TileGrate extends TilePressureNode implements IRotatable
 	private static double grateDrainSpeedMultiplier = 0.01;
 
 	@SideOnly(Side.CLIENT)
-	private static Icon iconFront, iconSide;
+	private static IIcon iconFront, iconSide;
 
 	private GratePathfinder gratePath;
 
@@ -52,20 +52,20 @@ public class TileGrate extends TilePressureNode implements IRotatable
 	}
 
 	@Override
-	public Icon getIcon(IBlockAccess world, int side)
+	public IIcon getIcon(IBlockAccess world, int side)
 	{
 		return side == getDirection().ordinal() ? iconFront : iconSide;
 	}
 
 	@Override
-	public Icon getIcon(int side, int metadata)
+	public IIcon getIcon(int side, int metadata)
 	{
 		return side == 1 ? iconFront : iconSide;
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister iconRegister)
+	public void registerIcons(IIconRegister iconRegister)
 	{
 		iconFront = iconRegister.registerIcon(Reference.PREFIX + "grate_front");
 		iconSide = iconRegister.registerIcon(Reference.PREFIX + "grate");
@@ -317,7 +317,7 @@ public class TileGrate extends TilePressureNode implements IRotatable
 
 				if (dir == TileGrate.this.getDirection())
 				{
-					Vector3 check = start.clone().translate(dir);
+					Vector3 check = start.clone().add(dir);
 					this.navigationMap.put(check, start);
 					this.workingNodes.add(new TileGrate.ComparableVector(check, 0));
 				}
@@ -380,7 +380,7 @@ public class TileGrate extends TilePressureNode implements IRotatable
 		{
 			for (int i = 0; i < 6; i++)
 			{
-				Vector3 newPosition = next.position.clone().translate(ForgeDirection.getOrientation(i));
+				Vector3 newPosition = next.position.clone().add(ForgeDirection.getOrientation(i));
 
 				if (!this.navigationMap.containsKey(newPosition) && !(!fillOver && newPosition.intY() > y()))
 				{
@@ -401,7 +401,7 @@ public class TileGrate extends TilePressureNode implements IRotatable
 
 				if (dir == TileGrate.this.getDirection())
 				{
-					Vector3 check = start.clone().translate(dir);
+					Vector3 check = start.clone().add(dir);
 					this.navigationMap.put(check, start);
 					this.workingNodes.add(new ComparableVector(check, 0));
 					fluidType = FluidUtility.getFluidFromBlock(TileGrate.this.worldObj, check);
@@ -450,7 +450,7 @@ public class TileGrate extends TilePressureNode implements IRotatable
 		{
 			for (int i = 0; i < 6; i++)
 			{
-				Vector3 check = next.position.clone().translate(ForgeDirection.getOrientation(i));
+				Vector3 check = next.position.clone().add(ForgeDirection.getOrientation(i));
 				Fluid checkFluid = FluidUtility.getFluidFromBlock(TileGrate.this.worldObj, check);
 
 				if (checkFluid != null && fluidType.getID() == checkFluid.getID())

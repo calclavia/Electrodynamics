@@ -12,7 +12,7 @@ import net.minecraft.item.ItemShears;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import resonant.lib.prefab.damage.ElectricalDamage;
 import resonantinduction.core.MultipartUtility;
 import universalelectricity.api.CompatibilityModule;

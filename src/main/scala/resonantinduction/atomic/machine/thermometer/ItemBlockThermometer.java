@@ -9,7 +9,7 @@ import net.minecraft.world.World;
 import resonant.lib.prefab.item.ItemBlockSaved;
 import resonant.lib.utility.LanguageUtility;
 import resonant.lib.utility.nbt.NBTUtility;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 /** Handheld thermometer */
 public class ItemBlockThermometer extends ItemBlockSaved

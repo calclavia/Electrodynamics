@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.FluidRegistry;
 import resonant.lib.prefab.poison.PoisonRadiation;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 public class BlockToxicWaste extends BlockFluidClassic
 {

@@ -3,12 +3,12 @@ package resonantinduction.electrical.wire;
 import java.awt.Color;
 import java.util.List;
 
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.input.Keyboard;
 
@@ -116,7 +116,7 @@ public class ItemWire extends JItemMultiPart
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister register)
+	public void registerIcons(IIconRegister register)
 	{
 		RenderFlatWire.flatWireTexture = register.registerIcon(Reference.PREFIX + "models/flatWire");
 		RenderFramedWire.wireIcon = register.registerIcon(Reference.PREFIX + "models/wire");

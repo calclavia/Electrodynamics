@@ -3,13 +3,13 @@ package resonantinduction.atomic.items;
 import java.util.List;
 
 import resonantinduction.atomic.Atomic;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -23,14 +23,14 @@ import resonantinduction.atomic.Atomic;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 /* Antimatter Cell */
 public class ItemAntimatter extends ItemCell
 {
-    private Icon iconGram;
+    private IIcon iconGram;
 
     public ItemAntimatter(int itemID)
     {
@@ -41,7 +41,7 @@ public class ItemAntimatter extends ItemCell
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void registerIcons(IconRegister iconRegister)
+    public void registerIcons(IIconRegister iconRegister)
     {
         // Animated Icons
         //ResonantInduction.LOGGER.info(this.getUnlocalizedName().replace("item.", "") + "_milligram");
@@ -50,7 +50,7 @@ public class ItemAntimatter extends ItemCell
     }
 
     @Override
-    public Icon getIconFromDamage(int metadata)
+    public IIcon getIconFromDamage(int metadata)
     {
         if (metadata >= 1)
         {

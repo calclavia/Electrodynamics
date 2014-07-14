@@ -2,11 +2,11 @@ package resonantinduction.core.items;
 
 import java.util.List;
 
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import resonantinduction.core.Reference;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -22,13 +22,13 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ItemFlour extends Item {
 
 	@SideOnly(Side.CLIENT)
-	Icon doughIcon;
+	IIcon doughIcon;
 
 	/*@SideOnly(Side.CLIENT)
-	Icon bakingtrayIcon;
+	IIcon bakingtrayIcon;
 
 	@SideOnly(Side.CLIENT)
-	Icon bakingtraywithdoughIcon;*/
+	IIcon bakingtraywithdoughIcon;*/
 
 
 	public ItemFlour(int par1) {
@@ -37,7 +37,7 @@ public class ItemFlour extends Item {
 	}
 
 	@Override
-	public Icon getIconFromDamage(int meta) {
+	public IIcon getIconFromDamage(int meta) {
 		switch (meta) {
 		case 1:
 			return doughIcon;
@@ -56,7 +56,7 @@ public class ItemFlour extends Item {
 	}
 
 	@Override
-	public void registerIcons(IconRegister iconRegister) {
+	public void registerIcons(IIconRegister iconRegister) {
 		super.registerIcons(iconRegister);
 		this.doughIcon = iconRegister.registerIcon(Reference.PREFIX + "dough");
 		/*this.bakingtrayIcon = iconRegister.registerIcon(Reference.PREFIX + "bakingtray");

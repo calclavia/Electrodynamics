@@ -4,7 +4,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import resonant.lib.gui.GuiContainerBase;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 public class GuiAccelerator extends GuiContainerBase
 {
@@ -27,7 +27,7 @@ public class GuiAccelerator extends GuiContainerBase
 
         String status = "";
         Vector3 position = new Vector3(this.tileEntity);
-        position.translate(this.tileEntity.getDirection().getOpposite());
+        position.add(this.tileEntity.getDirection().getOpposite());
 
         if (!EntityParticle.canSpawnParticle(this.tileEntity.worldObj, position))
         {

@@ -3,7 +3,7 @@ package resonantinduction.electrical.generator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import resonant.lib.prefab.block.BlockRotatable;
 import resonant.lib.render.block.BlockRenderingHandler;
 import resonantinduction.core.Reference;
@@ -55,7 +55,7 @@ public class BlockMotor extends BlockRotatable
 			if (!world.isRemote)
 			{
 				((TileMotor) tileEntity).isInversed = !((TileMotor) tileEntity).isInversed;
-				entityPlayer.addChatMessage("Generator now producing " + (((TileMotor) tileEntity).isInversed ? "mechanical" : "electrical") + " energy.");
+				entityPlayer.addChatMessage("Generator now producing " + (((TileMotor) tileEntity).isInversed ? "resonantinduction/mechanical" : "electrical") + " energy.");
 			}
 
 			return true;

@@ -9,7 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockFluid;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
@@ -19,7 +19,7 @@ import net.minecraftforge.fluids.IFluidTank;
 import resonant.lib.path.IPathCallBack;
 import resonant.lib.path.Pathfinder;
 import resonant.lib.prefab.tile.TileAdvanced;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 /** Reactor Drain
  * 
@@ -45,8 +45,8 @@ public class TileReactorDrain extends TileAdvanced implements IFluidHandler
                 for (int i = 0; i < 6; i++)
                 {
                     ForgeDirection direction = ForgeDirection.getOrientation(i);
-                    Vector3 position = currentNode.clone().translate(direction);
-                    int connectedBlockID = position.getBlockID(world);
+                    Vector3 position = currentNode.clone().add(direction);
+                    int connectedBlockID = position.getBlock(world);
 
                     if (connectedBlockID == 0 || Block.blocksList[connectedBlockID] instanceof BlockFluid || Block.blocksList[connectedBlockID] instanceof IFluidBlock || position.getTileEntity(world) instanceof TileReactorCell)
                     {
@@ -72,7 +72,7 @@ public class TileReactorDrain extends TileAdvanced implements IFluidHandler
 
                 return false;
             }
-        }).init(new Vector3(this).translate(ForgeDirection.getOrientation(this.getBlockMetadata()).getOpposite()));
+        }).init(new Vector3(this).add(ForgeDirection.getOrientation(this.getBlockMetadata()).getOpposite()));
 
         for (Vector3 node : finder.results)
         {

@@ -3,10 +3,10 @@ package resonantinduction.atomic.schematic;
 import java.util.HashMap;
 
 import atomic.Atomic;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import resonant.lib.schematic.Schematic;
 import resonant.lib.type.Pair;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 public class SchematicFusionReactor extends Schematic
 {
@@ -45,7 +45,7 @@ public class SchematicFusionReactor extends Schematic
                             if (magnitude >= 1)
                             {
                                 double yDeviation = (y == 0 ? size / 3 : -size / 3) + (y == 0 ? -1 : 1) * Math.sin(magnitude / radius * Math.PI) * size / 2d;
-                                Vector3 newPos = position.clone().translate(0, yDeviation, 0);
+                                Vector3 newPos = position.clone().add(0, yDeviation, 0);
                                 returnMap.put(newPos.round(), new Pair(Atomic.blockElectromagnet.blockID, 1));
                             }
                         }

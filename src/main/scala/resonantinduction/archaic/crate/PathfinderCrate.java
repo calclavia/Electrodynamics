@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.api.vector.Vector3;
+import net.minecraftforge.common.util.ForgeDirection;
+import universalelectricity.core.transform.vector.Vector3;
 import universalelectricity.api.vector.VectorHelper;
 
 /**

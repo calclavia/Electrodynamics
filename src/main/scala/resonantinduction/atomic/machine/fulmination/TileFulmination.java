@@ -3,7 +3,7 @@ package resonantinduction.atomic.machine.fulmination;
 import java.util.EnumSet;
 
 import net.minecraft.block.material.Material;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import resonant.lib.utility.ConnectedTextureRenderer;
 import resonant.lib.content.module.TileRender;
 import resonant.lib.prefab.tile.TileElectrical;

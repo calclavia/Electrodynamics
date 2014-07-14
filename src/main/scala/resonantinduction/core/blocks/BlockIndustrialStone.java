@@ -4,10 +4,10 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import resonant.lib.prefab.block.BlockTile;
 import resonantinduction.core.Reference;
 
@@ -20,7 +20,7 @@ import resonantinduction.core.Reference;
 public class BlockIndustrialStone extends BlockTile
 {
 	String[] iconNames = new String[] { "material_stone_brick", "material_stone_brick2", "material_stone_chiseled", "material_stone_cobble", "material_stone_cracked", "material_stone", "material_stone_slab", "material_stone_mossy", "material_steel_dark", "material_steel_tint", "material_steel" };
-	Icon[] icons = new Icon[iconNames.length];
+	IIcon[] icons = new IIcon[iconNames.length];
 
 	public BlockIndustrialStone(int id)
 	{
@@ -36,18 +36,18 @@ public class BlockIndustrialStone extends BlockTile
 	}
 
 	@Override
-	public Icon getIcon(int side, int metadata)
+	public IIcon getIcon(int side, int metadata)
 	{
 		return icons[metadata];
 	}
 
 	@Override
-	public void registerIcons(IconRegister par1IconRegister)
+	public void registerIcons(IIconRegister par1IIconRegister)
 	{
-		this.blockIcon = par1IconRegister.registerIcon(this.getTextureName());
+		this.blockIcon = par1IIconRegister.registerIcon(this.getTextureName());
 
 		for (int i = 0; i < iconNames.length; i++)
-			icons[i] = par1IconRegister.registerIcon(Reference.PREFIX + iconNames[i]);
+			icons[i] = par1IIconRegister.registerIcon(Reference.PREFIX + iconNames[i]);
 	}
 
 	@Override

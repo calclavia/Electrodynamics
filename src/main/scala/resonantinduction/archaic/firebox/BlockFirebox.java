@@ -5,12 +5,12 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import resonant.lib.prefab.block.BlockTile;
@@ -21,15 +21,15 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockFirebox extends BlockTile
 {
-	private Icon topOn;
-	private Icon topOff;
-	private Icon sideOn;
-	private Icon sideOff;
+	private IIcon topOn;
+	private IIcon topOff;
+	private IIcon sideOn;
+	private IIcon sideOff;
 
-	private Icon topElectricOn;
-	private Icon topElectricOff;
-	private Icon sideOnElectric;
-	private Icon sideOffElectric;
+	private IIcon topElectricOn;
+	private IIcon topElectricOff;
+	private IIcon sideOnElectric;
+	private IIcon sideOffElectric;
 
 	public BlockFirebox(int id)
 	{
@@ -40,7 +40,7 @@ public class BlockFirebox extends BlockTile
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister iconReg)
+	public void registerIcons(IIconRegister iconReg)
 	{
 		super.registerIcons(iconReg);
 		sideOn = iconReg.registerIcon(Reference.PREFIX + "firebox_side_on");
@@ -88,7 +88,7 @@ public class BlockFirebox extends BlockTile
 	}
 
 	@Override
-	public Icon getBlockTexture(IBlockAccess access, int x, int y, int z, int side)
+	public IIcon getBlockTexture(IBlockAccess access, int x, int y, int z, int side)
 	{
 		if (side == 0)
 			return blockIcon;
@@ -112,7 +112,7 @@ public class BlockFirebox extends BlockTile
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public Icon getIcon(int side, int meta)
+	public IIcon getIcon(int side, int meta)
 	{
 		if (side == 0)
 			return blockIcon;

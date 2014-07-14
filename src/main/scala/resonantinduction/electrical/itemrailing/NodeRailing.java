@@ -3,12 +3,12 @@ package resonantinduction.electrical.itemrailing;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import resonant.lib.grid.Node;
 import resonant.lib.grid.TickingGrid;
 import resonantinduction.electrical.itemrailing.interfaces.IItemRailingProvider;
 import universalelectricity.api.vector.IVector3;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 /**
  * @since 25/05/14
@@ -49,7 +49,7 @@ public class NodeRailing extends Node<IItemRailingProvider, GridRailing, Object>
 
         for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
         {
-            TileEntity tile = new Vector3(position()).translate(dir).getTileEntity(world());
+            TileEntity tile = new Vector3(position()).add(dir).getTileEntity(world());
 
             if (tile instanceof IItemRailingProvider)
             {

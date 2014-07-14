@@ -10,7 +10,7 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import resonant.api.IElectromagnet;
 import resonant.api.IRotatable;
 import resonant.lib.network.Synced;
@@ -24,7 +24,7 @@ import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.electricity.IVoltageInput;
 import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.api.energy.IEnergyInterface;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 
@@ -153,8 +153,8 @@ public class TileAccelerator extends TileElectricalInventory implements IElectro
                         if (getStackInSlot(0) != null && lastSpawnTick >= 40)
                         {
                             Vector3 spawn_vec = new Vector3(this);
-                            spawn_vec.translate(getDirection().getOpposite());
-                            spawn_vec.translate(0.5f);
+                            spawn_vec.add(getDirection().getOpposite());
+                            spawn_vec.add(0.5f);
 
                             // Only render the particle if container within the proper environment for it.
                             if (EntityParticle.canSpawnParticle(worldObj, spawn_vec))

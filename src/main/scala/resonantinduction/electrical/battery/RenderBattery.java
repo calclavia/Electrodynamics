@@ -16,14 +16,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
 import resonant.api.items.ISimpleItemRenderer;
 import resonant.lib.render.RenderUtility;
 import resonantinduction.core.Reference;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -90,7 +90,7 @@ public class RenderBattery extends TileEntitySpecialRenderer implements ISimpleI
 
 		for (ForgeDirection check : ForgeDirection.VALID_DIRECTIONS)
 		{
-			if (new Vector3(t).translate(check).getTileEntity(t.worldObj) instanceof TileBattery)
+			if (new Vector3(t).add(check).getTileEntity(t.worldObj) instanceof TileBattery)
 			{
 				disabledParts.addAll(Arrays.asList(partToDisable[check.ordinal()]));
 
@@ -111,7 +111,7 @@ public class RenderBattery extends TileEntitySpecialRenderer implements ISimpleI
 					{
 						if (sideCheck.offsetY == 0)
 						{
-							if (new Vector3(t).translate(sideCheck).getTileEntity(t.worldObj) instanceof TileBattery)
+							if (new Vector3(t).add(sideCheck).getTileEntity(t.worldObj) instanceof TileBattery)
 							{
 								connectionParts.removeAll(Arrays.asList(connectionPartToEnable[sideCheck.ordinal()]));
 								// connectionParts.addAll(Arrays.asList(connectionPartSideToEnable[sideCheck.ordinal()]));

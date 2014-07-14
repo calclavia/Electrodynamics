@@ -3,7 +3,7 @@ package resonantinduction.archaic.crate;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,7 +11,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 import resonant.lib.prefab.block.BlockTile;
@@ -31,7 +31,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author DarkGuardsman */
 public class BlockCrate extends BlockTile
 {
-    Icon advanced, elite;
+    IIcon advanced, elite;
 
     public BlockCrate(int id)
     {
@@ -40,7 +40,7 @@ public class BlockCrate extends BlockTile
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void registerIcons(IconRegister iconReg)
+    public void registerIcons(IIconRegister iconReg)
     {
         this.blockIcon = iconReg.registerIcon(Reference.PREFIX + "crate_wood");
         this.advanced = iconReg.registerIcon(Reference.PREFIX + "crate_iron");
@@ -49,7 +49,7 @@ public class BlockCrate extends BlockTile
 
     @Override
     @SideOnly(Side.CLIENT)
-    public Icon getIcon(int side, int meta)
+    public IIcon getIcon(int side, int meta)
     {
         if (meta == 1)
         {

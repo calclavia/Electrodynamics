@@ -3,8 +3,6 @@ package resonantinduction.mechanical.belt;
 import java.util.List;
 import java.util.Set;
 
-import mechanical.belt.RenderConveyorBelt;
-import mechanical.belt.TileConveyorBelt;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -20,7 +18,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.prefab.block.BlockMachine;
-import mechanical.belt.TileConveyorBelt.SlantType;
+import resonantinduction.mechanical.belt.TileConveyorBelt.SlantType;
 import resonantinduction.mechanical.render.MechanicalBlockRenderingHandler;
 import resonantinduction.old.client.render.RenderConveyorBelt;
 

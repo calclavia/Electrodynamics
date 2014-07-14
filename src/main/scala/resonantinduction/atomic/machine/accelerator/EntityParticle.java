@@ -14,11 +14,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import net.minecraftforge.common.ForgeChunkManager.Type;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import resonant.api.IElectromagnet;
 import resonant.lib.prefab.poison.PoisonRadiation;
 import resonantinduction.core.Reference;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 import universalelectricity.api.vector.VectorHelper;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -54,7 +54,7 @@ public class EntityParticle extends Entity implements IEntityAdditionalSpawnData
 
     public static boolean canSpawnParticle(World world, Vector3 pos)
     {
-        Block block  = Block.blocksList[pos.getBlockID(world)];
+        Block block  = Block.blocksList[pos.getBlock(world)];
         if (block != null && !block.isAirBlock(world, pos.intX(), pos.intY(), pos.intZ()))
         {
             return false;
@@ -75,7 +75,7 @@ public class EntityParticle extends Entity implements IEntityAdditionalSpawnData
 
     public static boolean isElectromagnet(World world, Vector3 position, ForgeDirection dir)
     {
-        Vector3 checkPos = position.clone().translate(dir);
+        Vector3 checkPos = position.clone().add(dir);
         TileEntity tile = checkPos.getTileEntity(world);
 
         if (tile instanceof IElectromagnet)
@@ -187,7 +187,7 @@ public class EntityParticle extends Entity implements IEntityAdditionalSpawnData
         }
 
         Vector3 dongLi = new Vector3();
-        dongLi.translate(this.movementDirection);
+        dongLi.add(this.movementDirection);
         dongLi.scale(acceleration);
         this.motionX = Math.min(dongLi.x + this.motionX, TileAccelerator.clientParticleVelocity);
         this.motionY = Math.min(dongLi.y + this.motionY, TileAccelerator.clientParticleVelocity);
@@ -229,17 +229,17 @@ public class EntityParticle extends Entity implements IEntityAdditionalSpawnData
     {
         ForgeDirection zuoFangXiang = VectorHelper.getOrientationFromSide(this.movementDirection, ForgeDirection.EAST);
         Vector3 zuoBian = new Vector3(this).floor();
-        zuoBian.translate(zuoFangXiang);
+        zuoBian.add(zuoFangXiang);
 
         ForgeDirection youFangXiang = VectorHelper.getOrientationFromSide(this.movementDirection, ForgeDirection.WEST);
         Vector3 youBian = new Vector3(this).floor();
-        youBian.translate(youFangXiang);
+        youBian.add(youFangXiang);
 
-        if (zuoBian.getBlockID(this.worldObj) == 0)
+        if (zuoBian.getBlock(this.worldObj) == 0)
         {
             this.movementDirection = zuoFangXiang;
         }
-        else if (youBian.getBlockID(this.worldObj) == 0)
+        else if (youBian.getBlock(this.worldObj) == 0)
         {
             this.movementDirection = youFangXiang;
         }

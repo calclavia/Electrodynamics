@@ -1,6 +1,6 @@
 package resonantinduction.atomic.machine.extractor.turbine;
 
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import resonant.api.IBoilHandler;
 import resonant.lib.prefab.turbine.TileTurbine;

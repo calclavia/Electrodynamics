@@ -7,7 +7,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import resonant.api.recipe.QuantumAssemblerRecipes;
 import resonant.lib.network.IPacketReceiver;
 import resonant.lib.prefab.tile.TileElectricalInventory;
@@ -16,7 +16,7 @@ import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import universalelectricity.api.electricity.IVoltageInput;
 import universalelectricity.api.energy.EnergyStorageHandler;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -132,7 +132,7 @@ public class TileQuantumAssembler extends TileElectricalInventory implements IPa
             }
             
             //Animation frame update
-            this.rotation.translate(3, 2, 1);
+            this.rotation.add(3, 2, 1);
         }
     }
 

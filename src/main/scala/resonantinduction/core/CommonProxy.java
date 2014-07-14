@@ -8,7 +8,7 @@ import java.awt.Color;
 import net.minecraft.world.World;
 import resonant.lib.prefab.ProxyBase;
 import universalelectricity.api.vector.IVector3;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 /** @author Calclavia */
 public class CommonProxy extends ProxyBase

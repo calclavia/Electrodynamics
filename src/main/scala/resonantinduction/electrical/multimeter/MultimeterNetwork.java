@@ -10,7 +10,7 @@ import resonant.lib.utility.LanguageUtility;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.net.IUpdate;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 import universalelectricity.core.net.Network;
 import universalelectricity.core.net.NetworkTickHandler;
 
@@ -211,7 +211,7 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 
 		if (upperBound == null)
 		{
-			upperBound = node.getPosition().translate(1);
+			upperBound = node.getPosition().add(1);
 		}
 
 		if (lowerBound == null)
@@ -219,7 +219,7 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 			lowerBound = node.getPosition();
 		}
 
-		upperBound = upperBound.max(node.getPosition().translate(1));
+		upperBound = upperBound.max(node.getPosition().add(1));
 		lowerBound = lowerBound.min(node.getPosition());
 	}
 

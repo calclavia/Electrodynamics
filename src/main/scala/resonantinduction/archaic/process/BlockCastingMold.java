@@ -9,7 +9,7 @@ import resonant.lib.prefab.block.BlockTile;
 import resonant.lib.render.block.BlockRenderingHandler;
 import resonant.lib.utility.inventory.InventoryUtility;
 import resonantinduction.core.Reference;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

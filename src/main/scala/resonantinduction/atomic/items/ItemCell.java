@@ -3,7 +3,7 @@ package resonantinduction.atomic.items;
 import resonantinduction.atomic.Atomic;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import resonant.api.IReactor;
@@ -27,7 +27,7 @@ public class ItemCell extends ItemTooltip
     
     @SideOnly(Side.CLIENT)
     @Override
-    public void registerIcons(IconRegister iconRegister)
+    public void registerIcons(IIconRegister iconRegister)
     {
         this.itemIcon = iconRegister.registerIcon(this.getUnlocalizedName().replace("item.", ""));
     }

@@ -35,7 +35,7 @@ import resonantinduction.electrical.tesla.TileTesla;
 import resonantinduction.electrical.transformer.ItemTransformer;
 import resonantinduction.electrical.wire.EnumWireMaterial;
 import resonantinduction.electrical.wire.ItemWire;
-import resonantinduction.quantum.gate.ItemQuantumGlyph;
+import resonantinduction.atomic.gate.ItemQuantumGlyph;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;

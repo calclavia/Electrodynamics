@@ -23,7 +23,7 @@ public class RenderGenerator extends TileEntitySpecialRenderer
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double d, double d1, double d2, float d3)
 	{
-		// bindTextureByName(FluidMech.MODEL_TEXTURE_DIRECTORY + "mechanical/Generator.png");
+		// bindTextureByName(FluidMech.MODEL_TEXTURE_DIRECTORY + "resonantinduction.mechanical/Generator.png");
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.45F, (float) d2 + 0.5F);
 		GL11.glScalef(1.0F, -1F, -1F);

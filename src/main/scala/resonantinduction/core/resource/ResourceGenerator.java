@@ -19,7 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.ForgeSubscribe;
@@ -58,7 +58,7 @@ public class ResourceGenerator implements IVirtualObject
 	public static final ResourceGenerator INSTANCE = new ResourceGenerator();
 	public static final HashBiMap<String, Integer> materials = HashBiMap.create();
 	static final HashMap<String, Integer> materialColorCache = new HashMap<String, Integer>();
-	static final HashMap<Icon, Integer> iconColorCache = new HashMap<Icon, Integer>();
+	static final HashMap<IIcon, Integer> iconColorCache = new HashMap<IIcon, Integer>();
 
 	static
 	{
@@ -249,7 +249,7 @@ public class ResourceGenerator implements IVirtualObject
 
 		try
 		{
-			Icon icon = item.getIconIndex(itemStack);
+			IIcon icon = item.getIconIndex(itemStack);
 
 			if (iconColorCache.containsKey(icon))
 			{

@@ -3,7 +3,7 @@ package resonantinduction.archaic.process;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -18,7 +18,7 @@ import resonant.lib.prefab.tile.TileExternalInventory;
 import resonant.lib.utility.FluidUtility;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.ResonantInduction.RecipeType;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -78,7 +78,7 @@ public class TileCastingMold extends TileExternalInventory implements IFluidHand
 		/**
 		 * Check blocks above for fluid.
 		 */
-		Vector3 checkPos = new Vector3(this).translate(0, 1, 0);
+		Vector3 checkPos = new Vector3(this).add(0, 1, 0);
 		FluidStack drainStack = FluidUtility.drainBlock(worldObj, checkPos, false);
 
 		if (MachineRecipes.INSTANCE.getOutput(RecipeType.SMELTER.name(), drainStack).length > 0)

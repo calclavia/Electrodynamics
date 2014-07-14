@@ -1,11 +1,11 @@
 package resonantinduction.atomic.machine.reactor;
 
 import net.minecraft.block.material.Material;
-import resonant.lib.content.module.TileBlock;
+import resonant.content.spatial.block.SpatialBlock;
 import resonant.lib.prefab.vector.Cuboid;
 
 /** Control rod block */
-public class TileControlRod extends TileBlock
+public class TileControlRod extends SpatialBlock
 {
     public TileControlRod()
     {

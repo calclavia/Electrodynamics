@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonant.api.grid.INodeProvider;
@@ -320,8 +320,8 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
         detectMode = DetectMode.values()[packet.readByte()];
         detectType = packet.readByte();
         graphType = packet.readByte();
-        getNetwork().center = new universalelectricity.api.vector.Vector3(packet.readNBTTagCompound());
-        getNetwork().size = new universalelectricity.api.vector.Vector3(packet.readNBTTagCompound());
+        getNetwork().center = new universalelectricity.core.transform.vector.Vector3(packet.readNBTTagCompound());
+        getNetwork().size = new universalelectricity.core.transform.vector.Vector3(packet.readNBTTagCompound());
         getNetwork().isEnabled = packet.readBoolean();
     }
 
@@ -366,8 +366,8 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
                 detectMode = DetectMode.values()[packet.readByte()];
                 detectType = packet.readByte();
                 graphType = packet.readByte();
-                getNetwork().center = new universalelectricity.api.vector.Vector3(packet.readNBTTagCompound());
-                getNetwork().size = new universalelectricity.api.vector.Vector3(packet.readNBTTagCompound());
+                getNetwork().center = new universalelectricity.core.transform.vector.Vector3(packet.readNBTTagCompound());
+                getNetwork().size = new universalelectricity.core.transform.vector.Vector3(packet.readNBTTagCompound());
                 getNetwork().isEnabled = packet.readBoolean();
                 refresh();
                 break;
@@ -428,7 +428,7 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 
     public void updateServer()
     {
-        PacketDispatcher.sendPacketToServer(ResonantInduction.PACKET_MULTIPART.getPacket(new universalelectricity.api.vector.Vector3(x(), y(), z()), placementSide.ordinal(), (byte) detectMode.ordinal(), detectType, graphType, redstoneTriggerLimit));
+        PacketDispatcher.sendPacketToServer(ResonantInduction.PACKET_MULTIPART.getPacket(new universalelectricity.core.transform.vector.Vector3(x(), y(), z()), placementSide.ordinal(), (byte) detectMode.ordinal(), detectType, graphType, redstoneTriggerLimit));
     }
 
     @Override
@@ -545,7 +545,7 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
         {
             if (dir != getDirection() && dir != getDirection().getOpposite())
             {
-                universalelectricity.api.vector.Vector3 vector = getPosition().translate(dir);
+                universalelectricity.core.transform.vector.Vector3 vector = getPosition().add(dir);
 
                 if (hasMultimeter(vector.intX(), vector.intY(), vector.intZ()))
                 {
@@ -563,9 +563,9 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
         return this;
     }
 
-    public universalelectricity.api.vector.Vector3 getPosition()
+    public universalelectricity.core.transform.vector.Vector3 getPosition()
     {
-        return new universalelectricity.api.vector.Vector3(x(), y(), z());
+        return new universalelectricity.core.transform.vector.Vector3(x(), y(), z());
     }
 
     @Override

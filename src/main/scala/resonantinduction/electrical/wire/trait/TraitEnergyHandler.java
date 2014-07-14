@@ -3,7 +3,7 @@ package resonantinduction.electrical.wire.trait;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import resonantinduction.electrical.wire.PartConductor;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;

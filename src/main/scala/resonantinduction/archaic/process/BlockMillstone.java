@@ -1,24 +1,24 @@
 package resonantinduction.archaic.process;
 
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import resonant.lib.prefab.block.BlockTile;
 import resonant.lib.utility.inventory.InventoryUtility;
 import resonantinduction.core.Reference;
 import resonantinduction.core.resource.ItemHandCrank;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockMillstone extends BlockTile
 {
-	Icon top;
+	IIcon top;
 
 	public BlockMillstone(int id)
 	{
@@ -28,7 +28,7 @@ public class BlockMillstone extends BlockTile
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void registerIcons(IconRegister iconReg)
+	public void registerIcons(IIconRegister iconReg)
 	{
 		this.top = iconReg.registerIcon(Reference.PREFIX + "millstone_top");
 		super.registerIcons(iconReg);
@@ -36,7 +36,7 @@ public class BlockMillstone extends BlockTile
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
+	public IIcon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
 	{
 		return getIcon(side, 0);
 	}
@@ -44,7 +44,7 @@ public class BlockMillstone extends BlockTile
 	/** Returns the block texture based on the side being looked at. Args: side */
 	@Override
 	@SideOnly(Side.CLIENT)
-	public Icon getIcon(int side, int meta)
+	public IIcon getIcon(int side, int meta)
 	{
 		if (side == 0 || side == 1)
 		{

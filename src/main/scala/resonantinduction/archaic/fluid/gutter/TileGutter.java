@@ -13,7 +13,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -38,7 +38,7 @@ import resonantinduction.core.ResonantInduction.RecipeType;
 import resonantinduction.core.grid.fluid.FluidPressureNode;
 import resonantinduction.core.grid.fluid.IPressureNodeProvider;
 import resonantinduction.core.grid.fluid.TilePressureNode;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -68,7 +68,7 @@ public class TileGutter extends TilePressureNode
 
 				for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 				{
-					TileEntity tile = position().translate(dir).getTileEntity(world());
+					TileEntity tile = position().add(dir).getTileEntity(world());
 
 					if (tile instanceof IFluidHandler)
 					{
@@ -116,7 +116,7 @@ public class TileGutter extends TilePressureNode
 		if (!this.world().isRemote && this.ticks % 20 == 0)
 		{
 			/** Drain block above if it is a fluid. */
-			Vector3 drainPos = position().translate(0, 1, 0);
+			Vector3 drainPos = position().add(0, 1, 0);
 			FluidStack drain = FluidUtility.drainBlock(worldObj, drainPos, false);
 
 			if (drain != null)
@@ -200,7 +200,7 @@ public class TileGutter extends TilePressureNode
 			{
 				ForgeDirection dir = ForgeDirection.getOrientation(i);
 				int pressure = node.getPressure(dir);
-				Vector3 position = position().translate(dir);
+				Vector3 position = position().add(dir);
 
 				TileEntity checkTile = position.getTileEntity(world());
 

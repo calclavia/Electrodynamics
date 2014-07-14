@@ -3,23 +3,23 @@ package resonantinduction.archaic.firebox;
 import java.util.Random;
 
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import resonant.lib.prefab.block.BlockTile;
 import resonantinduction.core.Reference;
 import universalelectricity.api.vector.Vector2;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockHotPlate extends BlockTile
 {
-	private Icon topElectric;
+	private IIcon topElectric;
 
 	public BlockHotPlate(int id)
 	{
@@ -42,7 +42,7 @@ public class BlockHotPlate extends BlockTile
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister iconReg)
+	public void registerIcons(IIconRegister iconReg)
 	{
 		super.registerIcons(iconReg);
 		topElectric = iconReg.registerIcon(Reference.PREFIX + "electricHotPlate");
@@ -50,7 +50,7 @@ public class BlockHotPlate extends BlockTile
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public Icon getIcon(int side, int meta)
+	public IIcon getIcon(int side, int meta)
 	{
 		return meta == 1 ? topElectric : blockIcon;
 	}
@@ -131,12 +131,12 @@ public class BlockHotPlate extends BlockTile
 
 						for (int spawn = 0; spawn < maxParticles; spawn++)
 						{
-							Vector3 particlePosition = new Vector3(x, y, z).translate((double) (i / 2) / ((double) 2) + (0.5 / (2)), 0.2, (double) (i % 2) / ((double) 2) + (0.5 / (2)));
-							particlePosition.translate(new Vector3((random.nextFloat() - 0.5) * 0.2, (random.nextFloat() - 0.5) * 0.2, (random.nextFloat() - 0.5) * 0.2));
+							Vector3 particlePosition = new Vector3(x, y, z).add((double) (i / 2) / ((double) 2) + (0.5 / (2)), 0.2, (double) (i % 2) / ((double) 2) + (0.5 / (2)));
+							particlePosition.add(new Vector3((random.nextFloat() - 0.5) * 0.2, (random.nextFloat() - 0.5) * 0.2, (random.nextFloat() - 0.5) * 0.2));
 							world.spawnParticle("smoke", particlePosition.x, particlePosition.y, particlePosition.z, 0.0D, 0.0D, 0.0D);
 						}
 
-						Vector3 particlePosition = new Vector3(x, y, z).translate((double) (i / 2) / ((double) 2) + (0.5 / (2)), 0.2, (double) (i % 2) / ((double) 2) + (0.5 / (2)));
+						Vector3 particlePosition = new Vector3(x, y, z).add((double) (i / 2) / ((double) 2) + (0.5 / (2)), 0.2, (double) (i % 2) / ((double) 2) + (0.5 / (2)));
 						world.spawnParticle("flame", particlePosition.x, particlePosition.y, particlePosition.z, 0.0D, 0.01D, 0.0D);
 					}
 				}

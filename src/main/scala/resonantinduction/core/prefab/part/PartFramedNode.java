@@ -9,9 +9,9 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import resonant.api.grid.INode;
 import resonant.api.grid.INodeProvider;
 import resonant.lib.grid.Node;
@@ -70,7 +70,7 @@ public abstract class PartFramedNode<M extends Enum, N extends Node, T extends I
     private ForgeDirection testingSide;
 
     @SideOnly(Side.CLIENT)
-    protected Icon breakIcon;
+    protected IIcon breakIcon;
 
     public PartFramedNode(Item insulationType)
     {
@@ -141,13 +141,13 @@ public abstract class PartFramedNode<M extends Enum, N extends Node, T extends I
     }
 
     @Override
-    public Icon getBreakingIcon(Object subPart, int side)
+    public IIcon getBreakingIcon(Object subPart, int side)
     {
         return breakIcon;
     }
 
     @Override
-    public Icon getBrokenIcon(int side)
+    public IIcon getBrokenIcon(int side)
     {
         return breakIcon;
     }

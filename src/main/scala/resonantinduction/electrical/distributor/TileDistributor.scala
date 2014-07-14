@@ -7,12 +7,12 @@ import net.minecraft.block.material.Material
 import net.minecraft.inventory.IInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
-import net.minecraftforge.common.ForgeDirection
+import net.minecraftforge.common.util.ForgeDirection
 import resonant.lib.content.module.TileBase
 import resonant.lib.content.prefab.TraitElectrical
 import resonant.lib.content.prefab.TraitInventory
 import resonant.lib.utility.inventory.InventoryUtility
-import universalelectricity.api.vector.Vector3
+import universalelectricity.core.transform.vector.Vector3
 
 /**
  * A Block that interacts with connected inventories
@@ -40,7 +40,7 @@ class TileDistributor extends TileBase(Material.rock) with TraitInventory with T
       var index: Int = 0
       while (index < shuffledDirs.toArray().size)
       {
-        targetNode = prevNode.clone().translate(ForgeDirection.getOrientation(index))
+        targetNode = prevNode.clone().add(ForgeDirection.getOrientation(index))
         val tile: TileEntity = targetNode.getTileEntity(world())
         if (tile.isInstanceOf[IInventory])
         {

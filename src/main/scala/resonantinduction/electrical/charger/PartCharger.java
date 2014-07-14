@@ -6,7 +6,7 @@ import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import resonant.lib.utility.WrenchUtility;
 import resonant.lib.utility.inventory.InventoryUtility;
 import resonantinduction.core.prefab.part.PartInventoryPanel;
@@ -58,7 +58,7 @@ public class PartCharger extends PartInventoryPanel implements IEnergyInterface
 
         if (getStackInSlot(0) != null)
         {
-            InventoryUtility.dropItemStack(world(), new universalelectricity.api.vector.Vector3(player), getStackInSlot(0), 0);
+            InventoryUtility.dropItemStack(world(), new universalelectricity.core.transform.vector.Vector3(player), getStackInSlot(0), 0);
             setInventorySlotContents(0, null);
             if (!world().isRemote)
                 sendDescUpdate();

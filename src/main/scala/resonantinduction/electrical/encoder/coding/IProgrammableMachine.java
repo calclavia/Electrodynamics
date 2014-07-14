@@ -2,7 +2,7 @@ package resonantinduction.electrical.encoder.coding;
 
 import net.minecraft.world.World;
 import resonant.lib.type.Pair;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 /**
  * Simple interface too say an object is programmable

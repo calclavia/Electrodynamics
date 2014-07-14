@@ -1,10 +1,10 @@
 package resonantinduction.electrical.generator.thermopile;
 
 import net.minecraft.block.Block;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import resonant.lib.prefab.tile.TileElectrical;
 import universalelectricity.api.energy.EnergyStorageHandler;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 public class TileThermopile extends TileElectrical
 {
@@ -34,9 +34,9 @@ public class TileThermopile extends TileElectrical
 
 			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 			{
-				Vector3 checkPos = new Vector3(this).translate(dir);
+				Vector3 checkPos = new Vector3(this).add(dir);
 
-				int blockID = checkPos.getBlockID(worldObj);
+				int blockID = checkPos.getBlock(worldObj);
 
 				if (blockID == Block.waterStill.blockID)
 				{
@@ -74,8 +74,8 @@ public class TileThermopile extends TileElectrical
 					 */
 					for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 					{
-						Vector3 checkPos = new Vector3(this).translate(dir);
-						int blockID = checkPos.getBlockID(worldObj);
+						Vector3 checkPos = new Vector3(this).add(dir);
+						int blockID = checkPos.getBlock(worldObj);
 
 						if (blockID == Block.waterStill.blockID)
 						{

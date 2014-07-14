@@ -7,7 +7,7 @@ import codechicken.microblock.IHollowConnect;
 import codechicken.multipart.JNormalOcclusion;
 import codechicken.multipart.TSlottedPart;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import resonant.api.IExternalInventory;
 import resonant.api.IExternalInventoryBox;
 import resonant.api.grid.INode;

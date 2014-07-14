@@ -1,8 +1,8 @@
 package resonantinduction.electrical.generator.solar;
 
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.util.Icon;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.util.IIcon;
 import resonant.lib.content.module.TileRender;
 import resonant.lib.prefab.vector.Cuboid;
 import resonant.lib.utility.ConnectedTextureRenderer;
@@ -16,7 +16,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class TileSolarPanel extends TileEnergyDistribution
 {
 	@SideOnly(Side.CLIENT)
-	public static Icon sideIcon, bottomIcon;
+	public static IIcon sideIcon, bottomIcon;
 	
 
 	public TileSolarPanel()
@@ -32,7 +32,7 @@ public class TileSolarPanel extends TileEnergyDistribution
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void registerIcons(IconRegister iconReg)
+	public void registerIcons(IIconRegister iconReg)
 	{
 		sideIcon = iconReg.registerIcon(Reference.PREFIX + "solarPanel_side");
 		bottomIcon = iconReg.registerIcon(Reference.PREFIX + "solarPanel_bottom");
@@ -41,7 +41,7 @@ public class TileSolarPanel extends TileEnergyDistribution
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public Icon getIcon(int side, int meta)
+	public IIcon getIcon(int side, int meta)
 	{
 		if (side == 0)
 		{

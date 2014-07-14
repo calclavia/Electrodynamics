@@ -15,7 +15,7 @@ import resonantinduction.electrical.armbot.IArmbot;
 import resonantinduction.electrical.armbot.TaskBaseArmbot;
 import resonantinduction.electrical.armbot.TaskBaseProcess;
 import resonantinduction.electrical.encoder.coding.args.ArgumentFloatData;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 public class TaskFire extends TaskBaseArmbot
 {

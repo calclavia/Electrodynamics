@@ -3,7 +3,7 @@ package resonantinduction.atomic.blocks;
 import java.util.Random;
 
 import net.minecraft.block.material.Material;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import resonant.lib.prefab.block.BlockRadioactive;
 import resonantinduction.core.Reference;
@@ -43,7 +43,7 @@ public class BlockUraniumOre extends BlockRadioactive
     }
 
     @Override
-    public Icon getIcon(int side, int metadata)
+    public IIcon getIcon(int side, int metadata)
     {
         return this.blockIcon;
     }

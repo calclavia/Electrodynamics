@@ -9,7 +9,7 @@ import resonantinduction.electrical.wire.flat.PartFlatSwitchWire;
 import resonantinduction.electrical.wire.flat.PartFlatWire;
 import resonantinduction.electrical.wire.framed.PartFramedSwitchWire;
 import resonantinduction.electrical.wire.framed.PartFramedWire;
-import resonantinduction.quantum.gate.PartQuantumGlyph;
+import resonantinduction.atomic.gate.PartQuantumGlyph;
 import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.MultiPartRegistry.IPartFactory;
 import codechicken.multipart.MultipartGenerator;

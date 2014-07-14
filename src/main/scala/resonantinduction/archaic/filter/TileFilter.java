@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
@@ -31,7 +31,7 @@ import resonantinduction.core.prefab.imprint.ItemImprint;
 import resonantinduction.core.prefab.imprint.TileFilterable;
 import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -81,10 +81,10 @@ public class TileFilter extends TileFilterable implements IFilterable
 
             /** Fluid filters */
             Vector3 position = new Vector3(this);
-            Vector3 checkAbove = position.clone().translate(ForgeDirection.UP);
-            Vector3 checkBelow = position.clone().translate(ForgeDirection.DOWN);
+            Vector3 checkAbove = position.clone().add(ForgeDirection.UP);
+            Vector3 checkBelow = position.clone().add(ForgeDirection.DOWN);
 
-            Block bAbove = Block.blocksList[checkAbove.getBlockID(worldObj)];
+            Block bAbove = Block.blocksList[checkAbove.getBlock(worldObj)];
 
             if (bAbove instanceof BlockFluidMixture && worldObj.isAirBlock(checkBelow.intX(), checkBelow.intY(), checkBelow.intZ()))
             {

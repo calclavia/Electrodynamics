@@ -55,7 +55,7 @@ public class BlockRenderHelper implements ISimpleBlockRenderingHandler
 		{
 			GL11.glTranslatef(0.0F, 1.5F, 0.0F);
 			GL11.glRotatef(180f, 0f, 0f, 1f);
-			FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "mechanical/GearRod.png"));
+			FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "resonantinduction/mechanical/GearRod.png"));
 			modelRod.render(0.0825F, 0);
 		}
 		else if (RecipeLoader.blockConPump != null && block.blockID == RecipeLoader.blockConPump.blockID && metadata < 4)

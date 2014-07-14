@@ -3,7 +3,7 @@ package resonantinduction.electrical.wire.flat;
 import java.util.Arrays;
 import java.util.LinkedList;
 
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import codechicken.lib.lighting.LightModel;
 import codechicken.lib.math.MathHelper;
 import codechicken.lib.render.CCModel;
@@ -25,7 +25,7 @@ import codechicken.lib.vec.Vector3;
 
 public class RenderFlatWire
 {
-	public static Icon flatWireTexture;
+	public static IIcon flatWireTexture;
 
 	public static class UVT implements IUVTransformation
 	{
@@ -416,7 +416,7 @@ public class RenderFlatWire
 		model.render(new Translation(pos), new IconTransformation(w.getIcon()), m);
 	}
 
-	public static void renderInv(int thickness, Transformation t, Icon icon)
+	public static void renderInv(int thickness, Transformation t, IIcon icon)
 	{
 		CCModel m = invModels[thickness];
 		if (m == null)
@@ -425,7 +425,7 @@ public class RenderFlatWire
 		m.render(t, new IconTransformation(icon));
 	}
 
-	public static void renderBreakingOverlay(Icon icon, PartFlatWire wire)
+	public static void renderBreakingOverlay(IIcon icon, PartFlatWire wire)
 	{
 		int key = modelKey(wire);
 		int side = (key >> 8) % 6;

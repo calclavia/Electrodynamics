@@ -11,7 +11,7 @@ import net.minecraft.util.MovingObjectPosition;
 import resonant.lib.render.RenderUtility;
 import resonantinduction.core.prefab.imprint.ItemImprint;
 import resonantinduction.core.prefab.imprint.TileFilterable;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -48,11 +48,11 @@ public abstract class RenderImprintable extends TileEntitySpecialRenderer
 							{
 								if (((TileFilterable) tileEntity).isInverted())
 								{
-									RenderUtility.renderFloatingText(filterStack.getTooltip(player, Minecraft.getMinecraft().gameSettings.advancedItemTooltips).get(0).toString(), new Vector3(x, y, z).translate(0.5, i * 0.25f - 1f, z + 0.5f), 0xFF8888);
+									RenderUtility.renderFloatingText(filterStack.getTooltip(player, Minecraft.getMinecraft().gameSettings.advancedItemTooltips).get(0).toString(), new Vector3(x, y, z).add(0.5, i * 0.25f - 1f, z + 0.5f), 0xFF8888);
 								}
 								else
 								{
-									RenderUtility.renderFloatingText(filterStack.getTooltip(player, Minecraft.getMinecraft().gameSettings.advancedItemTooltips).get(0).toString(), new Vector3(x, y, z).translate(0.5, i * 0.25f - 1f, z + 0.5f), 0x88FF88);
+									RenderUtility.renderFloatingText(filterStack.getTooltip(player, Minecraft.getMinecraft().gameSettings.advancedItemTooltips).get(0).toString(), new Vector3(x, y, z).add(0.5, i * 0.25f - 1f, z + 0.5f), 0x88FF88);
 								}
 								i++;
 							}

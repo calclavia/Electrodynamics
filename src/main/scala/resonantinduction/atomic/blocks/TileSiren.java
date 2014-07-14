@@ -2,14 +2,14 @@ package resonantinduction.atomic.blocks;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
-import resonant.lib.content.module.TileBlock;
+import net.minecraftforge.common.util.ForgeDirection;
+import resonant.content.spatial.block.SpatialBlock;
 import resonantinduction.core.Reference;
 import universalelectricity.api.UniversalElectricity;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 /** Siren block */
-public class TileSiren extends TileBlock
+public class TileSiren extends SpatialBlock
 {
     public TileSiren()
     {
@@ -41,8 +41,8 @@ public class TileSiren extends TileBlock
                 float volume = 0.5f;
                 for (int i = 0; i < 6; i++)
                 {
-                    Vector3 check = position().translate(ForgeDirection.getOrientation(i));
-                    if (check.getBlockID(world) == blockID())
+                    Vector3 check = position().add(ForgeDirection.getOrientation(i));
+                    if (check.getBlock(world) == blockID())
                     {
                         volume *= 1.5f;
                     }

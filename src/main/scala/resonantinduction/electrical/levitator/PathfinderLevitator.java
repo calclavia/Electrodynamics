@@ -4,11 +4,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import resonant.lib.path.IPathCallBack;
 import resonant.lib.path.Pathfinder;
 import resonant.lib.path.PathfinderAStar;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 /**
  * Uses the well known A* Pathfinding algorithm.
@@ -32,7 +32,7 @@ public class PathfinderLevitator extends PathfinderAStar
 
 				for (int i = 0; i < 6; i++)
 				{
-					Vector3 neighbor = currentNode.clone().translate(ForgeDirection.getOrientation(i));
+					Vector3 neighbor = currentNode.clone().add(ForgeDirection.getOrientation(i));
 
 					if (PartLevitator.canBePath(world, neighbor) || neighbor.equals(goal))
 					{
@@ -61,7 +61,7 @@ public class PathfinderLevitator extends PathfinderAStar
 		for (int i = 0; i < 6; i++)
 		{
 			ForgeDirection direction = ForgeDirection.getOrientation(i);
-			Vector3 neighbor = this.goal.clone().translate(new Vector3(direction.offsetX, direction.offsetY, direction.offsetZ));
+			Vector3 neighbor = this.goal.clone().add(new Vector3(direction.offsetX, direction.offsetY, direction.offsetZ));
 
 			if (!PartLevitator.canBePath(this.world, neighbor))
 			{

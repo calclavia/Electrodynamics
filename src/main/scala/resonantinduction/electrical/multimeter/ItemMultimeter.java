@@ -6,7 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
@@ -27,7 +27,7 @@ import codechicken.multipart.TileMultipart;
 
 public class ItemMultimeter extends JItemMultiPart implements IHighlight
 {
-	private Icon[] icons = new Icon[EnumWireMaterial.values().length];
+	private IIcon[] icons = new IIcon[EnumWireMaterial.values().length];
 
 	public ItemMultimeter(int id)
 	{

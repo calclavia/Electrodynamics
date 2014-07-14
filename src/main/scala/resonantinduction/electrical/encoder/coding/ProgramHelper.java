@@ -5,7 +5,7 @@ import java.util.HashMap;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import resonantinduction.electrical.encoder.coding.IProcessTask.ProcessReturn;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 /**
  * Basic class to handle a machine like programs for any object that uses the IProgramable

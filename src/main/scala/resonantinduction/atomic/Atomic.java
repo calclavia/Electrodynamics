@@ -116,7 +116,7 @@ import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
 import resonantinduction.core.TabRI;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -651,7 +651,7 @@ public class Atomic
     public void thermalEventHandler(EventThermalUpdate evt)
     {
         VectorWorld pos = evt.position;
-        Block block = Block.blocksList[pos.getBlockID()];
+        Block block = Block.blocksList[pos.getBlock()];
 
         if (block == blockElectromagnet)
         {
@@ -664,7 +664,7 @@ public class Atomic
     {
         World world = evt.world;
         Vector3 position = new Vector3(evt.x, evt.y, evt.z);
-        int blockID = position.getBlockID(world);
+        int blockID = position.getBlock(world);
 
         Block block = Block.blocksList[blockID];
 
@@ -733,7 +733,7 @@ public class Atomic
         if (!evt.world.isRemote && evt.target != null && evt.target.typeOfHit == EnumMovingObjectType.TILE)
         {
             Vector3 blockPos = new Vector3(evt.target);
-            int blockID = blockPos.getBlockID(evt.world);
+            int blockID = blockPos.getBlock(evt.world);
 
             if (blockID == blockToxicWaste.blockID)
             {

@@ -9,10 +9,10 @@ import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
@@ -882,7 +882,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 
     /** RENDERING */
     @SideOnly(Side.CLIENT)
-    public Icon getIcon()
+    public IIcon getIcon()
     {
         return RenderFlatWire.flatWireTexture;
     }

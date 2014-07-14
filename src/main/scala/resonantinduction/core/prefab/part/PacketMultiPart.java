@@ -8,7 +8,7 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import resonant.lib.network.IPacketReceiver;
 import resonant.lib.network.PacketType;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 

@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.block.BlockMachine;
-import mechanical.CommonProxy;
+import resonantinduction.mechanical.CommonProxy;
 import resonantinduction.old.transport.ResonantInductionTransport;
 
 import com.builtbroken.common.Pair;

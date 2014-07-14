@@ -3,7 +3,7 @@ package resonantinduction.electrical.encoder;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -23,9 +23,9 @@ public class ItemDisk extends Item
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister par1IconRegister)
+	public void registerIcons(IIconRegister par1IIconRegister)
 	{
-		this.itemIcon = par1IconRegister.registerIcon(Reference.PREFIX + "disk");
+		this.itemIcon = par1IIconRegister.registerIcon(Reference.PREFIX + "disk");
 	}
 
 	@Override

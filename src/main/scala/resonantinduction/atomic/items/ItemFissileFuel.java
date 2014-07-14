@@ -7,14 +7,14 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import resonant.api.IReactor;
 import resonant.api.IReactorComponent;
 import atomic.machine.reactor.TileReactorCell;
 import resonantinduction.atomic.Atomic;
 import resonantinduction.core.Settings;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -49,7 +49,7 @@ public class ItemFissileFuel extends ItemRadioactive implements IReactorComponen
 
         for (int i = 0; i < 6; i++)
         {
-            Vector3 checkPos = new Vector3(tileEntity).translate(ForgeDirection.getOrientation(i));
+            Vector3 checkPos = new Vector3(tileEntity).add(ForgeDirection.getOrientation(i));
             TileEntity tile = checkPos.getTileEntity(worldObj);
 
             // Check that the other reactors not only exist but also are running.

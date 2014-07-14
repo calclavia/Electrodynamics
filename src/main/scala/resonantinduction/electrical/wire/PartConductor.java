@@ -5,7 +5,7 @@ import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergyTile;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import resonantinduction.core.prefab.part.PartAdvanced;
 import universalelectricity.api.CompatibilityModule;
@@ -14,7 +14,7 @@ import universalelectricity.api.energy.EnergyNetworkLoader;
 import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyNetwork;
 import universalelectricity.api.net.IConnector;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 import universalelectricity.api.vector.VectorHelper;
 import codechicken.multipart.TMultiPart;
 
@@ -72,7 +72,7 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
     @Override
     public boolean canConnect(ForgeDirection direction, Object source)
     {
-        Vector3 connectPos = new Vector3(tile()).translate(direction);
+        Vector3 connectPos = new Vector3(tile()).add(direction);
         TileEntity connectTile = connectPos.getTileEntity(world());
 
         if (connectTile instanceof IConductor)

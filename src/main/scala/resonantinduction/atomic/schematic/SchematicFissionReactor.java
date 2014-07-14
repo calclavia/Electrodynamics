@@ -4,10 +4,10 @@ import java.util.HashMap;
 
 import atomic.Atomic;
 import net.minecraft.block.Block;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import resonant.lib.schematic.Schematic;
 import resonant.lib.type.Pair;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 public class SchematicFissionReactor extends Schematic
 {
@@ -91,7 +91,7 @@ public class SchematicFissionReactor extends Schematic
                                     }
                                 }
 
-                                returnMap.put(targetPosition.clone().translate(offset), new Pair(Block.pistonStickyBase.blockID, rotationMetadata));
+                                returnMap.put(targetPosition.clone().add(offset), new Pair(Block.pistonStickyBase.blockID, rotationMetadata));
                             }
                             else if (x == -r || x == r || z == -r || z == r)
                             {

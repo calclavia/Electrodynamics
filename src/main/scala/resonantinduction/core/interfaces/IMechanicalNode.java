@@ -1,10 +1,10 @@
 package resonantinduction.core.interfaces;
 
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import resonant.api.grid.INode;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
-/** Applied to any node that will act as a mechanical object in the network
+/** Applied to any node that will act as a resonantinduction.mechanical object in the network
  * 
  * @author Darkguardsman */
 public interface IMechanicalNode extends INode
@@ -15,7 +15,7 @@ public interface IMechanicalNode extends INode
     /** The Rotational speed of the object */
     public double getAngularSpeed();
     
-    /** Applies rotational force and velocity to the mechanical object */
+    /** Applies rotational force and velocity to the resonantinduction.mechanical object */
     public void apply(Object source, double torque, double angularVelocity);   
     
     

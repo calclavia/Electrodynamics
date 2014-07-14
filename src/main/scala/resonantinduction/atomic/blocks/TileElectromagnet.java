@@ -2,10 +2,10 @@ package resonantinduction.atomic.blocks;
 
 import java.util.List;
 
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import resonant.api.IElectromagnet;
 import resonant.lib.content.module.TileBase;
@@ -20,7 +20,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 /** Electromagnet block */
 public class TileElectromagnet extends TileBase implements IElectromagnet
 {
-    private static Icon iconTop, iconGlass;
+    private static IIcon iconTop, iconGlass;
 
     public TileElectromagnet()
     {
@@ -31,7 +31,7 @@ public class TileElectromagnet extends TileBase implements IElectromagnet
     }
 
     @Override
-    public Icon getIcon(int side, int metadata)
+    public IIcon getIcon(int side, int metadata)
     {
         if (metadata == 1)
         {
@@ -48,7 +48,7 @@ public class TileElectromagnet extends TileBase implements IElectromagnet
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void registerIcons(IconRegister iconRegister)
+    public void registerIcons(IIconRegister iconRegister)
     {
         super.registerIcons(iconRegister);
         iconTop = iconRegister.registerIcon(domain + textureName + "_top");

@@ -1,9 +1,9 @@
 package resonantinduction.electrical.encoder;
 
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import resonant.lib.prefab.block.BlockTile;
@@ -15,9 +15,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockEncoder extends BlockTile
 {
-	Icon encoder_side;
-	Icon encoder_top;
-	Icon encoder_bottom;
+	IIcon encoder_side;
+	IIcon encoder_top;
+	IIcon encoder_bottom;
 
 	public BlockEncoder(int id)
 	{
@@ -26,7 +26,7 @@ public class BlockEncoder extends BlockTile
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void registerIcons(IconRegister iconReg)
+	public void registerIcons(IIconRegister iconReg)
 	{
 		this.encoder_side = iconReg.registerIcon(Reference.PREFIX + "encoder_side");
 		this.encoder_top = iconReg.registerIcon(Reference.PREFIX + "encoder_top");
@@ -36,7 +36,7 @@ public class BlockEncoder extends BlockTile
 	/** Returns the block texture based on the side being looked at. Args: side */
 	@Override
 	@SideOnly(Side.CLIENT)
-	public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
+	public IIcon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
 	{
 		return getIcon(side, 0);
 	}
@@ -44,7 +44,7 @@ public class BlockEncoder extends BlockTile
 	/** Returns the block texture based on the side being looked at. Args: side */
 	@Override
 	@SideOnly(Side.CLIENT)
-	public Icon getIcon(int side, int meta)
+	public IIcon getIcon(int side, int meta)
 	{
 		if (side == 1)
 		{

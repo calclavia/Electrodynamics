@@ -5,7 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import resonant.lib.utility.WrenchUtility;
 import resonantinduction.core.prefab.part.PartFace;
 import resonantinduction.electrical.Electrical;
@@ -121,7 +121,7 @@ public class PartTransformer extends PartFace implements IVoltageOutput, IEnergy
 	{
 		if (from == getAbsoluteFacing())
 		{
-			TileEntity tile = VectorHelper.getTileEntityFromSide(this.world(), new universalelectricity.api.vector.Vector3(x(), y(), z()), from.getOpposite());
+			TileEntity tile = VectorHelper.getTileEntityFromSide(this.world(), new universalelectricity.core.transform.vector.Vector3(x(), y(), z()), from.getOpposite());
 
 			if (CompatibilityModule.isHandler(tile))
 			{
@@ -152,7 +152,7 @@ public class PartTransformer extends PartFace implements IVoltageOutput, IEnergy
 	{
 		if (from == getAbsoluteFacing().getOpposite())
 		{
-			TileEntity inputTile = VectorHelper.getTileEntityFromSide(this.world(), new universalelectricity.api.vector.Vector3(x(), y(), z()), getAbsoluteFacing());
+			TileEntity inputTile = VectorHelper.getTileEntityFromSide(this.world(), new universalelectricity.core.transform.vector.Vector3(x(), y(), z()), getAbsoluteFacing());
 
 			long inputVoltage = UniversalElectricity.DEFAULT_VOLTAGE;
 

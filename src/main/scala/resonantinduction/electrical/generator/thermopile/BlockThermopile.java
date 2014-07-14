@@ -1,8 +1,8 @@
 package resonantinduction.electrical.generator.thermopile;
 
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import resonant.lib.prefab.block.BlockTile;
 import resonantinduction.core.Reference;
@@ -12,7 +12,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockThermopile extends BlockTile
 {
-	public Icon topIcon;
+	public IIcon topIcon;
 
 	public BlockThermopile(int id)
 	{
@@ -21,7 +21,7 @@ public class BlockThermopile extends BlockTile
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void registerIcons(IconRegister iconReg)
+	public void registerIcons(IIconRegister iconReg)
 	{
 		topIcon = iconReg.registerIcon(Reference.PREFIX + "thermopile_top");
 		super.registerIcons(iconReg);
@@ -29,7 +29,7 @@ public class BlockThermopile extends BlockTile
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public Icon getIcon(int side, int meta)
+	public IIcon getIcon(int side, int meta)
 	{
 		if (side == 1)
 		{

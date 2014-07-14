@@ -10,7 +10,7 @@ import resonantinduction.electrical.encoder.TileEncoder;
 import resonantinduction.electrical.encoder.gui.ContainerEncoder;
 import resonantinduction.electrical.multimeter.ContainerMultimeter;
 import resonantinduction.electrical.multimeter.PartMultimeter;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 

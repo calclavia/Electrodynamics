@@ -11,7 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -20,7 +20,7 @@ import org.lwjgl.opengl.GL11;
 
 import resonant.api.IRemovable.ISneakPickup;
 import resonant.api.items.ISimpleItemRenderer;
-import resonant.lib.content.module.TileBlock.IComparatorInputOverride;
+import resonant.content.spatial.block.SpatialBlock.IComparatorInputOverride;
 import resonant.lib.content.module.TileRender;
 import resonant.lib.render.FluidRenderUtility;
 import resonant.lib.render.RenderUtility;
@@ -33,7 +33,7 @@ import resonantinduction.core.grid.fluid.FluidDistributionetwork;
 import resonantinduction.core.grid.fluid.IFluidDistribution;
 import resonantinduction.core.grid.fluid.TileFluidDistribution;
 import universalelectricity.api.UniversalElectricity;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

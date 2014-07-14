@@ -8,12 +8,12 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import universalelectricity.api.net.IConnector;
 import universalelectricity.api.net.INodeNetwork;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 import universalelectricity.api.vector.VectorHelper;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
@@ -68,7 +68,7 @@ public abstract class PartFramedConnection<M extends Enum, C extends IConnector<
     private ForgeDirection testingSide;
 
     @SideOnly(Side.CLIENT)
-    protected Icon breakIcon;
+    protected IIcon breakIcon;
 
     public PartFramedConnection(Item insulationType)
     {
@@ -322,7 +322,7 @@ public abstract class PartFramedConnection<M extends Enum, C extends IConnector<
     @Override
     public boolean canConnect(ForgeDirection direction, Object source)
     {
-        Vector3 connectPos = new Vector3(tile()).translate(direction);
+        Vector3 connectPos = new Vector3(tile()).add(direction);
         TileEntity connectTile = connectPos.getTileEntity(world());
         return !isConnectionPrevented(connectTile, direction);
     }

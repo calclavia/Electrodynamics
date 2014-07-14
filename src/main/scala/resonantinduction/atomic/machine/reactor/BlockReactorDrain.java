@@ -1,10 +1,10 @@
 package resonantinduction.atomic.machine.reactor;
 
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import resonant.lib.prefab.block.BlockRotatable;
@@ -15,7 +15,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 /** Reactor tap block */
 public class BlockReactorDrain extends BlockRotatable
 {
-    private Icon frontIcon;
+    private IIcon frontIcon;
 
     public BlockReactorDrain(int id)
     {
@@ -46,7 +46,7 @@ public class BlockReactorDrain extends BlockRotatable
     }
 
     @Override
-    public Icon getIcon(int side, int metadata)
+    public IIcon getIcon(int side, int metadata)
     {
         if (side == metadata)
         {
@@ -57,7 +57,7 @@ public class BlockReactorDrain extends BlockRotatable
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void registerIcons(IconRegister iconRegister)
+    public void registerIcons(IIconRegister iconRegister)
     {
         super.registerIcons(iconRegister);
         this.frontIcon = iconRegister.registerIcon(this.getUnlocalizedName().replace("tile.", "") + "_front");

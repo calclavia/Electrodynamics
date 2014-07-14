@@ -1,7 +1,7 @@
 package resonantinduction.core.grid.fluid;
 
 import net.minecraft.block.material.Material;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;

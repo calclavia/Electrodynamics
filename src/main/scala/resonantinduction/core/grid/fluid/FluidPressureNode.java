@@ -7,13 +7,13 @@ import java.util.Map.Entry;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonant.lib.grid.Node;
 import resonant.lib.grid.TickingGrid;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 import codechicken.multipart.TMultiPart;
 
 @SuppressWarnings("deprecation")
@@ -210,7 +210,7 @@ public class FluidPressureNode extends Node<IPressureNodeProvider, TickingGrid, 
 
         for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
         {
-            TileEntity tile = position().translate(dir).getTileEntity(world());
+            TileEntity tile = position().add(dir).getTileEntity(world());
 
             if (tile instanceof IPressureNodeProvider)
             {

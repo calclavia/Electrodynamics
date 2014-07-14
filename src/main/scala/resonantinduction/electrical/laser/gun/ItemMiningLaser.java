@@ -14,7 +14,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import resonant.api.event.LaserEvent;
 import resonant.api.event.LaserFiredPlayerEvent;
@@ -23,7 +23,7 @@ import resonant.lib.type.Pair;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.prefab.items.ItemEnergyTool;
 import universalelectricity.api.vector.IVector3;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 /** Stream laser mining tool, When held down it will slowly mine away at the block in front of it.
  * 
@@ -175,8 +175,8 @@ public class ItemMiningLaser extends ItemEnergyTool
             {
                 float x = (float) (MathHelper.cos((float) (player.rotationYawHead * 0.0174532925)) * (-.4) - MathHelper.sin((float) (player.rotationYawHead * 0.0174532925)) * (-.1));
                 float z = (float) (MathHelper.sin((float) (player.rotationYawHead * 0.0174532925)) * (-.4) + MathHelper.cos((float) (player.rotationYawHead * 0.0174532925)) * (-.1));
-                ResonantInduction.proxy.renderBeam(player.worldObj, (IVector3) new Vector3(p).translate(new Vector3(x, -.25, z)), (IVector3) new Vector3(playerViewOffset), Color.red, 5);
-                ResonantInduction.proxy.renderBeam(player.worldObj, (IVector3) new Vector3(p).translate(new Vector3(x, -.45, z)), (IVector3) new Vector3(playerViewOffset), Color.red, 5);
+                ResonantInduction.proxy.renderBeam(player.worldObj, (IVector3) new Vector3(p).add(new Vector3(x, -.25, z)), (IVector3) new Vector3(playerViewOffset), Color.red, 5);
+                ResonantInduction.proxy.renderBeam(player.worldObj, (IVector3) new Vector3(p).add(new Vector3(x, -.45, z)), (IVector3) new Vector3(playerViewOffset), Color.red, 5);
             }
 
         }

@@ -4,7 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import resonant.api.recipe.MachineRecipes;
 import resonant.api.recipe.RecipeResource;
 import resonant.lib.network.IPacketReceiver;
@@ -13,7 +13,7 @@ import resonant.lib.prefab.tile.TileExternalInventory;
 import resonant.lib.utility.inventory.InventoryUtility;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.ResonantInduction.RecipeType;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 import com.google.common.io.ByteArrayDataInput;
 

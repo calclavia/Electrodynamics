@@ -6,7 +6,7 @@ import java.util.List;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
@@ -15,7 +15,7 @@ import resonant.lib.render.RenderUtility;
 import resonant.lib.utility.LanguageUtility;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

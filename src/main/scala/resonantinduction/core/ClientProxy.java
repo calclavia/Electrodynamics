@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import resonant.lib.render.fx.FxLaser;
 import universalelectricity.api.vector.IVector3;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

@@ -3,11 +3,11 @@ package resonantinduction.atomic.schematic;
 import java.util.HashMap;
 
 import net.minecraft.block.Block;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import resonant.lib.schematic.Schematic;
 import resonant.lib.type.Pair;
 import atomic.Atomic;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 public class SchematicBreedingReactor extends Schematic
 {

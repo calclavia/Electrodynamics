@@ -7,11 +7,11 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import resonant.api.IFilterable;
 import resonant.api.IRotatable;
 import resonant.lib.content.module.prefab.TileInventory;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 public abstract class TileFilterable extends TileInventory implements IRotatable, IFilterable
 {

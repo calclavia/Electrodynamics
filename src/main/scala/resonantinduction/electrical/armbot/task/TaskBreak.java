@@ -13,7 +13,7 @@ import resonantinduction.electrical.armbot.IArmbot;
 import resonantinduction.electrical.armbot.TaskBaseArmbot;
 import resonantinduction.electrical.armbot.TaskBaseProcess;
 import resonantinduction.electrical.encoder.coding.ITask;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 /**
  * Used by arms to break a specific block in a position.
@@ -44,7 +44,7 @@ public class TaskBreak extends TaskBaseArmbot
 
 			Vector3 serachPosition = ((IArmbot) this.program.getMachine()).getHandPos();
 			Pair<World, Vector3> location = this.program.getMachine().getLocation();
-			Block block = Block.blocksList[serachPosition.getBlockID(location.left())];
+			Block block = Block.blocksList[serachPosition.getBlock(location.left())];
 			this.breakTicks--;
 			if (block != null && breakTicks <= 0)
 			{

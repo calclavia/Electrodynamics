@@ -17,7 +17,7 @@ import org.lwjgl.opengl.GL11;
 import resonant.api.items.ISimpleItemRenderer;
 import resonant.lib.render.RenderUtility;
 import resonantinduction.core.Reference;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

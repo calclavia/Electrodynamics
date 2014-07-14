@@ -1,11 +1,11 @@
 package resonantinduction.atomic.machine.extractor.turbine;
 
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraft.util.IIcon;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -23,7 +23,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 /** Funnel for gas. */
 public class TileFunnel extends TileBase implements IBoilHandler
 {
-    private static Icon iconTop;
+    private static IIcon iconTop;
     private final FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 16);
 
     public TileFunnel()
@@ -33,14 +33,14 @@ public class TileFunnel extends TileBase implements IBoilHandler
     }
 
     @Override
-    public Icon getIcon(int side, int meta)
+    public IIcon getIcon(int side, int meta)
     {
         return side == 1 || side == 0 ? iconTop : super.getIcon(side, meta);
     }
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void registerIcons(IconRegister iconRegister)
+    public void registerIcons(IIconRegister iconRegister)
     {
         super.registerIcons(iconRegister);
         iconTop = iconRegister.registerIcon(domain + name + "_top");

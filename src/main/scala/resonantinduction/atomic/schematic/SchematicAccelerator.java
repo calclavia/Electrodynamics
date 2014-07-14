@@ -3,10 +3,10 @@ package resonantinduction.atomic.schematic;
 import java.util.HashMap;
 
 import atomic.Atomic;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import resonant.lib.schematic.Schematic;
 import resonant.lib.type.Pair;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 public class SchematicAccelerator extends Schematic
 {

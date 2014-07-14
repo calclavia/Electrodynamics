@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.core.prefab.block.BlockMachine;
-import mechanical.CommonProxy;
+import resonantinduction.mechanical.CommonProxy;
 import resonantinduction.old.client.render.MechanicalBlockRenderingHandler;
 import resonantinduction.old.client.render.RenderProcessor;
 import resonantinduction.old.transport.ResonantInductionTransport;

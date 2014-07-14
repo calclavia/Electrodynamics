@@ -3,7 +3,7 @@
  */
 package resonantinduction.electrical.levitator;
 
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 /**
  * @author Calclavia

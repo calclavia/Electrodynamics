@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import resonant.lib.multiblock.IMultiBlock;
 import resonant.lib.network.IPacketReceiverWithID;
 import resonant.lib.network.PacketHandler;
@@ -26,7 +26,7 @@ import resonantinduction.electrical.encoder.coding.IProgram;
 import resonantinduction.electrical.encoder.coding.ProgramHelper;
 import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.api.vector.Vector2;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -110,7 +110,7 @@ public class TileArmbot extends TileElectrical implements IMultiBlock, IArmbot, 
 				this.programHelper.onUpdate(this.worldObj, new Vector3(this));
 				if (this.targetYaw != preYaw || this.targetPitch != prePitch)
 				{
-					PacketHandler.sendPacketToClients(this.getDescriptionPacket(), worldObj, new Vector3(this).translate(new Vector3(.5f, 1f, .5f)), 64);
+					PacketHandler.sendPacketToClients(this.getDescriptionPacket(), worldObj, new Vector3(this).add(new Vector3(.5f, 1f, .5f)), 64);
 				}
 			}
 			this.updateRotation();
@@ -377,8 +377,8 @@ public class TileArmbot extends TileElectrical implements IMultiBlock, IArmbot, 
 	public Vector3 getHandPos()
 	{
 		Vector3 position = new Vector3(this);
-		position.translate(0.5);
-		position.translate(this.getDeltaHandPosition());
+		position.add(0.5);
+		position.add(this.getDeltaHandPosition());
 		return position;
 	}
 

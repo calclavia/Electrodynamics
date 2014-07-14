@@ -18,7 +18,7 @@ import resonantinduction.core.Reference;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 /**
  * Renderer for electric item charger

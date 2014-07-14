@@ -9,14 +9,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import resonant.api.event.PlasmaEvent.SpawnPlasmaEvent;
 import resonant.lib.config.Config;
 import resonant.lib.content.module.TileBase;
 import resonant.lib.prefab.vector.Cuboid;
 import resonant.lib.thermal.ThermalGrid;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
 
 public class TilePlasma extends TileBase
@@ -93,7 +93,7 @@ public class TilePlasma extends TileBase
                 }
 
                 Vector3 diDian = new Vector3(this);
-                diDian.translate(ForgeDirection.getOrientation(i));
+                diDian.add(ForgeDirection.getOrientation(i));
 
                 TileEntity tileEntity = diDian.getTileEntity(worldObj);
 

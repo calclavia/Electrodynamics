@@ -1,11 +1,10 @@
 package resonantinduction.mechanical;
 
-import mechanical.CommonProxy;
 import net.minecraft.block.Block;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
-import mechanical.belt.BlockConveyorBelt;
+import resonantinduction.mechanical.belt.BlockConveyorBelt;
 import resonantinduction.old.core.recipe.RecipeLoader;
 import resonantinduction.old.transport.ResonantInductionTransport;
 import calclavia.lib.network.PacketHandler;

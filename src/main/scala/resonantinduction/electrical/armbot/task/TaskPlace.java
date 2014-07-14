@@ -4,12 +4,12 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.common.IPlantable;
 import resonantinduction.electrical.armbot.IArmbot;
 import resonantinduction.electrical.armbot.TaskBaseArmbot;
 import resonantinduction.electrical.armbot.TaskBaseProcess;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 /**
  * Used by arms to break a specific block in a position.
@@ -33,7 +33,7 @@ public class TaskPlace extends TaskBaseArmbot
 		{
 			Vector3 serachPosition = ((IArmbot) this.program.getMachine()).getHandPos();
 
-			Block block = Block.blocksList[serachPosition.getBlockID(this.program.getMachine().getLocation().left())];
+			Block block = Block.blocksList[serachPosition.getBlock(this.program.getMachine().getLocation().left())];
 
 			if (block == null && ticks >= this.PLACE_TIME)
 			{
@@ -59,7 +59,7 @@ public class TaskPlace extends TaskBaseArmbot
 					else if (itemStack.getItem() instanceof IPlantable)
 					{
 						IPlantable plantable = ((IPlantable) itemStack.getItem());
-						Block blockBelow = Block.blocksList[Vector3.translate(serachPosition, new Vector3(0, -1, 0)).getBlockID(this.program.getMachine().getLocation().left())];
+						Block blockBelow = Block.blocksList[Vector3.add(serachPosition, new Vector3(0, -1, 0)).getBlock(this.program.getMachine().getLocation().left())];
 
 						if (blockBelow != null)
 						{

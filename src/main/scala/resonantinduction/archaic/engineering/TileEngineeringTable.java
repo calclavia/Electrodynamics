@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Set;
 
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -17,8 +17,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraft.util.IIcon;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.oredict.OreDictionary;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -47,7 +47,7 @@ import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.ResonantInduction.RecipeType;
 import resonantinduction.core.prefab.imprint.ItemImprint;
 import universalelectricity.api.vector.Vector2;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 import codechicken.multipart.ControlKeyModifer;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -87,7 +87,7 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
     private int[] playerSlots;
 
     @SideOnly(Side.CLIENT)
-    private static Icon iconTop, iconFront, iconSide;
+    private static IIcon iconTop, iconFront, iconSide;
 
     public TileEngineeringTable()
     {
@@ -100,14 +100,14 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
 
     @Override
     @SideOnly(Side.CLIENT)
-    public Icon getIcon(int side, int meta)
+    public IIcon getIcon(int side, int meta)
     {
         return side == 1 ? iconTop : (side == meta ? iconFront : iconSide);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerIcons(IconRegister iconRegister)
+    public void registerIcons(IIconRegister iconRegister)
     {
         iconTop = iconRegister.registerIcon(getTextureName() + "_top");
         iconFront = iconRegister.registerIcon(getTextureName() + "_front");
@@ -184,9 +184,9 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
                 final double regionLength = 1d / 3d;
 
                 // Rotate the hit vector based on direction of the tile.
-                hitVector.translate(new Vector3(-0.5, 0, -0.5));
+                hitVector.add(new Vector3(-0.5, 0, -0.5));
                 hitVector.rotate(WorldUtility.getAngleFromForgeDirection(getDirection()), Vector3.UP());
-                hitVector.translate(new Vector3(0.5, 0, 0.5));
+                hitVector.add(new Vector3(0.5, 0, 0.5));
 
                 /** Crafting Matrix */
                 matrix:
@@ -364,7 +364,7 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
 
             for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
             {
-                TileEntity tile = new Vector3(this).translate(dir).getTileEntity(worldObj);
+                TileEntity tile = new Vector3(this).add(dir).getTileEntity(worldObj);
 
                 if (tile instanceof IInventory)
                 {
@@ -440,7 +440,7 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
 
             for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
             {
-                TileEntity tile = new Vector3(this).translate(dir).getTileEntity(worldObj);
+                TileEntity tile = new Vector3(this).add(dir).getTileEntity(worldObj);
 
                 if (tile instanceof IInventory)
                 {
@@ -736,7 +736,7 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
 
             for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
             {
-                TileEntity tile = new Vector3(this).translate(dir).getTileEntity(worldObj);
+                TileEntity tile = new Vector3(this).add(dir).getTileEntity(worldObj);
 
                 if (tile instanceof IInventory)
                 {

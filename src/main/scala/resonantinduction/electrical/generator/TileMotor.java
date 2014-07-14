@@ -3,7 +3,7 @@ package resonantinduction.electrical.generator;
 import java.util.EnumSet;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import resonant.api.IRotatable;
 import resonant.api.grid.INode;
 import resonant.api.grid.INodeProvider;

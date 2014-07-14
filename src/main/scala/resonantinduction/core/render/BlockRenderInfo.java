@@ -3,9 +3,9 @@ package resonantinduction.core.render;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 /** Used to store info on a block mainly used for rendering */
 public class BlockRenderInfo
@@ -17,7 +17,7 @@ public class BlockRenderInfo
 	/** Block to pull info from */
 	public Block baseBlock = Block.sand;
 	/** Override render texture */
-	public Icon texture = null;
+	public IIcon texture = null;
 	/** meta data to use for block the block */
 	public int meta = 0;
 
@@ -28,21 +28,21 @@ public class BlockRenderInfo
 	}
 
 	/** Gets the block texture from the given side */
-	public Icon getBlockTextureFromSide(int side)
+	public IIcon getBlockTextureFromSide(int side)
 	{
 		return this.getBlockIconFromSideAndMetadata(side, meta);
 	}
 
 	/** Gets the block texture from side and meta */
-	public Icon getBlockIconFromSideAndMetadata(int side, int meta)
+	public IIcon getBlockIconFromSideAndMetadata(int side, int meta)
 	{
 		return this.getIconSafe(baseBlock.getIcon(side, meta));
 	}
 
 	/** Gets the icon and does some safty checks */
-	public Icon getIconSafe(Icon par1Icon)
+	public IIcon getIconSafe(IIcon par1Icon)
 	{
-		Icon icon = par1Icon;
+		IIcon icon = par1Icon;
 		if (this.texture != null)
 		{
 			icon = texture;

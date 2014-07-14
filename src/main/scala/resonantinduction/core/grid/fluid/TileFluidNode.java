@@ -12,7 +12,7 @@ import resonant.lib.network.IPacketReceiverWithID;
 import resonant.lib.network.PacketHandler;
 import resonant.lib.utility.FluidUtility;
 import resonantinduction.core.ResonantInduction;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 import com.google.common.io.ByteArrayDataInput;
 

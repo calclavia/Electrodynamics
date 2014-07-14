@@ -2,10 +2,10 @@ package resonantinduction.electrical.battery;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import resonant.lib.prefab.tile.TileElectrical;
 import universalelectricity.api.net.IConnector;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 public class TileEnergyDistribution extends TileElectrical implements IConnector<EnergyDistributionNetwork>
 {
@@ -142,7 +142,7 @@ public class TileEnergyDistribution extends TileElectrical implements IConnector
 
         for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
         {
-            TileEntity tile = new Vector3(this).translate(dir).getTileEntity(this.worldObj);
+            TileEntity tile = new Vector3(this).add(dir).getTileEntity(this.worldObj);
 
             if (tile != null && tile.getClass() == this.getClass())
             {

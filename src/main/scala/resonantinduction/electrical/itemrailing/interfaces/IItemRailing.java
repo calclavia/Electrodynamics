@@ -3,7 +3,7 @@ package resonantinduction.electrical.itemrailing.interfaces;
 import java.util.Map;
 
 import net.minecraft.inventory.IInventory;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import resonant.api.grid.INode;
 import resonant.lib.render.EnumColor;
 import universalelectricity.api.vector.VectorWorld;

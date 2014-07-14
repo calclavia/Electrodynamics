@@ -1,12 +1,12 @@
 package resonantinduction.electrical.armbot.task;
 
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import resonant.api.IEntityConveyor;
 import resonantinduction.electrical.armbot.IArmbot;
 import resonantinduction.electrical.armbot.TaskBaseArmbot;
 import universalelectricity.api.vector.Vector2;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 /**
  * Prefab for grab based commands
@@ -35,7 +35,7 @@ public abstract class TaskGrabPrefab extends TaskBaseArmbot
 			TileEntity entity = this.armPos.getTileEntity(this.program.getMachine().getLocation().left());
 			if (entity == null)
 			{
-				entity = this.armPos.clone().translate(new Vector3(ForgeDirection.DOWN)).getTileEntity(this.program.getMachine().getLocation().left());
+				entity = this.armPos.clone().add(new Vector3(ForgeDirection.DOWN)).getTileEntity(this.program.getMachine().getLocation().left());
 			}
 			if (entity instanceof IEntityConveyor)
 			{

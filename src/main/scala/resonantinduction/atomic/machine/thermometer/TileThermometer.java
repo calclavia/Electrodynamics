@@ -7,12 +7,12 @@ import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Context;
 import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import resonant.lib.content.module.TileBase;
 import resonant.lib.network.PacketHandler;
@@ -22,7 +22,7 @@ import resonant.lib.thermal.ThermalGrid;
 import resonant.lib.utility.inventory.InventoryUtility;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
@@ -36,7 +36,7 @@ import dan200.computercraft.api.peripheral.IPeripheral;
 public class TileThermometer extends TileBase implements IPeripheral, SimpleComponent
 {
     public static final int MAX_THRESHOLD = 5000;
-    private static Icon iconSide;
+    private static IIcon iconSide;
 
     @Synced
     public float detectedTemperature = 295;
@@ -63,14 +63,14 @@ public class TileThermometer extends TileBase implements IPeripheral, SimpleComp
     }
 
     @Override
-    public Icon getIcon(int side, int meta)
+    public IIcon getIcon(int side, int meta)
     {
         return side == 1 || side == 0 ? super.getIcon(side, meta) : iconSide;
     }
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void registerIcons(IconRegister iconRegister)
+    public void registerIcons(IIconRegister iconRegister)
     {
         super.registerIcons(iconRegister);
         iconSide = iconRegister.registerIcon(Reference.PREFIX + "machine");

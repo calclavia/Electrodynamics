@@ -1,9 +1,9 @@
 package resonantinduction.electrical.armbot;
 
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import resonantinduction.electrical.encoder.coding.IProgrammableMachine;
 import universalelectricity.api.vector.Vector2;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 /** Should be used to interact with the armbot and not to create a new armbot */
 public interface IArmbot extends Cloneable, IProgrammableMachine

@@ -7,7 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import resonant.lib.science.units.UnitHelper;
 import resonant.lib.utility.MathUtility;
 import resonant.lib.utility.inventory.InternalInventoryHandler;
@@ -16,7 +16,7 @@ import resonantinduction.electrical.armbot.TaskBaseArmbot;
 import resonantinduction.electrical.armbot.TaskBaseProcess;
 import resonantinduction.electrical.encoder.coding.args.ArgumentIntData;
 import universalelectricity.api.vector.Vector2;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 public class TaskGive extends TaskBaseArmbot
 {

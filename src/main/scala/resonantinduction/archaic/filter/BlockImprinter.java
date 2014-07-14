@@ -1,21 +1,21 @@
 package resonantinduction.archaic.filter;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import resonant.lib.prefab.block.BlockTile;
 import resonant.lib.utility.inventory.InventoryUtility;
 import resonantinduction.core.Reference;
 import resonantinduction.core.prefab.imprint.ItemImprint;
 import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.vector.Vector2;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
 import codechicken.multipart.ControlKeyModifer;
 import cpw.mods.fml.relauncher.Side;
@@ -23,9 +23,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockImprinter extends BlockTile
 {
-	Icon imprinter_side;
-	Icon imprinter_top;
-	Icon imprinter_bottom;
+	IIcon imprinter_side;
+	IIcon imprinter_top;
+	IIcon imprinter_bottom;
 
 	public BlockImprinter(int id)
 	{
@@ -34,7 +34,7 @@ public class BlockImprinter extends BlockTile
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void registerIcons(IconRegister iconReg)
+	public void registerIcons(IIconRegister iconReg)
 	{
 		this.imprinter_side = iconReg.registerIcon(Reference.PREFIX + "imprinter_side");
 		this.imprinter_top = iconReg.registerIcon(Reference.PREFIX + "imprinter_top");
@@ -43,7 +43,7 @@ public class BlockImprinter extends BlockTile
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
+	public IIcon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
 	{
 		return getIcon(side, 0);
 	}
@@ -51,7 +51,7 @@ public class BlockImprinter extends BlockTile
 	/** Returns the block texture based on the side being looked at. Args: side */
 	@Override
 	@SideOnly(Side.CLIENT)
-	public Icon getIcon(int side, int meta)
+	public IIcon getIcon(int side, int meta)
 	{
 		if (side == 1)
 		{
@@ -75,7 +75,7 @@ public class BlockImprinter extends BlockTile
 		if (te instanceof TileImprinter)
 		{
 			TileImprinter tile = (TileImprinter) te;
-			int idOnTop = ((VectorWorld) new VectorWorld(world, x, y, z).translate(ForgeDirection.getOrientation(1))).getBlockID();
+			int idOnTop = ((VectorWorld) new VectorWorld(world, x, y, z).add(ForgeDirection.getOrientation(1))).getBlock();
 
 			if (Block.pistonMoving.blockID == blockID)
 			{

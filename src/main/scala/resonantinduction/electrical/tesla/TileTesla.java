@@ -19,7 +19,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import resonant.lib.multiblock.IMultiBlockStructure;
 import resonant.lib.multiblock.MultiBlockHandler;
 import resonant.lib.network.IPacketReceiver;
@@ -34,7 +34,7 @@ import resonantinduction.core.Settings;
 import resonantinduction.electrical.Electrical;
 import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.energy.EnergyStorageHandler;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -138,7 +138,7 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 					}
 					else
 					{
-						Electrical.proxy.renderElectricShock(this.worldObj, topTeslaVector.clone().translate(0.5), topTeslaVector.clone().translate(new Vector3(0.5, Double.POSITIVE_INFINITY, 0.5)), false);
+						Electrical.proxy.renderElectricShock(this.worldObj, topTeslaVector.clone().add(0.5), topTeslaVector.clone().add(new Vector3(0.5, Double.POSITIVE_INFINITY, 0.5)), false);
 					}
 				}
 				else
@@ -225,7 +225,7 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 
 								double distance = topTeslaVector.distance(targetVector);
 
-								Electrical.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).translate(new Vector3(0.5)), targetVector.translate(new Vector3(0.5, Math.random() * heightRange / 3 - heightRange / 3, 0.5)), EnumColor.DYES[this.dyeID].toColor());
+								Electrical.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).add(new Vector3(0.5)), targetVector.add(new Vector3(0.5, Math.random() * heightRange / 3 - heightRange / 3, 0.5)), EnumColor.DYES[this.dyeID].toColor());
 
 								this.transfer(tesla, Math.min(transferEnergy, TRANSFER_CAP));
 
@@ -236,14 +236,14 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 
 								if (this.attackEntities && this.zapCounter % 5 == 0)
 								{
-									MovingObjectPosition mop = topTeslaVector.clone().translate(0.5).rayTraceEntities(this.worldObj, targetVector.clone().translate(0.5));
+									MovingObjectPosition mop = topTeslaVector.clone().add(0.5).rayTraceEntities(this.worldObj, targetVector.clone().add(0.5));
 
 									if (mop != null && mop.entityHit != null)
 									{
 										if (mop.entityHit instanceof EntityLivingBase)
 										{
 										    ElectricalDamage.electrocuteEntity(mop.entityHit, this, UniversalElectricity.DEFAULT_VOLTAGE * 4, 1);
-											Electrical.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).clone().translate(0.5), new Vector3(mop.entityHit));
+											Electrical.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).clone().add(0.5), new Vector3(mop.entityHit));
 										}
 									}
 								}
@@ -412,8 +412,8 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 		mainTile.getMultiBlock().deconstruct();
 		mainTile.getMultiBlock().construct();
 
-		boolean isTop = new Vector3(this).translate(new Vector3(0, 1, 0)).getTileEntity(this.worldObj) instanceof TileTesla;
-		boolean isBottom = new Vector3(this).translate(new Vector3(0, -1, 0)).getTileEntity(this.worldObj) instanceof TileTesla;
+		boolean isTop = new Vector3(this).add(new Vector3(0, 1, 0)).getTileEntity(this.worldObj) instanceof TileTesla;
+		boolean isBottom = new Vector3(this).add(new Vector3(0, -1, 0)).getTileEntity(this.worldObj) instanceof TileTesla;
 
 		if (isTop && isBottom)
 		{
@@ -478,7 +478,7 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 
 		while (true)
 		{
-			TileEntity t = new Vector3(this).translate(new Vector3(0, y, 0)).getTileEntity(this.worldObj);
+			TileEntity t = new Vector3(this).add(new Vector3(0, y, 0)).getTileEntity(this.worldObj);
 
 			if (t instanceof TileTesla)
 			{

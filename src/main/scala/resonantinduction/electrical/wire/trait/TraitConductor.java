@@ -3,7 +3,7 @@ package resonantinduction.electrical.wire.trait;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyNetwork;
 import universalelectricity.api.net.IConnector;

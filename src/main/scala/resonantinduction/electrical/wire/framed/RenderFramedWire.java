@@ -4,9 +4,9 @@ import java.nio.FloatBuffer;
 import java.util.Map;
 
 import net.minecraft.item.ItemDye;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -38,10 +38,10 @@ public class RenderFramedWire
 	public static final ResourceLocation WIRE_SHINE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "white.png");
 	public static final Map<String, CCModel> models;
 	public static final Map<String, CCModel> shinyModels;
-	public static Icon wireIcon;
-	public static Icon lainWireIcon;
-	public static Icon insulationIcon;
-	public static Icon breakIcon;
+	public static IIcon wireIcon;
+	public static IIcon lainWireIcon;
+	public static IIcon insulationIcon;
+	public static IIcon breakIcon;
 	public static FloatBuffer location = BufferUtils.createFloatBuffer(4);
 	public static FloatBuffer specular = BufferUtils.createFloatBuffer(4);
 	public static FloatBuffer zero = BufferUtils.createFloatBuffer(4);
@@ -173,7 +173,7 @@ public class RenderFramedWire
 		renderPartShine(shinyModels.get(name));
 	}
 
-	public void renderPart(Icon icon, CCModel cc, double x, double y, double z, Colour colour)
+	public void renderPart(IIcon icon, CCModel cc, double x, double y, double z, Colour colour)
 	{
 		cc.render(0, cc.verts.length, Rotation.sideOrientation(0, Rotation.rotationTo(0, 2)).at(codechicken.lib.vec.Vector3.center).with(new Translation(x, y, z)), new IconTransformation(icon), new ColourMultiplier(colour));
 	}

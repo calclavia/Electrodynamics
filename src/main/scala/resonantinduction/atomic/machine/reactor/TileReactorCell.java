@@ -17,7 +17,7 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -45,7 +45,7 @@ import resonantinduction.atomic.machine.plasma.TilePlasma;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import universalelectricity.api.UniversalElectricity;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -182,8 +182,8 @@ public class TileReactorCell extends TileInventory implements IMultiBlockStructu
                 if (drain != null && drain.amount >= FluidContainerRegistry.BUCKET_VOLUME)
                 {
                     ForgeDirection spawnDir = ForgeDirection.getOrientation(worldObj.rand.nextInt(3) + 2);
-                    Vector3 spawnPos = new Vector3(this).translate(spawnDir, 2);
-                    spawnPos.translate(0, Math.max(worldObj.rand.nextInt(getHeight()) - 1, 0), 0);
+                    Vector3 spawnPos = new Vector3(this).add(spawnDir, 2);
+                    spawnPos.add(0, Math.max(worldObj.rand.nextInt(getHeight()) - 1, 0), 0);
 
                     if (worldObj.isAirBlock(spawnPos.intX(), spawnPos.intY(), spawnPos.intZ()))
                     {
@@ -243,9 +243,9 @@ public class TileReactorCell extends TileInventory implements IMultiBlockStructu
 
                     for (int i = 2; i < 6; i++)
                     {
-                        Vector3 checkAdjacent = new Vector3(this).translate(ForgeDirection.getOrientation(i));
+                        Vector3 checkAdjacent = new Vector3(this).add(ForgeDirection.getOrientation(i));
 
-                        if (checkAdjacent.getBlockID(worldObj) == Atomic.blockControlRod.blockID)
+                        if (checkAdjacent.getBlock(worldObj) == Atomic.blockControlRod.blockID)
                         {
                             deltaT /= 1.1;
                             rods++;
@@ -308,9 +308,9 @@ public class TileReactorCell extends TileInventory implements IMultiBlockStructu
                 if (isOverToxic())
                 {
                     /** Randomly leak toxic waste when it is too toxic */
-                    VectorWorld leakPos = new VectorWorld(this).translate(worldObj.rand.nextInt(20) - 10, worldObj.rand.nextInt(20) - 10, worldObj.rand.nextInt(20) - 10);
+                    VectorWorld leakPos = new VectorWorld(this).add(worldObj.rand.nextInt(20) - 10, worldObj.rand.nextInt(20) - 10, worldObj.rand.nextInt(20) - 10);
 
-                    int blockID = leakPos.getBlockID();
+                    int blockID = leakPos.getBlock();
 
                     if (blockID == Block.grass.blockID)
                     {
@@ -321,7 +321,7 @@ public class TileReactorCell extends TileInventory implements IMultiBlockStructu
                     {
                         if (tank.getFluid() != null)
                         {
-                            leakPos.setBlock(worldObj, tank.getFluid().getFluid().getBlockID());
+                            leakPos.setBlock(worldObj, tank.getFluid().getFluid().getBlock());
                             tank.drain(FluidContainerRegistry.BUCKET_VOLUME, true);
                         }
                     }

@@ -9,7 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -31,7 +31,7 @@ import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.TileMaterial;
 import universalelectricity.api.energy.EnergyStorageHandler;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -154,7 +154,7 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 					{
 						if (FluidRegistry.getFluid("steam") != null)
 						{
-							MinecraftForge.EVENT_BUS.post(new BoilEvent(worldObj, new Vector3(this).translate(0, 1, 0), new FluidStack(FluidRegistry.WATER, volume), new FluidStack(FluidRegistry.getFluid("steam"), volume), 2, false));
+							MinecraftForge.EVENT_BUS.post(new BoilEvent(worldObj, new Vector3(this).add(0, 1, 0), new FluidStack(FluidRegistry.WATER, volume), new FluidStack(FluidRegistry.getFluid("steam"), volume), 2, false));
 							boiledVolume += volume;
 						}
 
@@ -179,7 +179,7 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 						{
 							if (FluidRegistry.getFluid("steam") != null)
 							{
-								MinecraftForge.EVENT_BUS.post(new BoilEvent(worldObj, new Vector3(this).translate(0, 1, 0), new FluidStack(FluidRegistry.WATER, volume), new FluidStack(FluidRegistry.getFluid("steam"), volume), 2, false));
+								MinecraftForge.EVENT_BUS.post(new BoilEvent(worldObj, new Vector3(this).add(0, 1, 0), new FluidStack(FluidRegistry.WATER, volume), new FluidStack(FluidRegistry.getFluid("steam"), volume), 2, false));
 								((TileGutter) tileEntity).drain(ForgeDirection.DOWN, volume, true);
 							}
 

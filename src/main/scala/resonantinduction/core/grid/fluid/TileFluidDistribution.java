@@ -2,12 +2,12 @@ package resonantinduction.core.grid.fluid;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import resonant.lib.utility.WorldUtility;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 /**
  * A prefab class for tiles that use the fluid network.
@@ -102,7 +102,7 @@ public abstract class TileFluidDistribution extends TileFluidNode implements IFl
 
 			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 			{
-				this.validateConnectionSide(new Vector3(this).translate(dir).getTileEntity(worldObj), dir);
+				this.validateConnectionSide(new Vector3(this).add(dir).getTileEntity(worldObj), dir);
 			}
 
 			/** Only send packet updates if visuallyConnected changed. */

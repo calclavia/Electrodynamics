@@ -19,7 +19,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.IFluidBlock;
 import resonant.lib.render.EnumColor;
 import resonant.lib.utility.LinkUtility;
@@ -30,7 +30,7 @@ import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.part.PartFace;
 import resonantinduction.electrical.Electrical;
 import resonantinduction.electrical.tesla.TileTesla;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
@@ -70,7 +70,7 @@ public class PartLevitator extends PartFace
 
 	public static boolean canBePath(World world, Vector3 position)
 	{
-		Block block = Block.blocksList[position.getBlockID(world)];
+		Block block = Block.blocksList[position.getBlock(world)];
 		return block == null || (block instanceof BlockSnow || block instanceof BlockVine || block instanceof BlockLadder || ((block instanceof BlockFluid || block instanceof IFluidBlock) && block.blockID != Block.lavaMoving.blockID && block.blockID != Block.lavaStill.blockID));
 	}
 
@@ -269,8 +269,8 @@ public class PartLevitator extends PartFace
 							 */
 							if (renderBeam)
 							{
-								Electrical.proxy.renderElectricShock(world(), getBeamSpawnPosition(), getPosition().translate(0.5), EnumColor.DYES[dyeID].toColor(), world().rand.nextFloat() > 0.9);
-								Electrical.proxy.renderElectricShock(world(), getLink().getPosition().translate(0.5), getLink().getBeamSpawnPosition(), EnumColor.DYES[dyeID].toColor(), world().rand.nextFloat() > 0.9);
+								Electrical.proxy.renderElectricShock(world(), getBeamSpawnPosition(), getPosition().add(0.5), EnumColor.DYES[dyeID].toColor(), world().rand.nextFloat() > 0.9);
+								Electrical.proxy.renderElectricShock(world(), getLink().getPosition().add(0.5), getLink().getBeamSpawnPosition(), EnumColor.DYES[dyeID].toColor(), world().rand.nextFloat() > 0.9);
 							}
 
 							for (int i = 0; i < results.size(); i++)
@@ -288,7 +288,7 @@ public class PartLevitator extends PartFace
 
 										if (renderBeam)
 										{
-											Electrical.proxy.renderElectricShock(world(), prevResult.clone().translate(0.5), result.clone().translate(0.5), EnumColor.DYES[dyeID].toColor(), world().rand.nextFloat() > 0.9);
+											Electrical.proxy.renderElectricShock(world(), prevResult.clone().add(0.5), result.clone().add(0.5), EnumColor.DYES[dyeID].toColor(), world().rand.nextFloat() > 0.9);
 										}
 
 										AxisAlignedBB bounds = AxisAlignedBB.getAABBPool().getAABB(result.x, result.y, result.z, result.x + 1, result.y + 1, result.z + 1);
@@ -485,7 +485,7 @@ public class PartLevitator extends PartFace
 		suckBounds = operationBounds = null;
 
 		ForgeDirection dir = placementSide.getOpposite();
-		MovingObjectPosition mop = world().clip(getPosition().translate(dir).toVec3(), getPosition().translate(dir, Settings.LEVITATOR_MAX_REACH).toVec3());
+		MovingObjectPosition mop = world().clip(getPosition().add(dir).toVec3(), getPosition().add(dir, Settings.LEVITATOR_MAX_REACH).toVec3());
 
 		int reach = Settings.LEVITATOR_MAX_REACH;
 

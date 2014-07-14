@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.packet.Packet;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import resonant.lib.network.IPacketReceiver;
 import resonant.lib.network.IPacketSender;
 import resonantinduction.core.ResonantInduction;
