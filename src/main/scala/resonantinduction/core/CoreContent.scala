@@ -67,12 +67,6 @@ object CoreContent extends ContentHolder
   @ExplicitContentName
   val bucketMolten = new ItemOreResourceBucket(true)
 
-  /*
-  val itemBiomass = contentRegistry.createItem(classOf[ItemBiomass])
-  val itemDevStaff = contentRegistry.createItem(classOf[ItemDevStaff])
-  val  itemFlour = contentRegistry.createItem(classOf[ItemFlour])
-  */
-
   manager.setTab(ResonantTab).setPrefix(Reference.prefix)
 
   /**
