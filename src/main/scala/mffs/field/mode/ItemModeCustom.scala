@@ -11,7 +11,6 @@ import mffs.{Content, Settings}
 import net.minecraft.block.Block
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.init.Blocks
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.{NBTTagCompound, NBTTagList}
 import net.minecraft.server.MinecraftServer
@@ -26,6 +25,7 @@ import resonant.lib.wrapper.WrapList._
 import universalelectricity.core.transform.vector.Vector3
 
 import scala.collection.JavaConversions._
+import scala.collection.mutable
 
 class ItemModeCustom extends ItemMode with TCache
 {
@@ -91,20 +91,19 @@ class ItemModeCustom extends ItemMode with TCache
             {
               nbt.removeTag(NBT_POINT_1)
               nbt.removeTag(NBT_POINT_2)
-              var midPoint: Vector3 = new Vector3
-              midPoint.x = (point1.x + point2.x) / 2
-              midPoint.y = (point1.y + point2.y) / 2
-              midPoint.z = (point1.z + point2.z) / 2
-              midPoint = midPoint.floor
-              point1.subtract(midPoint)
-              point2.subtract(midPoint)
-              val minPoint: Vector3 = new Vector3(Math.min(point1.x, point2.x), Math.min(point1.y, point2.y), Math.min(point1.z, point2.z))
-              val maxPoint: Vector3 = new Vector3(Math.max(point1.x, point2.x), Math.max(point1.y, point2.y), Math.max(point1.z, point2.z))
-              var saveNBT: NBTTagCompound = NBTUtility.loadData(this.getSaveDirectory, NBT_FILE_SAVE_PREFIX + getModeID(itemStack))
+              var midPoint = point1.midpoint(point2).floor
+              point1 -= midPoint
+              point2 -= midPoint
+              val minPoint = point1.min(point2)
+              val maxPoint = point1.max(point2)
+
+              var saveNBT = NBTUtility.loadData(getSaveDirectory, NBT_FILE_SAVE_PREFIX + getModeID(itemStack))
+
               if (saveNBT == null)
               {
                 saveNBT = new NBTTagCompound
               }
+
               var list: NBTTagList = null
               if (saveNBT.hasKey(NBT_FIELD_BLOCK_LIST))
               {
@@ -114,63 +113,32 @@ class ItemModeCustom extends ItemMode with TCache
               {
                 list = new NBTTagList
               }
+
+              for (x <- minPoint.xi to maxPoint.xi; y <- minPoint.yi to maxPoint.yi; z <- minPoint.zi to maxPoint.zi)
               {
-                var x: Int = minPoint.xi
-                while (x <= maxPoint.xi)
+                val position = new Vector3(x, y, z)
+                val targetCheck = midPoint + position
+                val block = targetCheck.getBlock(world)
+
+                if (!block.isAir(world, targetCheck.xi, targetCheck.yi, targetCheck.zi))
                 {
+                  /**
+                   * Additive and Subtractive modes
+                   */
+                  if (!nbt.getBoolean(NBT_MODE))
                   {
-                    {
-                      var y: Int = minPoint.yi
-                      while (y <= maxPoint.yi)
-                      {
-                        {
-                          {
-                            var z: Int = minPoint.zi
-                            while (z <= maxPoint.zi)
-                            {
-                              {
-                                val position = new Vector3(x, y, z)
-                                val targetCheck = midPoint.clone + position
-                                val block = targetCheck.getBlock(world)
-                                if (block != Blocks.air)
-                                {
-                                  if (!nbt.getBoolean(NBT_MODE))
-                                  {
-                                    val vectorTag = position.toNBT
-                                    vectorTag.setString(NBT_FIELD_BLOCK_NAME, Block.blockRegistry.getNameForObject(block))
-                                    vectorTag.setInteger(NBT_FIELD_BLOCK_METADATA, targetCheck.getBlockMetadata(world))
-                                    list.appendTag(vectorTag)
-                                  }
-                                  else
-                                  {
-                                    {
-                                      var i: Int = 0
-                                      while (i < list.tagCount)
-                                      {
-                                        val vector = new Vector3(list.getCompoundTagAt(i))
-
-                                        if (vector == position)
-                                        {
-                                          list.removeTag(i)
-                                        }
-
-                                        i += 1
-                                      }
-                                    }
-                                  }
-                                }
-                              }
-                              z += 1
-                            }
-                          }
-                        }
-                        y += 1
-                      }
-                    }
+                    val vectorTag = position.toNBT
+                    vectorTag.setString(NBT_FIELD_BLOCK_NAME, Block.blockRegistry.getNameForObject(block))
+                    vectorTag.setInteger(NBT_FIELD_BLOCK_METADATA, targetCheck.getBlockMetadata(world))
+                    list.appendTag(vectorTag)
                   }
-                  x += 1
+                  else
+                  {
+                    (0 until list.tagCount) filter (i => new Vector3(list.getCompoundTagAt(i)).equals(position)) foreach (list.removeTag(_))
+                  }
                 }
               }
+
               saveNBT.setTag(NBT_FIELD_BLOCK_LIST, list)
               nbt.setInteger(NBT_FIELD_SIZE, list.tagCount)
               NBTUtility.saveData(getSaveDirectory, NBT_FILE_SAVE_PREFIX + getModeID(itemStack), saveNBT)
@@ -187,7 +155,7 @@ class ItemModeCustom extends ItemMode with TCache
         if (nbt != null)
         {
           nbt.setBoolean(NBT_MODE, !nbt.getBoolean(NBT_MODE))
-          entityPlayer.addChatMessage(new ChatComponentText(LanguageUtility.getLocal("message.modeCustom.modeChange").replaceAll("%p", (if (nbt.getBoolean(NBT_MODE)) LanguageUtility.getLocal("info.modeCustom.substraction") else LanguageUtility.getLocal("info.modeCustom.additive")))))
+          entityPlayer.addChatMessage(new ChatComponentText(LanguageUtility.getLocal("message.modeCustom.modeChange").replaceAll("#p", (if (nbt.getBoolean(NBT_MODE)) LanguageUtility.getLocal("info.modeCustom.substraction") else LanguageUtility.getLocal("info.modeCustom.additive")))))
         }
       }
     }
@@ -256,14 +224,14 @@ class ItemModeCustom extends ItemMode with TCache
 
   def getFieldBlocks(projector: IFieldMatrix, itemStack: ItemStack): Set[Vector3] =
   {
-    return getFieldBlockMapClean(projector, itemStack).keySet
+    return getFieldBlockMapClean(projector, itemStack).keySet.toSet
   }
 
-  def getFieldBlockMap(projector: IFieldMatrix, itemStack: ItemStack): Map[Vector3, (Block, Int)] =
+  def getFieldBlockMap(projector: IFieldMatrix, itemStack: ItemStack): mutable.Map[Vector3, (Block, Int)] =
   {
     val cacheID = "itemStack_" + itemStack.hashCode
 
-    if (hasCache(classOf[Map[Vector3, (Block, Int)]], cacheID)) return getCache(classOf[Map[Vector3, (Block, Int)]], cacheID)
+    if (hasCache(classOf[mutable.Map[Vector3, (Block, Int)]], cacheID)) return getCache(classOf[mutable.Map[Vector3, (Block, Int)]], cacheID)
 
     val fieldMap = getFieldBlockMapClean(projector, itemStack)
 
@@ -294,20 +262,22 @@ class ItemModeCustom extends ItemMode with TCache
     return fieldMap
   }
 
-  def getFieldBlockMapClean(projector: IFieldMatrix, itemStack: ItemStack): Map[Vector3, (Block, Int)] =
+  def getFieldBlockMapClean(projector: IFieldMatrix, itemStack: ItemStack): mutable.Map[Vector3, (Block, Int)] =
   {
-    val scale = projector.getModuleCount(Content.moduleScale) / 3f
-    val fieldBlocks = Map[Vector3, (Block, Int)]()
+    val scale = (projector.getModuleCount(Content.moduleScale) / 3f + 1)
+    val fieldBlocks = mutable.Map.empty[Vector3, (Block, Int)]
 
     if (getSaveDirectory != null)
     {
-      val nbt: NBTTagCompound = NBTUtility.loadData(this.getSaveDirectory, NBT_FILE_SAVE_PREFIX + getModeID(itemStack))
+      val nbt = NBTUtility.loadData(this.getSaveDirectory, NBT_FILE_SAVE_PREFIX + getModeID(itemStack))
 
       if (nbt != null)
       {
         val nbtTagList = nbt.getTagList(NBT_FIELD_BLOCK_LIST, 10)
 
-        (0 until nbtTagList.tagCount) map (i => nbtTagList.getCompoundTagAt(i)) foreach (vectorTag => fieldBlocks.put(new Vector3(vectorTag) * scale, (Block.blockRegistry.getObject(vectorTag.getString(NBT_FIELD_BLOCK_NAME)).asInstanceOf[Block], vectorTag.getInteger(NBT_FIELD_BLOCK_METADATA))))
+        (0 until nbtTagList.tagCount)
+          .map(i => nbtTagList.getCompoundTagAt(i))
+          .foreach(vectorTag => fieldBlocks.put(new Vector3(vectorTag) * scale, (Block.blockRegistry.getObject(vectorTag.getString(NBT_FIELD_BLOCK_NAME)).asInstanceOf[Block], vectorTag.getInteger(NBT_FIELD_BLOCK_METADATA))))
       }
     }
     return fieldBlocks

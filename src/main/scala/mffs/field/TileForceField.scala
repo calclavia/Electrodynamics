@@ -1,6 +1,5 @@
 package mffs.field
 
-import cpw.mods.fml.common.network.ByteBufUtils
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import io.netty.buffer.ByteBuf
 import mffs.security.MFFSPermissions
@@ -21,6 +20,7 @@ import net.minecraft.world.IBlockAccess
 import resonant.api.mffs.machine.{IForceField, IProjector}
 import resonant.api.mffs.modules.IModule
 import resonant.content.spatial.block.SpatialTile
+import resonant.lib.network.ByteBufWrapper.ByteBufWrapper
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.TPacketReceiver
 import universalelectricity.core.transform.region.Cuboid
@@ -348,10 +348,10 @@ class TileForceField extends SpatialTile(Material.glass) with TPacketReceiver wi
       {
         val nbt = new NBTTagCompound
         camoStack.writeToNBT(nbt)
-        return ModularForceFieldSystem.packetHandler.toMCPacket(new PacketTile(this, projector.xi: Integer, projector.yi: Integer, projector.zi: Integer, true: java.lang.Boolean, camoStack))
+        return ModularForceFieldSystem.packetHandler.toMCPacket(new PacketTile(this) <<< projector.xi <<< projector.yi <<< projector.zi <<< true <<< nbt)
       }
 
-      return ModularForceFieldSystem.packetHandler.toMCPacket(new PacketTile(this, projector.xi: Integer, projector.yi: Integer, projector.zi: Integer, false: java.lang.Boolean))
+      return ModularForceFieldSystem.packetHandler.toMCPacket(new PacketTile(this) <<< projector.xi <<< projector.yi <<< projector.zi <<< false)
     }
 
     return null
@@ -365,7 +365,7 @@ class TileForceField extends SpatialTile(Material.glass) with TPacketReceiver wi
 
     if (data.readBoolean)
     {
-      camoStack = ItemStack.loadItemStackFromNBT(ByteBufUtils.readTag(data))
+      camoStack = ItemStack.loadItemStackFromNBT(data.readTag())
     }
   }
 

@@ -123,8 +123,6 @@ object MFFSUtility
     {
       if (!tile.getWorldObj().isRemote)
       {
-        if (projector != null)
-        {
           if (projector.getModuleCount(Content.moduleCamouflage) > 0)
           {
             if (projector.getMode.isInstanceOf[ItemModeCustom])
@@ -133,13 +131,13 @@ object MFFSUtility
 
               if (fieldMap != null)
               {
-                val fieldCenter: Vector3 = new Vector3(projector.asInstanceOf[TileEntity]) + projector.getTranslation()
-                var relativePosition: Vector3 = position.clone.subtract(fieldCenter)
+                val fieldCenter = new Vector3(projector.asInstanceOf[TileEntity]) + projector.getTranslation()
+                var relativePosition: Vector3 = position - fieldCenter
                 relativePosition = relativePosition.apply(new Rotation(-projector.getRotationYaw, -projector.getRotationPitch, 0))
 
                 val blockInfo = fieldMap(relativePosition.round)
 
-                if (blockInfo != null && blockInfo._1.isAir(tile.getWorldObj(), position.xi, position.yi, position.zi))
+                if (blockInfo != null && !blockInfo._1.isAir(tile.getWorldObj(), position.xi, position.yi, position.zi))
                 {
                   return new ItemStack(blockInfo._1, 1, blockInfo._2)
                 }
@@ -156,9 +154,9 @@ object MFFSUtility
               }
             }
           }
-        }
       }
     }
+
     return null
   }
 
