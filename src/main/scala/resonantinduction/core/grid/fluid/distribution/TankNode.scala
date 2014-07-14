@@ -15,7 +15,7 @@ class TankNode(parent: INodeProvider) extends MultipartNode[TankNode](parent) wi
   var maxPressure: Int = 100
   private var pressure: Int = 0
 
-  var onChange: () => () = _
+  var onChange: () => Unit = null
 
   def getMaxFlowRate: Int =
   {

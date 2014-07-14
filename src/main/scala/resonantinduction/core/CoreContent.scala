@@ -22,6 +22,31 @@ object CoreContent extends ContentHolder
   /**
    * Blocks
    */
+  var blockOreCopper: Block = null
+  var blockOreTin: Block = null
+
+  /**
+   * Items
+   */
+  var itemMotor: Item = null
+  var itemCircuitBasic: Item = null
+  var itemCircuitAdvanced: Item = null
+  var itemCircuitElite: Item = null
+  var itemPlateCopper: Item = null
+  var itemPlateTin: Item = null
+  var itemPlateBronze: Item = null
+  var itemPlateSteel: Item = null
+  var itemPlateIron: Item = null
+  var itemPlateGold: Item = null
+  var itemIngotCopper: Item = null
+  var itemIngotTin: Item = null
+  var itemIngotSteel: Item = null
+  var itemIngotBronze: Item = null
+  var itemDustSteel: Item = null
+  var itemDustBronze: Item = null
+  var generationOreCopper: Nothing = null
+  var generationOreTin: Nothing = null
+
   val decoration: Block = new BlockIndustrialStone()
   @ExplicitContentName("dust")
   val blockDust: Block = new TileDust().setCreativeTab(null)

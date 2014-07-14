@@ -52,6 +52,7 @@ object Settings
   @Config(comment = "Put a list of block/item IDs to be used by the Quantum Assembler. Separate by commas, no space.")
   var quantumAssemblerRecipes: Array[Int] = new Array[Int](0)
   @Config var darkMatterSpawnChance: Double = 0.2
+  @Config var steamMultiplier: Double = 1
 
   @SubscribeEvent
   def configEvent(evt: PostConfigEvent)

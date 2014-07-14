@@ -25,6 +25,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ItemOreResource extends Item
 {
 
+
 	private Block block = ResonantInduction.blockRefinedDust;
 
 	public ItemOreResource()
