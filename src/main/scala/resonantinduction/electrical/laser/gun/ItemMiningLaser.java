@@ -201,7 +201,7 @@ public class ItemMiningLaser extends ItemEnergyTool
             Pair<Vector3, Integer> vec = miningMap.get(player);
             if (vec != null && vec.left() != null)
             {
-                player.worldObj.destroyBlockInWorldPartially(player.entityId, vec.left().intX(), vec.left().intY(), vec.left().intZ(), -1);
+                player.worldObj.destroyBlockInWorldPartially(player.entityId, vec.left().xi(), vec.left().yi(), vec.left().zi(), -1);
             }
             miningMap.remove(player);
         }

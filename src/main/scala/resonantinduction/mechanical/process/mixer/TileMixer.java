@@ -187,9 +187,9 @@ public class TileMixer extends TileMechanical implements IInventory
 				{
 					ItemStack itemStack = entity.getEntityItem().copy();
 
-					if (((BlockFluidMixture) block).mix(worldObj, mixPosition.intX(), mixPosition.intY(), mixPosition.intZ(), itemStack))
+					if (((BlockFluidMixture) block).mix(worldObj, mixPosition.xi(), mixPosition.yi(), mixPosition.zi(), itemStack))
 					{
-						worldObj.notifyBlocksOfNeighborChange(mixPosition.intX(), mixPosition.intY(), mixPosition.intZ(), mixPosition.getBlock(worldObj));
+						worldObj.notifyBlocksOfNeighborChange(mixPosition.xi(), mixPosition.yi(), mixPosition.zi(), mixPosition.getBlock(worldObj));
 						return true;
 					}
 				}

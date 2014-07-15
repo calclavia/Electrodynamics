@@ -123,7 +123,7 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
 		Vector3 placePos = position().add(getDirection());
 		ItemStack placeStack = getStackInSlot(0);
 
-		if (InventoryUtility.placeItemBlock(world(), placePos.intX(), placePos.intY(), placePos.intZ(), placeStack, side))
+		if (InventoryUtility.placeItemBlock(world(), placePos.xi(), placePos.yi(), placePos.zi(), placeStack, side))
 		{
 			if (placeStack.stackSize <= 0)
 			{

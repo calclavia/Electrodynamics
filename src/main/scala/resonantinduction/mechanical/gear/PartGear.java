@@ -129,17 +129,17 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
 
         universalelectricity.core.transform.vector.Vector3 primaryPos = getMultiBlock().getPrimary().getPosition();
 
-        if (primaryPos.intX() == x() && placementSide.offsetX == 0)
+        if (primaryPos.xi() == x() && placementSide.offsetX == 0)
         {
             return true;
         }
 
-        if (primaryPos.intY() == y() && placementSide.offsetY == 0)
+        if (primaryPos.yi() == y() && placementSide.offsetY == 0)
         {
             return true;
         }
 
-        if (primaryPos.intZ() == z() && placementSide.offsetZ == 0)
+        if (primaryPos.zi() == z() && placementSide.offsetZ == 0)
         {
             return true;
         }

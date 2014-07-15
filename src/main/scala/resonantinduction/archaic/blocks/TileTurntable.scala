@@ -85,10 +85,10 @@ class TileTurntable extends SpatialBlock(Material.piston) with TRotatable with R
           }
           else if (block != null)
           {
-            block.rotateBlock(world, position.intX, position.intY, position.intZ, facing.getOpposite)
+            block.rotateBlock(world, position.xi, position.yi, position.zi, facing.getOpposite)
           }
 
-          world.markBlockForUpdate(position.intX, position.intY, position.intZ)
+          world.markBlockForUpdate(position.xi, position.yi, position.zi)
           world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, "tile.piston.in", 0.5F, world.rand.nextFloat * 0.15F + 0.6F)
         }
       }

@@ -103,7 +103,7 @@ public class TileMechanicalPiston extends TileMechanical implements IRotatable
                 if (!worldObj.isRemote)
                 {
                     int breakStatus = (int) (((float) (startBreakCount - breakCount) / (float) startBreakCount) * 10f);
-                    world().destroyBlockInWorldPartially(0, blockPos.intX(), blockPos.intY(), blockPos.intZ(), breakStatus);
+                    world().destroyBlockInWorldPartially(0, blockPos.xi(), blockPos.yi(), blockPos.zi(), breakStatus);
                     ResonantInduction.LOGGER.info("[Mechanical Piston] Break Count: " + breakCount);
                     
                     if (breakCount >= mechanicalPistonMultiplier)
@@ -116,7 +116,7 @@ public class TileMechanicalPiston extends TileMechanical implements IRotatable
                             }
                         }
 
-                        getWorldObj().destroyBlock(blockPos.intX(), blockPos.intY(), blockPos.intZ(), false);
+                        getWorldObj().destroyBlock(blockPos.xi(), blockPos.yi(), blockPos.zi(), false);
                     }
                 }
 
@@ -128,7 +128,7 @@ public class TileMechanicalPiston extends TileMechanical implements IRotatable
 
         if (!worldObj.isRemote)
         {
-            world().destroyBlockInWorldPartially(0, blockPos.intX(), blockPos.intY(), blockPos.intZ(), -1);
+            world().destroyBlockInWorldPartially(0, blockPos.xi(), blockPos.yi(), blockPos.zi(), -1);
         }
         
         return false;
@@ -152,7 +152,7 @@ public class TileMechanicalPiston extends TileMechanical implements IRotatable
         /** Check Target */
         int targetBlock = to.getBlock(worldObj);
 
-        if (!(worldObj.isAirBlock(to.intX(), to.intY(), to.intZ()) || (targetBlock > 0 && (Block.blocksList[targetBlock].isBlockReplaceable(worldObj, to.intX(), to.intY(), to.intZ())))))
+        if (!(worldObj.isAirBlock(to.xi(), to.yi(), to.zi()) || (targetBlock > 0 && (Block.blocksList[targetBlock].isBlockReplaceable(worldObj, to.xi(), to.yi(), to.zi())))))
         {
             return false;
         }
@@ -232,7 +232,7 @@ public class TileMechanicalPiston extends TileMechanical implements IRotatable
 
     public void notifyChanges(Vector3 pos)
     {
-        worldObj.notifyBlocksOfNeighborChange(pos.intX(), pos.intY(), pos.intZ(), pos.getBlock(worldObj));
+        worldObj.notifyBlocksOfNeighborChange(pos.xi(), pos.yi(), pos.zi(), pos.getBlock(worldObj));
 
         TileEntity newTile = pos.getTileEntity(worldObj);
 

@@ -337,9 +337,9 @@ public class FixedTechneModel extends ModelBase implements IModelCustom
 				{
 					GL11.glPushMatrix();
 					ModelRenderer model = entry.getValue();
-					GL11.glTranslatef(model.rotationPointX / 16, model.rotationPointY / 16, model.rotationPointZ / 16);
+					GL11.glTranslatef(model.rotationPoxi / 16, model.rotationPoyi / 16, model.rotationPozi / 16);
 					GL11.glRotated(angle, rotX, rotY, rotZ);
-					GL11.glTranslatef(-model.rotationPointX / 16, -model.rotationPointY / 16, -model.rotationPointZ / 16);
+					GL11.glTranslatef(-model.rotationPoxi / 16, -model.rotationPoyi / 16, -model.rotationPozi / 16);
 					model.render(0.0625f);
 					GL11.glPopMatrix();
 				}

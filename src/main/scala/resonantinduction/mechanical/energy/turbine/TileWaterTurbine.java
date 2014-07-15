@@ -101,15 +101,15 @@ public class TileWaterTurbine extends TileTurbine
 				if (dir != currentDir && dir != currentDir.getOpposite())
 				{
 					Vector3 check = new Vector3(this).add(dir);
-					int blockID = worldObj.getBlockId(check.intX(), check.intY(), check.intZ());
-					int metadata = worldObj.getBlockMetadata(check.intX(), check.intY(), check.intZ());
+					int blockID = worldObj.getBlockId(check.xi(), check.yi(), check.zi());
+					int metadata = worldObj.getBlockMetadata(check.xi(), check.yi(), check.zi());
 
 					if (blockID == Block.waterMoving.blockID || blockID == Block.waterStill.blockID)
 					{
 						try
 						{
 							Method m = ReflectionHelper.findMethod(BlockFluid.class, null, new String[] { "getFlowVector", "func_72202_i" }, IBlockAccess.class, Integer.TYPE, Integer.TYPE, Integer.TYPE);
-							Vector3 vector = new Vector3((Vec3) m.invoke(Block.waterMoving, worldObj, check.intX(), check.intY(), check.intZ()));
+							Vector3 vector = new Vector3((Vec3) m.invoke(Block.waterMoving, worldObj, check.xi(), check.yi(), check.zi()));
 
 							if ((currentDir.offsetZ > 0 && vector.x < 0) || (currentDir.offsetZ < 0 && vector.x > 0) || (currentDir.offsetX > 0 && vector.z > 0) || (currentDir.offsetX < 0 && vector.z < 0))
 							{

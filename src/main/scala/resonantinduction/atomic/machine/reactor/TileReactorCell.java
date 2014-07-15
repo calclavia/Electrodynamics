@@ -185,9 +185,9 @@ public class TileReactorCell extends TileInventory implements IMultiBlockStructu
                     Vector3 spawnPos = new Vector3(this).add(spawnDir, 2);
                     spawnPos.add(0, Math.max(worldObj.rand.nextInt(getHeight()) - 1, 0), 0);
 
-                    if (worldObj.isAirBlock(spawnPos.intX(), spawnPos.intY(), spawnPos.intZ()))
+                    if (worldObj.isAirBlock(spawnPos.xi(), spawnPos.yi(), spawnPos.zi()))
                     {
-                        MinecraftForge.EVENT_BUS.post(new SpawnPlasmaEvent(worldObj, spawnPos.intX(), spawnPos.intY(), spawnPos.intZ(), TilePlasma.plasmaMaxTemperature));
+                        MinecraftForge.EVENT_BUS.post(new SpawnPlasmaEvent(worldObj, spawnPos.xi(), spawnPos.yi(), spawnPos.zi(), TilePlasma.plasmaMaxTemperature));
                         tank.drain(FluidContainerRegistry.BUCKET_VOLUME, true);
                     }
                 }
@@ -317,7 +317,7 @@ public class TileReactorCell extends TileInventory implements IMultiBlockStructu
                         leakPos.setBlock(worldObj, Atomic.blockRadioactive.blockID);
                         tank.drain(FluidContainerRegistry.BUCKET_VOLUME, true);
                     }
-                    else if (blockID == 0 || Block.blocksList[blockID].isBlockReplaceable(worldObj, leakPos.intX(), leakPos.intY(), leakPos.intZ()))
+                    else if (blockID == 0 || Block.blocksList[blockID].isBlockReplaceable(worldObj, leakPos.xi(), leakPos.yi(), leakPos.zi()))
                     {
                         if (tank.getFluid() != null)
                         {

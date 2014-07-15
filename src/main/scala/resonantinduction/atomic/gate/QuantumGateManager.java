@@ -19,7 +19,7 @@ public class QuantumGateManager
 	{
 		if (currentEntity != null && location != null && location.world instanceof WorldServer)
 		{
-			location.world.markBlockForUpdate(location.intX(), location.intY(), location.intZ());
+			location.world.markBlockForUpdate(location.xi(), location.yi(), location.zi());
 
 			int dimID = location.world.provider.dimensionId;
 

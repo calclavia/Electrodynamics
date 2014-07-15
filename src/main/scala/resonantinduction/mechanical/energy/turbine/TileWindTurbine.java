@@ -92,7 +92,7 @@ public class TileWindTurbine extends TileTurbine
 
         byte openAirBlocks = 0;
 
-        while (openAirBlocks < checkSize && worldObj.isAirBlock(check.intX(), check.intY(), check.intZ()))
+        while (openAirBlocks < checkSize && worldObj.isAirBlock(check.xi(), check.yi(), check.zi()))
         {
             check.add(checkDir);
             openAirBlocks++;

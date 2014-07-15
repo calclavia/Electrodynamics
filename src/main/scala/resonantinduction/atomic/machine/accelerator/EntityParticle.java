@@ -55,7 +55,7 @@ public class EntityParticle extends Entity implements IEntityAdditionalSpawnData
     public static boolean canSpawnParticle(World world, Vector3 pos)
     {
         Block block  = Block.blocksList[pos.getBlock(world)];
-        if (block != null && !block.isAirBlock(world, pos.intX(), pos.intY(), pos.intZ()))
+        if (block != null && !block.isAirBlock(world, pos.xi(), pos.yi(), pos.zi()))
         {
             return false;
         }
@@ -89,9 +89,9 @@ public class EntityParticle extends Entity implements IEntityAdditionalSpawnData
     @Override
     public void writeSpawnData(ByteArrayDataOutput data)
     {
-        data.writeInt(this.movementVector.intX());
-        data.writeInt(this.movementVector.intY());
-        data.writeInt(this.movementVector.intZ());
+        data.writeInt(this.movementVector.xi());
+        data.writeInt(this.movementVector.yi());
+        data.writeInt(this.movementVector.zi());
         data.writeInt(this.movementDirection.ordinal());
     }
 
@@ -127,7 +127,7 @@ public class EntityParticle extends Entity implements IEntityAdditionalSpawnData
         }
 
         /** Check if the accelerator tile entity exists. */
-        TileEntity t = this.worldObj.getBlockTileEntity(this.movementVector.intX(), this.movementVector.intY(), this.movementVector.intZ());
+        TileEntity t = this.worldObj.getBlockTileEntity(this.movementVector.xi(), this.movementVector.yi(), this.movementVector.zi());
 
         if (!(t instanceof TileAccelerator))
         {

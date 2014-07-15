@@ -547,9 +547,9 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
             {
                 universalelectricity.core.transform.vector.Vector3 vector = getPosition().add(dir);
 
-                if (hasMultimeter(vector.intX(), vector.intY(), vector.intZ()))
+                if (hasMultimeter(vector.xi(), vector.yi(), vector.zi()))
                 {
-                    connections[dir.ordinal()] = getMultimeter(vector.intX(), vector.intY(), vector.intZ());
+                    connections[dir.ordinal()] = getMultimeter(vector.xi(), vector.yi(), vector.zi());
                 }
             }
         }

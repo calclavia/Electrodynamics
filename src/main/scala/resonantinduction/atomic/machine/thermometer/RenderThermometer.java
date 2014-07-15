@@ -27,7 +27,7 @@ public class RenderThermometer extends TileEntitySpecialRenderer
 
             if (tile.trackCoordinate != null)
             {
-                RenderUtility.renderText(tile.trackCoordinate.intX() + ", " + tile.trackCoordinate.intY() + ", " + tile.trackCoordinate.intZ(), side, 0.5f, x, y - 0.3, z);
+                RenderUtility.renderText(tile.trackCoordinate.xi() + ", " + tile.trackCoordinate.yi() + ", " + tile.trackCoordinate.zi(), side, 0.5f, x, y - 0.3, z);
             }
         }
 

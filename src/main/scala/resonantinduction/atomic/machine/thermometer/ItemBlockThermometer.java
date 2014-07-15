@@ -30,7 +30,7 @@ public class ItemBlockThermometer extends ItemBlockSaved
         if (coord != null)
         {
             par3List.add("\uaa74" + LanguageUtility.getLocal("tooltip.trackingTemperature"));
-            par3List.add("X: " + coord.intX() + ", Y: " + coord.intY() + ", Z: " + coord.intZ());
+            par3List.add("X: " + coord.xi() + ", Y: " + coord.yi() + ", Z: " + coord.zi());
             // TODO: Add client side temperature.
         }
         else

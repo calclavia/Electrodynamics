@@ -82,13 +82,13 @@ public class TileFilter extends TileFilterable implements IFilterable
 
             Block bAbove = Block.blocksList[checkAbove.getBlock(worldObj)];
 
-            if (bAbove instanceof BlockFluidMixture && worldObj.isAirBlock(checkBelow.intX(), checkBelow.intY(), checkBelow.intZ()))
+            if (bAbove instanceof BlockFluidMixture && worldObj.isAirBlock(checkBelow.xi(), checkBelow.yi(), checkBelow.zi()))
             {
                 worldObj.spawnParticle("dripWater", xCoord + 0.5, yCoord, zCoord + 0.5, 0, 0, 0);
 
                 /** Leak the fluid down. */
                 BlockFluidMixture fluidBlock = (BlockFluidMixture) bAbove;
-                int amount = fluidBlock.getQuantaValue(worldObj, checkAbove.intX(), checkAbove.intY(), checkAbove.intZ());
+                int amount = fluidBlock.getQuantaValue(worldObj, checkAbove.xi(), checkAbove.yi(), checkAbove.zi());
                 int leakAmount = 2;
 
                 /** Drop item from fluid. */
@@ -101,7 +101,7 @@ public class TileFilter extends TileFilterable implements IFilterable
                 int remaining = amount - leakAmount;
 
                 /** Remove liquid from top. */
-                fluidBlock.setQuanta(worldObj, checkAbove.intX(), checkAbove.intY(), checkAbove.intZ(), remaining);
+                fluidBlock.setQuanta(worldObj, checkAbove.xi(), checkAbove.yi(), checkAbove.zi(), remaining);
                 
                 // Since there is air below us we will spawn water.
                 checkBelow.setBlock(worldObj, Block.waterMoving.blockID);

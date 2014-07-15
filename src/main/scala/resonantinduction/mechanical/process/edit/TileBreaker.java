@@ -108,11 +108,11 @@ public class TileBreaker extends TileBase implements IRotatable, IPacketReceiver
 
 			if (block != null)
 			{
-				int candidateMeta = world().getBlockMetadata(check.intX(), check.intY(), check.intZ());
+				int candidateMeta = world().getBlockMetadata(check.xi(), check.yi(), check.zi());
 				boolean flag = true;
 
 				//Get items dropped
-				ArrayList<ItemStack> drops = block.getBlockDropped(getWorldObj(), check.intX(), check.intY(), check.intZ(), candidateMeta, 0);
+				ArrayList<ItemStack> drops = block.getBlockDropped(getWorldObj(), check.xi(), check.yi(), check.zi(), candidateMeta, 0);
 
 				for (ItemStack stack : drops)
 				{
@@ -127,10 +127,10 @@ public class TileBreaker extends TileBase implements IRotatable, IPacketReceiver
 				}
 
 				//Destroy block
-				ResonantInduction.proxy.renderBlockParticle(worldObj, check.intX(), check.intY(), check.intZ(), new Vector3((Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3), world().getBlockId(check.intX(), check.intY(), check.intZ()), 1);
+				ResonantInduction.proxy.renderBlockParticle(worldObj, check.xi(), check.yi(), check.zi(), new Vector3((Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3), world().getBlockId(check.xi(), check.yi(), check.zi()), 1);
 
-				getWorldObj().destroyBlock(check.intX(), check.intY(), check.intZ(), false);
-				getWorldObj().playAuxSFX(1012, check.intX(), check.intY(), check.intZ(), 0);
+				getWorldObj().destroyBlock(check.xi(), check.yi(), check.zi(), false);
+				getWorldObj().playAuxSFX(1012, check.xi(), check.yi(), check.zi(), 0);
 
 			}
 		}

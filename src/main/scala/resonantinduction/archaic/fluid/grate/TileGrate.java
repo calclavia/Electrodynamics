@@ -226,7 +226,7 @@ public class TileGrate extends TilePressureNode implements IRotatable
 			{
 				return this.iterations - wr.iterations;
 			}
-			return this.position.intY() - wr.position.intY();
+			return this.position.yi() - wr.position.yi();
 		}
 	}
 
@@ -382,7 +382,7 @@ public class TileGrate extends TilePressureNode implements IRotatable
 			{
 				Vector3 newPosition = next.position.clone().add(ForgeDirection.getOrientation(i));
 
-				if (!this.navigationMap.containsKey(newPosition) && !(!fillOver && newPosition.intY() > y()))
+				if (!this.navigationMap.containsKey(newPosition) && !(!fillOver && newPosition.yi() > y()))
 				{
 					this.navigationMap.put(newPosition, next.position);
 					this.workingNodes.add(new ComparableVector(newPosition, next.iterations + 1));

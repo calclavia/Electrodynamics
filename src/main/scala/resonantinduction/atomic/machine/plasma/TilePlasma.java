@@ -99,7 +99,7 @@ public class TilePlasma extends TileBase
 
                 if (!(tileEntity instanceof TilePlasma))
                 {
-                    MinecraftForge.EVENT_BUS.post(new SpawnPlasmaEvent(worldObj, diDian.intX(), diDian.intY(), diDian.intZ(), (int) temperature));
+                    MinecraftForge.EVENT_BUS.post(new SpawnPlasmaEvent(worldObj, diDian.xi(), diDian.yi(), diDian.zi(), (int) temperature));
                 }
             }
         }

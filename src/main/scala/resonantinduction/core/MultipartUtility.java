@@ -34,7 +34,7 @@ public class MultipartUtility
 
 	public static TMultiPart getMultipart(VectorWorld vector, int partMap)
 	{
-		return getMultipart(vector.world, vector.intX(), vector.intY(), vector.intZ(), partMap);
+		return getMultipart(vector.world, vector.xi(), vector.yi(), vector.zi(), partMap);
 	}
 
 	public static TMultiPart getMultipart(World world, int x, int y, int z, int partMap)
