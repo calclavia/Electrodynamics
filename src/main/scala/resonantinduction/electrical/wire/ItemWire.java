@@ -14,7 +14,7 @@ import org.lwjgl.input.Keyboard;
 
 import resonant.lib.render.EnumColor;
 import resonant.lib.utility.LanguageUtility;
-import resonantinduction.core.MultipartUtility;
+import resonantinduction.core.prefab.part.MultipartUtility;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantTab;
 import resonantinduction.electrical.wire.flat.PartFlatWire;

@@ -66,7 +66,7 @@ abstract class TileFluidNode(material: Material) extends SpatialTile(material) w
   {
     super.writeToNBT(nbt)
     nbt.setInteger("colorID", colorID)
-    nbt.setCompoundTag("FluidTank", tank.writeToNBT(new NBTTagCompound))
+    nbt.setTag("FluidTank", tank.writeToNBT(new NBTTagCompound))
   }
 
   def write(buf: ByteBuf, id: Int)
@@ -98,20 +98,20 @@ abstract class TileFluidNode(material: Material) extends SpatialTile(material) w
     {
       if (id == TileFluidNode.PACKET_DESCRIPTION)
       {
-        colorID = data.readInt
-        renderSides = data.readByte
+        colorID = buf.readInt
+        renderSides = buf.readByte
         tank = buf.readTank()
       }
       else if (id == TileFluidNode.PACKET_RENDER)
       {
-        colorID = data.readInt
-        renderSides = data.readByte
+        colorID = buf.readInt
+        renderSides = buf.readByte
         markRender
       }
       else if (id == TileFluidNode.PACKET_TANK)
       {
         tank = buf.readTank()
-        pressure = data.readInt
+        pressure = buf.readInt
         updateLight()
       }
     }
@@ -135,7 +135,7 @@ abstract class TileFluidNode(material: Material) extends SpatialTile(material) w
   {
     if (!worldObj.isRemote)
     {
-      if (!FluidUtility.matchExact(prevStack, tank.getFluid) || ticks eq 0)
+      if (!FluidUtility.matchExact(prevStack, tank.getFluid) || ticks == 0)
       {
         markTankUpdate = true
         prevStack = if (tank.getFluid != null) tank.getFluid.copy else null

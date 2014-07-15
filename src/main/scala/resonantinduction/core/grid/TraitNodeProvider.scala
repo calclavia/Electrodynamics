@@ -2,11 +2,11 @@ package resonantinduction.core.grid
 
 import codechicken.multipart.{PartMap, TileMultipart}
 import net.minecraftforge.common.util.ForgeDirection
-import universalelectricity.api.core.grid.INodeProvider
+import universalelectricity.api.core.grid.{INode, INodeProvider}
 
 trait TraitNodeProvider extends TileMultipart with INodeProvider
 {
-  def getNode[N](nodeType: Class[N], from: ForgeDirection): N =
+  def getNode[N <: INode](nodeType: Class[N], from: ForgeDirection): N =
   {
     var part = partMap(from.ordinal)
 
@@ -16,9 +16,9 @@ trait TraitNodeProvider extends TileMultipart with INodeProvider
     }
     if (part.isInstanceOf[INodeProvider])
     {
-      return (part.asInstanceOf[INodeProvider]).getNode(nodeType, from)
+      return part.asInstanceOf[INodeProvider].getNode(nodeType, from)
     }
 
-    return null
+    return null.asInstanceOf[N]
   }
 }

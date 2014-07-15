@@ -7,19 +7,20 @@ import java.util.logging.Logger
  *
  * @author Calclavia
  */
-object Reference
+final object Reference
 {
   final val idPrefix = "ResonantInduction"
+  final val coreID = idPrefix + ":Core"
 
   /** The official name of the mod */
-  final val name: String = "Resonant Induction"
+  final val name = "Resonant Induction"
   final val logger = Logger.getLogger(Reference.name)
 
-  final val majorVersion: String = "@MAJOR@"
-  final val minorVersion: String = "@MINOR@"
-  final val revisionVersion: String = "@REVIS@"
-  final val build: String = "@BUILD@"
-  final val version: String = majorVersion + "." + minorVersion + "." + revisionVersion
+  final val majorVersion = "@MAJOR@"
+  final val minorVersion = "@MINOR@"
+  final val revisionVersion = "@REVIS@"
+  final val build = "@BUILD@"
+  final val version = majorVersion + "." + minorVersion + "." + revisionVersion
   final val channel: String = "resonindc"
   /**
    * Directory Information

@@ -126,7 +126,7 @@ object ResourceGenerator
     }
   }
 
-  def generateOreResources
+  def generateOreResources()
   {
     OreDictionary.registerOre("ingotGold", Item.ingotGold)
     OreDictionary.registerOre("ingotIron", Item.ingotIron)

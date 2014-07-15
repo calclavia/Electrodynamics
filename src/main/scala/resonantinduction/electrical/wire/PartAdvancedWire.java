@@ -14,7 +14,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.util.ForgeDirection;
 import resonant.lib.prefab.damage.ElectricalDamage;
-import resonantinduction.core.MultipartUtility;
+import resonantinduction.core.prefab.part.MultipartUtility;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.electricity.IElectricalNetwork;
 import universalelectricity.api.energy.IConductor;

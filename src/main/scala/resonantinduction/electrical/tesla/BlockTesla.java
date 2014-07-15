@@ -14,7 +14,7 @@ import resonant.lib.render.block.BlockRenderingHandler;
 import resonant.lib.utility.LanguageUtility;
 import resonant.lib.utility.LinkUtility;
 import resonant.lib.utility.WrenchUtility;
-import resonantinduction.core.MultipartUtility;
+import resonantinduction.core.prefab.part.MultipartUtility;
 import resonantinduction.core.Reference;
 import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.vector.VectorWorld;

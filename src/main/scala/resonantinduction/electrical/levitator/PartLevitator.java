@@ -25,7 +25,7 @@ import resonant.lib.render.EnumColor;
 import resonant.lib.utility.LinkUtility;
 import resonant.lib.utility.WrenchUtility;
 import resonant.lib.utility.inventory.InventoryUtility;
-import resonantinduction.core.MultipartUtility;
+import resonantinduction.core.prefab.part.MultipartUtility;
 import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.part.PartFace;
 import resonantinduction.electrical.Electrical;

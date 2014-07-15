@@ -16,7 +16,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
-import resonantinduction.core.MultipartUtility;
+import resonantinduction.core.prefab.part.MultipartUtility;
 import resonantinduction.electrical.wire.EnumWireMaterial;
 import resonantinduction.electrical.wire.PartAdvancedWire;
 import codechicken.lib.colour.Colour;

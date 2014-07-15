@@ -17,13 +17,10 @@ import resonantinduction.core.resource.ResourceGenerator
 /** The core module of Resonant Induction
   *
   * @author Calclavia */
-@Mod(modid = ResonantInduction.ID, name = ResonantInduction.NAME, version = Reference.version, modLanguage = "scala", dependencies = "required-after:ForgeMultipart@[1.0.0.244,);required-after:ResonantEngine;before:ThermalExpansion;before:Mekanism")
+@Mod(modid = Reference.coreID, name = Reference.name, version = Reference.version, modLanguage = "scala", dependencies = "required-after:ForgeMultipart@[1.0.0.244,);required-after:ResonantEngine;before:ThermalExpansion;before:Mekanism")
 @ModstatInfo(prefix = "resonantin")
 object ResonantInduction
 {
-  /** Mod Information */
-  final val ID: String = Reference.idPrefix + ":Core"
-
   /** Packets */
   val packetHandler = new PacketManager(Reference.channel)
   val loadables = new LoadableHandler
@@ -43,13 +40,13 @@ object ResonantInduction
     /**
      * Registrations
      */
-    NetworkRegistry.instance.registerGuiHandler(this, proxy)
+    NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy)
     Modstats.instance.getReporter.registerMod(this)
 
-    Settings.config = new Configuration(event.getSuggestedConfigurationFile)
+    Settings.config = new Configuration(evt.getSuggestedConfigurationFile)
     ConfigHandler.sync(Settings, Settings.config)
 
-    MinecraftForge.EVENT_BUS.register(ResourceGenerator.INSTANCE)
+    MinecraftForge.EVENT_BUS.register(ResourceGenerator)
     MinecraftForge.EVENT_BUS.register(new TextureHookHandler)
 
     loadables.applyModule(proxy)
@@ -58,7 +55,7 @@ object ResonantInduction
 
     proxy.preInit()
 
-    ResonantTab.itemStack = new ItemStack(blockIndustrialStone)
+    ResonantTab.itemStack = new ItemStack(CoreContent.decoration)
   }
 
   @EventHandler

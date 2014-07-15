@@ -1,13 +1,13 @@
 package resonantinduction.core
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent
-import net.minecraft.item.ItemStack
+import net.minecraft.block.Block
 import net.minecraftforge.common.config.Configuration
 import resonant.api.recipe.QuantumAssemblerRecipes
 import resonant.lib.config.Config
 import resonant.lib.config.ConfigEvent.PostConfigEvent
 import resonant.lib.prefab.poison.PotionRadiation
-
+import scala.collection.convert.wrapAll._
 /** @author Calclavia */
 object Settings
 {
@@ -50,27 +50,14 @@ object Settings
   @Config var waterPerDeutermium: Int = 4
   @Config var deutermiumPerTritium: Int = 4
   @Config(comment = "Put a list of block/item IDs to be used by the Quantum Assembler. Separate by commas, no space.")
-  var quantumAssemblerRecipes: Array[Int] = new Array[Int](0)
+  var quantumAssemblerRecipes: Array[String] = _
   @Config var darkMatterSpawnChance: Double = 0.2
   @Config var steamMultiplier: Double = 1
 
   @SubscribeEvent
   def configEvent(evt: PostConfigEvent)
   {
-    for (recipeID <- quantumAssemblerRecipes)
-    {
-      try
-      {
-        QuantumAssemblerRecipes.addRecipe(new ItemStack(recipeID, 1, 0))
-      }
-      catch
-        {
-          case e: Exception =>
-          {
-            e.printStackTrace
-          }
-        }
-    }
+    QuantumAssemblerRecipes.RECIPES.addAll(quantumAssemblerRecipes.map(Block.blockRegistry.getObject(_).asInstanceOf[Block]).toSet)
     PotionRadiation.INSTANCE.getId
   }
 }
