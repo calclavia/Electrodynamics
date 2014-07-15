@@ -11,9 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 import resonant.lib.utility.LanguageUtility;
-import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.ResonantTab;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -22,13 +20,11 @@ import cpw.mods.fml.relauncher.SideOnly;
  *
  * @author Calclavia
  */
-public class ItemOreResource extends Item
+public class ItemResourceDust extends Item
 {
-
-
 	private Block block = ResonantInduction.blockRefinedDust;
 
-	public ItemOreResource()
+	public ItemResourceDust()
 	{
 		setHasSubtypes(true);
 		setMaxDamage(0);
@@ -190,7 +186,7 @@ public class ItemOreResource extends Item
 		/**
 		 * Auto-color based on the texture of the ingot.
 		 */
-		String name = ItemOreResource.getMaterialFromStack(itemStack);
+		String name = ItemResourceDust.getMaterialFromStack(itemStack);
 
 		if (ResourceGenerator.materialColorCache.containsKey(name))
 		{

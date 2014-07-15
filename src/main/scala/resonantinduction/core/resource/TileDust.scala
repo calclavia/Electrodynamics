@@ -53,7 +53,7 @@ class TileDust extends TileMaterial(Material.sand)
 
   override def onPlaced(entityLiving: EntityLivingBase, itemStack: ItemStack)
   {
-    name = ItemOreResource.getMaterialFromStack(itemStack)
+    name = ItemResourceDust.getMaterialFromStack(itemStack)
   }
 
   override def onPostBlockPlaced(world: World, x: Int, y: Int, z: Int, metadata: Int)
