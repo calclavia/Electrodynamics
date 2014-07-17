@@ -50,23 +50,14 @@ object MultipartUtility
     if (!w.blockExists(x, y, z)) return _default
     val b: Block = w.getBlock(x, y, z)
     if (b == null) return false
-    if (b eq Blocks.glowstone || b eq Blocks.piston || b eq Blocks.sticky_piston || b eq Blocks.piston_extension) return true
+    if (b == Blocks.glowstone || b == Blocks.piston || b == Blocks.sticky_piston || b == Blocks.piston_extension) return true
     return b.isSideSolid(w, x, y, z, side)
   }
 
+  val dyes: Array[String] = Array("dyeBlack", "dyeRed", "dyeGreen", "dyeBrown", "dyeBlue", "dyePurple", "dyeCyan", "dyeLightGray", "dyeGray", "dyePink", "dyeLime", "dyeYellow", "dyeLightBlue", "dyeMagenta", "dyeOrange", "dyeWhite")
+
   def isDye(is: ItemStack): Int =
   {
-    val dyes: Array[String] = Array("dyeBlack", "dyeRed", "dyeGreen", "dyeBrown", "dyeBlue", "dyePurple", "dyeCyan", "dyeLightGray", "dyeGray", "dyePink", "dyeLime", "dyeYellow", "dyeLightBlue", "dyeMagenta", "dyeOrange", "dyeWhite")
-    {
-      var i: Int = 0
-      while (i < dyes.length)
-      {
-        {
-          if (OreDictionary.getOreID(is) != -1 && (OreDictionary.getOreName(OreDictionary.getOreID(is)) == dyes(i))) return i
-        }
-        ({i += 1; i - 1 })
-      }
-    }
-    return -1
+    return (0 until dyes.size) find (i => OreDictionary.getOreID(is) != -1 && (OreDictionary.getOreName(OreDictionary.getOreID(is)) == dyes(i))) getOrElse (-1)
   }
 }

@@ -3,15 +3,15 @@ package resonantinduction.core.resource
 import java.awt.Color
 import java.awt.image.BufferedImage
 import java.io.InputStream
-import java.util.{ArrayList, HashMap, Iterator, List}
+import java.util.{ArrayList, HashMap, List}
 import javax.imageio.ImageIO
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent
-import cpw.mods.fml.common.registry.{GameRegistry, LanguageRegistry}
+import cpw.mods.fml.common.registry.GameRegistry
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.block.Block
 import net.minecraft.client.Minecraft
-import net.minecraft.item.crafting.FurnaceRecipes
+import net.minecraft.init.{Blocks, Items}
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.util.{IIcon, ResourceLocation}
 import net.minecraftforge.client.event.TextureStitchEvent
@@ -19,13 +19,14 @@ import net.minecraftforge.fluids.{BlockFluidFinite, FluidContainerRegistry, Flui
 import net.minecraftforge.oredict.OreDictionary
 import resonant.api.recipe.MachineRecipes
 import resonant.lib.config.Config
+import resonant.lib.recipe.Recipes
 import resonant.lib.utility.LanguageUtility
 import resonantinduction.core.ResonantInduction.RecipeType
 import resonantinduction.core.prefab.FluidColored
 import resonantinduction.core.resource.fluid.{BlockFluidMaterial, BlockFluidMixture}
 import resonantinduction.core.{CoreContent, Reference, ResonantInduction, Settings}
-import scala.collection.JavaConversions._
 
+import scala.collection.JavaConversions._
 import scala.collection.mutable
 
 /**
@@ -53,6 +54,27 @@ object ResourceGenerator
   @Config(category = "resource-generator", comment = "Allow the Resource Generator to make ore dictionary compatible recipes?")
   private val allowOreDictCompatibility: Boolean = true
 
+  /**
+   * Automatically generate resources from available ingots
+   */
+  def generateOreResources()
+  {
+    OreDictionary.registerOre("ingotGold", Items.gold_ingot)
+    OreDictionary.registerOre("ingotIron", Items.iron_ingot)
+    OreDictionary.registerOre("oreGold", Blocks.gold_ore)
+    OreDictionary.registerOre("oreIron", Blocks.iron_ore)
+    OreDictionary.registerOre("oreLapis", Blocks.lapis_ore)
+    MachineRecipes.INSTANCE.addRecipe(RecipeType.SMELTER.name, new FluidStack(FluidRegistry.LAVA, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(Blocks.stone))
+    MachineRecipes.INSTANCE.addRecipe(RecipeType.CRUSHER.name, Blocks.cobblestone, Blocks.gravel)
+    MachineRecipes.INSTANCE.addRecipe(RecipeType.CRUSHER.name, Blocks.stone, Blocks.cobblestone)
+    MachineRecipes.INSTANCE.addRecipe(RecipeType.CRUSHER.name, Blocks.chest, new ItemStack(Blocks.planks, 7, 0))
+    MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER.name, Blocks.cobblestone, Blocks.sand)
+    MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER.name, Blocks.gravel, Blocks.sand)
+    MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER.name, Blocks.glass, Blocks.sand)
+
+    materials filter (name => OreDictionary.getOres("ore" + LanguageUtility.capitalizeFirst(name)).size > 0) foreach (generate)
+  }
+
   def generate(materialName: String)
   {
     val nameCaps = LanguageUtility.capitalizeFirst(materialName)
@@ -73,37 +95,35 @@ object ResourceGenerator
 
     if (enableAllFluids)
     {
-      val fluidMolten: FluidColored = new FluidColored(materialNameToMolten(materialName))
-      fluidMolten.setDensity(7)
-      fluidMolten.setViscosity(5000)
-      fluidMolten.setTemperature(273 + 1538)
+      /**
+       * Generate molten fluid
+       */
+      val fluidMolten = new FluidColored(materialNameToMolten(materialName)).setDensity(7).setViscosity(5000).setTemperature(273 + 1538)
       FluidRegistry.registerFluid(fluidMolten)
-      LanguageRegistry.instance.addStringLocalization(fluidMolten.getUnlocalizedName, LanguageUtility.getLocal("tooltip.molten") + " " + localizedName)
-      val blockFluidMaterial: BlockFluidMaterial = new BlockFluidMaterial(fluidMolten)
-      GameRegistry.registerBlock(blockFluidMaterial, "molten" + nameCaps)
-      ResonantInduction.blockMoltenFluid.put(getID(materialName), blockFluidMaterial)
-      FluidContainerRegistry.registerFluidContainer(fluidMolten, CoreContent.BucketMolten.getStackFromMaterial(materialName))
-      val fluidMixture: FluidColored = new FluidColored(materialNameToMixture(materialName))
+      val blockFluidMaterial = new BlockFluidMaterial(fluidMolten)
+      CoreContent.manager.newBlock("molten" + nameCaps, blockFluidMaterial)
+      FluidContainerRegistry.registerFluidContainer(fluidMolten, CoreContent.bucketMolten.getStackFromMaterial(materialName))
+
+      /**
+       * Generate mixture fluid
+       */
+      val fluidMixture = new FluidColored(materialNameToMixture(materialName))
       FluidRegistry.registerFluid(fluidMixture)
-      val blockFluidMixture: BlockFluidMixture = new BlockFluidMixture(fluidMixture)
-      LanguageRegistry.instance.addStringLocalization(fluidMixture.getUnlocalizedName, localizedName + " " + LanguageUtility.getLocal("tooltip.mixture"))
+      val blockFluidMixture = new BlockFluidMixture(fluidMixture)
       GameRegistry.registerBlock(blockFluidMixture, "mixture" + nameCaps)
-      ResonantInduction.blockMixtureFluids.put(getID(materialName), blockFluidMixture)
-      FluidContainerRegistry.registerFluidContainer(fluidMixture, CoreContent.BucketMixture.getStackFromMaterial(materialName))
-      
+      FluidContainerRegistry.registerFluidContainer(fluidMixture, CoreContent.bucketMixture.getStackFromMaterial(materialName))
+
       if (allowOreDictCompatibility)
-      {
         MachineRecipes.INSTANCE.addRecipe(RecipeType.SMELTER.name, new FluidStack(fluidMolten, FluidContainerRegistry.BUCKET_VOLUME), "ingot" + nameCaps)
-      }
       else
-      {
         MachineRecipes.INSTANCE.addRecipe(RecipeType.SMELTER.name, new FluidStack(fluidMolten, FluidContainerRegistry.BUCKET_VOLUME), "ingot" + nameCaps)
-      }
+
     }
 
     val dust: ItemStack = CoreContent.dust.getStackFromMaterial(materialName)
     val rubble: ItemStack = CoreContent.rubble.getStackFromMaterial(materialName)
     val refinedDust: ItemStack = CoreContent.refinedDust.getStackFromMaterial(materialName)
+
     if (allowOreDictCompatibility)
     {
       OreDictionary.registerOre("rubble" + nameCaps, CoreContent.rubble.getStackFromMaterial(materialName))
@@ -117,42 +137,14 @@ object ResourceGenerator
       MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER.name, rubble, dust, dust)
       MachineRecipes.INSTANCE.addRecipe(RecipeType.MIXER.name, dust, refinedDust)
     }
-    FurnaceRecipes.smelting.addSmelting(dust.itemID, dust.getItemDamage, OreDictionary.getOres("ingot" + nameCaps).get(0).copy, 0.7f)
-    val smeltResult: ItemStack = OreDictionary.getOres("ingot" + nameCaps).get(0).copy
-    FurnaceRecipes.smelting.addSmelting(refinedDust.itemID, refinedDust.getItemDamage, smeltResult, 0.7f)
+
+    Recipes +=(dust.copy, OreDictionary.getOres("ingot" + nameCaps).get(0).copy, 0.7f)
+    val smeltResult = OreDictionary.getOres("ingot" + nameCaps).get(0).copy
+    Recipes +=(refinedDust.copy, smeltResult, 0.7f)
+
     if (OreDictionary.getOres("ore" + nameCaps).size > 0)
     {
       MachineRecipes.INSTANCE.addRecipe(RecipeType.CRUSHER.name, "ore" + nameCaps, "rubble" + nameCaps)
-    }
-  }
-
-  def generateOreResources()
-  {
-    OreDictionary.registerOre("ingotGold", Item.ingotGold)
-    OreDictionary.registerOre("ingotIron", Item.ingotIron)
-    OreDictionary.registerOre("oreGold", Block.oreGold)
-    OreDictionary.registerOre("oreIron", Block.oreIron)
-    OreDictionary.registerOre("oreLapis", Block.oreLapis)
-    MachineRecipes.INSTANCE.addRecipe(RecipeType.SMELTER.name, new FluidStack(FluidRegistry.LAVA, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(Block.stone))
-    MachineRecipes.INSTANCE.addRecipe(RecipeType.CRUSHER.name, Block.cobblestone, Block.gravel)
-    MachineRecipes.INSTANCE.addRecipe(RecipeType.CRUSHER.name, Block.stone, Block.cobblestone)
-    MachineRecipes.INSTANCE.addRecipe(RecipeType.CRUSHER.name, Block.chest, new ItemStack(Block.planks, 7, 0))
-    MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER.name, Block.cobblestone, Block.sand)
-    MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER.name, Block.gravel, Block.sand)
-    MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER.name, Block.glass, Block.sand)
-    val it: Iterator[String] = materials.keySet.iterator
-    while (it.hasNext)
-    {
-      val materialName: String = it.next
-      val nameCaps: String = LanguageUtility.capitalizeFirst(materialName)
-      if (OreDictionary.getOres("ore" + nameCaps).size > 0)
-      {
-        generate(materialName)
-      }
-      else
-      {
-        it.remove
-      }
     }
   }
 
@@ -184,7 +176,8 @@ object ResourceGenerator
    * @param itemStack
    * @return The RGB hexadecimal color code.
    */
-  @SideOnly(Side.CLIENT) def getAverageColor(itemStack: ItemStack): Int =
+  @SideOnly(Side.CLIENT)
+  def getAverageColor(itemStack: ItemStack): Int =
   {
     var totalR: Int = 0
     var totalG: Int = 0
@@ -201,37 +194,27 @@ object ResourceGenerator
       var iconString: String = icon.getIconName
       if (iconString != null && !iconString.contains("MISSING_ICON_ITEM"))
       {
-        iconString = (if (iconString.contains(":")) iconString.replace(":", ":" + Reference.ITEM_TEXTURE_DIRECTORY) else Reference.ITEM_TEXTURE_DIRECTORY + iconString) + ".png"
+        iconString = (if (iconString.contains(":")) iconString.replace(":", ":" + Reference.itemTextureDirectory) else Reference.itemTextureDirectory + iconString) + ".png"
         val textureLocation: ResourceLocation = new ResourceLocation(iconString)
         val inputstream: InputStream = Minecraft.getMinecraft.getResourceManager.getResource(textureLocation).getInputStream
         val bufferedimage: BufferedImage = ImageIO.read(inputstream)
         val width: Int = bufferedimage.getWidth
         val height: Int = bufferedimage.getWidth
+
+        /**
+         * Read every single pixel of the texture.
+         */
+        for (x <- 0 until width; y <- 0 until height)
         {
-          var x: Int = 0
-          while (x < width)
+          val rgb: Color = new Color(bufferedimage.getRGB(x, y))
+          val luma: Double = 0.2126 * rgb.getRed + 0.7152 * rgb.getGreen + 0.0722 * rgb.getBlue
+
+          if (luma > 40)
           {
-            {
-              {
-                var y: Int = 0
-                while (y < height)
-                {
-                  {
-                    val rgb: Color = new Color(bufferedimage.getRGB(x, y))
-                    val luma: Double = 0.2126 * rgb.getRed + 0.7152 * rgb.getGreen + 0.0722 * rgb.getBlue
-                    if (luma > 40)
-                    {
-                      totalR += rgb.getRed
-                      totalG += rgb.getGreen
-                      totalB += rgb.getBlue
-                      colorCount += 1
-                    }
-                  }
-                  ({y += 1; y - 1 })
-                }
-              }
-            }
-            ({x += 1; x - 1 })
+            totalR += rgb.getRed
+            totalG += rgb.getGreen
+            totalB += rgb.getBlue
+            colorCount += 1
           }
         }
       }
@@ -249,7 +232,7 @@ object ResourceGenerator
       {
         case e: Exception =>
         {
-          ResonantInduction.LOGGER.fine("Failed to compute colors for: " + item)
+          Reference.logger.fine("Failed to compute colors for: " + item)
         }
       }
     return 0xFFFFFF
@@ -287,17 +270,12 @@ object ResourceGenerator
 
   def getMixture(name: String): BlockFluidFinite =
   {
-    return ResonantInduction.blockMixtureFluids.get(getID(name))
+    return Block.blockRegistry.getObject("mixture" + name).asInstanceOf[BlockFluidFinite]
   }
 
   def getMolten(name: String): BlockFluidFinite =
   {
-    return ResonantInduction.blockMoltenFluid.get(getID(name))
-  }
-
-  def getName(id: Int): String =
-  {
-    return materials.inverse.get(id)
+    return Block.blockRegistry.getObject("molten" + LanguageUtility.capitalizeFirst(name)).asInstanceOf[BlockFluidFinite]
   }
 
   def getName(itemStack: ItemStack): String =
@@ -314,7 +292,8 @@ object ResourceGenerator
     return 0xFFFFFF
   }
 
-  @Deprecated def getMaterials: List[String] =
+  @Deprecated
+  def getMaterials: List[String] =
   {
     val returnMaterials: List[String] = new ArrayList[String]
     {
@@ -324,7 +303,7 @@ object ResourceGenerator
         {
           returnMaterials.add(getName(i))
         }
-        ({i += 1; i - 1 })
+        i += 1
       }
     }
     return returnMaterials

@@ -1,24 +1,22 @@
 package resonantinduction.core.grid.fluid.pressure
 
-import java.util.{HashMap, Iterator}
-
-import codechicken.multipart.TMultiPart
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.tileentity.TileEntity
-import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.{FluidStack, FluidTank, IFluidHandler}
 import resonantinduction.core.grid.MultipartNode
+import resonantinduction.core.grid.fluid.distribution.TFluidDistributor
 import universalelectricity.api.core.grid.INodeProvider
-import universalelectricity.core.grid.Node
-import universalelectricity.core.transform.vector.Vector3
 
-class FluidPressureNode(parent: INodeProvider) extends MultipartNode[FluidPressureNode](parent)
+import scala.collection.convert.wrapAll._
+
+class FluidPressureNode(parent: INodeProvider) extends MultipartNode[AnyRef](parent)
 {
   var maxFlowRate: Int = 20
   var maxPressure: Int = 100
-  protected var connectionMap: Byte = Byte.parseByte("111111", 2)
-  private var pressure: Int = 0
+  protected var connectionMap: Byte = java.lang.Byte.parseByte("111111", 2)
+  private var pressure = 0
+
+  def genericParent = parent.asInstanceOf[TFluidDistributor]
 
   def setConnection(connectionMap: Byte): FluidPressureNode =
   {
@@ -35,27 +33,28 @@ class FluidPressureNode(parent: INodeProvider) extends MultipartNode[FluidPressu
     }
   }
 
-  protected def updatePressure
+  protected def updatePressure()
   {
-    var totalPressure: Int = 0
-    var findCount: Int = 0
-    var minPressure: Int = 0
-    var maxPressure: Int = 0
-    val it: Iterator[Map.Entry[AnyRef, ForgeDirection]] = new HashMap[_, _](connections).entrySet.iterator
-    while (it.hasNext)
+    var totalPressure = 0
+    val connectionSize = connections.size
+    var minPressure = 0
+    var maxPressure = 0
+
+    connections
+    .filterKeys(_.isInstanceOf[FluidPressureNode])
+    .map({ case (k: AnyRef, v: ForgeDirection) => (k.asInstanceOf[FluidPressureNode], v) })
+    .foreach
     {
-      val entry: Map.Entry[AnyRef, ForgeDirection] = it.next
-      val obj: AnyRef = entry.getKey
-      if (obj.isInstanceOf[FluidPressureNode])
+      case (node: FluidPressureNode, dir: ForgeDirection) =>
       {
-        val pressure: Int = (obj.asInstanceOf[FluidPressureNode]).getPressure(entry.getValue.getOpposite)
+        val pressure = node.getPressure(dir.getOpposite)
         minPressure = Math.min(pressure, minPressure)
         maxPressure = Math.max(pressure, maxPressure)
         totalPressure += pressure
-        findCount += 1
       }
     }
-    if (findCount == 0)
+
+    if (connectionSize == 0)
     {
       setPressure(0)
     }
@@ -69,47 +68,50 @@ class FluidPressureNode(parent: INodeProvider) extends MultipartNode[FluidPressu
       {
         maxPressure -= 1
       }
-      setPressure(Math.max(minPressure, Math.min(maxPressure, totalPressure / findCount + Integer.signum(totalPressure))))
+
+      setPressure(Math.max(minPressure, Math.min(maxPressure, totalPressure / connectionSize + Integer.signum(totalPressure))))
     }
   }
 
   def distribute
   {
-    val it: Iterator[Map.Entry[AnyRef, ForgeDirection]] = new HashMap[_, _](connections).entrySet.iterator
-    while (it.hasNext)
+    connections.foreach
     {
-      val entry: Map.Entry[_, ForgeDirection] = it.next
-      val obj: AnyRef = entry.getKey
-      val dir: ForgeDirection = entry.getValue
-
-      if (obj.isInstanceOf[FluidPressureNode])
+      case (obj: AnyRef, dir: ForgeDirection) =>
       {
-        val otherNode: FluidPressureNode = obj.asInstanceOf[FluidPressureNode]
-        val pressureA: Int = getPressure(dir)
-        val pressureB: Int = otherNode.getPressure(dir.getOpposite)
-        if (pressureA >= pressureB)
+        if (obj.isInstanceOf[FluidPressureNode])
         {
-          val tankA: FluidTank = parent.getPressureTank
-          if (tankA != null)
+          val otherNode: FluidPressureNode = obj.asInstanceOf[FluidPressureNode]
+          val pressureA = getPressure(dir)
+          val pressureB = otherNode.getPressure(dir.getOpposite)
+
+          /**
+           * High pressure from this node flows to low pressure nodes.
+           */
+          if (pressureA >= pressureB)
           {
-            val fluidA: FluidStack = tankA.getFluid
-            if (fluidA != null)
+            val tankA = genericParent.getTank
+            if (tankA != null)
             {
-              val amountA: Int = fluidA.amount
-              if (amountA > 0)
+              val fluidA: FluidStack = tankA.getFluid
+              if (fluidA != null)
               {
-                val tankB: FluidTank = otherNode.parent.getPressureTank
-                if (tankB != null)
+                val amountA: Int = fluidA.amount
+                if (amountA > 0)
                 {
-                  val amountB: Int = tankB.getFluidAmount
-                  var quantity: Int = Math.max(if (pressureA > pressureB) (pressureA - pressureB) * getMaxFlowRate else 0, Math.min((amountA - amountB) / 2, getMaxFlowRate))
-                  quantity = Math.min(Math.min(quantity, tankB.getCapacity - amountB), amountA)
-                  if (quantity > 0)
+                  val tankB: FluidTank = otherNode.genericParent.getTank
+                  if (tankB != null)
                   {
-                    val drainStack: FluidStack = parent.drain(dir.getOpposite, quantity, false)
-                    if (drainStack != null && drainStack.amount > 0)
+                    val amountB: Int = tankB.getFluidAmount
+                    var quantity: Int = Math.max(if (pressureA > pressureB) (pressureA - pressureB) * getMaxFlowRate else 0, Math.min((amountA - amountB) / 2, getMaxFlowRate))
+                    quantity = Math.min(Math.min(quantity, tankB.getCapacity - amountB), amountA)
+                    if (quantity > 0)
                     {
-                      parent.drain(dir.getOpposite, otherNode.parent.fill(dir, drainStack, true), true)
+                      val drainStack: FluidStack = genericParent.drain(dir.getOpposite, quantity, false)
+                      if (drainStack != null && drainStack.amount > 0)
+                      {
+                        genericParent.drain(dir.getOpposite, otherNode.genericParent.fill(dir, drainStack, true), true)
+                      }
                     }
                   }
                 }
@@ -117,30 +119,30 @@ class FluidPressureNode(parent: INodeProvider) extends MultipartNode[FluidPressu
             }
           }
         }
-      }
-      else if (obj.isInstanceOf[IFluidHandler])
-      {
-        val fluidHandler: IFluidHandler = obj.asInstanceOf[IFluidHandler]
-        val pressure: Int = getPressure(dir)
-        val tankPressure: Int = if (fluidHandler.isInstanceOf[INodeProvider]) (fluidHandler.asInstanceOf[INodeProvider]).getNode(classOf[FluidPressureNode], dir.getOpposite).getPressure(dir.getOpposite) else 0
-        val sourceTank: FluidTank = parent.getPressureTank
-        val transferAmount: Int = (Math.max(pressure, tankPressure) - Math.min(pressure, tankPressure)) * getMaxFlowRate
-        if (pressure > tankPressure)
+        else if (obj.isInstanceOf[IFluidHandler])
         {
-          if (sourceTank.getFluidAmount > 0 && transferAmount > 0)
+          val fluidHandler: IFluidHandler = obj.asInstanceOf[IFluidHandler]
+          val pressure: Int = getPressure(dir)
+          val tankPressure: Int = if (fluidHandler.isInstanceOf[INodeProvider]) (fluidHandler.asInstanceOf[INodeProvider]).getNode(classOf[FluidPressureNode], dir.getOpposite).getPressure(dir.getOpposite) else 0
+          val sourceTank = genericParent.getTank
+          val transferAmount: Int = (Math.max(pressure, tankPressure) - Math.min(pressure, tankPressure)) * getMaxFlowRate
+          if (pressure > tankPressure)
           {
-            val drainStack: FluidStack = parent.drain(dir.getOpposite, transferAmount, false)
-            parent.drain(dir.getOpposite, fluidHandler.fill(dir.getOpposite, drainStack, true), true)
-          }
-        }
-        else if (pressure < tankPressure)
-        {
-          if (transferAmount > 0)
-          {
-            val drainStack: FluidStack = fluidHandler.drain(dir.getOpposite, transferAmount, false)
-            if (drainStack != null)
+            if (sourceTank.getFluidAmount > 0 && transferAmount > 0)
             {
-              fluidHandler.drain(dir.getOpposite, parent.fill(dir.getOpposite, drainStack, true), true)
+              val drainStack: FluidStack = genericParent.drain(dir.getOpposite, transferAmount, false)
+              genericParent.drain(dir.getOpposite, fluidHandler.fill(dir.getOpposite, drainStack, true), true)
+            }
+          }
+          else if (pressure < tankPressure)
+          {
+            if (transferAmount > 0)
+            {
+              val drainStack: FluidStack = fluidHandler.drain(dir.getOpposite, transferAmount, false)
+              if (drainStack != null)
+              {
+                fluidHandler.drain(dir.getOpposite, genericParent.fill(dir.getOpposite, drainStack, true), true)
+              }
             }
           }
         }
@@ -175,11 +177,13 @@ class FluidPressureNode(parent: INodeProvider) extends MultipartNode[FluidPressu
    */
   override def doRecache
   {
-    connections.clear
+    connections.clear()
+
     for (dir <- ForgeDirection.VALID_DIRECTIONS)
     {
-      val tile: TileEntity = position.add(dir).getTileEntity(world)
-      if (tile.isInstanceOf[Nothing])
+      val tile = (position + dir).getTileEntity
+
+      if (tile.isInstanceOf[INodeProvider])
       {
         val check: FluidPressureNode = (tile.asInstanceOf[INodeProvider]).getNode(classOf[FluidPressureNode], dir.getOpposite)
         if (check != null && canConnect(dir, check) && check.canConnect(dir.getOpposite, this))

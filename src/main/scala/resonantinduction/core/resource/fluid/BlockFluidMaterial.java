@@ -17,15 +17,12 @@ import cpw.mods.fml.relauncher.SideOnly;
  * Fluid class uses for molten materials.
  * 
  * @author Calclavia
- * 
  */
 public class BlockFluidMaterial extends BlockFluidFinite
 {
 	public BlockFluidMaterial(Fluid fluid)
 	{
-		super(Settings.getNextBlockID(fluid.getName()), fluid, Material.lava);
-		setTextureName(Reference.PREFIX + "molten_flow");
-		setUnlocalizedName(Reference.PREFIX + "fluidMaterial");
+		super(fluid, Material.lava);
 	}
 
 	public void setQuanta(World world, int x, int y, int z, int quanta)

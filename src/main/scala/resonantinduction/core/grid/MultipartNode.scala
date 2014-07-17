@@ -5,7 +5,7 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
 import universalelectricity.api.core.grid.INodeProvider
 import universalelectricity.core.grid.Node
-import universalelectricity.core.transform.vector.Vector3
+import universalelectricity.core.transform.vector.VectorWorld
 
 /**
  * A node that works with Forge Multipart
@@ -18,8 +18,8 @@ abstract class MultipartNode[N <: Node[N]](parent: INodeProvider) extends Node[N
     return if (parent.isInstanceOf[TMultiPart]) (parent.asInstanceOf[TMultiPart]).world else if (parent.isInstanceOf[TileEntity]) (parent.asInstanceOf[TileEntity]).getWorldObj else null
   }
 
-  override def position: Vector3 =
+  override def position: VectorWorld =
   {
-    return if (parent.isInstanceOf[TMultiPart]) new Vector3((parent.asInstanceOf[TMultiPart]).x, (parent.asInstanceOf[TMultiPart]).y, (parent.asInstanceOf[TMultiPart]).z) else if (parent.isInstanceOf[TileEntity]) new Vector3(parent.asInstanceOf[TileEntity]) else null
+    return if (parent.isInstanceOf[TMultiPart]) new VectorWorld(parent.asInstanceOf[TMultiPart].world, parent.asInstanceOf[TMultiPart].x, parent.asInstanceOf[TMultiPart].y, parent.asInstanceOf[TMultiPart].z) else if (parent.isInstanceOf[TileEntity]) new VectorWorld(parent.asInstanceOf[TileEntity]) else null
   }
 }

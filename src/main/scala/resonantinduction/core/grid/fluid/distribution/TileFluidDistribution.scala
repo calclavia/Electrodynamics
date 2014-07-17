@@ -3,25 +3,27 @@ package resonantinduction.core.grid.fluid.distribution
 import net.minecraft.block.material.Material
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.{Fluid, FluidStack, FluidTankInfo}
-import resonantinduction.core.grid.fluid.TileFluidNode
+import resonantinduction.core.grid.fluid.TileFluidNodeProvider
 
 /**
  * A prefab class for tiles that use the fluid network.
  *
  * @author DarkGuardsman
  */
-abstract class TileFluidDistribution(material: Material) extends TileFluidNode(material) with IFluidDistributor
+abstract class TileFluidDistribution(material: Material) extends TileFluidNodeProvider(material) with TFluidDistributor
 {
-  override def start
+  tankNode.onChange = () => sendRenderUpdate
+
+  override def start()
   {
-    super.start
-    tankNode.reconstruct
+    super.start()
+    tankNode.reconstruct()
   }
 
-  override def invalidate
+  override def invalidate()
   {
-    tankNode.deconstruct
-    super.invalidate
+    tankNode.deconstruct()
+    super.invalidate()
   }
 
   def fill(from: ForgeDirection, resource: FluidStack, doFill: Boolean): Int =
@@ -51,7 +53,7 @@ abstract class TileFluidDistribution(material: Material) extends TileFluidNode(m
 
   def getTankInfo(from: ForgeDirection): Array[FluidTankInfo] =
   {
-    return Array[FluidTankInfo](getInternalTank.getInfo)
+    return Array[FluidTankInfo](getTank.getInfo)
   }
 
   /**

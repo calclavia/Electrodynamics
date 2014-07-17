@@ -29,10 +29,10 @@ class PacketMultiPart extends PacketType
     this.z = part.z
     this.partID = partID
 
-    this << x
-    this << y
-    this << z
-    this << partID
+    this <<< x
+    this <<< y
+    this <<< z
+    this <<< partID
   }
 
   def encodeInto(ctx: ChannelHandlerContext, buffer: ByteBuf)
@@ -65,11 +65,11 @@ class PacketMultiPart extends PacketType
 
   def handle(player: EntityPlayer)
   {
-    val tile: TileEntity = player.getEntityWorld.getTileEntity(this.x, this.y, this.z)
+    val tile = player.getEntityWorld.getTileEntity(this.x, this.y, this.z)
 
-    if (tileEntity.isInstanceOf[TileMultipart])
+    if (tile.isInstanceOf[TileMultipart])
     {
-      val part = (tileEntity.asInstanceOf[TileMultipart]).partMap(data.readInt)
+      val part = tile.asInstanceOf[TileMultipart].partMap(data.readInt)
 
       if (part.isInstanceOf[TPacketReceiver])
       {

@@ -9,7 +9,7 @@ import universalelectricity.core.grid.{TickingGrid, UpdateTicker}
  *
  * @author DarkCow, Calclavia
  */
-abstract class FluidDistributionGrid extends TickingGrid[IFluidDistributor]
+abstract class FluidDistributionGrid extends TickingGrid[TFluidDistributor]
 {
   val tank = new FluidTank(0)
   var needsUpdate = false
@@ -33,9 +33,9 @@ abstract class FluidDistributionGrid extends TickingGrid[IFluidDistributor]
     UpdateTicker.addUpdater(this)
   }
 
-  override def reconstructNode(node: IFluidDistributor)
+  override def reconstructNode(node: TFluidDistributor)
   {
-    val connectorTank: FluidTank = node.getInternalTank
+    val connectorTank: FluidTank = node.getTank
 
     if (connectorTank != null)
     {
@@ -58,9 +58,9 @@ abstract class FluidDistributionGrid extends TickingGrid[IFluidDistributor]
     }
   }
 
-  def fill(source: IFluidDistributor, from: ForgeDirection, resource: FluidStack, doFill: Boolean): Int =
+  def fill(source: TFluidDistributor, from: ForgeDirection, resource: FluidStack, doFill: Boolean): Int =
   {
-    val fill: Int = this.getTank.fill(resource.copy, doFill)
+    val fill: Int = tank.fill(resource.copy, doFill)
     if (fill > 0)
     {
       needsUpdate = true
@@ -69,11 +69,11 @@ abstract class FluidDistributionGrid extends TickingGrid[IFluidDistributor]
     return fill
   }
 
-  def drain(source: IFluidDistributor, from: ForgeDirection, resource: FluidStack, doDrain: Boolean): FluidStack =
+  def drain(source: TFluidDistributor, from: ForgeDirection, resource: FluidStack, doDrain: Boolean): FluidStack =
   {
-    if (resource != null && resource.isFluidEqual(getTank.getFluid))
+    if (resource != null && resource.isFluidEqual(tank.getFluid))
     {
-      val drain: FluidStack = getTank.drain(resource.amount, doDrain)
+      val drain: FluidStack = tank.drain(resource.amount, doDrain)
       needsUpdate = true
       UpdateTicker.addUpdater(this)
       return drain
@@ -81,17 +81,17 @@ abstract class FluidDistributionGrid extends TickingGrid[IFluidDistributor]
     return null
   }
 
-  def drain(source: IFluidDistributor, from: ForgeDirection, resource: Int, doDrain: Boolean): FluidStack =
+  def drain(source: TFluidDistributor, from: ForgeDirection, resource: Int, doDrain: Boolean): FluidStack =
   {
-    val drain: FluidStack = getTank.drain(resource, doDrain)
+    val drain: FluidStack = tank.drain(resource, doDrain)
     needsUpdate = true
     UpdateTicker.addUpdater(this)
     return drain
   }
 
-  def getTankInfo: Array[FluidTankInfo] =
+  def tankInfo: Array[FluidTankInfo] =
   {
-    return Array[FluidTankInfo](getTank.getInfo)
+    return Array[FluidTankInfo](tank.getInfo)
   }
 
   override def toString: String =

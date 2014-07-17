@@ -3,33 +3,34 @@ package resonantinduction.core.grid.fluid.pressure
 import net.minecraft.block.material.Material
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.{FluidContainerRegistry, FluidStack, FluidTank, FluidTankInfo}
-import resonantinduction.core.grid.fluid.TileFluidNode
+import resonantinduction.core.grid.fluid.TileFluidNodeProvider
+import universalelectricity.api.core.grid.INode
 
 /**
  * A prefab class for tiles that use the fluid network.
  *
  * @author DarkGuardsman
  */
-abstract class TilePressureNode(material: Material) extends TileFluidNode(material)
+abstract class TilePressureNode(material: Material) extends TileFluidNodeProvider(material)
 {
-  protected val node: FluidPressureNode
+  protected val pressureNode: FluidPressureNode
   tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME)
 
   override def start
   {
     super.start
-    node.reconstruct
+    pressureNode.reconstruct
   }
 
   override def invalidate
   {
-    node.deconstruct
+    pressureNode.deconstruct
     super.invalidate
   }
 
   override def fill(from: ForgeDirection, resource: FluidStack, doFill: Boolean): Int =
   {
-    val fill: Int = getInternalTank.fill(resource, doFill)
+    val fill: Int = tank.fill(resource, doFill)
     onFluidChanged
     return fill
   }
@@ -63,12 +64,14 @@ abstract class TilePressureNode(material: Material) extends TileFluidNode(materi
 
   def getPressureTank: FluidTank =
   {
-    return getInternalTank
+    return tank
   }
 
-  def getNode(nodeType: Class[_ <: Nothing], from: ForgeDirection): Nothing =
+  override def getNode[N <: INode](nodeType: Class[N], from: ForgeDirection): N =
   {
-    if (nodeType.isAssignableFrom(node.getClass)) return node
-    return null
+    if (nodeType.isAssignableFrom(pressureNode.getClass))
+      return pressureNode.asInstanceOf[N]
+
+    return null.asInstanceOf[N]
   }
 }

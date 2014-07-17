@@ -1,19 +1,18 @@
 package resonantinduction.core.grid.fluid.distribution
 
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.IFluidHandler
 import resonant.lib.utility.WorldUtility
 import resonantinduction.core.grid.MultipartNode
 import universalelectricity.api.core.grid.INodeProvider
-import universalelectricity.core.transform.vector.Vector3
 
 class TankNode(parent: INodeProvider) extends MultipartNode[TankNode](parent) with IFluidHandler
 {
   var maxFlowRate: Int = 20
   var maxPressure: Int = 100
   private var pressure: Int = 0
+  var connectedSides: Byte = 0
 
   var onChange: () => Unit = null
 
@@ -46,47 +45,35 @@ class TankNode(parent: INodeProvider) extends MultipartNode[TankNode](parent) wi
   {
     connections.clear
 
-    if (this.worldObj != null && !this.worldObj.isRemote)
+    if (world != null && !world.isRemote)
     {
-      val previousConnections: Byte = renderSides
-      connectedBlocks = new Array[AnyRef](6)
-      renderSides = 0
+      val previousSides = connectedSides
+      connectedSides = 0
+
       for (dir <- ForgeDirection.VALID_DIRECTIONS)
       {
-        this.validateConnectionSide(new Vector3(this).add(dir).getTileEntity(worldObj), dir)
-      }
-      if (previousConnections != renderSides)
-      {
-        getNetwork.update
-        getNetwork.reconstruct
-        onChange.apply()
-        sendRenderUpdate
-      }
-    }
-  }
+        val tile = (position + dir).getTileEntity
 
-  /**
-   * Checks to make sure the connection is valid to the tileEntity
-   *
-   * @param tileEntity - the tileEntity being checked
-   * @param side       - side the connection is too
-   */
-  def validateConnectionSide(tileEntity: TileEntity, side: ForgeDirection)
-  {
-    if (!this.worldObj.isRemote)
-    {
-      if (tileEntity.isInstanceOf[IFluidDistributor])
+        if (tile.isInstanceOf[TFluidDistributor])
+        {
+          connections.put(tile.asInstanceOf[TFluidDistributor].getNode(classOf[TankNode], dir.getOpposite), dir)
+          connectedSides = WorldUtility.setEnableSide(connectedSides, dir, true)
+        }
+      }
+
+      if (previousSides != connectedSides)
       {
-        this.getNetwork.merge((tileEntity.asInstanceOf[IFluidDistributor]).getNetwork)
-        renderSides = WorldUtility.setEnableSide(renderSides, side, true)
-        connectedBlocks(side.ordinal) = tileEntity
+        //TODO: Check and fix
+        getGrid.reconstruct()
+        onChange.apply()
       }
     }
   }
 
   override def canConnect(from: ForgeDirection, source: AnyRef): Boolean =
   {
-    return (source.isInstanceOf[TankNode]) && (connectionMap & (1 << from.ordinal)) != 0
+    //TODO: Check this
+    return source.isInstanceOf[TankNode]
   }
 
   override def load(nbt: NBTTagCompound)

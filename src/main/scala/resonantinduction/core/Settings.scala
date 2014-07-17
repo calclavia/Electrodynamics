@@ -2,12 +2,15 @@ package resonantinduction.core
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent
 import net.minecraft.block.Block
+import net.minecraft.item.ItemStack
 import net.minecraftforge.common.config.Configuration
 import resonant.api.recipe.QuantumAssemblerRecipes
 import resonant.lib.config.Config
 import resonant.lib.config.ConfigEvent.PostConfigEvent
 import resonant.lib.prefab.poison.PotionRadiation
+
 import scala.collection.convert.wrapAll._
+
 /** @author Calclavia */
 object Settings
 {
@@ -57,7 +60,7 @@ object Settings
   @SubscribeEvent
   def configEvent(evt: PostConfigEvent)
   {
-    QuantumAssemblerRecipes.RECIPES.addAll(quantumAssemblerRecipes.map(Block.blockRegistry.getObject(_).asInstanceOf[Block]).toSet)
+    QuantumAssemblerRecipes.RECIPES.addAll(quantumAssemblerRecipes.map(x => new ItemStack(Block.blockRegistry.getObject(x).asInstanceOf[Block])).toList)
     PotionRadiation.INSTANCE.getId
   }
 }

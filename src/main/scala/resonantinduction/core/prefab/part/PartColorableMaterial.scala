@@ -1,18 +1,16 @@
 package resonantinduction.core.prefab.part
 
-import java.util.ArrayList
 import java.util.Collections
-import java.util.List
+
+import codechicken.lib.data.{MCDataInput, MCDataOutput}
 import codechicken.multipart.TMultiPart
 import net.minecraft.block.BlockColored
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.item.Item
-import net.minecraft.item.ItemShears
-import net.minecraft.item.ItemStack
+import net.minecraft.item.{Item, ItemShears, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.MovingObjectPosition
-import codechicken.lib.data.MCDataInput
-import codechicken.lib.data.MCDataOutput
+
+import scala.collection.mutable
 
 /**
  * @author Calclavia
@@ -20,15 +18,15 @@ import codechicken.lib.data.MCDataOutput
  */
 object PartColorableMaterial
 {
-  final val DEFAULT_COLOR: Int = 15
+  final val defaultColor: Int = 15
 }
 
 abstract class PartColorableMaterial[M](insulationType: Item) extends TMultiPart with TraitPart
 {
-  var color: Int = DEFAULT_COLOR
-  var material: M = null
-  var isInsulated: Boolean = false
-  var requiresInsulation: Boolean = true
+  var color: Int = PartColorableMaterial.defaultColor
+  var material: M = _
+  var isInsulated = false
+  var requiresInsulation = true
 
   /**
    * Material Methods
@@ -45,10 +43,7 @@ abstract class PartColorableMaterial[M](insulationType: Item) extends TMultiPart
 
   def setMaterial(i: Int)
 
-  def getMaterialID: Int =
-  {
-    return material.ordinal
-  }
+  def getMaterialID: Int
 
   /**
    * Insulation Methods
@@ -56,7 +51,7 @@ abstract class PartColorableMaterial[M](insulationType: Item) extends TMultiPart
   def setInsulated(insulated: Boolean)
   {
     this.isInsulated = insulated
-    this.color = DEFAULT_COLOR
+    this.color = PartColorableMaterial.defaultColor
     if (!this.world.isRemote)
     {
       tile.notifyPartChange(this)
@@ -138,7 +133,7 @@ abstract class PartColorableMaterial[M](insulationType: Item) extends TMultiPart
           {
             if (!world.isRemote && player.capabilities.isCreativeMode)
             {
-              tile.dropItems(Collections.singletonList(new ItemStack(insulationType, 1, BlockColored.getBlockFromDye(color))))
+              tile.dropItems(Collections.singletonList(new ItemStack(insulationType, 1, BlockColored.func_150031_c(color))))
             }
             this.setInsulated(false)
             return true
@@ -149,7 +144,7 @@ abstract class PartColorableMaterial[M](insulationType: Item) extends TMultiPart
             {
               player.inventory.decrStackSize(player.inventory.currentItem, 1)
             }
-            this.setInsulated(BlockColored.getDyeFromBlock(itemStack.getItemDamage))
+            this.setInsulated(BlockColored.func_150031_c(itemStack.getItemDamage))
             return true
           }
         }
@@ -157,7 +152,7 @@ abstract class PartColorableMaterial[M](insulationType: Item) extends TMultiPart
         {
           if (!world.isRemote && !player.capabilities.isCreativeMode)
           {
-            tile.dropItems(Collections.singletonList(new ItemStack(insulationType, 1, BlockColored.getBlockFromDye(color))))
+            tile.dropItems(Collections.singletonList(new ItemStack(insulationType, 1, BlockColored.func_150031_c(color))))
           }
           this.setInsulated(false)
         }
@@ -169,11 +164,11 @@ abstract class PartColorableMaterial[M](insulationType: Item) extends TMultiPart
 
   override def getDrops: Iterable[ItemStack] =
   {
-    val drops: List[ItemStack] = new ArrayList[ItemStack]
+    val drops = mutable.Set.empty[ItemStack]
     drops.add(getItem)
     if (requiresInsulation && isInsulated)
     {
-      drops.add(new ItemStack(insulationType, 1, BlockColored.getBlockFromDye(color)))
+      drops.add(new ItemStack(insulationType, 1, BlockColored.func_150031_c(color)))
     }
     return drops
   }
@@ -199,11 +194,9 @@ abstract class PartColorableMaterial[M](insulationType: Item) extends TMultiPart
       case 1 =>
         this.isInsulated = packet.readBoolean
         this.tile.markRender
-        break //todo: break is not supported
       case 2 =>
         this.color = packet.readInt
         this.tile.markRender
-        break //todo: break is not supported
     }
   }
 
