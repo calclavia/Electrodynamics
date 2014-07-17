@@ -79,7 +79,7 @@ public class ItemBlockTank extends ItemBlock implements IFluidContainerItem
 	{
 		if (super.placeBlockAt(stack, player, world, x, y, z, side, hitX, hitY, hitZ, metadata))
 		{
-			TileEntity tile = world.getBlockTileEntity(x, y, z);
+			TileEntity tile = world.getTileEntity(x, y, z);
 			if (tile instanceof TileFluidDistribution)
 			{
 				((TileFluidDistribution) tile).setSubID(stack.getItemDamage());

@@ -35,7 +35,7 @@ public class BlockConveyorBelt extends BlockTile
     @Override
     public void onBlockAdded(World world, int x, int y, int z)
     {
-        //TileEntity tile = world.getBlockTileEntity(x, y, z);
+        //TileEntity tile = world.getTileEntity(x, y, z);
         //if (tile instanceof TileConveyorBelt)
            // ((TileConveyorBelt) tile).node.reconstruct();
     }
@@ -43,9 +43,9 @@ public class BlockConveyorBelt extends BlockTile
     @Override
     public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
     {
-        if (world.getBlockTileEntity(x, y, z) instanceof TileConveyorBelt)
+        if (world.getTileEntity(x, y, z) instanceof TileConveyorBelt)
         {
-            TileConveyorBelt tileEntity = (TileConveyorBelt) world.getBlockTileEntity(x, y, z);
+            TileConveyorBelt tileEntity = (TileConveyorBelt) world.getTileEntity(x, y, z);
 
             if (tileEntity.getBeltType() == TileConveyorBelt.BeltType.SLANT_UP || tileEntity.getBeltType() == TileConveyorBelt.BeltType.SLANT_DOWN)
             {
@@ -65,7 +65,7 @@ public class BlockConveyorBelt extends BlockTile
     @Override
     public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z)
     {
-        TileEntity t = world.getBlockTileEntity(x, y, z);
+        TileEntity t = world.getTileEntity(x, y, z);
 
         if (t != null && t instanceof TileConveyorBelt)
         {
@@ -87,7 +87,7 @@ public class BlockConveyorBelt extends BlockTile
     @Override
     public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB boundBox, List boxList, Entity entity)
     {
-        TileEntity t = world.getBlockTileEntity(x, y, z);
+        TileEntity t = world.getTileEntity(x, y, z);
 
         if (t != null && t instanceof TileConveyorBelt)
         {
@@ -241,7 +241,7 @@ public class BlockConveyorBelt extends BlockTile
     @Override
     public boolean onSneakUseWrench(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
     {
-        TileConveyorBelt tileEntity = (TileConveyorBelt) world.getBlockTileEntity(x, y, z);
+        TileConveyorBelt tileEntity = (TileConveyorBelt) world.getTileEntity(x, y, z);
 
         int slantOrdinal = tileEntity.getBeltType().ordinal() + 1;
 
@@ -259,7 +259,7 @@ public class BlockConveyorBelt extends BlockTile
     @Override
     public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
     {
-        TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+        TileEntity tileEntity = world.getTileEntity(x, y, z);
 
         if (tileEntity instanceof TileConveyorBelt)
         {

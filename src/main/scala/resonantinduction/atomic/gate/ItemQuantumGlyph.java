@@ -36,7 +36,7 @@ public class ItemQuantumGlyph extends JItemMultiPart implements IHighlight
 		PartQuantumGlyph part = (PartQuantumGlyph) MultiPartRegistry.createPart("resonant_induction_quantum_glyph", false);
 		int slot = CornerPlacementGrid$.MODULE$.getHitSlot(hit, side);
 
-		TileEntity tile = world.getBlockTileEntity(pos.x, pos.y, pos.z);
+		TileEntity tile = world.getTileEntity(pos.x, pos.y, pos.z);
 
 		if (tile instanceof TileMultipart)
 		{

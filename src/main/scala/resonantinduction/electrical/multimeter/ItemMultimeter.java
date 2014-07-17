@@ -39,7 +39,7 @@ public class ItemMultimeter extends JItemMultiPart implements IHighlight
 	{
 		side = FacePlacementGrid$.MODULE$.getHitSlot(hit, side);
 
-		TileEntity tile = world.getBlockTileEntity(pos.x, pos.y, pos.z);
+		TileEntity tile = world.getTileEntity(pos.x, pos.y, pos.z);
 
 		if (tile instanceof TileMultipart)
 		{

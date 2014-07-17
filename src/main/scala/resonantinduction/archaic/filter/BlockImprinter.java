@@ -70,7 +70,7 @@ public class BlockImprinter extends BlockTile
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, int blockID)
 	{
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 
 		if (te instanceof TileImprinter)
 		{
@@ -87,7 +87,7 @@ public class BlockImprinter extends BlockTile
 	@Override
 	public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer player, int hitSide, float hitX, float hitY, float hitZ)
 	{
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 
 		if (te instanceof TileImprinter)
 		{

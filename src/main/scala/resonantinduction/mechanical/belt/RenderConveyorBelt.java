@@ -60,7 +60,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer implements ISi
             {
                 GL11.glTranslatef(0f, 0.8f, -0.8f);
                 GL11.glRotatef(180f, 0f, 1f, 1f);
-                TileEntity test = beltTile.worldObj.getBlockTileEntity(beltTile.xCoord + beltTile.getDirection().offsetX, beltTile.yCoord, beltTile.zCoord + beltTile.getDirection().offsetZ);
+                TileEntity test = beltTile.worldObj.getTileEntity(beltTile.xCoord + beltTile.getDirection().offsetX, beltTile.yCoord, beltTile.zCoord + beltTile.getDirection().offsetZ);
                 if (test != null)
                 {
                     if (test instanceof TileConveyorBelt)
@@ -76,7 +76,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer implements ISi
             else if (slantType == TileConveyorBelt.BeltType.SLANT_DOWN)
             {
                 boolean slantAdjust = false;
-                TileEntity test = beltTile.worldObj.getBlockTileEntity(beltTile.xCoord - beltTile.getDirection().offsetX, beltTile.yCoord, beltTile.zCoord - beltTile.getDirection().offsetZ);
+                TileEntity test = beltTile.worldObj.getTileEntity(beltTile.xCoord - beltTile.getDirection().offsetX, beltTile.yCoord, beltTile.zCoord - beltTile.getDirection().offsetZ);
                 if (test != null)
                 {
                     if (test instanceof TileConveyorBelt)

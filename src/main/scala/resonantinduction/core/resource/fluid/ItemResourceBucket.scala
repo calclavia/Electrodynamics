@@ -27,14 +27,9 @@ class ItemResourceBucket(isMolten: Boolean) extends Item
   setHasSubtypes(true)
   setMaxDamage(0)
 
-  def getMaterialFromStack(itemStack: ItemStack): String =
-  {
-    return ResourceGenerator.getName(itemStack.getItemDamage)
-  }
-
   override def getItemStackDisplayName(stack: ItemStack): String =
   {
-    val material: String = getMaterialFromStack(stack)
+    val material = ResourceGenerator.getMaterial(stack)
     if (material != null)
     {
       val fluidID: String = if (isMolten) ResourceGenerator.materialNameToMolten(material) else ResourceGenerator.materialNameToMixture(material)
@@ -48,11 +43,12 @@ class ItemResourceBucket(isMolten: Boolean) extends Item
     return null
   }
 
-  /** Called whenever this item is equipped and the right mouse button is pressed. Args: itemStack,
+  /** Called whenever this item is ==uipped and the right mouse button is pressed. Args: itemStack,
     * world, entityPlayer */
   override def onItemRightClick(itemStack: ItemStack, world: World, entityPlayer: EntityPlayer): ItemStack =
   {
-    val materialName: String = ResourceGenerator.getName(itemStack.getItemDamage)
+    val materialName = ResourceGenerator.getMaterial(itemStack)
+
     if (materialName != null)
     {
       val moltenBlock: BlockFluidFinite = ResourceGenerator.getMolten(materialName)
@@ -72,7 +68,7 @@ class ItemResourceBucket(isMolten: Boolean) extends Item
           {
             return itemStack
           }
-          if (event.getResult eq Event.Result.ALLOW)
+          if (event.getResult == Event.Result.ALLOW)
           {
             if (entityPlayer.capabilities.isCreativeMode)
             {
@@ -88,7 +84,7 @@ class ItemResourceBucket(isMolten: Boolean) extends Item
             }
             return itemStack
           }
-          if (movingobjectposition.typeOfHit eq MovingObjectPosition.MovingObjectType.BLOCK)
+          if (movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
           {
             var i: Int = movingobjectposition.blockX
             var j: Int = movingobjectposition.blockY
@@ -103,7 +99,7 @@ class ItemResourceBucket(isMolten: Boolean) extends Item
               {
                 return itemStack
               }
-              if (world.getBlock(i, j, k).getMaterial eq Material.water && world.getBlockMetadata(i, j, k) == 0)
+              if (world.getBlock(i, j, k).getMaterial == Material.water && world.getBlockMetadata(i, j, k) == 0)
               {
                 world.setBlockToAir(i, j, k)
                 if (entityPlayer.capabilities.isCreativeMode)
@@ -120,7 +116,7 @@ class ItemResourceBucket(isMolten: Boolean) extends Item
                 }
                 return itemStack
               }
-              if (world.getBlock(i, j, k).getMaterial eq Material.lava && world.getBlockMetadata(i, j, k) == 0)
+              if (world.getBlock(i, j, k).getMaterial == Material.lava && world.getBlockMetadata(i, j, k) == 0)
               {
                 world.setBlockToAir(i, j, k)
                 if (entityPlayer.capabilities.isCreativeMode)
@@ -209,13 +205,6 @@ class ItemResourceBucket(isMolten: Boolean) extends Item
         return true
       }
     }
-  }
-
-  def getStackFromMaterial(name: String): ItemStack =
-  {
-    val itemStack: ItemStack = new ItemStack(this)
-    itemStack.setItemDamage(ResourceGenerator.getID(name))
-    return itemStack
   }
 
   override def getSubItems(item: Item, tabs: CreativeTabs, list: List[_])

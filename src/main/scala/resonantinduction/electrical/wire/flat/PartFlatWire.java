@@ -435,7 +435,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
         }
 
         /** Look for an external energy handler. */
-        TileEntity tileEntity = world().getBlockTileEntity(pos.x, pos.y, pos.z);
+        TileEntity tileEntity = world().getTileEntity(pos.x, pos.y, pos.z);
 
         if (this.canConnectTo(tileEntity, ForgeDirection.getOrientation(absSide)))
         {
@@ -689,7 +689,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
         }
         else
         {
-            TileEntity tileEntity = world().getBlockTileEntity(pos.x, pos.y, pos.z);
+            TileEntity tileEntity = world().getTileEntity(pos.x, pos.y, pos.z);
             return this.canConnectTo(tileEntity, ForgeDirection.getOrientation(absDir));
         }
 

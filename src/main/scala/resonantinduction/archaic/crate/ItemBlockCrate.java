@@ -120,11 +120,11 @@ public class ItemBlockCrate extends ItemBlockTooltip
         {
             ItemStack containingItem = getContainingItemStack(stack);
 
-            if (world.getBlockTileEntity(x, y, z) != null && containingItem != null)
+            if (world.getTileEntity(x, y, z) != null && containingItem != null)
             {
                 if (containingItem.stackSize > 0)
                 {
-                    TileCrate tileEntity = (TileCrate) world.getBlockTileEntity(x, y, z);
+                    TileCrate tileEntity = (TileCrate) world.getTileEntity(x, y, z);
                     int count = containingItem.stackSize;
 
                     for (int slot = 0; slot < tileEntity.getInventory().getSizeInventory(); slot++)

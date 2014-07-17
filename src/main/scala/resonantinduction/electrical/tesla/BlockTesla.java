@@ -37,14 +37,14 @@ public class BlockTesla extends BlockSidedIO implements ITileEntityProvider
 	public void onBlockAdded(World world, int x, int y, int z)
 	{
 		super.onBlockAdded(world, x, y, z);
-		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+		TileEntity tileEntity = world.getTileEntity(x, y, z);
 		((TileTesla) tileEntity).updatePositionStatus();
 	}
 
 	@Override
 	public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
 	{
-		TileEntity t = world.getBlockTileEntity(x, y, z);
+		TileEntity t = world.getTileEntity(x, y, z);
 		TileTesla tileEntity = ((TileTesla) t).getMultiBlock().get();
 
 		if (entityPlayer.getCurrentEquippedItem() != null)
@@ -98,7 +98,7 @@ public class BlockTesla extends BlockSidedIO implements ITileEntityProvider
 	@Override
 	public boolean onSneakUseWrench(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
 	{
-		TileEntity tile = world.getBlockTileEntity(x, y, z);
+		TileEntity tile = world.getTileEntity(x, y, z);
 
 		if (tile instanceof TileTesla)
 		{
@@ -130,7 +130,7 @@ public class BlockTesla extends BlockSidedIO implements ITileEntityProvider
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, int id)
 	{
-		TileEntity tile = world.getBlockTileEntity(x, y, z);
+		TileEntity tile = world.getTileEntity(x, y, z);
 
 		if (tile instanceof TileTesla)
 		{

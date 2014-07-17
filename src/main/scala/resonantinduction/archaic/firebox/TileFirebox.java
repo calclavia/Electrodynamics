@@ -121,7 +121,7 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 				{
 					usedHeat = true;
 
-					TileEntity dustTile = worldObj.getBlockTileEntity(xCoord, yCoord + 1, zCoord);
+					TileEntity dustTile = worldObj.getTileEntity(xCoord, yCoord + 1, zCoord);
 
 					if (dustTile instanceof TileMaterial)
 					{
@@ -134,7 +134,7 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 
 							worldObj.setBlock(xCoord, yCoord + 1, zCoord, ResourceGenerator.getMolten(name).blockID, volumeMeta, 3);
 
-							TileEntity tile = worldObj.getBlockTileEntity(xCoord, yCoord + 1, zCoord);
+							TileEntity tile = worldObj.getTileEntity(xCoord, yCoord + 1, zCoord);
 
 							if (tile instanceof TileMaterial)
 							{
@@ -169,7 +169,7 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 				}
 				else if (blockID == Archaic.blockGutter.blockID)
 				{
-					TileEntity tileEntity = worldObj.getBlockTileEntity(xCoord, yCoord + 1, zCoord);
+					TileEntity tileEntity = worldObj.getTileEntity(xCoord, yCoord + 1, zCoord);
 
 					if (tileEntity instanceof TileGutter)
 					{

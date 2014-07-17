@@ -531,7 +531,7 @@ public class PartLevitator extends PartFace
 	{
 		ForgeDirection side = placementSide;
 
-		TileEntity tile = world().getBlockTileEntity(x() + side.offsetX, y() + side.offsetY, z() + side.offsetZ);
+		TileEntity tile = world().getTileEntity(x() + side.offsetX, y() + side.offsetY, z() + side.offsetZ);
 
 		if (tile instanceof IInventory)
 		{

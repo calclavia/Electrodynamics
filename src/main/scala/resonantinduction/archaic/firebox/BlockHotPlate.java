@@ -58,7 +58,7 @@ public class BlockHotPlate extends BlockTile
 	@Override
 	public void onBlockClicked(World world, int x, int y, int z, EntityPlayer player)
 	{
-		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+		TileEntity tileEntity = world.getTileEntity(x, y, z);
 
 		if (tileEntity instanceof TileHotPlate)
 		{
@@ -70,7 +70,7 @@ public class BlockHotPlate extends BlockTile
 	@Override
 	public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
 	{
-		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+		TileEntity tileEntity = world.getTileEntity(x, y, z);
 
 		if (tileEntity instanceof TileHotPlate)
 		{
@@ -112,7 +112,7 @@ public class BlockHotPlate extends BlockTile
 	@Override
 	public void randomDisplayTick(World world, int x, int y, int z, Random random)
 	{
-		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+		TileEntity tileEntity = world.getTileEntity(x, y, z);
 
 		if (tileEntity instanceof TileHotPlate)
 		{
@@ -147,7 +147,7 @@ public class BlockHotPlate extends BlockTile
 	@Override
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity par5Entity)
 	{
-		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+		TileEntity tileEntity = world.getTileEntity(x, y, z);
 
 		if (tileEntity instanceof TileHotPlate)
 		{

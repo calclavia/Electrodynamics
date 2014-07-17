@@ -41,7 +41,7 @@ public class BlockDetector extends BlockImprintable
 	{
 		boolean isInverted = false;
 		boolean isFront = false;
-		TileEntity tileEntity = iBlockAccess.getBlockTileEntity(x, y, z);
+		TileEntity tileEntity = iBlockAccess.getTileEntity(x, y, z);
 
 		if (tileEntity instanceof TileDetector)
 		{
@@ -67,7 +67,7 @@ public class BlockDetector extends BlockImprintable
 	@Override
 	public boolean onUseWrench(World world, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
 	{
-		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+		TileEntity tileEntity = world.getTileEntity(x, y, z);
 
 		if (tileEntity instanceof TileDetector)
 		{
@@ -122,7 +122,7 @@ public class BlockDetector extends BlockImprintable
 	@Override
 	public int isProvidingStrongPower(IBlockAccess world, int x, int y, int z, int direction)
 	{
-		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+		TileEntity tileEntity = world.getTileEntity(x, y, z);
 
 		if (tileEntity instanceof TileDetector)
 		{

@@ -77,7 +77,7 @@ public class ClientProxy extends CommonProxy
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
     {
-        TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+        TileEntity tileEntity = world.getTileEntity(x, y, z);
         Block block = Block.blocksList[world.getBlockId(x, y, z)];
 
         if (tileEntity instanceof TileCentrifuge)

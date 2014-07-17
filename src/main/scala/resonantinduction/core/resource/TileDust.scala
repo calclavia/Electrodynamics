@@ -6,11 +6,13 @@ import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.entity.EntityLivingBase
+import net.minecraft.init.Blocks
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.{AxisAlignedBB, MovingObjectPosition}
 import net.minecraft.world.{IBlockAccess, World}
-import resonantinduction.core.{CoreContent, Reference}
+import resonantinduction.core.CoreContent
+import universalelectricity.core.transform.region.Cuboid
 
 /**
  * @author Calclavia
@@ -19,46 +21,44 @@ class TileDust extends TileMaterial(Material.sand)
 {
   private[resource] var nextDropMaterialID: Int = 0
 
-  setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.125F, 1.0F)
+  bounds = new Cuboid(0.0F, 0.0F, 0.0F, 1.0F, 0.125F, 1.0F)
   setBlockBoundsForDepth(0)
-  setHardness(0.5f)
-  setTextureName(Reference.PREFIX + "material_sand")
-  setStepSound(soundGravelFootstep)
+  blockHardness = 0.5f
+  textureName = "material_sand"
+  stepSound = Block.soundTypeGravel
   normalRender = false
   isOpaqueCube = false
 
-  def canFallBelow(par0World: World, par1: Int, par2: Int, par3: Int): Boolean =
+  def canFallBelow(world: World, x: Int, y: Int, z: Int): Boolean =
   {
-    val l: Int = par0World.getBlockId(par1, par2, par3)
-    if (par0World.isAirBlock(par1, par2, par3))
+    val block = world.getBlock(x, y, z)
+
+    if (world.isAirBlock(x, y, z))
     {
       return true
     }
-    else if (l == Block.fire.blockID)
+    else if (block == Blocks.fire)
     {
       return true
     }
     else
     {
-      val material: Material = Block.blocksList(l).blockMaterial
-      return if (material eq Material.water) true else material eq Material.lava
+      val material = block.getMaterial
+      return if (material == Material.water) true else material == Material.lava
     }
   }
 
   @SideOnly(Side.CLIENT)
-  override def colorMultiplier: Int = super.colorMultiplier
-  {
-    return getColor
-  }
+  override def colorMultiplier: Int = getColor
 
   override def onPlaced(entityLiving: EntityLivingBase, itemStack: ItemStack)
   {
     name = ItemResourceDust.getMaterialFromStack(itemStack)
   }
 
-  override def onPostBlockPlaced(world: World, x: Int, y: Int, z: Int, metadata: Int)
+  override def onPostPlaced(metadata: Int)
   {
-    tryToFall(world, x, y, z)
+    tryToFall()
   }
 
   /**
@@ -66,17 +66,19 @@ class TileDust extends TileMaterial(Material.sand)
    */
   override def onAdded()
   {
-    tryToFall(world, x, y, z)
+    tryToFall()
   }
 
   override def onNeighborChanged(block: Block)
   {
-    tryToFall(world, x, y, z)
+    tryToFall()
   }
 
-  private def tryToFall(world: World, x: Int, y: Int, z: Int)
+  private def tryToFall()
   {
-    val tile: TileEntity = world.getBlockTileEntity(x, y, z)
+    var y = this.y
+
+    val tile: TileEntity = world.getTileEntity(x, y, z)
     if (tile.isInstanceOf[TileMaterial])
     {
       val materialName: String = (tile.asInstanceOf[TileMaterial]).name
@@ -92,8 +94,9 @@ class TileDust extends TileMaterial(Material.sand)
           }
           if (y > 0)
           {
-            world.setBlock(x, y, z, this.blockID, metadata, 3)
-            val newTile: TileEntity = world.getBlockTileEntity(x, y, z)
+            world.setBlock(x, y, z, block, metadata, 3)
+
+            val newTile: TileEntity = world.getTileEntity(x, y, z)
             if (newTile.isInstanceOf[TileMaterial])
             {
               (newTile.asInstanceOf[TileMaterial]).name = materialName
@@ -113,7 +116,7 @@ class TileDust extends TileMaterial(Material.sand)
   {
     val l: Int = par1World.getBlockMetadata(par2, par3, par4) & 7
     val f: Float = 0.125F
-    return AxisAlignedBB.getAABBPool.getAABB(par2 + this.minX, par3 + this.minY, par4 + this.minZ, par2 + this.maxX, par3 + l * f, par4 + this.maxZ)
+    return AxisAlignedBB.getBoundingBox(par2 + bounds.min.x, par3 + bounds.min.y, par4 + bounds.min.z, par2 + bounds.max.x, par3 + l * f, par4 + bounds.max.z)
   }
 
   /**
@@ -127,7 +130,7 @@ class TileDust extends TileMaterial(Material.sand)
   /**
    * Updates the blocks bounds based on its current state. Args: world, x, y, z
    */
-  def setBlockBoundsBasedOnState(par1IBlockAccess: IBlockAccess, par2: Int, par3: Int, par4: Int)
+  override def setBlockBoundsBasedOnState(par1IBlockAccess: IBlockAccess, par2: Int, par3: Int, par4: Int)
   {
     this.setBlockBoundsForDepth(par1IBlockAccess.getBlockMetadata(par2, par3, par4))
   }
@@ -140,7 +143,7 @@ class TileDust extends TileMaterial(Material.sand)
   {
     val j: Int = par1 & 7
     val f: Float = 2 * (1 + j) / 16.0F
-    this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, f, 1.0F)
+    bounds = new Cuboid(0.0F, 0.0F, 0.0F, 1.0F, f, 1.0F)
   }
 
   /**
@@ -148,34 +151,28 @@ class TileDust extends TileMaterial(Material.sand)
    */
   override def getDrops(metadata: Int, fortune: Int): util.ArrayList[ItemStack] =
   {
-    if (this == CoreContent.blockRefinedDust)
-      return List(new ItemStack(CoreContent.refinedDust))
+    val list = new util.ArrayList[ItemStack]
 
-    return List(new ItemStack(CoreContent.dust))
+    if (block == CoreContent.blockRefinedDust)
+      list.add(ResourceGenerator.getRefinedDust(name, quantityDropped(metadata, fortune)))
+    else
+      list.add(ResourceGenerator.getDust(name, quantityDropped(metadata, fortune)))
+
+    return list
   }
 
-  override def getPickBlock(target: MovingObjectPosition): ItemStack = if (this == CoreContent.blockRefinedDust) new ItemStack(CoreContent.refinedDust) else new ItemStack(CoreContent.dust)
-
-  override def onRemove(block: Block, par6: Int)
+  override def getPickBlock(target: MovingObjectPosition): ItemStack =
   {
-    val tileEntity: TileEntity = world.getBlockTileEntity(x, y, z)
-    if (tileEntity.isInstanceOf[TileMaterial])
-    {
-      nextDropMaterialID = ResourceGenerator.getID((tileEntity.asInstanceOf[TileMaterial]).name)
-    }
+    if (block == CoreContent.blockRefinedDust)
+      return ResourceGenerator.getRefinedDust(name)
+    else
+      return ResourceGenerator.getDust(name)
   }
-
-  def getDamageValue(world: World, x: Int, y: Int, z: Int): Int =
-  {
-    ResourceGenerator.getID((tileEntity.asInstanceOf[TileMaterial]).name)
-  }
-
-  override def metadataDropped(meta: Int, fortune: Int): Int = nextDropMaterialID
 
   @SideOnly(Side.CLIENT)
   override def shouldSideBeRendered(access: IBlockAccess, x: Int, y: Int, z: Int, side: Int): Boolean =
   {
-    if (par5 == 1) true else super.shouldSideBeRendered(access, x, y, z, side)
+    if (side == 1) true else super.shouldSideBeRendered(access, x, y, z, side)
   }
 
   override def quantityDropped(meta: Int, fortune: Int): Int = (meta & 7) + 1

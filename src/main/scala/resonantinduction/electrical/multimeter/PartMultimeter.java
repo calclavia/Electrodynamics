@@ -136,7 +136,7 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
     /** Gets the multimeter on the same plane. */
     public PartMultimeter getMultimeter(int x, int y, int z)
     {
-        TileEntity tileEntity = world().getBlockTileEntity(x, y, z);
+        TileEntity tileEntity = world().getTileEntity(x, y, z);
 
         if (tileEntity instanceof TileMultipart)
         {
@@ -400,7 +400,7 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
     public TileEntity getDetectedTile()
     {
         ForgeDirection direction = getDirection();
-        return world().getBlockTileEntity(x() + direction.offsetX, y() + direction.offsetY, z() + direction.offsetZ);
+        return world().getTileEntity(x() + direction.offsetX, y() + direction.offsetY, z() + direction.offsetZ);
     }
 
     public ForgeDirection getDirection()

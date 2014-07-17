@@ -1,9 +1,6 @@
 package resonantinduction.core.resource
 
 import java.awt.Color
-import java.awt.image.BufferedImage
-import java.io.InputStream
-import java.util.{ArrayList, HashMap, List}
 import javax.imageio.ImageIO
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent
@@ -13,6 +10,7 @@ import net.minecraft.block.Block
 import net.minecraft.client.Minecraft
 import net.minecraft.init.{Blocks, Items}
 import net.minecraft.item.{Item, ItemStack}
+import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.{IIcon, ResourceLocation}
 import net.minecraftforge.client.event.TextureStitchEvent
 import net.minecraftforge.fluids.{BlockFluidFinite, FluidContainerRegistry, FluidRegistry, FluidStack}
@@ -21,10 +19,12 @@ import resonant.api.recipe.MachineRecipes
 import resonant.lib.config.Config
 import resonant.lib.recipe.Recipes
 import resonant.lib.utility.LanguageUtility
+import resonant.lib.utility.nbt.NBTUtility
+import resonant.lib.wrapper.StringWrapper._
 import resonantinduction.core.ResonantInduction.RecipeType
 import resonantinduction.core.prefab.FluidColored
 import resonantinduction.core.resource.fluid.{BlockFluidMaterial, BlockFluidMixture}
-import resonantinduction.core.{CoreContent, Reference, ResonantInduction, Settings}
+import resonantinduction.core.{CoreContent, Reference, Settings}
 
 import scala.collection.JavaConversions._
 import scala.collection.mutable
@@ -35,13 +35,15 @@ import scala.collection.mutable
  */
 object ResourceGenerator
 {
-  private final val materials = mutable.Set.empty[String]
-  private final val materialColorCache: HashMap[String, Integer] = new HashMap[String, Integer]
-  private final val iconColorCache: HashMap[IIcon, Integer] = new HashMap[IIcon, Integer]
+  final val materials = mutable.Set.empty[String]
+  private final val materialColorCache = mutable.HashMap.empty[String, Integer]
+  private final val iconColorCache = mutable.HashMap.empty[IIcon, Integer]
 
-  @Config(category = "resource-generator")
+  private final val category = "resource-generator"
+
+  @Config(category = category)
   var enableAll: Boolean = true
-  @Config(category = "resource-generator")
+  @Config(category = category)
   var enableAllFluids: Boolean = true
 
   /**
@@ -72,12 +74,12 @@ object ResourceGenerator
     MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER.name, Blocks.gravel, Blocks.sand)
     MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER.name, Blocks.glass, Blocks.sand)
 
-    materials filter (name => OreDictionary.getOres("ore" + LanguageUtility.capitalizeFirst(name)).size > 0) foreach (generate)
+    materials filter (name => OreDictionary.getOres("ore" + name.capitalizeFirst).size > 0) foreach (generate)
   }
 
   def generate(materialName: String)
   {
-    val nameCaps = LanguageUtility.capitalizeFirst(materialName)
+    val nameCaps = materialName.capitalizeFirst
     var localizedName = materialName
 
     val list = OreDictionary.getOres("ingot" + nameCaps)
@@ -187,26 +189,28 @@ object ResourceGenerator
     try
     {
       val icon: IIcon = item.getIconIndex(itemStack)
-      if (iconColorCache.containsKey(icon))
+
+      if (iconColorCache.contains(icon))
       {
-        return iconColorCache.get(icon)
+        return iconColorCache(icon)
       }
+
       var iconString: String = icon.getIconName
       if (iconString != null && !iconString.contains("MISSING_ICON_ITEM"))
       {
         iconString = (if (iconString.contains(":")) iconString.replace(":", ":" + Reference.itemTextureDirectory) else Reference.itemTextureDirectory + iconString) + ".png"
-        val textureLocation: ResourceLocation = new ResourceLocation(iconString)
-        val inputstream: InputStream = Minecraft.getMinecraft.getResourceManager.getResource(textureLocation).getInputStream
-        val bufferedimage: BufferedImage = ImageIO.read(inputstream)
-        val width: Int = bufferedimage.getWidth
-        val height: Int = bufferedimage.getWidth
+        val textureLocation = new ResourceLocation(iconString)
+        val inputStream = Minecraft.getMinecraft.getResourceManager.getResource(textureLocation).getInputStream
+        val bufferedImage = ImageIO.read(inputStream)
+        val width: Int = bufferedImage.getWidth
+        val height: Int = bufferedImage.getWidth
 
         /**
          * Read every single pixel of the texture.
          */
         for (x <- 0 until width; y <- 0 until height)
         {
-          val rgb: Color = new Color(bufferedimage.getRGB(x, y))
+          val rgb: Color = new Color(bufferedImage.getRGB(x, y))
           val luma: Double = 0.2126 * rgb.getRed + 0.7152 * rgb.getGreen + 0.0722 * rgb.getBlue
 
           if (luma > 40)
@@ -278,6 +282,38 @@ object ResourceGenerator
     return Block.blockRegistry.getObject("molten" + LanguageUtility.capitalizeFirst(name)).asInstanceOf[BlockFluidFinite]
   }
 
+  /**
+   * Gets the ItemStack of the ore dust with this material name.
+   */
+  def getDust(name: String, quantity: Int = 1): ItemStack =
+  {
+    val itemStack = new ItemStack(CoreContent.dust, quantity)
+    val nbt = new NBTTagCompound
+    nbt.setString("material", name)
+    itemStack.setTagCompound(nbt)
+    return itemStack
+  }
+
+  /**
+   * Gets the ItemStack of the refined ore dust with this material name.
+   */
+  def getRefinedDust(name: String, quantity: Int = 1): ItemStack =
+  {
+    val itemStack = new ItemStack(CoreContent.refinedDust, quantity)
+    val nbt = new NBTTagCompound
+    nbt.setString("material", name)
+    itemStack.setTagCompound(nbt)
+    return itemStack
+  }
+
+  /**
+   * Gets the material of this ItemStack
+   */
+  def getMaterial(stack: ItemStack): String =
+  {
+    return NBTUtility.getNBTTagCompound(stack).getString("material")
+  }
+
   def getName(itemStack: ItemStack): String =
   {
     return LanguageUtility.decapitalizeFirst(OreDictionary.getOreName(OreDictionary.getOreID(itemStack)).replace("dirtyDust", "").replace("dust", "").replace("ore", "").replace("ingot", ""))
@@ -285,28 +321,11 @@ object ResourceGenerator
 
   def getColor(name: String): Int =
   {
-    if (name != null && materialColorCache.containsKey(name))
+    if (name != null && materialColorCache.contains(name))
     {
-      return materialColorCache.get(name)
+      return materialColorCache(name)
     }
     return 0xFFFFFF
-  }
-
-  @Deprecated
-  def getMaterials: List[String] =
-  {
-    val returnMaterials: List[String] = new ArrayList[String]
-    {
-      var i: Int = 0
-      while (i < materials.size)
-      {
-        {
-          returnMaterials.add(getName(i))
-        }
-        i += 1
-      }
-    }
-    return returnMaterials
   }
 
   @SubscribeEvent
@@ -314,18 +333,21 @@ object ResourceGenerator
   {
     if (evt.Name.startsWith("ingot"))
     {
-      val oreDictName: String = evt.Name.replace("ingot", "")
-      val materialName: String = LanguageUtility.decapitalizeFirst(oreDictName)
-      if (!materials.containsKey(materialName))
+      val oreDictName = evt.Name.replace("ingot", "")
+      val materialName = oreDictName.decapitalizeFirst
+
+      if (!materials.contains(materialName))
       {
-        Settings.config.load
-        val allowMaterial: Boolean = Settings.config.get("Resource_Generator", "Enable " + oreDictName, true).getBoolean(true)
-        Settings.config.save
+        Settings.config.load()
+        val allowMaterial = Settings.config.get(category, "Enable " + oreDictName, true).getBoolean(true)
+        Settings.config.save()
+
         if (!allowMaterial || OreDetectionBlackList.isIngotBlackListed("ingot" + oreDictName) || OreDetectionBlackList.isOreBlackListed("ore" + oreDictName))
         {
           return
         }
-        materials.put(materialName, ({maxID += 1; maxID - 1 }))
+
+        materials += materialName
       }
     }
   }

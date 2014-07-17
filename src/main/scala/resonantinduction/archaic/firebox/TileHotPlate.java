@@ -119,7 +119,7 @@ public class TileHotPlate extends TileExternalInventory implements IPacketSender
 	public boolean canRun()
 	{
 
-		TileEntity tileEntity = worldObj.getBlockTileEntity(xCoord, yCoord - 1, zCoord);
+		TileEntity tileEntity = worldObj.getTileEntity(xCoord, yCoord - 1, zCoord);
 
 		if (tileEntity instanceof TileFirebox)
 		{

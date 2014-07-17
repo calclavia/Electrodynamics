@@ -6,6 +6,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.network.Packet
 import resonant.content.spatial.block.SpatialTile
+import resonant.lib.network.discriminator.PacketTile
 import resonant.lib.network.handle.TPacketReceiver
 import resonantinduction.core.ResonantInduction
 
@@ -14,7 +15,7 @@ import resonantinduction.core.ResonantInduction
  *
  * @author Calclavia
  */
-abstract class TileMaterial(mateiral: Material) extends SpatialTile(material) with TPacketReceiver
+abstract class TileMaterial(material: Material) extends SpatialTile(material) with TPacketReceiver
 {
   var name: String = null
 
@@ -38,7 +39,7 @@ abstract class TileMaterial(mateiral: Material) extends SpatialTile(material) wi
   {
     if (name != null)
     {
-      return ResonantInduction.packetHandler.toMCPacket(this, name)
+      return ResonantInduction.packetHandler.toMCPacket(new PacketTile(this) <<< name)
     }
 
     return null

@@ -53,7 +53,7 @@ public class TileFunnel extends TileBase implements IBoilHandler
 
         if (tank.getFluidAmount() > 0)
         {
-            TileEntity tileEntity = this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord + 1, this.zCoord);
+            TileEntity tileEntity = this.worldObj.getTileEntity(this.xCoord, this.yCoord + 1, this.zCoord);
 
             if (tileEntity instanceof IFluidHandler)
             {

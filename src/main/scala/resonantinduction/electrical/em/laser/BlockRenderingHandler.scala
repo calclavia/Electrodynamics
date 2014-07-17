@@ -5,8 +5,8 @@ import net.minecraft.client.renderer.RenderBlocks
 import net.minecraft.world.IBlockAccess
 import net.minecraft.block.Block
 import resonantinduction.electrical.em.laser.focus.mirror.{RenderMirror, BlockMirror}
-import resonantinduction.electrical.em.laser.emitter.{RenderLaserReceiver, RenderLaserEmitter, BlockLaserEmitter}
-import resonantinduction.electrical.em.laser.receiver.BlockLaserReceiver
+import resonantinduction.electrical.em.laser.emitter.{RenderLaserEmitter, BlockLaserEmitter}
+import resonantinduction.electrical.em.laser.receiver.{RenderLaserReceiver, BlockLaserReceiver}
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import resonantinduction.electrical.em.laser.focus.crystal.{BlockFocusCrystal, RenderFocusCrystal}
 

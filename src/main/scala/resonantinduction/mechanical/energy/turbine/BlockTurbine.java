@@ -25,7 +25,7 @@ public class BlockTurbine extends BlockRotatable
     @Override
     public void breakBlock(World world, int x, int y, int z, int par5, int par6)
     {
-        TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+        TileEntity tileEntity = world.getTileEntity(x, y, z);
 
         if (tileEntity instanceof TileTurbine)
         {
@@ -50,7 +50,7 @@ public class BlockTurbine extends BlockRotatable
     @Override
     public int getDamageValue(World world, int x, int y, int z)
     {
-        TileEntity tile = world.getBlockTileEntity(x, y, z);
+        TileEntity tile = world.getTileEntity(x, y, z);
 
         if (tile instanceof TileTurbine)
             return ((TileTurbine) tile).tier;
@@ -71,7 +71,7 @@ public class BlockTurbine extends BlockRotatable
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack itemStack)
     {
         super.onBlockPlacedBy(world, x, y, z, entityLiving, itemStack);
-        TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+        TileEntity tileEntity = world.getTileEntity(x, y, z);
 
         if (tileEntity instanceof TileTurbine)
         {
@@ -84,7 +84,7 @@ public class BlockTurbine extends BlockRotatable
     {
         if (player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().getItem() instanceof ItemHandCrank)
         {
-            TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+            TileEntity tileEntity = world.getTileEntity(x, y, z);
 
             if (tileEntity instanceof TileTurbine)
             {
@@ -104,7 +104,7 @@ public class BlockTurbine extends BlockRotatable
     @Override
     public boolean onUseWrench(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
     {
-        TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+        TileEntity tileEntity = world.getTileEntity(x, y, z);
 
         if (tileEntity instanceof TileTurbine)
         {
@@ -140,7 +140,7 @@ public class BlockTurbine extends BlockRotatable
     @Override
     public boolean onSneakUseWrench(World world, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
     {
-        TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+        TileEntity tileEntity = world.getTileEntity(x, y, z);
 
         if (!world.isRemote && tileEntity instanceof TileTurbine)
         {

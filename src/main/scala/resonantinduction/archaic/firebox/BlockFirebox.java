@@ -58,7 +58,7 @@ public class BlockFirebox extends BlockTile
 	@Override
 	public void onBlockClicked(World world, int x, int y, int z, EntityPlayer player)
 	{
-		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+		TileEntity tileEntity = world.getTileEntity(x, y, z);
 
 		if (tileEntity instanceof TileFirebox)
 		{
@@ -70,7 +70,7 @@ public class BlockFirebox extends BlockTile
 	@Override
 	public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
 	{
-		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+		TileEntity tileEntity = world.getTileEntity(x, y, z);
 
 		if (tileEntity instanceof TileFirebox)
 		{
@@ -95,7 +95,7 @@ public class BlockFirebox extends BlockTile
 
 		boolean isElectric = access.getBlockMetadata(x, y, z) == 1;
 		boolean isBurning = false;
-		TileEntity tile = access.getBlockTileEntity(x, y, z);
+		TileEntity tile = access.getTileEntity(x, y, z);
 
 		if (tile instanceof TileFirebox)
 		{
@@ -131,7 +131,7 @@ public class BlockFirebox extends BlockTile
 	@Override
 	public void randomDisplayTick(World world, int x, int y, int z, Random par5Random)
 	{
-		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+		TileEntity tileEntity = world.getTileEntity(x, y, z);
 
 		if (((TileFirebox) tileEntity).isBurning())
 		{
@@ -166,7 +166,7 @@ public class BlockFirebox extends BlockTile
 	@Override
 	public float getBlockBrightness(IBlockAccess access, int x, int y, int z)
 	{
-		TileEntity tileEntity = access.getBlockTileEntity(x, y, z);
+		TileEntity tileEntity = access.getTileEntity(x, y, z);
 
 		if (((TileFirebox) tileEntity).isBurning())
 		{

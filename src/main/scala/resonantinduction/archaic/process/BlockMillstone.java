@@ -59,7 +59,7 @@ public class BlockMillstone extends BlockTile
 	{
 		if (!world.isRemote)
 		{
-			TileEntity te = world.getBlockTileEntity(x, y, z);
+			TileEntity te = world.getTileEntity(x, y, z);
 
 			if (te instanceof TileMillstone)
 			{
@@ -82,7 +82,7 @@ public class BlockMillstone extends BlockTile
 	@Override
 	public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer player, int hitSide, float hitX, float hitY, float hitZ)
 	{
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 
 		if (te instanceof TileMillstone)
 		{

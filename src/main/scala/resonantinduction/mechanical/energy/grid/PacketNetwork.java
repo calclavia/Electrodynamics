@@ -52,7 +52,7 @@ public class PacketNetwork<C extends IConnector> extends PacketType
 		int x = data.readInt();
 		int y = data.readInt();
 		int z = data.readInt();
-		TileEntity tileEntity = player.worldObj.getBlockTileEntity(x, y, z);
+		TileEntity tileEntity = player.worldObj.getTileEntity(x, y, z);
 		System.out.println(tileEntity + " rec: " + new Vector3(x, y, z));
 		// TODO: Somehow this would receive the wrong coordinate once in a while...
 		if (tileEntity != null && connectorClass.isAssignableFrom(tileEntity.getClass()))

@@ -127,7 +127,7 @@ public class EntityParticle extends Entity implements IEntityAdditionalSpawnData
         }
 
         /** Check if the accelerator tile entity exists. */
-        TileEntity t = this.worldObj.getBlockTileEntity(this.movementVector.xi(), this.movementVector.yi(), this.movementVector.zi());
+        TileEntity t = this.worldObj.getTileEntity(this.movementVector.xi(), this.movementVector.yi(), this.movementVector.zi());
 
         if (!(t instanceof TileAccelerator))
         {

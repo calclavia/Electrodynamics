@@ -42,7 +42,7 @@ public class RenderReactorCell extends TileEntitySpecialRenderer
             meta = tileEntity.getBlockMetadata();
         }
 
-        boolean hasBelow = tileEntity.worldObj != null && t.worldObj.getBlockTileEntity(t.xCoord, t.yCoord - 1, t.zCoord) instanceof TileReactorCell;
+        boolean hasBelow = tileEntity.worldObj != null && t.worldObj.getTileEntity(t.xCoord, t.yCoord - 1, t.zCoord) instanceof TileReactorCell;
 
         switch (meta)
         {

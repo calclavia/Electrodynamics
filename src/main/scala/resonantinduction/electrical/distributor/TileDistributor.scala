@@ -8,9 +8,9 @@ import net.minecraft.inventory.IInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.util.ForgeDirection
+import resonant.content.spatial.block.SpatialTile
 import resonant.lib.content.module.TileBase
-import resonant.lib.content.prefab.TraitElectrical
-import resonant.lib.content.prefab.TraitInventory
+import resonant.lib.content.prefab.{TElectric, TInventory, TraitElectrical, TraitInventory}
 import resonant.lib.utility.inventory.InventoryUtility
 import universalelectricity.core.transform.vector.Vector3
 
@@ -20,14 +20,14 @@ import universalelectricity.core.transform.vector.Vector3
  * @since 22/03/14
  * @author tgame14
  */
-class TileDistributor extends TileBase(Material.rock) with TraitInventory with TraitElectrical
+class TileDistributor extends SpatialTile(Material.rock) with TInventory with TElectric
 {
   var state: EnumDistributorMode = EnumDistributorMode.PUSH
   var targetNode: Vector3 = new Vector3(this)
 
-  override def updateEntity(): Unit =
+  override def update(): Unit =
   {
-    super.updateEntity()
+    super.update()
     val prevNode = targetNode.clone()
 
     val shuffledDirs = util.Arrays.asList(ForgeDirection.VALID_DIRECTIONS)
@@ -41,7 +41,7 @@ class TileDistributor extends TileBase(Material.rock) with TraitInventory with T
       while (index < shuffledDirs.toArray().size)
       {
         targetNode = prevNode.clone().add(ForgeDirection.getOrientation(index))
-        val tile: TileEntity = targetNode.getTileEntity(world())
+        val tile: TileEntity = targetNode.getTileEntity
         if (tile.isInstanceOf[IInventory])
         {
           hasInventoriesAround = true
@@ -98,7 +98,6 @@ class TileDistributor extends TileBase(Material.rock) with TraitInventory with T
           }
           index += 1
         }
-
 
       }
     }

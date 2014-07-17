@@ -76,7 +76,7 @@ public class ItemResourceDust extends Item
 			}
 			else
 			{
-				TileEntity tile = world.getBlockTileEntity(x, y, z);
+				TileEntity tile = world.getTileEntity(x, y, z);
 
 				if (world.getBlockId(x, y, z) == blockID && tile instanceof TileMaterial)
 				{

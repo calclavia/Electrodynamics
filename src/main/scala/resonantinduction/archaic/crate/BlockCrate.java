@@ -14,6 +14,7 @@ import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
+import resonant.content.spatial.block.SpatialBlock;
 import resonant.lib.prefab.block.BlockTile;
 import resonant.lib.utility.LanguageUtility;
 import resonant.lib.utility.inventory.InventoryUtility;
@@ -29,7 +30,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * NOTE: Crates should be upgraded with an item.
  * 
  * @author DarkGuardsman */
-public class BlockCrate extends BlockTile
+public class BlockCrate extends SpatialBlock
 {
     IIcon advanced, elite;
 
@@ -65,9 +66,9 @@ public class BlockCrate extends BlockTile
     @Override
     public void onBlockClicked(World world, int x, int y, int z, EntityPlayer player)
     {
-        if (!world.isRemote && world.getBlockTileEntity(x, y, z) instanceof TileCrate)
+        if (!world.isRemote && world.getTileEntity(x, y, z) instanceof TileCrate)
         {
-            TileCrate tileEntity = (TileCrate) world.getBlockTileEntity(x, y, z);
+            TileCrate tileEntity = (TileCrate) world.getTileEntity(x, y, z);
             this.tryEject(tileEntity, player, (System.currentTimeMillis() - tileEntity.prevClickTime) < 200);
             tileEntity.prevClickTime = System.currentTimeMillis();
         }
@@ -76,9 +77,9 @@ public class BlockCrate extends BlockTile
     @Override
     public boolean onUseWrench(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
     {
-        if (!world.isRemote && world.getBlockTileEntity(x, y, z) instanceof TileCrate)
+        if (!world.isRemote && world.getTileEntity(x, y, z) instanceof TileCrate)
         {
-            TileCrate tile = (TileCrate) world.getBlockTileEntity(x, y, z);
+            TileCrate tile = (TileCrate) world.getTileEntity(x, y, z);
             tile.buildSampleStack();
             ItemStack sampleStack = tile.getSampleStack();
             int oreID = OreDictionary.getOreID(sampleStack);
@@ -116,9 +117,9 @@ public class BlockCrate extends BlockTile
     @Override
     public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
     {
-        if (!world.isRemote && world.getBlockTileEntity(x, y, z) instanceof TileCrate)
+        if (!world.isRemote && world.getTileEntity(x, y, z) instanceof TileCrate)
         {
-            TileCrate tile = (TileCrate) world.getBlockTileEntity(x, y, z);
+            TileCrate tile = (TileCrate) world.getTileEntity(x, y, z);
 
             if (ControlKeyModifer.isControlDown(player))
             {

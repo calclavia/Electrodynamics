@@ -40,7 +40,7 @@ public class BlockBattery extends BlockSidedIO implements ITileEntityProvider
 	{
 		if (!world.isRemote)
 		{
-			TileEnergyDistribution distribution = (TileEnergyDistribution) world.getBlockTileEntity(x, y, z);
+			TileEnergyDistribution distribution = (TileEnergyDistribution) world.getTileEntity(x, y, z);
 			distribution.updateStructure();
 		}
 	}
@@ -48,7 +48,7 @@ public class BlockBattery extends BlockSidedIO implements ITileEntityProvider
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, int id)
 	{
-		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+		TileEntity tileEntity = world.getTileEntity(x, y, z);
 
 		if (!world.isRemote && tileEntity instanceof TileEnergyDistribution)
 		{
@@ -63,7 +63,7 @@ public class BlockBattery extends BlockSidedIO implements ITileEntityProvider
 		if (!world.isRemote && itemStack.getItem() instanceof ItemBlockBattery)
 		{
 			ItemBlockBattery itemBlock = (ItemBlockBattery) itemStack.getItem();
-			TileBattery battery = (TileBattery) world.getBlockTileEntity(x, y, z);
+			TileBattery battery = (TileBattery) world.getTileEntity(x, y, z);
 			battery.getEnergyHandler().setCapacity(TileBattery.getEnergyForTier(ItemBlockBattery.getTier(itemStack)));
 			battery.getEnergyHandler().setEnergy(itemBlock.getEnergy(itemStack));
 			battery.updateStructure();
@@ -93,9 +93,9 @@ public class BlockBattery extends BlockSidedIO implements ITileEntityProvider
 		ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
 		ItemStack itemStack = new ItemStack(this, 1);
 
-		if (world.getBlockTileEntity(x, y, z) instanceof TileBattery)
+		if (world.getTileEntity(x, y, z) instanceof TileBattery)
 		{
-			TileBattery battery = (TileBattery) world.getBlockTileEntity(x, y, z);
+			TileBattery battery = (TileBattery) world.getTileEntity(x, y, z);
 			ItemBlockBattery itemBlock = (ItemBlockBattery) itemStack.getItem();
 			ItemBlockBattery.setTier(itemStack, (byte) world.getBlockMetadata(x, y, z));
 			itemBlock.setEnergy(itemStack, battery.getEnergyHandler().getEnergy());
@@ -145,7 +145,7 @@ public class BlockBattery extends BlockSidedIO implements ITileEntityProvider
 			return null;
 		}
 
-		TileBattery battery = (TileBattery) world.getBlockTileEntity(x, y, z);
+		TileBattery battery = (TileBattery) world.getTileEntity(x, y, z);
 		return CompatibilityModule.getItemWithCharge(ItemBlockBattery.setTier(new ItemStack(id, 1, 0), (byte) world.getBlockMetadata(x, y, z)), battery.getEnergyHandler().getEnergy());
 	}
 }
