@@ -5,7 +5,7 @@ import net.minecraft.block.material.Material
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.network.Packet
-import net.minecraftforge.fluids.{IFluidHandler, FluidStack, FluidTank}
+import net.minecraftforge.fluids.{FluidStack, FluidTank, IFluidHandler}
 import resonant.content.spatial.block.SpatialTile
 import resonant.lib.network.ByteBufWrapper.ByteBufWrapper
 import resonant.lib.network.discriminator.PacketType
@@ -69,7 +69,7 @@ abstract class TileFluidNodeProvider(material: Material) extends SpatialTile(mat
     nbt.setTag("FluidTank", tank.writeToNBT(new NBTTagCompound))
   }
 
-  def write(buf: ByteBuf, id: Int)
+  override def write(buf: ByteBuf, id: Int)
   {
     super.write(buf, id)
 

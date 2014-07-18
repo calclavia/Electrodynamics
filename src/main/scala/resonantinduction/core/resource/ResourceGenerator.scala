@@ -104,7 +104,7 @@ object ResourceGenerator
       FluidRegistry.registerFluid(fluidMolten)
       val blockFluidMaterial = new BlockFluidMaterial(fluidMolten)
       CoreContent.manager.newBlock("molten" + nameCaps, blockFluidMaterial)
-      FluidContainerRegistry.registerFluidContainer(fluidMolten, CoreContent.bucketMolten.getStackFromMaterial(materialName))
+      FluidContainerRegistry.registerFluidContainer(fluidMolten, setMaterial(new ItemStack(CoreContent.bucketMolten), materialName))
 
       /**
        * Generate mixture fluid
@@ -113,7 +113,7 @@ object ResourceGenerator
       FluidRegistry.registerFluid(fluidMixture)
       val blockFluidMixture = new BlockFluidMixture(fluidMixture)
       GameRegistry.registerBlock(blockFluidMixture, "mixture" + nameCaps)
-      FluidContainerRegistry.registerFluidContainer(fluidMixture, CoreContent.bucketMixture.getStackFromMaterial(materialName))
+      FluidContainerRegistry.registerFluidContainer(fluidMixture, setMaterial(new ItemStack(CoreContent.bucketMixture), materialName))
 
       if (allowOreDictCompatibility)
         MachineRecipes.INSTANCE.addRecipe(RecipeType.SMELTER.name, new FluidStack(fluidMolten, FluidContainerRegistry.BUCKET_VOLUME), "ingot" + nameCaps)
@@ -314,6 +314,12 @@ object ResourceGenerator
     return NBTUtility.getNBTTagCompound(stack).getString("material")
   }
 
+  def setMaterial(stack: ItemStack, material: String): ItemStack =
+  {
+    NBTUtility.getNBTTagCompound(stack).setString("material", material)
+    return stack
+  }
+
   def getName(itemStack: ItemStack): String =
   {
     return LanguageUtility.decapitalizeFirst(OreDictionary.getOreName(OreDictionary.getOreID(itemStack)).replace("dirtyDust", "").replace("dust", "").replace("ore", "").replace("ingot", ""))
@@ -321,10 +327,13 @@ object ResourceGenerator
 
   def getColor(name: String): Int =
   {
+    assert(name != null, "getColor(name) received a null name!")
+
     if (name != null && materialColorCache.contains(name))
     {
       return materialColorCache(name)
     }
+
     return 0xFFFFFF
   }
 

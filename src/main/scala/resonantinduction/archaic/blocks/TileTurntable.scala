@@ -2,6 +2,7 @@ package resonantinduction.archaic.blocks
 
 import codechicken.multipart.TileMultipart
 import cpw.mods.fml.relauncher.{Side, SideOnly}
+import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.util.IIcon
@@ -34,7 +35,7 @@ class TileTurntable extends SpatialBlock(Material.piston) with TRotatable with R
     TileTurntable.top = iconReg.registerIcon(Reference.prefix + "turntable")
   }
 
-  override def updateEntity()
+  override def update()
   {
     updateTurntableState(world, x, y, z)
   }
@@ -60,7 +61,7 @@ class TileTurntable extends SpatialBlock(Material.piston) with TRotatable with R
     return getIcon
   }
 
-  override def onNeighborChanged()
+  override def onNeighborChanged(block: Block)
   {
     scheduleTick(10)
   }

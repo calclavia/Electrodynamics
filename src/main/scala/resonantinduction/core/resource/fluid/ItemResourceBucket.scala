@@ -16,11 +16,13 @@ import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.entity.player.FillBucketEvent
 import net.minecraftforge.fluids.{BlockFluidFinite, FluidRegistry}
 import resonant.lib.utility.LanguageUtility
+import resonant.lib.wrapper.WrapList._
 import resonantinduction.core.resource.ResourceGenerator
 
 /** Modified version of the MC bucket to meet the needs of a dynamic fluid registry system
   *
-  * @author Calclavia */
+  * @author Calclavia
+  */
 class ItemResourceBucket(isMolten: Boolean) extends Item
 {
   setMaxStackSize(1)
@@ -209,17 +211,12 @@ class ItemResourceBucket(isMolten: Boolean) extends Item
 
   override def getSubItems(item: Item, tabs: CreativeTabs, list: List[_])
   {
-    import scala.collection.JavaConversions._
-    for (materialName <- ResourceGenerator.materials.keySet)
-    {
-      list.add(getStackFromMaterial(materialName))
-    }
+    ResourceGenerator.materials foreach (m => list.add(ResourceGenerator.setMaterial(new ItemStack(this), m)))
   }
 
   @SideOnly(Side.CLIENT)
   override def getColorFromItemStack(itemStack: ItemStack, par2: Int): Int =
   {
-    val name = ResourceGenerator.getMaterialFromStack(itemStack)
-    return ResourceGenerator.getColor(name)
+    return ResourceGenerator.getColor(ResourceGenerator.getMaterial(itemStack))
   }
 }

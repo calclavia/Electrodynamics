@@ -9,8 +9,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.content.spatial.block.SpatialTile
-import resonant.lib.content.module.TileBase
-import resonant.lib.content.prefab.{TElectric, TInventory, TraitElectrical, TraitInventory}
+import resonant.lib.content.prefab.{TElectric, TInventory}
 import resonant.lib.utility.inventory.InventoryUtility
 import universalelectricity.core.transform.vector.Vector3
 
@@ -23,7 +22,7 @@ import universalelectricity.core.transform.vector.Vector3
 class TileDistributor extends SpatialTile(Material.rock) with TInventory with TElectric
 {
   var state: EnumDistributorMode = EnumDistributorMode.PUSH
-  var targetNode: Vector3 = new Vector3(this)
+  var targetNode = position
 
   override def update(): Unit =
   {
@@ -52,15 +51,11 @@ class TileDistributor extends SpatialTile(Material.rock) with TInventory with TE
     }
     if (!targetNode.equals(prevNode) && hasInventoriesAround)
     {
-      val inv: IInventory = targetNode.getTileEntity(world()).asInstanceOf[IInventory]
+      val inv: IInventory = targetNode.getTileEntity(world).asInstanceOf[IInventory]
       callAction(inv)
     }
-
     else
-      targetNode = new Vector3(this)
-
-
-
+      targetNode = position
 
   }
 

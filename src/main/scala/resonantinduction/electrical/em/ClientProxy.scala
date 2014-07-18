@@ -1,15 +1,15 @@
 package resonantinduction.electrical.em
 
 import cpw.mods.fml.client.FMLClientHandler
-import net.minecraft.world.World
-import cpw.mods.fml.client.registry.{RenderingRegistry, ClientRegistry}
-import resonantinduction.electrical.em.laser.emitter.{RenderLaserReceiver, TileLaserReceiver, TileLaserEmitter, RenderLaserEmitter}
-import resonantinduction.electrical.em.laser.focus.mirror.{RenderMirror, TileMirror}
-import resonantinduction.electrical.em.laser.BlockRenderingHandler
+import cpw.mods.fml.client.registry.{ClientRegistry, RenderingRegistry}
 import net.minecraft.block.Block
-import resonantinduction.electrical.em.laser.fx.{EntityLaserFX, EntityBlockParticleFX, EntityScorchFX}
+import net.minecraft.world.World
 import net.minecraftforge.client.model.AdvancedModelLoader
-import resonantinduction.electrical.em.laser.focus.crystal.{TileFocusCrystal, RenderFocusCrystal}
+import resonantinduction.electrical.em.laser.BlockRenderingHandler
+import resonantinduction.electrical.em.laser.emitter.{RenderLaserEmitter, TileLaserEmitter}
+import resonantinduction.electrical.em.laser.focus.crystal.{RenderFocusCrystal, TileFocusCrystal}
+import resonantinduction.electrical.em.laser.focus.mirror.{RenderMirror, TileMirror}
+import resonantinduction.electrical.em.laser.fx.{EntityBlockParticleFX, EntityLaserFX, EntityScorchFX}
 
 /**
  * @author Calclavia
@@ -24,7 +24,6 @@ class ClientProxy extends CommonProxy
     RenderingRegistry.registerBlockHandler(BlockRenderingHandler)
 
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileLaserEmitter], RenderLaserEmitter)
-    ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileLaserReceiver], RenderLaserReceiver)
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileMirror], RenderMirror)
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileFocusCrystal], RenderFocusCrystal)
   }
