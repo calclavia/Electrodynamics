@@ -10,11 +10,11 @@ import scala.collection.mutable
 /** Network that handles connected tanks
   *
   * @author DarkGuardsman */
-class TankNetwork extends FluidDistributionGrid
+class TankGrid extends FluidDistributionGrid
 {
   needsUpdate = true
 
-  override def update()
+  override def update(deltaTime: Double)
   {
     val networkTankFluid = tank.getFluid
 
@@ -34,7 +34,7 @@ class TankNetwork extends FluidDistributionGrid
         }
       })
 
-      heightPriorityQueue ++= getNodes()
+      heightPriorityQueue ++= (getNodes() map (_.genericParent))
 
       var didChange = false
 

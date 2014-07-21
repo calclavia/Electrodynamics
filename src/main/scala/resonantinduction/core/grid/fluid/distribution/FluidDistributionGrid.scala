@@ -1,7 +1,7 @@
 package resonantinduction.core.grid.fluid.distribution
 
 import net.minecraftforge.common.util.ForgeDirection
-import net.minecraftforge.fluids.{FluidStack, FluidTank, FluidTankInfo}
+import net.minecraftforge.fluids._
 import universalelectricity.core.grid.{TickingGrid, UpdateTicker}
 
 /**
@@ -9,14 +9,14 @@ import universalelectricity.core.grid.{TickingGrid, UpdateTicker}
  *
  * @author DarkCow, Calclavia
  */
-abstract class FluidDistributionGrid extends TickingGrid[TFluidDistributor]
+abstract class FluidDistributionGrid extends TickingGrid[TankNode] with IFluidHandler
 {
   val tank = new FluidTank(0)
   var needsUpdate = false
 
   override def canUpdate: Boolean =
   {
-    return needsUpdate && getNodes.size > 0
+    return needsUpdate && getNodes().size > 0
   }
 
   override def continueUpdate: Boolean =
@@ -33,9 +33,9 @@ abstract class FluidDistributionGrid extends TickingGrid[TFluidDistributor]
     UpdateTicker.addUpdater(this)
   }
 
-  override def reconstructNode(node: TFluidDistributor)
+  override def reconstructNode(node: TankNode)
   {
-    val connectorTank: FluidTank = node.getTank
+    val connectorTank: FluidTank = node.genericParent.getTank
 
     if (connectorTank != null)
     {
@@ -58,7 +58,7 @@ abstract class FluidDistributionGrid extends TickingGrid[TFluidDistributor]
     }
   }
 
-  def fill(source: TFluidDistributor, from: ForgeDirection, resource: FluidStack, doFill: Boolean): Int =
+  override def fill(from: ForgeDirection, resource: FluidStack, doFill: Boolean): Int =
   {
     val fill: Int = tank.fill(resource.copy, doFill)
     if (fill > 0)
@@ -69,7 +69,7 @@ abstract class FluidDistributionGrid extends TickingGrid[TFluidDistributor]
     return fill
   }
 
-  def drain(source: TFluidDistributor, from: ForgeDirection, resource: FluidStack, doDrain: Boolean): FluidStack =
+  override def drain(from: ForgeDirection, resource: FluidStack, doDrain: Boolean): FluidStack =
   {
     if (resource != null && resource.isFluidEqual(tank.getFluid))
     {
@@ -81,7 +81,7 @@ abstract class FluidDistributionGrid extends TickingGrid[TFluidDistributor]
     return null
   }
 
-  def drain(source: TFluidDistributor, from: ForgeDirection, resource: Int, doDrain: Boolean): FluidStack =
+  override def drain(from: ForgeDirection, resource: Int, doDrain: Boolean): FluidStack =
   {
     val drain: FluidStack = tank.drain(resource, doDrain)
     needsUpdate = true
@@ -89,10 +89,11 @@ abstract class FluidDistributionGrid extends TickingGrid[TFluidDistributor]
     return drain
   }
 
-  def tankInfo: Array[FluidTankInfo] =
-  {
-    return Array[FluidTankInfo](tank.getInfo)
-  }
+  override def canFill(from: ForgeDirection, fluid: Fluid) = true
+
+  override def canDrain(from: ForgeDirection, fluid: Fluid) = true
+
+  override def getTankInfo(from: ForgeDirection) = Array[FluidTankInfo](tank.getInfo)
 
   override def toString: String =
   {

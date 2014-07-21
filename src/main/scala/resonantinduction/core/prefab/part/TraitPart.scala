@@ -1,24 +1,20 @@
 package resonantinduction.core.prefab.part
 
-import java.util.{ArrayList, List}
-
 import codechicken.multipart.{IRedstonePart, TMultiPart}
 import net.minecraft.item.ItemStack
 import net.minecraft.util.MovingObjectPosition
 import resonant.content.spatial.block.TraitTicker
 
-import scala.collection.JavaConversions._
-
 trait TraitPart extends TMultiPart with TraitTicker
 {
+  override def update()
+  {
+    super[TraitTicker].update()
+  }
+
   protected def getItem: ItemStack
 
-  override def getDrops: Iterable[ItemStack] =
-  {
-    val drops: List[ItemStack] = new ArrayList[ItemStack]
-    drops.add(getItem)
-    return drops
-  }
+  override def getDrops: Iterable[ItemStack] = Seq(getItem)
 
   override def pickItem(hit: MovingObjectPosition): ItemStack =
   {

@@ -166,10 +166,12 @@ abstract class PartColorableMaterial[M](insulationType: Item) extends TMultiPart
   {
     val drops = mutable.Set.empty[ItemStack]
     drops.add(getItem)
+
     if (requiresInsulation && isInsulated)
     {
       drops.add(new ItemStack(insulationType, 1, BlockColored.func_150031_c(color)))
     }
+
     return drops
   }
 

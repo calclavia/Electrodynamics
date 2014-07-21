@@ -11,7 +11,7 @@ import universalelectricity.core.transform.vector.VectorWorld
  * A node that works with Forge Multipart
  * @author Calclavia
  */
-abstract class MultipartNode[N <: Node[N]](parent: INodeProvider) extends Node[N](parent)
+abstract class MultipartNode[N](parent: INodeProvider) extends Node[N](parent)
 {
   override def world: World =
   {

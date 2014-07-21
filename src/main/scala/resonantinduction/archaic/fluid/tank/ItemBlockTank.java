@@ -83,7 +83,7 @@ public class ItemBlockTank extends ItemBlock implements IFluidContainerItem
 			if (tile instanceof TileFluidDistribution)
 			{
 				((TileFluidDistribution) tile).setSubID(stack.getItemDamage());
-				((TileFluidDistribution) tile).getTank().fill(getFluid(stack), true);
+				((TileFluidDistribution) tile).getForwardTank().fill(getFluid(stack), true);
 
 			}
 			return true;

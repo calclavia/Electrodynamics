@@ -31,7 +31,7 @@ import archaic.Archaic;
 import resonantinduction.core.Reference;
 import resonantinduction.core.grid.fluid.distribution.FluidDistributionGrid;
 import resonantinduction.core.grid.fluid.distribution.TFluidDistributor;
-import resonantinduction.core.grid.fluid.distribution.TankNetwork;
+import resonantinduction.core.grid.fluid.distribution.TankGrid;
 import resonantinduction.core.grid.fluid.distribution.TileFluidDistribution;
 import universalelectricity.api.UniversalElectricity;
 import universalelectricity.core.transform.vector.Vector3;
@@ -85,9 +85,9 @@ public class TileTank extends TileFluidDistribution implements IComparatorInputO
 	@Override
 	public int getLightValue(IBlockAccess access)
 	{
-		if (getTank().getFluid() != null)
+		if (getForwardTank().getFluid() != null)
 		{
-			return getTank().getFluid().getFluid().getLuminosity();
+			return getForwardTank().getFluid().getFluid().getLuminosity();
 		}
 		return super.getLightValue(access);
 	}
@@ -97,7 +97,7 @@ public class TileTank extends TileFluidDistribution implements IComparatorInputO
 	{
 		if (this.network == null)
 		{
-			this.network = new TankNetwork();
+			this.network = new TankGrid();
 			this.network.addConnector(this);
 		}
 		return this.network;
@@ -106,7 +106,7 @@ public class TileTank extends TileFluidDistribution implements IComparatorInputO
 	@Override
 	public void setNetwork(FluidDistributionGrid network)
 	{
-		if (network instanceof TankNetwork)
+		if (network instanceof TankGrid)
 		{
 			this.network = network;
 		}
@@ -153,7 +153,7 @@ public class TileTank extends TileFluidDistribution implements IComparatorInputO
 						if (!fluid.getFluid().isGaseous())
 						{
 							GL11.glScaled(0.99, 0.99, 0.99);
-							FluidTank tank = ((TileTank) tileEntity).getTank();
+							FluidTank tank = ((TileTank) tileEntity).getForwardTank();
 							double percentageFilled = (double) tank.getFluidAmount() / (double) tank.getCapacity();
 
 							double ySouthEast = FluidUtility.getAveragePercentageFilledForSides(TileTank.class, percentageFilled, tileEntity.worldObj, new Vector3(tileEntity), ForgeDirection.SOUTH, ForgeDirection.EAST);
@@ -166,7 +166,7 @@ public class TileTank extends TileFluidDistribution implements IComparatorInputO
 						{
 							GL11.glTranslated(-0.5, -0.5, -0.5);
 							GL11.glScaled(0.99, 0.99, 0.99);
-							int capacity = tileEntity instanceof TileTank ? ((TileTank) tileEntity).getTank().getCapacity() : fluid.amount;
+							int capacity = tileEntity instanceof TileTank ? ((TileTank) tileEntity).getForwardTank().getCapacity() : fluid.amount;
 							double filledPercentage = (double) fluid.amount / (double) capacity;
 							double renderPercentage = fluid.getFluid().isGaseous() ? 1 : filledPercentage;
 
@@ -198,7 +198,7 @@ public class TileTank extends TileFluidDistribution implements IComparatorInputO
 			@Override
 			public boolean renderDynamic(Vector3 position, boolean isItem, float frame)
 			{
-				renderTank(TileTank.this, position.x, position.y, position.z, getTank().getFluid());
+				renderTank(TileTank.this, position.x, position.y, position.z, getForwardTank().getFluid());
 				return false;
 			}
 		};
@@ -278,9 +278,9 @@ public class TileTank extends TileFluidDistribution implements IComparatorInputO
 		ItemStack itemStack = new ItemStack(Archaic.blockTank, 1, 0);
 		if (itemStack != null)
 		{
-			if (getTank() != null && getTank().getFluid() != null)
+			if (getForwardTank() != null && getForwardTank().getFluid() != null)
 			{
-				FluidStack stack = getTank().getFluid();
+				FluidStack stack = getForwardTank().getFluid();
 
 				if (stack != null)
 				{

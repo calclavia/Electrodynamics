@@ -4,7 +4,6 @@ import codechicken.multipart.{TMultiPart, TileMultipart}
 import io.netty.buffer.ByteBuf
 import io.netty.channel.ChannelHandlerContext
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.tileentity.TileEntity
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.TPacketReceiver
 import universalelectricity.core.transform.vector.Vector3
@@ -16,10 +15,10 @@ import universalelectricity.core.transform.vector.Vector3
  */
 class PacketMultiPart extends PacketType
 {
-  var x: Int
-  var y: Int
-  var z: Int
-  var partID: Int
+  var x: Int = 0
+  var y: Int = 0
+  var z: Int = 0
+  var partID: Int = 0
 
   def this(part: TMultiPart, partID: Int)
   {

@@ -7,14 +7,18 @@ import resonant.lib.utility.WorldUtility
 import resonantinduction.core.grid.MultipartNode
 import universalelectricity.api.core.grid.INodeProvider
 
-class TankNode(parent: INodeProvider) extends MultipartNode[TankNode](parent) with IFluidHandler
+class TankNode(parent: INodeProvider) extends MultipartNode[TankNode](parent) with IFluidHandler with TFluidForwarder
 {
   var maxFlowRate: Int = 20
   var maxPressure: Int = 100
+
+  //TODO: Do we actually call this?
   private var pressure: Int = 0
   var connectedSides: Byte = 0
 
   var onChange: () => Unit = null
+
+  def genericParent = parent.asInstanceOf[TFluidDistributor]
 
   def getMaxFlowRate: Int =
   {
@@ -75,6 +79,10 @@ class TankNode(parent: INodeProvider) extends MultipartNode[TankNode](parent) wi
     //TODO: Check this
     return source.isInstanceOf[TankNode]
   }
+
+  override def getForwardTank = getGrid.asInstanceOf[TankGrid]
+
+  override protected def newGrid() = new TankGrid
 
   override def load(nbt: NBTTagCompound)
   {
