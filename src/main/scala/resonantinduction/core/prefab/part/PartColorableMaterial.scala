@@ -10,6 +10,7 @@ import net.minecraft.item.{Item, ItemShears, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.MovingObjectPosition
 
+import scala.collection.convert.wrapAll._
 import scala.collection.mutable
 
 /**
@@ -162,7 +163,7 @@ abstract class PartColorableMaterial[M](insulationType: Item) extends TMultiPart
     return false
   }
 
-  override def getDrops: Iterable[ItemStack] =
+  override def getDrops: java.lang.Iterable[ItemStack] =
   {
     val drops = mutable.Set.empty[ItemStack]
     drops.add(getItem)

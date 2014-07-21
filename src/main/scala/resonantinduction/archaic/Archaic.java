@@ -39,7 +39,7 @@ import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.ResonantTab;
 import resonantinduction.core.Settings;
 import resonantinduction.archaic.filter.imprint.ItemImprint;
-import resonantinduction.core.resource.ItemHandCrank;
+import resonantinduction.mechanical.gear.ItemHandCrank;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;

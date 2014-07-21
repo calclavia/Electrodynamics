@@ -16,7 +16,7 @@ import resonant.lib.multiblock.IMultiBlockStructure;
 import resonant.lib.multiblock.MultiBlockHandler;
 import resonant.lib.utility.WrenchUtility;
 import resonantinduction.core.Reference;
-import resonantinduction.core.resource.ItemHandCrank;
+import resonantinduction.mechanical.gear.ItemHandCrank;
 import resonantinduction.mechanical.Mechanical;
 import resonantinduction.mechanical.energy.grid.PartMechanical;
 import codechicken.lib.vec.Cuboid6;

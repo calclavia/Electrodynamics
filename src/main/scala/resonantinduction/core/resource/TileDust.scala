@@ -53,7 +53,7 @@ class TileDust extends TileMaterial(Material.sand)
 
   override def onPlaced(entityLiving: EntityLivingBase, itemStack: ItemStack)
   {
-    name = ItemResourceDust.getMaterialFromStack(itemStack)
+    materialName = ItemResourceDust.getMaterialFromStack(itemStack)
   }
 
   override def onPostPlaced(metadata: Int)
@@ -81,7 +81,7 @@ class TileDust extends TileMaterial(Material.sand)
     val tile: TileEntity = world.getTileEntity(x, y, z)
     if (tile.isInstanceOf[TileMaterial])
     {
-      val materialName: String = (tile.asInstanceOf[TileMaterial]).name
+      val materialName: String = (tile.asInstanceOf[TileMaterial]).materialName
       if (materialName != null)
       {
         val metadata: Int = world.getBlockMetadata(x, y, z)
@@ -99,7 +99,7 @@ class TileDust extends TileMaterial(Material.sand)
             val newTile: TileEntity = world.getTileEntity(x, y, z)
             if (newTile.isInstanceOf[TileMaterial])
             {
-              (newTile.asInstanceOf[TileMaterial]).name = materialName
+              (newTile.asInstanceOf[TileMaterial]).materialName = materialName
             }
           }
         }
@@ -128,20 +128,20 @@ class TileDust extends TileMaterial(Material.sand)
   }
 
   /**
-   * Updates the blocks bounds based on its current state. Args: world, x, y, z
+   * Called upon bounds raytrace. World data given.
    */
-  override def setBlockBoundsBasedOnState(par1IBlockAccess: IBlockAccess, par2: Int, par3: Int, par4: Int)
+  override def setBlockBoundsBasedOnState()
   {
-    this.setBlockBoundsForDepth(par1IBlockAccess.getBlockMetadata(par2, par3, par4))
+    setBlockBoundsForDepth(metadata)
   }
 
   /**
    * calls setBlockBounds based on the depth of the snow. Int is any values 0x0-0x7, usually this
    * blocks metadata.
    */
-  protected def setBlockBoundsForDepth(par1: Int)
+  protected def setBlockBoundsForDepth(meta: Int)
   {
-    val j: Int = par1 & 7
+    val j: Int = meta & 7
     val f: Float = 2 * (1 + j) / 16.0F
     bounds = new Cuboid(0.0F, 0.0F, 0.0F, 1.0F, f, 1.0F)
   }
@@ -154,9 +154,9 @@ class TileDust extends TileMaterial(Material.sand)
     val list = new util.ArrayList[ItemStack]
 
     if (block == CoreContent.blockRefinedDust)
-      list.add(ResourceGenerator.getRefinedDust(name, quantityDropped(metadata, fortune)))
+      list.add(ResourceGenerator.getRefinedDust(materialName, quantityDropped(metadata, fortune)))
     else
-      list.add(ResourceGenerator.getDust(name, quantityDropped(metadata, fortune)))
+      list.add(ResourceGenerator.getDust(materialName, quantityDropped(metadata, fortune)))
 
     return list
   }
@@ -164,9 +164,9 @@ class TileDust extends TileMaterial(Material.sand)
   override def getPickBlock(target: MovingObjectPosition): ItemStack =
   {
     if (block == CoreContent.blockRefinedDust)
-      return ResourceGenerator.getRefinedDust(name)
+      return ResourceGenerator.getRefinedDust(materialName)
     else
-      return ResourceGenerator.getDust(name)
+      return ResourceGenerator.getDust(materialName)
   }
 
   @SideOnly(Side.CLIENT)

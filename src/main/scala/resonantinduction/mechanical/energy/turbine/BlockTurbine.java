@@ -11,7 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonant.lib.prefab.block.BlockRotatable;
 import resonantinduction.core.Reference;
-import resonantinduction.core.resource.ItemHandCrank;
+import resonantinduction.mechanical.gear.ItemHandCrank;
 
 public class BlockTurbine extends BlockRotatable
 {

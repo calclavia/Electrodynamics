@@ -5,6 +5,8 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.MovingObjectPosition
 import resonant.content.spatial.block.TraitTicker
 
+import scala.collection.convert.wrapAll._
+
 trait TraitPart extends TMultiPart with TraitTicker
 {
   override def update()
@@ -14,7 +16,7 @@ trait TraitPart extends TMultiPart with TraitTicker
 
   protected def getItem: ItemStack
 
-  override def getDrops: Iterable[ItemStack] = Seq(getItem)
+  override def getDrops: java.lang.Iterable[ItemStack] = Seq(getItem)
 
   override def pickItem(hit: MovingObjectPosition): ItemStack =
   {

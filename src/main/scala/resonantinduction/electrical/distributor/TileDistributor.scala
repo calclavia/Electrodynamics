@@ -6,12 +6,10 @@ import java.util.Collections
 import net.minecraft.block.material.Material
 import net.minecraft.inventory.IInventory
 import net.minecraft.item.ItemStack
-import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.content.spatial.block.SpatialTile
 import resonant.lib.content.prefab.{TElectric, TInventory}
 import resonant.lib.utility.inventory.InventoryUtility
-import universalelectricity.core.transform.vector.Vector3
 
 /**
  * A Block that interacts with connected inventories
@@ -24,6 +22,8 @@ class TileDistributor extends SpatialTile(Material.rock) with TInventory with TE
   var state: EnumDistributorMode = EnumDistributorMode.PUSH
   var targetNode = position
 
+  override def getSizeInventory = 0
+
   override def update(): Unit =
   {
     super.update()
@@ -32,23 +32,8 @@ class TileDistributor extends SpatialTile(Material.rock) with TInventory with TE
     val shuffledDirs = util.Arrays.asList(ForgeDirection.VALID_DIRECTIONS)
     Collections.shuffle(shuffledDirs)
 
-    var hasInventoriesAround = false
+    val hasInventoriesAround = (0 until shuffledDirs.toArray().size) map (i => (prevNode + ForgeDirection.getOrientation(i)).getTileEntity) exists (_.isInstanceOf[IInventory])
 
-    scala.util.control.Breaks.breakable
-    {
-      var index: Int = 0
-      while (index < shuffledDirs.toArray().size)
-      {
-        targetNode = prevNode.clone().add(ForgeDirection.getOrientation(index))
-        val tile: TileEntity = targetNode.getTileEntity
-        if (tile.isInstanceOf[IInventory])
-        {
-          hasInventoriesAround = true
-          scala.util.control.Breaks.break()
-        }
-        index += 1
-      }
-    }
     if (!targetNode.equals(prevNode) && hasInventoriesAround)
     {
       val inv: IInventory = targetNode.getTileEntity(world).asInstanceOf[IInventory]

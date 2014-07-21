@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 import resonant.lib.prefab.block.BlockTile;
 import resonant.lib.utility.inventory.InventoryUtility;
 import resonantinduction.core.Reference;
-import resonantinduction.core.resource.ItemHandCrank;
+import resonantinduction.mechanical.gear.ItemHandCrank;
 import universalelectricity.core.transform.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

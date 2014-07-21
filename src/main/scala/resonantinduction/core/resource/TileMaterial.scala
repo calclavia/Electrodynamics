@@ -1,12 +1,13 @@
 package resonantinduction.core.resource
 
-import com.google.common.io.ByteArrayDataInput
+import io.netty.buffer.ByteBuf
 import net.minecraft.block.material.Material
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.network.Packet
 import resonant.content.spatial.block.SpatialTile
-import resonant.lib.network.discriminator.PacketTile
+import resonant.lib.network.ByteBufWrapper.ByteBufWrapper
+import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.TPacketReceiver
 import resonantinduction.core.ResonantInduction
 
@@ -17,11 +18,11 @@ import resonantinduction.core.ResonantInduction
  */
 abstract class TileMaterial(material: Material) extends SpatialTile(material) with TPacketReceiver
 {
-  var name: String = null
+  var materialName: String = null
 
   def getColor: Int =
   {
-    return ResourceGenerator.getColor(name)
+    return ResourceGenerator.getColor(materialName)
   }
 
   override def canUpdate: Boolean =
@@ -29,17 +30,23 @@ abstract class TileMaterial(material: Material) extends SpatialTile(material) wi
     return false
   }
 
-  def onReceivePacket(data: ByteArrayDataInput, player: EntityPlayer, extra: AnyRef*)
+  /**
+   * Reads a packet
+   * @param buf   - data encoded into the packet
+   * @param player - player that is receiving the packet
+   * @param packet - The packet instance that was sending this packet.
+   */
+  override def read(buf: ByteBuf, player: EntityPlayer, packet: PacketType)
   {
-    name = data.readUTF
-    markRender
+    materialName = buf.readString()
+    markRender()
   }
 
   override def getDescriptionPacket: Packet =
   {
-    if (name != null)
+    if (materialName != null)
     {
-      return ResonantInduction.packetHandler.toMCPacket(new PacketTile(this) <<< name)
+      return ResonantInduction.packetHandler.toMCPacket(new PacketTile(this) <<< materialName)
     }
 
     return null
@@ -48,15 +55,15 @@ abstract class TileMaterial(material: Material) extends SpatialTile(material) wi
   override def readFromNBT(nbt: NBTTagCompound)
   {
     super.readFromNBT(nbt)
-    name = nbt.getString("name")
+    materialName = nbt.getString("name")
   }
 
   override def writeToNBT(nbt: NBTTagCompound)
   {
     super.writeToNBT(nbt)
-    if (name != null)
+    if (materialName != null)
     {
-      nbt.setString("name", name)
+      nbt.setString("name", materialName)
     }
   }
 }

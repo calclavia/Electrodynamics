@@ -3,6 +3,7 @@ package resonantinduction.archaic.crate;
 import java.util.Arrays;
 import java.util.List;
 
+import resonant.content.spatial.block.SpatialTile;
 import resonantinduction.archaic.Archaic;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -28,7 +29,7 @@ import com.google.common.io.ByteArrayDataInput;
  * TODO: Add filter-locking feature. Put filter in, locks the crate to only use that item.
  * 
  * @author DarkGuardsman */
-public class TileCrate extends TileExternalInventory implements IPacketReceiver, IExtendedStorage, IFilterable, ISneakPickup
+public class TileCrate extends SpatialTile implements TInventory, IPacketReceiver, IExtendedStorage, IFilterable, ISneakPickup
 {
     /** max meta size of the crate */
     public static final int maxSize = 2;
