@@ -3,20 +3,21 @@ package resonantinduction.archaic.crate;
 import java.util.List;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.block.Block;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
-import resonant.lib.prefab.item.ItemBlockTooltip;
 import resonant.lib.utility.LanguageUtility;
 
-public class ItemBlockCrate extends ItemBlockTooltip
+public class ItemBlockCrate extends ItemBlock
 {
-    public ItemBlockCrate(int id)
+    public ItemBlockCrate(Block block)
     {
-        super(id);
+        super(block);
         this.setHasSubtypes(true);
     }
 
@@ -130,7 +131,7 @@ public class ItemBlockCrate extends ItemBlockTooltip
                     for (int slot = 0; slot < tileEntity.getInventory().getSizeInventory(); slot++)
                     {
                         int stackSize = Math.min(64, count);
-                        tileEntity.getInventory().setInventorySlotContents(slot, new ItemStack(containingItem.itemID, stackSize, containingItem.getItemDamage()));
+                        tileEntity.getInventory().setInventorySlotContents(slot, new ItemStack(containingItem.getItem(), stackSize, containingItem.getItemDamage()));
                         count -= stackSize;
 
                         if (count <= 0)

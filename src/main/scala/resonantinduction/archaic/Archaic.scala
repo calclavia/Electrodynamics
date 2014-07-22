@@ -1,11 +1,8 @@
 package resonantinduction.archaic
 
 import resonantinduction.archaic.firebox.BlockFirebox
-import archaic.firebox.BlockHotPlate
 import resonantinduction.archaic.fluid.gutter.TileGutter
-import net.minecraft.block.Block
 import net.minecraft.init.Blocks
-import net.minecraft.item.Item
 import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
 import net.minecraftforge.oredict.OreDictionary
@@ -14,24 +11,23 @@ import resonant.content.loader.ModManager
 import resonant.lib.recipe.UniversalRecipe
 import resonantinduction.archaic.blocks.TileTurntable
 import resonantinduction.archaic.crate.BlockCrate
-import resonantinduction.archaic.crate.CrateCraftingHandler
+import resonantinduction.archaic.crate.CrateRecipe
 import resonantinduction.archaic.crate.ItemBlockCrate
 import resonantinduction.archaic.crate.TileCrate
-import archaic.engineering.ItemHammer
+import resonantinduction.archaic.engineering.ItemHammer
 import resonantinduction.archaic.engineering.TileEngineeringTable
-import archaic.filter.BlockImprinter
+import resonantinduction.archaic.filter.BlockImprinter
 import resonantinduction.archaic.filter.TileFilter
-import archaic.filter.TileImprinter
-import archaic.firebox.BlockHotPlate
-import archaic.firebox.TileFirebox
+import resonantinduction.archaic.filter.TileImprinter
+import resonantinduction.archaic.firebox.BlockHotPlate
+import resonantinduction.archaic.firebox.TileFirebox
 import resonantinduction.archaic.firebox.TileHotPlate
 import resonantinduction.archaic.fluid.grate.TileGrate
 import resonantinduction.archaic.fluid.tank.TileTank
-import archaic.process.BlockCastingMold
-import archaic.process.BlockMillstone
-import archaic.process.TileCastingMold
-import archaic.process.TileMillstone
-import resonantinduction.archaic.waila.Waila
+import resonantinduction.archaic.process.BlockCastingMold
+import resonantinduction.archaic.process.BlockMillstone
+import resonantinduction.archaic.process.TileCastingMold
+import resonantinduction.archaic.process.TileMillstone
 import resonantinduction.core.Reference
 import resonantinduction.core.ResonantInduction
 import resonantinduction.core.ResonantTab
@@ -49,8 +45,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent
 import cpw.mods.fml.common.network.NetworkRegistry
 import cpw.mods.fml.common.registry.GameRegistry
 import Archaic._
-//remove if not needed
-import scala.collection.JavaConversions._
 
 object Archaic {
 
@@ -82,7 +76,7 @@ class Archaic {
         ArchaicBlocks.blockCrate = contentRegistry.createBlock( classOf[ BlockCrate ], classOf[ ItemBlockCrate ], classOf[ TileCrate ] )
         ArchaicBlocks.blockImprinter = contentRegistry.createTile( classOf[ BlockImprinter ], classOf[ TileImprinter ] )
         ArchaicBlocks.blockTurntable = contentRegistry.newBlock( classOf[ TileTurntable ] )
-        ArchaicBlocks.blockFirebox = contentRegistry.createBlock( classOf[ BlockFirebox ], classOf[ ItemBlockMetadata ], classOf[ TileFirebox ] )
+        ArchaicBlocks.blockFirebox = contentRegistry.createBlock( classOf[ BlockFirebox ], null, classOf[ TileFirebox ] )
         ArchaicBlocks.blockHotPlate = contentRegistry.createTile( classOf[ BlockHotPlate ], classOf[ TileHotPlate ] )
         ArchaicBlocks.blockMillstone = contentRegistry.createTile( classOf[ BlockMillstone ], classOf[ TileMillstone ] )
         ArchaicBlocks.blockCast = contentRegistry.createTile( classOf[ BlockCastingMold ], classOf[ TileCastingMold ] )
@@ -116,9 +110,9 @@ class Archaic {
         GameRegistry.addRecipe( new ShapedOreRecipe( ArchaicBlocks.blockFilter, Array( "B", "P", "B", 'B', Blocks.iron_bars, 'P', Items.paper ) ) )
         GameRegistry.addRecipe( new ShapedOreRecipe( new ItemStack( ArchaicBlocks.blockCrate, 1, 0 ), Array( "WWW", "WSW", "WWW",
             'S', "stickWood", 'W', "logWood" ) ) )
-        GameRegistry.addRecipe( new ShapedOreRecipe( new ItemStack( ArchaicBlocks.blockCrate, 1, 1 ), Array( "WWW", "WSW", "WWW",
+        GameRegistry.addRecipe( new CrateRecipe( new ItemStack( ArchaicBlocks.blockCrate, 1, 1 ), Array( "WWW", "WSW", "WWW",
             'S', new ItemStack( ArchaicBlocks.blockCrate, 1, 0 ), 'W', "ingotIron" ) ) )
-        GameRegistry.addRecipe( new ShapedOreRecipe( new ItemStack( ArchaicBlocks.blockCrate, 1, 2 ), Array( "WWW", "WSW", "WWW",
+        GameRegistry.addRecipe( new CrateRecipe( new ItemStack( ArchaicBlocks.blockCrate, 1, 2 ), Array( "WWW", "WSW", "WWW",
             'S', new ItemStack( ArchaicBlocks.blockCrate, 1, 1 ), 'W', UniversalRecipe.PRIMARY_METAL.get ) ) )
         GameRegistry.addRecipe( new ShapedOreRecipe( ArchaicBlocks.blockFirebox, Array( "III", "SFS", "SSS", 'I', Items.iron_ingot,
             'F', Blocks.furnace, 'S', Blocks.stone ) ) )
@@ -145,7 +139,6 @@ class Archaic {
             new ItemStack( Items.dye, 0 ) ) ) )
         GameRegistry.addRecipe( new ShapedOreRecipe( ArchaicItems.itemHammer, Array( "CC ", "CS ", "  S", 'C', "cobblestone", 'S',
             "stickWood" ) ) )
-        GameRegistry.registerCraftingHandler( new CrateCraftingHandler() )
         proxy.postInit()
     }
 }
