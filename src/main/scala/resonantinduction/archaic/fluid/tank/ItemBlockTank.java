@@ -13,18 +13,18 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 import resonant.lib.utility.LanguageUtility;
 import resonantinduction.core.grid.fluid.distribution.TileFluidDistribution;
-import universalelectricity.api.energy.UnitDisplay;
-import universalelectricity.api.energy.UnitDisplay.Unit;
-import universalelectricity.api.energy.UnitDisplay.UnitPrefix;
+import universalelectricity.api.UnitDisplay;
+import universalelectricity.api.UnitDisplay.Unit;
+import universalelectricity.api.UnitDisplay.UnitPrefix;
 
 /**
  * @author Darkguardsman
  */
 public class ItemBlockTank extends ItemBlock implements IFluidContainerItem
 {
-	public ItemBlockTank(int id)
+	public ItemBlockTank(Block block)
 	{
-		super(id);
+		super(block);
 		this.setMaxDamage(0);
 		this.setHasSubtypes(true);
 	}

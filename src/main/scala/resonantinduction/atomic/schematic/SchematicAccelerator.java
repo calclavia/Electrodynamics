@@ -3,6 +3,7 @@ package resonantinduction.atomic.schematic;
 import java.util.HashMap;
 
 import atomic.Atomic;
+import net.minecraft.block.Block;
 import net.minecraftforge.common.util.ForgeDirection;
 import resonant.lib.schematic.Schematic;
 import resonant.lib.type.Pair;
@@ -17,7 +18,7 @@ public class SchematicAccelerator extends Schematic
     }
 
     @Override
-    public HashMap<Vector3, Pair<Integer, Integer>> getStructure(ForgeDirection dir, int size)
+    public HashMap<Vector3, Pair<Block, Integer>> getStructure(ForgeDirection dir, int size)
     {
         HashMap<Vector3, Pair<Integer, Integer>> returnMap = new HashMap<Vector3, Pair<Integer, Integer>>();
 

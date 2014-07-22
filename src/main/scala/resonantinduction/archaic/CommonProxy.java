@@ -1,8 +1,8 @@
 package resonantinduction.archaic;
 
-import resonant.lib.prefab.ProxyBase;
+import resonant.lib.prefab.AbstractProxy;
 
-public class CommonProxy extends ProxyBase
+public class CommonProxy extends AbstractProxy
 {
 
 }

@@ -111,8 +111,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @Mod(modid = Atomic.ID, name = Atomic.NAME, version = Reference.VERSION, dependencies = "required-after:ResonantEngine;after:IC2;after:ResonantInduction|Electrical;required-after:" + ResonantInduction.ID)
-@NetworkMod(channels =
-{ Reference.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
 public class Atomic
 {
     public static final String ID = "ResonantInduction|Atomic";
@@ -411,7 +409,7 @@ public class Atomic
     public void postInit(FMLPostInitializationEvent event)
     {
         /** IC2 Recipes */
-        if (Loader.isModLoaded("IC2") && Settings.allowAlternateRecipes)
+        if (Loader.isModLoaded("IC2") && Settings.allowAlternateRecipes())
         {
             OreDictionary.registerOre("cellEmpty", Items.getItem("cell"));
 
