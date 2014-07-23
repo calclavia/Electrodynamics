@@ -1,52 +1,61 @@
 package resonantinduction.archaic.crate
 
 import java.util.List
-import net.minecraft.entity.Entity
+
 import net.minecraft.block.Block
-import net.minecraft.item.ItemBlock
+import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.item.ItemStack
+import net.minecraft.item.{ItemBlock, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.potion.Potion
-import net.minecraft.potion.PotionEffect
+import net.minecraft.potion.{Potion, PotionEffect}
 import net.minecraft.world.World
 import resonant.lib.utility.LanguageUtility
-import scala.util.control.Breaks._
 
-object ItemBlockCrate {
-  def setContainingItemStack(itemStack: ItemStack, containingStack: ItemStack) {
-    if (itemStack.stackTagCompound == null) {
+import scala.util.control.Breaks._
+import resonant.lib.wrapper.WrapList._
+object ItemBlockCrate
+{
+  def setContainingItemStack(itemStack: ItemStack, containingStack: ItemStack)
+  {
+    if (itemStack.stackTagCompound == null)
+    {
       itemStack.setTagCompound(new NBTTagCompound)
     }
-    if (containingStack != null) {
+    if (containingStack != null)
+    {
       val itemTagCompound: NBTTagCompound = new NBTTagCompound
       containingStack.stackSize = Math.abs(containingStack.stackSize)
       containingStack.writeToNBT(itemTagCompound)
       itemStack.getTagCompound.setTag("Item", itemTagCompound)
       itemStack.getTagCompound.setInteger("Count", containingStack.stackSize)
     }
-    else {
+    else
+    {
       itemStack.getTagCompound.setTag("Item", new NBTTagCompound)
       itemStack.getTagCompound.setInteger("Count", 0)
     }
   }
 
-  def getContainingItemStack(itemStack: ItemStack): ItemStack = {
-    if (itemStack.stackTagCompound == null) {
+  def getContainingItemStack(itemStack: ItemStack): ItemStack =
+  {
+    if (itemStack.stackTagCompound == null)
+    {
       itemStack.setTagCompound(new NBTTagCompound)
       return null
     }
     val itemTagCompound: NBTTagCompound = itemStack.getTagCompound.getCompoundTag("Item")
     val containingStack: ItemStack = ItemStack.loadItemStackFromNBT(itemTagCompound)
-    if (containingStack != null) {
+    if (containingStack != null)
+    {
       containingStack.stackSize = itemStack.getTagCompound.getInteger("Count")
     }
     return containingStack
   }
 }
 
-class ItemBlockCrate(block: Block) extends ItemBlock(block: Block) {
-   this.setHasSubtypes(true)
+class ItemBlockCrate(block: Block) extends ItemBlock(block: Block)
+{
+  this.setHasSubtypes(true)
 
   override def getUnlocalizedName(itemStack: ItemStack): String =
   {
@@ -60,15 +69,16 @@ class ItemBlockCrate(block: Block) extends ItemBlock(block: Block) {
     if (containingStack != null)
     {
       val s = LanguageUtility.getLocal("crate.tooltip.amount") + " " + containingStack.stackSize
-      list.add(containingStack.getDisplayName.asInstanceOf[_])
-      list.add(s.asInstanceOf[_])
+      list.add(containingStack.getDisplayName)
+      list.add(s)
     }
   }
 
   override def getItemStackLimit(stack: ItemStack): Int =
   {
     val containingStack: ItemStack = ItemBlockCrate.getContainingItemStack(stack)
-    if (containingStack != null) {
+    if (containingStack != null)
+    {
       return 1
     }
     return this.maxStackSize
@@ -103,16 +113,16 @@ class ItemBlockCrate(block: Block) extends ItemBlock(block: Block) {
         {
           val tileEntity: TileCrate = world.getTileEntity(x, y, z).asInstanceOf[TileCrate]
           var count: Int = containingItem.stackSize
-          for(slot <- tileEntity.getInventory.getSizeInventory)
+          for (slot <- tileEntity.getInventory.getSizeInventory)
           {
-                val stackSize: Int = Math.min(64, count)
-                tileEntity.getInventory.setInventorySlotContents(slot, new ItemStack(containingItem.getItem, stackSize, containingItem.getItemDamage))
-                count -= stackSize
-                if (count <= 0)
-                {
-                  containingItem = null
-                  break
-                }
+            val stackSize: Int = Math.min(64, count)
+            tileEntity.getInventory.setInventorySlotContents(slot, new ItemStack(containingItem.getItem, stackSize, containingItem.getItemDamage))
+            count -= stackSize
+            if (count <= 0)
+            {
+              containingItem = null
+              break
+            }
           }
           tileEntity.buildSampleStack
         }
