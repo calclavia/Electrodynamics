@@ -3,6 +3,7 @@ package resonantinduction.archaic.crate;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.item.EntityItem;
@@ -34,18 +35,18 @@ public class BlockCrate extends SpatialBlock
 {
     IIcon advanced, elite;
 
-    public BlockCrate(int id)
+    public BlockCrate()
     {
-        super(id, UniversalElectricity.machine);
+        super(Material.iron);
     }
 
     @SideOnly(Side.CLIENT)
     @Override
     public void registerIcons(IIconRegister iconReg)
     {
-        this.blockIcon = iconReg.registerIcon(Reference.PREFIX + "crate_wood");
-        this.advanced = iconReg.registerIcon(Reference.PREFIX + "crate_iron");
-        this.elite = iconReg.registerIcon(Reference.PREFIX + "crate_steel");
+        this.blockIcon = iconReg.registerIcon(Reference.prefix + "crate_wood");
+        this.advanced = iconReg.registerIcon(Reference.prefix + "crate_iron");
+        this.elite = iconReg.registerIcon(Reference.prefix + "crate_steel");
     }
 
     @Override

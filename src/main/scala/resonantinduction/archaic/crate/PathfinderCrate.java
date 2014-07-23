@@ -6,7 +6,7 @@ import java.util.List;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import universalelectricity.core.transform.vector.Vector3;
-import universalelectricity.api.vector.VectorHelper;
+import universalelectricity.core.transform.vector.VectorWorld;
 
 /**
  * A class that allows flexible path finding in Minecraft Blocks. Back Ported from UE 1.3.0.
@@ -77,7 +77,9 @@ public class PathfinderCrate
 
 			for (int i = 0; i < 6; i++)
 			{
-				TileEntity connectedTile = VectorHelper.getTileEntityFromSide(provider.worldObj, new Vector3(provider), ForgeDirection.getOrientation(i));
+                VectorWorld vec = new VectorWorld(provider);
+                vec.addEquals(ForgeDirection.getOrientation(i));
+                TileEntity connectedTile = vec.getTileEntity();
 
 				if (!iteratedNodes.contains(connectedTile))
 				{
