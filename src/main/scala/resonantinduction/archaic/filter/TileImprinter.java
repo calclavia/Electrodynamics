@@ -27,7 +27,7 @@ public class TileImprinter extends TileAdvanced implements ISidedInventory, IPac
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 		this.writeToNBT(nbt);
-		return ResonantInduction.PACKET_TILE.getPacket(this, nbt);
+		return new PacketTile(this, nbt);
 	}
 
 	@Override
