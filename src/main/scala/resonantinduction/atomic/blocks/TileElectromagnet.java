@@ -2,32 +2,32 @@ package resonantinduction.atomic.blocks;
 
 import java.util.List;
 
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import resonant.api.IElectromagnet;
-import resonant.lib.content.module.TileBase;
-import resonant.lib.content.module.TileRender;
-import resonant.lib.utility.ConnectedTextureRenderer;
-import resonant.lib.prefab.item.ItemBlockMetadata;
+import resonant.content.prefab.itemblock.ItemBlockMetadata;
+import resonant.content.spatial.block.SpatialBlock;
 import resonantinduction.core.Reference;
-import universalelectricity.api.UniversalElectricity;
 import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import universalelectricity.core.UniversalElectricity;
 
 /** Electromagnet block */
-public class TileElectromagnet extends TileBase implements IElectromagnet
+public class TileElectromagnet extends SpatialBlock implements IElectromagnet
 {
     private static IIcon iconTop, iconGlass;
 
     public TileElectromagnet()
     {
-        super(UniversalElectricity.machine);
-        blockResistance = 20;
-        isOpaqueCube = false;
-        itemBlock = ItemBlockMetadata.class;
+        super(Material.iron);
+        blockResistance(20);
+        isOpaqueCube(false);
+        this.itemBlock(ItemBlockMetadata.class);
     }
 
     @Override
@@ -51,8 +51,8 @@ public class TileElectromagnet extends TileBase implements IElectromagnet
     public void registerIcons(IIconRegister iconRegister)
     {
         super.registerIcons(iconRegister);
-        iconTop = iconRegister.registerIcon(domain + textureName + "_top");
-        iconGlass = iconRegister.registerIcon(domain + "electromagnetGlass");
+        iconTop = iconRegister.registerIcon(domain() + textureName() + "_top");
+        iconGlass = iconRegister.registerIcon(domain() + "electromagnetGlass");
     }
 
     @Override
@@ -80,22 +80,15 @@ public class TileElectromagnet extends TileBase implements IElectromagnet
     }
 
     @Override
-    public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List par3List)
+    public void getSubBlocks(Item item, CreativeTabs par2CreativeTabs, List par3List)
     {
-        par3List.add(new ItemStack(par1, 1, 0));
-        par3List.add(new ItemStack(par1, 1, 1));
+        super.getSubBlocks(item, par2CreativeTabs, par3List);
+        par3List.add(new ItemStack(item, 1, 1));
     }
 
     @Override
     public boolean isRunning()
     {
         return true;
-    }
-
-    @SideOnly(Side.CLIENT)
-    @Override
-    protected TileRender newRenderer()
-    {
-        return new ConnectedTextureRenderer(this, Reference.PREFIX + "atomic_edge");
     }
 }

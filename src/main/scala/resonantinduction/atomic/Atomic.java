@@ -1,5 +1,14 @@
 package resonantinduction.atomic;
 
+import cpw.mods.fml.common.eventhandler.Event;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.util.MovingObjectPosition;
+import resonant.content.loader.ModManager;
+import resonant.engine.content.debug.TileCreativeBuilder;
+import resonant.lib.network.discriminator.PacketAnnotation;
+import resonant.lib.network.discriminator.PacketAnnotationManager;
 import resonantinduction.atomic.blocks.TileElectromagnet;
 import resonantinduction.atomic.items.ItemDarkMatter;
 import resonantinduction.atomic.items.ItemHazmat;
@@ -9,7 +18,7 @@ import resonantinduction.atomic.machine.plasma.BlockPlasmaHeater;
 import resonantinduction.atomic.machine.plasma.TilePlasma;
 import resonantinduction.atomic.machine.quantum.TileQuantumAssembler;
 import resonantinduction.atomic.schematic.SchematicBreedingReactor;
-import ic2.api.item.Items;
+import universalelectricity.core.transform.vector.VectorWorld;
 import ic2.api.recipe.IRecipeInput;
 import ic2.api.recipe.RecipeOutput;
 import ic2.api.recipe.Recipes;
@@ -25,7 +34,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumMovingObjectType;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.Configuration;
@@ -35,8 +43,6 @@ import net.minecraftforge.common.ForgeChunkManager.LoadingCallback;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import net.minecraftforge.common.ForgeChunkManager.Type;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.Event.Result;
-import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.player.FillBucketEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -49,11 +55,6 @@ import resonant.api.IElectromagnet;
 import resonant.api.event.PlasmaEvent.SpawnPlasmaEvent;
 import resonant.api.recipe.QuantumAssemblerRecipes;
 import resonant.core.content.debug.BlockCreativeBuilder;
-import resonant.lib.content.ContentRegistry;
-import resonant.lib.flag.FlagRegistry;
-import resonant.lib.modproxy.ProxyHandler;
-import resonant.lib.network.PacketAnnotation;
-import resonant.lib.network.PacketHandler;
 import resonant.lib.prefab.block.BlockRadioactive;
 import resonant.lib.prefab.ore.OreGenBase;
 import resonant.lib.prefab.ore.OreGenReplaceStone;
@@ -121,8 +122,8 @@ public class Atomic
     public static final EnumArmorMaterial hazmatArmorMaterial = EnumHelper.addArmorMaterial("HAZMAT", 0, new int[]
     { 0, 0, 0, 0 }, 0);
     public static final String BAN_ANTIMATTER_POWER = FlagRegistry.registerFlag("ban_antimatter_power");
-    public static final String NAME = Reference.NAME + " Atomic";
-    public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.config, Settings.idManager, ID).setPrefix(Reference.PREFIX).setTab(ResonantTab.DEFAULT);
+    public static final String NAME = Reference.name() + " Atomic";
+    public static final ModManager contentRegistry = new ModManager().setPrefix(Reference.prefix()).setTab(ResonantTab.tab());
     private static final String[] SUPPORTED_LANGUAGES = new String[]
     { "en_US", "pl_PL", "de_DE", "ru_RU" };
 
@@ -131,8 +132,6 @@ public class Atomic
 
     @SidedProxy(clientSide = "ClientProxy", serverSide = "CommonProxy")
     public static CommonProxy proxy;
-
-    public ProxyHandler modproxies;
 
     @Mod.Metadata(ID)
     public static ModMetadata metadata;
@@ -155,12 +154,11 @@ public class Atomic
     public static Block blockQuantumAssembler;
     public static Block blockReactorCell;
 
-    /** Cells */
+    public static Block blockUraniumOre;
+
+    //items
     public static Item itemCell, itemFissileFuel, itemBreedingRod, itemDarkMatter, itemAntimatter, itemDeuteriumCell, itemTritiumCell, itemWaterCell;
     public static Item itemBucketToxic;
-
-    /** Uranium Related Items */
-    public static Block blockUraniumOre;
     public static Item itemYellowCake;
     public static Item itemUranium;
     public static Item itemHazmatTop;
@@ -239,27 +237,18 @@ public class Atomic
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
-        modproxies = new ProxyHandler();
         INSTANCE = this;
         MinecraftForge.EVENT_BUS.register(this);
-        NetworkRegistry.instance().registerGuiHandler(this, proxy);
+        NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
 
-        PacketAnnotation.register(TileElectricTurbine.class);
-        PacketAnnotation.register(TileReactorCell.class);
-        PacketAnnotation.register(TileThermometer.class);
 
-        BlockCreativeBuilder.register(new SchematicAccelerator());
-        BlockCreativeBuilder.register(new SchematicBreedingReactor());
-        BlockCreativeBuilder.register(new SchematicFissionReactor());
-        BlockCreativeBuilder.register(new SchematicFusionReactor());
+
+        TileCreativeBuilder.register(new SchematicAccelerator());
+        TileCreativeBuilder.register(new SchematicBreedingReactor());
+        TileCreativeBuilder.register(new SchematicFissionReactor());
+        TileCreativeBuilder.register(new SchematicFusionReactor());
 
         Settings.config.load();
-
-        /** Register Packets */
-        PacketAnnotation.register(TileAccelerator.class);
-        PacketAnnotation.register(TileChemicalExtractor.class);
-        PacketAnnotation.register(TileNuclearBoiler.class);
-        PacketAnnotation.register(TileElectricTurbine.class);
 
         /** Registers Gases & Fluids */
         FLUID_URANIUM_HEXAFLOURIDE = new Fluid("uraniumhexafluoride").setGaseous(true);
@@ -285,15 +274,15 @@ public class Atomic
         FLUIDSTACK_TOXIC_WASTE = new FluidStack(FluidRegistry.getFluidID("toxicwaste"), 0);
 
         /** Block Initiation */
-        blockRadioactive = contentRegistry.createBlock(BlockRadioactive.class).setUnlocalizedName(Reference.PREFIX + "radioactive").setTextureName(Reference.PREFIX + "radioactive").setCreativeTab(ResonantTab.DEFAULT);
-        blockUraniumOre = contentRegistry.createBlock(BlockUraniumOre.class);
+        blockRadioactive = new BlockRadioactive().setUnlocalizedName(Reference.prefix() + "radioactive").setTextureName(Reference.prefix() + "radioactive").setCreativeTab(CreativeTabs.tabBlock);
+        blockUraniumOre = new BlockUraniumOre();
 
-        blockElectricTurbine = contentRegistry.createTile(BlockElectricTurbine.class, TileElectricTurbine.class);
-        blockCentrifuge = contentRegistry.createTile(BlockCentrifuge.class, TileCentrifuge.class);
+        blockElectricTurbine = contentRegistry.newBlock(TileElectricTurbine.class);
+        blockCentrifuge = contentRegistry.newBlock(TileCentrifuge.class);
         blockReactorCell = contentRegistry.newBlock(TileReactorCell.class);
-        blockNuclearBoiler = contentRegistry.createTile(BlockNuclearBoiler.class, TileNuclearBoiler.class);
-        blockChemicalExtractor = contentRegistry.createTile(BlockChemicalExtractor.class, TileChemicalExtractor.class);
-        blockFusionCore = contentRegistry.createTile(BlockPlasmaHeater.class, TilePlasmaHeater.class);
+        blockNuclearBoiler = contentRegistry.newBlock(TileNuclearBoiler.class);
+        blockChemicalExtractor = contentRegistry.newBlock(TileChemicalExtractor.class);
+        blockFusionCore = contentRegistry.newBlock(BlockPlasmaHeater.class, TilePlasmaHeater.class);
         blockControlRod = contentRegistry.newBlock(TileControlRod.class);
         blockThermometer = contentRegistry.newBlock(TileThermometer.class);
         blockPlasma = contentRegistry.newBlock(TilePlasma.class);
@@ -371,19 +360,13 @@ public class Atomic
         OreDictionary.registerOre("antimatterMilligram", new ItemStack(itemAntimatter, 1, 0));
         OreDictionary.registerOre("antimatterGram", new ItemStack(itemAntimatter, 1, 1));
 
-        ForgeChunkManager.setForcedChunkLoadingCallback(this, new LoadingCallback()
-        {
+        ForgeChunkManager.setForcedChunkLoadingCallback(this, new LoadingCallback() {
             @Override
-            public void ticketsLoaded(List<Ticket> tickets, World world)
-            {
-                for (Ticket ticket : tickets)
-                {
-                    if (ticket.getType() == Type.ENTITY)
-                    {
-                        if (ticket.getEntity() != null)
-                        {
-                            if (ticket.getEntity() instanceof EntityParticle)
-                            {
+            public void ticketsLoaded(List<Ticket> tickets, World world) {
+                for (Ticket ticket : tickets) {
+                    if (ticket.getType() == Type.ENTITY) {
+                        if (ticket.getEntity() != null) {
+                            if (ticket.getEntity() instanceof EntityParticle) {
                                 ((EntityParticle) ticket.getEntity()).updateTicket = ticket;
                             }
                         }
@@ -391,8 +374,6 @@ public class Atomic
                 }
             }
         });
-
-        proxy.preInit();
         Settings.config.save();
         ResonantTab.ITEMSTACK = new ItemStack(blockReactorCell);
     }
@@ -402,7 +383,6 @@ public class Atomic
     {
         Settings.setModMetadata(metadata, ID, NAME, ResonantInduction.ID);
         proxy.init();
-        modproxies.init();
     }
 
     @EventHandler
@@ -517,13 +497,13 @@ public class Atomic
 
         // Hazmat Suit
         GameRegistry.addRecipe(new ShapedOreRecipe(itemHazmatTop, new Object[]
-        { "SSS", "BAB", "SCS", 'A', Item.helmetLeather, 'C', UniversalRecipe.CIRCUIT_T1.get(Settings.allowAlternateRecipes), 'S', Block.cloth }));
+        { "SSS", "BAB", "SCS", 'A', Items.leather_helmet, 'C', UniversalRecipe.CIRCUIT_T1.get(), 'S', Blocks.wool }));
         GameRegistry.addRecipe(new ShapedOreRecipe(itemHazmatBody, new Object[]
-        { "SSS", "BAB", "SCS", 'A', Item.plateLeather, 'C', UniversalRecipe.CIRCUIT_T1.get(Settings.allowAlternateRecipes), 'S', Block.cloth }));
+        { "SSS", "BAB", "SCS", 'A', Items.leather_chestplate, 'C', UniversalRecipe.CIRCUIT_T1.get(), 'S', Blocks.wool }));
         GameRegistry.addRecipe(new ShapedOreRecipe(itemHazmatLeggings, new Object[]
-        { "SSS", "BAB", "SCS", 'A', Item.legsLeather, 'C', UniversalRecipe.CIRCUIT_T1.get(Settings.allowAlternateRecipes), 'S', Block.cloth }));
+        { "SSS", "BAB", "SCS", 'A', Items.leather_leggings, 'C', UniversalRecipe.CIRCUIT_T1.get(), 'S', Blocks.wool }));
         GameRegistry.addRecipe(new ShapedOreRecipe(itemHazmatBoots, new Object[]
-        { "SSS", "BAB", "SCS", 'A', Item.bootsLeather, 'C', UniversalRecipe.CIRCUIT_T1.get(Settings.allowAlternateRecipes), 'S', Block.cloth }));
+        { "SSS", "BAB", "SCS", 'A', Items.leather_boots, 'C', UniversalRecipe.CIRCUIT_T1.get(), 'S', Blocks.wool }));
 
         EntityRegistry.registerGlobalEntityID(EntityParticle.class, "ASParticle", EntityRegistry.findGlobalUniqueEntityId());
         EntityRegistry.registerModEntity(EntityParticle.class, "ASParticle", ENTITY_ID_PREFIX, this, 80, 3, true);
@@ -532,76 +512,6 @@ public class Atomic
 
         Settings.config.load();
 
-        if (Loader.isModLoaded("IC2") && Settings.allowAlternateRecipes)
-        {
-            if (Settings.allowIC2UraniumCompression)
-            {
-                try
-                {
-                    if (Recipes.compressor != null)
-                    {
-                        Map<IRecipeInput, RecipeOutput> compressorRecipes = Recipes.compressor.getRecipes();
-                        Iterator<Entry<IRecipeInput, RecipeOutput>> it = compressorRecipes.entrySet().iterator();
-                        int i = 0;
-
-                        while (it.hasNext())
-                        {
-                            Map.Entry<IRecipeInput, RecipeOutput> entry = it.next();
-
-                            for (ItemStack checkStack : entry.getKey().getInputs())
-                            {
-                                if (isItemStackUraniumOre(checkStack))
-                                {
-                                    i++;
-                                    it.remove();
-                                }
-                            }
-                        }
-
-                        ResonantInduction.LOGGER.fine("Removed " + i + " IC2 uranium compression recipe, use centrifuge instead.");
-                    }
-                }
-                catch (Exception e)
-                {
-                    ResonantInduction.LOGGER.fine("Failed to remove IC2 compressor recipes.");
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        /** Atomic Assembler Recipes */
-        if (Settings.quantumAssemblerGenerateMode > 0)
-        {
-            for (Item item : Item.itemsList)
-            {
-                if (item != null)
-                {
-                    if (item.itemID > 256 || Settings.quantumAssemblerGenerateMode == 2)
-                    {
-                        ItemStack itemStack = new ItemStack(item);
-
-                        if (itemStack != null)
-                        {
-                            QuantumAssemblerRecipes.addRecipe(itemStack);
-                        }
-                    }
-                }
-            }
-
-            if (Settings.quantumAssemblerGenerateMode == 2)
-            {
-                for (Block block : Block.blocksList)
-                {
-                    if (block != null)
-                    {
-                        ItemStack itemStack = new ItemStack(block);
-                        if (itemStack != null)
-                        {
-                            QuantumAssemblerRecipes.addRecipe(itemStack);
-                        }
-                    }
-                }
-            }
 
             for (String oreName : OreDictionary.getOreNames())
             {
@@ -616,12 +526,11 @@ public class Atomic
                     }
                 }
             }
-        }
 
         Settings.config.save();
     }
 
-    @ForgeSubscribe
+    @EventHandler
     public void thermalEventHandler(EventThermalUpdate evt)
     {
         VectorWorld pos = evt.position;
@@ -633,87 +542,71 @@ public class Atomic
         }
     }
 
-    @ForgeSubscribe
+    @EventHandler
     public void plasmaEvent(SpawnPlasmaEvent evt)
     {
-        World world = evt.world;
-        Vector3 position = new Vector3(evt.x, evt.y, evt.z);
-        int blockID = position.getBlock(world);
+        Block block = evt.world.getBlock(evt.x, evt.y, evt.z);
 
-        Block block = Block.blocksList[blockID];
-
-        if (block != null)
+        if (block != null && block.getBlockHardness(evt.world, evt.x, evt.y, evt.z) >= 0)
         {
-            if (block.blockID == Block.bedrock.blockID || block.blockID == Block.blockIron.blockID)
-            {
-                return;
-            }
-
-            TileEntity tile = position.getTileEntity(world);
+            TileEntity tile = evt.world.getTileEntity(evt.x, evt.y, evt.z);
 
             if (tile instanceof TilePlasma)
             {
                 ((TilePlasma) tile).setTemperature(evt.temperature);
                 return;
-            }
-
-            if (tile instanceof IElectromagnet)
+            }else if (tile instanceof IElectromagnet)
             {
                 return;
             }
-        }
-
-        position.setBlock(world, blockPlasma.blockID);
-
-        TileEntity tile = position.getTileEntity(world);
-
-        if (tile instanceof TilePlasma)
-        {
-            ((TilePlasma) tile).setTemperature(evt.temperature);
+            else
+            {
+                evt.world.setBlockToAir(evt.x, evt.y, evt.z);
+                evt.world.setBlock(evt.x, evt.y, evt.z, blockPlasma);
+            }
         }
     }
 
-    @ForgeSubscribe
+    @EventHandler
     @SideOnly(Side.CLIENT)
     public void preTextureHook(TextureStitchEvent.Pre event)
     {
-        if (event.map.textureType == 0)
+        if (event.map.getTextureType() == 0)
         {
-            RenderUtility.registerIcon(Reference.PREFIX + "uraniumHexafluoride", event.map);
-            RenderUtility.registerIcon(Reference.PREFIX + "steam", event.map);
-            RenderUtility.registerIcon(Reference.PREFIX + "deuterium", event.map);
-            RenderUtility.registerIcon(Reference.PREFIX + "tritium", event.map);
-            RenderUtility.registerIcon(Reference.PREFIX + "atomic_edge", event.map);
-            RenderUtility.registerIcon(Reference.PREFIX + "funnel_edge", event.map);
-            RenderUtility.registerIcon(Reference.PREFIX + "glass", event.map);
+            RenderUtility.registerIcon(Reference.prefix() + "uraniumHexafluoride", event.map);
+            RenderUtility.registerIcon(Reference.prefix() + "steam", event.map);
+            RenderUtility.registerIcon(Reference.prefix() + "deuterium", event.map);
+            RenderUtility.registerIcon(Reference.prefix() + "tritium", event.map);
+            RenderUtility.registerIcon(Reference.prefix() + "atomic_edge", event.map);
+            RenderUtility.registerIcon(Reference.prefix() + "funnel_edge", event.map);
+            RenderUtility.registerIcon(Reference.prefix() + "glass", event.map);
         }
     }
 
-    @ForgeSubscribe
+    @EventHandler
     @SideOnly(Side.CLIENT)
     public void postTextureHook(TextureStitchEvent.Post event)
     {
-        FLUID_URANIUM_HEXAFLOURIDE.setIcons(RenderUtility.loadedIconMap.get(Reference.PREFIX + "uraniumHexafluoride"));
-        FLUID_STEAM.setIcons(RenderUtility.loadedIconMap.get(Reference.PREFIX + "steam"));
-        FLUID_DEUTERIUM.setIcons(RenderUtility.loadedIconMap.get(Reference.PREFIX + "deuterium"));
-        FLUID_TRITIUM.setIcons(RenderUtility.loadedIconMap.get(Reference.PREFIX + "tritium"));
+        FLUID_URANIUM_HEXAFLOURIDE.setIcons(RenderUtility.loadedIconMap.get(Reference.prefix() + "uraniumHexafluoride"));
+        FLUID_STEAM.setIcons(RenderUtility.loadedIconMap.get(Reference.prefix() + "steam"));
+        FLUID_DEUTERIUM.setIcons(RenderUtility.loadedIconMap.get(Reference.prefix() + "deuterium"));
+        FLUID_TRITIUM.setIcons(RenderUtility.loadedIconMap.get(Reference.prefix() + "tritium"));
         FLUID_TOXIC_WASTE.setIcons(blockToxicWaste.getIcon(0, 0));
         FLUID_PLASMA.setIcons(blockPlasma.getIcon(0, 0));
     }    
 
-    @ForgeSubscribe
+    @EventHandler
     public void fillBucketEvent(FillBucketEvent evt)
     {
-        if (!evt.world.isRemote && evt.target != null && evt.target.typeOfHit == EnumMovingObjectType.TILE)
+        if (!evt.world.isRemote && evt.target != null && evt.target.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
         {
-            Vector3 blockPos = new Vector3(evt.target);
-            int blockID = blockPos.getBlock(evt.world);
+            VectorWorld pos = new VectorWorld(evt.world, evt.target);
 
-            if (blockID == blockToxicWaste.blockID)
+            if (pos.getBlock() == blockToxicWaste)
             {
-                blockPos.setBlock(evt.world, 0);
+                pos.setBlockToAir();
                 evt.result = new ItemStack(itemBucketToxic);
-                evt.setResult(Result.ALLOW);
+                evt.setResult(Event.Result.ALLOW);
             }
         }
     }

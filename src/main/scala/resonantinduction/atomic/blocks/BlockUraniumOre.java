@@ -5,7 +5,6 @@ import java.util.Random;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-import resonant.lib.prefab.block.BlockRadioactive;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantTab;
 import resonantinduction.core.Settings;
@@ -15,17 +14,17 @@ import cpw.mods.fml.relauncher.SideOnly;
 /** Uranium ore block */
 public class BlockUraniumOre extends BlockRadioactive
 {
-    public BlockUraniumOre(int id)
+    public BlockUraniumOre()
     {
-        super(id, Material.rock);
-        this.setUnlocalizedName(Reference.PREFIX + "oreUranium");
-        this.setStepSound(soundStoneFootstep);
-        this.setCreativeTab(ResonantTab.DEFAULT);
+        super(Material.rock);
+        this.setBlockName(Reference.prefix() + "oreUranium");
+        this.setStepSound(soundTypeStone);
+        this.setCreativeTab(ResonantTab.tab());
         this.setHardness(2f);
-        this.setTextureName(Reference.PREFIX + "oreUranium");
+        this.setBlockTextureName(Reference.prefix() + "oreUranium");
 
-        this.isRandomlyRadioactive = Settings.allowRadioactiveOres;
-        this.canWalkPoison = Settings.allowRadioactiveOres;
+        this.isRandomlyRadioactive = Settings.allowRadioactiveOres();
+        this.canWalkPoison = Settings.allowRadioactiveOres();
         this.canSpread = false;
         this.radius = 1f;
         this.amplifier = 0;
@@ -36,7 +35,7 @@ public class BlockUraniumOre extends BlockRadioactive
     @SideOnly(Side.CLIENT)
     public void randomDisplayTick(World world, int x, int y, int z, Random par5Random)
     {
-        if (Settings.allowRadioactiveOres)
+        if (Settings.allowRadioactiveOres())
         {
             super.randomDisplayTick(world, x, y, z, par5Random);
         }

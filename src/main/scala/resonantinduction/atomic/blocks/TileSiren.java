@@ -1,11 +1,11 @@
 package resonantinduction.atomic.blocks;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import resonant.content.spatial.block.SpatialBlock;
 import resonantinduction.core.Reference;
-import universalelectricity.api.UniversalElectricity;
 import universalelectricity.core.transform.vector.Vector3;
 
 /** Siren block */
@@ -13,23 +13,11 @@ public class TileSiren extends SpatialBlock
 {
     public TileSiren()
     {
-        super(UniversalElectricity.machine);
+        super(Material.wood);
     }
 
     @Override
-    public void onWorldJoin()
-    {
-        scheduelTick(1);
-    }
-
-    @Override
-    public void onNeighborChanged()
-    {
-        scheduelTick(1);
-    }
-
-    @Override
-    public void updateEntity()
+    public void update()
     {
         World world = worldObj;
         if (world != null)
@@ -42,20 +30,19 @@ public class TileSiren extends SpatialBlock
                 for (int i = 0; i < 6; i++)
                 {
                     Vector3 check = position().add(ForgeDirection.getOrientation(i));
-                    if (check.getBlock(world) == blockID())
+                    if (check.getBlock(world) == getBlockType())
                     {
                         volume *= 1.5f;
                     }
                 }
 
-                world.playSoundEffect(x(), y(), z(), Reference.PREFIX + "alarm", volume, 1f - 0.18f * (metadata / 15f));
-                scheduelTick(30);
+                world.playSoundEffect(x(), y(), z(), Reference.prefix() + "alarm", volume, 1f - 0.18f * (metadata / 15f));
             }
         }
     }
 
     @Override
-    protected boolean configure(EntityPlayer player, int side, Vector3 hit)
+    public boolean configure(EntityPlayer player, int side, Vector3 hit)
     {
         int metadata = world().getBlockMetadata(x(), y(), z());
 

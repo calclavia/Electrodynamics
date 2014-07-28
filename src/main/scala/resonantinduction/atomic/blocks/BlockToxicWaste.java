@@ -16,7 +16,7 @@ public class BlockToxicWaste extends BlockFluidClassic
 {
     public BlockToxicWaste(int id)
     {
-        super(id, FluidRegistry.getFluid("toxicwaste"), Material.water);
+        super(FluidRegistry.getFluid("toxicwaste"), Material.water);
         setTickRate(20);
     }
 
