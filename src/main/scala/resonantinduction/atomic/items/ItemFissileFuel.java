@@ -2,6 +2,7 @@ package resonantinduction.atomic.items;
 
 import java.util.List;
 
+import net.minecraft.item.Item;
 import resonantinduction.atomic.Atomic;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
@@ -11,8 +12,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import resonant.api.IReactor;
 import resonant.api.IReactorComponent;
-import atomic.machine.reactor.TileReactorCell;
-import resonantinduction.atomic.Atomic;
+import resonantinduction.atomic.machine.reactor.TileReactorCell;
 import resonantinduction.core.Settings;
 import universalelectricity.core.transform.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
@@ -32,9 +32,9 @@ public class ItemFissileFuel extends ItemRadioactive implements IReactorComponen
     /** Approximately 20,000,000J per tick. 400 MW. */
     public static final long ENERGY_PER_TICK = ENERGY / 50000;
 
-    public ItemFissileFuel(int itemID)
+    public ItemFissileFuel()
     {
-        super(itemID);
+        super();
         this.setMaxStackSize(1);
         this.setMaxDamage(DECAY);
         this.setNoRepair();
@@ -44,7 +44,7 @@ public class ItemFissileFuel extends ItemRadioactive implements IReactorComponen
     public void onReact(ItemStack itemStack, IReactor reactor)
     {
         TileEntity tileEntity = (TileEntity) reactor;
-        World worldObj = tileEntity.worldObj;
+        World worldObj = tileEntity.getWorldObj();
         int reactors = 0;
 
         for (int i = 0; i < 6; i++)
@@ -84,7 +84,7 @@ public class ItemFissileFuel extends ItemRadioactive implements IReactorComponen
             }
 
             // Create toxic waste.
-            if (Settings.allowToxicWaste && worldObj.rand.nextFloat() > 0.5)
+            if (Settings.allowToxicWaste() && worldObj.rand.nextFloat() > 0.5)
             {
                 FluidStack fluid = Atomic.FLUIDSTACK_TOXIC_WASTE.copy();
                 fluid.amount = 1;
@@ -95,10 +95,10 @@ public class ItemFissileFuel extends ItemRadioactive implements IReactorComponen
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
+    public void getSubItems(Item item, CreativeTabs par2CreativeTabs, List par3List)
     {
-        par3List.add(new ItemStack(par1, 1, 0));
-        par3List.add(new ItemStack(par1, 1, getMaxDamage() - 1));
+        par3List.add(new ItemStack(item, 1, 0));
+        par3List.add(new ItemStack(item, 1, getMaxDamage() - 1));
     }
 
 }

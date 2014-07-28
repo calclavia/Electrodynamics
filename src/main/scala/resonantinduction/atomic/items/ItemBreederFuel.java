@@ -9,9 +9,9 @@ import resonant.api.IReactorComponent;
 /** Breeder rods */
 public class ItemBreederFuel extends ItemRadioactive implements IReactorComponent
 {
-    public ItemBreederFuel(int itemID)
+    public ItemBreederFuel()
     {
-        super(itemID);
+        super();
         this.setMaxDamage(ItemFissileFuel.DECAY);
         this.setMaxStackSize(1);
         this.setNoRepair();
@@ -21,7 +21,7 @@ public class ItemBreederFuel extends ItemRadioactive implements IReactorComponen
     public void onReact(ItemStack itemStack, IReactor reactor)
     {
         TileEntity tileEntity = (TileEntity) reactor;
-        World worldObj = tileEntity.worldObj;
+        World worldObj = tileEntity.getWorldObj();
 
         // Breeder fuel rods have half the normal energy potential of pure uranium.
         reactor.heat(ItemFissileFuel.ENERGY_PER_TICK / 2);

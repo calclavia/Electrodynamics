@@ -5,8 +5,8 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import resonant.lib.gui.ContainerBase;
 import resonant.lib.prefab.slot.SlotSpecific;
-import atomic.items.ItemBreederFuel;
-import atomic.items.ItemFissileFuel;
+import resonantinduction.atomic.items.ItemBreederFuel;
+import resonantinduction.atomic.items.ItemFissileFuel;
 
 public class ContainerReactorCell extends ContainerBase
 {

@@ -11,11 +11,6 @@ import universalelectricity.core.transform.vector.Vector3;
 /** Radioactive Items */
 public class ItemRadioactive extends Item
 {
-    public ItemRadioactive(int itemID)
-    {
-        super(itemID);
-    }
-
     @Override
     public void onUpdate(ItemStack par1ItemStack, World par2World, Entity entity, int par4, boolean par5)
     {

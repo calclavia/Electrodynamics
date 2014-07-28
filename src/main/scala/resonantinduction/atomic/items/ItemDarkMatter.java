@@ -8,11 +8,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 /** Strange matter cell */
 public class ItemDarkMatter extends ItemCell
 {
-    public ItemDarkMatter(int itemID)
-    {
-        super(itemID);
-    }
-    
     @SideOnly(Side.CLIENT)
     @Override
     public void registerIcons(IIconRegister iconRegister)

@@ -14,7 +14,7 @@ import universalelectricity.core.transform.vector.Vector3;
 
 public class BlockToxicWaste extends BlockFluidClassic
 {
-    public BlockToxicWaste(int id)
+    public BlockToxicWaste()
     {
         super(FluidRegistry.getFluid("toxicwaste"), Material.water);
         setTickRate(20);

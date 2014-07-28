@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import org.lwjgl.input.Keyboard;
@@ -14,9 +15,9 @@ import resonant.lib.utility.LanguageUtility;
 /** Uranium */
 public class ItemUranium extends ItemRadioactive
 {
-    public ItemUranium(int itemID)
+    public ItemUranium()
     {
-        super(itemID);
+        super();
         this.setHasSubtypes(true);
         this.setMaxDamage(0);
     }
@@ -46,9 +47,9 @@ public class ItemUranium extends ItemRadioactive
     }
 
     @Override
-    public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List list)
+    public void getSubItems(Item item, CreativeTabs par2CreativeTabs, List list)
     {
-        list.add(new ItemStack(this, 1, 0));
-        list.add(new ItemStack(this, 1, 1));
+        list.add(new ItemStack(item, 1, 0));
+        list.add(new ItemStack(item, 1, 1));
     }
 }

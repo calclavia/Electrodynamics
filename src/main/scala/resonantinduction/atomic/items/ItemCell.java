@@ -1,28 +1,18 @@
 package resonantinduction.atomic.items;
 
+import cpw.mods.fml.relauncher.SideOnly;
+import resonant.content.prefab.itemblock.ItemTooltip;
 import resonantinduction.atomic.Atomic;
 import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
-import resonant.api.IReactor;
-import resonant.lib.prefab.item.ItemTooltip;
 import resonant.lib.utility.LanguageUtility;
-import resonantinduction.atomic.Atomic;
 
 public class ItemCell extends ItemTooltip
 {
-    public ItemCell(int itemID)
+    public ItemCell()
     {
-        super(itemID);
         setContainerItem(Atomic.itemCell);
-    }
-
-    @Override
-    public boolean shouldPassSneakingClickToBlock(World world, int x, int y, int z)
-    {
-        return world.getTileEntity(x, y, z) instanceof IReactor;
     }
     
     @SideOnly(Side.CLIENT)

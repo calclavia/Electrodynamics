@@ -2,22 +2,26 @@ package resonantinduction.atomic.items;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
+import net.minecraftforge.common.util.EnumHelper;
 import resonant.api.armor.IAntiPoisonArmor;
+import resonantinduction.atomic.Atomic;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantTab;
 
 /** Hazmat */
 public class ItemHazmat extends ItemArmor implements IAntiPoisonArmor
 {
-    public ItemHazmat(int id, EnumArmorMaterial material, int index, int slot)
+
+    public static final ItemArmor.ArmorMaterial hazmatArmorMaterial = EnumHelper.addArmorMaterial("HAZMAT", 0, new int[]{0, 0, 0, 0}, 0);
+    public ItemHazmat(String name, int slot)
     {
-        super(id, material, index, slot);
-        this.setCreativeTab(ResonantTab.DEFAULT);
+        super(hazmatArmorMaterial, Atomic.proxy.getArmorIndex("hazmat"), slot);
+        this.setUnlocalizedName(Reference.prefix() + name);
+        this.setCreativeTab(ResonantTab.tab());
         this.setMaxDamage(200000);
     }
 
@@ -30,9 +34,9 @@ public class ItemHazmat extends ItemArmor implements IAntiPoisonArmor
     }
 
     @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, int slot, int layer)
+    public String getArmorTexture(ItemStack stack, Entity entity, int slot, String type)
     {
-        return Reference.PREFIX + Reference.MODEL_PATH + "hazmat.png";
+        return Reference.prefix() + Reference.modelPath() + "hazmat.png";
     }
 
     @Override

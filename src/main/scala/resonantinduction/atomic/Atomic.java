@@ -1,22 +1,27 @@
 package resonantinduction.atomic;
 
 import cpw.mods.fml.common.eventhandler.Event;
+import ic2.api.item.IC2Items;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraftforge.common.util.EnumHelper;
 import resonant.content.loader.ModManager;
 import resonant.engine.content.debug.TileCreativeBuilder;
 import resonant.lib.network.discriminator.PacketAnnotation;
 import resonant.lib.network.discriminator.PacketAnnotationManager;
+import resonantinduction.atomic.blocks.BlockToxicWaste;
+import resonantinduction.atomic.blocks.BlockUraniumOre;
 import resonantinduction.atomic.blocks.TileElectromagnet;
-import resonantinduction.atomic.items.ItemDarkMatter;
-import resonantinduction.atomic.items.ItemHazmat;
+import resonantinduction.atomic.items.*;
 import resonantinduction.atomic.machine.extractor.turbine.TileElectricTurbine;
 import resonantinduction.atomic.machine.extractor.turbine.TileFunnel;
 import resonantinduction.atomic.machine.plasma.BlockPlasmaHeater;
 import resonantinduction.atomic.machine.plasma.TilePlasma;
 import resonantinduction.atomic.machine.quantum.TileQuantumAssembler;
+import resonantinduction.atomic.machine.reactor.TileReactorCell;
 import resonantinduction.atomic.schematic.SchematicBreedingReactor;
 import universalelectricity.core.transform.vector.VectorWorld;
 import ic2.api.recipe.IRecipeInput;
@@ -29,15 +34,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import net.minecraft.block.Block;
-import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.common.Configuration;
-import net.minecraftforge.common.EnumHelper;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.LoadingCallback;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
@@ -61,30 +63,12 @@ import resonant.lib.prefab.ore.OreGenReplaceStone;
 import resonant.lib.prefab.ore.OreGenerator;
 import resonant.lib.recipe.UniversalRecipe;
 import resonant.lib.render.RenderUtility;
-import resonant.lib.thermal.EventThermal.EventThermalUpdate;
-import atomic.blocks.BlockToxicWaste;
-import atomic.blocks.BlockUraniumOre;
 import resonantinduction.atomic.blocks.TileSiren;
-import atomic.items.ItemAntimatter;
-import resonantinduction.atomic.items.ItemBreederFuel;
-import atomic.items.ItemCell;
-import atomic.items.ItemFissileFuel;
-import resonantinduction.atomic.items.ItemRadioactive;
-import atomic.items.ItemUranium;
 import resonantinduction.atomic.machine.accelerator.EntityParticle;
 import resonantinduction.atomic.machine.accelerator.TileAccelerator;
-import resonantinduction.atomic.machine.boiler.BlockNuclearBoiler;
-import atomic.machine.boiler.TileNuclearBoiler;
-import resonantinduction.atomic.machine.centrifuge.BlockCentrifuge;
 import resonantinduction.atomic.machine.centrifuge.TileCentrifuge;
-import resonantinduction.atomic.machine.extractor.BlockChemicalExtractor;
-import atomic.machine.extractor.TileChemicalExtractor;
-import atomic.machine.extractor.turbine.BlockElectricTurbine;
-import atomic.machine.fulmination.FulminationHandler;
-import atomic.machine.fulmination.TileFulmination;
 import resonantinduction.atomic.machine.plasma.TilePlasmaHeater;
 import resonantinduction.atomic.machine.reactor.TileControlRod;
-import atomic.machine.reactor.TileReactorCell;
 import resonantinduction.atomic.machine.thermometer.TileThermometer;
 import resonantinduction.atomic.schematic.SchematicAccelerator;
 import resonantinduction.atomic.schematic.SchematicFissionReactor;
@@ -93,8 +77,6 @@ import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.ResonantTab;
 import resonantinduction.core.Settings;
-import universalelectricity.core.transform.vector.Vector3;
-import universalelectricity.api.vector.VectorWorld;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -104,7 +86,6 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -119,8 +100,6 @@ public class Atomic
     public static final String GUI_TEXTURE_DIRECTORY = TEXTURE_DIRECTORY + "gui/";
     public static final int ENTITY_ID_PREFIX = 49;
     public static final int SECOND_IN_TICKS = 20;
-    public static final EnumArmorMaterial hazmatArmorMaterial = EnumHelper.addArmorMaterial("HAZMAT", 0, new int[]
-    { 0, 0, 0, 0 }, 0);
     public static final String BAN_ANTIMATTER_POWER = FlagRegistry.registerFlag("ban_antimatter_power");
     public static final String NAME = Reference.name() + " Atomic";
     public static final ModManager contentRegistry = new ModManager().setPrefix(Reference.prefix()).setTab(ResonantTab.tab());
@@ -276,13 +255,14 @@ public class Atomic
         /** Block Initiation */
         blockRadioactive = new BlockRadioactive().setUnlocalizedName(Reference.prefix() + "radioactive").setTextureName(Reference.prefix() + "radioactive").setCreativeTab(CreativeTabs.tabBlock);
         blockUraniumOre = new BlockUraniumOre();
+        blockToxicWaste = new BlockToxicWaste().setCreativeTab(null);
 
         blockElectricTurbine = contentRegistry.newBlock(TileElectricTurbine.class);
         blockCentrifuge = contentRegistry.newBlock(TileCentrifuge.class);
         blockReactorCell = contentRegistry.newBlock(TileReactorCell.class);
         blockNuclearBoiler = contentRegistry.newBlock(TileNuclearBoiler.class);
         blockChemicalExtractor = contentRegistry.newBlock(TileChemicalExtractor.class);
-        blockFusionCore = contentRegistry.newBlock(BlockPlasmaHeater.class, TilePlasmaHeater.class);
+        blockFusionCore = contentRegistry.newBlock(TilePlasmaHeater.class);
         blockControlRod = contentRegistry.newBlock(TileControlRod.class);
         blockThermometer = contentRegistry.newBlock(TileThermometer.class);
         blockPlasma = contentRegistry.newBlock(TilePlasma.class);
@@ -292,25 +272,23 @@ public class Atomic
         blockAccelerator = contentRegistry.newBlock(TileAccelerator.class);
         blockFulmination = contentRegistry.newBlock(TileFulmination.class);
         blockQuantumAssembler = contentRegistry.newBlock(TileQuantumAssembler.class);
-        blockToxicWaste = contentRegistry.createBlock(BlockToxicWaste.class).setCreativeTab(null);
+
 
         /** Items */
-        itemHazmatTop = new ItemHazmat(Settings.config.getItem("HazmatTop", Settings.getNextItemID()).getInt(), hazmatArmorMaterial, proxy.getArmorIndex("hazmat"), 0).setUnlocalizedName(Reference.PREFIX + "hazmatMask");
-        itemHazmatBody = new ItemHazmat(Settings.config.getItem("HazmatBody", Settings.getNextItemID()).getInt(), hazmatArmorMaterial, proxy.getArmorIndex("hazmat"), 1).setUnlocalizedName(Reference.PREFIX + "hazmatBody");
-        itemHazmatLeggings = new ItemHazmat(Settings.config.getItem("HazmatBottom", Settings.getNextItemID()).getInt(), hazmatArmorMaterial, proxy.getArmorIndex("hazmat"), 2).setUnlocalizedName(Reference.PREFIX + "hazmatLeggings");
-        itemHazmatBoots = new ItemHazmat(Settings.config.getItem("HazmatBoots", Settings.getNextItemID()).getInt(), hazmatArmorMaterial, proxy.getArmorIndex("hazmat"), 3).setUnlocalizedName(Reference.PREFIX + "hazmatBoots");
-
-        itemCell = contentRegistry.createItem("cellEmpty", Item.class);
-        itemFissileFuel = contentRegistry.createItem("rodFissileFuel", ItemFissileFuel.class);
-        itemDeuteriumCell = contentRegistry.createItem("cellDeuterium", ItemCell.class);
-        itemTritiumCell = contentRegistry.createItem("cellTritium", ItemCell.class);
-        itemWaterCell = contentRegistry.createItem("cellWater", ItemCell.class);
-        itemDarkMatter = contentRegistry.createItem("darkMatter", ItemDarkMatter.class);
-        itemAntimatter = contentRegistry.createItem("antimatter", ItemAntimatter.class);
-        itemBreedingRod = contentRegistry.createItem("rodBreederFuel", ItemBreederFuel.class);
-
-        itemYellowCake = contentRegistry.createItem("yellowcake", ItemRadioactive.class);
-        itemUranium = contentRegistry.createItem(ItemUranium.class);
+        itemHazmatTop = new ItemHazmat("HazmatMask", 0);
+        itemHazmatBody = new ItemHazmat("HazmatBody", 1);
+        itemHazmatLeggings = new ItemHazmat("HazmatLeggings", 2);
+        itemHazmatBoots = new ItemHazmat("HazmatBoots", 3);
+        itemCell = new Item().setUnlocalizedName("cellEmpty");
+        itemFissileFuel = new ItemFissileFuel().setUnlocalizedName("rodFissileFuel");
+        itemDeuteriumCell = new ItemCell().setUnlocalizedName("cellDeuterium");
+        itemTritiumCell = new ItemCell().setUnlocalizedName("cellTritium");
+        itemWaterCell = new ItemCell().setUnlocalizedName("cellWater");
+        itemDarkMatter = new ItemDarkMatter().setUnlocalizedName("darkMatter");
+        itemAntimatter = new ItemAntimatter().setUnlocalizedName("antimatter");
+        itemBreedingRod = new ItemBreederFuel().setUnlocalizedName("rodBreederFuel");
+        itemYellowCake = new ItemRadioactive().setUnlocalizedName("yellowcake");
+        itemUranium = contentRegistry.newItem(ItemUranium.class);
 
         /** Fluid Item Initialization */
         FLUID_PLASMA.setBlockID(blockPlasma);
@@ -391,19 +369,19 @@ public class Atomic
         /** IC2 Recipes */
         if (Loader.isModLoaded("IC2") && Settings.allowAlternateRecipes())
         {
-            OreDictionary.registerOre("cellEmpty", Items.getItem("cell"));
+            OreDictionary.registerOre("cellEmpty", IC2Items.getItem("cell"));
 
             // Check to make sure we have actually registered the Ore, otherwise tell the user about
             // it.
             String cellEmptyName = OreDictionary.getOreName(OreDictionary.getOreID("cellEmpty"));
             if (cellEmptyName == "Unknown")
             {
-                ResonantInduction.LOGGER.info("Unable to register cellEmpty in OreDictionary!");
+                ResonantInduction.logger().info("Unable to register cellEmpty in OreDictionary!");
             }
 
             // IC2 exchangeable recipes
-            GameRegistry.addRecipe(new ShapelessOreRecipe(itemYellowCake, Items.getItem("reactorUraniumSimple")));
-            GameRegistry.addRecipe(new ShapelessOreRecipe(Items.getItem("cell"), itemCell));
+            GameRegistry.addRecipe(new ShapelessOreRecipe(itemYellowCake, IC2Items.getItem("reactorUraniumSimple")));
+            GameRegistry.addRecipe(new ShapelessOreRecipe(IC2Items.getItem("cell"), itemCell));
             GameRegistry.addRecipe(new ShapelessOreRecipe(itemCell, "cellEmpty"));
         }
 
@@ -415,69 +393,69 @@ public class Atomic
 
         // Steam Funnel
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockSteamFunnel, 2), new Object[]
-        { " B ", "B B", "B B", 'B', UniversalRecipe.SECONDARY_METAL.get(Settings.allowAlternateRecipes) }));
+        { " B ", "B B", "B B", 'B', UniversalRecipe.SECONDARY_METAL.get() }));
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockSteamFunnel, 2), new Object[]
         { " B ", "B B", "B B", 'B', "ingotIron" }));
 
         // Atomic Assembler
         GameRegistry.addRecipe(new ShapedOreRecipe(blockQuantumAssembler, new Object[]
-        { "CCC", "SXS", "SSS", 'X', blockCentrifuge, 'C', UniversalRecipe.CIRCUIT_T3.get(Settings.allowAlternateRecipes), 'S', UniversalRecipe.PRIMARY_PLATE.get(Settings.allowAlternateRecipes) }));
+        { "CCC", "SXS", "SSS", 'X', blockCentrifuge, 'C', UniversalRecipe.CIRCUIT_T3.get(), 'S', UniversalRecipe.PRIMARY_PLATE.get() }));
 
         // Fulmination Generator
         GameRegistry.addRecipe(new ShapedOreRecipe(blockFulmination, new Object[]
-        { "OSO", "SCS", "OSO", 'O', Block.obsidian, 'C', UniversalRecipe.CIRCUIT_T2.get(Settings.allowAlternateRecipes), 'S', UniversalRecipe.PRIMARY_PLATE.get(Settings.allowAlternateRecipes) }));
+        { "OSO", "SCS", "OSO", 'O', Blocks.obsidian, 'C', UniversalRecipe.CIRCUIT_T2.get(), 'S', UniversalRecipe.PRIMARY_PLATE.get() }));
 
         // Particle Accelerator
         GameRegistry.addRecipe(new ShapedOreRecipe(blockAccelerator, new Object[]
-        { "SCS", "CMC", "SCS", 'M', UniversalRecipe.MOTOR.get(Settings.allowAlternateRecipes), 'C', UniversalRecipe.CIRCUIT_T3.get(Settings.allowAlternateRecipes), 'S', UniversalRecipe.PRIMARY_PLATE.get(Settings.allowAlternateRecipes) }));
+        { "SCS", "CMC", "SCS", 'M', UniversalRecipe.MOTOR.get(), 'C', UniversalRecipe.CIRCUIT_T3.get(), 'S', UniversalRecipe.PRIMARY_PLATE.get() }));
 
         // Centrifuge
         GameRegistry.addRecipe(new ShapedOreRecipe(blockCentrifuge, new Object[]
-        { "BSB", "MCM", "BSB", 'C', UniversalRecipe.CIRCUIT_T2.get(Settings.allowAlternateRecipes), 'S', UniversalRecipe.PRIMARY_PLATE.get(Settings.allowAlternateRecipes), 'B', UniversalRecipe.SECONDARY_METAL.get(Settings.allowAlternateRecipes), 'M',
-                UniversalRecipe.MOTOR.get(Settings.allowAlternateRecipes) }));
+        { "BSB", "MCM", "BSB", 'C', UniversalRecipe.CIRCUIT_T2.get(), 'S', UniversalRecipe.PRIMARY_PLATE.get(), 'B', UniversalRecipe.SECONDARY_METAL.get(), 'M',
+                UniversalRecipe.MOTOR.get() }));
 
         // Nuclear Boiler
         GameRegistry.addRecipe(new ShapedOreRecipe(blockNuclearBoiler, new Object[]
-        { "S S", "FBF", "SMS", 'F', Block.furnaceIdle, 'S', UniversalRecipe.PRIMARY_PLATE.get(Settings.allowAlternateRecipes), 'B', Item.bucketEmpty, 'M', UniversalRecipe.MOTOR.get(Settings.allowAlternateRecipes) }));
+        { "S S", "FBF", "SMS", 'F', Blocks.furnace, 'S', UniversalRecipe.PRIMARY_PLATE.get(), 'B', Items.bucket, 'M', UniversalRecipe.MOTOR.get() }));
 
         // Chemical Extractor
         GameRegistry.addRecipe(new ShapedOreRecipe(blockChemicalExtractor, new Object[]
-        { "BSB", "MCM", "BSB", 'C', UniversalRecipe.CIRCUIT_T3.get(Settings.allowAlternateRecipes), 'S', UniversalRecipe.PRIMARY_PLATE.get(Settings.allowAlternateRecipes), 'B', UniversalRecipe.SECONDARY_METAL.get(Settings.allowAlternateRecipes), 'M',
-                UniversalRecipe.MOTOR.get(Settings.allowAlternateRecipes) }));
+        { "BSB", "MCM", "BSB", 'C', UniversalRecipe.CIRCUIT_T3.get(), 'S', UniversalRecipe.PRIMARY_PLATE.get(), 'B', UniversalRecipe.SECONDARY_METAL.get(), 'M',
+                UniversalRecipe.MOTOR.get() }));
 
         // Siren
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockSiren, 2), new Object[]
-        { "NPN", 'N', Block.music, 'P', UniversalRecipe.SECONDARY_PLATE.get(Settings.allowAlternateRecipes) }));
+        { "NPN", 'N', Blocks.noteblock, 'P', UniversalRecipe.SECONDARY_PLATE.get() }));
 
         // Fission Reactor
         GameRegistry
                 .addRecipe(new ShapedOreRecipe(blockReactorCell, new Object[]
-                { "SCS", "MEM", "SCS", 'E', "cellEmpty", 'C', UniversalRecipe.CIRCUIT_T2.get(Settings.allowAlternateRecipes), 'S', UniversalRecipe.PRIMARY_PLATE.get(Settings.allowAlternateRecipes), 'M',
-                        UniversalRecipe.MOTOR.get(Settings.allowAlternateRecipes) }));
+                { "SCS", "MEM", "SCS", 'E', "cellEmpty", 'C', UniversalRecipe.CIRCUIT_T2.get(), 'S', UniversalRecipe.PRIMARY_PLATE.get(), 'M',
+                        UniversalRecipe.MOTOR.get() }));
 
         // Fusion Reactor
         GameRegistry.addRecipe(new ShapedOreRecipe(blockFusionCore, new Object[]
-        { "CPC", "PFP", "CPC", 'P', UniversalRecipe.PRIMARY_PLATE.get(Settings.allowAlternateRecipes), 'F', blockReactorCell, 'C', UniversalRecipe.CIRCUIT_T3.get(Settings.allowAlternateRecipes) }));
+        { "CPC", "PFP", "CPC", 'P', UniversalRecipe.PRIMARY_PLATE.get(), 'F', blockReactorCell, 'C', UniversalRecipe.CIRCUIT_T3.get() }));
 
         // Turbine
         GameRegistry.addRecipe(new ShapedOreRecipe(blockElectricTurbine, new Object[]
-        { " B ", "BMB", " B ", 'B', UniversalRecipe.SECONDARY_PLATE.get(Settings.allowAlternateRecipes), 'M', UniversalRecipe.MOTOR.get(Settings.allowAlternateRecipes) }));
+        { " B ", "BMB", " B ", 'B', UniversalRecipe.SECONDARY_PLATE.get(), 'M', UniversalRecipe.MOTOR.get() }));
 
         // Empty Cell
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemCell, 16), new Object[]
-        { " T ", "TGT", " T ", 'T', "ingotTin", 'G', Block.glass }));
+        { " T ", "TGT", " T ", 'T', "ingotTin", 'G', Blocks.glass }));
 
         // Water Cell
         GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(itemWaterCell), new Object[]
-        { "cellEmpty", Item.bucketWater }));
+        { "cellEmpty", Items.water_bucket }));
 
         // Thermometer
         GameRegistry.addRecipe(new ShapedOreRecipe(blockThermometer, new Object[]
-        { "SSS", "GCG", "GSG", 'S', UniversalRecipe.PRIMARY_METAL.get(Settings.allowAlternateRecipes), 'G', Block.glass, 'C', UniversalRecipe.CIRCUIT_T1.get(Settings.allowAlternateRecipes) }));
+        { "SSS", "GCG", "GSG", 'S', UniversalRecipe.PRIMARY_METAL.get(), 'G', Blocks.glass, 'C', UniversalRecipe.CIRCUIT_T1.get() }));
 
         // Control Rod
         GameRegistry.addRecipe(new ShapedOreRecipe(blockControlRod, new Object[]
-        { "I", "I", "I", 'I', Item.ingotIron }));
+        { "I", "I", "I", 'I', Items.iron_ingot }));
 
         // Fuel Rod
         GameRegistry.addRecipe(new ShapedOreRecipe(itemFissileFuel, new Object[]
@@ -489,11 +467,11 @@ public class Atomic
 
         // Electromagnet
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockElectromagnet, 2, 0), new Object[]
-        { "BBB", "BMB", "BBB", 'B', UniversalRecipe.SECONDARY_METAL.get(Settings.allowAlternateRecipes), 'M', UniversalRecipe.MOTOR.get(Settings.allowAlternateRecipes) }));
+        { "BBB", "BMB", "BBB", 'B', UniversalRecipe.SECONDARY_METAL.get(), 'M', UniversalRecipe.MOTOR.get(S) }));
 
         // Electromagnet Glass
         GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockElectromagnet, 1, 1), new Object[]
-        { blockElectromagnet, Block.glass }));
+        { blockElectromagnet, Blocks.glass }));
 
         // Hazmat Suit
         GameRegistry.addRecipe(new ShapedOreRecipe(itemHazmatTop, new Object[]

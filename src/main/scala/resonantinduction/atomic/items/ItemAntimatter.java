@@ -2,28 +2,12 @@ package resonantinduction.atomic.items;
 
 import java.util.List;
 
-import resonantinduction.atomic.Atomic;
+import net.minecraft.item.Item;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
-import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.ForgeSubscribe;
-import net.minecraftforge.event.entity.item.ItemExpireEvent;
-import resonant.api.explosion.ExplosionEvent.DoExplosionEvent;
-import resonant.api.explosion.IExplosion;
-import resonant.lib.flag.FlagRegistry;
-import resonant.lib.prefab.poison.PoisonRadiation;
-import resonantinduction.atomic.Atomic;
-import resonantinduction.core.Reference;
-import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.Settings;
-import universalelectricity.core.transform.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -32,9 +16,9 @@ public class ItemAntimatter extends ItemCell
 {
     private IIcon iconGram;
 
-    public ItemAntimatter(int itemID)
+    public ItemAntimatter()
     {
-        super(itemID);
+        super();
         this.setMaxDamage(0);
         this.setHasSubtypes(true);
     }
@@ -63,84 +47,15 @@ public class ItemAntimatter extends ItemCell
     }
 
     @Override
-    public void getSubItems(int id, CreativeTabs par2CreativeTabs, List par3List)
+    public void getSubItems(Item item, CreativeTabs par2CreativeTabs, List par3List)
     {
-        par3List.add(new ItemStack(id, 1, 0));
-        par3List.add(new ItemStack(id, 1, 1));
+        par3List.add(new ItemStack(item, 1, 0));
+        par3List.add(new ItemStack(item, 1, 1));
     }
 
     @Override
     public int getEntityLifespan(ItemStack itemStack, World world)
     {
         return 160;
-    }
-
-    @ForgeSubscribe
-    public void antimatterExpireEvent(ItemExpireEvent evt)
-    {
-        if (evt.entityItem != null)
-        {
-            ItemStack itemStack = evt.entityItem.getEntityItem();
-
-            if (itemStack != null)
-            {
-                if (itemStack.itemID == this.itemID)
-                {
-                    evt.entityItem.worldObj.playSoundEffect(evt.entityItem.posX, evt.entityItem.posY, evt.entityItem.posZ, Reference.PREFIX + "antimatter", 3f, 1f - evt.entityItem.worldObj.rand.nextFloat() * 0.3f);
-
-                    if (!evt.entityItem.worldObj.isRemote)
-                    {
-                        if (!FlagRegistry.getModFlag(FlagRegistry.DEFAULT_NAME).containsValue(evt.entityItem.worldObj, Atomic.BAN_ANTIMATTER_POWER, "true", new Vector3(evt.entityItem)))
-                        {
-                            IExplosion explosive = new AntimatterExposion(evt.entity.worldObj, evt.entityItem, evt.entityItem.posX, evt.entityItem.posY, evt.entityItem.posZ, 4, itemStack.getItemDamage());
-                            MinecraftForge.EVENT_BUS.post(new DoExplosionEvent(evt.entityItem.worldObj, explosive));
-                            evt.entityItem.worldObj.createExplosion(evt.entityItem, evt.entityItem.posX, evt.entityItem.posY, evt.entityItem.posZ, explosive.getRadius(), true);
-                            ResonantInduction.LOGGER.fine("Antimatter cell detonated at: " + evt.entityItem.posX + ", " + evt.entityItem.posY + ", " + evt.entityItem.posZ);
-
-                            final int radius = 20;
-                            AxisAlignedBB bounds = AxisAlignedBB.getBoundingBox(evt.entityItem.posX - radius, evt.entityItem.posY - radius, evt.entityItem.posZ - radius, evt.entityItem.posX + radius, evt.entityItem.posY + radius, evt.entityItem.posZ
-                                    + radius);
-                            List<EntityLiving> entitiesNearby = evt.entityItem.worldObj.getEntitiesWithinAABB(EntityLiving.class, bounds);
-
-                            for (EntityLiving entity : entitiesNearby)
-                            {
-                                PoisonRadiation.INSTANCE.poisonEntity(new Vector3(entity), entity);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    public static class AntimatterExposion extends Explosion implements IExplosion
-    {
-        private int tier;
-
-        public AntimatterExposion(World par1World, Entity par2Entity, double x, double y, double z, float size, int tier)
-        {
-            super(par1World, par2Entity, x, y, z, size + 2 * tier);
-            this.tier = tier;
-        }
-
-        @Override
-        public float getRadius()
-        {
-            return this.explosionSize;
-        }
-
-        @Override
-        public long getEnergy()
-        {
-            return (long) ((2000000000000000L + (2000000000000000L * 9 * tier)) * Settings.fulminationOutputMultiplier);
-
-        }
-
-        @Override
-        public void explode()
-        {
-            this.doExplosionA();
-            this.doExplosionB(true);
-        }
     }
 }
