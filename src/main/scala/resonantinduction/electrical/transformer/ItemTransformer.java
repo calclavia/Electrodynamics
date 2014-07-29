@@ -14,11 +14,6 @@ import codechicken.multipart.TMultiPart;
 
 public class ItemTransformer extends JItemMultiPart implements IHighlight
 {
-	public ItemTransformer(int id)
-	{
-		super(id);
-	}
-
 	@Override
 	public TMultiPart newPart(ItemStack itemStack, EntityPlayer player, World world, BlockCoord pos, int side, Vector3 hit)
 	{

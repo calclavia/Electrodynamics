@@ -1,7 +1,7 @@
 package resonantinduction.core.interfaces;
 
 import net.minecraftforge.common.util.ForgeDirection;
-import resonant.api.grid.INode;
+import universalelectricity.api.core.grid.INode;
 import universalelectricity.core.transform.vector.Vector3;
 
 /** Applied to any node that will act as a resonantinduction.mechanical object in the network

@@ -64,7 +64,7 @@ class PartQuantumGlyph extends JCuboidPart with TSlottedPart with JNormalOcclusi
 
   def transport(entity: Entity) {
     if (ticks % 10 == 0 && (tile.asInstanceOf[IQuantumGate]).getFrequency != -1) {
-      val frequencyBlocks: Set[IBlockFrequency] = FrequencyGridRegistry.instance.get((tile.asInstanceOf[IQuantumGate]).getFrequency)
+      val frequencyBlocks: Set[IBlockFrequency] = FrequencyGridRegistry.instance.getNodes((tile.asInstanceOf[IQuantumGate]).getFrequency)
       val gates: List[IQuantumGate] = new ArrayList[IQuantumGate]
       import scala.collection.JavaConversions._
       for (frequencyBlock <- frequencyBlocks) {

@@ -1,5 +1,6 @@
 package resonantinduction.core.handler;
 
+import cpw.mods.fml.common.Mod;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.fluids.BlockFluidFinite;
@@ -17,37 +18,37 @@ import cpw.mods.fml.relauncher.SideOnly;
  */
 public class TextureHookHandler
 {
-	@ForgeSubscribe
+	@Mod.EventHandler
 	@SideOnly(Side.CLIENT)
 	public void preTextureHook(TextureStitchEvent.Pre event)
 	{
-		if (event.map.textureType == 0)
+		if (event.map.getTextureType() == 0)
 		{
-			RenderUtility.registerIcon(Reference.PREFIX + "glyph_0", event.map);
-			RenderUtility.registerIcon(Reference.PREFIX + "glyph_1", event.map);
-			RenderUtility.registerIcon(Reference.PREFIX + "glyph_2", event.map);
-			RenderUtility.registerIcon(Reference.PREFIX + "glyph_3", event.map);
+			RenderUtility.registerIcon(Reference.prefix() + "glyph_0", event.map);
+			RenderUtility.registerIcon(Reference.prefix() + "glyph_1", event.map);
+			RenderUtility.registerIcon(Reference.prefix() + "glyph_2", event.map);
+			RenderUtility.registerIcon(Reference.prefix() + "glyph_3", event.map);
 
-			RenderUtility.registerIcon(Reference.PREFIX + "mixture_flow", event.map);
-			RenderUtility.registerIcon(Reference.PREFIX + "molten_flow", event.map);
-			RenderUtility.registerIcon(Reference.PREFIX + "multimeter_screen", event.map);
-			RenderUtility.registerIcon(Reference.PREFIX + "tankEdge", event.map);
+			RenderUtility.registerIcon(Reference.prefix() + "mixture_flow", event.map);
+			RenderUtility.registerIcon(Reference.prefix() + "molten_flow", event.map);
+			RenderUtility.registerIcon(Reference.prefix() + "multimeter_screen", event.map);
+			RenderUtility.registerIcon(Reference.prefix() + "tankEdge", event.map);
 		}
 	}
 
-	@ForgeSubscribe
+	@Mod.EventHandler
 	@SideOnly(Side.CLIENT)
 	public void postTextureHook(TextureStitchEvent.Post event)
 	{
 		for (BlockFluidFinite block : ResonantInduction.blockMixtureFluids.values())
 		{
-			block.getFluid().setIcons(RenderUtility.getIcon(Reference.PREFIX + "mixture_flow"));
+			block.getFluid().setIcons(RenderUtility.getIcon(Reference.prefix() + "mixture_flow"));
 			((FluidColored) block.getFluid()).setColor(ResourceGenerator.getColor(ResourceGenerator.mixtureToMaterial(block.getFluid().getName())));
 		}
 
 		for (BlockFluidFinite block : ResonantInduction.blockMoltenFluid.values())
 		{
-			block.getFluid().setIcons(RenderUtility.getIcon(Reference.PREFIX + "molten_flow"));
+			block.getFluid().setIcons(RenderUtility.getIcon(Reference.prefix() + "molten_flow"));
 			((FluidColored) block.getFluid()).setColor(ResourceGenerator.getColor(ResourceGenerator.moltenToMaterial(block.getFluid().getName())));
 		}
 	}

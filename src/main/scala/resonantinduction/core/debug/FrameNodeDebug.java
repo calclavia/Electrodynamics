@@ -3,9 +3,9 @@ package resonantinduction.core.debug;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import resonant.api.grid.INode;
-import resonant.api.grid.INodeProvider;
 import codechicken.multipart.TMultiPart;
+import universalelectricity.api.core.grid.INode;
+import universalelectricity.api.core.grid.INodeProvider;
 
 /** @author Darkguardsman */
 @SuppressWarnings("serial")

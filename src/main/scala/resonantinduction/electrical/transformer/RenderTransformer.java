@@ -6,8 +6,7 @@ import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.obj.WavefrontObject;
 
 import org.lwjgl.opengl.GL11;
-
-import resonant.api.items.ISimpleItemRenderer;
+import resonant.content.prefab.scala.render.ISimpleItemRenderer;
 import resonant.lib.render.RenderUtility;
 import resonantinduction.core.Reference;
 import cpw.mods.fml.client.FMLClientHandler;
@@ -20,7 +19,7 @@ public class RenderTransformer implements ISimpleItemRenderer
 	public static final RenderTransformer INSTANCE = new RenderTransformer();
 
 	public static final WavefrontObject MODEL = (WavefrontObject) AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "transformer.obj");
-	public static final ResourceLocation TEXTURE_COIL = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "transformer_winding.png");
+	public static final ResourceLocation TEXTURE_COIL = new ResourceLocation(Reference.domain(), Reference.MODEL_PATH + "transformer_winding.png");
 	public static final ResourceLocation TEXTURE_STONE = new ResourceLocation(Reference.BLOCK_TEXTURE_DIRECTORY + "stone.png");
 	public static final ResourceLocation TEXTURE_IRON = new ResourceLocation(Reference.BLOCK_TEXTURE_DIRECTORY + "iron_block.png");
 

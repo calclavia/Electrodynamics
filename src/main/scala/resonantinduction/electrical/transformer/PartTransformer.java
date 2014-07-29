@@ -9,20 +9,17 @@ import net.minecraftforge.common.util.ForgeDirection;
 import resonant.lib.utility.WrenchUtility;
 import resonantinduction.core.prefab.part.PartFace;
 import resonantinduction.electrical.Electrical;
-import universalelectricity.api.CompatibilityModule;
-import universalelectricity.api.UniversalClass;
-import universalelectricity.api.UniversalElectricity;
-import universalelectricity.api.electricity.IElectricalNetwork;
-import universalelectricity.api.electricity.IVoltageInput;
-import universalelectricity.api.electricity.IVoltageOutput;
-import universalelectricity.api.energy.IConductor;
-import universalelectricity.api.energy.IEnergyInterface;
-import universalelectricity.api.vector.VectorHelper;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import codechicken.lib.vec.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import universalelectricity.api.UniversalClass;
+import universalelectricity.api.core.grid.INode;
+import universalelectricity.api.core.grid.INodeProvider;
+import universalelectricity.api.core.grid.electric.IElectricNode;
+import universalelectricity.core.UniversalElectricity;
+import universalelectricity.core.grid.node.ElectricNode;
 
 /**
  * TODO: We can't use face parts, need to use thicker ones. Also, transformer is currently NO-OP
@@ -31,7 +28,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * 
  */
 @UniversalClass
-public class PartTransformer extends PartFace implements IVoltageOutput, IEnergyInterface
+public class PartTransformer extends PartFace implements INodeProvider
 {
 
 	/** Step the voltage up */
@@ -39,6 +36,8 @@ public class PartTransformer extends PartFace implements IVoltageOutput, IEnergy
 
 	/** Amount to mulitply the step by (up x2. down /2) */
 	public byte multiplier = 2;
+
+    protected ElectricNode node;
 
 	@Override
 	public void preparePlacement(int side, int facing)
@@ -117,37 +116,6 @@ public class PartTransformer extends PartFace implements IVoltageOutput, IEnergy
 	}
 
 	@Override
-	public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)
-	{
-		if (from == getAbsoluteFacing())
-		{
-			TileEntity tile = VectorHelper.getTileEntityFromSide(this.world(), new universalelectricity.core.transform.vector.Vector3(x(), y(), z()), from.getOpposite());
-
-			if (CompatibilityModule.isHandler(tile))
-			{
-				if (tile instanceof IVoltageInput)
-				{
-					long voltage = this.getVoltageOutput(from.getOpposite());
-
-					if (voltage != ((IVoltageInput) tile).getVoltageInput(from))
-					{
-						((IVoltageInput) tile).onWrongVoltage(from, voltage);
-					}
-				}
-
-				return CompatibilityModule.receiveEnergy(tile, from, receive, doReceive);
-			}
-		}
-		return 0;
-	}
-
-	@Override
-	public long onExtractEnergy(ForgeDirection from, long extract, boolean doExtract)
-	{
-		return 0;
-	}
-
-	@Override
 	public long getVoltageOutput(ForgeDirection from)
 	{
 		if (from == getAbsoluteFacing().getOpposite())
@@ -170,7 +138,7 @@ public class PartTransformer extends PartFace implements IVoltageOutput, IEnergy
 			}
 
 			if (inputVoltage <= 0)
-				inputVoltage = UniversalElectricity.DEFAULT_VOLTAGE;
+				inputVoltage = 240;
 
 			if (this.stepUp())
 				return inputVoltage * (this.multiplier + 2);
@@ -212,4 +180,16 @@ public class PartTransformer extends PartFace implements IVoltageOutput, IEnergy
 
 		return true;
 	}
+
+    @Override
+    public INode getNode(Class<INode> nodeType, ForgeDirection from) {
+        if(nodeType.isAssignableFrom(IElectricNode.class))
+        {
+            if (node == null) {
+                node = new ElectricNode(this);
+            }
+            return node;
+        }
+        return null;
+    }
 }

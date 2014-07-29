@@ -15,7 +15,7 @@ import javax.swing.border.EtchedBorder;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import universalelectricity.api.vector.IVectorWorld;
+import universalelectricity.core.transform.vector.IVectorWorld;
 
 /** @author Darkguardsman */
 @SuppressWarnings("serial")
@@ -158,7 +158,7 @@ public class FrameDebug extends Frame implements IVectorWorld
             @Override
             public String buildLabel()
             {
-                return super.buildLabel() + (tile != null && tile.getBlockType() != null ? tile.getBlockType().blockID : "-");
+                return super.buildLabel() + (tile != null && tile.getBlockType() != null ? tile.getBlockType() : "-");
             }
         };
         panel.add(meta_label);
@@ -168,7 +168,7 @@ public class FrameDebug extends Frame implements IVectorWorld
             @Override
             public String buildLabel()
             {
-                return super.buildLabel() + (tile != null && tile.getBlockType() != null ? tile.getBlockType().blockID : "-");
+                return super.buildLabel() + (tile != null && tile.getBlockType() != null ? tile.getBlockType() : "-");
             }
         };
         panel.add(id_label);

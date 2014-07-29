@@ -3,6 +3,7 @@ package resonantinduction.core.render;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import universalelectricity.core.transform.vector.Vector3;
@@ -15,7 +16,7 @@ public class BlockRenderInfo
 	/** Block higher corner size */
 	public Vector3 max = new Vector3(1, 1, 1);
 	/** Block to pull info from */
-	public Block baseBlock = Block.sand;
+	public Block baseBlock = Blocks.sand;
 	/** Override render texture */
 	public IIcon texture = null;
 	/** meta data to use for block the block */
