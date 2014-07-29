@@ -49,7 +49,6 @@ public class ClientProxy extends CommonProxy
     @Override
     public void preInit()
     {
-        MinecraftForge.EVENT_BUS.register(SoundHandler.INSTANCE);
         RenderingRegistry.registerBlockHandler(new BlockRenderingHandler());
     }
 

@@ -12,9 +12,7 @@ import resonant.api.blocks.IBlockFrequency;
  * @author Calclavia
  * 
  */
-public interface IQuantumGate extends IBlockFrequency, IFluidHandler, ISidedInventory
+public interface IQuantumGate extends IBlockFrequency
 {
-	public void transport(Entity entity);
-
-	FluidTank getQuantumTank();
+	public void transport(Object object);
 }

@@ -9,7 +9,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.Teleporter;
 import net.minecraft.world.WorldServer;
-import universalelectricity.api.vector.VectorWorld;
+import universalelectricity.core.transform.vector.VectorWorld;
 
 public class QuantumGateManager
 {
@@ -17,26 +17,26 @@ public class QuantumGateManager
 
 	protected static boolean moveEntity(Entity currentEntity, final VectorWorld location)
 	{
-		if (currentEntity != null && location != null && location.world instanceof WorldServer)
+		if (currentEntity != null && location != null && location.world() instanceof WorldServer)
 		{
-			location.world.markBlockForUpdate(location.xi(), location.yi(), location.zi());
+			location.world().markBlockForUpdate(location.xi(), location.yi(), location.zi());
 
-			int dimID = location.world.provider.dimensionId;
+			int dimID = location.world().provider.dimensionId;
 
 			if (currentEntity instanceof EntityPlayerMP)
 			{
-				if (playerCooldown.get(((EntityPlayerMP) currentEntity).username) == null || (System.currentTimeMillis() - playerCooldown.get(((EntityPlayerMP) currentEntity).username) > 1000))
+				if (playerCooldown.get(((EntityPlayerMP) currentEntity).getCommandSenderName()) == null || (System.currentTimeMillis() - playerCooldown.get(((EntityPlayerMP) currentEntity).getCommandSenderName()) > 1000))
 				{
 					EntityPlayerMP player = (EntityPlayerMP) currentEntity;
 
-					if (location.world != currentEntity.worldObj)
+					if (location.world() != currentEntity.worldObj)
 					{
-						Teleporter dummyTeleporter = new Teleporter((WorldServer) location.world)
+						Teleporter dummyTeleporter = new Teleporter((WorldServer) location.world())
 						{
 							@Override
 							public void placeInPortal(Entity teleportEntity, double x, double y, double z, float par8)
 							{
-								teleportEntity.setLocationAndAngles(location.x, location.y, location.z, teleportEntity.rotationYaw, 0.0F);
+								teleportEntity.setLocationAndAngles(location.x(), location.y(), location.z(), teleportEntity.rotationYaw, 0.0F);
 								teleportEntity.motionX = teleportEntity.motionY = teleportEntity.motionZ = 0.0D;
 								teleportEntity.setSneaking(false);
 							}
@@ -46,16 +46,16 @@ public class QuantumGateManager
 					}
 					else
 					{
-						player.playerNetServerHandler.setPlayerLocation(location.x, location.y, location.z, 0, 0);
+						player.playerNetServerHandler.setPlayerLocation(location.x(), location.y(), location.z(), 0, 0);
 					}
 
-					playerCooldown.put(((EntityPlayerMP) currentEntity).username, System.currentTimeMillis());
+					playerCooldown.put(((EntityPlayerMP) currentEntity).getCommandSenderName(), System.currentTimeMillis());
 					return true;
 				}
 			}
 			else
 			{
-				if (location.world != currentEntity.worldObj)
+				if (location.world() != currentEntity.worldObj)
 				{
 
 					currentEntity.worldObj.theProfiler.startSection("changeDimension");
@@ -100,7 +100,7 @@ public class QuantumGateManager
 					return true;
 				}
 
-				currentEntity.setPosition(location.x, location.y, location.z);
+				currentEntity.setPosition(location.x(), location.y(), location.z());
 				return true;
 			}
 
