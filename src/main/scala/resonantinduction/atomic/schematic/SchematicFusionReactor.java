@@ -2,10 +2,11 @@ package resonantinduction.atomic.schematic;
 
 import java.util.HashMap;
 
-import atomic.Atomic;
+import net.minecraft.block.Block;
 import net.minecraftforge.common.util.ForgeDirection;
 import resonant.lib.schematic.Schematic;
 import resonant.lib.type.Pair;
+import resonantinduction.atomic.Atomic;
 import universalelectricity.core.transform.vector.Vector3;
 
 public class SchematicFusionReactor extends Schematic
@@ -17,9 +18,9 @@ public class SchematicFusionReactor extends Schematic
     }
 
     @Override
-    public HashMap<Vector3, Pair<Integer, Integer>> getStructure(ForgeDirection dir, int size)
+    public HashMap<Vector3, Pair<Block, Integer>> getStructure(ForgeDirection dir, int size)
     {
-        HashMap<Vector3, Pair<Integer, Integer>> returnMap = new HashMap<Vector3, Pair<Integer, Integer>>();
+        HashMap<Vector3, Pair<Block, Integer>> returnMap = new HashMap<Vector3, Pair<Block, Integer>>();
 
         /** Fusion Torus */
         int radius = size + 2;
@@ -46,12 +47,12 @@ public class SchematicFusionReactor extends Schematic
                             {
                                 double yDeviation = (y == 0 ? size / 3 : -size / 3) + (y == 0 ? -1 : 1) * Math.sin(magnitude / radius * Math.PI) * size / 2d;
                                 Vector3 newPos = position.clone().add(0, yDeviation, 0);
-                                returnMap.put(newPos.round(), new Pair(Atomic.blockElectromagnet.blockID, 1));
+                                returnMap.put(newPos.round(), new Pair(Atomic.blockElectromagnet, 1));
                             }
                         }
                         else if (magnitude > radius - 1)
                         {
-                            returnMap.put(position, new Pair(Atomic.blockElectromagnet.blockID, 0));
+                            returnMap.put(position, new Pair(Atomic.blockElectromagnet, 0));
                         }
                     }
                 }
@@ -60,14 +61,14 @@ public class SchematicFusionReactor extends Schematic
         /** Fusion Core */
         for (int y = 0; y < size; y++)
         {
-            returnMap.put(new Vector3(0, y, 0), new Pair(Atomic.blockReactorCell.blockID, 0));
-            returnMap.put(new Vector3(1, y, 0), new Pair(Atomic.blockElectromagnet.blockID, 0));
-            returnMap.put(new Vector3(0, y, 1), new Pair(Atomic.blockElectromagnet.blockID, 0));
-            returnMap.put(new Vector3(0, y, -1), new Pair(Atomic.blockElectromagnet.blockID, 0));
-            returnMap.put(new Vector3(-1, y, 0), new Pair(Atomic.blockElectromagnet.blockID, 0));
+            returnMap.put(new Vector3(0, y, 0), new Pair(Atomic.blockReactorCell, 0));
+            returnMap.put(new Vector3(1, y, 0), new Pair(Atomic.blockElectromagnet, 0));
+            returnMap.put(new Vector3(0, y, 1), new Pair(Atomic.blockElectromagnet, 0));
+            returnMap.put(new Vector3(0, y, -1), new Pair(Atomic.blockElectromagnet, 0));
+            returnMap.put(new Vector3(-1, y, 0), new Pair(Atomic.blockElectromagnet, 0));
         }
 
-        returnMap.put(new Vector3(0, 0, 0), new Pair(Atomic.blockReactorCell.blockID, 0));
+        returnMap.put(new Vector3(0, 0, 0), new Pair(Atomic.blockReactorCell, 0));
 
         return returnMap;
     }

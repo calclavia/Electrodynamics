@@ -2,11 +2,11 @@ package resonantinduction.atomic.schematic;
 
 import java.util.HashMap;
 
-import atomic.Atomic;
 import net.minecraft.block.Block;
 import net.minecraftforge.common.util.ForgeDirection;
 import resonant.lib.schematic.Schematic;
 import resonant.lib.type.Pair;
+import resonantinduction.atomic.Atomic;
 import universalelectricity.core.transform.vector.Vector3;
 
 public class SchematicAccelerator extends Schematic
@@ -20,7 +20,7 @@ public class SchematicAccelerator extends Schematic
     @Override
     public HashMap<Vector3, Pair<Block, Integer>> getStructure(ForgeDirection dir, int size)
     {
-        HashMap<Vector3, Pair<Integer, Integer>> returnMap = new HashMap<Vector3, Pair<Integer, Integer>>();
+        HashMap<Vector3, Pair<Block, Integer>> returnMap = new HashMap<Vector3, Pair<Block, Integer>>();
 
         int r = size;
 
@@ -32,7 +32,7 @@ public class SchematicAccelerator extends Schematic
                 {
                     if (x == -r || x == r - 1 || z == -r || z == r - 1)
                     {
-                        returnMap.put(new Vector3(x, y, z), new Pair(Atomic.blockElectromagnet.blockID, 0));
+                        returnMap.put(new Vector3(x, y, z), new Pair(Atomic.blockElectromagnet, 0));
                     }
                 }
             }
@@ -48,7 +48,7 @@ public class SchematicAccelerator extends Schematic
                 {
                     if (x == -r || x == r - 1 || z == -r || z == r - 1)
                     {
-                        returnMap.put(new Vector3(x, y, z), new Pair(Atomic.blockElectromagnet.blockID, 0));
+                        returnMap.put(new Vector3(x, y, z), new Pair(Atomic.blockElectromagnet, 0));
                     }
                 }
             }
@@ -66,7 +66,7 @@ public class SchematicAccelerator extends Schematic
                     {
                         if (y == -1 || y == 1)
                         {
-                            returnMap.put(new Vector3(x, y, z), new Pair(Atomic.blockElectromagnet.blockID, 1));
+                            returnMap.put(new Vector3(x, y, z), new Pair(Atomic.blockElectromagnet, 1));
                         }
                         else if (y == 0)
                         {

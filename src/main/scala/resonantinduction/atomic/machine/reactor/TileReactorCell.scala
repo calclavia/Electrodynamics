@@ -4,22 +4,17 @@ import java.util.ArrayList
 import java.util.List
 import net.minecraft.block.material.Material
 import net.minecraft.init.Blocks
-import resonant.content.spatial.block.SpatialBlock
+import resonant.api.event.PlasmaEvent
 import resonant.engine.grid.thermal.{ThermalGrid, ThermalPhysics}
-import resonant.lib.content.prefab.TInventory
+import resonant.lib.content.prefab.java.TileInventory
 import resonant.lib.multiblock.reference.{MultiBlockHandler, IMultiBlockStructure}
+import resonant.lib.network.discriminator.PacketAnnotation
 import resonant.lib.network.netty.PacketManager
-import resonantinduction.atomic.Atomic
-import resonantinduction.atomic.ReactorExplosion
-import resonantinduction.atomic.machine.plasma.TilePlasma
 import net.minecraft.block.Block
 import net.minecraft.entity.EntityLiving
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.inventory.IInventory
-import net.minecraft.inventory.ISidedInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.network.packet.Packet
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.AxisAlignedBB
 import net.minecraft.world.World
@@ -33,29 +28,20 @@ import net.minecraftforge.fluids.FluidTankInfo
 import net.minecraftforge.fluids.IFluidHandler
 import resonant.api.IReactor
 import resonant.api.IReactorComponent
-import resonant.api.event.PlasmaEvent.SpawnPlasmaEvent
-import resonant.lib.content.module.prefab.TileInventory
-import resonant.lib.multiblock.IMultiBlockStructure
-import resonant.lib.multiblock.MultiBlockHandler
-import resonant.lib.network.PacketHandler
 import resonant.lib.network.Synced
 import resonant.lib.network.Synced.SyncedInput
 import resonant.lib.network.Synced.SyncedOutput
 import resonant.lib.prefab.poison.PoisonRadiation
-import resonant.lib.thermal.ThermalGrid
-import resonant.lib.thermal.ThermalPhysics
 import resonant.lib.utility.inventory.InventoryUtility
 import resonantinduction.atomic.Atomic
 import resonantinduction.atomic.ReactorExplosion
 import resonantinduction.atomic.machine.plasma.TilePlasma
 import resonantinduction.core.Reference
 import resonantinduction.core.ResonantInduction
-import universalelectricity.api.UniversalElectricity
-import universalelectricity.core.UniversalElectricity
 import universalelectricity.core.transform.vector.{VectorWorld, Vector3}
-import universalelectricity.api.vector.VectorWorld
 import cpw.mods.fml.relauncher.Side
 import cpw.mods.fml.relauncher.SideOnly
+import scala.util.control.Breaks._
 
 /** The primary reactor component cell used to build reactors with.
   *
@@ -65,7 +51,7 @@ object TileReactorCell {
   final val MELTING_POINT: Int = 2000
 }
 
-class TileReactorCell extends SpatialBlock(Material.iron) with TInventory with IMultiBlockStructure[TileReactorCell] with IReactor with IFluidHandler {
+class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStructure[TileReactorCell] with IReactor with IFluidHandler {
 
   private final val specificHeatCapacity: Int = 1000
   private final val mass: Float = ThermalPhysics.getMass(1000, 7)
@@ -142,11 +128,11 @@ class TileReactorCell extends SpatialBlock(Material.iron) with TInventory with I
       }
     }
     if (!getWorld.isRemote) {
-      if (getMultiBlock.isPrimary && tank.getFluid != null && tank.getFluid.fluidID == Atomic.FLUID_PLASMA.getID) {
+      if (getMultiBlock().isPrimary() && tank.getFluid != null && tank.getFluid.fluidID == Atomic.FLUID_PLASMA.getID) {
         val drain: FluidStack = tank.drain(FluidContainerRegistry.BUCKET_VOLUME, false)
         if (drain != null && drain.amount >= FluidContainerRegistry.BUCKET_VOLUME) {
           val spawnDir: ForgeDirection = ForgeDirection.getOrientation(worldObj.rand.nextInt(3) + 2)
-          val spawnPos: Vector3 = new Vector3(this).add(spawnDir, 2)
+          val spawnPos: Vector3 = new Vector3(this) + spawnDir + spawnDir
           spawnPos.add(0, Math.max(worldObj.rand.nextInt(getHeight) - 1, 0), 0)
           if (worldObj.isAirBlock(spawnPos.xi, spawnPos.yi, spawnPos.zi)) {
             MinecraftForge.EVENT_BUS.post(new PlasmaEvent.SpawnPlasmaEvent(worldObj, spawnPos.xi, spawnPos.yi, spawnPos.zi, TilePlasma.plasmaMaxTemperature))
@@ -165,10 +151,9 @@ class TileReactorCell extends SpatialBlock(Material.iron) with TInventory with I
                 getMultiBlock.get.setInventorySlotContents(0, null)
               }
             }
-            if (ticks % 20 eq 0) {
+            if (ticks % 20 == 0) {
               if (worldObj.rand.nextFloat > 0.65) {
-                val entities: List[EntityLiving] = worldObj.getEntitiesWithinAABB(classOf[EntityLiving], AxisAlignedBB.getBoundingBox(xCoord - RADIUS * 2, yCoord - RADIUS * 2, zCoord - RADIUS * 2, xCoord + RADIUS * 2, yCoord + RADIUS * 2, zCoord + RADIUS * 2))
-                import scala.collection.JavaConversions._
+                val entities: List[_] = worldObj.getEntitiesWithinAABB(classOf[EntityLiving], AxisAlignedBB.getBoundingBox(xCoord - TileReactorCell.RADIUS * 2, yCoord - TileReactorCell.RADIUS * 2, zCoord - TileReactorCell.RADIUS * 2, xCoord + TileReactorCell.RADIUS * 2, yCoord + TileReactorCell.RADIUS * 2, zCoord + TileReactorCell.RADIUS * 2))
                 for (entity <- entities) {
                   PoisonRadiation.INSTANCE.poisonEntity(new Vector3(this), entity)
                 }
@@ -241,7 +226,7 @@ class TileReactorCell extends SpatialBlock(Material.iron) with TInventory with I
       }
     }
     else {
-      if (worldObj.rand.nextInt(5) eq 0 && this.getTemperature >= 373) {
+      if (worldObj.rand.nextInt(5) == 0 && this.getTemperature >= 373) {
         worldObj.spawnParticle("cloud", this.xCoord + worldObj.rand.nextInt(2), this.yCoord + 1.0F, this.zCoord + worldObj.rand.nextInt(2), 0, 0.1D, 0)
         worldObj.spawnParticle("bubble", this.xCoord + worldObj.rand.nextInt(5), this.yCoord, this.zCoord + worldObj.rand.nextInt(5), 0, 0, 0)
       }
@@ -313,7 +298,7 @@ class TileReactorCell extends SpatialBlock(Material.iron) with TInventory with I
     return new Vector3(this)
   }
 
-  def getMultiBlock: IMultiBlockStructure[TileReactorCell] = {
+  override def getMultiBlock: MultiBlockHandler[TileReactorCell] = {
     if (multiBlock == null) {
       multiBlock = new MultiBlockHandler[TileReactorCell](this)
     }
@@ -332,13 +317,13 @@ class TileReactorCell extends SpatialBlock(Material.iron) with TInventory with I
     return height
   }
 
-  def getDescriptionPacket: Nothing = {
-    return ResonantInduction.PACKET_ANNOTATION.getPacket(this)
+  override def getDescriptionPacket: Any = {
+    return new PacketAnnotation(this)
   }
 
   private def meltDown {
     if (!worldObj.isRemote) {
-      this.worldObj.setBlock(Block.lavaStill.blockID, 0, this.xCoord, this.yCoord, this.zCoord, 3)
+      this.worldObj.setBlock(this.xCoord, this.yCoord, this.zCoord, Blocks.lava)
       val reactorExplosion: ReactorExplosion = new ReactorExplosion(worldObj, null, xCoord, yCoord, zCoord, 9f)
       reactorExplosion.doExplosionA
       reactorExplosion.doExplosionB(true)
@@ -346,7 +331,7 @@ class TileReactorCell extends SpatialBlock(Material.iron) with TInventory with I
   }
 
   /** Reads a tile entity from NBT. */
-  @SyncedInput def readFromNBT(nbt: NBTTagCompound) {
+  @SyncedInput override def readFromNBT(nbt: NBTTagCompound) {
     super.readFromNBT(nbt)
     temperature = nbt.getFloat("temperature")
     tank.readFromNBT(nbt)
@@ -354,7 +339,7 @@ class TileReactorCell extends SpatialBlock(Material.iron) with TInventory with I
   }
 
   /** Writes a tile entity to NBT. */
-  @SyncedOutput def writeToNBT(nbt: NBTTagCompound) {
+  @SyncedOutput override def writeToNBT(nbt: NBTTagCompound) {
     super.writeToNBT(nbt)
     nbt.setFloat("temperature", temperature)
     tank.writeToNBT(nbt)
@@ -415,7 +400,7 @@ class TileReactorCell extends SpatialBlock(Material.iron) with TInventory with I
   }
 
   @SideOnly(Side.CLIENT) def getRenderBoundingBox: AxisAlignedBB = {
-    if (getMultiBlock && getMultiBlock.isConstructed) {
+    if (getMultiBlock.isPrimary && getMultiBlock.isConstructed) {
       return INFINITE_EXTENT_AABB
     }
     return super.getRenderBoundingBox
