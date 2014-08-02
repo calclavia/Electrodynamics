@@ -17,7 +17,6 @@ import resonant.api.mffs.Blacklist
 import resonant.api.mffs.event.EventStabilize
 import resonant.api.mffs.machine.IProjector
 import resonant.lib.network.discriminator.PacketTile
-import universalelectricity.core.transform.rotation.Rotation
 import universalelectricity.core.transform.vector.{Vector3, VectorWorld}
 
 class ItemModuleStabilize extends ItemModule

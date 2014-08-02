@@ -16,7 +16,6 @@ import resonant.api.mffs.fortron.FrequencyGridRegistry
 import resonant.api.mffs.machine.IProjector
 import resonant.engine.grid.frequency.FrequencyGrid
 import resonant.lib.access.java.Permission
-import universalelectricity.core.transform.rotation.Rotation
 import universalelectricity.core.transform.vector.Vector3
 
 import scala.collection.JavaConversions._

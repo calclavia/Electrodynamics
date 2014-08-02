@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.{OpenGlHelper, RenderBlocks, Tessellator}
 import net.minecraft.world.World
 import org.lwjgl.opengl.GL11
 import resonant.lib.render.RenderUtility
-import universalelectricity.core.transform.rotation.Rotation
 import universalelectricity.core.transform.vector.Vector3
 
 /**

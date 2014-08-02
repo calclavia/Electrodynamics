@@ -18,7 +18,6 @@ import resonant.lib.content.prefab.TRotatable
 import resonant.lib.network.ByteBufWrapper.ByteBufWrapper
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.utility.RotationUtility
-import universalelectricity.core.transform.rotation.Rotation
 import universalelectricity.core.transform.vector.Vector3
 
 import scala.collection.convert.wrapAll._

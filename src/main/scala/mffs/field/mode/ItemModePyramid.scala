@@ -8,7 +8,6 @@ import net.minecraft.tileentity.TileEntity
 import org.lwjgl.opengl.GL11
 import resonant.api.mffs.machine.{IFieldMatrix, IProjector}
 import universalelectricity.core.transform.region.Cuboid
-import universalelectricity.core.transform.rotation.Rotation
 import universalelectricity.core.transform.vector.Vector3
 
 class ItemModePyramid extends ItemMode

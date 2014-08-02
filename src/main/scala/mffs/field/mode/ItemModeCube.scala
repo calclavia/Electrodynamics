@@ -8,7 +8,6 @@ import org.lwjgl.opengl.GL11
 import resonant.api.mffs.machine.{IFieldMatrix, IProjector}
 import resonant.lib.render.block.ModelCube
 import universalelectricity.core.transform.region.Cuboid
-import universalelectricity.core.transform.rotation.Rotation
 import universalelectricity.core.transform.vector.Vector3
 
 class ItemModeCube extends ItemMode
