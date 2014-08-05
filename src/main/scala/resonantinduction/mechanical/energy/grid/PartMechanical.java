@@ -4,20 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.util.ForgeDirection;
-import resonant.api.grid.INode;
-import resonant.api.grid.INodeProvider;
-import resonant.core.ResonantEngine;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import codechicken.multipart.ControlKeyModifer;
 import codechicken.multipart.JCuboidPart;
 import codechicken.multipart.JNormalOcclusion;
 import codechicken.multipart.TFacePart;
+import resonant.engine.ResonantEngine;
+import universalelectricity.api.core.grid.INode;
+import universalelectricity.api.core.grid.INodeProvider;
 
 /** We assume all the force acting on the gear is 90 degrees.
  * 
@@ -31,7 +32,7 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
     /** Packets */
     boolean markPacketUpdate = false;
     /** Simple debug external GUI */
-    MechanicalNodeFrame frame = null;
+    DebugFrameMechanical frame = null;
 
     /** Side of the block this is placed on */
     public ForgeDirection placementSide = ForgeDirection.UNKNOWN;
@@ -74,7 +75,7 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
         {
             if (itemStack != null && !world().isRemote)
             {
-                if (itemStack.getItem().itemID == Item.stick.itemID)
+                if (itemStack.getItem() == Items.stick)
                 {
                     //Set the nodes debug mode
                     if (ControlKeyModifer.isControlDown(player))
@@ -82,7 +83,7 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
                         //Opens a debug GUI
                         if (frame == null)
                         {
-                            frame = new MechanicalNodeFrame(this);
+                            frame = new DebugFrameMechanical(this);
                             frame.showDebugFrame();
                         } //Closes the debug GUI
                         else

@@ -1,7 +1,6 @@
 package resonantinduction.mechanical;
 
 import resonantinduction.mechanical.fluid.pipe.RenderPipe;
-import resonant.lib.render.item.GlobalItemRenderer;
 import resonantinduction.mechanical.gear.RenderGear;
 import resonantinduction.mechanical.gearshaft.RenderGearShaft;
 

@@ -10,7 +10,6 @@ import resonantinduction.mechanical.fluid.transport.TilePump;
 import resonantinduction.mechanical.gear.ItemGear;
 import resonantinduction.mechanical.gearshaft.ItemGearShaft;
 import resonantinduction.mechanical.logistic.belt.BlockDetector;
-import resonantinduction.mechanical.logistic.belt.BlockManipulator;
 import resonantinduction.mechanical.logistic.belt.TileDetector;
 import resonantinduction.mechanical.logistic.belt.TileManipulator;
 import resonantinduction.mechanical.process.crusher.TileMechanicalPiston;

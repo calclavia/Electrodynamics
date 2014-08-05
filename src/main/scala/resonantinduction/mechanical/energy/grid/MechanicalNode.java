@@ -9,11 +9,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import resonant.api.grid.INode;
-import resonant.api.grid.INodeProvider;
 import resonant.lib.utility.nbt.ISaveObj;
 import resonantinduction.core.interfaces.IMechanicalNode;
-import universalelectricity.api.vector.IVectorWorld;
+import universalelectricity.api.core.grid.INode;
+import universalelectricity.api.core.grid.INodeProvider;
+import universalelectricity.core.transform.vector.IVectorWorld;
 import universalelectricity.core.transform.vector.Vector3;
 import codechicken.multipart.TMultiPart;
 
@@ -99,7 +99,7 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj, IVectorWorld
 	}
 
 	@Override
-	public void update(float deltaTime)
+	public void update(double deltaTime)
 	{
 		ticks++;
 		if (ticks >= Long.MAX_VALUE)
@@ -358,8 +358,7 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj, IVectorWorld
 			}
 		}
 	}
-
-	/**
+    /**
 	 * Gets the node provider for this node
 	 */
 	public INodeProvider getParent()

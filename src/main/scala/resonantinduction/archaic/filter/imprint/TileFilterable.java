@@ -10,8 +10,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 import resonant.api.IFilterable;
 import resonant.api.IRotatable;
-import resonant.lib.content.module.prefab.TileInventory;
 import universalelectricity.core.transform.vector.Vector3;
+import resonant.lib.content.prefab.java.TileInventory;
 
 public abstract class TileFilterable extends TileInventory implements IRotatable, IFilterable
 {
@@ -22,14 +22,14 @@ public abstract class TileFilterable extends TileInventory implements IRotatable
 
 	public TileFilterable()
 	{
-		super(null);
-		this.maxSlots = 2;
+		super(Material.wood);
+		this.setSizeInventory(2);
 	}
 
 	public TileFilterable(Material material)
 	{
 		super(material);
-		this.maxSlots = 2;
+		this.setSizeInventory(2);
 	}
 
 	protected boolean isFunctioning()

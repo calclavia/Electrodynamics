@@ -12,22 +12,22 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
 import net.minecraftforge.common.util.ForgeDirection;
-import resonant.api.grid.INode;
-import resonant.api.grid.INodeProvider;
 import resonantinduction.core.debug.FrameNodeDebug;
 import resonantinduction.core.debug.UpdatePanel;
 import resonantinduction.core.debug.UpdatedLabel;
+import universalelectricity.api.core.grid.INode;
+import universalelectricity.api.core.grid.INodeProvider;
 
 /** Java GUI used to help debug gear information
  * 
  * @author Darkguardsman */
 @SuppressWarnings("serial")
-public class MechanicalNodeFrame extends FrameNodeDebug
+public class DebugFrameMechanical extends FrameNodeDebug
 {
     JList<String> connectionList_component = null;
     DefaultListModel<String> connectionList_model = new DefaultListModel<String>();;
 
-    public MechanicalNodeFrame(INodeProvider node)
+    public DebugFrameMechanical(INodeProvider node)
     {
         super(node, MechanicalNode.class);
     }
@@ -41,7 +41,7 @@ public class MechanicalNodeFrame extends FrameNodeDebug
             @Override
             public String buildLabel()
             {
-                return super.buildLabel() + MechanicalNodeFrame.this.getNode();
+                return super.buildLabel() + DebugFrameMechanical.this.getNode();
             }
         };
         panel.add(tickLabel);
@@ -51,7 +51,7 @@ public class MechanicalNodeFrame extends FrameNodeDebug
             @Override
             public String buildLabel()
             {
-                return super.buildLabel() + (MechanicalNodeFrame.this.getNode() != null ? MechanicalNodeFrame.this.getNode().getParent() : "null");
+                return super.buildLabel() + (DebugFrameMechanical.this.getNode() != null ? DebugFrameMechanical.this.getNode().getParent() : "null");
             }
         };
         panel.add(xLabel);
@@ -130,7 +130,7 @@ public class MechanicalNodeFrame extends FrameNodeDebug
             @Override
             public String buildLabel()
             {
-                return super.buildLabel() + MechanicalNodeFrame.this.getNode().angularVelocity;
+                return super.buildLabel() + DebugFrameMechanical.this.getNode().angularVelocity;
             }
         };
         topPanel.add(velLabel);
@@ -140,7 +140,7 @@ public class MechanicalNodeFrame extends FrameNodeDebug
             @Override
             public String buildLabel()
             {
-                return super.buildLabel() + MechanicalNodeFrame.this.getNode().renderAngle;
+                return super.buildLabel() + DebugFrameMechanical.this.getNode().renderAngle;
             }
         };
         topPanel.add(angleLabel);
@@ -150,7 +150,7 @@ public class MechanicalNodeFrame extends FrameNodeDebug
             @Override
             public String buildLabel()
             {
-                return super.buildLabel() + MechanicalNodeFrame.this.getNode().torque;
+                return super.buildLabel() + DebugFrameMechanical.this.getNode().torque;
             }
         };
         topPanel.add(torqueLabel);

@@ -23,11 +23,11 @@ public class TileDetector extends TileFilterable implements IPacketReceiver
 	private boolean powering = false;
 
 	@Override
-	public void updateEntity()
+	public void update()
 	{
-		super.updateEntity();
+		super.update();
 
-		if (!this.worldObj.isRemote && this.ticks % 10 == 0)
+		if (!this.worldObj.isRemote && this.ticks() % 10 == 0)
 		{
 			int metadata = this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord);
 			AxisAlignedBB testArea = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord, this.zCoord, this.xCoord + 1, this.yCoord + 1, this.zCoord + 1);
@@ -62,13 +62,13 @@ public class TileDetector extends TileFilterable implements IPacketReceiver
 			if (powerCheck != this.powering)
 			{
 				this.powering = powerCheck;
-				this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, Mechanical.blockDetector.blockID);
-				this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord + 1, this.zCoord, Mechanical.blockDetector.blockID);
+				this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, Mechanical.blockDetector);
+				this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord + 1, this.zCoord, Mechanical.blockDetector);
 				for (int x = this.xCoord - 1; x <= this.xCoord + 1; x++)
 				{
 					for (int z = this.zCoord - 1; z <= this.zCoord + 1; z++)
 					{
-						this.worldObj.notifyBlocksOfNeighborChange(x, this.yCoord + 1, z, Mechanical.blockDetector.blockID);
+						this.worldObj.notifyBlocksOfNeighborChange(x, this.yCoord + 1, z, Mechanical.blockDetector);
 					}
 				}
 

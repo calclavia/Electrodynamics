@@ -4,20 +4,17 @@ import java.io.IOException;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.packet.Packet;
 import net.minecraftforge.common.util.ForgeDirection;
-import resonant.api.grid.INode;
-import resonant.api.grid.INodeProvider;
-import resonant.core.ResonantEngine;
-import resonant.lib.References;
-import resonant.lib.content.module.TileBase;
-import resonant.lib.network.IPacketReceiver;
-import resonant.lib.network.IPacketReceiverWithID;
-import resonant.lib.network.PacketHandler;
+import resonant.content.prefab.java.TileAdvanced;
+import resonant.engine.ResonantEngine;
+import resonant.lib.network.handle.TPacketIDReceiver;
 import resonantinduction.core.ResonantInduction;
+import universalelectricity.api.core.grid.INode;
+import universalelectricity.api.core.grid.INodeProvider;
 import universalelectricity.core.transform.vector.Vector3;
 import codechicken.multipart.ControlKeyModifer;
 
@@ -26,7 +23,7 @@ import com.google.common.io.ByteArrayDataInput;
 /** Prefab for resonantinduction.mechanical tiles
  * 
  * @author Calclavia */
-public abstract class TileMechanical extends TileBase implements INodeProvider, IPacketReceiverWithID
+public abstract class TileMechanical extends TileAdvanced implements INodeProvider, TPacketIDReceiver
 {
     protected static final int PACKET_NBT = 0;
     protected static final int PACKET_VELOCITY = 1;
@@ -35,7 +32,7 @@ public abstract class TileMechanical extends TileBase implements INodeProvider, 
     public MechanicalNode mechanicalNode;
     
     /** External debug GUI */
-    MechanicalNodeFrame frame = null;
+    DebugFrameMechanical frame = null;
 
     @Deprecated
     public TileMechanical()
@@ -64,9 +61,9 @@ public abstract class TileMechanical extends TileBase implements INodeProvider, 
     }
 
     @Override
-    public void updateEntity()
+    public void update()
     {
-        super.updateEntity();
+        super.update();
         mechanicalNode.update();
         
         if(frame != null)
@@ -81,7 +78,7 @@ public abstract class TileMechanical extends TileBase implements INodeProvider, 
         
         if (!this.getWorldObj().isRemote)
         {
-            if (ticks % 3 == 0 && (mechanicalNode.markTorqueUpdate || mechanicalNode.markRotationUpdate))
+            if (ticks() % 3 == 0 && (mechanicalNode.markTorqueUpdate || mechanicalNode.markRotationUpdate))
             {
                 //ResonantInduction.LOGGER.info("[mechanicalNode] Sending Update");
                 sendRotationPacket();
@@ -92,14 +89,14 @@ public abstract class TileMechanical extends TileBase implements INodeProvider, 
     }
    
     @Override
-    protected boolean use(EntityPlayer player, int side, Vector3 hit)
+    public boolean use(EntityPlayer player, int side, Vector3 hit)
     {
         ItemStack itemStack = player.getHeldItem();
         if (ResonantEngine.runningAsDev)
         {
             if (itemStack != null && !world().isRemote)
             {
-                if (itemStack.getItem().itemID == Item.stick.itemID)
+                if (itemStack.getItem() == Items.stick)
                 {
                     //Set the nodes debug mode
                     if (ControlKeyModifer.isControlDown(player))
@@ -107,7 +104,7 @@ public abstract class TileMechanical extends TileBase implements INodeProvider, 
                         //Opens a debug GUI
                         if (frame == null)
                         {
-                            frame = new MechanicalNodeFrame(this);
+                            frame = new DebugFrameMechanical(this);
                             frame.showDebugFrame();
                         } //Closes the debug GUI
                         else
@@ -144,7 +141,7 @@ public abstract class TileMechanical extends TileBase implements INodeProvider, 
     }
 
     @Override
-    public boolean onReceivePacket(int id, ByteArrayDataInput data, EntityPlayer player, Object... extra)
+    public boolean read(int id, ByteArrayDataInput data, EntityPlayer player, Object... extra)
     {
         try
         {

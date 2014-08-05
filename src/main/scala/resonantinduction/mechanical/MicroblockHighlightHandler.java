@@ -1,8 +1,8 @@
 package resonantinduction.mechanical;
 
-import net.minecraft.util.EnumMovingObjectType;
+import cpw.mods.fml.common.Mod;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
-import net.minecraftforge.event.ForgeSubscribe;
 
 import org.lwjgl.opengl.GL11;
 
@@ -16,11 +16,11 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class MicroblockHighlightHandler
 {
-	@ForgeSubscribe
+	@Mod.EventHandler
 	@SideOnly(Side.CLIENT)
 	public void drawBlockHighlight(DrawBlockHighlightEvent event)
 	{
-		if (event.currentItem != null && (event.currentItem.getItem() instanceof IHighlight) && event.target != null && event.target.typeOfHit == EnumMovingObjectType.TILE)
+		if (event.currentItem != null && (event.currentItem.getItem() instanceof IHighlight) && event.target != null && event.target.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
 		{
 			GL11.glPushMatrix();
 			RenderUtils.translateToWorldCoords(event.player, event.partialTicks);

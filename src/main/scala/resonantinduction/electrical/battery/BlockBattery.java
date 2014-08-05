@@ -6,6 +6,7 @@ package resonantinduction.electrical.battery;
 import java.util.ArrayList;
 
 import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -13,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+import resonant.content.spatial.block.SpatialBlock;
 import resonant.lib.prefab.block.BlockSidedIO;
 import resonant.lib.render.block.BlockRenderingHandler;
 import resonant.lib.utility.inventory.InventoryUtility;
@@ -27,12 +29,12 @@ import cpw.mods.fml.relauncher.SideOnly;
  * 
  * @author Calclavia
  */
-public class BlockBattery extends BlockSidedIO implements ITileEntityProvider
+public class BlockBattery extends SpatialBlock
 {
-	public BlockBattery(int id)
+	public BlockBattery()
 	{
-		super(id, UniversalElectricity.machine);
-		setTextureName(Reference.PREFIX + "material_metal_side");
+		super(Material.iron);
+		setBlockName(Reference.prefix() + "material_metal_side");
 	}
 
 	@Override
@@ -121,12 +123,6 @@ public class BlockBattery extends BlockSidedIO implements ITileEntityProvider
 	public int getRenderType()
 	{
 		return BlockRenderingHandler.INSTANCE.getRenderId();
-	}
-
-	@Override
-	public TileEntity createNewTileEntity(World world)
-	{
-		return new TileBattery();
 	}
 
 	@Override

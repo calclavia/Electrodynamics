@@ -1,5 +1,6 @@
 package resonantinduction.mechanical.fluid.transport;
 
+import net.minecraft.block.material.Material;
 import resonantinduction.mechanical.energy.grid.TileMechanical;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -9,10 +10,8 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonant.api.IRotatable;
-import resonant.api.grid.INode;
 import resonantinduction.core.grid.fluid.pressure.FluidPressureNode;
-import resonantinduction.core.grid.fluid.IPressureNodeProvider;
-import universalelectricity.api.UniversalElectricity;
+import universalelectricity.api.core.grid.INode;
 import universalelectricity.core.transform.vector.Vector3;
 
 public class TilePump extends TileMechanical implements IPressureNodeProvider, IRotatable
@@ -21,7 +20,7 @@ public class TilePump extends TileMechanical implements IPressureNodeProvider, I
 
 	public TilePump()
 	{
-		super(UniversalElectricity.machine);
+		super(Material.iron);
 
 		pressureNode = new FluidPressureNode(this)
 		{
@@ -166,4 +165,14 @@ public class TilePump extends TileMechanical implements IPressureNodeProvider, I
 	{
 
 	}
+
+    @Override
+    public ForgeDirection getDirection() {
+        return null;
+    }
+
+    @Override
+    public void setDirection(ForgeDirection direction) {
+
+    }
 }

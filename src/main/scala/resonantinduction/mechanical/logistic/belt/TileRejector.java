@@ -2,6 +2,7 @@ package resonantinduction.mechanical.logistic.belt;
 
 import java.util.List;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,12 +25,18 @@ public class TileRejector extends TileFilterable implements IPacketReceiverWithI
 	/** should the piston fire, or be extended */
 	public boolean firePiston = false;
 
+    public TileRejector()
+    {
+        super(Material.circuits);
+        this.set
+    }
+
 	@Override
-	public void updateEntity()
+	public void update()
 	{
-		super.updateEntity();
+		super.update();
 		/** Has to update a bit faster than a conveyer belt */
-		if (this.ticks % 5 == 0)
+		if (this.ticks() % 5 == 0)
 		{
 			this.firePiston = false;
 
@@ -45,7 +52,7 @@ public class TileRejector extends TileFilterable implements IPacketReceiverWithI
 					 * Find all entities in the position in which this block is facing and attempt
 					 * to push it out of the way.
 					 */
-					AxisAlignedBB bounds = AxisAlignedBB.getBoundingBox(searchPosition.x, searchPosition.y, searchPosition.z, searchPosition.x + 1, searchPosition.y + 1, searchPosition.z + 1);
+					AxisAlignedBB bounds = AxisAlignedBB.getBoundingBox(searchPosition.x(), searchPosition.y(), searchPosition.z(), searchPosition.x() + 1, searchPosition.y() + 1, searchPosition.z() + 1);
 					List<Entity> entitiesInFront = this.worldObj.getEntitiesWithinAABB(Entity.class, bounds);
 
 					for (Entity entity : entitiesInFront)
