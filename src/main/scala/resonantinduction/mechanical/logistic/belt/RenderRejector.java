@@ -14,7 +14,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class RenderRejector extends RenderImprintable
 {
 	public static final ModelRejectorPiston MODEL = new ModelRejectorPiston();
-	public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "rejector.png");
+	public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.domain(), Reference.modelPath() + "rejector.png");
 
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float var8)

@@ -10,11 +10,11 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
 import net.minecraftforge.common.util.ForgeDirection;
-import resonant.api.grid.INode;
-import resonant.api.grid.INodeProvider;
 import resonantinduction.core.debug.FrameNodeDebug;
 import resonantinduction.core.debug.UpdatePanel;
 import resonantinduction.core.debug.UpdatedLabel;
+import universalelectricity.api.core.grid.INode;
+import universalelectricity.api.core.grid.INodeProvider;
 
 /** Java GUI used to help debug pipe information
  * 

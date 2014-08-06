@@ -1,40 +1,43 @@
 package resonantinduction.mechanical.gearshaft;
 
 import static org.lwjgl.opengl.GL11.glRotatef;
+
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
-import resonant.api.items.ISimpleItemRenderer;
+import resonant.content.prefab.scala.render.ISimpleItemRenderer;
 import resonant.lib.render.RenderUtility;
 import resonantinduction.core.Reference;
 import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class RenderGearShaft implements ISimpleItemRenderer
 {
 	public static final RenderGearShaft INSTANCE = new RenderGearShaft();
-	public final IModelCustom MODEL = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "gears.obj");
+	public final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), "gears.obj"));
 
 	@Override
-	public void renderInventoryItem(ItemStack itemStack)
+	public void renderInventoryItem(IItemRenderer.ItemRenderType type, ItemStack itemStack, Object... data)
 	{
 		GL11.glRotatef(90, 1, 0, 0);
 
 		switch (itemStack.getItemDamage())
 		{
 			default:
-				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "planks_oak.png");
+				RenderUtility.bind(Reference.blockTextureDirectory() + "planks_oak.png");
 				break;
 			case 1:
-				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "cobblestone.png");
+				RenderUtility.bind(Reference.blockTextureDirectory() + "cobblestone.png");
 				break;
 			case 2:
-				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "iron_block.png");
+				RenderUtility.bind(Reference.blockTextureDirectory() + "iron_block.png");
 				break;
 		}
 
@@ -67,13 +70,13 @@ public class RenderGearShaft implements ISimpleItemRenderer
 		switch (part.tier)
 		{
 			default:
-				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "planks_oak.png");
+				RenderUtility.bind(Reference.blockTextureDirectory() + "planks_oak.png");
 				break;
 			case 1:
-				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "cobblestone.png");
+				RenderUtility.bind(Reference.blockTextureDirectory() + "cobblestone.png");
 				break;
 			case 2:
-				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "iron_block.png");
+				RenderUtility.bind(Reference.blockTextureDirectory() + "iron_block.png");
 				break;
 		}
 

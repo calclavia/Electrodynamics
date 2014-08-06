@@ -10,13 +10,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import resonant.api.grid.INode;
-import resonant.api.grid.INodeProvider;
-import resonant.lib.multiblock.IMultiBlockStructure;
-import resonant.lib.multiblock.MultiBlockHandler;
+import resonant.lib.multiblock.reference.IMultiBlockStructure;
 import resonant.lib.utility.WrenchUtility;
 import resonantinduction.core.Reference;
-import resonantinduction.mechanical.gear.ItemHandCrank;
 import resonantinduction.mechanical.Mechanical;
 import resonantinduction.mechanical.energy.grid.PartMechanical;
 import codechicken.lib.vec.Cuboid6;
@@ -27,6 +23,9 @@ import codechicken.microblock.FaceMicroClass;
 import codechicken.multipart.ControlKeyModifer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import universalelectricity.api.core.grid.INode;
+import universalelectricity.core.transform.rotation.EulerAngle;
+import universalelectricity.core.transform.vector.VectorWorld;
 
 /** We assume all the force acting on the gear is 90 degrees.
  * 
@@ -95,7 +94,7 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
 
             isClockwiseCrank = player.isSneaking();
             getMultiBlock().get().manualCrankTime = 20;
-            world().playSoundEffect(x() + 0.5, y() + 0.5, z() + 0.5, Reference.PREFIX + "gearCrank", 0.5f, 0.9f + world().rand.nextFloat() * 0.2f);
+            world().playSoundEffect(x() + 0.5, y() + 0.5, z() + 0.5, Reference.prefix() + "gearCrank", 0.5f, 0.9f + world().rand.nextFloat() * 0.2f);
             player.addExhaustion(0.01f);
             return true;
         }
@@ -189,32 +188,7 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
     @Override
     public universalelectricity.core.transform.vector.Vector3[] getMultiBlockVectors()
     {
-        Set<universalelectricity.core.transform.vector.Vector3> vectors = new HashSet<universalelectricity.core.transform.vector.Vector3>();
-        ForgeDirection dir = placementSide;
-
-        universalelectricity.core.transform.vector.Vector3 rotationalAxis = universalelectricity.core.transform.vector.Vector3.UP();
-
-        if (placementSide == ForgeDirection.NORTH || placementSide == ForgeDirection.SOUTH)
-        {
-            rotationalAxis = universalelectricity.core.transform.vector.Vector3.EAST();
-        }
-        else if (placementSide == ForgeDirection.WEST || placementSide == ForgeDirection.EAST)
-        {
-            rotationalAxis = universalelectricity.core.transform.vector.Vector3.SOUTH();
-        }
-
-        for (int x = -1; x <= 1; x++)
-        {
-            for (int z = -1; z <= 1; z++)
-            {
-                universalelectricity.core.transform.vector.Vector3 vector = new universalelectricity.core.transform.vector.Vector3(x, 0, z);
-                vector.rotate(90, rotationalAxis);
-                vector = vector.round();
-                vectors.add(vector);
-            }
-        }
-
-        return vectors.toArray(new universalelectricity.core.transform.vector.Vector3[0]);
+        return (universalelectricity.core.transform.vector.Vector3[])new universalelectricity.core.transform.vector.Vector3(this.x(), this.y(), this.z()).getAround(this.world(), placementSide, 1).toArray();
     }
 
     @Override
@@ -238,7 +212,7 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
     }
 
     @Override
-    public MultiBlockHandler<PartGear> getMultiBlock()
+    public GearMultiBlockHandler getMultiBlock()
     {
         if (multiBlock == null)
             multiBlock = new GearMultiBlockHandler(this);

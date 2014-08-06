@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import codechicken.lib.render.uv.IconTransformation;
 import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,18 +13,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.util.ForgeDirection;
-import resonant.api.grid.INode;
-import resonant.api.grid.INodeProvider;
-import resonant.lib.grid.Node;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import codechicken.lib.raytracer.IndexedCuboid6;
 import codechicken.lib.render.CCRenderState;
-import codechicken.lib.render.IconTransformation;
 import codechicken.lib.render.RenderUtils;
 import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Translation;
-import codechicken.microblock.IHollowConnect;
 import codechicken.multipart.IconHitEffects;
 import codechicken.multipart.JIconHitEffects;
 import codechicken.multipart.JNormalOcclusion;
@@ -34,6 +30,9 @@ import codechicken.multipart.TSlottedPart;
 import codechicken.multipart.TileMultipart;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import universalelectricity.api.core.grid.INode;
+import universalelectricity.api.core.grid.INodeProvider;
+import universalelectricity.core.grid.Node;
 
 public abstract class PartFramedNode<M extends Enum, N extends Node, T extends INodeProvider> extends PartColorableMaterial<M> implements INodeProvider, TSlottedPart, JNormalOcclusion, IHollowConnect, JIconHitEffects
 {

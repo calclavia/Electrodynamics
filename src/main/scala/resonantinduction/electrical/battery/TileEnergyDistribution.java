@@ -3,11 +3,10 @@ package resonantinduction.electrical.battery;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
-import resonant.lib.prefab.tile.TileElectrical;
-import universalelectricity.api.net.IConnector;
 import universalelectricity.core.transform.vector.Vector3;
+import resonant.lib.content.prefab.java.TileElectric;
 
-public class TileEnergyDistribution extends TileElectrical implements IConnector<EnergyDistributionNetwork>
+public class TileEnergyDistribution extends TileElectric
 {
     public boolean markClientUpdate = false;
     public boolean markDistributionUpdate = false;

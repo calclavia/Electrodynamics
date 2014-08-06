@@ -2,16 +2,22 @@ package resonantinduction.mechanical.energy.grid;
 
 import java.io.IOException;
 
+import cpw.mods.fml.common.network.ByteBufUtils;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.Packet;
 import net.minecraftforge.common.util.ForgeDirection;
 import resonant.content.prefab.java.TileAdvanced;
 import resonant.engine.ResonantEngine;
-import resonant.lib.network.handle.TPacketIDReceiver;
+import resonant.lib.network.ByteBufWrapper;
+import resonant.lib.network.discriminator.PacketTile;
+import resonant.lib.network.discriminator.PacketType;
+import resonant.lib.network.handle.IPacketIDReceiver;
 import resonantinduction.core.ResonantInduction;
 import universalelectricity.api.core.grid.INode;
 import universalelectricity.api.core.grid.INodeProvider;
@@ -23,7 +29,7 @@ import com.google.common.io.ByteArrayDataInput;
 /** Prefab for resonantinduction.mechanical tiles
  * 
  * @author Calclavia */
-public abstract class TileMechanical extends TileAdvanced implements INodeProvider, TPacketIDReceiver
+public abstract class TileMechanical extends TileAdvanced implements INodeProvider, IPacketIDReceiver
 {
     protected static final int PACKET_NBT = 0;
     protected static final int PACKET_VELOCITY = 1;
@@ -132,16 +138,16 @@ public abstract class TileMechanical extends TileAdvanced implements INodeProvid
     {
         NBTTagCompound tag = new NBTTagCompound();
         writeToNBT(tag);
-        return References.PACKET_TILE.getPacketWithID(PACKET_NBT, this, tag);
+        return ResonantEngine.instance.packetHandler.toMCPacket(new PacketTile(this, PACKET_NBT, tag));
     }
 
     private void sendRotationPacket()
     {
-        PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacketWithID(PACKET_VELOCITY, this, mechanicalNode.angularVelocity, mechanicalNode.torque), worldObj, new Vector3(this), 20);
+        ResonantEngine.instance.packetHandler.sendToAllAround(new PacketTile(this, PACKET_VELOCITY, mechanicalNode.angularVelocity, mechanicalNode.torque), this);
     }
 
     @Override
-    public boolean read(int id, ByteArrayDataInput data, EntityPlayer player, Object... extra)
+    public boolean read(ByteBuf data, int id, EntityPlayer player, PacketType type)
     {
         try
         {
@@ -149,7 +155,7 @@ public abstract class TileMechanical extends TileAdvanced implements INodeProvid
             {
                 if (id == PACKET_NBT)
                 {
-                    readFromNBT(PacketHandler.readNBTTagCompound(data));
+                    readFromNBT(ByteBufUtils.readTag(data));
                     return true;
                 }
                 else if (id == PACKET_VELOCITY)
@@ -160,7 +166,7 @@ public abstract class TileMechanical extends TileAdvanced implements INodeProvid
                 }
             }
         }
-        catch (IOException e)
+        catch (Exception e)
         {
             e.printStackTrace();
             return true;

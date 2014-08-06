@@ -6,6 +6,7 @@ import java.util.List;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -21,8 +22,6 @@ import resonantinduction.electrical.wire.flat.PartFlatWire;
 import resonantinduction.electrical.wire.flat.RenderFlatWire;
 import resonantinduction.electrical.wire.framed.PartFramedWire;
 import resonantinduction.electrical.wire.framed.RenderFramedWire;
-import universalelectricity.api.energy.UnitDisplay;
-import universalelectricity.api.energy.UnitDisplay.Unit;
 import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
 import codechicken.multipart.ControlKeyModifer;
@@ -31,15 +30,16 @@ import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.TMultiPart;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import universalelectricity.api.UnitDisplay;
 
 public class ItemWire extends JItemMultiPart
 {
-	public ItemWire(int id)
+	public ItemWire()
 	{
-		super(id);
-		this.setUnlocalizedName(Reference.PREFIX + "wire");
-		this.setTextureName(Reference.PREFIX + "wire");
-		this.setCreativeTab(ResonantTab.DEFAULT);
+		super();
+		this.setUnlocalizedName(Reference.prefix() + "wire");
+		this.setTextureName(Reference.prefix() + "wire");
+		this.setCreativeTab(ResonantTab.tab());
 		this.setHasSubtypes(true);
 		this.setMaxDamage(0);
 	}
@@ -100,8 +100,8 @@ public class ItemWire extends JItemMultiPart
 		}
 		else
 		{
-			list.add(EnumColor.AQUA + LanguageUtility.getLocal("tooltip.wire.resistance").replace("%v", "" + EnumColor.ORANGE + UnitDisplay.getDisplay(EnumWireMaterial.values()[itemstack.getItemDamage()].resistance, Unit.RESISTANCE)));
-			list.add(EnumColor.AQUA + LanguageUtility.getLocal("tooltip.wire.current").replace("%v", "" + EnumColor.ORANGE + UnitDisplay.getDisplay(EnumWireMaterial.values()[itemstack.getItemDamage()].maxAmps, Unit.AMPERE)));
+			list.add(EnumColor.AQUA + LanguageUtility.getLocal("tooltip.wire.resistance").replace("%v", "" + EnumColor.ORANGE + new UnitDisplay(UnitDisplay.Unit.RESISTANCE, EnumWireMaterial.values()[itemstack.getItemDamage()].resistance)));
+			list.add(EnumColor.AQUA + LanguageUtility.getLocal("tooltip.wire.current").replace("%v", "" + EnumColor.ORANGE + new UnitDisplay(UnitDisplay.Unit.AMPERE, EnumWireMaterial.values()[itemstack.getItemDamage()].maxAmps)));
 			list.add(EnumColor.AQUA + LanguageUtility.getLocal("tooltip.wire.damage").replace("%v", "" + EnumColor.ORANGE + EnumWireMaterial.values()[itemstack.getItemDamage()].damage));
 			list.addAll(LanguageUtility.splitStringPerWord(LanguageUtility.getLocal("tooltip.wire.helpText"), 5));
 		}
@@ -118,9 +118,9 @@ public class ItemWire extends JItemMultiPart
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister register)
 	{
-		RenderFlatWire.flatWireTexture = register.registerIcon(Reference.PREFIX + "models/flatWire");
-		RenderFramedWire.wireIcon = register.registerIcon(Reference.PREFIX + "models/wire");
-		RenderFramedWire.insulationIcon = register.registerIcon(Reference.PREFIX + "models/insulation");
+		RenderFlatWire.flatWireTexture = register.registerIcon(Reference.prefix() + "models/flatWire");
+		RenderFramedWire.wireIcon = register.registerIcon(Reference.prefix() + "models/wire");
+		RenderFramedWire.insulationIcon = register.registerIcon(Reference.prefix() + "models/insulation");
 		super.registerIcons(register);
 	}
 
@@ -132,7 +132,7 @@ public class ItemWire extends JItemMultiPart
 	}
 
 	@Override
-	public void getSubItems(int itemID, CreativeTabs tab, List listToAddTo)
+	public void getSubItems(Item itemID, CreativeTabs tab, List listToAddTo)
 	{
 		for (EnumWireMaterial mat : EnumWireMaterial.values())
 		{

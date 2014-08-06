@@ -2,25 +2,26 @@ package resonantinduction.mechanical.logistic.belt;
 
 import java.util.List;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.packet.Packet;
+import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
 import resonant.api.IEntityConveyor;
-import resonant.lib.network.IPacketReceiverWithID;
-import resonantinduction.core.ResonantInduction;
+import resonant.engine.ResonantEngine;
+import resonant.lib.network.discriminator.PacketTile;
+import resonant.lib.network.discriminator.PacketType;
+import resonant.lib.network.handle.IPacketIDReceiver;
 import resonantinduction.archaic.filter.imprint.TileFilterable;
 import universalelectricity.core.transform.vector.Vector3;
 
-import com.google.common.io.ByteArrayDataInput;
-
 /** @author Darkguardsman */
-public class TileRejector extends TileFilterable implements IPacketReceiverWithID
+public class TileRejector extends TileFilterable implements IPacketIDReceiver
 {
 	/** should the piston fire, or be extended */
 	public boolean firePiston = false;
@@ -28,7 +29,8 @@ public class TileRejector extends TileFilterable implements IPacketReceiverWithI
     public TileRejector()
     {
         super(Material.circuits);
-        this.set
+        this.isOpaqueCube(false);
+        this.normalRender(false);
     }
 
 	@Override
@@ -104,11 +106,11 @@ public class TileRejector extends TileFilterable implements IPacketReceiverWithI
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		return ResonantInduction.PACKET_TILE.getPacket(this, 0, this.isInverted(), this.firePiston);
+		return ResonantEngine.instance.packetHandler.toMCPacket(new PacketTile(this, 0, this.isInverted(), this.firePiston));
 	}
 
 	@Override
-	public boolean onReceivePacket(int id, ByteArrayDataInput data, EntityPlayer player, Object... extra)
+	public boolean read(ByteBuf data, int id, EntityPlayer player, PacketType type)
 	{
 		try
 		{

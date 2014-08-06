@@ -16,8 +16,8 @@ import resonantinduction.core.Reference;
 
 public class RenderPump extends TileEntitySpecialRenderer
 {
-	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "pump.tcn");
-	public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "pump.png");
+	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelDirectory() + "pump.tcn"));
+	public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.domain(), Reference.modelDirectory() + "pump.png");
 
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float f)
@@ -29,7 +29,7 @@ public class RenderPump extends TileEntitySpecialRenderer
 
 		GL11.glRotatef(-90, 0, 1, 0);
 
-		if (tile.worldObj != null)
+		if (tile.getWorldObj() != null)
 			RenderUtility.rotateBlockBasedOnDirection(tile.getDirection());
 
 		bindTexture(TEXTURE);

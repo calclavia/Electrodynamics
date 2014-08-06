@@ -2,13 +2,13 @@ package resonantinduction.mechanical.gear;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
-import resonant.api.grid.INodeProvider;
 import resonantinduction.core.interfaces.IMechanicalNode;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
 import resonantinduction.mechanical.gearshaft.PartGearShaft;
 import codechicken.lib.vec.Rotation;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
+import universalelectricity.api.core.grid.INodeProvider;
 
 /**
  * Node for the gear
@@ -143,7 +143,7 @@ public class GearNode extends MechanicalNode
 			for (int i = 0; i < 4; i++)
 			{
 				ForgeDirection checkDir = ForgeDirection.getOrientation(Rotation.rotateSide(gear().placementSide.ordinal(), i));
-				TileEntity checkTile = new universalelectricity.core.transform.vector.Vector3(gear().tile()).add(checkDir, displaceCheck).getTileEntity(world());
+				TileEntity checkTile = new universalelectricity.core.transform.vector.Vector3(gear().tile()).add(checkDir).getTileEntity(world());
 
 				if (!getConnections().containsValue(checkDir) && checkTile instanceof INodeProvider)
 				{
@@ -284,9 +284,9 @@ public class GearNode extends MechanicalNode
 	{
 		universalelectricity.core.transform.vector.Vector3 deltaPos = with.position().subtract(position());
 
-		boolean caseX = gear().placementSide.offsetX != 0 && deltaPos.y == 0 && deltaPos.z == 0;
-		boolean caseY = gear().placementSide.offsetY != 0 && deltaPos.x == 0 && deltaPos.z == 0;
-		boolean caseZ = gear().placementSide.offsetZ != 0 && deltaPos.x == 0 && deltaPos.y == 0;
+		boolean caseX = gear().placementSide.offsetX != 0 && deltaPos.y() == 0 && deltaPos.z() == 0;
+		boolean caseY = gear().placementSide.offsetY != 0 && deltaPos.x() == 0 && deltaPos.z() == 0;
+		boolean caseZ = gear().placementSide.offsetZ != 0 && deltaPos.x() == 0 && deltaPos.y() == 0;
 
 		if (caseX || caseY || caseZ)
 		{

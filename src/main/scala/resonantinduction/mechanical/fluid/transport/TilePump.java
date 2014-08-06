@@ -14,7 +14,7 @@ import resonantinduction.core.grid.fluid.pressure.FluidPressureNode;
 import universalelectricity.api.core.grid.INode;
 import universalelectricity.core.transform.vector.Vector3;
 
-public class TilePump extends TileMechanical implements IPressureNodeProvider, IRotatable
+public class TilePump extends TileMechanical implements IRotatable, IFluidHandler
 {
 	private final FluidPressureNode pressureNode;
 
@@ -22,6 +22,10 @@ public class TilePump extends TileMechanical implements IPressureNodeProvider, I
 	{
 		super(Material.iron);
 
+        normalRender(false);
+        isOpaqueCube(false);
+        customItemRender(true);
+        textureName("material_steel");
 		pressureNode = new FluidPressureNode(this)
 		{
 			@Override
@@ -55,12 +59,6 @@ public class TilePump extends TileMechanical implements IPressureNodeProvider, I
 			}
 
 		};
-
-		normalRender = false;
-		isOpaqueCube = false;
-		customItemRender = true;
-		rotationMask = Byte.parseByte("111111", 2);
-		textureName = "material_steel";
 	}
 
 	@Override
@@ -78,9 +76,9 @@ public class TilePump extends TileMechanical implements IPressureNodeProvider, I
 	}
 
 	@Override
-	public void updateEntity()
+	public void update()
 	{
-		super.updateEntity();
+		super.update();
 
 		if (!worldObj.isRemote && mechanicalNode.getPower() > 0)
 		{
@@ -146,24 +144,12 @@ public class TilePump extends TileMechanical implements IPressureNodeProvider, I
 	}
 
 	@Override
-	public FluidTank getPressureTank()
-	{
-		return new FluidTank(0);
-	}
-
-	@Override
 	public INode getNode(Class<? extends INode> nodeType, ForgeDirection from)
 	{
 		if (nodeType.isAssignableFrom(pressureNode.getClass()))
 			return pressureNode;
 
 		return super.getNode(nodeType, from);
-	}
-
-	@Override
-	public void onFluidChanged()
-	{
-
 	}
 
     @Override

@@ -1,5 +1,6 @@
 package resonantinduction.mechanical.fluid.pipe;
 
+import codechicken.lib.vec.Cuboid6;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -12,20 +13,14 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
-import resonant.api.grid.INode;
-import resonant.core.ResonantEngine;
 import resonant.lib.type.EvictingList;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.grid.fluid.pressure.FluidPressureNode;
-import resonantinduction.core.grid.fluid.IPressureNodeProvider;
-import resonantinduction.core.prefab.part.PartFramedNode;
 import resonantinduction.mechanical.Mechanical;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.render.CCRenderState;
-import codechicken.lib.render.IconTransformation;
 import codechicken.lib.render.RenderUtils;
 import codechicken.lib.vec.Translation;
-import codechicken.microblock.IHollowConnect;
 import codechicken.multipart.ControlKeyModifer;
 import codechicken.multipart.JNormalOcclusion;
 import codechicken.multipart.TSlottedPart;
@@ -267,5 +262,15 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial, FluidPressureNode
         {
             frame.closeDebugFrame();
         }
+    }
+
+    @Override
+    public Iterable<Cuboid6> getOcclusionBoxes() {
+        return null;
+    }
+
+    @Override
+    public int getSlotMask() {
+        return 0;
     }
 }

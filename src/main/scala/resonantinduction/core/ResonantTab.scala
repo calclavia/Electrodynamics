@@ -16,5 +16,7 @@ object ResonantTab extends CreativeTabs(CreativeTabs.getNextID, "ResonantInducti
 
   override def getTabIconItem: Item = itemStack.getItem
 
+  def itemStack(item: ItemStack) { itemStack = item}
+
   def tab = this
 }

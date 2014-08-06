@@ -8,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockColored;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemShears;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -32,7 +33,7 @@ public abstract class PartAdvancedWire extends PartConductor
 
     public EnumWireMaterial material = EnumWireMaterial.COPPER;
     public boolean isInsulated = false;
-    protected ItemStack insulationType = new ItemStack(Block.cloth);
+    protected ItemStack insulationType = new ItemStack(Blocks.wool);
 
     /** INTERNAL USE. Can this conductor connect with an external object? */
     @Override

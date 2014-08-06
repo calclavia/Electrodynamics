@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import codechicken.lib.render.uv.IconTransformation;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -11,19 +12,15 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.util.ForgeDirection;
-import universalelectricity.api.net.IConnector;
-import universalelectricity.api.net.INodeNetwork;
+import universalelectricity.api.core.grid.INode;
 import universalelectricity.core.transform.vector.Vector3;
-import universalelectricity.api.vector.VectorHelper;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import codechicken.lib.raytracer.IndexedCuboid6;
 import codechicken.lib.render.CCRenderState;
-import codechicken.lib.render.IconTransformation;
 import codechicken.lib.render.RenderUtils;
 import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Translation;
-import codechicken.microblock.IHollowConnect;
 import codechicken.multipart.JNormalOcclusion;
 import codechicken.multipart.NormalOcclusionTest;
 import codechicken.multipart.PartMap;
@@ -32,8 +29,9 @@ import codechicken.multipart.TSlottedPart;
 import codechicken.multipart.TileMultipart;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import universalelectricity.core.transform.vector.VectorWorld;
 
-public abstract class PartFramedConnection<M extends Enum, C extends IConnector<N>, N extends INodeNetwork> extends PartColorableMaterial<M> implements IConnector<N>, TSlottedPart, JNormalOcclusion, IHollowConnect
+public abstract class PartFramedConnection<M extends Enum> extends PartColorableMaterial<M> implements TSlottedPart, JNormalOcclusion
 {
     public static IndexedCuboid6[] sides = new IndexedCuboid6[7];
     public static IndexedCuboid6[] insulatedSides = new IndexedCuboid6[7];
@@ -57,8 +55,6 @@ public abstract class PartFramedConnection<M extends Enum, C extends IConnector<
     }
 
     protected Object[] connections = new Object[6];
-
-    protected N network;
 
     /** Bitmask connections */
     public byte currentWireConnections = 0x00;
@@ -144,12 +140,6 @@ public abstract class PartFramedConnection<M extends Enum, C extends IConnector<
         return PartMap.CENTER.mask;
     }
 
-    @Override
-    public int getHollowSize()
-    {
-        return isInsulated ? 8 : 6;
-    }
-
     public boolean isBlockedOnSide(ForgeDirection side)
     {
         TMultiPart blocker = tile().partMap(side.ordinal());
@@ -170,25 +160,10 @@ public abstract class PartFramedConnection<M extends Enum, C extends IConnector<
         return ((connections & tester) > 0);
     }
 
-    @Override
-    public void bind(TileMultipart t)
-    {
-        if (this.getNetwork() != null)
-        {
-            getNetwork().getConnectors().remove(this);
-            super.bind(t);
-            getNetwork().getConnectors().add(this);
-        }
-        else
-        {
-            super.bind(t);
-        }
-    }
-
     /** CONNECTION LOGIC CODE */
     protected abstract boolean canConnectTo(TileEntity tile, ForgeDirection to);
 
-    protected abstract C getConnector(TileEntity tile);
+    protected abstract INode getConnector(TileEntity tile);
 
     public boolean canConnectBothSides(TileEntity tile, ForgeDirection side)
     {
@@ -218,7 +193,7 @@ public abstract class PartFramedConnection<M extends Enum, C extends IConnector<
 
         for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
         {
-            TileEntity tileEntity = VectorHelper.getTileEntityFromSide(world(), new Vector3(tile()), side);
+            TileEntity tileEntity = new VectorWorld(this.tile()).add(side).getTileEntity();
 
             if (getConnector(tileEntity) != null && canConnectBothSides(tileEntity, side))
             {
@@ -235,7 +210,7 @@ public abstract class PartFramedConnection<M extends Enum, C extends IConnector<
 
         for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
         {
-            TileEntity tileEntity = VectorHelper.getTileEntityFromSide(world(), new Vector3(tile()), side);
+            TileEntity tileEntity = new VectorWorld(this.tile()).add(side).getTileEntity();
 
             if (canConnectTo(tileEntity, side) && canConnectBothSides(tileEntity, side))
             {
@@ -244,49 +219,6 @@ public abstract class PartFramedConnection<M extends Enum, C extends IConnector<
         }
 
         return connections;
-    }
-
-    public void refresh()
-    {
-        if (!world().isRemote)
-        {
-            byte possibleWireConnections = getPossibleWireConnections();
-            byte possibleAcceptorConnections = getPossibleAcceptorConnections();
-
-            if (possibleWireConnections != this.currentWireConnections)
-            {
-                byte or = (byte) (possibleWireConnections | this.currentWireConnections);
-
-                // Connections have been removed
-                if (or != possibleWireConnections)
-                {
-                    this.getNetwork().removeConnector(this);
-                    this.getNetwork().split(this);
-                    setNetwork(null);
-                }
-
-                for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
-                {
-                    if (connectionMapContainsSide(possibleWireConnections, side))
-                    {
-                        TileEntity tileEntity = VectorHelper.getConnectorFromSide(world(), new Vector3(tile()), side, this);
-
-                        if (getConnector(tileEntity) != null)
-                        {
-                            getNetwork().merge(getConnector(tileEntity).getNetwork());
-                        }
-                    }
-                }
-
-                this.currentWireConnections = possibleWireConnections;
-            }
-
-            this.currentAcceptorConnections = possibleAcceptorConnections;
-            this.getNetwork().reconstruct();
-            this.sendConnectionUpdate();
-        }
-
-        tile().markRender();
     }
 
     /** Should include connections that are in the current connection maps even if those connections
@@ -301,7 +233,7 @@ public abstract class PartFramedConnection<M extends Enum, C extends IConnector<
             for (byte i = 0; i < 6; i++)
             {
                 ForgeDirection side = ForgeDirection.getOrientation(i);
-                TileEntity tileEntity = VectorHelper.getTileEntityFromSide(world(), new Vector3(tile()), side);
+                TileEntity tileEntity = new VectorWorld(this.tile()).add(side).getTileEntity();
 
                 if (isCurrentlyConnected(side))
                 {
@@ -350,18 +282,7 @@ public abstract class PartFramedConnection<M extends Enum, C extends IConnector<
     @Override
     public void onPartChanged(TMultiPart part)
     {
-        refresh();
-    }
-
-    public void copyFrom(PartFramedConnection<M, C, N> other)
-    {
-        this.isInsulated = other.isInsulated;
-        this.color = other.color;
-        this.connections = other.connections;
-        this.material = other.material;
-        this.currentWireConnections = other.currentWireConnections;
-        this.currentAcceptorConnections = other.currentAcceptorConnections;
-        this.setNetwork(other.getNetwork());
+        node.
     }
 
     /** Packet Methods */
@@ -405,19 +326,6 @@ public abstract class PartFramedConnection<M extends Enum, C extends IConnector<
         {
             super.read(packet, packetID);
         }
-    }
-
-    /** Network Methods */
-    @Override
-    public void setNetwork(N network)
-    {
-        this.network = network;
-    }
-
-    @Override
-    public IConnector<N> getInstance(ForgeDirection dir)
-    {
-        return this;
     }
 
     @Override

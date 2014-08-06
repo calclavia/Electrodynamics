@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
@@ -11,19 +12,18 @@ import org.lwjgl.input.Keyboard;
 
 import resonant.lib.render.EnumColor;
 import resonant.lib.utility.LanguageUtility;
-import universalelectricity.api.energy.UnitDisplay;
-import universalelectricity.api.energy.UnitDisplay.Unit;
 import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
 import codechicken.multipart.JItemMultiPart;
 import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.TMultiPart;
+import universalelectricity.api.UnitDisplay;
 
 public class ItemPipe extends JItemMultiPart
 {
-	public ItemPipe(int id)
+	public ItemPipe()
 	{
-		super(id);
+		super();
 		this.setHasSubtypes(true);
 		this.setMaxDamage(0);
 	}
@@ -58,13 +58,13 @@ public class ItemPipe extends JItemMultiPart
 		}
 		else
 		{
-			list.add(EnumColor.AQUA + LanguageUtility.getLocal("tooltip.pipe.rate").replace("%v", "" + EnumColor.ORANGE + UnitDisplay.getDisplay(EnumPipeMaterial.values()[itemstack.getItemDamage()].maxFlowRate * 20, Unit.LITER) + "/s"));
+			list.add(EnumColor.AQUA + LanguageUtility.getLocal("tooltip.pipe.rate").replace("%v", "" + EnumColor.ORANGE + new UnitDisplay(UnitDisplay.Unit.LITER, EnumPipeMaterial.values()[itemstack.getItemDamage()].maxFlowRate * 20) + "/s"));
 			list.add(EnumColor.AQUA + LanguageUtility.getLocal("tooltip.pipe.pressure").replace("%v", "" + EnumColor.ORANGE + EnumPipeMaterial.values()[itemstack.getItemDamage()].maxPressure + " Pa"));
 		}
 	}
 
 	@Override
-	public void getSubItems(int itemID, CreativeTabs tab, List listToAddTo)
+	public void getSubItems(Item itemID, CreativeTabs tab, List listToAddTo)
 	{
 		for (EnumPipeMaterial material : EnumPipeMaterial.values())
 		{

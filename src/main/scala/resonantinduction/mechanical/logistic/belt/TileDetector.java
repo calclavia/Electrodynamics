@@ -2,25 +2,43 @@ package resonantinduction.mechanical.logistic.belt;
 
 import java.util.ArrayList;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.packet.Packet;
+import net.minecraft.network.Packet;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.IIcon;
+import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
-import resonant.lib.network.IPacketReceiver;
-import resonant.lib.network.PacketHandler;
-import resonantinduction.core.ResonantInduction;
+import resonant.content.spatial.block.SpatialBlock;
+import resonant.engine.ResonantEngine;
+import resonant.lib.network.discriminator.PacketTile;
+import resonant.lib.network.discriminator.PacketType;
+import resonant.lib.network.handle.IPacketIDReceiver;
 import resonantinduction.archaic.filter.imprint.TileFilterable;
+import resonantinduction.core.Reference;
 import resonantinduction.mechanical.Mechanical;
 
-import com.google.common.io.ByteArrayDataInput;
-
-public class TileDetector extends TileFilterable implements IPacketReceiver
+public class TileDetector extends TileFilterable implements IPacketIDReceiver
 {
 	private boolean powering = false;
+    IIcon front_red, front_green, side_green, side_red;
+
+    public TileDetector()
+    {
+        super();
+        textureName(Reference.prefix() + "material_metal_side");
+        this.isOpaqueCube(false);
+        this.normalRender(false);
+        this.canProvidePower(true);
+    }
 
 	@Override
 	public void update()
@@ -72,7 +90,7 @@ public class TileDetector extends TileFilterable implements IPacketReceiver
 					}
 				}
 
-				PacketHandler.sendPacketToClients(getDescriptionPacket());
+				ResonantEngine.instance.packetHandler.sendToAllAround(new PacketTile(this, 0, this.isInverted()), this);
 			}
 		}
 	}
@@ -80,8 +98,8 @@ public class TileDetector extends TileFilterable implements IPacketReceiver
 	@Override
 	public void invalidate()
 	{
-		this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, Mechanical.blockDetector.blockID);
-		this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord + 1, this.zCoord, Mechanical.blockDetector.blockID);
+		this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, Mechanical.blockDetector);
+		this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord + 1, this.zCoord, Mechanical.blockDetector);
 		super.invalidate();
 	}
 
@@ -104,13 +122,15 @@ public class TileDetector extends TileFilterable implements IPacketReceiver
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		return ResonantInduction.PACKET_TILE.getPacket(this, this.isInverted());
+		return ResonantEngine.instance.packetHandler.toMCPacket(new PacketTile(this, 0, this.isInverted()));
 	}
 
 	@Override
-	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
+	public boolean read(ByteBuf data, int id, EntityPlayer player, PacketType type)
 	{
-		this.setInverted(data.readBoolean());
+        if(id == 0)
+		    this.setInverted(data.readBoolean());
+        return true;
 	}
 
 	public int isPoweringTo(ForgeDirection side)
@@ -122,4 +142,53 @@ public class TileDetector extends TileFilterable implements IPacketReceiver
 	{
 		return this.isPoweringTo(side) > 0;
 	}
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void registerIcons(IIconRegister iconReg)
+    {
+        SpatialBlock.icon().put("detector_front_green", iconReg.registerIcon(Reference.prefix() + "detector_front_green"));
+        SpatialBlock.icon().put("detector_front_red", iconReg.registerIcon(Reference.prefix() + "detector_front_red"));
+        SpatialBlock.icon().put("detector_side_green", iconReg.registerIcon(Reference.prefix() + "detector_side_green"));
+        SpatialBlock.icon().put("detector_side_red", iconReg.registerIcon(Reference.prefix() + "detector_side_red"));
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public IIcon getIcon(int side, int metadata)
+    {
+        if (side == ForgeDirection.SOUTH.ordinal())
+        {
+            return SpatialBlock.icon().get("detector_front_green");
+        }
+
+        return SpatialBlock.icon().get("detector_side_green");
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public IIcon getIcon(IBlockAccess iBlockAccess, int side)
+    {
+        boolean isInverted = false;
+        boolean isFront = false;
+        TileEntity tileEntity = iBlockAccess.getTileEntity(x(), y(), z());
+
+        if (tileEntity instanceof TileDetector)
+        {
+            isFront = side == ((TileDetector) tileEntity).getDirection().ordinal();
+            isInverted = ((TileDetector) tileEntity).isInverted();
+        }
+
+        return isInverted ? (isFront ? front_red : side_red) : (isFront ? front_green : side_green);
+    }
+
+    @Override
+    public int getStrongRedstonePower(IBlockAccess access, int side)
+    {
+        if(side != getDirection().ordinal())
+        {
+            return powering ? 15 : 0;
+        }
+        return 0;
+    }
 }

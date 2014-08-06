@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import resonantinduction.core.prefab.part.IHighlight;
@@ -15,9 +16,9 @@ import codechicken.multipart.TMultiPart;
 
 public class ItemGearShaft extends JItemMultiPart implements IHighlight
 {
-	public ItemGearShaft(int id)
+	public ItemGearShaft()
 	{
-		super(id);
+		super();
 		setHasSubtypes(true);
 	}
 
@@ -41,7 +42,7 @@ public class ItemGearShaft extends JItemMultiPart implements IHighlight
 	}
 
 	@Override
-	public void getSubItems(int itemID, CreativeTabs tab, List listToAddTo)
+	public void getSubItems(Item itemID, CreativeTabs tab, List listToAddTo)
 	{
 		for (int i = 0; i < 3; i++)
 		{

@@ -1,5 +1,6 @@
 package resonantinduction.archaic.filter.imprint;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -7,18 +8,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonant.api.IFilterable;
-import resonant.lib.prefab.block.BlockRotatable;
 
 /**
  * Extend this block class if a filter is allowed to be placed inside of this block.
  * 
  * @author Calclavia
  */
-public abstract class BlockImprintable extends BlockRotatable
+public abstract class BlockImprintable extends Block
 {
-	public BlockImprintable(int id, Material material)
+	public BlockImprintable(Material material)
 	{
-		super(id, material);
+		super(material);
 	}
 
 	/** Allows filters to be placed inside of this block. */
