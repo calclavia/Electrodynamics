@@ -9,7 +9,7 @@ import net.minecraftforge.oredict.OreDictionary
 import net.minecraftforge.oredict.ShapedOreRecipe
 import resonant.content.loader.ModManager
 import resonant.lib.recipe.UniversalRecipe
-import resonantinduction.archaic.blocks.TileTurntable
+import resonantinduction.archaic.blocks.{ItemImprint, TileImprinter, TileTurntable}
 import resonantinduction.archaic.crate.BlockCrate
 import resonantinduction.archaic.crate.CrateRecipe
 import resonantinduction.archaic.crate.ItemBlockCrate
@@ -17,8 +17,6 @@ import resonantinduction.archaic.crate.TileCrate
 import resonantinduction.archaic.engineering.ItemHammer
 import resonantinduction.archaic.engineering.TileEngineeringTable
 import resonantinduction.archaic.filter.BlockImprinter
-import resonantinduction.archaic.filter.TileFilter
-import resonantinduction.archaic.filter.TileImprinter
 import resonantinduction.archaic.firebox.BlockHotPlate
 import resonantinduction.archaic.firebox.TileFirebox
 import resonantinduction.archaic.firebox.TileHotPlate
@@ -32,7 +30,6 @@ import resonantinduction.core.Reference
 import resonantinduction.core.ResonantInduction
 import resonantinduction.core.ResonantTab
 import resonantinduction.core.Settings
-import resonantinduction.archaic.filter.imprint.ItemImprint
 import resonantinduction.mechanical.gear.ItemHandCrank
 import cpw.mods.fml.common.Mod
 import cpw.mods.fml.common.Mod.EventHandler

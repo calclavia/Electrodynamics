@@ -3,6 +3,9 @@ package resonantinduction.archaic.engineering;
 import java.util.ArrayList;
 import java.util.Set;
 
+import cpw.mods.fml.common.network.ByteBufUtils;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,12 +14,14 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.packet.Packet;
+import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.oredict.OreDictionary;
@@ -28,13 +33,12 @@ import resonant.api.IRotatable;
 import resonant.api.ISlotPickResult;
 import resonant.api.recipe.MachineRecipes;
 import resonant.api.recipe.RecipeResource;
-import resonant.lib.content.module.TileRender;
-import resonant.lib.content.module.prefab.TileInventory;
+import resonant.content.prefab.itemblock.ItemBlockSaved;
+import resonant.engine.ResonantEngine;
 import resonant.lib.gui.ContainerDummy;
-import resonant.lib.network.IPacketReceiver;
-import resonant.lib.network.PacketHandler;
-import resonant.lib.prefab.item.ItemBlockSaved;
-import resonant.lib.prefab.vector.Cuboid;
+import resonant.lib.network.discriminator.PacketTile;
+import resonant.lib.network.discriminator.PacketType;
+import resonant.lib.network.handle.IPacketReceiver;
 import resonant.lib.render.RenderItemOverlayUtility;
 import resonant.lib.type.Pair;
 import resonant.lib.utility.LanguageUtility;
@@ -45,15 +49,16 @@ import resonant.lib.utility.inventory.InventoryUtility;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.ResonantInduction.RecipeType;
-import resonantinduction.archaic.filter.imprint.ItemImprint;
-import universalelectricity.api.vector.Vector2;
+import resonantinduction.archaic.blocks.ItemImprint;
+import universalelectricity.core.transform.region.Cuboid;
+import universalelectricity.core.transform.rotation.Quaternion;
+import universalelectricity.core.transform.vector.Vector2;
 import universalelectricity.core.transform.vector.Vector3;
 import codechicken.multipart.ControlKeyModifer;
 
-import com.google.common.io.ByteArrayDataInput;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import resonant.lib.content.prefab.java.TileInventory;
 
 /** Advanced crafting table that stores its crafting grid, can craft out of the player's inv, and be
  * configed to auto craft.
@@ -92,10 +97,10 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
     public TileEngineeringTable()
     {
         super(Material.wood);
-        bounds = new Cuboid(0, 0, 0, 1, 0.9f, 1);
-        isOpaqueCube = false;
-        normalRender = false;
-        itemBlock = ItemBlockSaved.class;
+        bounds(new Cuboid(0, 0, 0, 1, 0.9f, 1));
+        isOpaqueCube(false);
+        normalRender(false);
+        itemBlock(ItemBlockSaved.class);
     }
 
     @Override
@@ -132,7 +137,7 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
     }
 
     @Override
-    protected boolean use(EntityPlayer player, int hitSide, Vector3 hit)
+    public boolean use(EntityPlayer player, int hitSide, Vector3 hit)
     {
         if (player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().getItem() instanceof ItemHammer)
         {
@@ -146,7 +151,7 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
 
                     if (oreName != null && !oreName.equals("Unknown"))
                     {
-                        RecipeResource[] outputs = MachineRecipes.INSTANCE.getOutput(RecipeType.CRUSHER.name(), oreName);
+                        RecipeResource[] outputs = MachineRecipes.INSTANCE.getOutput(RecipeType.CRUSHER().toString(), oreName);
 
                         if (outputs != null && outputs.length > 0)
                         {
@@ -164,8 +169,8 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
                                 }
                             }
                             
-                            ResonantInduction.proxy.renderBlockParticle(world(), new Vector3(x() + 0.5, y() + 0.5, z() + 0.5), new Vector3((Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3), inputStack.itemID, 1);
-                            world().playSoundEffect(x() + 0.5, y() + 0.5, z() + 0.5, Reference.PREFIX + "hammer", 0.5f, 0.8f + (0.2f * world().rand.nextFloat()));
+                            ResonantInduction.proxy().renderBlockParticle(world(), new Vector3(x() + 0.5, y() + 0.5, z() + 0.5), new Vector3((Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3), Item.getIdFromItem(inputStack.getItem()), 1);
+                            world().playSoundEffect(x() + 0.5, y() + 0.5, z() + 0.5, Reference.prefix() + "hammer", 0.5f, 0.8f + (0.2f * world().rand.nextFloat()));
                             player.addExhaustion(0.1f);
                             player.getCurrentEquippedItem().damageItem(1, player);
                             return true;
@@ -180,12 +185,12 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
         {
             if (!world().isRemote)
             {
-                Vector3 hitVector = new Vector3(hit.x, 0, hit.z);
+                Vector3 hitVector = new Vector3(hit.x(), 0, hit.z());
                 final double regionLength = 1d / 3d;
 
                 // Rotate the hit vector based on direction of the tile.
                 hitVector.add(new Vector3(-0.5, 0, -0.5));
-                hitVector.rotate(WorldUtility.getAngleFromForgeDirection(getDirection()), Vector3.UP());
+                hitVector.transform(new Quaternion(WorldUtility.getAngleFromForgeDirection(getDirection()), Vector3.up()));
                 hitVector.add(new Vector3(0.5, 0, 0.5));
 
                 /** Crafting Matrix */
@@ -194,7 +199,7 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
                 {
                     for (int k = 0; k < 3; k++)
                     {
-                        Vector2 check = new Vector2(j, k).scale(regionLength);
+                        Vector2 check = new Vector2(j, k).multiply(regionLength);
 
                         if (check.distance(hitVector.toVector2()) < regionLength)
                         {
@@ -246,7 +251,7 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
     }
 
     @Override
-    protected boolean configure(EntityPlayer player, int side, Vector3 hit)
+    public boolean configure(EntityPlayer player, int side, Vector3 hit)
     {
         if (player.isSneaking())
         {
@@ -254,9 +259,9 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
             if (!world().isRemote)
             {
                 if (searchInventories)
-                    player.addChatMessage(LanguageUtility.getLocal("engineerTable.config.inventory.true"));
+                    player.addChatMessage(new ChatComponentText(LanguageUtility.getLocal("engineerTable.config.inventory.true")));
                 else
-                    player.addChatMessage(LanguageUtility.getLocal("engineerTable.config.inventory.false"));
+                    player.addChatMessage(new ChatComponentText(LanguageUtility.getLocal("engineerTable.config.inventory.false")));
             }
 
             markUpdate();
@@ -273,9 +278,9 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
     }
 
     @Override
-    public void onRemove(int par5, int par6)
+    public void onRemove(Block block, int par6)
     {
-        ItemStack stack = ItemBlockSaved.getItemStackWithNBT(this.getBlockType(), world(), x(), y(), z());
+        ItemStack stack = ItemBlockSaved.getItemStackWithNBT(block, world(), x(), y(), z());
         InventoryUtility.dropItemStack(world(), center(), stack);
     }
 
@@ -320,15 +325,15 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
     {
         NBTTagCompound nbt = new NBTTagCompound();
         this.writeToNBT(nbt);
-        return ResonantInduction.PACKET_TILE.getPacket(this, nbt);
+        return ResonantEngine.instance.packetHandler.toMCPacket(new PacketTile(this, nbt));
     }
 
     @Override
-    public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
+    public void read(ByteBuf data, EntityPlayer player, PacketType type)
     {
         try
         {
-            readFromNBT(PacketHandler.readNBTTagCompound(data));
+            readFromNBT(ByteBufUtils.readTag(data));
         }
         catch (Exception e)
         {
@@ -475,24 +480,6 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
         }
     }
 
-    @Override
-    public String getInvName()
-    {
-        return this.getBlockType().getLocalizedName();
-    }
-
-    @Override
-    public void openChest()
-    {
-        this.onInventoryChanged();
-    }
-
-    @Override
-    public void closeChest()
-    {
-        this.onInventoryChanged();
-    }
-
     /** Construct an InventoryCrafting Matrix on the fly.
      * 
      * @return */
@@ -509,7 +496,6 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
     }
 
     /** Updates all the output slots. Call this to update the Engineering Table. */
-    @Override
     public void onInventoryChanged()
     {
         if (worldObj != null)
@@ -597,13 +583,13 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
     {
         super.readFromNBT(nbt);
 
-        NBTTagList nbtList = nbt.getTagList("Items");
+        NBTTagList nbtList = nbt.getTagList("Items", 0);
         this.craftingMatrix = new ItemStack[9];
         this.outputInventory = new ItemStack[1];
 
         for (int i = 0; i < nbtList.tagCount(); ++i)
         {
-            NBTTagCompound stackTag = (NBTTagCompound) nbtList.tagAt(i);
+            NBTTagCompound stackTag = nbtList.getCompoundTagAt(i);
             byte id = stackTag.getByte("Slot");
 
             if (id >= 0 && id < this.getSizeInventory())
@@ -641,12 +627,6 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
     // ///////////////////////////////////////
     // // Inventory Access side Methods //////
     // ///////////////////////////////////////
-
-    @Override
-    public boolean isInvNameLocalized()
-    {
-        return false;
-    }
 
     @Override
     public boolean isItemValidForSlot(int i, ItemStack itemstack)
@@ -756,25 +736,23 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
         return slots;
     }
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    protected TileRender newRenderer()
-    {
-        return new TileRender()
-        {
-            @Override
-            public boolean renderDynamic(Vector3 position, boolean isItem, float frame)
-            {
-                if (!isItem)
-                {
-                    GL11.glPushMatrix();
-                    RenderItemOverlayUtility.renderItemOnSides(TileEngineeringTable.this, getStackInSlot(9), position.x, position.y, position.z);
-                    RenderItemOverlayUtility.renderTopOverlay(TileEngineeringTable.this, craftingMatrix, getDirection(), position.x, position.y - 0.1, position.z);
-                    GL11.glPopMatrix();
-                }
 
-                return false;
-            }
-        };
+    @Override
+    public void renderDynamic(Vector3 position, float frame, int pass)
+    {
+        GL11.glPushMatrix();
+        RenderItemOverlayUtility.renderItemOnSides(TileEngineeringTable.this, getStackInSlot(9), position.x(), position.y(), position.z());
+        RenderItemOverlayUtility.renderTopOverlay(TileEngineeringTable.this, craftingMatrix, getDirection(), position.x(), position.y() - 0.1, position.z());
+        GL11.glPopMatrix();
+    }
+
+    @Override
+    public ForgeDirection getDirection() {
+        return null;
+    }
+
+    @Override
+    public void setDirection(ForgeDirection direction) {
+
     }
 }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import archaic.Archaic;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -34,6 +35,7 @@ import resonantinduction.core.grid.fluid.distribution.TFluidDistributor;
 import resonantinduction.core.grid.fluid.distribution.TankGrid;
 import resonantinduction.core.grid.fluid.distribution.TileFluidDistribution;
 import universalelectricity.api.UniversalElectricity;
+import universalelectricity.api.core.grid.INode;
 import universalelectricity.core.transform.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -49,20 +51,20 @@ public class TileTank extends TileFluidDistribution implements IComparatorInputO
 
 	public TileTank()
 	{
-		super(UniversalElectricity.machine, VOLUME * FluidContainerRegistry.BUCKET_VOLUME);
-		isOpaqueCube = false;
-		normalRender = false;
-		itemBlock = ItemBlockTank.class;
+		super(Material.iron, VOLUME * FluidContainerRegistry.BUCKET_VOLUME);
+		isOpaqueCube(false);
+		normalRender(false);
+		itemBlock(ItemBlockTank.class);
 	}
 
 	@Override
 	public boolean shouldSideBeRendered(IBlockAccess access, int x, int y, int z, int side)
 	{
-		return access != null && block != null && access.getBlockId(x, y, z) != block.blockID;
+		return access.getBlock(x, y, z) != getBlockType();
 	}
 
 	@Override
-	protected boolean use(EntityPlayer player, int side, Vector3 vector3)
+	public boolean use(EntityPlayer player, int side, Vector3 vector3)
 	{
 		if (!world().isRemote)
 		{
@@ -204,7 +206,27 @@ public class TileTank extends TileFluidDistribution implements IComparatorInputO
 		};
 	}
 
-	public static class ItemRenderer implements ISimpleItemRenderer
+    @Override
+    public FluidTank getTank() {
+        return null;
+    }
+
+    @Override
+    public FluidTank tank() {
+        return null;
+    }
+
+    @Override
+    public void tank_$eq(FluidTank tank) {
+
+    }
+
+    @Override
+    public INode getNode(Class<? extends INode> nodeType, ForgeDirection from) {
+        return null;
+    }
+
+    public static class ItemRenderer implements ISimpleItemRenderer
 	{
 		public static ItemRenderer instance = new ItemRenderer();
 

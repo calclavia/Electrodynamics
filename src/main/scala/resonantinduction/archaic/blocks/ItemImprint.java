@@ -1,4 +1,4 @@
-package resonantinduction.archaic.filter.imprint;
+package resonantinduction.archaic.blocks;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -22,12 +22,12 @@ import resonantinduction.core.Settings;
 
 public class ItemImprint extends Item
 {
-	public ItemImprint(int id)
+	public ItemImprint()
 	{
-		super(Settings.config.getItem("imprint", id).getInt());
-		this.setUnlocalizedName(Reference.PREFIX + "imprint");
-		this.setTextureName(Reference.PREFIX + "imprint");
-		this.setCreativeTab(ResonantTab.DEFAULT);
+		super();
+		this.setUnlocalizedName(Reference.prefix() + "imprint");
+		this.setTextureName(Reference.prefix() + "imprint");
+		this.setCreativeTab(ResonantTab.tab());
 		this.setHasSubtypes(true);
 		this.setMaxStackSize(1);
 	}
@@ -114,11 +114,11 @@ public class ItemImprint extends Item
 		HashSet<ItemStack> filterStacks = new HashSet<ItemStack>();
 
 		NBTTagCompound nbt = NBTUtility.getNBTTagCompound(itemStack);
-		NBTTagList tagList = nbt.getTagList("Items");
+		NBTTagList tagList = nbt.getTagList("Items", 0);
 
 		for (int i = 0; i < tagList.tagCount(); ++i)
 		{
-			NBTTagCompound var4 = (NBTTagCompound) tagList.tagAt(i);
+			NBTTagCompound var4 = (NBTTagCompound) tagList.getCompoundTagAt(i);
 			filterStacks.add(ItemStack.loadItemStackFromNBT(var4));
 		}
 
@@ -130,11 +130,11 @@ public class ItemImprint extends Item
 		List<ItemStack> filterStacks = new ArrayList<ItemStack>();
 
 		NBTTagCompound nbt = NBTUtility.getNBTTagCompound(itemStack);
-		NBTTagList tagList = nbt.getTagList("Items");
+		NBTTagList tagList = nbt.getTagList("Items", 0);
 
 		for (int i = 0; i < tagList.tagCount(); ++i)
 		{
-			NBTTagCompound var4 = (NBTTagCompound) tagList.tagAt(i);
+			NBTTagCompound var4 = (NBTTagCompound) tagList.getCompoundTagAt(i);
 			filterStacks.add(ItemStack.loadItemStackFromNBT(var4));
 		}
 

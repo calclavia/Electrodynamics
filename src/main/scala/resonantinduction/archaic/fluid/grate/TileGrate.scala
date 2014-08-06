@@ -43,14 +43,14 @@ object TileGrate {
     @SideOnly( Side.CLIENT )
     private var iconSide : IIcon = _
 
-    class ComparableVector( var position : Vector3, var iterations : Int ) extends Comparable[ _ ] {
+    class ComparableVector( var position : Vector3, var iterations : Int ) extends Comparable[Vector3] {
 
-        override def compareTo( obj : AnyRef ) : Int = {
+        override def compareTo( obj : Vector3 ) : Int = {
             val wr = obj.asInstanceOf[ ComparableVector ]
             if ( this.position.y == wr.position.y ) {
                 return this.iterations - wr.iterations
             }
-            this.position.yi() - wr.position.yi()
+            this.position.yi - wr.position.yi
         }
     }
 }

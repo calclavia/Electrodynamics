@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 import resonant.lib.utility.LanguageUtility;
@@ -46,7 +47,7 @@ public class ItemBlockTank extends ItemBlock implements IFluidContainerItem
 			if (fluid != null)
 			{
 				list.add("Fluid: " + fluid.getFluid().getLocalizedName());
-				list.add("Volume: " + UnitDisplay.getDisplay(fluid.amount, Unit.LITER, UnitPrefix.MILLI));
+				list.add("Volume: " + new UnitDisplay(Unit.LITER, fluid.amount));
 			}
 		}
 	}
@@ -64,14 +65,14 @@ public class ItemBlockTank extends ItemBlock implements IFluidContainerItem
 	@Override
 	public String getUnlocalizedName(ItemStack itemStack)
 	{
-		String translation = LanguageUtility.getLocal(Block.blocksList[this.getBlock()].getUnlocalizedName() + "." + itemStack.getItemDamage());
+		String translation = LanguageUtility.getLocal(getUnlocalizedName() + "." + itemStack.getItemDamage());
 
 		if (translation == null || translation.isEmpty())
 		{
-			return Block.blocksList[this.getBlock()].getUnlocalizedName();
+			return getUnlocalizedName();
 		}
 
-		return Block.blocksList[this.getBlock()].getUnlocalizedName() + "." + itemStack.getItemDamage();
+		return getUnlocalizedName() + "." + itemStack.getItemDamage();
 	}
 
 	@Override
@@ -82,9 +83,7 @@ public class ItemBlockTank extends ItemBlock implements IFluidContainerItem
 			TileEntity tile = world.getTileEntity(x, y, z);
 			if (tile instanceof TileFluidDistribution)
 			{
-				((TileFluidDistribution) tile).setSubID(stack.getItemDamage());
-				((TileFluidDistribution) tile).getForwardTank().fill(getFluid(stack), true);
-
+				((TileFluidDistribution) tile).getForwardTank().fill(ForgeDirection.UNKNOWN, getFluid(stack), true);
 			}
 			return true;
 		}

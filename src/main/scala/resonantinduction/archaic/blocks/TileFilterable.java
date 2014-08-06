@@ -1,4 +1,4 @@
-package resonantinduction.archaic.filter.imprint;
+package resonantinduction.archaic.blocks;
 
 import java.util.Set;
 

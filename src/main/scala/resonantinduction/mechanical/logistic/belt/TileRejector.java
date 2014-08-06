@@ -17,7 +17,7 @@ import resonant.engine.ResonantEngine;
 import resonant.lib.network.discriminator.PacketTile;
 import resonant.lib.network.discriminator.PacketType;
 import resonant.lib.network.handle.IPacketIDReceiver;
-import resonantinduction.archaic.filter.imprint.TileFilterable;
+import resonantinduction.archaic.blocks.TileFilterable;
 import universalelectricity.core.transform.vector.Vector3;
 
 /** @author Darkguardsman */
