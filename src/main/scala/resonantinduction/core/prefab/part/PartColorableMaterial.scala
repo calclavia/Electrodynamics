@@ -77,6 +77,8 @@ abstract class PartColorableMaterial[M](insulationType: Item) extends TMultiPart
     return this.isInsulated
   }
 
+  def setRequiresInsulation(b : Boolean) { this.requiresInsulation = b}
+
   def sendInsulationUpdate
   {
     tile.getWriteStream(this).writeByte(1).writeBoolean(this.isInsulated)

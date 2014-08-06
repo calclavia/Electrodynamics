@@ -1,8 +1,9 @@
 package resonantinduction.core.handler;
 
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraft.init.Items;
 import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.fluids.BlockFluidFinite;
 import resonant.lib.render.RenderUtility;
 import resonantinduction.core.Reference;
@@ -36,11 +37,12 @@ public class TextureHookHandler
 		}
 	}
 
-	@Mod.EventHandler
+	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void postTextureHook(TextureStitchEvent.Post event)
 	{
-		for (BlockFluidFinite block : ResonantInduction.blockMixtureFluids.values())
+        Items.arrow
+        for (BlockFluidFinite block : ResonantInduction.blockMixtureFluids.values())
 		{
 			block.getFluid().setIcons(RenderUtility.getIcon(Reference.prefix() + "mixture_flow"));
 			((FluidColored) block.getFluid()).setColor(ResourceGenerator.getColor(ResourceGenerator.mixtureToMaterial(block.getFluid().getName())));

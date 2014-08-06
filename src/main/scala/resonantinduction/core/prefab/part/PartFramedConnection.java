@@ -119,16 +119,6 @@ public abstract class PartFramedConnection<M extends Enum> extends PartColorable
     }
 
     @Override
-    public void drawBreaking(RenderBlocks renderBlocks)
-    {
-        if (breakIcon != null)
-        {
-            CCRenderState.reset();
-            RenderUtils.renderBlock(sides[6], 0, new Translation(x(), y(), z()), new IconTransformation(breakIcon), null);
-        }
-    }
-
-    @Override
     public Iterable<Cuboid6> getOcclusionBoxes()
     {
         return getCollisionBoxes();
@@ -223,7 +213,6 @@ public abstract class PartFramedConnection<M extends Enum> extends PartColorable
 
     /** Should include connections that are in the current connection maps even if those connections
      * aren't allowed any more. This is so that networks split correctly. */
-    @Override
     public TileEntity[] getConnections()
     {
         TileEntity[] connections = new TileEntity[6];
@@ -251,38 +240,11 @@ public abstract class PartFramedConnection<M extends Enum> extends PartColorable
     }
 
     /** Shouldn't need to be overridden. Override connectionPrevented instead */
-    @Override
     public boolean canConnect(ForgeDirection direction, Object source)
     {
         Vector3 connectPos = new Vector3(tile()).add(direction);
         TileEntity connectTile = connectPos.getTileEntity(world());
         return !isConnectionPrevented(connectTile, direction);
-    }
-
-    @Override
-    public void onAdded()
-    {
-        super.onAdded();
-        refresh();
-    }
-
-    @Override
-    public void onWorldJoin()
-    {
-        refresh();
-    }
-
-    @Override
-    public void onNeighborChanged()
-    {
-        super.onNeighborChanged();
-        refresh();
-    }
-
-    @Override
-    public void onPartChanged(TMultiPart part)
-    {
-        node.
     }
 
     /** Packet Methods */

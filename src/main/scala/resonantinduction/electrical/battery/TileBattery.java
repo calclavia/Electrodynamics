@@ -20,7 +20,7 @@ import com.google.common.io.ByteArrayDataInput;
 /** A modular battery box that allows shared connections with boxes next to it.
  * 
  * @author Calclavia */
-public class TileBattery extends TileEnergyDistribution implements IVoltageInput, IVoltageOutput, IPacketSender, IPacketReceiver, IEnergyInterface, IEnergyContainer
+public class TileBattery extends TileEnergyDistribution
 {
     /** Tiers: 0, 1, 2 */
     public static final int MAX_TIER = 2;
@@ -32,7 +32,7 @@ public class TileBattery extends TileEnergyDistribution implements IVoltageInput
     {
         this.setEnergyHandler(new EnergyStorageHandler(0));
         this.getEnergyHandler().setCapacity(Long.MAX_VALUE);
-        this.ioMap = 0;
+        this.ioMap_$eq(0);
         this.saveIOMap = true;
     }
 

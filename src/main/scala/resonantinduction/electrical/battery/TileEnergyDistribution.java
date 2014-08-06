@@ -160,10 +160,4 @@ public class TileEnergyDistribution extends TileElectric
         super.invalidate();
     }
 
-    @Override
-    public IConnector<EnergyDistributionNetwork> getInstance(ForgeDirection from)
-    {
-        return this;
-    }
-
 }

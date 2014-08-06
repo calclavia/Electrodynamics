@@ -67,11 +67,11 @@ abstract class TilePressureNode(material: Material) extends TileFluidNodeProvide
     return tank
   }
 
-  override def getNode[N <: INode](nodeType: Class[N], from: ForgeDirection): N =
+  override def getNode(nodeType: Class[_ <: INode], from: ForgeDirection): INode =
   {
     if (nodeType.isAssignableFrom(pressureNode.getClass))
-      return pressureNode.asInstanceOf[N]
+      return pressureNode
 
-    return null.asInstanceOf[N]
+    return null
   }
 }

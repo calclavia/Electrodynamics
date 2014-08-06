@@ -22,18 +22,6 @@ public class BlockRenderInfo
 	/** meta data to use for block the block */
 	public int meta = 0;
 
-	/** Gets the block brightness at the given location */
-	public float getBlockBrightness(IBlockAccess iblockaccess, int i, int j, int k)
-	{
-		return baseBlock.getBlockBrightness(iblockaccess, i, j, k);
-	}
-
-	/** Gets the block texture from the given side */
-	public IIcon getBlockTextureFromSide(int side)
-	{
-		return this.getBlockIconFromSideAndMetadata(side, meta);
-	}
-
 	/** Gets the block texture from side and meta */
 	public IIcon getBlockIconFromSideAndMetadata(int side, int meta)
 	{

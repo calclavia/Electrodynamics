@@ -24,6 +24,9 @@ class FluidPressureNode(parent: INodeProvider) extends MultipartNode[AnyRef](par
     return this
   }
 
+  def setMaxFlowRate(flow : Int) {maxFlowRate = flow }
+  def setMaxPressure(p : Int) {maxPressure = p}
+
   override def update(deltaTime: Double)
   {
     if (!world.isRemote)
@@ -123,7 +126,7 @@ class FluidPressureNode(parent: INodeProvider) extends MultipartNode[AnyRef](par
         {
           val fluidHandler: IFluidHandler = obj.asInstanceOf[IFluidHandler]
           val pressure: Int = getPressure(dir)
-          val tankPressure: Int = if (fluidHandler.isInstanceOf[INodeProvider]) (fluidHandler.asInstanceOf[INodeProvider]).getNode(classOf[FluidPressureNode], dir.getOpposite).getPressure(dir.getOpposite) else 0
+          val tankPressure: Int = if (fluidHandler.isInstanceOf[INodeProvider]) (fluidHandler.asInstanceOf[INodeProvider]).getNode(classOf[FluidPressureNode], dir.getOpposite).asInstanceOf[FluidPressureNode].getPressure(dir.getOpposite) else 0
           val sourceTank = genericParent.getTank
           val transferAmount: Int = (Math.max(pressure, tankPressure) - Math.min(pressure, tankPressure)) * getMaxFlowRate
           if (pressure > tankPressure)
@@ -185,7 +188,7 @@ class FluidPressureNode(parent: INodeProvider) extends MultipartNode[AnyRef](par
 
       if (tile.isInstanceOf[INodeProvider])
       {
-        val check: FluidPressureNode = (tile.asInstanceOf[INodeProvider]).getNode(classOf[FluidPressureNode], dir.getOpposite)
+        val check: FluidPressureNode = (tile.asInstanceOf[INodeProvider]).getNode(classOf[FluidPressureNode], dir.getOpposite).asInstanceOf[FluidPressureNode]
         if (check != null && canConnect(dir, check) && check.canConnect(dir.getOpposite, this))
         {
           connections.put(check, dir)
