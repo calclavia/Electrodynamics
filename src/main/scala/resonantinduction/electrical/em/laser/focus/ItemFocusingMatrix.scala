@@ -1,14 +1,17 @@
 package resonantinduction.electrical.em.laser.focus
 
-import net.minecraft.item.{ItemStack, Item}
-import net.minecraft.world.World
+import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.entity.player.EntityPlayer
-import cpw.mods.fml.relauncher.{SideOnly, Side}
-import resonantinduction.electrical.em.{TabEC, ElectromagneticCoherence, Vector3}
-import net.minecraft.util.{EnumChatFormatting, ChatComponentText}
+import net.minecraft.item.{Item, ItemStack}
+import net.minecraft.nbt.NBTTagCompound
+import net.minecraft.util.{ChatComponentText, EnumChatFormatting}
+import net.minecraft.world.World
+import resonantinduction.core.ResonantTab
+import resonantinduction.electrical.em.ElectromagneticCoherence
+import universalelectricity.core.transform.vector.Vector3
+
 import scala.collection.convert.wrapAsScala._
 import scala.util.Random
-import net.minecraft.nbt.NBTTagCompound
 
 /**
  * @author Calclavia
@@ -17,7 +20,7 @@ class ItemFocusingMatrix extends Item
 {
   setUnlocalizedName(ElectromagneticCoherence.PREFIX + "focusingMatrix")
   setTextureName(ElectromagneticCoherence.PREFIX + "focusingMatrix")
-  setCreativeTab(TabEC)
+  setCreativeTab(ResonantTab)
 
   /**
    * allows items to add custom lines of information to the mouseover description
@@ -31,10 +34,10 @@ class ItemFocusingMatrix extends Item
 
     add(list, "Focusing:")
 
-    val vec = getControlCoordinate(itemStack)
+    val vec : Vector3 = getControlCoordinate(itemStack)
 
     if (vec != null)
-      add(list, "[" + vec.x.toInt + ", " + vec.y.toInt + ", " + vec.z.toInt + "]")
+      add(list, "[" + vec.xi + ", " + vec.yi + ", " + vec.z.toInt + "]")
     else
       add(list, "None")
   }
@@ -116,7 +119,7 @@ class ItemFocusingMatrix extends Item
   def setControlCoordinate(stack: ItemStack, vec: Vector3)
   {
     val nbt = if (stack.getTagCompound != null) stack.getTagCompound else new NBTTagCompound()
-    vec.writeToNBT(nbt)
+    vec.writeNBT(nbt)
     stack.setTagCompound(nbt)
   }
 

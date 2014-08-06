@@ -1,15 +1,14 @@
 package resonantinduction.electrical.em.laser.emitter
 
-import net.minecraft.block.{BlockPistonBase, BlockContainer}
+import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.block.material.Material
-import net.minecraft.world.{IBlockAccess, World}
-import net.minecraft.creativetab.CreativeTabs
-import net.minecraft.tileentity.TileEntity
-import resonantinduction.electrical.em.{TabEC, ElectromagneticCoherence}
+import net.minecraft.block.{BlockContainer, BlockPistonBase}
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.item.ItemStack
-import resonantinduction.electrical.em.laser.{Laser, BlockRenderingHandler}
-import cpw.mods.fml.relauncher.{Side, SideOnly}
+import net.minecraft.tileentity.TileEntity
+import net.minecraft.world.{IBlockAccess, World}
+import resonantinduction.electrical.em.ElectromagneticCoherence
+import resonantinduction.electrical.em.laser.{BlockRenderingHandler, Laser}
 
 /**
  * @author Calclavia

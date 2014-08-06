@@ -1,23 +1,23 @@
 package resonantinduction.electrical.em
 
-import cpw.mods.fml.common.{SidedProxy, Mod}
 import cpw.mods.fml.common.Mod.EventHandler
-import cpw.mods.fml.common.event.{FMLPreInitializationEvent, FMLInitializationEvent}
-import cpw.mods.fml.common.registry.{LanguageRegistry, GameRegistry}
-import net.minecraft.util.{EnumChatFormatting, ResourceLocation}
-import resonantinduction.electrical.em.laser.emitter.BlockLaserEmitter
-import resonantinduction.electrical.em.laser.focus.mirror.BlockMirror
-import resonantinduction.electrical.em.laser.receiver.BlockLaserReceiver
-import net.minecraft.init.{Items, Blocks}
-import net.minecraftforge.oredict.ShapedOreRecipe
-import net.minecraftforge.common.MinecraftForge
+import cpw.mods.fml.common.event.{FMLInitializationEvent, FMLPreInitializationEvent}
 import cpw.mods.fml.common.eventhandler.SubscribeEvent
-import net.minecraft.item.ItemStack
-import net.minecraftforge.event.entity.EntityJoinWorldEvent
+import cpw.mods.fml.common.registry.{GameRegistry, LanguageRegistry}
+import cpw.mods.fml.common.{Mod, SidedProxy}
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.nbt.{NBTTagString, NBTTagList, NBTTagCompound}
+import net.minecraft.init.{Blocks, Items}
+import net.minecraft.item.ItemStack
+import net.minecraft.nbt.{NBTTagCompound, NBTTagList, NBTTagString}
+import net.minecraft.util.{EnumChatFormatting, ResourceLocation}
+import net.minecraftforge.common.MinecraftForge
+import net.minecraftforge.event.entity.EntityJoinWorldEvent
+import net.minecraftforge.oredict.ShapedOreRecipe
+import resonantinduction.electrical.em.laser.emitter.BlockLaserEmitter
 import resonantinduction.electrical.em.laser.focus.ItemFocusingMatrix
 import resonantinduction.electrical.em.laser.focus.crystal.BlockFocusCrystal
+import resonantinduction.electrical.em.laser.focus.mirror.BlockMirror
+import resonantinduction.electrical.em.laser.receiver.BlockLaserReceiver
 
 /**
  * @author Calclavia

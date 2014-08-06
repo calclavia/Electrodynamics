@@ -4,19 +4,21 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockFluid;
 import net.minecraft.block.BlockLadder;
 import net.minecraft.block.BlockSnow;
 import net.minecraft.block.BlockVine;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -31,12 +33,12 @@ import resonantinduction.core.prefab.part.PartFace;
 import resonantinduction.electrical.Electrical;
 import resonantinduction.electrical.tesla.TileTesla;
 import universalelectricity.core.transform.vector.Vector3;
-import universalelectricity.api.vector.VectorWorld;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import codechicken.multipart.TMultiPart;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import universalelectricity.core.transform.vector.VectorWorld;
 
 public class PartLevitator extends PartFace
 {
@@ -70,8 +72,8 @@ public class PartLevitator extends PartFace
 
 	public static boolean canBePath(World world, Vector3 position)
 	{
-		Block block = Block.blocksList[position.getBlock(world)];
-		return block == null || (block instanceof BlockSnow || block instanceof BlockVine || block instanceof BlockLadder || ((block instanceof BlockFluid || block instanceof IFluidBlock) && block.blockID != Block.lavaMoving.blockID && block.blockID != Block.lavaStill.blockID));
+		Block block = position.getBlock(world);
+		return block == null || (block instanceof BlockSnow || block instanceof BlockVine || block instanceof BlockLadder || (block instanceof IFluidBlock && block != Blocks.flowing_lava && block != Blocks.lava));
 	}
 
 	@Override
@@ -83,7 +85,7 @@ public class PartLevitator extends PartFace
 			{
 				if (world().isRemote)
 				{
-					player.addChatMessage("Successfully linked devices.");
+					player.addChatMessage(new ChatComponentText("Successfully linked devices."));
 				}
 				LinkUtility.clearLink(itemStack);
 			}
@@ -91,7 +93,7 @@ public class PartLevitator extends PartFace
 			{
 				if (world().isRemote)
 				{
-					player.addChatMessage("Marked link for device.");
+					player.addChatMessage(new ChatComponentText("Marked link for device."));
 				}
 
 				LinkUtility.setLink(itemStack, new VectorWorld(world(), x(), y(), z()));
@@ -103,7 +105,7 @@ public class PartLevitator extends PartFace
 
 		if (player.getCurrentEquippedItem() != null)
 		{
-			if (player.getCurrentEquippedItem().itemID == Item.dyePowder.itemID)
+			if (player.getCurrentEquippedItem().getItem() == Items.dye)
 			{
 				setDye(player.getCurrentEquippedItem().getItemDamage());
 
@@ -226,7 +228,7 @@ public class PartLevitator extends PartFace
 							world().spawnEntityInWorld(entityItem);
 						}
 
-						pushDelay = Settings.LEVITATOR_PUSH_DELAY;
+						pushDelay = Settings.LEVITATOR_PUSH_DELAY();
 					}
 				}
 			}
@@ -283,7 +285,7 @@ public class PartLevitator extends PartFace
 									{
 										Vector3 prevResult = results.get(i - 1).clone();
 
-										Vector3 difference = prevResult.clone().difference(result);
+										Vector3 difference = prevResult.clone().subtract(result);
 										final ForgeDirection direction = difference.toForgeDirection();
 
 										if (renderBeam)
@@ -291,7 +293,7 @@ public class PartLevitator extends PartFace
 											Electrical.proxy.renderElectricShock(world(), prevResult.clone().add(0.5), result.clone().add(0.5), EnumColor.DYES[dyeID].toColor(), world().rand.nextFloat() > 0.9);
 										}
 
-										AxisAlignedBB bounds = AxisAlignedBB.getAABBPool().getAABB(result.x, result.y, result.z, result.x + 1, result.y + 1, result.z + 1);
+										AxisAlignedBB bounds = AxisAlignedBB.getBoundingBox(result.x(), result.y(), result.z(), result.x() + 1, result.y() + 1, result.z() + 1);
 										List<EntityItem> entities = world().getEntitiesWithinAABB(EntityItem.class, bounds);
 
 										for (EntityItem entityItem : entities)
@@ -362,102 +364,102 @@ public class PartLevitator extends PartFace
 		switch (direction)
 		{
 			case DOWN:
-				entityItem.setPosition(lockVector.x + 0.5, entityItem.posY, lockVector.z + 0.5);
+				entityItem.setPosition(lockVector.x() + 0.5, entityItem.posY, lockVector.z() + 0.5);
 
 				entityItem.motionX = 0;
 				entityItem.motionZ = 0;
 
 				if (!input)
 				{
-					entityItem.motionY = Math.max(-Settings.LEVITATOR_MAX_SPEED, entityItem.motionY - Settings.LEVITATOR_ACCELERATION);
+					entityItem.motionY = Math.max(-Settings.LEVITATOR_MAX_SPEED(), entityItem.motionY - Settings.LEVITATOR_ACCELERATION());
 				}
 				else
 				{
-					entityItem.motionY = Math.min(Settings.LEVITATOR_MAX_SPEED, entityItem.motionY + .04 + Settings.LEVITATOR_ACCELERATION);
+					entityItem.motionY = Math.min(Settings.LEVITATOR_MAX_SPEED(), entityItem.motionY + .04 + Settings.LEVITATOR_ACCELERATION());
 				}
 
 				break;
 			case UP:
 
-				entityItem.setPosition(lockVector.x + 0.5, entityItem.posY, lockVector.z + 0.5);
+				entityItem.setPosition(lockVector.x() + 0.5, entityItem.posY, lockVector.z() + 0.5);
 
 				entityItem.motionX = 0;
 				entityItem.motionZ = 0;
 
 				if (!input)
 				{
-					entityItem.motionY = Math.min(Settings.LEVITATOR_MAX_SPEED, entityItem.motionY + .04 + Settings.LEVITATOR_ACCELERATION);
+					entityItem.motionY = Math.min(Settings.LEVITATOR_MAX_SPEED(), entityItem.motionY + .04 + Settings.LEVITATOR_ACCELERATION());
 				}
 				else
 				{
-					entityItem.motionY = Math.max(-Settings.LEVITATOR_MAX_SPEED, entityItem.motionY - Settings.LEVITATOR_ACCELERATION);
+					entityItem.motionY = Math.max(-Settings.LEVITATOR_MAX_SPEED(), entityItem.motionY - Settings.LEVITATOR_ACCELERATION());
 				}
 
 				break;
 			case NORTH:
 
-				entityItem.setPosition(lockVector.x + 0.5, lockVector.y + 0.5, entityItem.posZ);
+				entityItem.setPosition(lockVector.x() + 0.5, lockVector.y() + 0.5, entityItem.posZ);
 
 				entityItem.motionX = 0;
 				entityItem.motionY = 0;
 
 				if (!input)
 				{
-					entityItem.motionZ = Math.max(-Settings.LEVITATOR_MAX_SPEED, entityItem.motionZ - Settings.LEVITATOR_ACCELERATION);
+					entityItem.motionZ = Math.max(-Settings.LEVITATOR_MAX_SPEED(), entityItem.motionZ - Settings.LEVITATOR_ACCELERATION());
 				}
 				else
 				{
-					entityItem.motionZ = Math.min(Settings.LEVITATOR_MAX_SPEED, entityItem.motionZ + Settings.LEVITATOR_ACCELERATION);
+					entityItem.motionZ = Math.min(Settings.LEVITATOR_MAX_SPEED(), entityItem.motionZ + Settings.LEVITATOR_ACCELERATION());
 				}
 
 				break;
 			case SOUTH:
 
-				entityItem.setPosition(lockVector.x + 0.5, lockVector.y + 0.5, entityItem.posZ);
+				entityItem.setPosition(lockVector.x() + 0.5, lockVector.y() + 0.5, entityItem.posZ);
 
 				entityItem.motionX = 0;
 				entityItem.motionY = 0;
 
 				if (!input)
 				{
-					entityItem.motionZ = Math.min(Settings.LEVITATOR_MAX_SPEED, entityItem.motionZ + Settings.LEVITATOR_ACCELERATION);
+					entityItem.motionZ = Math.min(Settings.LEVITATOR_MAX_SPEED(), entityItem.motionZ + Settings.LEVITATOR_ACCELERATION());
 				}
 				else
 				{
-					entityItem.motionZ = Math.max(-Settings.LEVITATOR_MAX_SPEED, entityItem.motionZ - Settings.LEVITATOR_ACCELERATION);
+					entityItem.motionZ = Math.max(-Settings.LEVITATOR_MAX_SPEED(), entityItem.motionZ - Settings.LEVITATOR_ACCELERATION());
 				}
 
 				break;
 			case WEST:
 
-				entityItem.setPosition(entityItem.posX, lockVector.y + 0.5, lockVector.z + 0.5);
+				entityItem.setPosition(entityItem.posX, lockVector.y() + 0.5, lockVector.z() + 0.5);
 
 				entityItem.motionY = 0;
 				entityItem.motionZ = 0;
 
 				if (!input)
 				{
-					entityItem.motionX = Math.max(-Settings.LEVITATOR_MAX_SPEED, entityItem.motionX - Settings.LEVITATOR_ACCELERATION);
+					entityItem.motionX = Math.max(-Settings.LEVITATOR_MAX_SPEED(), entityItem.motionX - Settings.LEVITATOR_ACCELERATION());
 				}
 				else
 				{
-					entityItem.motionX = Math.min(Settings.LEVITATOR_MAX_SPEED, entityItem.motionX + Settings.LEVITATOR_ACCELERATION);
+					entityItem.motionX = Math.min(Settings.LEVITATOR_MAX_SPEED(), entityItem.motionX + Settings.LEVITATOR_ACCELERATION());
 				}
 
 				break;
 			case EAST:
-				entityItem.setPosition(entityItem.posX, lockVector.y + 0.5, lockVector.z + 0.5);
+				entityItem.setPosition(entityItem.posX, lockVector.y() + 0.5, lockVector.z() + 0.5);
 
 				entityItem.motionY = 0;
 				entityItem.motionZ = 0;
 
 				if (!input)
 				{
-					entityItem.motionX = Math.min(Settings.LEVITATOR_MAX_SPEED, entityItem.motionX + Settings.LEVITATOR_ACCELERATION);
+					entityItem.motionX = Math.min(Settings.LEVITATOR_MAX_SPEED(), entityItem.motionX + Settings.LEVITATOR_ACCELERATION());
 				}
 				else
 				{
-					entityItem.motionX = Math.max(-Settings.LEVITATOR_MAX_SPEED, entityItem.motionX - Settings.LEVITATOR_ACCELERATION);
+					entityItem.motionX = Math.max(-Settings.LEVITATOR_MAX_SPEED(), entityItem.motionX - Settings.LEVITATOR_ACCELERATION());
 				}
 
 				break;
@@ -485,9 +487,9 @@ public class PartLevitator extends PartFace
 		suckBounds = operationBounds = null;
 
 		ForgeDirection dir = placementSide.getOpposite();
-		MovingObjectPosition mop = world().clip(getPosition().add(dir).toVec3(), getPosition().add(dir, Settings.LEVITATOR_MAX_REACH).toVec3());
+		MovingObjectPosition mop = world().rayTraceBlocks(getPosition().add(dir).toVec3(), getPosition().add(dir.offsetX * Settings.LEVITATOR_MAX_REACH(), dir.offsetY * Settings.LEVITATOR_MAX_REACH(), dir.offsetZ * Settings.LEVITATOR_MAX_REACH()).toVec3());
 
-		int reach = Settings.LEVITATOR_MAX_REACH;
+		int reach = Settings.LEVITATOR_MAX_REACH();
 
 		if (mop != null)
 		{
@@ -566,7 +568,7 @@ public class PartLevitator extends PartFace
 		{
 			packet.writeBoolean(true);
 			NBTTagCompound nbt = new NBTTagCompound();
-			new VectorWorld(getLink().world(), getLink().x(), getLink().y(), getLink().z()).writeToNBT(nbt);
+			new VectorWorld(getLink().world(), getLink().x(), getLink().y(), getLink().z()).writeNBT(nbt);
 			packet.writeNBTTagCompound(nbt);
 			packet.writeByte(getLink().placementSide.ordinal());
 		}
@@ -602,7 +604,7 @@ public class PartLevitator extends PartFace
 
 		if (getLink() != null && getLink().world() != null)
 		{
-			nbt.setCompoundTag("link", new VectorWorld(getLink().world(), getLink().x(), getLink().y(), getLink().z()).writeToNBT(new NBTTagCompound()));
+			nbt.setTag("link", new VectorWorld(getLink().world(), getLink().x(), getLink().y(), getLink().z()).writeNBT(new NBTTagCompound()));
 			nbt.setByte("linkSide", (byte) getLink().placementSide.ordinal());
 		}
 	}
@@ -636,7 +638,7 @@ public class PartLevitator extends PartFace
 			Vector3 start = getPosition();
 			Vector3 target = new Vector3(getLink().x(), getLink().y(), getLink().z());
 
-			if (start.distance(target) < Settings.MAX_LEVITATOR_DISTANCE)
+			if (start.distance(target) < Settings.MAX_LEVITATOR_DISTANCE())
 			{
 				if (canBeMovePath(world(), start) && canBeMovePath(world(), target))
 				{

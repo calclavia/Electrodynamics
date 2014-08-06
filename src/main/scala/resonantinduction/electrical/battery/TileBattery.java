@@ -1,26 +1,20 @@
 package resonantinduction.electrical.battery;
 
-import java.util.ArrayList;
-
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.network.packet.Packet;
+import net.minecraft.network.Packet;
 import net.minecraftforge.common.util.ForgeDirection;
-import resonant.lib.network.IPacketReceiver;
-import resonant.lib.network.IPacketSender;
-import resonantinduction.core.ResonantInduction;
-import universalelectricity.api.UniversalElectricity;
-import universalelectricity.api.electricity.IVoltageInput;
-import universalelectricity.api.electricity.IVoltageOutput;
-import universalelectricity.api.energy.EnergyStorageHandler;
-import universalelectricity.api.energy.IEnergyContainer;
-import universalelectricity.api.energy.IEnergyInterface;
+import resonant.engine.ResonantEngine;
+import resonant.lib.network.discriminator.PacketTile;
 
 import com.google.common.io.ByteArrayDataInput;
+import resonant.lib.network.discriminator.PacketType;
+import resonant.lib.network.handle.IPacketReceiver;
 
 /** A modular battery box that allows shared connections with boxes next to it.
  * 
  * @author Calclavia */
-public class TileBattery extends TileEnergyDistribution
+public class TileBattery extends TileEnergyDistribution implements IPacketReceiver
 {
     /** Tiers: 0, 1, 2 */
     public static final int MAX_TIER = 2;
@@ -30,10 +24,8 @@ public class TileBattery extends TileEnergyDistribution
 
     public TileBattery()
     {
-        this.setEnergyHandler(new EnergyStorageHandler(0));
-        this.getEnergyHandler().setCapacity(Long.MAX_VALUE);
-        this.ioMap_$eq(0);
-        this.saveIOMap = true;
+        this.ioMap_$eq((short) 0);
+        this.saveIOMap_$eq(true);
     }
 
     /** @param tier - 0, 1, 2
@@ -44,62 +36,16 @@ public class TileBattery extends TileEnergyDistribution
     }
 
     @Override
-    public void initiate()
-    {
-        super.initiate();
-        getEnergyHandler().setCapacity(getEnergyForTier(getBlockMetadata()));
-        getEnergyHandler().setMaxTransfer(getEnergyHandler().getEnergyCapacity());
-    }
-
-    @Override
-    public void updateEntity()
-    {
-        if (!this.worldObj.isRemote)
-        {
-            markDistributionUpdate |= produce() > 0;
-        }
-
-        super.updateEntity();
-    }
-
-    @Override
     public Packet getDescriptionPacket()
     {
-        return ResonantInduction.PACKET_TILE.getPacket(this, getPacketData(0).toArray());
+        return ResonantEngine.instance.packetHandler.toMCPacket(new PacketTile(this, renderEnergyAmount, ioMap()));
     }
 
     @Override
-    public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
+    public void read(ByteBuf data, EntityPlayer player, PacketType type)
     {
-        getEnergyHandler().setEnergy(data.readLong());
-        ioMap = data.readShort();
-    }
-
-    @Override
-    public ArrayList getPacketData(int type)
-    {
-        ArrayList data = new ArrayList();
-        data.add(renderEnergyAmount);
-        data.add(ioMap);
-        return data;
-    }
-
-    @Override
-    public long getVoltageOutput(ForgeDirection side)
-    {
-        return UniversalElectricity.DEFAULT_VOLTAGE;
-    }
-
-    @Override
-    public long getVoltageInput(ForgeDirection direction)
-    {
-        return UniversalElectricity.DEFAULT_VOLTAGE;
-    }
-
-    @Override
-    public void onWrongVoltage(ForgeDirection direction, long voltage)
-    {
-
+        this.electricNode().energy().setEnergy(data.readLong());
+        this.ioMap_$eq(data.readShort());
     }
 
     @Override

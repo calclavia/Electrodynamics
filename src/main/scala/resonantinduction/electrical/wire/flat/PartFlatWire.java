@@ -5,6 +5,8 @@ import java.util.Arrays;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -280,7 +282,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
     {
         if (item != null)
         {
-            if (item.getItem().itemID == Block.lever.blockID)
+            if (Item.getIdFromItem(item.getItem()) == Block.getIdFromBlock(Blocks.lever))
             {
                 TileMultipart tile = tile();
                 World w = world();
@@ -805,7 +807,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
         int absDir = Rotation.rotateSide(side, r);
 
         BlockCoord pos = new BlockCoord(tile()).offset(absDir).offset(side);
-        world().notifyBlockOfNeighborChange(pos.x, pos.y, pos.z, tile().getBlockType().blockID);
+        world().notifyBlockOfNeighborChange(pos.x, pos.y, pos.z, tile().getBlockType());
     }
 
     public void notifyStraightChange(int r)
@@ -813,7 +815,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
         int absDir = Rotation.rotateSide(side, r);
 
         BlockCoord pos = new BlockCoord(tile()).offset(absDir);
-        world().notifyBlockOfNeighborChange(pos.x, pos.y, pos.z, tile().getBlockType().blockID);
+        world().notifyBlockOfNeighborChange(pos.x, pos.y, pos.z, tile().getBlockType());
     }
 
     public boolean maskConnects(int r)
@@ -891,7 +893,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
     {
         if (isInsulated)
         {
-            Colour color = new ColourARGB(ItemDye.dyeColors[this.color]);
+            Colour color = new ColourARGB(ItemDye.field_150922_c[this.color]);
             color.a = (byte) 255;
             return color;
         }

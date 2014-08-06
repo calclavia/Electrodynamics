@@ -1,14 +1,14 @@
 package resonantinduction.electrical.em.laser.fx
 
-import net.minecraft.world.World
+import cpw.mods.fml.client.FMLClientHandler
+import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.client.particle.EntityFX
 import net.minecraft.client.renderer.Tessellator
-import org.lwjgl.opengl.GL11._
-import cpw.mods.fml.client.FMLClientHandler
-import resonantinduction.electrical.em.{Vector3, ElectromagneticCoherence}
 import net.minecraft.util.ResourceLocation
+import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
-import cpw.mods.fml.relauncher.{Side, SideOnly}
+import org.lwjgl.opengl.GL11._
+import resonantinduction.electrical.em.ElectromagneticCoherence
 
 /**
  * @author Calclavia

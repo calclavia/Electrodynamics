@@ -1,16 +1,19 @@
 package resonantinduction.electrical.em.laser
 
-import resonantinduction.electrical.em.{ElectromagneticCoherence, Vector3}
-import net.minecraft.world.World
-import net.minecraft.util.{DamageSource, MovingObjectPosition}
-import net.minecraft.block.{BlockTNT, BlockStainedGlassPane, BlockStainedGlass, Block}
-import net.minecraft.block.material.Material
-import scala.collection.mutable
-import net.minecraft.item.ItemDye
 import java.awt.Color
-import net.minecraft.init.Blocks
-import net.minecraft.tileentity.TileEntityFurnace
+
 import cpw.mods.fml.relauncher.ReflectionHelper
+import net.minecraft.block.material.Material
+import net.minecraft.block.{Block, BlockStainedGlass, BlockStainedGlassPane, BlockTNT}
+import net.minecraft.init.Blocks
+import net.minecraft.item.ItemDye
+import net.minecraft.tileentity.TileEntityFurnace
+import net.minecraft.util.{DamageSource, MovingObjectPosition}
+import net.minecraft.world.World
+import resonantinduction.electrical.em.ElectromagneticCoherence
+import universalelectricity.core.transform.vector.Vector3
+
+import scala.collection.mutable
 
 /**
  * @author Calclavia

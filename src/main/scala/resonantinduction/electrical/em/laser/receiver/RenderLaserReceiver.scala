@@ -1,15 +1,15 @@
 package resonantinduction.electrical.em.laser.receiver
 
+import cpw.mods.fml.client.FMLClientHandler
+import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer
 import net.minecraft.tileentity.TileEntity
-import net.minecraftforge.client.model.AdvancedModelLoader
-import resonantinduction.electrical.em.ElectromagneticCoherence
 import net.minecraft.util.ResourceLocation
+import net.minecraftforge.client.model.AdvancedModelLoader
+import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL11._
-import cpw.mods.fml.client.FMLClientHandler
-import net.minecraftforge.common.util.ForgeDirection
-import cpw.mods.fml.relauncher.{Side, SideOnly}
+import resonantinduction.electrical.em.ElectromagneticCoherence
 
 /**
  * @author Calclavia

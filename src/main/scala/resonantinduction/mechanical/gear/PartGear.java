@@ -188,7 +188,7 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
     @Override
     public universalelectricity.core.transform.vector.Vector3[] getMultiBlockVectors()
     {
-        return (universalelectricity.core.transform.vector.Vector3[])new universalelectricity.core.transform.vector.Vector3(this.x(), this.y(), this.z()).getAround(this.world(), placementSide, 1).toArray();
+        return new universalelectricity.core.transform.vector.Vector3(this.x(), this.y(), this.z()).getAround(this.world(), placementSide, 1);
     }
 
     @Override

@@ -72,7 +72,7 @@ class Archaic {
     def preInit( evt : FMLPreInitializationEvent ) {
         NetworkRegistry.instance().registerGuiHandler( this, proxy )
         Settings.config.load()
-        ArchaicBlocks.blockEngineeringTable = contentRegistry.newBlock( classOf[ TileEngineeringTable ] )
+        ArchaicBlocks.blockEngineeringTable = contentRegistry.newBlock(TileEngineeringTable.class)
         ArchaicBlocks.blockCrate = contentRegistry.createBlock( classOf[ BlockCrate ], classOf[ ItemBlockCrate ], classOf[ TileCrate ] )
         ArchaicBlocks.blockImprinter = contentRegistry.createTile( classOf[ BlockImprinter ], classOf[ TileImprinter ] )
         ArchaicBlocks.blockTurntable = contentRegistry.newBlock( classOf[ TileTurntable ] )

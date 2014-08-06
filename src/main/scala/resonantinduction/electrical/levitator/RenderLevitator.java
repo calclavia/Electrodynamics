@@ -2,12 +2,13 @@ package resonantinduction.electrical.levitator;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 
 import org.lwjgl.opengl.GL11;
 
-import resonant.api.items.ISimpleItemRenderer;
+import resonant.content.prefab.scala.render.ISimpleItemRenderer;
 import resonant.lib.render.RenderUtility;
 import resonantinduction.core.Reference;
 import cpw.mods.fml.client.FMLClientHandler;
@@ -16,9 +17,9 @@ public class RenderLevitator implements ISimpleItemRenderer
 {
 	public static final RenderLevitator INSTANCE = new RenderLevitator();
 
-	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "levitator.tcn");
-	public static final ResourceLocation TEXTURE_ON = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "levitator_on.png");
-	public static final ResourceLocation TEXTURE_OFF = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "levitator_off.png");
+	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelDirectory() + "levitator.tcn"));
+	public static final ResourceLocation TEXTURE_ON = new ResourceLocation(Reference.domain(), Reference.modelPath() + "levitator_on.png");
+	public static final ResourceLocation TEXTURE_OFF = new ResourceLocation(Reference.domain(), Reference.modelPath() + "levitator_off.png");
 
 	public void render(PartLevitator part, double x, double y, double z)
 	{
@@ -57,7 +58,7 @@ public class RenderLevitator implements ISimpleItemRenderer
 	}
 
 	@Override
-	public void renderInventoryItem(ItemStack itemStack)
+	public void renderInventoryItem(IItemRenderer.ItemRenderType type, ItemStack itemStack, Object... data)
 	{
 		GL11.glPushMatrix();
 		GL11.glTranslatef(0f, 0.5f, 0f);

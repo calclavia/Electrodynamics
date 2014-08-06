@@ -1,13 +1,13 @@
 package resonantinduction.electrical.em.laser.focus.crystal
 
-import resonantinduction.electrical.em.{ElectromagneticCoherence, Vector3}
-import resonantinduction.electrical.em.laser.{Laser, TileBase, ILaserHandler}
-import net.minecraft.util.MovingObjectPosition
-import resonantinduction.electrical.em.laser.focus.IFocus
-import net.minecraft.network.{NetworkManager, Packet}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity
+import net.minecraft.network.{NetworkManager, Packet}
+import net.minecraft.util.MovingObjectPosition
 import net.minecraftforge.common.util.ForgeDirection
+import resonantinduction.electrical.em.ElectromagneticCoherence
+import resonantinduction.electrical.em.laser.focus.IFocus
+import resonantinduction.electrical.em.laser.{ILaserHandler, Laser, TileBase}
 
 /**
  * Redirects lasers to one point

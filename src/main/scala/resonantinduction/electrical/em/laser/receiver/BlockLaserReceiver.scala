@@ -7,8 +7,8 @@ import net.minecraft.entity.EntityLivingBase
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.{IBlockAccess, World}
+import resonantinduction.electrical.em.ElectromagneticCoherence
 import resonantinduction.electrical.em.laser.BlockRenderingHandler
-import resonantinduction.electrical.em.{ElectromagneticCoherence, TabEC}
 
 /**
  * @author Calclavia

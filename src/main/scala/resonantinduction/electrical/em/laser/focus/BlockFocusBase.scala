@@ -2,12 +2,12 @@ package resonantinduction.electrical.em.laser.focus
 
 import net.minecraft.block.BlockContainer
 import net.minecraft.block.material.Material
-import net.minecraft.world.World
-import net.minecraft.entity.player.EntityPlayer
-import resonantinduction.electrical.em.Vector3
-import net.minecraftforge.common.util.ForgeDirection
 import net.minecraft.entity.EntityLivingBase
+import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
+import net.minecraft.world.World
+import net.minecraftforge.common.util.ForgeDirection
+import universalelectricity.core.transform.vector.Vector3
 
 /**
  * @author Calclavia

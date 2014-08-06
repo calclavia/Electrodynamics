@@ -1,9 +1,8 @@
 package resonantinduction.electrical.em.laser.receiver
 
-import resonantinduction.electrical.em.{ElectromagneticCoherence, Vector3}
-import resonantinduction.electrical.em.laser.{Laser, TileBase, ILaserHandler}
 import net.minecraft.util.MovingObjectPosition
 import net.minecraftforge.common.util.ForgeDirection
+import resonantinduction.electrical.em.laser.{ILaserHandler, Laser, TileBase}
 
 /**
  * @author Calclavia

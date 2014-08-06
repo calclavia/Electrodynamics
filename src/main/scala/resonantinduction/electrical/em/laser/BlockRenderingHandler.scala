@@ -1,14 +1,14 @@
 package resonantinduction.electrical.em.laser
 
-import cpw.mods.fml.client.registry.{RenderingRegistry, ISimpleBlockRenderingHandler}
+import cpw.mods.fml.client.registry.{ISimpleBlockRenderingHandler, RenderingRegistry}
+import cpw.mods.fml.relauncher.{Side, SideOnly}
+import net.minecraft.block.Block
 import net.minecraft.client.renderer.RenderBlocks
 import net.minecraft.world.IBlockAccess
-import net.minecraft.block.Block
-import resonantinduction.electrical.em.laser.focus.mirror.{RenderMirror, BlockMirror}
-import resonantinduction.electrical.em.laser.emitter.{RenderLaserEmitter, BlockLaserEmitter}
-import resonantinduction.electrical.em.laser.receiver.{RenderLaserReceiver, BlockLaserReceiver}
-import cpw.mods.fml.relauncher.{Side, SideOnly}
+import resonantinduction.electrical.em.laser.emitter.{BlockLaserEmitter, RenderLaserEmitter}
 import resonantinduction.electrical.em.laser.focus.crystal.{BlockFocusCrystal, RenderFocusCrystal}
+import resonantinduction.electrical.em.laser.focus.mirror.{BlockMirror, RenderMirror}
+import resonantinduction.electrical.em.laser.receiver.{BlockLaserReceiver, RenderLaserReceiver}
 
 /**
  * @author Calclavia

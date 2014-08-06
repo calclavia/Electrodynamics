@@ -1,14 +1,14 @@
 package resonantinduction.electrical.em.laser.focus.mirror
 
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer
-import net.minecraftforge.client.model.AdvancedModelLoader
-import net.minecraft.util.ResourceLocation
-import resonantinduction.electrical.em.ElectromagneticCoherence
-import net.minecraft.tileentity.TileEntity
-import org.lwjgl.opengl.GL11._
 import cpw.mods.fml.client.FMLClientHandler
-import org.lwjgl.opengl.GL11
 import cpw.mods.fml.relauncher.{Side, SideOnly}
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer
+import net.minecraft.tileentity.TileEntity
+import net.minecraft.util.ResourceLocation
+import net.minecraftforge.client.model.AdvancedModelLoader
+import org.lwjgl.opengl.GL11
+import org.lwjgl.opengl.GL11._
+import resonantinduction.electrical.em.ElectromagneticCoherence
 
 /**
  * @author Calclavia

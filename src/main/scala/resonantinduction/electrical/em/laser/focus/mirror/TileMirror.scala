@@ -1,14 +1,16 @@
 package resonantinduction.electrical.em.laser.focus.mirror
 
-import resonantinduction.electrical.em.{ElectromagneticCoherence, Vector3}
 import net.minecraft.nbt.NBTTagCompound
-import resonantinduction.electrical.em.laser.{TileBase, Laser, ILaserHandler}
-import net.minecraft.util.MovingObjectPosition
-import net.minecraft.network.{NetworkManager, Packet}
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity
+import net.minecraft.network.{NetworkManager, Packet}
+import net.minecraft.util.MovingObjectPosition
 import net.minecraftforge.common.util.ForgeDirection
-import scala.collection.convert.wrapAsJava._
+import resonantinduction.electrical.em.ElectromagneticCoherence
 import resonantinduction.electrical.em.laser.focus.IFocus
+import resonantinduction.electrical.em.laser.{ILaserHandler, Laser, TileBase}
+import universalelectricity.core.transform.vector.Vector3
+
+import scala.collection.convert.wrapAsJava._
 
 /**
  * @author Calclavia
@@ -108,7 +110,7 @@ class TileMirror extends TileBase with ILaserHandler with IFocus
   {
     super.writeToNBT(nbt)
     val normalNBT = new NBTTagCompound()
-    normal.writeToNBT(normalNBT)
+    normal.writeNBT(normalNBT)
     nbt.setTag("normal", normalNBT)
   }
 }

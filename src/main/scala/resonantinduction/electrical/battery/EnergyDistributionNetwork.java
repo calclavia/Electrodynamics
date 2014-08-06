@@ -4,18 +4,24 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import scala.reflect.ClassTag;
+import universalelectricity.api.core.grid.electric.IEnergyNode;
+import universalelectricity.core.grid.Grid;
+import universalelectricity.core.grid.NodeGrid;
+import universalelectricity.core.grid.TickingGrid;
+import universalelectricity.core.grid.node.EnergyNode;
 import universalelectricity.core.net.Network;
 
 /** Energy network designed to allow several tiles to act as if they share the same energy
  * level */
-public class EnergyDistributionNetwork extends Network<EnergyDistributionNetwork, TileEnergyDistribution>
+public class EnergyDistributionNetwork extends TickingGrid<EnergyNode>
 {
     public long totalEnergy = 0;
     public long totalCapacity = 0;
 
-    public EnergyDistributionNetwork()
+    public EnergyDistributionNetwork(ClassTag<IEnergyNode> evidence$1)
     {
-        super(TileEnergyDistribution.class);
+        super(evidence$1);
     }
 
     public void redistribute(TileEnergyDistribution... exclusion)

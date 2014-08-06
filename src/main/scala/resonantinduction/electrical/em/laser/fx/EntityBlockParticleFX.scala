@@ -1,10 +1,10 @@
 package resonantinduction.electrical.em.laser.fx
 
-import net.minecraft.client.particle.EntityFX
-import net.minecraft.world.World
 import net.minecraft.block.Block
-import net.minecraft.init.Blocks
+import net.minecraft.client.particle.EntityFX
 import net.minecraft.client.renderer.Tessellator
+import net.minecraft.init.Blocks
+import net.minecraft.world.World
 
 /**
  * @author Calclavia

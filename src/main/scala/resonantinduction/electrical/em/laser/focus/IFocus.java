@@ -1,6 +1,7 @@
 package resonantinduction.electrical.em.laser.focus;
 
-import resonantinduction.electrical.em.Vector3;
+
+import universalelectricity.core.transform.vector.Vector3;
 
 import java.util.List;
 

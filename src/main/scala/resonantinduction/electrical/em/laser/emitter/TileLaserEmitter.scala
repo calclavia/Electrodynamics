@@ -1,8 +1,7 @@
 package resonantinduction.electrical.em.laser.emitter
 
-import resonantinduction.electrical.em.laser.{ILaserHandler, Laser, TileBase}
-import resonantinduction.electrical.em.Vector3
 import net.minecraft.util.MovingObjectPosition
+import resonantinduction.electrical.em.laser.{ILaserHandler, Laser, TileBase}
 
 /**
  * @author Calclavia

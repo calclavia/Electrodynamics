@@ -1,14 +1,15 @@
 package resonantinduction.electrical.em.laser.fx
 
-import net.minecraft.world.World
+import cpw.mods.fml.client.FMLClientHandler
+import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.client.particle.EntityFX
 import net.minecraft.client.renderer.Tessellator
-import org.lwjgl.opengl.GL11._
-import cpw.mods.fml.client.FMLClientHandler
-import resonantinduction.electrical.em.{Vector3, ElectromagneticCoherence}
 import net.minecraft.util.ResourceLocation
+import net.minecraft.world.World
+import org.lwjgl.opengl.GL11._
+import resonantinduction.electrical.em.ElectromagneticCoherence
 import resonantinduction.electrical.em.laser.Laser
-import cpw.mods.fml.relauncher.{Side, SideOnly}
+import universalelectricity.core.transform.vector.Vector3
 
 /**
  * @author Calclavia
@@ -90,8 +91,8 @@ class EntityLaserFX(par1World: World, start: Vector3, end: Vector3, color: Vecto
     /**
      * Rotate the beam
      */
-    glRotated(angles.x, 0, 1, 0)
-    glRotated(angles.y, 1, 0, 0)
+    glRotated(angles.x(), 0, 1, 0)
+    glRotated(angles.y(), 1, 0, 0)
 
     glRotated(90, 1, 0, 0)
 

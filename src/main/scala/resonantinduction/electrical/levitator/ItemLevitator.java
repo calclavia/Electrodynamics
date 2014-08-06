@@ -16,11 +16,6 @@ import codechicken.multipart.TMultiPart;
 
 public class ItemLevitator extends JItemMultiPart implements IHighlight
 {
-    public ItemLevitator(int id)
-    {
-        super(id);
-    }
-
     @Override
     @SuppressWarnings("unchecked")
     public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean par4)
