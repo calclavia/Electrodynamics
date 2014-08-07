@@ -2,7 +2,6 @@ package resonantinduction.atomic.machine.accelerator;
 
 import java.util.List;
 
-import atomic.Atomic;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -186,10 +185,10 @@ public class EntityParticle extends Entity implements IEntityAdditionalSpawnData
 
         Vector3 dongLi = new Vector3();
         dongLi.add(this.movementDirection);
-        dongLi.scale(acceleration);
-        this.motionX = Math.min(dongLi.x + this.motionX, TileAccelerator.clientParticleVelocity);
-        this.motionY = Math.min(dongLi.y + this.motionY, TileAccelerator.clientParticleVelocity);
-        this.motionZ = Math.min(dongLi.z + this.motionZ, TileAccelerator.clientParticleVelocity);
+        dongLi.multiply(acceleration);
+        this.motionX = Math.min(dongLi.x() + this.motionX, TileAccelerator.clientParticleVelocity);
+        this.motionY = Math.min(dongLi.y() + this.motionY, TileAccelerator.clientParticleVelocity);
+        this.motionZ = Math.min(dongLi.z() + this.motionZ, TileAccelerator.clientParticleVelocity);
         this.isAirBorne = true;
 
         this.lastTickPosX = this.posX;
@@ -233,11 +232,11 @@ public class EntityParticle extends Entity implements IEntityAdditionalSpawnData
         Vector3 youBian = new Vector3(this).floor();
         youBian.add(youFangXiang);
 
-        if (zuoBian.getBlock(this.worldObj) == 0)
+        if (zuoBian.getBlock(this.worldObj) == null)
         {
             this.movementDirection = zuoFangXiang;
         }
-        else if (youBian.getBlock(this.worldObj) == 0)
+        else if (youBian.getBlock(this.worldObj) == null)
         {
             this.movementDirection = youFangXiang;
         }
@@ -255,7 +254,7 @@ public class EntityParticle extends Entity implements IEntityAdditionalSpawnData
 
     public void explode()
     {
-        this.worldObj.playSoundAtEntity(this, Reference.PREFIX + "antimatter", 1.5f, 1f - this.worldObj.rand.nextFloat() * 0.3f);
+        this.worldObj.playSoundAtEntity(this, Reference.prefix() + "antimatter", 1.5f, 1f - this.worldObj.rand.nextFloat() * 0.3f);
 
         if (!this.worldObj.isRemote)
         {
@@ -319,7 +318,7 @@ public class EntityParticle extends Entity implements IEntityAdditionalSpawnData
     @Override
     protected void writeEntityToNBT(NBTTagCompound nbt)
     {
-        nbt.setTag("jiqi", this.movementVector.writeToNBT(new NBTTagCompound()));
+        nbt.setTag("jiqi", this.movementVector.writeNBT(new NBTTagCompound()));
         nbt.setByte("fangXiang", (byte) this.movementDirection.ordinal());
     }
 
