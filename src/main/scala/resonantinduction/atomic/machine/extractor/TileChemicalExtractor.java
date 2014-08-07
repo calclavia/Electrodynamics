@@ -1,5 +1,6 @@
 package resonantinduction.atomic.machine.extractor;
 
+import net.minecraft.block.material.Material;
 import resonantinduction.atomic.Atomic;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
@@ -43,8 +44,9 @@ public class TileChemicalExtractor extends TileProcess implements ISidedInventor
 
     public TileChemicalExtractor()
     {
-        energy = new EnergyStorageHandler(ENERGY * 2);
-        maxSlots = 7;
+        super(Material.iron);
+        electricNode().energy().setCapacity(ENERGY * 2);
+        this.setSizeInventory(7);
         inputSlot = 1;
         outputSlot = 2;
         tankInputFillSlot = 3;
@@ -54,9 +56,9 @@ public class TileChemicalExtractor extends TileProcess implements ISidedInventor
     }
 
     @Override
-    public void updateEntity()
+    public void update()
     {
-        super.updateEntity();
+        super.update();
 
         if (time > 0)
         {
@@ -69,7 +71,7 @@ public class TileChemicalExtractor extends TileProcess implements ISidedInventor
             {
                 discharge(getStackInSlot(0));
 
-                if (energy.checkExtract(ENERGY))
+                if (electricNode().energy().checkExtract(ENERGY))
                 {
                     if (time == 0)
                     {
@@ -106,12 +108,12 @@ public class TileChemicalExtractor extends TileProcess implements ISidedInventor
                 time = 0;
             }
 
-            if (ticks % 10 == 0)
+            if (ticks() % 10 == 0)
             {
-                for (EntityPlayer player : getPlayersUsing())
-                {
-                    PacketDispatcher.sendPacketToPlayer(getDescriptionPacket(), (Player) player);
-                }
+                //for (EntityPlayer player : getPlayersUsing())
+                //{
+                //    PacketDispatcher.sendPacketToPlayer(getDescriptionPacket(), (Player) player);
+                //}
             }
         }
     }

@@ -17,6 +17,7 @@ import net.minecraftforge.common.ForgeChunkManager.Type;
 import net.minecraftforge.common.util.ForgeDirection;
 import resonant.api.IElectromagnet;
 import resonant.lib.prefab.poison.PoisonRadiation;
+import resonantinduction.atomic.Atomic;
 import resonantinduction.core.Reference;
 import universalelectricity.core.transform.vector.Vector3;
 
@@ -120,7 +121,7 @@ public class EntityParticle extends Entity implements IEntityAdditionalSpawnData
         /** Play sound fxs. */
         if (this.ticksExisted % 10 == 0)
         {
-            this.worldObj.playSoundAtEntity(this, Reference.PREFIX + "accelerator", 1f, (float) (0.6f + (0.4 * (this.getParticleVelocity() / TileAccelerator.clientParticleVelocity))));
+            this.worldObj.playSoundAtEntity(this, Reference.prefix() + "accelerator", 1f, (float) (0.6f + (0.4 * (this.getParticleVelocity() / TileAccelerator.clientParticleVelocity))));
         }
 
         /** Check if the accelerator tile entity exists. */

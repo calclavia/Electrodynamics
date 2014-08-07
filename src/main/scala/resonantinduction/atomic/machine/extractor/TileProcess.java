@@ -1,17 +1,18 @@
 package resonantinduction.atomic.machine.extractor;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import resonant.api.recipe.MachineRecipes;
 import resonant.api.recipe.RecipeResource;
-import resonant.lib.prefab.tile.TileElectricalInventory;
+import resonant.lib.content.prefab.java.TileElectricInventory;
 
 /** General class for all machines that do traditional recipe processing
  * 
  * @author Calclavia */
-public abstract class TileProcess extends TileElectricalInventory
+public abstract class TileProcess extends TileElectricInventory
 {
     protected int inputSlot;
     protected int outputSlot;
@@ -23,10 +24,15 @@ public abstract class TileProcess extends TileElectricalInventory
 
     protected String machineName;
 
-    @Override
-    public void updateEntity()
+    public TileProcess(Material material)
     {
-        super.updateEntity();
+        super(material);
+    }
+
+    @Override
+    public void update()
+    {
+        super.update();
 
         if (getInputTank() != null)
         {
@@ -47,7 +53,7 @@ public abstract class TileProcess extends TileElectricalInventory
         if (FluidContainerRegistry.isFilledContainer(inputStack))
         {
             FluidStack fluidStack = FluidContainerRegistry.getFluidForFilledItem(inputStack);
-            ItemStack result = inputStack.getItem().getContainerItemStack(inputStack);
+            ItemStack result = inputStack.getItem().getContainerItem(inputStack);
 
             if (result != null && tank.fill(fluidStack, false) >= fluidStack.amount && (outputStack == null || result.isItemEqual(outputStack)))
             {

@@ -2,8 +2,7 @@ package resonantinduction.atomic.machine.accelerator;
 
 import net.minecraft.entity.player.InventoryPlayer;
 import resonant.lib.gui.GuiContainerBase;
-import universalelectricity.api.energy.UnitDisplay;
-import universalelectricity.api.energy.UnitDisplay.Unit;
+import universalelectricity.api.UnitDisplay;
 import universalelectricity.core.transform.vector.Vector3;
 
 public class GuiAccelerator extends GuiContainerBase
@@ -23,13 +22,13 @@ public class GuiAccelerator extends GuiContainerBase
     @Override
     public void drawGuiContainerForegroundLayer(int x, int y)
     {
-        this.fontRenderer.drawString(tileEntity.getInvName(), 40, 10, 4210752);
+        this.fontRendererObj.drawString("Accelerator", 40, 10, 4210752);
 
         String status = "";
         Vector3 position = new Vector3(this.tileEntity);
         position.add(this.tileEntity.getDirection().getOpposite());
 
-        if (!EntityParticle.canSpawnParticle(this.tileEntity.worldObj, position))
+        if (!EntityParticle.canSpawnParticle(this.tileEntity.world(), position))
         {
             status = "\u00a74Fail to emit; try rotating.";
         }
@@ -42,17 +41,17 @@ public class GuiAccelerator extends GuiContainerBase
             status = "\u00a72Idle";
         }
 
-        this.fontRenderer.drawString("Velocity: " + Math.round((this.tileEntity.velocity / TileAccelerator.clientParticleVelocity) * 100) + "%", 8, 27, 4210752);
-        this.fontRenderer.drawString("Energy Used:", 8, 38, 4210752);
-        this.fontRenderer.drawString(UnitDisplay.getDisplay(this.tileEntity.totalEnergyConsumed, Unit.JOULES), 8, 49, 4210752);
-        this.fontRenderer.drawString(UnitDisplay.getDisplay(TileAccelerator.energyPerTick * 20, Unit.WATT), 8, 60, 4210752);
-        this.fontRenderer.drawString(UnitDisplay.getDisplay(this.tileEntity.getVoltageInput(null), Unit.VOLTAGE), 8, 70, 4210752);
-        this.fontRenderer.drawString("Antimatter: " + this.tileEntity.antimatter + " mg", 8, 80, 4210752);
-        this.fontRenderer.drawString("Status:", 8, 90, 4210752);
-        this.fontRenderer.drawString(status, 8, 100, 4210752);
-        this.fontRenderer.drawString("Buffer: " + UnitDisplay.getDisplayShort(this.tileEntity.getEnergyHandler().getEnergy(), Unit.JOULES) + "/" + UnitDisplay.getDisplayShort(this.tileEntity.getEnergyHandler().getEnergyCapacity(), Unit.JOULES), 8, 110,
+        this.fontRendererObj.drawString("Velocity: " + Math.round((this.tileEntity.velocity / TileAccelerator.clientParticleVelocity) * 100) + "%", 8, 27, 4210752);
+        this.fontRendererObj.drawString("Energy Used:", 8, 38, 4210752);
+        this.fontRendererObj.drawString(new UnitDisplay(UnitDisplay.Unit.JOULES, this.tileEntity.totalEnergyConsumed).toString(), 8, 49, 4210752);
+        this.fontRendererObj.drawString(new UnitDisplay(UnitDisplay.Unit.WATT, TileAccelerator.energyPerTick * 20).toString(), 8, 60, 4210752);
+        this.fontRendererObj.drawString("N?A", 8, 70, 4210752);
+        this.fontRendererObj.drawString("Antimatter: " + this.tileEntity.antimatter + " mg", 8, 80, 4210752);
+        this.fontRendererObj.drawString("Status:", 8, 90, 4210752);
+        this.fontRendererObj.drawString(status, 8, 100, 4210752);
+        this.fontRendererObj.drawString("Buffer: " + this.tileEntity.electricNode().getEnergy() + "/" + new UnitDisplay(UnitDisplay.Unit.JOULES, this.tileEntity.electricNode().getEnergyCapacity(),true ), 8, 110,
                 4210752);
-        this.fontRenderer.drawString("Facing: " + this.tileEntity.getDirection().getOpposite(), 100, 123, 4210752);
+        this.fontRendererObj.drawString("Facing: " + this.tileEntity.getDirection().getOpposite(), 100, 123, 4210752);
     }
 
     /** Draw the background layer for the GuiContainer (everything behind the items) */

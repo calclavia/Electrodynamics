@@ -1,5 +1,6 @@
 package resonantinduction.atomic.machine.accelerator;
 
+import net.minecraft.inventory.IInventory;
 import resonantinduction.atomic.Atomic;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -14,17 +15,17 @@ public class ContainerAccelerator extends ContainerBase
 {
     private TileAccelerator tileEntity;
 
-    public ContainerAccelerator(InventoryPlayer par1InventoryPlayer, TileAccelerator tileEntity)
+    public ContainerAccelerator(EntityPlayer player, TileAccelerator tileEntity)
     {
-        super(tileEntity);
+        super(player, (IInventory)tileEntity);
         this.tileEntity = tileEntity;
         // Inputs
-        addSlotToContainer(new Slot(tileEntity, 0, 132, 26));
-        addSlotToContainer(new Slot(tileEntity, 1, 132, 51));
+        addSlotToContainer(new Slot((IInventory)tileEntity, 0, 132, 26));
+        addSlotToContainer(new Slot((IInventory)tileEntity, 1, 132, 51));
         // Output
-        addSlotToContainer(new SlotFurnace(par1InventoryPlayer.player, tileEntity, 2, 132, 75));
-        addSlotToContainer(new SlotFurnace(par1InventoryPlayer.player, tileEntity, 3, 106, 75));
-        addPlayerInventory(par1InventoryPlayer.player);
+        addSlotToContainer(new SlotFurnace(player, (IInventory)tileEntity, 2, 132, 75));
+        addSlotToContainer(new SlotFurnace(player, (IInventory)tileEntity, 3, 106, 75));
+        addPlayerInventory(player);
     }
 
     /** Called to transfer a stack from one inventory to the other eg. when shift clicking. */
