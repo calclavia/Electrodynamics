@@ -41,7 +41,7 @@ public class ContainerAccelerator extends ContainerBase
 
             if (par1 > 2)
             {
-                if (itemStack.itemID == Atomic.itemCell.itemID)
+                if (itemStack.getItem() == Atomic.itemCell)
                 {
                     if (!this.mergeItemStack(itemStack, 1, 2, false))
                     {

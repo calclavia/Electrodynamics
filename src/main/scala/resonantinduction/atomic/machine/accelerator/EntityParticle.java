@@ -3,6 +3,7 @@ package resonantinduction.atomic.machine.accelerator;
 import java.util.List;
 
 import atomic.Atomic;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -19,7 +20,6 @@ import resonant.api.IElectromagnet;
 import resonant.lib.prefab.poison.PoisonRadiation;
 import resonantinduction.core.Reference;
 import universalelectricity.core.transform.vector.Vector3;
-import universalelectricity.api.vector.VectorHelper;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
@@ -47,15 +47,15 @@ public class EntityParticle extends Entity implements IEntityAdditionalSpawnData
     public EntityParticle(World world, Vector3 pos, Vector3 movementVec, ForgeDirection dir)
     {
         this(world);
-        this.setPosition(pos.x, pos.y, pos.z);
+        this.setPosition(pos.x(), pos.y(), pos.z());
         this.movementVector = movementVec;
         this.movementDirection = dir;
     }
 
     public static boolean canSpawnParticle(World world, Vector3 pos)
     {
-        Block block  = Block.blocksList[pos.getBlock(world)];
-        if (block != null && !block.isAirBlock(world, pos.xi(), pos.yi(), pos.zi()))
+        Block block  = pos.getBlock(world);
+        if (block != null && !block.isAir(world, pos.xi(), pos.yi(), pos.zi()))
         {
             return false;
         }
@@ -87,7 +87,7 @@ public class EntityParticle extends Entity implements IEntityAdditionalSpawnData
     }
 
     @Override
-    public void writeSpawnData(ByteArrayDataOutput data)
+    public void writeSpawnData(ByteBuf data)
     {
         data.writeInt(this.movementVector.xi());
         data.writeInt(this.movementVector.yi());
@@ -96,11 +96,9 @@ public class EntityParticle extends Entity implements IEntityAdditionalSpawnData
     }
 
     @Override
-    public void readSpawnData(ByteArrayDataInput data)
+    public void readSpawnData(ByteBuf data)
     {
-        this.movementVector.x = data.readInt();
-        this.movementVector.y = data.readInt();
-        this.movementVector.z = data.readInt();
+        this.movementVector = new Vector3(data);
         this.movementDirection = ForgeDirection.getOrientation(data.readInt());
     }
 
