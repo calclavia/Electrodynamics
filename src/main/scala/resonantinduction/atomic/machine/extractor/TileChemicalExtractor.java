@@ -1,12 +1,14 @@
 package resonantinduction.atomic.machine.extractor;
 
 import net.minecraft.block.material.Material;
+import net.minecraft.network.Packet;
+import resonant.engine.ResonantEngine;
+import resonant.lib.network.discriminator.PacketAnnotation;
 import resonantinduction.atomic.Atomic;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.packet.Packet;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -20,15 +22,12 @@ import resonant.lib.network.Synced;
 import resonantinduction.atomic.Atomic;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
-import universalelectricity.api.CompatibilityModule;
-import universalelectricity.api.electricity.IVoltageInput;
-import universalelectricity.api.energy.EnergyStorageHandler;
-import cpw.mods.fml.common.network.PacketDispatcher;
-import cpw.mods.fml.common.network.Player;
+import universalelectricity.compatibility.Compatibility;
+import universalelectricity.core.transform.vector.Vector3;
 
 /** Chemical extractor TileEntity */
 
-public class TileChemicalExtractor extends TileProcess implements ISidedInventory, IFluidHandler, IRotatable, IVoltageInput
+public class TileChemicalExtractor extends TileProcess implements IFluidHandler
 {
     public static final int TICK_TIME = 20 * 14;
     public static final int EXTRACT_SPEED = 100;
@@ -47,6 +46,8 @@ public class TileChemicalExtractor extends TileProcess implements ISidedInventor
         super(Material.iron);
         electricNode().energy().setCapacity(ENERGY * 2);
         this.setSizeInventory(7);
+        this.isOpaqueCube(true);
+        this.normalRender(false);
         inputSlot = 1;
         outputSlot = 2;
         tankInputFillSlot = 3;
@@ -101,7 +102,7 @@ public class TileChemicalExtractor extends TileProcess implements ISidedInventor
                     }
                 }
 
-                energy.extractEnergy(ENERGY, true);
+                electricNode().energy().extractEnergy(ENERGY, true);
             }
             else
             {
@@ -121,8 +122,16 @@ public class TileChemicalExtractor extends TileProcess implements ISidedInventor
     @Override
     public Packet getDescriptionPacket()
     {
-        return ResonantInduction.PACKET_ANNOTATION.getPacket(this);
+        return ResonantEngine.instance.packetHandler.toMCPacket(new PacketAnnotation(this));
     }
+
+    @Override
+    public boolean use(EntityPlayer player, int side, Vector3 hit)
+    {
+        openGui(player, Atomic.INSTANCE);
+        return true;
+    }
+
 
     public boolean canUse()
     {
@@ -138,7 +147,7 @@ public class TileChemicalExtractor extends TileProcess implements ISidedInventor
 
             if (outputTank.getFluidAmount() < outputTank.getCapacity())
             {
-                if (inputTank.getFluid().getFluid().getID() == Atomic.FLUID_DEUTERIUM.getID() && inputTank.getFluid().amount >= Settings.deutermiumPerTritium * EXTRACT_SPEED)
+                if (inputTank.getFluid().getFluid().getID() == Atomic.FLUID_DEUTERIUM.getID() && inputTank.getFluid().amount >= Settings.deutermiumPerTritium() * EXTRACT_SPEED)
                 {
                     if (outputTank.getFluid() == null || Atomic.FLUIDSTACK_TRITIUM.equals(outputTank.getFluid()))
                     {
@@ -146,7 +155,7 @@ public class TileChemicalExtractor extends TileProcess implements ISidedInventor
                     }
                 }
 
-                if (inputTank.getFluid().getFluid().getID() == FluidRegistry.WATER.getID() && inputTank.getFluid().amount >= Settings.waterPerDeutermium * EXTRACT_SPEED)
+                if (inputTank.getFluid().getFluid().getID() == FluidRegistry.WATER.getID() && inputTank.getFluid().amount >= Settings.waterPerDeutermium() * EXTRACT_SPEED)
                 {
                     if (outputTank.getFluid() == null || Atomic.FLUIDSTACK_DEUTERIUM.equals(outputTank.getFluid()))
                     {
@@ -180,13 +189,13 @@ public class TileChemicalExtractor extends TileProcess implements ISidedInventor
     {
         if (canUse())
         {
-            FluidStack drain = inputTank.drain(Settings.waterPerDeutermium * EXTRACT_SPEED, false);
+            FluidStack drain = inputTank.drain(Settings.waterPerDeutermium() * EXTRACT_SPEED, false);
 
             if (drain != null && drain.amount >= 1 && drain.getFluid().getID() == FluidRegistry.WATER.getID())
             {
                 if (outputTank.fill(new FluidStack(Atomic.FLUIDSTACK_DEUTERIUM, EXTRACT_SPEED), true) >= EXTRACT_SPEED)
                 {
-                    inputTank.drain(Settings.waterPerDeutermium * EXTRACT_SPEED, true);
+                    inputTank.drain(Settings.waterPerDeutermium() * EXTRACT_SPEED, true);
                     return true;
                 }
             }
@@ -199,15 +208,15 @@ public class TileChemicalExtractor extends TileProcess implements ISidedInventor
     {
         if (canUse())
         {
-            int waterUsage = Settings.deutermiumPerTritium;
+            int waterUsage = Settings.deutermiumPerTritium();
 
-            FluidStack drain = inputTank.drain(Settings.deutermiumPerTritium * EXTRACT_SPEED, false);
+            FluidStack drain = inputTank.drain(Settings.deutermiumPerTritium() * EXTRACT_SPEED, false);
 
             if (drain != null && drain.amount >= 1 && drain.getFluid().getID() == Atomic.FLUID_DEUTERIUM.getID())
             {
                 if (outputTank.fill(new FluidStack(Atomic.FLUIDSTACK_TRITIUM, EXTRACT_SPEED), true) >= EXTRACT_SPEED)
                 {
-                    inputTank.drain(Settings.deutermiumPerTritium * EXTRACT_SPEED, true);
+                    inputTank.drain(Settings.deutermiumPerTritium() * EXTRACT_SPEED, true);
                     return true;
                 }
             }
@@ -300,7 +309,7 @@ public class TileChemicalExtractor extends TileProcess implements ISidedInventor
         // Water input for machine.
         if (slotID == 0)
         {
-            return CompatibilityModule.isHandler(itemStack.getItem());
+            return Compatibility.isHandler(itemStack.getItem());
         }
 
         if (slotID == 1)
@@ -340,37 +349,6 @@ public class TileChemicalExtractor extends TileProcess implements ISidedInventor
     public boolean canExtractItem(int slotID, ItemStack itemstack, int side)
     {
         return slotID == 2;
-    }
-
-    @Override
-    public long onExtractEnergy(ForgeDirection from, long extract, boolean doExtract)
-    {
-        return 0;
-    }
-
-    @Override
-    public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)
-    {
-        if (this.canUse())
-        {
-            return super.onReceiveEnergy(from, receive, doReceive);
-        }
-        else
-        {
-            return 0;
-        }
-    }
-
-    @Override
-    public long getVoltageInput(ForgeDirection from)
-    {
-        return 1000;
-    }
-
-    @Override
-    public void onWrongVoltage(ForgeDirection direction, long voltage)
-    {
-
     }
 
     @Override

@@ -1,19 +1,18 @@
 package resonantinduction.atomic.machine.boiler;
 
-import resonantinduction.atomic.machine.plasma.ContainerNuclearBoiler;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.StatCollector;
 import resonant.lib.gui.GuiContainerBase;
-import resonantinduction.atomic.machine.plasma.ContainerNuclearBoiler;
-import universalelectricity.api.energy.UnitDisplay.Unit;
+import universalelectricity.api.UnitDisplay;
 
 public class GuiNuclearBoiler extends GuiContainerBase
 {
     private TileNuclearBoiler tileEntity;
 
-    public GuiNuclearBoiler(InventoryPlayer par1InventoryPlayer, TileNuclearBoiler tileEntity)
+    public GuiNuclearBoiler(EntityPlayer player, TileNuclearBoiler tileEntity)
     {
-        super(new ContainerNuclearBoiler(par1InventoryPlayer, tileEntity));
+        super(new ContainerNuclearBoiler(player, tileEntity));
         this.tileEntity = tileEntity;
     }
 
@@ -21,26 +20,26 @@ public class GuiNuclearBoiler extends GuiContainerBase
     @Override
     public void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
     {
-        this.fontRenderer.drawString(tileEntity.getInvName(), 52, 6, 4210752);
+        this.fontRendererObj.drawString("Boiler", 52, 6, 4210752);
 
-        this.renderUniversalDisplay(8, 112, TileNuclearBoiler.DIAN * 20, mouseX, mouseY, Unit.WATT);
-        this.renderUniversalDisplay(110, 112, this.tileEntity.getVoltageInput(null), mouseX, mouseY, Unit.VOLTAGE);
+        this.renderUniversalDisplay(8, 112, TileNuclearBoiler.DIAN * 20, mouseX, mouseY, UnitDisplay.Unit.WATT);
+        this.renderUniversalDisplay(110, 112, tileEntity.electricNode().voltage(), mouseX, mouseY, UnitDisplay.Unit.VOLTAGE);
 
-        this.fontRenderer.drawString("The nuclear boiler can boil", 8, 75, 4210752);
-        this.fontRenderer.drawString("yellow cake into uranium", 8, 85, 4210752);
-        this.fontRenderer.drawString("hexafluoride gas to be refined.", 8, 95, 4210752);
+        this.fontRendererObj.drawString("The nuclear boiler can boil", 8, 75, 4210752);
+        this.fontRendererObj.drawString("yellow cake into uranium", 8, 85, 4210752);
+        this.fontRendererObj.drawString("hexafluoride gas to be refined.", 8, 95, 4210752);
 
-        this.fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
+        this.fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
 
-        if (this.isPointInRegion(8, 18, this.meterWidth, this.meterHeight, mouseX, mouseY) && this.tileEntity.waterTank.getFluid() != null)
-        {
-            this.drawTooltip(mouseX - this.guiLeft, mouseY - this.guiTop + 10, this.tileEntity.waterTank.getFluid().getFluid().getLocalizedName(), this.tileEntity.waterTank.getFluid().amount + " L");
+        //if (this.isPointInRegion(8, 18, this.meterWidth, this.meterHeight, mouseX, mouseY) && this.tileEntity.waterTank.getFluid() != null)
+        //{
+        //    this.drawTooltip(mouseX - this.guiLeft, mouseY - this.guiTop + 10, this.tileEntity.waterTank.getFluid().getFluid().getLocalizedName(), this.tileEntity.waterTank.getFluid().amount + " L");
 
-        }
-        else if (this.isPointInRegion(155, 18, this.meterWidth, this.meterHeight, mouseX, mouseY) && this.tileEntity.gasTank.getFluid() != null)
-        {
-            this.drawTooltip(mouseX - this.guiLeft, mouseY - this.guiTop + 10, this.tileEntity.gasTank.getFluid().getFluid().getLocalizedName(), this.tileEntity.gasTank.getFluid().amount + " L");
-        }
+        //}
+        //else if (this.isPointInRegion(155, 18, this.meterWidth, this.meterHeight, mouseX, mouseY) && this.tileEntity.gasTank.getFluid() != null)
+        //{
+        //    this.drawTooltip(mouseX - this.guiLeft, mouseY - this.guiTop + 10, this.tileEntity.gasTank.getFluid().getFluid().getLocalizedName(), this.tileEntity.gasTank.getFluid().amount + " L");
+        //}
     }
 
     /** Draw the background layer for the GuiContainer (everything behind the items) */

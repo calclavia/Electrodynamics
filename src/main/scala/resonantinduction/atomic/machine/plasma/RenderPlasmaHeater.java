@@ -15,15 +15,15 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderPlasmaHeater extends RenderTaggedTile
 {
-    public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "fusionReactor.tcn");
-    public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "fusionReactor.png");
+    public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.modelDirectory() + "fusionReactor.tcn"));
+    public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.domain(), Reference.modelPath() + "fusionReactor.png");
 
     @Override
     public void renderTileEntityAt(TileEntity t, double x, double y, double z, float f)
     {
         TilePlasmaHeater tileEntity = (TilePlasmaHeater) t;
 
-        if (tileEntity.worldObj != null)
+        if (tileEntity.world() != null)
         {
             super.renderTileEntityAt(t, x, y, z, f);
         }

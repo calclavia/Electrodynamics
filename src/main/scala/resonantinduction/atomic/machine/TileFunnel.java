@@ -1,4 +1,4 @@
-package resonantinduction.atomic.machine.extractor.turbine;
+package resonantinduction.atomic.machine;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -13,15 +13,12 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonant.api.IBoilHandler;
-import resonant.lib.content.module.TileBase;
-import resonant.lib.content.module.TileRender;
-import resonant.lib.utility.ConnectedTextureRenderer;
-import resonantinduction.core.Reference;
+import resonant.content.prefab.java.TileAdvanced;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 /** Funnel for gas. */
-public class TileFunnel extends TileBase implements IBoilHandler
+public class TileFunnel extends TileAdvanced implements IBoilHandler
 {
     private static IIcon iconTop;
     private final FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 16);
@@ -43,13 +40,13 @@ public class TileFunnel extends TileBase implements IBoilHandler
     public void registerIcons(IIconRegister iconRegister)
     {
         super.registerIcons(iconRegister);
-        iconTop = iconRegister.registerIcon(domain + name + "_top");
+        iconTop = iconRegister.registerIcon(getTextureName() + "_top");
     }
 
     @Override
-    public void updateEntity()
+    public void update()
     {
-        super.updateEntity();
+        super.update();
 
         if (tank.getFluidAmount() > 0)
         {
@@ -138,12 +135,5 @@ public class TileFunnel extends TileBase implements IBoilHandler
     {
         return new FluidTankInfo[]
         { tank.getInfo() };
-    }
-
-    @SideOnly(Side.CLIENT)
-    @Override
-    protected TileRender newRenderer()
-    {
-        return new ConnectedTextureRenderer(this, Reference.PREFIX + "funnel_edge");
     }
 }

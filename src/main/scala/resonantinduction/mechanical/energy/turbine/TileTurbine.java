@@ -3,21 +3,21 @@ package resonantinduction.mechanical.energy.turbine;
 import java.util.HashSet;
 import java.util.Set;
 
+import resonant.lib.multiblock.reference.IMultiBlockStructure;
+import resonant.lib.network.handle.IPacketIDReceiver;
 import resonantinduction.mechanical.energy.grid.TileMechanical;
 import net.minecraft.block.material.Material;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import resonant.api.grid.INodeProvider;
-import resonant.lib.multiblock.IMultiBlockStructure;
-import resonant.lib.network.IPacketReceiverWithID;
+import universalelectricity.api.core.grid.INodeProvider;
 import universalelectricity.core.transform.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 /** Reduced version of the main turbine class */
-public class TileTurbine extends TileMechanical implements IMultiBlockStructure<TileTurbine>, INodeProvider, IPacketReceiverWithID
+public class TileTurbine extends TileMechanical implements IMultiBlockStructure<TileTurbine>, INodeProvider, IPacketIDReceiver
 {
     /** Tier of the tile */
     public int tier = 0;
@@ -43,9 +43,9 @@ public class TileTurbine extends TileMechanical implements IMultiBlockStructure<
     }
 
     @Override
-    public void updateEntity()
+    public void update()
     {
-        super.updateEntity();
+        super.update();
         getMultiBlock().update();
 
         if (getMultiBlock().isPrimary())

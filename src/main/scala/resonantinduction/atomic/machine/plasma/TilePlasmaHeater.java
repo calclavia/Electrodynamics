@@ -2,10 +2,12 @@ package resonantinduction.atomic.machine.plasma;
 
 import java.util.HashMap;
 
-import atomic.Atomic;
+import cpw.mods.fml.common.network.ByteBufUtils;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.packet.Packet;
+import net.minecraft.network.Packet;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -14,20 +16,21 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonant.api.ITagRender;
+import resonant.engine.ResonantEngine;
 import resonant.lib.config.Config;
-import resonant.lib.network.IPacketReceiver;
-import resonant.lib.network.PacketHandler;
-import resonant.lib.prefab.tile.TileElectrical;
+import resonant.lib.network.discriminator.PacketTile;
+import resonant.lib.network.discriminator.PacketType;
+import resonant.lib.network.handle.IPacketReceiver;
 import resonant.lib.utility.LanguageUtility;
+import resonantinduction.atomic.Atomic;
 import resonantinduction.core.ResonantInduction;
-import universalelectricity.api.energy.EnergyStorageHandler;
-import universalelectricity.api.energy.UnitDisplay;
-import universalelectricity.api.energy.UnitDisplay.Unit;
+import universalelectricity.api.UnitDisplay;
 import universalelectricity.core.transform.vector.Vector3;
 
 import com.google.common.io.ByteArrayDataInput;
+import resonant.lib.content.prefab.java.TileElectric;
 
-public class TilePlasmaHeater extends TileElectrical implements IPacketReceiver, ITagRender, IFluidHandler
+public class TilePlasmaHeater extends TileElectric implements IPacketReceiver, ITagRender, IFluidHandler
 {
     public static long joules = 10000000000L;
 
@@ -42,30 +45,21 @@ public class TilePlasmaHeater extends TileElectrical implements IPacketReceiver,
 
     public TilePlasmaHeater()
     {
-        energy = new EnergyStorageHandler(joules, joules / 20);
+        super(Material.iron);
+        electricNode().energy().setCapacity(joules);
+        electricNode().energy().setMaxTransfer(joules / 20);
     }
 
     @Override
-    public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)
+    public void update()
     {
-        if (tankInputDeuterium.getFluidAmount() > 0 && tankInputTritium.getFluidAmount() > 0)
-        {
-            return super.onReceiveEnergy(from, receive, doReceive);
-        }
+        super.update();
 
-        return 0;
-    }
-
-    @Override
-    public void updateEntity()
-    {
-        super.updateEntity();
-
-        rotation += energy.getEnergy() / 10000f;
+        rotation += electricNode().energy().getEnergy() / 10000f;
 
         if (!worldObj.isRemote)
         {
-            if (energy.checkExtract())
+            if (electricNode().energy().checkExtract())
             {
                 // Creates plasma if there is enough Deuterium, Tritium AND Plasma output is not full.
                 if (tankInputDeuterium.getFluidAmount() >= plasmaHeatAmount &&
@@ -75,14 +69,15 @@ public class TilePlasmaHeater extends TileElectrical implements IPacketReceiver,
                     tankInputDeuterium.drain(plasmaHeatAmount, true);
                     tankInputTritium.drain(plasmaHeatAmount, true);
                     tankOutput.fill(new FluidStack(Atomic.FLUID_PLASMA, tankOutput.getCapacity()), true);
-                    energy.extractEnergy();
+                    electricNode().energy().extractEnergy();
                 }
             }
         }
 
-        if (ticks % 80 == 0)
+        if (ticks() % 80 == 0)
         {
-            PacketHandler.sendPacketToClients(getDescriptionPacket(), worldObj, new Vector3(this), 25);
+            world().markBlockForUpdate(x(), y(), z());
+            //PacketHandler.sendPacketToClients(getDescriptionPacket(), worldObj, new Vector3(this), 25);
         }
     }
 
@@ -91,15 +86,15 @@ public class TilePlasmaHeater extends TileElectrical implements IPacketReceiver,
     {
         NBTTagCompound nbt = new NBTTagCompound();
         writeToNBT(nbt);
-        return ResonantInduction.PACKET_TILE.getPacket(this, nbt);
+        return ResonantEngine.instance.packetHandler.toMCPacket(new PacketTile(this, nbt));
     }
 
     @Override
-    public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
+    public void read(ByteBuf data, EntityPlayer player, PacketType type)
     {
         try
         {
-            readFromNBT(PacketHandler.readNBTTagCompound(data));
+            readFromNBT(ByteBufUtils.readTag(data));
         }
         catch (Exception e)
         {
@@ -149,9 +144,9 @@ public class TilePlasmaHeater extends TileElectrical implements IPacketReceiver,
     @Override
     public float addInformation(HashMap<String, Integer> map, EntityPlayer player)
     {
-        if (energy != null)
+        if (electricNode().energy() != null)
         {
-            map.put(LanguageUtility.getLocal("tooltip.energy") + ": " + UnitDisplay.getDisplay(energy.getEnergy(), Unit.JOULES), 0xFFFFFF);
+            map.put(LanguageUtility.getLocal("tooltip.energy") + ": " + new UnitDisplay(UnitDisplay.Unit.JOULES, electricNode().energy().getEnergy()), 0xFFFFFF);
         }
 
         if (tankInputDeuterium.getFluidAmount() > 0)
@@ -170,12 +165,6 @@ public class TilePlasmaHeater extends TileElectrical implements IPacketReceiver,
         }
 
         return 1.5f;
-    }
-
-    @Override
-    public long onExtractEnergy(ForgeDirection from, long extract, boolean doExtract)
-    {
-        return 0;
     }
 
     @Override

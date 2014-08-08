@@ -1,32 +1,29 @@
 package resonantinduction.atomic.machine.quantum;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.packet.Packet;
+import net.minecraft.network.Packet;
 import net.minecraftforge.common.util.ForgeDirection;
 import resonant.api.recipe.QuantumAssemblerRecipes;
-import resonant.lib.network.IPacketReceiver;
-import resonant.lib.prefab.tile.TileElectricalInventory;
-import atomic.Atomic;
+import resonant.lib.network.discriminator.PacketTile;
+import resonant.lib.network.discriminator.PacketType;
+import resonant.lib.network.handle.IPacketReceiver;
+import resonantinduction.atomic.Atomic;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
-import universalelectricity.api.electricity.IVoltageInput;
-import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.core.transform.vector.Vector3;
-
 import com.google.common.io.ByteArrayDataInput;
-
-import cpw.mods.fml.common.network.PacketDispatcher;
-import cpw.mods.fml.common.network.Player;
+import resonant.lib.content.prefab.java.TileElectricInventory;
 
 /** Atomic assembler of items *
  * 
  * @author Calclavia, Darkguardsman */
-public class TileQuantumAssembler extends TileElectricalInventory implements IPacketReceiver, IVoltageInput
+public class TileQuantumAssembler extends TileElectricInventory implements IPacketReceiver
 {
     long ENERGY = 1000000000L;
     int MAX_TIME = 20 * 120;
@@ -41,12 +38,13 @@ public class TileQuantumAssembler extends TileElectricalInventory implements IPa
     public TileQuantumAssembler()
     {
         super(Material.iron);
-        energy = new EnergyStorageHandler(ENERGY, ENERGY / 10);
-        maxSlots = 7;
-        isOpaqueCube = false;
-        normalRender = false;
-        customItemRender = true;
-        textureName = "machine";
+        setSizeInventory(7);
+        electricNode().energy().setCapacity(ENERGY);
+        electricNode().energy().setMaxTransfer(ENERGY / 10);
+        isOpaqueCube(false);
+        normalRender(false);
+        customItemRender(true);
+        setTextureName("machine");
     }
 
     /** Called when the block is right clicked by the player */
@@ -60,16 +58,16 @@ public class TileQuantumAssembler extends TileElectricalInventory implements IPa
     }
 
     @Override
-    public void updateEntity()
+    public void update()
     {
-        super.updateEntity();
+        super.update();
         
         //Server side processing of items
         if (!this.worldObj.isRemote)
         {
             if (this.canProcess())
             {
-                if (energy.checkExtract())
+                if (electricNode().energy().checkExtract())
                 {
                     if (this.time == 0)
                     {
@@ -88,19 +86,19 @@ public class TileQuantumAssembler extends TileElectricalInventory implements IPa
                     {
                         this.time = 0;
                     }
-                    this.energy.extractEnergy(ENERGY, true);
+                    electricNode().energy().extractEnergy(ENERGY, true);
                 }
             }
             else
             {
                 this.time = 0;
             }
-            if (this.ticks % 10 == 0)
+            if (this.ticks() % 10 == 0)
             {
-                for (EntityPlayer player : this.getPlayersUsing())
-                {
-                    PacketDispatcher.sendPacketToPlayer(getDescriptionPacket(), (Player) player);
-                }
+                //for (EntityPlayer player : this.getPlayersUsing())
+                //{
+                //    PacketDispatcher.sendPacketToPlayer(getDescriptionPacket(), (Player) player);
+                //}
             }
         } //Client side animation
         else if (this.time > 0)
@@ -126,9 +124,9 @@ public class TileQuantumAssembler extends TileElectricalInventory implements IPa
             }
             
             //Audio update
-            if (this.ticks % 600 == 0)
+            if (this.ticks() % 600 == 0)
             {
-                this.worldObj.playSoundEffect(this.xCoord, this.yCoord, this.zCoord, Reference.PREFIX + "assembler", 0.7f, 1f);
+                this.worldObj.playSoundEffect(this.xCoord, this.yCoord, this.zCoord, Reference.prefix() + "assembler", 0.7f, 1f);
             }
             
             //Animation frame update
@@ -137,17 +135,7 @@ public class TileQuantumAssembler extends TileElectricalInventory implements IPa
     }
 
     @Override
-    public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)
-    {
-        if (this.canProcess())
-        {
-            return super.onReceiveEnergy(from, receive, doReceive);
-        }
-        return 0;
-    }
-
-    @Override
-    public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... obj)
+    public void read(ByteBuf data, EntityPlayer player, PacketType type)
     {
         try
         {
@@ -157,7 +145,7 @@ public class TileQuantumAssembler extends TileElectricalInventory implements IPa
             int itemMeta = data.readInt();
             if (itemID != -1 && itemAmount != -1 && itemMeta != -1)
             {
-                this.setInventorySlotContents(6, new ItemStack(Item.itemsList[itemID], itemAmount, itemMeta));
+                this.setInventorySlotContents(6, new ItemStack(Item.getItemById(itemID), itemAmount, itemMeta));
             }
         }
         catch (Exception e)
@@ -167,25 +155,13 @@ public class TileQuantumAssembler extends TileElectricalInventory implements IPa
     }
 
     @Override
-    public Packet getDescriptionPacket()
+    public PacketTile getDescPacket()
     {
         if (this.getStackInSlot(6) != null)
         {
-            return ResonantInduction.PACKET_TILE.getPacket(this, time, getStackInSlot(6).itemID, getStackInSlot(6).stackSize, getStackInSlot(6).getItemDamage());
+            return new PacketTile(this, time, getStackInSlot(6));
         }
-        return ResonantInduction.PACKET_TILE.getPacket(this, time, -1, -1, -1);
-    }
-
-    @Override
-    public void openChest()
-    {
-        if (!this.worldObj.isRemote)
-        {
-            for (EntityPlayer player : this.getPlayersUsing())
-            {
-                PacketDispatcher.sendPacketToPlayer(getDescriptionPacket(), (Player) player);
-            }
-        }
+        return new PacketTile(this, time, -1, -1, -1);
     }
 
     /** Checks to see if the assembler can run */
@@ -199,7 +175,7 @@ public class TileQuantumAssembler extends TileElectricalInventory implements IPa
                 {
                     if (getStackInSlot(i) == null)
                         return false;
-                    if (getStackInSlot(i).itemID != Atomic.itemDarkMatter.itemID)
+                    if (getStackInSlot(i).getItem() != Atomic.itemDarkMatter)
                         return false;
                 }
                 return getStackInSlot(6).stackSize < 64;
@@ -249,17 +225,6 @@ public class TileQuantumAssembler extends TileElectricalInventory implements IPa
         {
             return true;
         }
-        return itemStack.itemID == Atomic.itemDarkMatter.itemID;
-    }
-
-    @Override
-    public long getVoltageInput(ForgeDirection from)
-    {
-        return 1000;
-    }
-
-    @Override
-    public void onWrongVoltage(ForgeDirection d, long voltage)
-    {
+        return itemStack.getItem() == Atomic.itemDarkMatter;
     }
 }

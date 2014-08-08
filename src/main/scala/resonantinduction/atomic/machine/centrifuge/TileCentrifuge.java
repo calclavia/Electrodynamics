@@ -1,11 +1,13 @@
 package resonantinduction.atomic.machine.centrifuge;
 
-import atomic.Atomic;
+
+import io.netty.buffer.ByteBuf;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.packet.Packet;
+import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
@@ -15,23 +17,21 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonant.api.IRotatable;
-import resonant.lib.network.IPacketReceiver;
-import resonant.lib.prefab.tile.TileElectricalInventory;
+import resonant.engine.ResonantEngine;
+import resonant.lib.network.discriminator.PacketTile;
+import resonant.lib.network.discriminator.PacketType;
+import resonant.lib.network.handle.IPacketReceiver;
+import resonantinduction.atomic.Atomic;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
-import universalelectricity.api.CompatibilityModule;
-import universalelectricity.api.electricity.IVoltageInput;
-import universalelectricity.api.energy.EnergyStorageHandler;
+import universalelectricity.compatibility.Compatibility;
 import universalelectricity.core.transform.vector.Vector3;
-import universalelectricity.api.vector.VectorHelper;
 
 import com.google.common.io.ByteArrayDataInput;
-
-import cpw.mods.fml.common.network.PacketDispatcher;
-import cpw.mods.fml.common.network.Player;
+import resonant.lib.content.prefab.java.TileElectricInventory;
 
 /** Centrifuge TileEntity */
-public class TileCentrifuge extends TileElectricalInventory implements ISidedInventory, IPacketReceiver, IFluidHandler, IRotatable, IVoltageInput
+public class TileCentrifuge extends TileElectricInventory implements IPacketReceiver, IFluidHandler
 {
     public static final int SHI_JIAN = 20 * 60;
 
@@ -42,14 +42,17 @@ public class TileCentrifuge extends TileElectricalInventory implements ISidedInv
 
     public TileCentrifuge()
     {
-        energy = new EnergyStorageHandler(DIAN * 2);
-        maxSlots = 4;
+        super(Material.iron);
+        isOpaqueCube(true);
+        normalRender(false);
+        electricNode().energy().setCapacity(DIAN * 2);
+        setSizeInventory(4);
     }
 
     @Override
-    public void updateEntity()
+    public void update()
     {
-        super.updateEntity();
+        super.update();
 
         if (timer > 0)
         {
@@ -59,12 +62,12 @@ public class TileCentrifuge extends TileElectricalInventory implements ISidedInv
         if (!this.worldObj.isRemote)
         {
             /** Look for nearby tanks that contains uranium gas and try to extract it. */
-            if (this.ticks % 20 == 0)
+            if (this.ticks() % 20 == 0)
             {
                 for (int i = 0; i < 6; i++)
                 {
                     ForgeDirection direction = ForgeDirection.getOrientation(i);
-                    TileEntity tileEntity = VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(this), direction);
+                    TileEntity tileEntity = new Vector3(this).add( direction).getTileEntity(world());
 
                     if (tileEntity instanceof IFluidHandler && tileEntity.getClass() != this.getClass())
                     {
@@ -95,7 +98,7 @@ public class TileCentrifuge extends TileElectricalInventory implements ISidedInv
             {
                 this.discharge(getStackInSlot(0));
 
-                if (this.energy.extractEnergy(TileCentrifuge.DIAN, false) >= DIAN)
+                if (electricNode().energy().extractEnergy(TileCentrifuge.DIAN, false) >= DIAN)
                 {
                     if (this.timer == 0)
                     {
@@ -117,7 +120,7 @@ public class TileCentrifuge extends TileElectricalInventory implements ISidedInv
                         this.timer = 0;
                     }
 
-                    this.energy.extractEnergy(DIAN, true);
+                    electricNode().energy().extractEnergy(DIAN, true);
                 }
             }
             else
@@ -125,31 +128,25 @@ public class TileCentrifuge extends TileElectricalInventory implements ISidedInv
                 this.timer = 0;
             }
 
-            if (this.ticks % 10 == 0)
+            if (this.ticks() % 10 == 0)
             {
-                for (EntityPlayer player : this.getPlayersUsing())
-                {
-                    PacketDispatcher.sendPacketToPlayer(getDescriptionPacket(), (Player) player);
-                }
+                //for (EntityPlayer player : this.getPlayersUsing())
+                //{
+                //    PacketDispatcher.sendPacketToPlayer(getDescriptionPacket(), (Player) player);
+                //}
             }
         }
     }
 
     @Override
-    public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)
+    public boolean use(EntityPlayer player, int side, Vector3 hit)
     {
-        if (this.nengYong())
-        {
-            return super.onReceiveEnergy(from, receive, doReceive);
-        }
-        else
-        {
-            return 0;
-        }
+        openGui(player, Atomic.INSTANCE);
+        return true;
     }
 
     @Override
-    public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
+    public void read(ByteBuf data, EntityPlayer player, PacketType type)
     {
         try
         {
@@ -165,24 +162,7 @@ public class TileCentrifuge extends TileElectricalInventory implements ISidedInv
     @Override
     public Packet getDescriptionPacket()
     {
-        return ResonantInduction.PACKET_TILE.getPacket(this, this.timer, Atomic.getFluidAmount(this.gasTank.getFluid()));
-    }
-
-    @Override
-    public void openChest()
-    {
-        if (!this.worldObj.isRemote)
-        {
-            for (EntityPlayer player : this.getPlayersUsing())
-            {
-                PacketDispatcher.sendPacketToPlayer(getDescriptionPacket(), (Player) player);
-            }
-        }
-    }
-
-    @Override
-    public void closeChest()
-    {
+        return ResonantEngine.instance.packetHandler.toMCPacket(new PacketTile(this, this.timer, Atomic.getFluidAmount(this.gasTank.getFluid())));
     }
 
     /** @return If the machine can be used. */
@@ -190,7 +170,7 @@ public class TileCentrifuge extends TileElectricalInventory implements ISidedInv
     {
         if (this.gasTank.getFluid() != null)
         {
-            if (this.gasTank.getFluid().amount >= Settings.uraniumHexaflourideRatio)
+            if (this.gasTank.getFluid().amount >= Settings.uraniumHexaflourideRatio())
             {
                 return isItemValidForSlot(2, new ItemStack(Atomic.itemUranium)) && isItemValidForSlot(3, new ItemStack(Atomic.itemUranium, 1, 1));
             }
@@ -204,7 +184,7 @@ public class TileCentrifuge extends TileElectricalInventory implements ISidedInv
     {
         if (this.nengYong())
         {
-            this.gasTank.drain(Settings.uraniumHexaflourideRatio, true);
+            this.gasTank.drain(Settings.uraniumHexaflourideRatio(), true);
 
             if (this.worldObj.rand.nextFloat() > 0.6)
             {
@@ -313,33 +293,15 @@ public class TileCentrifuge extends TileElectricalInventory implements ISidedInv
         switch (i)
         {
         case 0:
-            return CompatibilityModule.isHandler(itemStack.getItem());
+            return Compatibility.isHandler(itemStack.getItem());
         case 1:
             return true;
         case 2:
-            return itemStack.itemID == Atomic.itemUranium.itemID;
+            return itemStack.getItem() == Atomic.itemUranium;
         case 3:
-            return itemStack.itemID == Atomic.itemUranium.itemID;
+            return itemStack.getItem() == Atomic.itemUranium;
         }
 
         return false;
-    }
-
-    @Override
-    public long onExtractEnergy(ForgeDirection from, long extract, boolean doExtract)
-    {
-        return 0;
-    }
-
-    @Override
-    public long getVoltageInput(ForgeDirection from)
-    {
-        return 1000;
-    }
-
-    @Override
-    public void onWrongVoltage(ForgeDirection direction, long voltage)
-    {
-
     }
 }

@@ -1,12 +1,11 @@
-package resonantinduction.atomic.machine.extractor.turbine;
+package resonantinduction.mechanical.energy.turbine;
 
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import resonant.api.IBoilHandler;
-import resonant.lib.prefab.turbine.TileTurbine;
-import atomic.Atomic;
 import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
+import resonantinduction.mechanical.energy.turbine.TileTurbine;
 
 public class TileElectricTurbine extends TileTurbine implements IBoilHandler
 {

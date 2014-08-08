@@ -1,5 +1,6 @@
 package resonantinduction.atomic.machine.quantum;
 
+import net.minecraft.inventory.IInventory;
 import resonantinduction.atomic.Atomic;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -16,13 +17,13 @@ public class ContainerQuantumAssembler extends Container
     public ContainerQuantumAssembler(InventoryPlayer par1InventoryPlayer, TileQuantumAssembler tileEntity)
     {
         this.tileEntity = tileEntity;
-        this.addSlotToContainer(new Slot(tileEntity, 0, 80, 40));
-        this.addSlotToContainer(new Slot(tileEntity, 1, 53, 56));
-        this.addSlotToContainer(new Slot(tileEntity, 2, 107, 56));
-        this.addSlotToContainer(new Slot(tileEntity, 3, 53, 88));
-        this.addSlotToContainer(new Slot(tileEntity, 4, 107, 88));
-        this.addSlotToContainer(new Slot(tileEntity, 5, 80, 103));
-        this.addSlotToContainer(new Slot(tileEntity, 6, 80, 72));
+        this.addSlotToContainer(new Slot((IInventory)tileEntity, 0, 80, 40));
+        this.addSlotToContainer(new Slot((IInventory)tileEntity, 1, 53, 56));
+        this.addSlotToContainer(new Slot((IInventory)tileEntity, 2, 107, 56));
+        this.addSlotToContainer(new Slot((IInventory)tileEntity, 3, 53, 88));
+        this.addSlotToContainer(new Slot((IInventory)tileEntity, 4, 107, 88));
+        this.addSlotToContainer(new Slot((IInventory)tileEntity, 5, 80, 103));
+        this.addSlotToContainer(new Slot((IInventory)tileEntity, 6, 80, 72));
 
         int var3;
 
@@ -39,15 +40,15 @@ public class ContainerQuantumAssembler extends Container
             this.addSlotToContainer(new Slot(par1InventoryPlayer, var3, 8 + var3 * 18, 206));
         }
 
-        this.tileEntity.getPlayersUsing().add(par1InventoryPlayer.player);
-        tileEntity.openChest();
+        //this.tileEntity.getPlayersUsing().add(par1InventoryPlayer.player);
+        //tileEntity.openChest();
     }
 
     @Override
     public void onContainerClosed(EntityPlayer entityplayer)
     {
         super.onContainerClosed(entityplayer);
-        this.tileEntity.getPlayersUsing().remove(entityplayer);
+        //this.tileEntity.getPlayersUsing().remove(entityplayer);
     }
 
     @Override
@@ -70,7 +71,7 @@ public class ContainerQuantumAssembler extends Container
 
             if (par1 > 6)
             {
-                if (itemStack.itemID == Atomic.itemDarkMatter.itemID)
+                if (itemStack.getItem() == Atomic.itemDarkMatter)
                 {
                     if (!this.mergeItemStack(itemStack, 0, 6, false))
                     {

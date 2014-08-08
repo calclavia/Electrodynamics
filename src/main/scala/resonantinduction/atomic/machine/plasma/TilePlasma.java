@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
@@ -12,14 +13,13 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import resonant.api.event.PlasmaEvent.SpawnPlasmaEvent;
+import resonant.content.prefab.java.TileAdvanced;
+import resonant.engine.grid.thermal.ThermalGrid;
 import resonant.lib.config.Config;
-import resonant.lib.content.module.TileBase;
-import resonant.lib.prefab.vector.Cuboid;
-import resonant.lib.thermal.ThermalGrid;
 import universalelectricity.core.transform.vector.Vector3;
-import universalelectricity.api.vector.VectorWorld;
+import universalelectricity.core.transform.vector.VectorWorld;
 
-public class TilePlasma extends TileBase
+public class TilePlasma extends TileAdvanced
 {
     @Config
     public static int plasmaMaxTemperature = 1000000;
@@ -28,8 +28,8 @@ public class TilePlasma extends TileBase
     public TilePlasma()
     {
         super(Material.lava);
-        textureName = "plasma";
-        isOpaqueCube = false;
+        textureName_$eq("plasma");
+        isOpaqueCube(false);
     }
 
     @Override
@@ -42,12 +42,6 @@ public class TilePlasma extends TileBase
     public boolean isSolid(IBlockAccess access, int side)
     {
         return false;
-    }
-
-    @Override
-    public Iterable<Cuboid> getCollisionBoxes()
-    {
-        return new ArrayList();
     }
 
     @Override
@@ -69,18 +63,18 @@ public class TilePlasma extends TileBase
     }
 
     @Override
-    public void updateEntity()
+    public void update()
     {
-        super.updateEntity();
+        super.update();
         ThermalGrid.addTemperature(new VectorWorld(this), (temperature - ThermalGrid.getTemperature(new VectorWorld(this))) * 0.1f);
 
-        if (ticks % 20 == 0)
+        if (ticks() % 20 == 0)
         {
             temperature /= 1.5;
 
             if (temperature <= plasmaMaxTemperature / 10)
             {
-                worldObj.setBlock(xCoord, yCoord, zCoord, Block.fire.blockID, 0, 3);
+                worldObj.setBlock(xCoord, yCoord, zCoord, Blocks.fire, 0, 3);
                 return;
             }
 

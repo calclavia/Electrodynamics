@@ -8,6 +8,7 @@ import resonant.engine.content.debug.TileCreativeBuilder;
 import resonant.lib.network.discriminator.PacketAnnotationManager;
 import resonantinduction.core.ResonantTab;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
+import resonantinduction.mechanical.energy.turbine.*;
 import resonantinduction.mechanical.fluid.pipe.EnumPipeMaterial;
 import resonantinduction.mechanical.fluid.pipe.ItemPipe;
 import resonantinduction.mechanical.fluid.transport.TilePump;
@@ -29,12 +30,6 @@ import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
 import resonantinduction.core.interfaces.IMechanicalNode;
-import resonantinduction.mechanical.energy.turbine.BlockWaterTurbine;
-import resonantinduction.mechanical.energy.turbine.BlockWindTurbine;
-import resonantinduction.mechanical.energy.turbine.SchematicWaterTurbine;
-import resonantinduction.mechanical.energy.turbine.SchematicWindTurbine;
-import resonantinduction.mechanical.energy.turbine.TileWaterTurbine;
-import resonantinduction.mechanical.energy.turbine.TileWindTurbine;
 import resonantinduction.mechanical.process.mixer.TileMixer;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -76,6 +71,7 @@ public class Mechanical
 	public static Item itemGearShaft;
 	public static Block blockWindTurbine;
 	public static Block blockWaterTurbine;
+    public static Block blockElectricTurbine;
 
 	// Transport
 	public static Block blockConveyorBelt;
@@ -125,6 +121,9 @@ public class Mechanical
         blockTileBreaker = contentRegistry.newBlock(TileBreaker.class);
         blockTilePlacer = contentRegistry.newBlock(TilePlacer.class);
 
+        //TODO disable if electrical module is not enabled
+        blockElectricTurbine = contentRegistry.newBlock(TileElectricTurbine.class);
+
 		proxy.preInit();
 
 		ResonantTab.itemStack(new ItemStack(blockGrinderWheel));
@@ -161,8 +160,9 @@ public class Mechanical
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWaterTurbine, 1, 0), "SWS", "WGW", "SWS", 'G', itemGear, 'W', "plankWood", 'S', Items.stick));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWaterTurbine, 1, 1), "SWS", "WGW", "SWS", 'G', new ItemStack(blockWaterTurbine, 1, 0), 'W', Blocks.stone, 'S', Items.stick));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWaterTurbine, 1, 2), "SWS", "WGW", "SWS", 'G', new ItemStack(blockWaterTurbine, 1, 1), 'W', UniversalRecipe.PRIMARY_METAL.get(), 'S', Items.stick));
+        GameRegistry.addRecipe(new ShapedOreRecipe(blockElectricTurbine, " B ", "BMB", " B ", 'B', UniversalRecipe.SECONDARY_PLATE.get(), 'M', UniversalRecipe.MOTOR.get()));
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockPump, "PPP", "GGG", "PPP", 'P', itemPipe, 'G', new ItemStack(itemGear, 1, 2)));
+        GameRegistry.addRecipe(new ShapedOreRecipe(blockPump, "PPP", "GGG", "PPP", 'P', itemPipe, 'G', new ItemStack(itemGear, 1, 2)));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 3, EnumPipeMaterial.CERAMIC.ordinal()), "BBB", "   ", "BBB", 'B', Items.brick));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 3, EnumPipeMaterial.BRONZE.ordinal()), "BBB", "   ", "BBB", 'B', "ingotBronze"));

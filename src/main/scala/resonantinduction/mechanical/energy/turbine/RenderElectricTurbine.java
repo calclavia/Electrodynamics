@@ -1,4 +1,4 @@
-package resonantinduction.atomic.machine.extractor.turbine;
+package resonantinduction.mechanical.energy.turbine;
 
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;

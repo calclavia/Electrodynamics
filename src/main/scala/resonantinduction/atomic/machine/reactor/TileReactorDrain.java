@@ -5,9 +5,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockFluid;
+import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
@@ -16,9 +23,10 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
+import resonant.content.prefab.java.TileAdvanced;
+import resonant.content.spatial.block.SpatialBlock;
 import resonant.lib.path.IPathCallBack;
 import resonant.lib.path.Pathfinder;
-import resonant.lib.prefab.tile.TileAdvanced;
 import universalelectricity.core.transform.vector.Vector3;
 
 /** Reactor Drain
@@ -28,6 +36,12 @@ public class TileReactorDrain extends TileAdvanced implements IFluidHandler
 {
     private final Set<IFluidTank> tanks = new HashSet<IFluidTank>();
     private long lastFindTime = -1;
+
+    public TileReactorDrain()
+    {
+        super(Material.iron);
+    }
+
 
     public void find()
     {
@@ -46,9 +60,9 @@ public class TileReactorDrain extends TileAdvanced implements IFluidHandler
                 {
                     ForgeDirection direction = ForgeDirection.getOrientation(i);
                     Vector3 position = currentNode.clone().add(direction);
-                    int connectedBlockID = position.getBlock(world);
+                    Block block = position.getBlock(world);
 
-                    if (connectedBlockID == 0 || Block.blocksList[connectedBlockID] instanceof BlockFluid || Block.blocksList[connectedBlockID] instanceof IFluidBlock || position.getTileEntity(world) instanceof TileReactorCell)
+                    if (block == null || block instanceof IFluidBlock || position.getTileEntity(world) instanceof TileReactorCell)
                     {
                         neighbors.add(position);
                     }
@@ -80,7 +94,7 @@ public class TileReactorDrain extends TileAdvanced implements IFluidHandler
 
             if (tileEntity instanceof TileReactorCell)
             {
-                this.tanks.add(((TileReactorCell) tileEntity).tank);
+                this.tanks.add(((TileReactorCell) tileEntity).tank());
             }
         }
 
@@ -178,5 +192,46 @@ public class TileReactorDrain extends TileAdvanced implements IFluidHandler
         }
 
         return tankInfoList.toArray(new FluidTankInfo[0]);
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void registerIcons(IIconRegister iconRegister)
+    {
+        super.registerIcons(iconRegister);
+        SpatialBlock.icon().put("ReactorDrain_front", iconRegister.registerIcon("ReactorDrain_front"));
+    }
+
+    @Override
+    public IIcon getIcon(int side, int metadata)
+    {
+        if (side == metadata)
+        {
+            return SpatialBlock.icon().get("ReactorDrain_front");
+        }
+        return super.getIcon(side, metadata);
+    }
+
+    @Override
+    public void onPlaced(EntityLivingBase entityLiving, ItemStack itemStack)
+    {
+        if (MathHelper.abs((float) entityLiving.posX - x()) < 2.0F && MathHelper.abs((float) entityLiving.posZ - z()) < 2.0F)
+        {
+            double d0 = entityLiving.posY + 1.82D - entityLiving.yOffset;
+
+            if (d0 - y() > 2.0D)
+            {
+                world().setBlockMetadataWithNotify(x(), y(), z(), 1, 3);
+                return;
+            }
+
+            if (y() - d0 > 0.0D)
+            {
+                world().setBlockMetadataWithNotify(x(), y(), z(), 0, 3);
+                return;
+            }
+        }
+
+        super.onPlaced(entityLiving, itemStack);
     }
 }

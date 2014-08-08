@@ -20,8 +20,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderQuantumAssembler extends TileEntitySpecialRenderer
 {
-    public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "quantumAssembler.tcn");
-    public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "quantumAssembler.png");
+    public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelDirectory() + "quantumAssembler.tcn"));
+    public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.domain(), Reference.modelPath() + "quantumAssembler.png");
 
     private final RenderBlocks renderBlocks = new RenderBlocks();
 
@@ -40,21 +40,21 @@ public class RenderQuantumAssembler extends TileEntitySpecialRenderer
         bindTexture(TEXTURE);
 
         GL11.glPushMatrix();
-        GL11.glRotatef(-tileEntity.rotation.floatX(), 0, 1f, 0);
+        GL11.glRotatef(-tileEntity.rotation.xf(), 0, 1f, 0);
         MODEL.renderOnly(hands);
         MODEL.renderOnly("Resonance_Crystal");
         GL11.glPopMatrix();
 
         /** Small Laser Arm */
         GL11.glPushMatrix();
-        GL11.glRotatef(tileEntity.rotation.floatY(), 0, 1f, 0);
+        GL11.glRotatef(tileEntity.rotation.yf(), 0, 1f, 0);
         MODEL.renderOnly(arms);
 
         GL11.glPopMatrix();
 
         /** Large Laser Arm */
         GL11.glPushMatrix();
-        GL11.glRotatef(-tileEntity.rotation.floatZ(), 0, 1f, 0);
+        GL11.glRotatef(-tileEntity.rotation.zf(), 0, 1f, 0);
         MODEL.renderOnly(largeArms);
         GL11.glPopMatrix();
 
@@ -68,7 +68,7 @@ public class RenderQuantumAssembler extends TileEntitySpecialRenderer
 
         if (tileEntity.entityItem != null)
         {
-            renderItem.doRenderItem(tileEntity.entityItem, x + 0.5, y + 0.4, z + 0.5, 0, 0);
+            renderItem.doRender(tileEntity.entityItem, x + 0.5, y + 0.4, z + 0.5, 0, 0);
         }
 
         GL11.glPopMatrix();

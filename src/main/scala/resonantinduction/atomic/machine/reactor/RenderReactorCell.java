@@ -17,14 +17,14 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderReactorCell extends TileEntitySpecialRenderer
 {
-    public static final IModelCustom MODEL_TOP = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "reactorCellTop.tcn");
-    public static final IModelCustom MODEL_MIDDLE = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "reactorCellMiddle.tcn");
-    public static final IModelCustom MODEL_BOTTOM = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "reactorCellBottom.tcn");
+    public static final IModelCustom MODEL_TOP = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelDirectory() + "reactorCellTop.tcn"));
+    public static final IModelCustom MODEL_MIDDLE = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelDirectory() + "reactorCellMiddle.tcn"));
+    public static final IModelCustom MODEL_BOTTOM = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelDirectory() + "reactorCellBottom.tcn"));
 
-    public static final ResourceLocation TEXTURE_TOP = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "reactorCellTop.png");
-    public static final ResourceLocation TEXTURE_MIDDLE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "reactorCellMiddle.png");
-    public static final ResourceLocation TEXTURE_BOTTOM = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "reactorCellBottom.png");
-    public static final ResourceLocation TEXTURE_FISSILE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "fissileMaterial.png");
+    public static final ResourceLocation TEXTURE_TOP = new ResourceLocation(Reference.domain(), Reference.modelPath() + "reactorCellTop.png");
+    public static final ResourceLocation TEXTURE_MIDDLE = new ResourceLocation(Reference.domain(), Reference.modelPath() + "reactorCellMiddle.png");
+    public static final ResourceLocation TEXTURE_BOTTOM = new ResourceLocation(Reference.domain(), Reference.modelPath() + "reactorCellBottom.png");
+    public static final ResourceLocation TEXTURE_FISSILE = new ResourceLocation(Reference.domain(), Reference.modelPath() + "fissileMaterial.png");
 
     @Override
     public void renderTileEntityAt(TileEntity t, double x, double y, double z, float f)
@@ -37,12 +37,12 @@ public class RenderReactorCell extends TileEntitySpecialRenderer
 
         int meta = 2;
 
-        if (tileEntity.worldObj != null)
+        if (tileEntity.world() != null)
         {
             meta = tileEntity.getBlockMetadata();
         }
 
-        boolean hasBelow = tileEntity.worldObj != null && t.worldObj.getTileEntity(t.xCoord, t.yCoord - 1, t.zCoord) instanceof TileReactorCell;
+        boolean hasBelow = tileEntity.world() != null && t.getWorldObj().getTileEntity(t.xCoord, t.yCoord - 1, t.zCoord) instanceof TileReactorCell;
 
         switch (meta)
         {

@@ -1,15 +1,15 @@
-package resonantinduction.atomic.machine.plasma;
+package resonantinduction.atomic.machine.boiler;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import resonant.lib.gui.ContainerBase;
 import resonant.lib.prefab.slot.SlotEnergyItem;
 import resonant.lib.prefab.slot.SlotSpecific;
-import atomic.Atomic;
-import atomic.machine.boiler.TileNuclearBoiler;
+import resonantinduction.atomic.Atomic;
 
 /** Nuclear boiler container */
 public class ContainerNuclearBoiler extends ContainerBase
@@ -17,20 +17,19 @@ public class ContainerNuclearBoiler extends ContainerBase
     private static final int slotCount = 4;
     private TileNuclearBoiler tileEntity;
 
-    public ContainerNuclearBoiler(InventoryPlayer par1InventoryPlayer, TileNuclearBoiler tileEntity)
+    public ContainerNuclearBoiler(EntityPlayer player, TileNuclearBoiler tileEntity)
     {
-        super(tileEntity);
+        super(player, (IInventory)tileEntity);
         this.tileEntity = tileEntity;
         // Battery
-        this.addSlotToContainer(new SlotEnergyItem(tileEntity, 0, 56, 26));
+        this.addSlotToContainer(new SlotEnergyItem((IInventory)tileEntity, 0, 56, 26));
         // Water Input
-        this.addSlotToContainer(new Slot(tileEntity, 1, 25, 50));
+        this.addSlotToContainer(new Slot((IInventory)tileEntity, 1, 25, 50));
         // Gas Output
-        this.addSlotToContainer(new Slot(tileEntity, 2, 136, 50));
+        this.addSlotToContainer(new Slot((IInventory)tileEntity, 2, 136, 50));
         // Yellowcake Input
-        this.addSlotToContainer(new SlotSpecific(tileEntity, 3, 81, 26, new ItemStack(Atomic.itemYellowCake), new ItemStack(Atomic.blockUraniumOre)));
-        this.addPlayerInventory(par1InventoryPlayer.player);
-        tileEntity.openChest();
+        this.addSlotToContainer(new SlotSpecific((IInventory)tileEntity, 3, 81, 26, new ItemStack(Atomic.itemYellowCake), new ItemStack(Atomic.blockUraniumOre)));
+        this.addPlayerInventory(player);
     }
 
     @Override

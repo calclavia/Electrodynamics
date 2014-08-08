@@ -8,8 +8,6 @@ import org.lwjgl.opengl.GL11;
 
 import resonant.lib.gui.GuiContainerBase;
 import resonant.lib.utility.LanguageUtility;
-import universalelectricity.api.energy.UnitDisplay;
-import universalelectricity.api.energy.UnitDisplay.Unit;
 
 public class GuiReactorCell extends GuiContainerBase
 {
@@ -25,23 +23,23 @@ public class GuiReactorCell extends GuiContainerBase
     @Override
     public void drawGuiContainerForegroundLayer(int x, int y)
     {
-        fontRenderer.drawString(tileEntity.getInvName(), xSize / 2 - fontRenderer.getStringWidth(tileEntity.getInvName()) / 2, 6, 4210752);
+        fontRendererObj.drawString(tileEntity.getInvName(), xSize / 2 - fontRendererObj.getStringWidth(tileEntity.getInvName()) / 2, 6, 4210752);
 
         if (tileEntity.getStackInSlot(0) != null)
         {
             // Test field for actual heat inside of reactor cell.
-            fontRenderer.drawString(LanguageUtility.getLocal("tooltip.temperature"), 9, 45, 4210752);
-            fontRenderer.drawString(String.valueOf((int) tileEntity.getTemperature()) + "/" + String.valueOf(TileReactorCell.MELTING_POINT) + " K", 9, 58, 4210752);
+            fontRendererObj.drawString(LanguageUtility.getLocal("tooltip.temperature"), 9, 45, 4210752);
+            fontRendererObj.drawString(String.valueOf((int) tileEntity.getTemperature()) + "/" + String.valueOf(TileReactorCell.MELTING_POINT()) + " K", 9, 58, 4210752);
 
             // Text field for total number of ticks remaining.
             int secondsLeft = (tileEntity.getStackInSlot(0).getMaxDamage() - tileEntity.getStackInSlot(0).getItemDamage());
-            fontRenderer.drawString(LanguageUtility.getLocal("tooltip.remainingTime"), 100, 45, 4210752);
-            fontRenderer.drawString(secondsLeft + " seconds", 100, 58, 4210752);
+            fontRendererObj.drawString(LanguageUtility.getLocal("tooltip.remainingTime"), 100, 45, 4210752);
+            fontRendererObj.drawString(secondsLeft + " seconds", 100, 58, 4210752);
         }
 
-        fontRenderer.drawString(LanguageUtility.getLocal("tooltip.remainingTime"), 100, 45, 4210752);
+        fontRendererObj.drawString(LanguageUtility.getLocal("tooltip.remainingTime"), 100, 45, 4210752);
 
-        if (isPointInRegion(80, 40, meterWidth, meterHeight, x, y))
+        /** if (isPointInRegion(80, 40, meterWidth, meterHeight, x, y))
         {
             if (tileEntity.tank.getFluid() != null)
             {
@@ -58,7 +56,7 @@ public class GuiReactorCell extends GuiContainerBase
         for (int i = 0; i < desc.size(); i++)
         {
             fontRenderer.drawString(desc.get(i), 9, 85 + i * 9, 4210752);
-        }
+        } **/
     }
 
     /** Draw the background layer for the GuiContainer (everything behind the items) */
@@ -67,7 +65,7 @@ public class GuiReactorCell extends GuiContainerBase
     {
         super.drawGuiContainerBackgroundLayer(par1, x, y);
         drawSlot(78, 16);
-        drawMeter(80, 36, (float) tileEntity.tank.getFluidAmount() / (float) tileEntity.tank.getCapacity(), tileEntity.tank.getFluid());
+        drawMeter(80, 36, (float) tileEntity.tank().getFluidAmount() / (float) tileEntity.tank().getCapacity(), tileEntity.tank().getFluid());
 
         if (tileEntity.getStackInSlot(0) != null)
         {
@@ -75,7 +73,7 @@ public class GuiReactorCell extends GuiContainerBase
             GL11.glPushMatrix();
             GL11.glTranslatef(32 * 2, 0, 0);
             GL11.glScalef(0.5f, 1, 1);
-            drawForce(20, 70, (tileEntity.getTemperature()) / (TileReactorCell.MELTING_POINT));
+            drawForce(20, 70, (tileEntity.getTemperature()) / (TileReactorCell.MELTING_POINT()));
             GL11.glPopMatrix();
 
             // Progress bar of remaining burn time on reactor cell.

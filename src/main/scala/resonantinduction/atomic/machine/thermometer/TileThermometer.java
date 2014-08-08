@@ -6,34 +6,33 @@ import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Context;
 import li.cil.oc.api.network.SimpleComponent;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.packet.Packet;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
-import resonant.lib.content.module.TileBase;
-import resonant.lib.network.PacketHandler;
+import resonant.content.prefab.itemblock.ItemBlockSaved;
+import resonant.content.prefab.java.TileAdvanced;
+import resonant.engine.grid.thermal.ThermalGrid;
 import resonant.lib.network.Synced;
-import resonant.lib.prefab.item.ItemBlockSaved;
-import resonant.lib.thermal.ThermalGrid;
+import resonant.lib.network.discriminator.PacketAnnotation;
+import resonant.lib.network.discriminator.PacketTile;
 import resonant.lib.utility.inventory.InventoryUtility;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.electrical.em.laser.TileBase;
 import universalelectricity.core.transform.vector.Vector3;
-import universalelectricity.api.vector.VectorWorld;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dan200.computercraft.api.lua.ILuaContext;
-import dan200.computercraft.api.peripheral.IComputerAccess;
-import dan200.computercraft.api.peripheral.IPeripheral;
+import universalelectricity.core.transform.vector.VectorWorld;
 
 /** Thermometer TileEntity */
 @Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "OpenComputers")
-public class TileThermometer extends TileBase implements IPeripheral, SimpleComponent
+public class TileThermometer extends TileAdvanced implements SimpleComponent
 {
     public static final int MAX_THRESHOLD = 5000;
     private static IIcon iconSide;
@@ -56,10 +55,10 @@ public class TileThermometer extends TileBase implements IPeripheral, SimpleComp
     public TileThermometer()
     {
         super(Material.piston);
-        canProvidePower = true;
-        normalRender = false;
-        forceStandardRender = true;
-        itemBlock = ItemBlockThermometer.class;
+        canProvidePower(true);
+        normalRender(false);
+        forceStandardRender(true);
+        itemBlock(ItemBlockThermometer.class);
     }
 
     @Override
@@ -73,11 +72,11 @@ public class TileThermometer extends TileBase implements IPeripheral, SimpleComp
     public void registerIcons(IIconRegister iconRegister)
     {
         super.registerIcons(iconRegister);
-        iconSide = iconRegister.registerIcon(Reference.PREFIX + "machine");
+        iconSide = iconRegister.registerIcon(Reference.prefix() + "machine");
     }
 
     @Override
-    protected boolean use(EntityPlayer player, int side, Vector3 hit)
+    public boolean use(EntityPlayer player, int side, Vector3 hit)
     {
         if (player.isSneaking())
         {
@@ -92,7 +91,7 @@ public class TileThermometer extends TileBase implements IPeripheral, SimpleComp
     }
 
     @Override
-    protected boolean configure(EntityPlayer player, int side, Vector3 hit)
+    public boolean configure(EntityPlayer player, int side, Vector3 hit)
     {
         if (player.isSneaking())
         {
@@ -118,14 +117,14 @@ public class TileThermometer extends TileBase implements IPeripheral, SimpleComp
     }
 
     @Override
-    public void onRemove(int par5, int par6)
+    public void onRemove(Block block, int par6)
     {
         ItemStack stack = ItemBlockSaved.getItemStackWithNBT(getBlockType(), world(), x(), y(), z());
         InventoryUtility.dropItemStack(world(), center(), stack);
     }
 
     @Override
-    public void updateEntity()
+    public void update()
     {
         super.updateEntity();
 
@@ -133,7 +132,7 @@ public class TileThermometer extends TileBase implements IPeripheral, SimpleComp
         if (!worldObj.isRemote)
         {
             // Every ten ticks.
-            if (ticks % 10 == 0)
+            if (ticks() % 10 == 0)
             {
                 // Grab temperature from target or from ourselves.
                 if (trackCoordinate != null)
@@ -151,16 +150,16 @@ public class TileThermometer extends TileBase implements IPeripheral, SimpleComp
                     previousDetectedTemperature = detectedTemperature;
                     isProvidingPower = isOverThreshold();
                     notifyChange();
-                    PacketHandler.sendPacketToClients(getDescriptionPacket(), this.worldObj, new Vector3(this), 25);
+                    sendPacket(getDescPacket());
                 }
             }
         }
     }
 
     @Override
-    public Packet getDescriptionPacket()
+    public PacketAnnotation getDescPacket()
     {
-        return ResonantInduction.PACKET_ANNOTATION.getPacket(this);
+        return new PacketAnnotation(this);
     }
 
     public void setTrack(Vector3 track)
@@ -194,7 +193,7 @@ public class TileThermometer extends TileBase implements IPeripheral, SimpleComp
 
         if (trackCoordinate != null)
         {
-            nbt.setCompoundTag("trackCoordinate", this.trackCoordinate.writeToNBT(new NBTTagCompound()));
+            nbt.setTag("trackCoordinate", this.trackCoordinate.writeNBT(new NBTTagCompound()));
         }
     }
 
@@ -218,87 +217,6 @@ public class TileThermometer extends TileBase implements IPeripheral, SimpleComp
     public boolean isOverThreshold()
     {
         return detectedTemperature >= getThershold();
-    }
-
-    /** ComputerCraft */
-    @Override
-    public String getType()
-    {
-        return "AS Thermometer";
-    }
-
-    @Override
-    public String[] getMethodNames()
-    {
-        return new String[]
-        { "getTemperature", "getWarningTemperature", "setWarningTemperature", "isAboveWarningTemperature" };
-    }
-
-    @Override
-    public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws Exception
-    {
-        final int getTemperature = 0;
-        final int getWarningTemperature = 1;
-        final int setWarningTemperature = 2;
-        final int isAboveWarningTemperature = 3;
-
-        switch (method)
-        {
-        case getTemperature:
-            return new Object[]
-            { this.detectedTemperature };
-        case getWarningTemperature:
-            return new Object[]
-            { this.getThershold() };
-        case isAboveWarningTemperature:
-            return new Object[]
-            { this.isOverThreshold() };
-        case setWarningTemperature:
-        {
-            if (arguments.length <= 0)
-            {
-                throw new IllegalArgumentException("Not enough Arguments. Must provide one argument");
-            }
-            if (arguments.length >= 2)
-            {
-                throw new IllegalArgumentException("Too many Arguments. Must provide one argument");
-            }
-            if (!(arguments[0] instanceof Number))
-            {
-                throw new IllegalArgumentException("Invalid Argument. Must provide a number");
-            }
-            synchronized (this)
-            {
-                this.setThreshold((Integer) arguments[0]);
-            }
-            return new Object[]
-            { this.threshold == (Integer) arguments[0] };
-        }
-        default:
-            return null;
-        }
-    }
-
-    @Override
-    public void attach(IComputerAccess computer)
-    {
-    }
-
-    @Override
-    public void detach(IComputerAccess computer)
-    {
-    }
-
-    @Override
-    public boolean equals(IPeripheral other)
-    {
-        return equals(this);
-    }
-
-    @Override
-    public String getComponentName()
-    {
-        return "AS_Thermometer";
     }
 
     @Callback
@@ -347,5 +265,10 @@ public class TileThermometer extends TileBase implements IPeripheral, SimpleComp
         }
         return new Object[]
         { this.threshold == args.checkInteger(0) };
+    }
+
+    @Override
+    public String getComponentName() {
+        return "AS Thermometer";
     }
 }

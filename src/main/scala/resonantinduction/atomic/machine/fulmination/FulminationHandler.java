@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import resonantinduction.atomic.Atomic;
 import net.minecraft.util.Vec3;
-import net.minecraftforge.event.ForgeSubscribe;
 import resonant.api.explosion.ExplosionEvent.DoExplosionEvent;
-import resonantinduction.atomic.Atomic;
 import universalelectricity.core.transform.vector.Vector3;
 
 /** Atomic Science Event Handling. */
@@ -31,7 +30,7 @@ public class FulminationHandler
         list.remove(tileEntity);
     }
 
-    @ForgeSubscribe
+    @SubscribeEvent
     public void BaoZha(DoExplosionEvent evt)
     {
         if (evt.iExplosion != null)
@@ -73,7 +72,7 @@ public class FulminationHandler
 
                     long energy = (long) Math.min(maxEnergyPerGenerator, maxEnergyPerGenerator / (juLi / evt.iExplosion.getRadius()));
                     energy = (long) Math.max((1 - density) * energy, 0);
-                    tileEntity.getEnergyHandler().receiveEnergy(energy, true);
+                    tileEntity.electricNode().energy().receiveEnergy(energy, true);
                 }
             }
         }
