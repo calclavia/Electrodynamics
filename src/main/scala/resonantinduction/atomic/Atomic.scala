@@ -31,7 +31,7 @@ import resonantinduction.atomic.machine.plasma.TilePlasma
 import resonantinduction.atomic.machine.quantum.TileQuantumAssembler
 import resonantinduction.atomic.machine.reactor.TileReactorCell
 import resonantinduction.atomic.schematic.SchematicBreedingReactor
-import resonantinduction.mechanical.energy.turbine.TileElectricTurbine
+import resonantinduction.mechanical.turbine.TileElectricTurbine
 import universalelectricity.core.transform.vector.VectorWorld
 import ic2.api.recipe.IRecipeInput
 import ic2.api.recipe.RecipeOutput

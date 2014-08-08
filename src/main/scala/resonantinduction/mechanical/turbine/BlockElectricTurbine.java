@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.energy.turbine;
+package resonantinduction.mechanical.turbine;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;

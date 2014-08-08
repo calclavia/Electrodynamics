@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.energy.turbine;
+package resonantinduction.mechanical.turbine;
 
 import net.minecraft.tileentity.TileEntity;
 import resonant.lib.multiblock.MultiBlockHandler;

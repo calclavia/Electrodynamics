@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.energy.turbine;
+package resonantinduction.mechanical.turbine;
 
 import java.util.List;
 
@@ -10,9 +10,9 @@ import resonant.lib.render.block.BlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockWaterTurbine extends BlockTurbine
+public class BlockWindTurbine extends BlockTurbine
 {
-	public BlockWaterTurbine(int id)
+	public BlockWindTurbine(int id)
 	{
 		super(id);
 	}
@@ -34,6 +34,6 @@ public class BlockWaterTurbine extends BlockTurbine
 	@Override
 	public TileEntity createNewTileEntity(World var1)
 	{
-		return new TileWaterTurbine();
+		return new TileWindTurbine();
 	}
 }

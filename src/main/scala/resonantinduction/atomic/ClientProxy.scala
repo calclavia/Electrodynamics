@@ -30,7 +30,7 @@ import net.minecraft.world.World
 import cpw.mods.fml.client.registry.ClientRegistry
 import cpw.mods.fml.client.registry.RenderingRegistry
 import resonantinduction.electrical.em.laser.BlockRenderingHandler
-import resonantinduction.mechanical.energy.turbine.{TileElectricTurbine, RenderElectricTurbine}
+import resonantinduction.mechanical.turbine.{TileElectricTurbine, RenderElectricTurbine}
 
 class ClientProxy extends CommonProxy {
   override def preInit {

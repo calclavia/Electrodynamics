@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.energy.turbine;
+package resonantinduction.mechanical.turbine;
 
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
 import net.minecraftforge.common.util.ForgeDirection;
