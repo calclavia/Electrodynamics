@@ -34,4 +34,6 @@ final object Reference
   final val itemTextureDirectory: String = textureDirectory + "items/"
   final val modelPath: String = "models/"
   final val modelDirectory: String = assetDirectory + modelPath
+
+  def instance() : Unit = this
 }

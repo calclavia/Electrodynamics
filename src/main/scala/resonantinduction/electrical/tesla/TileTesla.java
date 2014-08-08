@@ -11,35 +11,42 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Set;
 
+import cpw.mods.fml.common.network.ByteBufUtils;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.packet.Packet;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import resonant.lib.multiblock.IMultiBlockStructure;
-import resonant.lib.multiblock.MultiBlockHandler;
-import resonant.lib.network.IPacketReceiver;
-import resonant.lib.network.IPacketSender;
-import resonant.lib.network.PacketHandler;
+import resonant.lib.multiblock.reference.IMultiBlockStructure;
+import resonant.lib.multiblock.reference.MultiBlockHandler;
+import resonant.lib.network.discriminator.PacketTile;
+import resonant.lib.network.discriminator.PacketType;
+import resonant.lib.network.handle.IPacketReceiver;
 import resonant.lib.prefab.damage.ElectricalDamage;
-import resonant.lib.prefab.tile.TileElectrical;
 import resonant.lib.render.EnumColor;
+import resonant.lib.utility.LanguageUtility;
+import resonant.lib.utility.LinkUtility;
+import resonant.lib.utility.WrenchUtility;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
+import resonantinduction.core.prefab.part.MultipartUtility;
 import resonantinduction.electrical.Electrical;
-import universalelectricity.api.UniversalElectricity;
-import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.core.transform.vector.Vector3;
-import universalelectricity.api.vector.VectorWorld;
 
 import com.google.common.io.ByteArrayDataInput;
-
-import cpw.mods.fml.common.network.PacketDispatcher;
+import resonant.lib.content.prefab.java.TileElectric;
+import universalelectricity.core.transform.vector.VectorWorld;
 
 /**
  * The Tesla TileEntity.
@@ -49,10 +56,10 @@ import cpw.mods.fml.common.network.PacketDispatcher;
  * @author Calclavia
  * 
  */
-public class TileTesla extends TileElectrical implements IMultiBlockStructure<TileTesla>, ITesla, IPacketSender, IPacketReceiver
+public class TileTesla extends TileElectric implements IMultiBlockStructure<TileTesla>, ITesla, IPacketReceiver
 {
 	public final static int DEFAULT_COLOR = 12;
-	public final long TRANSFER_CAP = 10000;
+	public final double TRANSFER_CAP = 10000D;
 	private int dyeID = DEFAULT_COLOR;
 
 	private boolean canReceive = true;
@@ -64,6 +71,11 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 	/** Prevents transfer loops */
 	private final Set<TileTesla> outputBlacklist = new HashSet<TileTesla>();
 	private final Set<TileTesla> connectedTeslas = new HashSet<TileTesla>();
+
+    /**
+     * Multiblock Methods.
+     */
+    private MultiBlockHandler<TileTesla> multiBlock;
 
 	/**
 	 * Quantum Tesla
@@ -82,8 +94,13 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 
 	public TileTesla()
 	{
-		this.energy = new EnergyStorageHandler(TRANSFER_CAP);
-		this.saveIOMap = true;
+        super(Material.iron);
+        setCapacity(TRANSFER_CAP * 2);
+        setMaxTransfer(TRANSFER_CAP);
+        setTextureName(Reference.prefix() + "material_metal_side");
+        normalRender(false);
+        isOpaqueCube(false);
+		//this.saveIOMap(true);
 	}
 
 	@Override
@@ -94,20 +111,18 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 	}
 
 	@Override
-	public void updateEntity()
+	public void update()
 	{
-		super.updateEntity();
+		super.update();
 
-		boolean doPacketUpdate = this.energy.getEnergy() > 0;
+		boolean doPacketUpdate = energy().getEnergy() > 0;
 
 		/**
 		 * Only transfer if it is the controlling Tesla tower.
 		 */
 		if (this.getMultiBlock().isPrimary())
 		{
-			this.produce();
-
-			if (this.ticks % (4 + this.worldObj.rand.nextInt(2)) == 0 && ((this.worldObj.isRemote && isTransfering) || (!this.energy.isEmpty() && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))))
+			if (this.ticks() % (4 + this.worldObj.rand.nextInt(2)) == 0 && ((this.worldObj.isRemote && isTransfering) || (!this.energy().isEmpty() && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))))
 			{
 				final TileTesla topTesla = this.getTopTelsa();
 				final Vector3 topTeslaVector = new Vector3(topTesla);
@@ -127,18 +142,18 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 
 							if (transferTile instanceof TileTesla && !transferTile.isInvalid())
 							{
-								this.transfer(((TileTesla) transferTile), Math.min(this.energy.getEnergy(), TRANSFER_CAP));
+								this.transfer(((TileTesla) transferTile), Math.min(energy().getEnergy(), TRANSFER_CAP));
 
-								if (this.zapCounter % 5 == 0 && Settings.SOUND_FXS)
+								if (this.zapCounter % 5 == 0 && Settings.SOUND_FXS())
 								{
-									this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, Reference.PREFIX + "electricshock", (float) this.energy.getEnergy() / (float) TRANSFER_CAP, 1.3f - 0.5f * (this.dyeID / 16f));
+									this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, Reference.prefix() + "electricshock", (float) this.energy().getEnergy() / (float) TRANSFER_CAP, 1.3f - 0.5f * (this.dyeID / 16f));
 								}
 							}
 						}
 					}
 					else
 					{
-						Electrical.proxy.renderElectricShock(this.worldObj, topTeslaVector.clone().add(0.5), topTeslaVector.clone().add(new Vector3(0.5, Double.POSITIVE_INFINITY, 0.5)), false);
+						Electrical.proxy().renderElectricShock(this.worldObj, topTeslaVector.clone().add(0.5), topTeslaVector.clone().add(new Vector3(0.5, Double.POSITIVE_INFINITY, 0.5)), false);
 					}
 				}
 				else
@@ -146,7 +161,7 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 					/**
 					 * Normal transportation
 					 */
-					PriorityQueue<ITesla> teslaToTransfer = new PriorityQueue<ITesla>(1024, new Comparator()
+					PriorityQueue<ITesla> teslaToTransfer = new PriorityQueue<ITesla>(1024, new Comparator<ITesla>()
 					{
 						public int compare(ITesla o1, ITesla o2)
 						{
@@ -163,12 +178,6 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 							}
 
 							return 0;
-						}
-
-						@Override
-						public int compare(Object obj, Object obj1)
-						{
-							return compare((ITesla) obj, (ITesla) obj1);
 						}
 					});
 
@@ -198,7 +207,7 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 
 					if (teslaToTransfer.size() > 0)
 					{
-						long transferEnergy = this.energy.getEnergy() / teslaToTransfer.size();
+						double transferEnergy = this.energy().getEnergy() / teslaToTransfer.size();
 
 						boolean sentPacket = false;
 
@@ -208,9 +217,9 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 							{
 								ITesla tesla = teslaToTransfer.poll();
 
-								if (this.zapCounter % 5 == 0 && Settings.SOUND_FXS)
+								if (this.zapCounter % 5 == 0 && Settings.SOUND_FXS())
 								{
-									this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, Reference.PREFIX + "electricshock", (float) this.energy.getEnergy() / (float) TRANSFER_CAP, 1.3f - 0.5f * (this.dyeID / 16f));
+									this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, Reference.prefix() + "electricshock", (float) this.energy().getEnergy() / (float) TRANSFER_CAP, 1.3f - 0.5f * (this.dyeID / 16f));
 								}
 
 								Vector3 targetVector = new Vector3((TileEntity) tesla);
@@ -225,27 +234,13 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 
 								double distance = topTeslaVector.distance(targetVector);
 
-								Electrical.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).add(new Vector3(0.5)), targetVector.add(new Vector3(0.5, Math.random() * heightRange / 3 - heightRange / 3, 0.5)), EnumColor.DYES[this.dyeID].toColor());
+								Electrical.proxy().renderElectricShock(this.worldObj, new Vector3(topTesla).add(new Vector3(0.5)), targetVector.add(new Vector3(0.5, Math.random() * heightRange / 3 - heightRange / 3, 0.5)), EnumColor.DYES[this.dyeID].toColor());
 
 								this.transfer(tesla, Math.min(transferEnergy, TRANSFER_CAP));
 
 								if (!sentPacket && transferEnergy > 0)
 								{
 									this.sendPacket(3);
-								}
-
-								if (this.attackEntities && this.zapCounter % 5 == 0)
-								{
-									MovingObjectPosition mop = topTeslaVector.clone().add(0.5).rayTraceEntities(this.worldObj, targetVector.clone().add(0.5));
-
-									if (mop != null && mop.entityHit != null)
-									{
-										if (mop.entityHit instanceof EntityLivingBase)
-										{
-										    ElectricalDamage.electrocuteEntity(mop.entityHit, this, UniversalElectricity.DEFAULT_VOLTAGE * 4, 1);
-											Electrical.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).clone().add(0.5), new Vector3(mop.entityHit));
-										}
-									}
 								}
 							}
 						}
@@ -258,7 +253,7 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 				this.doTransfer = false;
 			}
 
-			if (!this.worldObj.isRemote && this.energy.didEnergyStateChange())
+			if (!this.worldObj.isRemote && this.energy().didEnergyStateChange())
 			{
 				this.sendPacket(2);
 			}
@@ -267,7 +262,7 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 		this.topCache = null;
 	}
 
-	private void transfer(ITesla tesla, long transferEnergy)
+	private void transfer(ITesla tesla, double transferEnergy)
 	{
 		if (transferEnergy > 0)
 		{
@@ -294,21 +289,15 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 
 	}
 
-	@Override
-	public boolean canConnect(ForgeDirection direction, Object obj)
-	{
-		return super.canConnect(direction, obj) && this.getMultiBlock().isPrimary() && !(obj instanceof TileTesla);
-	}
-
 	public void sendPacket(int type)
 	{
-		PacketDispatcher.sendPacketToAllInDimension(ResonantInduction.PACKET_TILE.getPacket(this, this.getPacketData(type).toArray()), this.worldObj.provider.dimensionId);
+		sendPacket(new PacketTile(this, this.getPacketData(type).toArray()));
 	}
 
 	@Override
-	public Packet getDescriptionPacket()
+	public PacketTile getDescPacket()
 	{
-		return ResonantInduction.PACKET_TILE.getPacket(this, this.getPacketData(1).toArray());
+		return new PacketTile(this, this.getPacketData(1).toArray());
 	}
 
 	/**
@@ -316,7 +305,6 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 	 * 2 - Energy Update
 	 * 3 - Tesla Beam
 	 */
-	@Override
 	public ArrayList getPacketData(int type)
 	{
 		ArrayList data = new ArrayList();
@@ -337,7 +325,7 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 			}
 			case 2:
 			{
-				data.add(this.energy.getEnergy() > 0);
+				data.add(this.energy().getEnergy() > 0);
 				break;
 			}
 		}
@@ -346,7 +334,7 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 	}
 
 	@Override
-	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
+	public void read(ByteBuf data, EntityPlayer player, PacketType type)
 	{
 		try
 		{
@@ -357,7 +345,7 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 					this.canReceive = data.readBoolean();
 					this.attackEntities = data.readBoolean();
 					this.isLinkedClient = data.readBoolean();
-					getMultiBlock().load(PacketHandler.readNBTTagCompound(data));
+					getMultiBlock().load(ByteBufUtils.readTag(data));
 					break;
 				case 2:
 					this.isTransfering = data.readBoolean();
@@ -373,15 +361,15 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 	}
 
 	@Override
-	public long teslaTransfer(long transferEnergy, boolean doTransfer)
+	public double teslaTransfer(double transferEnergy, boolean doTransfer)
 	{
 		if (getMultiBlock().isPrimary())
 		{
 			if (doTransfer)
 			{
-				this.energy.receiveEnergy(transferEnergy, true);
+				this.energy().receiveEnergy(transferEnergy, true);
 
-				if (this.energy.didEnergyStateChange())
+				if (this.energy().didEnergyStateChange())
 				{
 					this.sendPacket(2);
 				}
@@ -391,10 +379,10 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 		}
 		else
 		{
-			if (this.energy.getEnergy() > 0)
+			if (this.energy().getEnergy() > 0)
 			{
-				transferEnergy += this.energy.getEnergy();
-				this.energy.setEnergy(0);
+				transferEnergy += this.energy().getEnergy();
+				this.energy().setEnergy(0);
 			}
 
 			return getMultiBlock().get().teslaTransfer(transferEnergy, doTransfer);
@@ -459,7 +447,7 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 				break;
 			}
 
-			checkPosition.y++;
+			checkPosition.add(0, 1, 0);
 		}
 
 		this.topCache = returnTile;
@@ -552,9 +540,9 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 
 		if (this.linked != null)
 		{
-			nbt.setInteger("link_x", (int) this.linked.x);
-			nbt.setInteger("link_y", (int) this.linked.y);
-			nbt.setInteger("link_z", (int) this.linked.z);
+			nbt.setInteger("link_x", (int) this.linked.x());
+			nbt.setInteger("link_y", (int) this.linked.y());
+			nbt.setInteger("link_z", (int) this.linked.z());
 			nbt.setInteger("linkDim", this.linkDim);
 		}
 		getMultiBlock().save(nbt);
@@ -601,7 +589,7 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 		{
 			if (vector.getTileEntity() instanceof TileTesla)
 			{
-				setLink(vector, vector.world.provider.dimensionId, true);
+				setLink(vector, vector.world().provider.dimensionId, true);
 			}
 
 			return true;
@@ -610,10 +598,7 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 		return false;
 	}
 
-	/**
-	 * Multiblock Methods.
-	 */
-	private MultiBlockHandler<TileTesla> multiBlock;
+
 
 	@Override
 	public void onMultiBlockChanged()
@@ -641,7 +626,7 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 				break;
 			}
 
-			checkPosition.y++;
+			checkPosition.add(0, 1, 0);
 		}
 
 		return vectors.toArray(new Vector3[0]);
@@ -665,7 +650,7 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 				break;
 			}
 
-			checkPosition.y--;
+			checkPosition.add(0, -1, 0);
 		}
 
 		return lowest;
@@ -716,11 +701,82 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 		return getMultiBlock().get().getIO(dir);
 	}
 
-	@Override
-	public EnumSet<ForgeDirection> getOutputDirections()
-	{
-		EnumSet<ForgeDirection> dirs = super.getOutputDirections();
-		dirs.remove(ForgeDirection.UP);
-		return dirs;
-	}
+    @Override
+    public boolean use(EntityPlayer entityPlayer, int side, Vector3 hit)
+    {
+        if (entityPlayer.getCurrentEquippedItem() != null)
+        {
+            int dyeColor = MultipartUtility.isDye(entityPlayer.getCurrentEquippedItem());
+
+            if (dyeColor != -1)
+            {
+                getMultiBlock().get().setDye(dyeColor);
+
+                if (!entityPlayer.capabilities.isCreativeMode)
+                {
+                    entityPlayer.inventory.decrStackSize(entityPlayer.inventory.currentItem, 1);
+                }
+
+                return true;
+            }
+            else if (entityPlayer.getCurrentEquippedItem().getItem() == Items.redstone)
+            {
+                boolean status = getMultiBlock().get().toggleEntityAttack();
+
+                if (!entityPlayer.capabilities.isCreativeMode)
+                {
+                    entityPlayer.inventory.decrStackSize(entityPlayer.inventory.currentItem, 1);
+                }
+
+                if (!world().isRemote)
+                {
+                    entityPlayer.addChatMessage(new ChatComponentText(LanguageUtility.getLocal("message.tesla.toggleAttack").replace("%v", status + "")));
+                }
+
+                return true;
+            }
+        }
+        else
+        {
+            boolean receiveMode = getMultiBlock().get().toggleReceive();
+
+            if (!world().isRemote)
+            {
+                entityPlayer.addChatMessage(new ChatComponentText(LanguageUtility.getLocal("message.tesla.mode").replace("%v", receiveMode + "")));
+            }
+
+            return true;
+
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean configure(EntityPlayer player, int side, Vector3 hit)
+    {
+        ItemStack itemStack = player.getCurrentEquippedItem();
+
+        if (player.isSneaking()) {
+            if (tryLink(LinkUtility.getLink(itemStack))) {
+                if (world().isRemote)
+                    player.addChatMessage(new ChatComponentText("Successfully linked devices."));
+                LinkUtility.clearLink(itemStack);
+            } else {
+                if (world().isRemote)
+                    player.addChatMessage(new ChatComponentText("Marked link for device."));
+
+                LinkUtility.setLink(itemStack, new VectorWorld(this));
+            }
+
+            return true;
+        }
+        return super.configure(player, side, hit);
+    }
+
+    @Override
+    public void onNeighborChanged(Block id)
+    {
+        updatePositionStatus();
+    }
 }

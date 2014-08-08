@@ -2,20 +2,27 @@ package resonantinduction.electrical;
 
 import java.awt.Color;
 
+import cpw.mods.fml.common.network.IGuiHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import resonant.lib.prefab.ProxyBase;
-import resonantinduction.electrical.encoder.TileEncoder;
-import resonantinduction.electrical.encoder.gui.ContainerEncoder;
 import resonantinduction.electrical.multimeter.ContainerMultimeter;
 import resonantinduction.electrical.multimeter.PartMultimeter;
 import universalelectricity.core.transform.vector.Vector3;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 
-public class CommonProxy extends ProxyBase
+public class CommonProxy implements IGuiHandler
 {
+
+    public void preInit() {
+    }
+
+    public void init() {
+    }
+
+    public void postInit() {
+    }
 	@Override
 	public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z)
 	{
@@ -29,15 +36,16 @@ public class CommonProxy extends ProxyBase
 				return new ContainerMultimeter(player.inventory, ((PartMultimeter) part));
 			}
 		}
-		else if (tileEntity instanceof TileEncoder)
-		{
-			return new ContainerEncoder(player.inventory, (TileEncoder) tileEntity);
-		}
 
 		return null;
 	}
 
-	public void renderElectricShock(World world, Vector3 start, Vector3 target, float r, float g, float b, boolean split)
+    @Override
+    public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+        return null;
+    }
+
+    public void renderElectricShock(World world, Vector3 start, Vector3 target, float r, float g, float b, boolean split)
 	{
 
 	}
@@ -67,4 +75,5 @@ public class CommonProxy extends ProxyBase
 		this.renderElectricShock(world, start, target, 0.55f, 0.7f, 1f, b);
 
 	}
+
 }

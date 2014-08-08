@@ -7,11 +7,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.WeakHashMap;
-
-import net.minecraft.server.ServerListenThread;
-import net.minecraft.server.ThreadMinecraftServer;
 import net.minecraft.tileentity.TileEntity;
-import calclavia.api.mffs.fortron.IServerThread;
+import resonant.api.mffs.fortron.IServerThread;
 
 /**
  * @author Calclavia
@@ -61,7 +58,7 @@ public class TeslaGrid
 	{
 		Thread thr = Thread.currentThread();
 
-		if ((thr instanceof ThreadMinecraftServer) || (thr instanceof ServerListenThread) || (thr instanceof IServerThread))
+		if (thr instanceof IServerThread)
 		{
 			return INSTANCE_SERVER;
 		}
