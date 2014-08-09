@@ -6,7 +6,7 @@ import universalelectricity.api.core.grid.{INode, INodeProvider}
 
 trait TraitNodeProvider extends TileMultipart with INodeProvider
 {
-  def getNode[N <: INode](nodeType: Class[N], from: ForgeDirection): N =
+  def getNode(nodeType: Class[INode], from: ForgeDirection): INode =
   {
     var part = partMap(from.ordinal)
 
@@ -19,6 +19,6 @@ trait TraitNodeProvider extends TileMultipart with INodeProvider
       return part.asInstanceOf[INodeProvider].getNode(nodeType, from)
     }
 
-    return null.asInstanceOf[N]
+    return null
   }
 }

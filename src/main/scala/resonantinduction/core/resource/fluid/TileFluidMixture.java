@@ -3,6 +3,7 @@ package resonantinduction.core.resource.fluid;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -24,6 +25,11 @@ public class TileFluidMixture extends TileMaterial
 	public final Set<ItemStack> items = new HashSet<ItemStack>();
 	public final Set<FluidStack> fluids = new HashSet<FluidStack>();
 
+    public TileFluidMixture()
+    {
+        super(Material.water);
+    }
+
 	@Override
 	public boolean canUpdate()
 	{
@@ -32,14 +38,14 @@ public class TileFluidMixture extends TileMaterial
 
 	public boolean mix(ItemStack itemStack)
 	{
-		if (MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER.name(), itemStack).length > 0 && getBlockMetadata() < 8)
+		if (MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER().toString(), itemStack).length > 0 && getBlockMetadata() < 8)
 		{
 			// TODO: Maybe we need to merge the stacks?
 			items.add(itemStack);
 
-			if (name == null)
+			if (name() == null)
 			{
-				name = ResourceGenerator.getName(itemStack.getItemDamage());
+				name_$eq(ResourceGenerator.getName(itemStack));
 			}
 
 			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, getBlockMetadata() + 1, 3);
@@ -90,19 +96,19 @@ public class TileFluidMixture extends TileMaterial
 		fluids.clear();
 		items.clear();
 
-		NBTTagList fluidList = nbt.getTagList("Fluids");
+		NBTTagList fluidList = nbt.getTagList("Fluids", 0);
 
 		for (int i = 0; i < fluidList.tagCount(); ++i)
 		{
-			NBTTagCompound fluidNBT = (NBTTagCompound) fluidList.tagAt(i);
+			NBTTagCompound fluidNBT = (NBTTagCompound) fluidList.getCompoundTagAt(i);
 			fluids.add(FluidStack.loadFluidStackFromNBT(fluidNBT));
 		}
 
-		NBTTagList itemList = nbt.getTagList("Items");
+		NBTTagList itemList = nbt.getTagList("Items", 0);
 
 		for (int i = 0; i < itemList.tagCount(); ++i)
 		{
-			NBTTagCompound stackTag = (NBTTagCompound) itemList.tagAt(i);
+			NBTTagCompound stackTag = (NBTTagCompound) itemList.getCompoundTagAt(i);
 			items.add(ItemStack.loadItemStackFromNBT(stackTag));
 		}
 	}

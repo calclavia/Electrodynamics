@@ -1,5 +1,6 @@
 package resonantinduction.core.resource;
 
+import java.awt.*;
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -11,9 +12,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 import resonant.lib.utility.LanguageUtility;
+import resonantinduction.core.CoreContent;
 import resonantinduction.core.ResonantInduction;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import scala.collection.Iterator;
 
 /**
  * An item used for auto-generated dusts based on registered ingots in the OreDict.
@@ -22,8 +25,6 @@ import cpw.mods.fml.relauncher.SideOnly;
  */
 public class ItemResourceDust extends Item
 {
-	private Block block = ResonantInduction.blockRefinedDust;
-
 	public ItemResourceDust()
 	{
 		setHasSubtypes(true);
@@ -32,11 +33,11 @@ public class ItemResourceDust extends Item
 
 	public static String getMaterialFromStack(ItemStack itemStack)
 	{
-		return ResourceGenerator.getName(itemStack.getItemDamage());
+		return ResourceGenerator.getName(itemStack);
 	}
 
 	@Override
-	public String getItemDisplayName(ItemStack is)
+	public String getItemStackDisplayName(ItemStack is)
 	{
 		String material = getMaterialFromStack(is);
 
@@ -62,9 +63,9 @@ public class ItemResourceDust extends Item
 		/**
 		 * Allow refined dust to be placed down.
 		 */
-		if (itemStack.getItem() == ResonantInduction.itemDust || itemStack.getItem() == ResonantInduction.itemRefinedDust)
+		if (itemStack.getItem() == CoreContent.dust() || itemStack.getItem() == CoreContent.refinedDust())
 		{
-			blockID = itemStack.getItem() == ResonantInduction.itemRefinedDust ? ResonantInduction.blockRefinedDust.blockID : ResonantInduction.blockDust.blockID;
+			Block block = itemStack.getItem() == CoreContent.dust() ? CoreContent.blockDust() : CoreContent.blockRefinedDust();
 
 			if (itemStack.stackSize == 0)
 			{
@@ -78,17 +79,16 @@ public class ItemResourceDust extends Item
 			{
 				TileEntity tile = world.getTileEntity(x, y, z);
 
-				if (world.getBlockId(x, y, z) == blockID && tile instanceof TileMaterial)
+				if (world.getBlock(x, y, z) == block && tile instanceof TileMaterial)
 				{
-					if (getMaterialFromStack(itemStack).equals(((TileMaterial) tile).name))
+					if (getMaterialFromStack(itemStack).equals(((TileMaterial) tile).name()))
 					{
-						Block block = Block.blocksList[blockID];
 						int j1 = world.getBlockMetadata(x, y, z);
 						int k1 = j1 & 7;
 
 						if (k1 <= 6 && world.checkNoEntityCollision(block.getCollisionBoundingBoxFromPool(world, x, y, z)) && world.setBlockMetadataWithNotify(x, y, z, k1 + 1 | j1 & -8, 2))
 						{
-							world.playSoundEffect(x + 0.5F, y + 0.5F, z + 0.5F, block.stepSound.getPlaceSound(), (block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getPitch() * 0.8F);
+							world.playSoundEffect(x + 0.5F, y + 0.5F, z + 0.5F, block.stepSound.func_150496_b(), (block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getPitch() * 0.8F);
 							--itemStack.stackSize;
 							return true;
 						}
@@ -125,15 +125,14 @@ public class ItemResourceDust extends Item
 					++x;
 				}
 
-				if (world.canPlaceEntityOnSide(blockID, x, y, z, false, side, player, itemStack))
+				if (world.canPlaceEntityOnSide(block, x, y, z, false, side, player, itemStack))
 				{
-					Block block = Block.blocksList[blockID];
 					int j1 = this.getMetadata(itemStack.getItemDamage());
-					int k1 = Block.blocksList[blockID].onBlockPlaced(world, x, y, z, side, hitX, hitY, hitZ, j1);
+					int k1 = block.onBlockPlaced(world, x, y, z, side, hitX, hitY, hitZ, j1);
 
 					if (placeBlockAt(itemStack, player, world, x, y, z, side, hitX, hitY, hitZ, k1))
 					{
-						world.playSoundEffect(x + 0.5F, y + 0.5F, z + 0.5F, block.stepSound.getPlaceSound(), (block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getPitch() * 0.8F);
+						world.playSoundEffect(x + 0.5F, y + 0.5F, z + 0.5F, block.stepSound.func_150496_b(), (block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getPitch() * 0.8F);
 						--itemStack.stackSize;
 					}
 
@@ -147,17 +146,17 @@ public class ItemResourceDust extends Item
 
 	public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int metadata)
 	{
-		blockID = stack.getItem() == ResonantInduction.itemRefinedDust ? ResonantInduction.blockRefinedDust.blockID : ResonantInduction.blockDust.blockID;
+		Block block = stack.getItem() == CoreContent.refinedDust() ? CoreContent.blockRefinedDust() : CoreContent.blockDust();
 
-		if (!world.setBlock(x, y, z, this.blockID, metadata, 3))
+		if (!world.setBlock(x, y, z, block, metadata, 3))
 		{
 			return false;
 		}
 
-		if (world.getBlockId(x, y, z) == this.blockID)
+		if (world.getBlock(x, y, z) == block)
 		{
-			Block.blocksList[this.blockID].onBlockPlacedBy(world, x, y, z, player, stack);
-			Block.blocksList[this.blockID].onPostBlockPlaced(world, x, y, z, metadata);
+			block.onBlockPlacedBy(world, x, y, z, player, stack);
+			block.onPostBlockPlaced(world, x, y, z, metadata);
 		}
 
 		return true;
@@ -165,17 +164,16 @@ public class ItemResourceDust extends Item
 
 	public ItemStack getStackFromMaterial(String name)
 	{
-		ItemStack itemStack = new ItemStack(this);
-		itemStack.setItemDamage(ResourceGenerator.getID(name));
-		return itemStack;
+		return ResourceGenerator.getRefinedDust(name, 1);
 	}
 
 	@Override
-	public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
+	public void getSubItems(Item par1, CreativeTabs par2CreativeTabs, List par3List)
 	{
-		for (String materialName : ResourceGenerator.materials.keySet())
+        Iterator<String> it = ResourceGenerator.materials().iterator();
+		while(it.hasNext())
 		{
-			par3List.add(getStackFromMaterial(materialName));
+			par3List.add(it.next());
 		}
 	}
 
@@ -183,16 +181,6 @@ public class ItemResourceDust extends Item
 	@SideOnly(Side.CLIENT)
 	public int getColorFromItemStack(ItemStack itemStack, int par2)
 	{
-		/**
-		 * Auto-color based on the texture of the ingot.
-		 */
-		String name = ItemResourceDust.getMaterialFromStack(itemStack);
-
-		if (ResourceGenerator.materialColorCache.containsKey(name))
-		{
-			return ResourceGenerator.materialColorCache.get(name);
-		}
-
-		return 16777215;
+		return ResourceGenerator.getColor(ItemResourceDust.getMaterialFromStack(itemStack));
 	}
 }

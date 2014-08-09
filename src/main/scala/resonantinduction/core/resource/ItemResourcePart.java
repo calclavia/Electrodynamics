@@ -10,8 +10,4 @@ import net.minecraft.item.Item;
  */
 public class ItemResourcePart extends Item
 {
-	public ItemResourcePart(int par1)
-	{
-		super(par1);
-	}
 }

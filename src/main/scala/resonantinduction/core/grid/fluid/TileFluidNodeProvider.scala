@@ -9,7 +9,7 @@ import net.minecraftforge.fluids.{FluidStack, FluidTank, IFluidHandler}
 import resonant.content.spatial.block.SpatialTile
 import resonant.lib.network.ByteBufWrapper.ByteBufWrapper
 import resonant.lib.network.discriminator.PacketType
-import resonant.lib.network.handle.{TPacketIDReceiver, TPacketIDSender}
+import resonant.lib.network.handle.{IPacketIDReceiver, TPacketIDSender}
 import resonant.lib.network.netty.PacketManager
 import resonant.lib.utility.FluidUtility
 import resonantinduction.core.ResonantInduction
@@ -26,7 +26,7 @@ object TileFluidNodeProvider extends Enumeration
   final val PACKET_DESCRIPTION, PACKET_RENDER, PACKET_TANK = Value
 }
 
-abstract class TileFluidNodeProvider(material: Material) extends SpatialTile(material) with INodeProvider with IFluidHandler with TPacketIDReceiver with TPacketIDSender
+abstract class TileFluidNodeProvider(material: Material) extends SpatialTile(material) with INodeProvider with IFluidHandler with IPacketIDReceiver with TPacketIDSender
 {
   protected var tank: FluidTank
   protected var pressure = 0

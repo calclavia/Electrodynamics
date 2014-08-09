@@ -36,10 +36,10 @@ import scala.collection.mutable
 object ResourceGenerator
 {
   final val materials = mutable.Set.empty[String]
-  private final val materialColorCache = mutable.HashMap.empty[String, Integer]
-  private final val iconColorCache = mutable.HashMap.empty[IIcon, Integer]
+  final val materialColorCache = mutable.HashMap.empty[String, Integer]
+  final val iconColorCache = mutable.HashMap.empty[IIcon, Integer]
 
-  private final val category = "resource-generator"
+  final val category = "resource-generator"
 
   @Config(category = category)
   var enableAll: Boolean = true

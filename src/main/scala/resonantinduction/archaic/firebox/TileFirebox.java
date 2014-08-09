@@ -1,14 +1,25 @@
 package resonantinduction.archaic.firebox;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
+import net.minecraft.util.IIcon;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
+import resonant.content.spatial.block.SpatialBlock;
 import resonant.engine.grid.thermal.BoilEvent;
 import resonant.engine.grid.thermal.ThermalPhysics;
 import resonant.lib.network.discriminator.PacketAnnotation;
 import resonant.lib.network.discriminator.PacketTile;
 import resonant.lib.network.discriminator.PacketType;
 import resonant.lib.network.handle.IPacketReceiver;
+import resonant.lib.utility.FluidUtility;
 import resonantinduction.archaic.Archaic;
 import resonantinduction.archaic.fluid.gutter.TileGutter;
 import net.minecraft.block.Block;
@@ -28,12 +39,15 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonant.lib.network.Synced;
 import resonantinduction.core.CoreContent;
+import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.TileMaterial;
 import universalelectricity.core.transform.vector.Vector3;
 import resonant.lib.content.prefab.java.TileElectricInventory;
 import com.google.common.io.ByteArrayDataInput;
+
+import java.util.List;
 
 /**
  * Meant to replace the furnace class.
@@ -169,26 +183,6 @@ public class TileFirebox extends TileElectricInventory implements IPacketReceive
 						heatEnergy = 0;
 					}
 				}
-				else if (block == Archaic.blockGutter())
-				{
-					TileEntity tileEntity = worldObj.getTileEntity(xCoord, yCoord + 1, zCoord);
-
-					if (tileEntity instanceof TileGutter)
-					{
-						usedHeat = true;
-						int volume = Math.min(((TileGutter) tileEntity).getInternalTank().getFluidAmount(), 10);
-						if (volume > 0 && heatEnergy >= getRequiredBoilWaterEnergy(volume))
-						{
-							if (FluidRegistry.getFluid("steam") != null)
-							{
-								MinecraftForge.EVENT_BUS.post(new BoilEvent(worldObj, new Vector3(this).add(0, 1, 0), new FluidStack(FluidRegistry.WATER, volume), new FluidStack(FluidRegistry.getFluid("steam"), volume), 2, false));
-								((TileGutter) tileEntity).drain(ForgeDirection.DOWN, volume, true);
-							}
-
-							heatEnergy = 0;
-						}
-					}
-				}
 
 				if (!usedHeat)
 				{
@@ -315,4 +309,65 @@ public class TileFirebox extends TileElectricInventory implements IPacketReceive
 	{
 		return new FluidTankInfo[] { tank.getInfo() };
 	}
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(IIconRegister iconReg)
+    {
+        super.registerIcons(iconReg);
+        SpatialBlock.icon().put("firebox_side_on", iconReg.registerIcon(Reference.prefix() + "firebox_side_on"));
+        SpatialBlock.icon().put("firebox_side_off", iconReg.registerIcon(Reference.prefix() + "firebox_side_off"));
+        SpatialBlock.icon().put("firebox_top_on", iconReg.registerIcon(Reference.prefix() + "firebox_top_on"));
+        SpatialBlock.icon().put("firebox_top_off", iconReg.registerIcon(Reference.prefix() + "firebox_top_off"));
+
+        SpatialBlock.icon().put("firebox_electric_side_on", iconReg.registerIcon(Reference.prefix() + "firebox_electric_side_on"));
+        SpatialBlock.icon().put("firebox_electric_side_off", iconReg.registerIcon(Reference.prefix() + "firebox_electric_side_off"));
+        SpatialBlock.icon().put("firebox_electric_top_on", iconReg.registerIcon(Reference.prefix() + "firebox_electric_top_on"));
+        SpatialBlock.icon().put("firebox_electric_top_off", iconReg.registerIcon(Reference.prefix() + "firebox_electric_top_off"));
+
+    }
+
+    @Override
+    public void click(EntityPlayer player)
+    {
+        if(server())
+           extractItem((IInventory)this, 0, player);
+    }
+
+    @Override
+    public boolean use(EntityPlayer player, int side, Vector3 hit)
+    {
+
+            if (FluidUtility.playerActivatedFluidItem(world(), x(), y(), z(), player, side))
+            {
+                return true;
+            }
+
+            return interactCurrentItem((IInventory)this, 0, player);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public IIcon getIcon(int side, int meta)
+    {
+        if (side == 0)
+            return SpatialBlock.icon().get("firebox");
+
+        boolean isElectric = meta == 1;
+        boolean isBurning = false;
+
+        if (side == 1)
+        {
+            return isBurning ? (isElectric ? SpatialBlock.icon().get("firebox_eletric_top_on") : SpatialBlock.icon().get("firebox_top_on")) : (isElectric ? SpatialBlock.icon().get("firebox_eletric_top_off") : SpatialBlock.icon().get("firebox_top_off"));
+        }
+
+        return isBurning ? (isElectric ? SpatialBlock.icon().get("firebox_eletric_side_on") : SpatialBlock.icon().get("firebox_side_on")) : (isElectric ? SpatialBlock.icon().get("firebox_eletric_side_off") : SpatialBlock.icon().get("firebox_side_off"));
+    }
+
+    @Override
+    public void getSubBlocks(Item par1, CreativeTabs par2CreativeTabs, List par3List)
+    {
+        par3List.add(new ItemStack(par1, 1, 0));
+        par3List.add(new ItemStack(par1, 1, 1));
+    }
 }
