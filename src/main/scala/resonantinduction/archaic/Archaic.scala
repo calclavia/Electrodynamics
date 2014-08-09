@@ -1,43 +1,26 @@
 package resonantinduction.archaic
 
-import resonantinduction.archaic.firebox.BlockFirebox
-import resonantinduction.archaic.fluid.gutter.TileGutter
-import net.minecraft.init.Blocks
-import net.minecraft.init.Items
-import net.minecraft.item.ItemStack
-import net.minecraftforge.oredict.OreDictionary
-import net.minecraftforge.oredict.ShapedOreRecipe
-import resonant.content.loader.ModManager
-import resonant.lib.recipe.UniversalRecipe
-import resonantinduction.archaic.blocks.{ItemImprint, TileImprinter, TileTurntable}
-import resonantinduction.archaic.crate.BlockCrate
-import resonantinduction.archaic.crate.CrateRecipe
-import resonantinduction.archaic.crate.ItemBlockCrate
-import resonantinduction.archaic.crate.TileCrate
-import resonantinduction.archaic.engineering.ItemHammer
-import resonantinduction.archaic.engineering.TileEngineeringTable
-import resonantinduction.archaic.firebox.TileFirebox
-import resonantinduction.archaic.firebox.TileHotPlate
-import resonantinduction.archaic.fluid.grate.TileGrate
-import resonantinduction.archaic.fluid.tank.TileTank
-import resonantinduction.archaic.process.TileCastingMold
-import resonantinduction.archaic.process.TileMillstone
-import resonantinduction.core.Reference
-import resonantinduction.core.ResonantInduction
-import resonantinduction.core.ResonantTab
-import resonantinduction.core.Settings
-import resonantinduction.mechanical.gear.ItemHandCrank
-import cpw.mods.fml.common.Mod
-import cpw.mods.fml.common.Mod.EventHandler
-import cpw.mods.fml.common.Mod.Instance
-import cpw.mods.fml.common.ModMetadata
-import cpw.mods.fml.common.SidedProxy
-import cpw.mods.fml.common.event.FMLInitializationEvent
-import cpw.mods.fml.common.event.FMLPostInitializationEvent
-import cpw.mods.fml.common.event.FMLPreInitializationEvent
+import cpw.mods.fml.common.Mod.{EventHandler, Instance}
+import cpw.mods.fml.common.{Mod, ModMetadata, SidedProxy}
+import cpw.mods.fml.common.event.{FMLInitializationEvent, FMLPostInitializationEvent, FMLPreInitializationEvent}
 import cpw.mods.fml.common.network.NetworkRegistry
 import cpw.mods.fml.common.registry.GameRegistry
-import Archaic._
+import net.minecraft.init.{Blocks, Items}
+import net.minecraft.item.ItemStack
+import net.minecraftforge.oredict.{OreDictionary, ShapedOreRecipe}
+import resonant.content.loader.ModManager
+import resonant.lib.recipe.UniversalRecipe
+import resonantinduction.archaic.Archaic._
+import resonantinduction.archaic.blocks.{ItemImprint, TileImprinter, TileTurntable}
+import resonantinduction.archaic.crate.{BlockCrate, CrateRecipe, ItemBlockCrate, TileCrate}
+import resonantinduction.archaic.engineering.{ItemHammer, TileEngineeringTable}
+import resonantinduction.archaic.firebox.{TileFirebox, TileHotPlate}
+import resonantinduction.archaic.fluid.grate.TileGrate
+import resonantinduction.archaic.fluid.gutter.TileGutter
+import resonantinduction.archaic.fluid.tank.TileTank
+import resonantinduction.archaic.process.{TileCastingMold, TileMillstone}
+import resonantinduction.core.{Reference, ResonantTab, Settings}
+import resonantinduction.mechanical.gear.ItemHandCrank
 
 object Archaic {
 
@@ -58,12 +41,12 @@ object Archaic {
 
 }
 
-@Mod( modid = Archaic.ID, name = Archaic.NAME, version = Reference.version, dependencies = "required-after:" + ResonantInduction.ID )
+@Mod( modid = Archaic.ID, name = Archaic.NAME, version = Reference.version, dependencies = "required-after:" + Reference.coreID )
 class Archaic {
 
     @EventHandler
     def preInit( evt : FMLPreInitializationEvent ) {
-        NetworkRegistry.instance().registerGuiHandler( this, proxy )
+        NetworkRegistry.INSTANCE.registerGuiHandler( this, proxy )
         Settings.config.load()
         ArchaicBlocks.blockEngineeringTable = contentRegistry.newBlock(classOf[ TileEngineeringTable])
         ArchaicBlocks.blockCrate = contentRegistry.newBlock( classOf[ BlockCrate ], classOf[ ItemBlockCrate ], classOf[ TileCrate ] )
@@ -75,7 +58,7 @@ class Archaic {
         ArchaicBlocks.blockCast = contentRegistry.newBlock( classOf[ TileCastingMold ] )
         ArchaicBlocks.blockGutter = contentRegistry.newBlock( classOf[ TileGutter ] )
         ArchaicBlocks.blockGrate = contentRegistry.newBlock( classOf[ TileGrate ] )
-        ArchaicBlocks.blockFilter = contentRegistry.newBlock( classOf[ TileFilter ] )
+        //ArchaicBlocks.blockFilter = contentRegistry.newBlock( classOf[ TileFilter ] )
         ArchaicBlocks.blockTank = contentRegistry.newBlock( classOf[ TileTank ] )
         ArchaicItems.itemHandCrank = contentRegistry.newItem( classOf[ ItemHandCrank ] )
         ArchaicItems.itemImprint = contentRegistry.newItem( classOf[ ItemImprint ] )

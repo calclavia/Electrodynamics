@@ -1,8 +1,13 @@
 package resonantinduction.archaic.process;
 
+import cpw.mods.fml.common.network.ByteBufUtils;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.packet.Packet;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -12,14 +17,16 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonant.api.recipe.MachineRecipes;
 import resonant.api.recipe.RecipeResource;
-import resonant.lib.network.IPacketReceiver;
-import resonant.lib.network.PacketHandler;
-import resonant.lib.prefab.tile.TileExternalInventory;
+import resonant.lib.network.discriminator.PacketTile;
+import resonant.lib.network.discriminator.PacketType;
+import resonant.lib.network.handle.IPacketReceiver;
 import resonant.lib.utility.FluidUtility;
+import resonant.lib.utility.inventory.InventoryUtility;
+import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.ResonantInduction.RecipeType;
 import universalelectricity.core.transform.vector.Vector3;
-
+import resonant.lib.content.prefab.java.TileInventory;
 import com.google.common.io.ByteArrayDataInput;
 
 /**
@@ -31,31 +38,38 @@ import com.google.common.io.ByteArrayDataInput;
  * @author Calclavia
  * 
  */
-public class TileCastingMold extends TileExternalInventory implements IFluidHandler, IPacketReceiver
+public class TileCastingMold extends TileInventory implements IFluidHandler, IPacketReceiver
 {
 	protected FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
 	private final int amountPerIngot = 100;
 
-	@Override
+    public TileCastingMold() {
+        super(Material.rock);
+        setTextureName(Reference.prefix() + "material_metal_side");
+        normalRender(false);
+        isOpaqueCube(false);
+    }
+
+    @Override
 	public boolean canUpdate()
 	{
 		return false;
 	}
 
 	@Override
-	public Packet getDescriptionPacket()
+	public PacketTile getDescPacket()
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 		this.writeToNBT(nbt);
-		return ResonantInduction.PACKET_TILE.getPacket(this, nbt);
+		return new PacketTile(this, nbt);
 	}
 
 	@Override
-	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
+	public void read(ByteBuf data, EntityPlayer player, PacketType type)
 	{
 		try
 		{
-			this.readFromNBT(PacketHandler.readNBTTagCompound(data));
+			this.readFromNBT(ByteBufUtils.readTag(data));
 		}
 		catch (Exception e)
 		{
@@ -63,7 +77,6 @@ public class TileCastingMold extends TileExternalInventory implements IFluidHand
 		}
 	}
 
-	@Override
 	public void onInventoryChanged()
 	{
 		if (worldObj != null)
@@ -72,8 +85,7 @@ public class TileCastingMold extends TileExternalInventory implements IFluidHand
 		}
 	}
 
-	@Override
-	public void updateEntity()
+	public void update()
 	{
 		/**
 		 * Check blocks above for fluid.
@@ -81,7 +93,7 @@ public class TileCastingMold extends TileExternalInventory implements IFluidHand
 		Vector3 checkPos = new Vector3(this).add(0, 1, 0);
 		FluidStack drainStack = FluidUtility.drainBlock(worldObj, checkPos, false);
 
-		if (MachineRecipes.INSTANCE.getOutput(RecipeType.SMELTER.name(), drainStack).length > 0)
+		if (MachineRecipes.INSTANCE.getOutput(RecipeType.SMELTER().toString(), drainStack).length > 0)
 		{
 			if (drainStack.amount == tank.fill(drainStack, false))
 			{
@@ -94,7 +106,7 @@ public class TileCastingMold extends TileExternalInventory implements IFluidHand
 		 */
 		while (tank.getFluidAmount() >= amountPerIngot && (getStackInSlot(0) == null || getStackInSlot(0).stackSize < getStackInSlot(0).getMaxStackSize()))
 		{
-			RecipeResource[] outputs = MachineRecipes.INSTANCE.getOutput(RecipeType.SMELTER.name(), tank.getFluid());
+			RecipeResource[] outputs = MachineRecipes.INSTANCE.getOutput(RecipeType.SMELTER().toString(), tank.getFluid());
 
 			for (RecipeResource output : outputs)
 			{
@@ -157,4 +169,37 @@ public class TileCastingMold extends TileExternalInventory implements IFluidHand
 	{
 		return new FluidTankInfo[] { tank.getInfo() };
 	}
+
+    @Override
+    public void click(EntityPlayer player)
+    {
+        if (!world().isRemote) {
+
+            ItemStack output = getStackInSlot(0);
+
+            if (output != null) {
+                InventoryUtility.dropItemStack(world(), new Vector3(player), output, 0);
+                setInventorySlotContents(0, null);
+            }
+
+            onInventoryChanged();
+        }
+    }
+
+    @Override
+    public boolean use(EntityPlayer player, int hitSide, Vector3 hit)
+    {
+            update();
+
+            ItemStack current = player.inventory.getCurrentItem();
+            ItemStack output = getStackInSlot(0);
+
+            if (output != null)
+            {
+                InventoryUtility.dropItemStack(world(), new Vector3(player), output, 0);
+                setInventorySlotContents(0, null);
+            }
+
+            return true;
+    }
 }
