@@ -3,7 +3,7 @@ package resonantinduction.core.grid.fluid.pressure
 import net.minecraft.block.material.Material
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.{FluidContainerRegistry, FluidStack, FluidTank, FluidTankInfo}
-import resonantinduction.core.grid.fluid.TileFluidNodeProvider
+import resonantinduction.core.grid.fluid.TileTankNode
 import universalelectricity.api.core.grid.INode
 
 /**
@@ -11,7 +11,7 @@ import universalelectricity.api.core.grid.INode
  *
  * @author DarkGuardsman
  */
-abstract class TilePressureNode(material: Material) extends TileFluidNodeProvider(material)
+abstract class TilePressureNode(material: Material) extends TileTankNode(material)
 {
   protected val pressureNode: FluidPressureNode
   tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME)

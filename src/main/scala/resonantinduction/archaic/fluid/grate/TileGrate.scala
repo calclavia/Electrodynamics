@@ -79,8 +79,8 @@ class TileGrate extends TilePressureNode( Material.rock ) with IRotatable {
 
     @SideOnly( Side.CLIENT )
     override def registerIcons( iconRegister : IIconRegister ) {
-        iconFront = iconRegister.registerIcon( Reference.PREFIX + "grate_front" )
-        iconSide = iconRegister.registerIcon( Reference.PREFIX + "grate" )
+        iconFront = iconRegister.registerIcon( Reference.prefix + "grate_front" )
+        iconSide = iconRegister.registerIcon( Reference.prefix + "grate" )
     }
 
     protected override def configure( player : EntityPlayer, side : Int, hit : Vector3 ) : Boolean = {
@@ -114,7 +114,7 @@ class TileGrate extends TilePressureNode( Material.rock ) with IRotatable {
 
     override def updateEntity() {
         super.updateEntity()
-        if ( !world().isRemote ) {
+        if ( !world.isRemote ) {
             if ( ticks % 10 == 0 ) {
                 val pressure = node.getPressure( getDirection )
                 val blockEffect = Math.abs( pressure * grateEffectMultiplier ).toInt
@@ -250,7 +250,7 @@ class TileGrate extends TilePressureNode( Material.rock ) with IRotatable {
         def addNextFill( next : ComparableVector ) {
             for ( i <- 0 until 6 ) {
                 val newPosition = next.position.clone().add( ForgeDirection.getOrientation( i ) )
-                if ( !this.navigationMap.containsKey( newPosition ) && !( !fillOver && newPosition.yi() > y() ) ) {
+                if ( !this.navigationMap.containsKey( newPosition ) && !( !fillOver && newPosition.yi > y ) ) {
                     this.navigationMap.put( newPosition, next.position )
                     this.workingNodes.add( new ComparableVector( newPosition, next.iterations + 1 ) )
                 }

@@ -5,7 +5,8 @@ import net.minecraft.block.material.Material
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.network.Packet
-import net.minecraftforge.fluids.{FluidStack, FluidTank, IFluidHandler}
+import net.minecraftforge.common.util.ForgeDirection
+import net.minecraftforge.fluids._
 import resonant.content.spatial.block.SpatialTile
 import resonant.lib.network.ByteBufWrapper.ByteBufWrapper
 import resonant.lib.network.discriminator.PacketType
@@ -13,7 +14,8 @@ import resonant.lib.network.handle.{IPacketIDReceiver, TPacketIDSender}
 import resonant.lib.network.netty.PacketManager
 import resonant.lib.utility.FluidUtility
 import resonantinduction.core.ResonantInduction
-import universalelectricity.api.core.grid.INodeProvider
+import resonantinduction.core.grid.fluid.distribution.TankNode
+import universalelectricity.api.core.grid.{INode, INodeProvider}
 import universalelectricity.core.transform.vector.Vector3
 
 /**
@@ -21,12 +23,12 @@ import universalelectricity.core.transform.vector.Vector3
  *
  * @author DarkGuardsman
  */
-object TileFluidNodeProvider extends Enumeration
+object TileTankNode extends Enumeration
 {
   final val PACKET_DESCRIPTION, PACKET_RENDER, PACKET_TANK = Value
 }
 
-abstract class TileFluidNodeProvider(material: Material) extends SpatialTile(material) with INodeProvider with IFluidHandler with IPacketIDReceiver with TPacketIDSender
+abstract class TileTankNode(material: Material) extends SpatialTile(material) with INodeProvider with IFluidHandler with IPacketIDReceiver with TPacketIDSender
 {
   protected var tank: FluidTank
   protected var pressure = 0
@@ -44,6 +46,8 @@ abstract class TileFluidNodeProvider(material: Material) extends SpatialTile(mat
   protected var markTankUpdate = false
   protected final val tankSize = 0
 
+  var tankNode : TankNode = new TankNode(this)
+
   override def update()
   {
     super.update()
@@ -54,6 +58,12 @@ abstract class TileFluidNodeProvider(material: Material) extends SpatialTile(mat
       markTankUpdate = false
     }
   }
+
+  def getTank() : FluidTank = tank
+
+  def getFluid() : FluidStack = tank.getFluid
+
+  def getFluidCapacity() : Int = tank.getCapacity
 
   override def readFromNBT(nbt: NBTTagCompound)
   {
@@ -73,19 +83,19 @@ abstract class TileFluidNodeProvider(material: Material) extends SpatialTile(mat
   {
     super.write(buf, id)
 
-    if (id == TileFluidNodeProvider.PACKET_DESCRIPTION.id)
+    if (id == TileTankNode.PACKET_DESCRIPTION.id)
     {
       buf <<< colorID
       buf <<< renderSides
       buf <<< tank
 
     }
-    else if (id == TileFluidNodeProvider.PACKET_RENDER.id)
+    else if (id == TileTankNode.PACKET_RENDER.id)
     {
       buf <<< colorID
       buf <<< renderSides
     }
-    else if (id == TileFluidNodeProvider.PACKET_TANK.id)
+    else if (id == TileTankNode.PACKET_TANK.id)
     {
       buf <<< tank
       buf <<< pressure
@@ -96,19 +106,19 @@ abstract class TileFluidNodeProvider(material: Material) extends SpatialTile(mat
   {
     if (world.isRemote)
     {
-      if (id == TileFluidNodeProvider.PACKET_DESCRIPTION.id)
+      if (id == TileTankNode.PACKET_DESCRIPTION.id)
       {
         colorID = buf.readInt
         renderSides = buf.readByte
         tank = buf.readTank()
       }
-      else if (id == TileFluidNodeProvider.PACKET_RENDER.id)
+      else if (id == TileTankNode.PACKET_RENDER.id)
       {
         colorID = buf.readInt
         renderSides = buf.readByte
         markRender
       }
-      else if (id == TileFluidNodeProvider.PACKET_TANK.id)
+      else if (id == TileTankNode.PACKET_TANK.id)
       {
         tank = buf.readTank()
         pressure = buf.readInt
@@ -117,18 +127,18 @@ abstract class TileFluidNodeProvider(material: Material) extends SpatialTile(mat
     }
   }
 
-  override def getDescriptionPacket: Packet = ResonantInduction.packetHandler.toMCPacket(PacketManager.request(this, TileFluidNodeProvider.PACKET_DESCRIPTION.id))
+  override def getDescriptionPacket: Packet = ResonantInduction.packetHandler.toMCPacket(PacketManager.request(this, TileTankNode.PACKET_DESCRIPTION.id))
 
   def sendRenderUpdate
   {
     if (!world.isRemote)
-      ResonantInduction.packetHandler.sendToAll(PacketManager.request(this, TileFluidNodeProvider.PACKET_RENDER.id))
+      ResonantInduction.packetHandler.sendToAll(PacketManager.request(this, TileTankNode.PACKET_RENDER.id))
   }
 
   def sendTankUpdate
   {
     if (!world.isRemote)
-      ResonantInduction.packetHandler.sendToAllAround(PacketManager.request(this, TileFluidNodeProvider.PACKET_TANK.id), world, new Vector3(this), 60)
+      ResonantInduction.packetHandler.sendToAllAround(PacketManager.request(this, TileTankNode.PACKET_TANK.id), world, new Vector3(this), 60)
   }
 
   def onFluidChanged()
@@ -141,5 +151,33 @@ abstract class TileFluidNodeProvider(material: Material) extends SpatialTile(mat
         prevStack = if (tank.getFluid != null) tank.getFluid.copy else null
       }
     }
+  }
+
+  override def getNode(nodeType: Class[_ <: INode], from: ForgeDirection): INode = if(nodeType.isInstanceOf[TankNode]) return tankNode else null
+
+  override def drain(from: ForgeDirection, resource: FluidStack, doDrain: Boolean): FluidStack = tankNode.drain(from, resource, doDrain)
+
+  override def drain(from: ForgeDirection, maxDrain: Int, doDrain: Boolean): FluidStack = tankNode.drain(from, maxDrain, doDrain)
+
+  override def canFill(from: ForgeDirection, fluid: Fluid): Boolean = tankNode.canFill(from, fluid)
+
+  override def canDrain(from: ForgeDirection, fluid: Fluid): Boolean = tankNode.canDrain(from, fluid)
+
+  override def fill(from: ForgeDirection, resource: FluidStack, doFill: Boolean): Int = tankNode.fill(from, resource, doFill)
+
+  override def getTankInfo(from: ForgeDirection): Array[FluidTankInfo] = tankNode.getTankInfo(from)
+
+  tankNode.onChange = () => sendRenderUpdate
+
+  override def start()
+  {
+    super.start()
+    tankNode.reconstruct()
+  }
+
+  override def invalidate()
+  {
+    tankNode.deconstruct()
+    super.invalidate()
   }
 }

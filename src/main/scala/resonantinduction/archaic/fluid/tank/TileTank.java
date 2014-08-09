@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-import archaic.Archaic;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -20,21 +20,20 @@ import net.minecraftforge.fluids.FluidTank;
 import org.lwjgl.opengl.GL11;
 
 import resonant.api.IRemovable.ISneakPickup;
-import resonant.api.items.ISimpleItemRenderer;
+import resonant.content.prefab.scala.render.ISimpleItemRenderer;
 import resonant.content.spatial.block.SpatialBlock.IComparatorInputOverride;
-import resonant.lib.content.module.TileRender;
 import resonant.lib.render.FluidRenderUtility;
 import resonant.lib.render.RenderUtility;
 import resonant.lib.utility.FluidUtility;
 import resonant.lib.utility.WorldUtility;
 import resonant.lib.utility.render.RenderBlockUtility;
-import archaic.Archaic;
+import resonantinduction.archaic.Archaic;
 import resonantinduction.core.Reference;
+import resonantinduction.core.grid.fluid.TileTankNode;
 import resonantinduction.core.grid.fluid.distribution.FluidDistributionGrid;
 import resonantinduction.core.grid.fluid.distribution.TFluidDistributor;
 import resonantinduction.core.grid.fluid.distribution.TankGrid;
 import resonantinduction.core.grid.fluid.distribution.TileFluidDistribution;
-import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.core.grid.INode;
 import universalelectricity.core.transform.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
@@ -45,13 +44,13 @@ import cpw.mods.fml.relauncher.SideOnly;
  *
  * @author Darkguardsman
  */
-public class TileTank extends TileFluidDistribution implements IComparatorInputOverride, ISneakPickup
+public class TileTank extends TileTankNode implements ISneakPickup
 {
 	public static final int VOLUME = 16;
 
 	public TileTank()
 	{
-		super(Material.iron, VOLUME * FluidContainerRegistry.BUCKET_VOLUME);
+		super(Material.iron);
 		isOpaqueCube(false);
 		normalRender(false);
 		itemBlock(ItemBlockTank.class);
@@ -75,75 +74,26 @@ public class TileTank extends TileFluidDistribution implements IComparatorInputO
 	}
 
 	@Override
-	public int getComparatorInputOverride(int side)
-	{
-		if (getNetwork().getTank().getFluid() != null)
-		{
-			return (int) (15 * ((double) getNetwork().getTank().getFluidAmount() / (double) getNetwork().getTank().getCapacity()));
-		}
-		return 0;
-	}
-
-	@Override
 	public int getLightValue(IBlockAccess access)
 	{
-		if (getForwardTank().getFluid() != null)
+		if (getFluid().getFluid() != null)
 		{
-			return getForwardTank().getFluid().getFluid().getLuminosity();
+			return getFluid().getFluid().getLuminosity();
 		}
 		return super.getLightValue(access);
 	}
 
-	@Override
-	public FluidDistributionGrid getNetwork()
-	{
-		if (this.network == null)
-		{
-			this.network = new TankGrid();
-			this.network.addConnector(this);
-		}
-		return this.network;
-	}
 
-	@Override
-	public void setNetwork(FluidDistributionGrid network)
-	{
-		if (network instanceof TankGrid)
-		{
-			this.network = network;
-		}
-	}
-
-	@Override
-	public void validateConnectionSide(TileEntity tileEntity, ForgeDirection side)
-	{
-		if (!this.worldObj.isRemote)
-		{
-			if (tileEntity instanceof TileTank)
-			{
-				getNetwork().merge(((TFluidDistributor) tileEntity).getNetwork());
-				renderSides = WorldUtility.setEnableSide(renderSides, side, true);
-				connectedBlocks[side.ordinal()] = tileEntity;
-			}
-		}
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	protected TileRender newRenderer()
-	{
-		return new TileRender()
-		{
 			@Override
 			public boolean renderStatic(RenderBlocks renderer, Vector3 position)
 			{
-				RenderBlockUtility.tessellateBlockWithConnectedTextures(renderSides, world(), x(), y(), z(), Archaic.blockTank, null, RenderUtility.getIcon(Reference.PREFIX + "tankEdge"));
+				RenderBlockUtility.tessellateBlockWithConnectedTextures(renderSides, world(), x(), y(), z(), Archaic.blockTank(), null, RenderUtility.getIcon(Reference.PREFIX + "tankEdge"));
 				return true;
 			}
 
-			public void renderTank(TileEntity tileEntity, double x, double y, double z, FluidStack fluid)
+			public void renderTank(double x, double y, double z, FluidStack fluid)
 			{
-				if (tileEntity.worldObj != null && tileEntity instanceof TileTank)
+				if (world() != null)
 				{
 					GL11.glPushMatrix();
 					GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
@@ -155,24 +105,24 @@ public class TileTank extends TileFluidDistribution implements IComparatorInputO
 						if (!fluid.getFluid().isGaseous())
 						{
 							GL11.glScaled(0.99, 0.99, 0.99);
-							FluidTank tank = ((TileTank) tileEntity).getForwardTank();
+							FluidTank tank = getTank();
 							double percentageFilled = (double) tank.getFluidAmount() / (double) tank.getCapacity();
 
-							double ySouthEast = FluidUtility.getAveragePercentageFilledForSides(TileTank.class, percentageFilled, tileEntity.worldObj, new Vector3(tileEntity), ForgeDirection.SOUTH, ForgeDirection.EAST);
-							double yNorthEast = FluidUtility.getAveragePercentageFilledForSides(TileTank.class, percentageFilled, tileEntity.worldObj, new Vector3(tileEntity), ForgeDirection.NORTH, ForgeDirection.EAST);
-							double ySouthWest = FluidUtility.getAveragePercentageFilledForSides(TileTank.class, percentageFilled, tileEntity.worldObj, new Vector3(tileEntity), ForgeDirection.SOUTH, ForgeDirection.WEST);
-							double yNorthWest = FluidUtility.getAveragePercentageFilledForSides(TileTank.class, percentageFilled, tileEntity.worldObj, new Vector3(tileEntity), ForgeDirection.NORTH, ForgeDirection.WEST);
+							double ySouthEast = FluidUtility.getAveragePercentageFilledForSides(TileTank.class, percentageFilled, world(), new Vector3(this), ForgeDirection.SOUTH, ForgeDirection.EAST);
+							double yNorthEast = FluidUtility.getAveragePercentageFilledForSides(TileTank.class, percentageFilled, world(), new Vector3(this), ForgeDirection.NORTH, ForgeDirection.EAST);
+							double ySouthWest = FluidUtility.getAveragePercentageFilledForSides(TileTank.class, percentageFilled, world(), new Vector3(this), ForgeDirection.SOUTH, ForgeDirection.WEST);
+							double yNorthWest = FluidUtility.getAveragePercentageFilledForSides(TileTank.class, percentageFilled, world(), new Vector3(this), ForgeDirection.NORTH, ForgeDirection.WEST);
 							FluidRenderUtility.renderFluidTesselation(tank, ySouthEast, yNorthEast, ySouthWest, yNorthWest);
 						}
 						else
 						{
 							GL11.glTranslated(-0.5, -0.5, -0.5);
 							GL11.glScaled(0.99, 0.99, 0.99);
-							int capacity = tileEntity instanceof TileTank ? ((TileTank) tileEntity).getForwardTank().getCapacity() : fluid.amount;
+							int capacity = this.getFluidCapacity();
 							double filledPercentage = (double) fluid.amount / (double) capacity;
 							double renderPercentage = fluid.getFluid().isGaseous() ? 1 : filledPercentage;
 
-							int[] displayList = FluidRenderUtility.getFluidDisplayLists(fluid, tileEntity.worldObj, false);
+							int[] displayList = FluidRenderUtility.getFluidDisplayLists(fluid, world(), false);
 
 							GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
 							GL11.glEnable(GL11.GL_CULL_FACE);
@@ -198,13 +148,10 @@ public class TileTank extends TileFluidDistribution implements IComparatorInputO
 			}
 
 			@Override
-			public boolean renderDynamic(Vector3 position, boolean isItem, float frame)
+			public void renderDynamic(Vector3 position, float frame, int pass)
 			{
-				renderTank(TileTank.this, position.x, position.y, position.z, getForwardTank().getFluid());
-				return false;
+				renderTank(position.x(), position.y(), position.z(), getFluid());
 			}
-		};
-	}
 
     @Override
     public FluidTank getTank() {
@@ -274,7 +221,7 @@ public class TileTank extends TileFluidDistribution implements IComparatorInputO
 		}
 
 		@Override
-		public void renderInventoryItem(ItemStack itemStack)
+        public void renderInventoryItem(IItemRenderer.ItemRenderType type, ItemStack itemStack, Object... data)
 		{
 			GL11.glPushMatrix();
 			RenderBlockUtility.tessellateBlockWithConnectedTextures(itemStack.getItemDamage(), Archaic.blockTank, null, RenderUtility.getIcon(Reference.PREFIX + "tankEdge"));
@@ -289,20 +236,19 @@ public class TileTank extends TileFluidDistribution implements IComparatorInputO
 
 			GL11.glPopMatrix();
 		}
-
-	}
+    }
 
 	@Override
 	public List<ItemStack> getRemovedItems(EntityPlayer entity)
 	{
 		List<ItemStack> drops = new ArrayList();
 
-		ItemStack itemStack = new ItemStack(Archaic.blockTank, 1, 0);
+		ItemStack itemStack = new ItemStack(Archaic.blockTank(), 1, 0);
 		if (itemStack != null)
 		{
-			if (getForwardTank() != null && getForwardTank().getFluid() != null)
+			if (getTank() != null && getTank().getFluid() != null)
 			{
-				FluidStack stack = getForwardTank().getFluid();
+				FluidStack stack = getTank().getFluid();
 
 				if (stack != null)
 				{
@@ -311,7 +257,7 @@ public class TileTank extends TileFluidDistribution implements IComparatorInputO
 						itemStack.setTagCompound(new NBTTagCompound());
 					}
 					drain(ForgeDirection.UNKNOWN, stack.amount, false);
-					itemStack.getTagCompound().setCompoundTag("fluid", stack.writeToNBT(new NBTTagCompound()));
+					itemStack.getTagCompound().setTag("fluid", stack.writeToNBT(new NBTTagCompound()));
 				}
 			}
 			drops.add(itemStack);

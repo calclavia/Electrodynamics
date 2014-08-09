@@ -2,12 +2,12 @@ package resonantinduction.core.grid.fluid.distribution
 
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
-import net.minecraftforge.fluids.IFluidHandler
+import net.minecraftforge.fluids.{Fluid, FluidStack, FluidTankInfo, IFluidHandler}
 import resonant.lib.utility.WorldUtility
 import resonantinduction.core.grid.MultipartNode
-import universalelectricity.api.core.grid.INodeProvider
+import resonantinduction.core.grid.fluid.TileTankNode
 
-class TankNode(parent: INodeProvider) extends MultipartNode[TankNode](parent) with IFluidHandler with TFluidForwarder
+class TankNode(parent: TileTankNode) extends MultipartNode[TankNode](parent) with IFluidHandler
 {
   var maxFlowRate: Int = 20
   var maxPressure: Int = 100
@@ -18,7 +18,7 @@ class TankNode(parent: INodeProvider) extends MultipartNode[TankNode](parent) wi
 
   var onChange: () => Unit = null
 
-  def genericParent = parent.asInstanceOf[TFluidDistributor]
+  def genericParent = parent.asInstanceOf[TileTankNode]
 
   def getMaxFlowRate: Int =
   {
@@ -58,9 +58,9 @@ class TankNode(parent: INodeProvider) extends MultipartNode[TankNode](parent) wi
       {
         val tile = (position + dir).getTileEntity
 
-        if (tile.isInstanceOf[TFluidDistributor])
+        if (tile.isInstanceOf[TileTankNode])
         {
-          connections.put(tile.asInstanceOf[TFluidDistributor].getNode(classOf[TankNode], dir.getOpposite), dir)
+          connections.put(tile.asInstanceOf[TileTankNode].getNode(classOf[TankNode], dir.getOpposite).asInstanceOf[TankNode], dir)
           connectedSides = WorldUtility.setEnableSide(connectedSides, dir, true)
         }
       }
@@ -80,7 +80,7 @@ class TankNode(parent: INodeProvider) extends MultipartNode[TankNode](parent) wi
     return source.isInstanceOf[TankNode]
   }
 
-  override def getForwardTank = getGrid.asInstanceOf[TankGrid]
+  def getForwardTank : TankGrid = getGrid.asInstanceOf[TankGrid]
 
   override protected def newGrid() = new TankGrid
 
@@ -95,4 +95,16 @@ class TankNode(parent: INodeProvider) extends MultipartNode[TankNode](parent) wi
     super.save(nbt)
     nbt.setInteger("pressure", pressure)
   }
+
+  override def drain(from: ForgeDirection, resource: FluidStack, doDrain: Boolean): FluidStack = getForwardTank.drain(from, resource, doDrain)
+
+  override def drain(from: ForgeDirection, maxDrain: Int, doDrain: Boolean): FluidStack = getForwardTank.drain(from, maxDrain, doDrain)
+
+  override def canFill(from: ForgeDirection, fluid: Fluid): Boolean = getForwardTank.canFill(from, fluid)
+
+  override def canDrain(from: ForgeDirection, fluid: Fluid): Boolean = getForwardTank.canDrain(from, fluid)
+
+  override def fill(from: ForgeDirection, resource: FluidStack, doFill: Boolean): Int = getForwardTank.fill(from, resource, doFill)
+
+  override def getTankInfo(from: ForgeDirection): Array[FluidTankInfo] = getForwardTank.getTankInfo(from)
 }

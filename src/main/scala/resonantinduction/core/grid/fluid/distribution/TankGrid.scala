@@ -3,6 +3,7 @@ package resonantinduction.core.grid.fluid.distribution
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.fluids.FluidStack
 import resonant.lib.utility.FluidUtility
+import resonantinduction.core.grid.fluid.TileTankNode
 
 import scala.collection.JavaConversions._
 import scala.collection.mutable
@@ -25,9 +26,9 @@ class TankGrid extends FluidDistributionGrid
       /**
        * Creates a priority queue with tanks in the bottom as highest priority.
        */
-      val heightPriorityQueue = new mutable.PriorityQueue[TFluidDistributor]()(new Ordering[TFluidDistributor]
+      val heightPriorityQueue = new mutable.PriorityQueue[TileTankNode]()(new Ordering[TileTankNode]
       {
-        def compare(a: TFluidDistributor, b: TFluidDistributor): Int =
+        def compare(a: TileTankNode, b: TileTankNode): Int =
         {
           if (networkTankFluid != null && networkTankFluid.getFluid.isGaseous) return 0
           return b.asInstanceOf[TileEntity].yCoord - a.asInstanceOf[TileEntity].yCoord
