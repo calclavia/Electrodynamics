@@ -1,12 +1,20 @@
 package resonantinduction.archaic.firebox;
 
+import io.netty.buffer.ByteBuf;
+import net.minecraft.block.material.Material;
+import net.minecraft.init.Blocks;
+import resonant.engine.grid.thermal.BoilEvent;
+import resonant.engine.grid.thermal.ThermalPhysics;
+import resonant.lib.network.discriminator.PacketAnnotation;
+import resonant.lib.network.discriminator.PacketTile;
+import resonant.lib.network.discriminator.PacketType;
+import resonant.lib.network.handle.IPacketReceiver;
 import resonantinduction.archaic.Archaic;
 import resonantinduction.archaic.fluid.gutter.TileGutter;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -18,21 +26,13 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-import resonant.lib.network.IPacketReceiver;
 import resonant.lib.network.Synced;
-import resonant.lib.prefab.tile.TileElectricalInventory;
-import resonant.lib.thermal.BoilEvent;
-import resonant.lib.thermal.ThermalPhysics;
-import resonantinduction.archaic.Archaic;
-import resonantinduction.archaic.fluid.gutter.TileGutter;
-import resonantinduction.archaic.Archaic;
-import resonantinduction.archaic.fluid.gutter.TileGutter;
+import resonantinduction.core.CoreContent;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.TileMaterial;
-import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.core.transform.vector.Vector3;
-
+import resonant.lib.content.prefab.java.TileElectricInventory;
 import com.google.common.io.ByteArrayDataInput;
 
 /**
@@ -40,7 +40,7 @@ import com.google.common.io.ByteArrayDataInput;
  *
  * @author Calclavia
  */
-public class TileFirebox extends TileElectricalInventory implements IPacketReceiver, IFluidHandler
+public class TileFirebox extends TileElectricInventory implements IPacketReceiver, IFluidHandler
 {
 	/**
 	 * 1KG of coal ~= 24MJ
@@ -58,12 +58,14 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 
 	public TileFirebox()
 	{
-		energy = new EnergyStorageHandler(POWER, (POWER * 2) / 20);
+        super(Material.rock);
+        setCapacity(POWER);
+        setMaxTransfer((POWER * 2) / 20);
 		setIO(ForgeDirection.UP, 0);
 	}
 
 	@Override
-	public void updateEntity()
+	public void update()
 	{
 		if (!worldObj.isRemote)
 		{
@@ -81,9 +83,9 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 					worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 				}
 			}
-			else if (isElectrical() && energy.checkExtract())
+			else if (isElectrical() && energy().checkExtract())
 			{
-				energy.extractEnergy();
+				energy().extractEnergy();
 
 				if (burnTime == 0)
 				{
@@ -102,13 +104,13 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 				}
 			}
 
-			int blockID = worldObj.getBlockId(xCoord, yCoord + 1, zCoord);
+			Block block = worldObj.getBlock(xCoord, yCoord + 1, zCoord);
 
 			if (burnTime > 0)
 			{
-				if (blockID == 0 && blockID != Block.fire.blockID)
+				if (block == null)
 				{
-					worldObj.setBlock(xCoord, yCoord + 1, zCoord, Block.fire.blockID);
+					worldObj.setBlock(xCoord, yCoord + 1, zCoord, Blocks.fire);
 				}
 
 				/**
@@ -117,7 +119,7 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 				heatEnergy += POWER / 20;
 				boolean usedHeat = false;
 
-				if (blockID == ResonantInduction.blockDust.blockID || blockID == ResonantInduction.blockRefinedDust.blockID)
+				if (block == CoreContent.blockDust()|| block == CoreContent.blockRefinedDust())
 				{
 					usedHeat = true;
 
@@ -125,27 +127,27 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 
 					if (dustTile instanceof TileMaterial)
 					{
-						String name = ((TileMaterial) dustTile).name;
+						String name = ((TileMaterial) dustTile).name();
 						int meta = worldObj.getBlockMetadata(xCoord, yCoord + 1, zCoord);
 
 						if (heatEnergy >= getMeltIronEnergy(((meta + 1) / 7f) * 1000))
 						{
-							int volumeMeta = blockID == ResonantInduction.blockRefinedDust.blockID ? meta : meta / 2;
+							int volumeMeta = block == CoreContent.blockRefinedDust() ? meta : meta / 2;
 
-							worldObj.setBlock(xCoord, yCoord + 1, zCoord, ResourceGenerator.getMolten(name).blockID, volumeMeta, 3);
+							worldObj.setBlock(xCoord, yCoord + 1, zCoord, ResourceGenerator.getMolten(name), volumeMeta, 3);
 
 							TileEntity tile = worldObj.getTileEntity(xCoord, yCoord + 1, zCoord);
 
 							if (tile instanceof TileMaterial)
 							{
-								((TileMaterial) tile).name = name;
+								((TileMaterial) tile).name_$eq(name);
 							}
 
 							heatEnergy = 0;
 						}
 					}
 				}
-				else if (blockID == Block.waterStill.blockID)
+				else if (block == Blocks.water)
 				{
 					usedHeat = true;
 					int volume = 100;
@@ -161,13 +163,13 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 						if (boiledVolume >= FluidContainerRegistry.BUCKET_VOLUME)
 						{
 							boiledVolume = 0;
-							worldObj.setBlock(xCoord, yCoord + 1, zCoord, 0);
+							worldObj.setBlockToAir(xCoord, yCoord + 1, zCoord);
 						}
 
 						heatEnergy = 0;
 					}
 				}
-				else if (blockID == Archaic.blockGutter.blockID)
+				else if (block == Archaic.blockGutter())
 				{
 					TileEntity tileEntity = worldObj.getTileEntity(xCoord, yCoord + 1, zCoord);
 
@@ -195,9 +197,9 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 
 				if (--burnTime == 0)
 				{
-					if (blockID == Block.fire.blockID)
+					if (block == Blocks.fire)
 					{
-						worldObj.setBlock(xCoord, yCoord + 1, zCoord, 0);
+						worldObj.setBlockToAir(xCoord, yCoord + 1, zCoord);
 					}
 
 					worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
@@ -224,12 +226,6 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 		return (long) (ThermalPhysics.getEnergyForTemperatureChange(mass, 450, temperatureChange) + ThermalPhysics.getEnergyForStateChange(mass, 272000));
 	}
 
-	@Override
-	public boolean canConnect(ForgeDirection direction, Object obj)
-	{
-		return isElectrical() && super.canConnect(direction, obj);
-	}
-
 	public boolean isElectrical()
 	{
 		return this.getBlockMetadata() == 1;
@@ -252,15 +248,15 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 	}
 
 	@Override
-	public Packet getDescriptionPacket()
+	public PacketAnnotation getDescPacket()
 	{
-		return ResonantInduction.PACKET_ANNOTATION.getPacket(this);
+		return new PacketAnnotation(this);
 	}
 
 	@Override
-	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
-	{
-		this.worldObj.markBlockForRenderUpdate(this.xCoord, this.yCoord, this.zCoord);
+	public void read(ByteBuf data, EntityPlayer player, PacketType type)
+    {
+		this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 	}
 
 	@Override

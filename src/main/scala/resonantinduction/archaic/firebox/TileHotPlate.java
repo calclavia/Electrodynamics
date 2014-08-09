@@ -3,19 +3,30 @@ package resonantinduction.archaic.firebox;
 import java.util.ArrayList;
 import java.util.List;
 
+import cpw.mods.fml.common.network.ByteBufUtils;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
-import resonant.lib.network.IPacketReceiver;
-import resonant.lib.network.IPacketSender;
-import resonant.lib.network.PacketHandler;
-import resonant.lib.prefab.tile.TileExternalInventory;
+import net.minecraft.util.IIcon;
+import net.minecraft.world.World;
+import resonant.content.spatial.block.SpatialBlock;
+import resonant.lib.network.discriminator.PacketTile;
+import resonant.lib.network.discriminator.PacketType;
+import resonant.lib.network.handle.IPacketReceiver;
+import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
-
+import resonant.lib.content.prefab.java.TileInventory;
 import com.google.common.io.ByteArrayDataInput;
+import universalelectricity.core.transform.region.Cuboid;
+import universalelectricity.core.transform.vector.Vector2;
+import universalelectricity.core.transform.vector.Vector3;
 
 /**
  * For smelting items.
@@ -23,7 +34,7 @@ import com.google.common.io.ByteArrayDataInput;
  * @author Calclavia
  * 
  */
-public class TileHotPlate extends TileExternalInventory implements IPacketSender, IPacketReceiver
+public class TileHotPlate extends TileInventory implements IPacketReceiver
 {
 	private final int POWER = 50000;
 	public final int[] smeltTime = new int[] { 0, 0, 0, 0 };
@@ -32,17 +43,21 @@ public class TileHotPlate extends TileExternalInventory implements IPacketSender
 
 	public TileHotPlate()
 	{
-		maxSlots = 4;
+        super(Material.iron);
+		setSizeInventory(4);
+        bounds(new Cuboid(0, 0, 0, 1, 0.2f, 1));
+        normalRender(false);
+        isOpaqueCube(false);
 	}
 
 	@Override
-	public void updateEntity()
+	public void update()
 	{
 		if (canRun())
 		{
 			boolean didSmelt = false;
 
-			for (int i = 0; i < maxSlots; i++)
+			for (int i = 0; i < getSizeInventory(); i++)
 			{
 				if (canSmelt(this.getStackInSlot(i)))
 				{
@@ -82,15 +97,15 @@ public class TileHotPlate extends TileExternalInventory implements IPacketSender
 		}
 	}
 
-	@Override
+
 	public void onInventoryChanged()
 	{
-		super.onInventoryChanged();
+		//super.onInventoryChanged();
 
 		/**
 		 * Update cache calculation.
 		 */
-		for (int i = 0; i < maxSlots; i++)
+		for (int i = 0; i < getSizeInventory(); i++)
 		{
 			if (getStackInSlot(i) != null)
 			{
@@ -139,7 +154,7 @@ public class TileHotPlate extends TileExternalInventory implements IPacketSender
 
 	public boolean isSmelting()
 	{
-		for (int i = 0; i < maxSlots; i++)
+		for (int i = 0; i < getSizeInventory(); i++)
 		{
 			if (getSmeltTime(i) > 0)
 			{
@@ -158,13 +173,13 @@ public class TileHotPlate extends TileExternalInventory implements IPacketSender
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemStack)
 	{
-		return i < maxSlots && canSmelt(itemStack);
+		return i < getSizeInventory() && canSmelt(itemStack);
 	}
 
 	@Override
-	public Packet getDescriptionPacket()
+	public PacketTile getDescPacket()
 	{
-		return ResonantInduction.PACKET_TILE.getPacket(this, this.getPacketData(0).toArray());
+		return new PacketTile(this, this.getPacketData(0).toArray());
 	}
 
 	/**
@@ -172,7 +187,6 @@ public class TileHotPlate extends TileExternalInventory implements IPacketSender
 	 * 2 - Energy Update
 	 * 3 - Tesla Beam
 	 */
-	@Override
 	public List getPacketData(int type)
 	{
 		List list = new ArrayList();
@@ -183,12 +197,12 @@ public class TileHotPlate extends TileExternalInventory implements IPacketSender
 	}
 
 	@Override
-	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
+	public void read(ByteBuf data, EntityPlayer player, PacketType type)
 	{
 		try
 		{
-			this.readFromNBT(PacketHandler.readNBTTagCompound(data));
-			this.worldObj.markBlockForRenderUpdate(this.xCoord, this.yCoord, this.zCoord);
+			this.readFromNBT(ByteBufUtils.readTag(data));
+			this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 		}
 		catch (Exception e)
 		{
@@ -200,7 +214,7 @@ public class TileHotPlate extends TileExternalInventory implements IPacketSender
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		for (int i = 0; i < maxSlots; i++)
+		for (int i = 0; i < getSizeInventory(); i++)
 			smeltTime[i] = nbt.getInteger("smeltTime" + i);
 	}
 
@@ -208,8 +222,63 @@ public class TileHotPlate extends TileExternalInventory implements IPacketSender
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		for (int i = 0; i < maxSlots; i++)
+		for (int i = 0; i < getSizeInventory(); i++)
 			nbt.setInteger("smeltTime" + i, smeltTime[i]);
 	}
 
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(IIconRegister iconReg)
+    {
+        super.registerIcons(iconReg);
+        SpatialBlock.icon().put("electricHotPlate", iconReg.registerIcon(Reference.prefix() + "electricHotPlate"));
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public IIcon getIcon(int side, int meta)
+    {
+        return meta == 1 ? SpatialBlock.icon().get("electricHotPlate") : SpatialBlock.icon().get("HotPlate");
+    }
+
+    @Override
+    public void click(EntityPlayer player)
+    {
+        if (server()) {
+            extractItem(this, 0, player);
+        }
+    }
+
+    @Override
+    public boolean use(EntityPlayer player, int side, Vector3 hit)
+    {
+            if (server())
+            {
+                Vector2 hitVector = new Vector2(hit.x(), hit.z());
+                final double regionLength = 1d / 2d;
+
+                /**
+                 * Crafting Matrix
+                 */
+                matrix:
+                for (int j = 0; j < 2; j++)
+                {
+                    for (int k = 0; k < 2; k++)
+                    {
+                        Vector2 check = new Vector2(j, k).multiply(regionLength);
+
+                        if (check.distance(hitVector) < regionLength)
+                        {
+                            int slotID = j * 2 + k;
+                            interactCurrentItem(this, slotID, player);
+                            break matrix;
+                        }
+                    }
+                }
+
+                onInventoryChanged();
+            }
+
+        return true;
+    }
 }

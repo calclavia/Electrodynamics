@@ -16,14 +16,10 @@ import resonantinduction.archaic.crate.ItemBlockCrate
 import resonantinduction.archaic.crate.TileCrate
 import resonantinduction.archaic.engineering.ItemHammer
 import resonantinduction.archaic.engineering.TileEngineeringTable
-import resonantinduction.archaic.filter.BlockImprinter
-import resonantinduction.archaic.firebox.BlockHotPlate
 import resonantinduction.archaic.firebox.TileFirebox
 import resonantinduction.archaic.firebox.TileHotPlate
 import resonantinduction.archaic.fluid.grate.TileGrate
 import resonantinduction.archaic.fluid.tank.TileTank
-import resonantinduction.archaic.process.BlockCastingMold
-import resonantinduction.archaic.process.BlockMillstone
 import resonantinduction.archaic.process.TileCastingMold
 import resonantinduction.archaic.process.TileMillstone
 import resonantinduction.core.Reference
@@ -69,28 +65,28 @@ class Archaic {
     def preInit( evt : FMLPreInitializationEvent ) {
         NetworkRegistry.instance().registerGuiHandler( this, proxy )
         Settings.config.load()
-        ArchaicBlocks.blockEngineeringTable = contentRegistry.newBlock(TileEngineeringTable.class)
-        ArchaicBlocks.blockCrate = contentRegistry.createBlock( classOf[ BlockCrate ], classOf[ ItemBlockCrate ], classOf[ TileCrate ] )
-        ArchaicBlocks.blockImprinter = contentRegistry.createTile( classOf[ BlockImprinter ], classOf[ TileImprinter ] )
+        ArchaicBlocks.blockEngineeringTable = contentRegistry.newBlock(classOf[ TileEngineeringTable])
+        ArchaicBlocks.blockCrate = contentRegistry.newBlock( classOf[ BlockCrate ], classOf[ ItemBlockCrate ], classOf[ TileCrate ] )
+        ArchaicBlocks.blockImprinter = contentRegistry.newBlock(classOf[ TileImprinter ] )
         ArchaicBlocks.blockTurntable = contentRegistry.newBlock( classOf[ TileTurntable ] )
-        ArchaicBlocks.blockFirebox = contentRegistry.createBlock( classOf[ BlockFirebox ], null, classOf[ TileFirebox ] )
-        ArchaicBlocks.blockHotPlate = contentRegistry.createTile( classOf[ BlockHotPlate ], classOf[ TileHotPlate ] )
-        ArchaicBlocks.blockMillstone = contentRegistry.createTile( classOf[ BlockMillstone ], classOf[ TileMillstone ] )
-        ArchaicBlocks.blockCast = contentRegistry.createTile( classOf[ BlockCastingMold ], classOf[ TileCastingMold ] )
+        ArchaicBlocks.blockFirebox = contentRegistry.newBlock(classOf[ TileFirebox ] )
+        ArchaicBlocks.blockHotPlate = contentRegistry.newBlock(classOf[ TileHotPlate ] )
+        ArchaicBlocks.blockMillstone = contentRegistry.newBlock( classOf[ TileMillstone ] )
+        ArchaicBlocks.blockCast = contentRegistry.newBlock( classOf[ TileCastingMold ] )
         ArchaicBlocks.blockGutter = contentRegistry.newBlock( classOf[ TileGutter ] )
         ArchaicBlocks.blockGrate = contentRegistry.newBlock( classOf[ TileGrate ] )
         ArchaicBlocks.blockFilter = contentRegistry.newBlock( classOf[ TileFilter ] )
         ArchaicBlocks.blockTank = contentRegistry.newBlock( classOf[ TileTank ] )
-        ArchaicItems.itemHandCrank = contentRegistry.createItem( classOf[ ItemHandCrank ] )
-        ArchaicItems.itemImprint = contentRegistry.createItem( classOf[ ItemImprint ] )
-        ArchaicItems.itemHammer = contentRegistry.createItem( classOf[ ItemHammer ] )
+        ArchaicItems.itemHandCrank = contentRegistry.newItem( classOf[ ItemHandCrank ] )
+        ArchaicItems.itemImprint = contentRegistry.newItem( classOf[ ItemImprint ] )
+        ArchaicItems.itemHammer = contentRegistry.newItem( classOf[ ItemHammer ] )
         Settings.config.save()
         proxy.preInit()
     }
 
     @EventHandler
     def init( evt : FMLInitializationEvent ) {
-        Settings.setModMetadata( metadata, ID, NAME, ResonantInduction.ID )
+        //Settings.setModMetadata( metadata, ID, NAME, ResonantInduction.ID )
         proxy.init()
     }
 
