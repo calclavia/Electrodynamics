@@ -19,6 +19,7 @@ import universalelectricity.core.transform.vector.VectorWorld
 
 import scala.collection.JavaConversions._
 
+import java.lang.{Iterable=>JIterable}
 object PartQuantumGlyph {
   final val MAX_GLYPH: Int = 4
   private[gate] final val bounds: Array[Cuboid6] = new Array[Cuboid6](15)
@@ -118,7 +119,7 @@ class PartQuantumGlyph extends JCuboidPart with TSlottedPart with JNormalOcclusi
     return new Cuboid6(0, 0, 0, 0.5, 0.5, 0.5)
   }
 
-  override def getOcclusionBoxes: Array[codechicken.lib.vec.Cuboid6] = return Array[Cuboid6](getBounds)
+  override def getOcclusionBoxes: JIterable[codechicken.lib.vec.Cuboid6] = Seq[Cuboid6](getBounds)
 
   def getSlotMask: Int = {
     return 1 << slot
@@ -128,12 +129,7 @@ class PartQuantumGlyph extends JCuboidPart with TSlottedPart with JNormalOcclusi
     return new ItemStack(AtomicContent.itemQuantumGlyph, 1, number)
   }
 
-  override def getDrops: Array[ItemStack] = {
-    super.getDrops
-    val drops: Array[ItemStack] = new Array[ItemStack](1)
-    drops(0) = getItem
-    return drops
-  }
+  override def getDrops: JIterable[ItemStack] = Seq[ItemStack](getItem)
 
   override def pickItem(hit: MovingObjectPosition): ItemStack = {
     return getItem
