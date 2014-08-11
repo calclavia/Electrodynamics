@@ -59,7 +59,7 @@ class ItemBlockCrate(block: Block) extends ItemBlock(block: Block)
 
   override def getUnlocalizedName(itemStack: ItemStack): String =
   {
-    return this.getUnlocalizedName + "." + itemStack.getItemDamage
+    return getUnlocalizedName() + "." + itemStack.getItemDamage
   }
 
   override def addInformation(itemStack: ItemStack, par2EntityPlayer: EntityPlayer, list: List[_], par4: Boolean)
@@ -113,7 +113,7 @@ class ItemBlockCrate(block: Block) extends ItemBlock(block: Block)
         {
           val tileEntity: TileCrate = world.getTileEntity(x, y, z).asInstanceOf[TileCrate]
           var count: Int = containingItem.stackSize
-          for (slot <- tileEntity.getInventory.getSizeInventory)
+          for (slot <- 0 until tileEntity.getInventory.getSizeInventory)
           {
             val stackSize: Int = Math.min(64, count)
             tileEntity.getInventory.setInventorySlotContents(slot, new ItemStack(containingItem.getItem, stackSize, containingItem.getItemDamage))
