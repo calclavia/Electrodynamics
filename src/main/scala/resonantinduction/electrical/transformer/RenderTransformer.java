@@ -41,7 +41,7 @@ public class RenderTransformer implements ISimpleItemRenderer
 		MODEL.renderOnly("base");
 	}
 
-	public void render(PartTransformer part, double x, double y, double z)
+	public void render(PartElectricTransformer part, double x, double y, double z)
 	{
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 0.5F, (float) z + 0.5F);

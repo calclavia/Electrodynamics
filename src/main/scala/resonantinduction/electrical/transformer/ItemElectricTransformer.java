@@ -12,13 +12,13 @@ import codechicken.multipart.JItemMultiPart;
 import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.TMultiPart;
 
-public class ItemTransformer extends JItemMultiPart implements IHighlight
+public class ItemElectricTransformer extends JItemMultiPart implements IHighlight
 {
 	@Override
 	public TMultiPart newPart(ItemStack itemStack, EntityPlayer player, World world, BlockCoord pos, int side, Vector3 hit)
 	{
 		side = FacePlacementGrid$.MODULE$.getHitSlot(hit, side);
-		PartTransformer part = (PartTransformer) MultiPartRegistry.createPart("resonant_induction_transformer", false);
+		PartElectricTransformer part = (PartElectricTransformer) MultiPartRegistry.createPart("resonant_induction_transformer", false);
 
 		if (part != null)
 		{

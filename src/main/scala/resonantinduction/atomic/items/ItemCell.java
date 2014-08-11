@@ -7,12 +7,13 @@ import cpw.mods.fml.relauncher.Side;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.item.ItemStack;
 import resonant.lib.utility.LanguageUtility;
+import resonantinduction.atomic.AtomicContent;
 
 public class ItemCell extends ItemTooltip
 {
     public ItemCell()
     {
-        setContainerItem(Atomic.itemCell);
+        setContainerItem(AtomicContent.itemCell());
     }
     
     @SideOnly(Side.CLIENT)

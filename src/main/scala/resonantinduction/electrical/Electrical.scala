@@ -16,7 +16,7 @@ import resonantinduction.electrical.generator.{TileMotor, TileSolarPanel, TileTh
 import resonantinduction.electrical.levitator.ItemLevitator
 import resonantinduction.electrical.multimeter.ItemMultimeter
 import resonantinduction.electrical.tesla.TileTesla
-import resonantinduction.electrical.transformer.ItemTransformer
+import resonantinduction.electrical.transformer.ItemElectricTransformer
 import resonantinduction.electrical.wire.{EnumWireMaterial, ItemWire}
 
 /** Resonant Induction Electrical Module
@@ -40,7 +40,7 @@ object Electrical {
     Settings.config.load
     ElectricalContent.itemWire = Electrical.contentRegistry.newItem(classOf[ItemWire])
     ElectricalContent.itemMultimeter = Electrical.contentRegistry.newItem(classOf[ItemMultimeter])
-    ElectricalContent.itemTransformer = Electrical.contentRegistry.newItem(classOf[ItemTransformer])
+    ElectricalContent.itemTransformer = Electrical.contentRegistry.newItem(classOf[ItemElectricTransformer])
     ElectricalContent.blockTesla = Electrical.contentRegistry.newBlock(classOf[TileTesla])
     ElectricalContent.blockBattery = Electrical.contentRegistry.newBlock(classOf[BlockBattery], classOf[ItemBlockBattery], classOf[TileBattery])
     ElectricalContent.itemLevitator = Electrical.contentRegistry.newItem(classOf[ItemLevitator])

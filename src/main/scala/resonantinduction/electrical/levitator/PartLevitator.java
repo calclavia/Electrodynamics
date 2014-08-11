@@ -31,6 +31,7 @@ import resonantinduction.core.prefab.part.MultipartUtility;
 import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.part.PartFace;
 import resonantinduction.electrical.Electrical;
+import resonantinduction.electrical.ElectricalContent;
 import resonantinduction.electrical.tesla.TileTesla;
 import universalelectricity.core.transform.vector.Vector3;
 import codechicken.lib.data.MCDataInput;
@@ -271,8 +272,8 @@ public class PartLevitator extends PartFace
 							 */
 							if (renderBeam)
 							{
-								Electrical.proxy.renderElectricShock(world(), getBeamSpawnPosition(), getPosition().add(0.5), EnumColor.DYES[dyeID].toColor(), world().rand.nextFloat() > 0.9);
-								Electrical.proxy.renderElectricShock(world(), getLink().getPosition().add(0.5), getLink().getBeamSpawnPosition(), EnumColor.DYES[dyeID].toColor(), world().rand.nextFloat() > 0.9);
+								Electrical.proxy().renderElectricShock(world(), getBeamSpawnPosition(), getPosition().add(0.5), EnumColor.DYES[dyeID].toColor(), world().rand.nextFloat() > 0.9);
+								Electrical.proxy().renderElectricShock(world(), getLink().getPosition().add(0.5), getLink().getBeamSpawnPosition(), EnumColor.DYES[dyeID].toColor(), world().rand.nextFloat() > 0.9);
 							}
 
 							for (int i = 0; i < results.size(); i++)
@@ -290,7 +291,7 @@ public class PartLevitator extends PartFace
 
 										if (renderBeam)
 										{
-											Electrical.proxy.renderElectricShock(world(), prevResult.clone().add(0.5), result.clone().add(0.5), EnumColor.DYES[dyeID].toColor(), world().rand.nextFloat() > 0.9);
+											Electrical.proxy().renderElectricShock(world(), prevResult.clone().add(0.5), result.clone().add(0.5), EnumColor.DYES[dyeID].toColor(), world().rand.nextFloat() > 0.9);
 										}
 
 										AxisAlignedBB bounds = AxisAlignedBB.getBoundingBox(result.x(), result.y(), result.z(), result.x() + 1, result.y() + 1, result.z() + 1);
@@ -328,7 +329,7 @@ public class PartLevitator extends PartFace
 
 					if (ticks % renderPeriod == 0)
 					{
-						Electrical.proxy.renderElectricShock(world(), getBeamSpawnPosition(), new Vector3(operationBounds.maxX - 0.5 - placementSide.offsetX / 3f, operationBounds.maxY - 0.5 - placementSide.offsetY / 3f, operationBounds.maxZ - 0.5 - placementSide.offsetZ / 3f), EnumColor.DYES[dyeID].toColor(), world().rand.nextFloat() > 0.9);
+						Electrical.proxy().renderElectricShock(world(), getBeamSpawnPosition(), new Vector3(operationBounds.maxX - 0.5 - placementSide.offsetX / 3f, operationBounds.maxY - 0.5 - placementSide.offsetY / 3f, operationBounds.maxZ - 0.5 - placementSide.offsetZ / 3f), EnumColor.DYES[dyeID].toColor(), world().rand.nextFloat() > 0.9);
 					}
 				}
 			}
@@ -669,7 +670,7 @@ public class PartLevitator extends PartFace
 	@Override
 	protected ItemStack getItem()
 	{
-		return new ItemStack(Electrical.itemLevitator);
+		return new ItemStack(ElectricalContent.itemLevitator());
 	}
 
 	@Override
