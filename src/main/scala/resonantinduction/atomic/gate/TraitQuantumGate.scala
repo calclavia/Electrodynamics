@@ -28,7 +28,7 @@ class TraitQuantumGate extends TileMultipart with IQuantumGate {
     {
       if (part.isInstanceOf[IQuantumGate])
       {
-        frequency += Math.pow(PartQuantumGlyph.MAX_GLYPH, i) * (part.asInstanceOf[IBlockFrequency]).getFrequency
+        frequency += (Math.pow(PartQuantumGlyph.MAX_GLYPH, i) * (part.asInstanceOf[IBlockFrequency]).getFrequency).asInstanceOf[Int]
         i += 1
       }
     }

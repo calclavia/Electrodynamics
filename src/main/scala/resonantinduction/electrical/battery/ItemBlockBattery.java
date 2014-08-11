@@ -2,28 +2,27 @@ package resonantinduction.electrical.battery;
 
 import java.util.List;
 
+import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import resonant.lib.render.EnumColor;
 import resonant.lib.utility.LanguageUtility;
-import universalelectricity.api.CompatibilityModule;
+import universalelectricity.api.UnitDisplay;
 import universalelectricity.api.UniversalClass;
-import universalelectricity.api.UniversalElectricity;
-import universalelectricity.api.energy.UnitDisplay;
-import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.item.IEnergyItem;
-import universalelectricity.api.item.IVoltageItem;
+import universalelectricity.compatibility.Compatibility;
 
 @UniversalClass
-public class ItemBlockBattery extends ItemBlock implements IEnergyItem, IVoltageItem
+public class ItemBlockBattery extends ItemBlock implements IEnergyItem
 {
-	public ItemBlockBattery(int id)
+	public ItemBlockBattery(Block block)
 	{
-		super(id);
+		super(block);
 		this.setMaxStackSize(1);
 		this.setMaxDamage(100);
 		this.setNoRepair();
@@ -36,7 +35,7 @@ public class ItemBlockBattery extends ItemBlock implements IEnergyItem, IVoltage
 		list.add(LanguageUtility.getLocal("tooltip.tier") + ": " + (getTier(itemStack) + 1));
 
 		String color = "";
-		long joules = this.getEnergy(itemStack);
+		double joules = this.getEnergy(itemStack);
 
 		if (joules <= this.getEnergyCapacity(itemStack) / 3)
 		{
@@ -51,7 +50,7 @@ public class ItemBlockBattery extends ItemBlock implements IEnergyItem, IVoltage
 			color = "\u00a76";
 		}
 		itemStack.getItemDamageForDisplay();
-		list.add(LanguageUtility.getLocal("tooltip.battery.energy").replace("%0", color).replace("%1", EnumColor.GREY.toString()).replace("%v0", UnitDisplay.getDisplayShort(joules, Unit.JOULES)).replace("%v1", UnitDisplay.getDisplayShort(this.getEnergyCapacity(itemStack), Unit.JOULES)));
+		list.add(LanguageUtility.getLocal("tooltip.battery.energy").replace("%0", color).replace("%1", EnumColor.GREY.toString()).replace("%v0", new UnitDisplay(UnitDisplay.Unit.JOULES, joules).toString()).replace("%v1", new UnitDisplay(UnitDisplay.Unit.JOULES, this.getEnergyCapacity(itemStack),  true).toString()));
 	}
 
 	/**
@@ -65,10 +64,10 @@ public class ItemBlockBattery extends ItemBlock implements IEnergyItem, IVoltage
 	}
 
 	@Override
-	public long recharge(ItemStack itemStack, long energy, boolean doReceive)
+	public double recharge(ItemStack itemStack, double energy, boolean doReceive)
 	{
-		long rejectedElectricity = Math.max((this.getEnergy(itemStack) + energy) - this.getEnergyCapacity(itemStack), 0);
-		long energyToReceive = Math.min(energy - rejectedElectricity, getTransferRate(itemStack));
+		double rejectedElectricity = Math.max((this.getEnergy(itemStack) + energy) - this.getEnergyCapacity(itemStack), 0);
+		double energyToReceive = Math.min(energy - rejectedElectricity, getTransferRate(itemStack));
 
 		if (doReceive)
 		{
@@ -79,9 +78,9 @@ public class ItemBlockBattery extends ItemBlock implements IEnergyItem, IVoltage
 	}
 
 	@Override
-	public long discharge(ItemStack itemStack, long energy, boolean doTransfer)
+	public double discharge(ItemStack itemStack, double energy, boolean doTransfer)
 	{
-		long energyToExtract = Math.min(Math.min(this.getEnergy(itemStack), energy), getTransferRate(itemStack));
+		double energyToExtract = Math.min(Math.min(this.getEnergy(itemStack), energy), getTransferRate(itemStack));
 
 		if (doTransfer)
 		{
@@ -92,31 +91,31 @@ public class ItemBlockBattery extends ItemBlock implements IEnergyItem, IVoltage
 	}
 
 	@Override
-	public long getVoltage(ItemStack itemStack)
+	public double getVoltage(ItemStack itemStack)
 	{
-		return UniversalElectricity.DEFAULT_VOLTAGE;
+		return 240;
 	}
 
 	@Override
-	public void setEnergy(ItemStack itemStack, long joules)
+	public void setEnergy(ItemStack itemStack, double joules)
 	{
 		if (itemStack.getTagCompound() == null)
 		{
 			itemStack.setTagCompound(new NBTTagCompound());
 		}
 
-		long electricityStored = Math.max(Math.min(joules, this.getEnergyCapacity(itemStack)), 0);
-		itemStack.getTagCompound().setLong("electricity", electricityStored);
+		double electricityStored = Math.max(Math.min(joules, this.getEnergyCapacity(itemStack)), 0);
+		itemStack.getTagCompound().setDouble("electricity", electricityStored);
 	}
 
-	public long getTransfer(ItemStack itemStack)
+	public double getTransfer(ItemStack itemStack)
 	{
 		return this.getEnergyCapacity(itemStack) - this.getEnergy(itemStack);
 	}
 
 	/** Gets the energy stored in the item. Energy is stored using item NBT */
 	@Override
-	public long getEnergy(ItemStack itemStack)
+	public double getEnergy(ItemStack itemStack)
 	{
 		if (itemStack.getTagCompound() == null)
 		{
@@ -154,24 +153,24 @@ public class ItemBlockBattery extends ItemBlock implements IEnergyItem, IVoltage
 	}
 
 	@Override
-	public long getEnergyCapacity(ItemStack theItem)
+	public double getEnergyCapacity(ItemStack theItem)
 	{
 		return TileBattery.getEnergyForTier(getTier(theItem));
 	}
 
-	public long getTransferRate(ItemStack itemStack)
+	public double getTransferRate(ItemStack itemStack)
 	{
 		return this.getEnergyCapacity(itemStack) / 100;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
+	public void getSubItems(Item par1, CreativeTabs par2CreativeTabs, List par3List)
 	{
 		for (byte tier = 0; tier <= TileBattery.MAX_TIER; tier++)
 		{
-			par3List.add(CompatibilityModule.getItemWithCharge(setTier(new ItemStack(this), tier), 0));
-			par3List.add(CompatibilityModule.getItemWithCharge(setTier(new ItemStack(this), tier), TileBattery.getEnergyForTier(tier)));
+			par3List.add(Compatibility.getItemWithCharge(setTier(new ItemStack(this), tier), 0));
+			par3List.add(Compatibility.getItemWithCharge(setTier(new ItemStack(this), tier), TileBattery.getEnergyForTier(tier)));
 		}
 	}
 }

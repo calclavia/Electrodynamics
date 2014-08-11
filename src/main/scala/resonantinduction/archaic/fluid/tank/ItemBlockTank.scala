@@ -44,11 +44,11 @@ class ItemBlockTank(block: Block) extends ItemBlock(block: Block) with IFluidCon
   }
 
   override def getUnlocalizedName(itemStack: ItemStack): String = {
-    val translation: String = LanguageUtility.getLocal(getUnlocalizedName + "." + itemStack.getItemDamage)
+    val translation: String = LanguageUtility.getLocal(getUnlocalizedName() + "." + itemStack.getItemDamage)
     if (translation == null || translation.isEmpty) {
-      return getUnlocalizedName
+      return getUnlocalizedName()
     }
-    return getUnlocalizedName + "." + itemStack.getItemDamage
+    return getUnlocalizedName() + "." + itemStack.getItemDamage
   }
 
   override def placeBlockAt(stack: ItemStack, player: EntityPlayer, world: World, x: Int, y: Int, z: Int, side: Int, hitX: Float, hitY: Float, hitZ: Float, metadata: Int): Boolean = {

@@ -19,10 +19,8 @@ import scala.util.control.Breaks._
 import resonant.lib.wrapper.WrapList._
 
 class ItemQuantumGlyph extends JItemMultiPart with IHighlight {
-  def this() {
-    this()
-    setHasSubtypes(true)
-  }
+
+  setHasSubtypes(true)
 
   override def getUnlocalizedName(itemStack: ItemStack): String = {
     return super.getUnlocalizedName(itemStack) + "." + itemStack.getItemDamage
@@ -65,7 +63,7 @@ class ItemQuantumGlyph extends JItemMultiPart with IHighlight {
 
   override def getSubItems(item: Item, tab: CreativeTabs, listToAddTo: List[_]) {
 
-      for(i <- PartQuantumGlyph.MAX_GLYPH)
+      for(i <- 0 until PartQuantumGlyph.MAX_GLYPH)
       {
         {
           listToAddTo.add(new ItemStack(item, 1, i))

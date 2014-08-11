@@ -1,47 +1,38 @@
 package resonantinduction.atomic.machine.reactor
 
-import java.util.ArrayList
-import java.util.List
-import net.minecraft.block.material.Material
-import net.minecraft.init.Blocks
-import resonant.api.event.PlasmaEvent
-import resonant.engine.grid.thermal.{ThermalGrid, ThermalPhysics}
-import resonant.lib.content.prefab.java.TileInventory
-import resonant.lib.multiblock.reference.{MultiBlockHandler, IMultiBlockStructure}
-import resonant.lib.network.discriminator.PacketAnnotation
-import resonant.lib.network.netty.PacketManager
+import java.util.{ArrayList, List}
+
+import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.block.Block
+import net.minecraft.block.material.Material
 import net.minecraft.entity.EntityLiving
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.init.Blocks
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.AxisAlignedBB
 import net.minecraft.world.World
-import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.common.MinecraftForge
-import net.minecraftforge.fluids.Fluid
-import net.minecraftforge.fluids.FluidContainerRegistry
-import net.minecraftforge.fluids.FluidStack
-import net.minecraftforge.fluids.FluidTank
-import net.minecraftforge.fluids.FluidTankInfo
-import net.minecraftforge.fluids.IFluidHandler
-import resonant.api.IReactor
-import resonant.api.IReactorComponent
+import net.minecraftforge.common.util.ForgeDirection
+import net.minecraftforge.fluids.{Fluid, FluidContainerRegistry, FluidStack, FluidTank, FluidTankInfo, IFluidHandler}
+import resonant.api.{IReactor, IReactorComponent}
+import resonant.api.event.PlasmaEvent
+import resonant.engine.grid.thermal.{ThermalGrid, ThermalPhysics}
+import resonant.lib.content.prefab.java.TileInventory
+import resonant.lib.multiblock.reference.{IMultiBlockStructure, MultiBlockHandler}
 import resonant.lib.network.Synced
-import resonant.lib.network.Synced.SyncedInput
-import resonant.lib.network.Synced.SyncedOutput
+import resonant.lib.network.Synced.{SyncedInput, SyncedOutput}
+import resonant.lib.network.discriminator.PacketAnnotation
 import resonant.lib.prefab.poison.PoisonRadiation
 import resonant.lib.utility.inventory.InventoryUtility
-import resonantinduction.atomic.Atomic
-import resonantinduction.atomic.ReactorExplosion
 import resonantinduction.atomic.machine.plasma.TilePlasma
+import resonantinduction.atomic.{Atomic, AtomicContent}
 import resonantinduction.core.Reference
-import resonantinduction.core.ResonantInduction
-import universalelectricity.core.transform.vector.{VectorWorld, Vector3}
-import cpw.mods.fml.relauncher.Side
-import cpw.mods.fml.relauncher.SideOnly
+import universalelectricity.core.transform.vector.{Vector3, VectorWorld}
+
 import scala.util.control.Breaks._
+import scala.collection.convert.wrapAll._
 
 /** The primary reactor component cell used to build reactors with.
   *
@@ -66,13 +57,10 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
   /** Multiblock Methods. */
   private var multiBlock: MultiBlockHandler[TileReactorCell] = null
 
-  def this() {
-    this
-    textureName = "machine"
-    isOpaqueCube = false
-    normalRender = false
-    customItemRender = true
-  }
+  textureName = "machine"
+  isOpaqueCube = false
+  normalRender = false
+  customItemRender = true
 
   override protected def onWorldJoin {
     updatePositionStatus
@@ -128,7 +116,7 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
       }
     }
     if (!getWorld.isRemote) {
-      if (getMultiBlock().isPrimary() && tank.getFluid != null && tank.getFluid.fluidID == Atomic.FLUID_PLASMA.getID) {
+      if (getMultiBlock().isPrimary() && tank.getFluid != null && tank.getFluid.fluidID == AtomicContent.FLUID_PLASMA.getID) {
         val drain: FluidStack = tank.drain(FluidContainerRegistry.BUCKET_VOLUME, false)
         if (drain != null && drain.amount >= FluidContainerRegistry.BUCKET_VOLUME) {
           val spawnDir: ForgeDirection = ForgeDirection.getOrientation(worldObj.rand.nextInt(3) + 2)
@@ -153,7 +141,7 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
             }
             if (ticks % 20 == 0) {
               if (worldObj.rand.nextFloat > 0.65) {
-                val entities: List[_] = worldObj.getEntitiesWithinAABB(classOf[EntityLiving], AxisAlignedBB.getBoundingBox(xCoord - TileReactorCell.RADIUS * 2, yCoord - TileReactorCell.RADIUS * 2, zCoord - TileReactorCell.RADIUS * 2, xCoord + TileReactorCell.RADIUS * 2, yCoord + TileReactorCell.RADIUS * 2, zCoord + TileReactorCell.RADIUS * 2))
+                val entities: List[EntityLiving] = worldObj.getEntitiesWithinAABB(classOf[EntityLiving], AxisAlignedBB.getBoundingBox(xCoord - TileReactorCell.RADIUS * 2, yCoord - TileReactorCell.RADIUS * 2, zCoord - TileReactorCell.RADIUS * 2, xCoord + TileReactorCell.RADIUS * 2, yCoord + TileReactorCell.RADIUS * 2, zCoord + TileReactorCell.RADIUS * 2)).asInstanceOf[List[EntityLiving]]
                 for (entity <- entities) {
                   PoisonRadiation.INSTANCE.poisonEntity(new Vector3(this), entity)
                 }
@@ -161,21 +149,21 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
             }
           }
         }
-        temperature = ThermalGrid.getTemperature(new Nothing(this))
+        temperature = ThermalGrid.getTemperature(new VectorWorld(this))
         if (internalEnergy - prevInternalEnergy > 0) {
           var deltaT: Float = ThermalPhysics.getTemperatureForEnergy(mass, specificHeatCapacity, ((internalEnergy - prevInternalEnergy) * 0.15).asInstanceOf[Long])
           var rods: Int = 0
 
-            for(i <- 6) {
+            for(i <- 0 to 5) {
               {
                 val checkAdjacent: Vector3 = new Vector3(this).add(ForgeDirection.getOrientation(i))
-                if (checkAdjacent.getBlock(worldObj) == Atomic.blockControlRod) {
-                  deltaT /= 1.1
+                if (checkAdjacent.getBlock(worldObj) == AtomicContent.blockControlRod) {
+                  deltaT /= 1.1f
                   rods += 1
                 }
               }
           }
-          ThermalGrid.addTemperature(new Nothing(this), deltaT)
+          ThermalGrid.addTemperature(new VectorWorld(this), deltaT)
           if (worldObj.rand.nextInt(80) == 0 && this.getTemperature >= 373) {
             worldObj.playSoundEffect(this.xCoord + 0.5F, this.yCoord + 0.5F, this.zCoord + 0.5F, "Fluid.lava", 0.5F, 2.1F + (worldObj.rand.nextFloat - worldObj.rand.nextFloat) * 0.85F)
           }
@@ -208,12 +196,12 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
           val leakPos: VectorWorld = new VectorWorld(this).add(worldObj.rand.nextInt(20) - 10, worldObj.rand.nextInt(20) - 10, worldObj.rand.nextInt(20) - 10)
           val block : Block = leakPos.getBlock
           if (block == Blocks.grass) {
-            leakPos.setBlock(worldObj, Atomic.blockRadioactive)
+            leakPos.setBlock(world, AtomicContent.blockRadioactive)
             tank.drain(FluidContainerRegistry.BUCKET_VOLUME, true)
           }
           else if (block == null) {
             if (tank.getFluid != null) {
-              leakPos.setBlock(worldObj, tank.getFluid.getFluid.getBlock)
+              leakPos.setBlock(world, tank.getFluid.getFluid.getBlock)
               tank.drain(FluidContainerRegistry.BUCKET_VOLUME, true)
             }
           }
@@ -222,7 +210,7 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
       if (ticks % 60 == 0 || shouldUpdate) {
         shouldUpdate = false
         notifyChange
-        PacketManager.sendPacketToClients(getDescriptionPacket, worldObj, new Vector3(this), 50)
+        sendPacket(getDescPacket)
       }
     }
     else {
@@ -234,7 +222,7 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
   }
 
   def isOverToxic: Boolean = {
-    return tank.getFluid != null && tank.getFluid.fluidID == Atomic.FLUID_TOXIC_WASTE.getID && tank.getFluid.amount >= tank.getCapacity
+    return tank.getFluid != null && tank.getFluid.fluidID == AtomicContent.FLUID_TOXIC_WASTE.getID && tank.getFluid.amount >= tank.getCapacity
   }
 
   /** Multiblock Methods */
@@ -324,9 +312,9 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
   private def meltDown {
     if (!worldObj.isRemote) {
       this.worldObj.setBlock(this.xCoord, this.yCoord, this.zCoord, Blocks.lava)
-      val reactorExplosion: ReactorExplosion = new ReactorExplosion(worldObj, null, xCoord, yCoord, zCoord, 9f)
-      reactorExplosion.doExplosionA
-      reactorExplosion.doExplosionB(true)
+      //val reactorExplosion: ReactorExplosion = new ReactorExplosion(worldObj, null, xCoord, yCoord, zCoord, 9f)
+      //reactorExplosion.doExplosionA
+      //reactorExplosion.doExplosionB(true)
     }
   }
 
@@ -388,20 +376,20 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
   }
 
   override def canFill(from: ForgeDirection, fluid: Fluid): Boolean = {
-    return fluid eq Atomic.FLUID_PLASMA
+    return fluid == AtomicContent.FLUID_PLASMA
   }
 
   override def canDrain(from: ForgeDirection, fluid: Fluid): Boolean = {
-    return fluid eq Atomic.FLUID_TOXIC_WASTE
+    return fluid == AtomicContent.FLUID_TOXIC_WASTE
   }
 
   override def getTankInfo(from: ForgeDirection): Array[FluidTankInfo] = {
     return Array[FluidTankInfo](tank.getInfo)
   }
 
-  @SideOnly(Side.CLIENT) def getRenderBoundingBox: AxisAlignedBB = {
+  @SideOnly(Side.CLIENT)  override def getRenderBoundingBox: AxisAlignedBB = {
     if (getMultiBlock.isPrimary && getMultiBlock.isConstructed) {
-      return INFINITE_EXTENT_AABB
+      return AxisAlignedBB.getBoundingBox(x - 5, y - 5, z - 5, x + 5, y + 5, z + 5);
     }
     return super.getRenderBoundingBox
   }

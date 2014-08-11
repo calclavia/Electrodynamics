@@ -12,14 +12,11 @@ import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.oredict.OreDictionary
 import resonant.api.IFilterable
 import resonant.api.IRemovable.ISneakPickup
-import resonant.content.spatial.block.SpatialTile
-import resonant.engine.ResonantEngine
-import resonant.lib.content.prefab.TInventory
+import resonant.lib.content.prefab.java.TileInventory
 import resonant.lib.network.ByteBufWrapper._
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.TPacketReceiver
 import resonantinduction.archaic.ArchaicBlocks
-import universalelectricity.core.transform.vector.Vector3
 
 /** Basic single stack inventory.
   * <p/>
@@ -42,7 +39,7 @@ object TileCrate {
   final val maxSize: Int = 2
 }
 
-class TileCrate extends SpatialTile(Material.rock) with TInventory with TPacketReceiver with IFilterable with ISneakPickup {
+class TileCrate extends TileInventory(Material.rock) with TPacketReceiver with IFilterable with ISneakPickup {
 
   /** delay from last click */
   var prevClickTime: Long = -1000
@@ -66,7 +63,7 @@ class TileCrate extends SpatialTile(Material.rock) with TInventory with TPacketR
       }
       if (doUpdate) {
         doUpdate = false
-        ResonantEngine.instance.packetHandler.sendToAllAround(getDescriptionPacket, this.worldObj, new Vector3(this), 50)
+        sendPacket(getDescPacket)
       }
     }
   }
@@ -90,7 +87,7 @@ class TileCrate extends SpatialTile(Material.rock) with TInventory with TPacketR
     if (worldObj == null || !worldObj.isRemote) {
       var newSampleStack: ItemStack = null
       var rebuildBase: Boolean = false
-      for (slot <- getSizeInventory) {
+      for (slot <- 0 until getSizeInventory) {
 
         val slotStack: ItemStack = this.getInventory.getStackInSlot(slot)
         if (slotStack != null && slotStack.getItem != null && slotStack.stackSize > 0) {
@@ -210,15 +207,16 @@ class TileCrate extends SpatialTile(Material.rock) with TInventory with TPacketR
   }
 
   override def getDescPacket: PacketTile = {
-    var packet: PacketTile = null
+    var packet: PacketTile = new PacketTile(this)
     this.buildSampleStack
     val stack: ItemStack = this.getSampleStack
     if (stack != null) {
-
-      packet = new PacketTile(this, true, stack.writeToNBT(new NBTTagCompound), stack.stackSize)
+      packet <<< true
+      packet <<< stack
+      packet <<< stack.stackSize
     }
     else {
-      packet = new PacketTile(this, false)
+      packet <<< false
     }
     return packet
   }

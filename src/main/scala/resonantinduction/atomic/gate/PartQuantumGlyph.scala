@@ -1,38 +1,22 @@
 package resonantinduction.atomic.gate
 
-import java.util.ArrayList
-import java.util.Arrays
-import java.util.HashMap
-import java.util.List
-import java.util.Set
+import java.util.{ArrayList, List, Set}
+
+import codechicken.lib.data.{MCDataInput, MCDataOutput}
+import codechicken.lib.vec.{Cuboid6, Vector3}
+import codechicken.multipart.{JCuboidPart, JNormalOcclusion, TSlottedPart}
+import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
-import net.minecraft.util.MovingObjectPosition
-import net.minecraftforge.common.util.ForgeDirection
-import net.minecraftforge.fluids.Fluid
-import net.minecraftforge.fluids.FluidContainerRegistry
-import net.minecraftforge.fluids.FluidStack
-import net.minecraftforge.fluids.FluidTank
-import net.minecraftforge.fluids.FluidTankInfo
-import resonant.api.IExternalInventory
+import net.minecraft.util.{ChatComponentText, MovingObjectPosition}
 import resonant.api.blocks.IBlockFrequency
 import resonant.api.mffs.fortron.FrequencyGridRegistry
-import resonant.engine.grid.frequency.FrequencyGrid
-import resonant.lib.utility.inventory.ExternalInventory
-import codechicken.lib.data.MCDataInput
-import codechicken.lib.data.MCDataOutput
-import codechicken.lib.vec.Cuboid6
-import codechicken.lib.vec.Vector3
-import codechicken.multipart.JCuboidPart
-import codechicken.multipart.JNormalOcclusion
-import codechicken.multipart.TSlottedPart
-import cpw.mods.fml.relauncher.Side
-import cpw.mods.fml.relauncher.SideOnly
 import resonantinduction.electrical.Electrical
 import universalelectricity.core.transform.vector.VectorWorld
+import scala.collection.JavaConversions._
 
 object PartQuantumGlyph {
   final val MAX_GLYPH: Int = 4
@@ -40,6 +24,11 @@ object PartQuantumGlyph {
 }
 
 class PartQuantumGlyph extends JCuboidPart with TSlottedPart with JNormalOcclusion with IQuantumGate {
+
+  private var slot: Byte = 0
+  private[gate] var number: Byte = 0
+  private[gate] var ticks: Int = 0
+
   def preparePlacement(side: Int, itemDamage: Int) {
     this.slot = side.asInstanceOf[Byte]
     this.number = itemDamage.asInstanceOf[Byte]
@@ -62,21 +51,31 @@ class PartQuantumGlyph extends JCuboidPart with TSlottedPart with JNormalOcclusi
     }
   }
 
-  def transport(entity: Entity) {
-    if (ticks % 10 == 0 && (tile.asInstanceOf[IQuantumGate]).getFrequency != -1) {
+  def transport(`ob`: scala.Any)
+  {
+    if (ticks % 10 == 0 && (tile.asInstanceOf[IQuantumGate]).getFrequency != -1)
+    {
       val frequencyBlocks: Set[IBlockFrequency] = FrequencyGridRegistry.instance.getNodes((tile.asInstanceOf[IQuantumGate]).getFrequency)
       val gates: List[IQuantumGate] = new ArrayList[IQuantumGate]
-      import scala.collection.JavaConversions._
-      for (frequencyBlock <- frequencyBlocks) {
-        if (frequencyBlock.isInstanceOf[IQuantumGate]) {
+
+
+      for (frequencyBlock <- frequencyBlocks)
+      {
+        if (frequencyBlock.isInstanceOf[IQuantumGate])
+        {
           gates.add(frequencyBlock.asInstanceOf[IQuantumGate])
         }
       }
       gates.remove(tile)
+
       if (gates.size > 0) {
-        val gate: IQuantumGate = gates.get(if (gates.size > 1) entity.worldObj.rand.nextInt(gates.size - 1) else 0)
-        val position: VectorWorld = new VectorWorld(gate.asInstanceOf[TileEntity]).add(0.5, 2, 0.5)
-        if (QuantumGateManager.moveEntity(entity, position)) world.playSoundAtEntity(entity, "mob.endermen.portal", 1.0F, 1.0F)
+        if (ob.isInstanceOf[Entity])
+        {
+          val gate: IQuantumGate = gates.get(if (gates.size > 1) ob.asInstanceOf[Entity].worldObj.rand.nextInt(gates.size - 1) else 0)
+          val position: VectorWorld = new VectorWorld(gate.asInstanceOf[TileEntity]).add(0.5, 2, 0.5)
+
+          if (QuantumGateManager.moveEntity(ob.asInstanceOf[Entity], position)) world.playSoundAtEntity(ob.asInstanceOf[Entity], "mob.endermen.portal", 1.0F, 1.0F)
+        }
       }
     }
   }
@@ -97,7 +96,7 @@ class PartQuantumGlyph extends JCuboidPart with TSlottedPart with JNormalOcclusi
       val frequency: Int = (tile.asInstanceOf[IBlockFrequency]).getFrequency
       if (frequency > -1) {
         if (!world.isRemote) {
-          player.addChatMessage(new ChatMessageComponent("Quantum Gate Frequency: " + frequency))
+          player.addChatMessage(new ChatComponentText("Quantum Gate Frequency: " + frequency))
         }
         return true
       }
@@ -167,7 +166,7 @@ class PartQuantumGlyph extends JCuboidPart with TSlottedPart with JNormalOcclusi
     }
   }
 
-  private var slot: Byte = 0
-  private[gate] var number: Byte = 0
-  private[gate] var ticks: Int = 0
+  override def setFrequency(frequency: Int): Unit = ???
+
+  override def getFrequency: Int = ???
 }
