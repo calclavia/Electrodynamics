@@ -1,6 +1,8 @@
 package resonantinduction.compatibility.nei;
 
 import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
+import resonantinduction.core.CoreContent;
 import resonantinduction.core.ResonantInduction;
 import codechicken.nei.api.API;
 import codechicken.nei.api.IConfigureNEI;
@@ -26,14 +28,14 @@ public class NEIResonantInductionConfig implements IConfigureNEI
 		API.registerRecipeHandler(new RISmelterRecipeHandler());
 		API.registerUsageHandler(new RISmelterRecipeHandler());
 
-		for (Block block : ResonantInduction.blockMixtureFluids.values())
-			API.hideItem(block.blockID);
+		for (Block block : CoreContent.blockMixtureFluids().values())
+			API.hideItem(new ItemStack(block));
 
-		for (Block block : ResonantInduction.blockMoltenFluid.values())
-			API.hideItem(block.blockID);
+		for (Block block : CoreContent.blockMoltenFluid().values())
+			API.hideItem(new ItemStack(block));
 
-		API.hideItem(ResonantInduction.blockDust.blockID);
-		API.hideItem(ResonantInduction.blockRefinedDust.blockID);
+		API.hideItem(new ItemStack(CoreContent.blockDust()));
+		API.hideItem(new ItemStack(CoreContent.blockRefinedDust()));
 	}
 
 	@Override

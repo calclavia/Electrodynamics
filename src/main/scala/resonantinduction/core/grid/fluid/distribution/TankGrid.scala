@@ -35,7 +35,7 @@ class TankGrid extends FluidDistributionGrid
         }
       })
 
-      heightPriorityQueue ++= (getNodes() map (_.genericParent))
+      heightPriorityQueue ++= (getNodes() map (_.getParent.asInstanceOf[TileTankNode]))
 
       var didChange = false
 

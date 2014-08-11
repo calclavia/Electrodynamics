@@ -1,8 +1,6 @@
 package resonantinduction.core.grid.fluid.pressure
 
 import net.minecraftforge.common.util.ForgeDirection
-import net.minecraftforge.fluids.{FluidStack, FluidTank, IFluidHandler}
-import resonantinduction.core.grid.fluid.TileTankNode
 import resonantinduction.core.grid.fluid.distribution.TankNode
 import universalelectricity.api.core.grid.INodeProvider
 
@@ -73,6 +71,7 @@ class FluidPressureNode(parent: INodeProvider) extends TankNode(parent)
 
   def distribute
   {
+    /**
     connections.foreach
     {
       case (obj: AnyRef, dir: ForgeDirection) =>
@@ -145,7 +144,7 @@ class FluidPressureNode(parent: INodeProvider) extends TankNode(parent)
           }
         }
       }
-    }
+    } */
   }
 
   /**

@@ -171,7 +171,6 @@ class TileTankNode(material: Material) extends TileAdvanced(material) with INode
 
   override def getTankInfo(from: ForgeDirection): Array[FluidTankInfo] = tankNode.getTankInfo(from)
 
-  tankNode.onChange = () => sendRenderUpdate
 
   override def initiate()
   {

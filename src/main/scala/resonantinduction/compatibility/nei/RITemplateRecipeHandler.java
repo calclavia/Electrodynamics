@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import codechicken.lib.gui.GuiDraw;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -18,9 +19,8 @@ import resonant.api.recipe.RecipeResource.FluidStackResource;
 import resonant.api.recipe.RecipeResource.ItemStackResource;
 import resonant.api.recipe.RecipeResource.OreDictResource;
 import resonant.lib.utility.LanguageUtility;
+import resonantinduction.core.RecipeType;
 import resonantinduction.core.Reference;
-import resonantinduction.core.ResonantInduction.RecipeType;
-import codechicken.core.gui.GuiDraw;
 import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.GuiRecipe;
 import codechicken.nei.recipe.TemplateRecipeHandler;
@@ -56,7 +56,7 @@ public abstract class RITemplateRecipeHandler extends TemplateRecipeHandler
 	@Override
 	public String getGuiTexture()
 	{
-		return Reference.PREFIX + Reference.GUI_DIRECTORY + "gui_machine.png";
+		return Reference.prefix() + Reference.guiDirectory() + "gui_machine.png";
 	}
 
 	@Override

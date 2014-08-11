@@ -41,7 +41,7 @@ public class RenderPipe implements ISimpleItemRenderer
 		FluidStack fluid = part.tank.getFluid();
 		int capacity = part.tank.getCapacity();
 		byte renderSides = part.getAllCurrentConnections();
-
+    /**
 		if (fluid != null && fluid.amount > 0)
 		{
 			double filledPercentage = Math.min((double) fluid.amount / (double) capacity, 1);
@@ -107,7 +107,7 @@ public class RenderPipe implements ISimpleItemRenderer
 					GL11.glPopMatrix();
 				}
 			}
-		}
+		}*/
 		GL11.glPopMatrix();
 
 	}

@@ -2,6 +2,7 @@ package resonantinduction.core.grid.fluid.distribution
 
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
+import resonantinduction.core.grid.fluid.TileTankNode
 import universalelectricity.core.grid.{TickingGrid, UpdateTicker}
 
 /**
@@ -35,7 +36,7 @@ abstract class FluidDistributionGrid extends TickingGrid[TankNode] with IFluidHa
 
   override def reconstructNode(node: TankNode)
   {
-    val connectorTank: FluidTank = node.genericParent.getTank
+    val connectorTank: FluidTank = node.getParent.asInstanceOf[TileTankNode].getTank
 
     if (connectorTank != null)
     {

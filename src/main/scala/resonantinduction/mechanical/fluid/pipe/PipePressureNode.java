@@ -32,7 +32,7 @@ public class PipePressureNode extends FluidPressureNode
         if (world() != null)
         {
             byte previousConnections = pipe().getAllCurrentConnections();
-            pipe().currentConnections(0);
+            pipe().currentConnections_$eq((byte)0);
 
             for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
             {
@@ -55,20 +55,20 @@ public class PipePressureNode extends FluidPressureNode
 
                         if (check != null && check instanceof FluidPressureNode && canConnect(dir, check) && ((FluidPressureNode) check).canConnect(dir.getOpposite(), this))
                         {
-                            pipe().currentConnections = WorldUtility.setEnableSide(pipe().currentConnections, dir, true);
-                            connections().put(check, dir);
+                            pipe().currentConnections_$eq(WorldUtility.setEnableSide(pipe().currentConnections(), dir, true));
+                            connections().put((resonantinduction.core.grid.fluid.distribution.TankNode) check, dir);
                         }
                     }
                     else if (canConnect(dir, tile))
                     {
-                        pipe().currentConnections = WorldUtility.setEnableSide(pipe().currentConnections, dir, true);
-                        connections().put(tile, dir);
+                        pipe().currentConnections_$eq(WorldUtility.setEnableSide(pipe().currentConnections(), dir, true));
+                        connections().put((IFluidHandler) tile, dir);
                     }
                 }
             }
 
             /** Only send packet updates if visuallyConnected changed. */
-            if (!world().isRemote && previousConnections != pipe().currentConnections)
+            if (!world().isRemote && previousConnections != pipe().currentConnections())
             {
                 pipe().sendConnectionUpdate();
             }

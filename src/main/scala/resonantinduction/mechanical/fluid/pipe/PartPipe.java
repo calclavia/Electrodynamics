@@ -1,6 +1,5 @@
 package resonantinduction.mechanical.fluid.pipe;
 
-import codechicken.lib.render.uv.IconTransformation;
 import codechicken.lib.vec.Cuboid6;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.item.ItemStack;
@@ -8,13 +7,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.*;
 import resonant.lib.type.EvictingList;
-import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.prefab.part.PartFramedNode;
 import resonantinduction.mechanical.Mechanical;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.render.CCRenderState;
-import codechicken.lib.render.RenderUtils;
-import codechicken.lib.vec.Translation;
 import codechicken.multipart.JNormalOcclusion;
 import codechicken.multipart.TSlottedPart;
 import cpw.mods.fml.relauncher.Side;
@@ -32,14 +28,13 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial> implements TSlott
     /** Computes the average fluid for client to render. */
     private EvictingList<Integer> averageTankData = new EvictingList<Integer>(20);
     private boolean markPacket = true;
-    private PipePressureNode node = null;
 
     public PartPipe()
     {
         super(null);
         setMaterial(0);
         this.setRequiresInsulation(false);
-        node = new PipePressureNode(this);
+        setNode((INode) new PipePressureNode(this));
     }
 
     @Override
@@ -58,9 +53,9 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial> implements TSlott
     public void setMaterial(EnumPipeMaterial material)
     {
         super.setMaterial(material);
-        node.setMaxFlowRate(getMaterial().maxFlowRate);
-        node.setMaxPressure(getMaterial().maxPressure);
-        tank.setCapacity(node.maxFlowRate());
+        ((PipePressureNode)getNode()).setMaxFlowRate(getMaterial().maxFlowRate);
+        ((PipePressureNode)getNode()).setMaxPressure(getMaterial().maxPressure);
+        tank.setCapacity(((PipePressureNode)getNode()).maxFlowRate());
     }
 
     @Override
@@ -204,8 +199,8 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial> implements TSlott
     {
         super.load(nbt);
         tank.readFromNBT(nbt);
-        node().setMaxFlowRate(getMaterial().maxFlowRate);
-        node().setMaxPressure(getMaterial().maxPressure);
+        ((PipePressureNode)getNode()).setMaxFlowRate(getMaterial().maxFlowRate);
+        ((PipePressureNode)getNode()).setMaxPressure(getMaterial().maxPressure);
     }
 
     @Override
@@ -216,16 +211,5 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial> implements TSlott
     @Override
     public int getSlotMask() {
         return 0;
-    }
-
-    @Override
-    public INode node() {
-        return node;
-    }
-
-    @Override
-    public void node_$eq(INode node) {
-        if(node instanceof PipePressureNode)
-            this.node = (PipePresureNode)node;
     }
 }

@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.world.{IBlockAccess, World}
 import net.minecraftforge.fluids.{BlockFluidFinite, Fluid, FluidContainerRegistry, FluidStack}
 import resonant.api.recipe.MachineRecipes
-import resonantinduction.core.ResonantInduction.RecipeType
+import resonantinduction.core.RecipeType
 import resonantinduction.core.resource.ResourceGenerator
 
 /**

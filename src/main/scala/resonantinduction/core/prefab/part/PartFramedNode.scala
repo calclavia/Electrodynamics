@@ -29,7 +29,7 @@ object PartFramedNode {
 abstract class PartFramedNode[M](insulationType: Item) extends PartColorableMaterial[M](insulationType: Item) with INodeProvider with TSlottedPart with JNormalOcclusion with JIconHitEffects {
 
   protected var connections: Array[AnyRef] = new Array[AnyRef](6)
-  protected var node: INode
+  protected var node: INode = null
   /** Bitmask connections */
   var currentConnections: Byte = 0x00
   /** Client Side */
@@ -191,4 +191,8 @@ abstract class PartFramedNode[M](insulationType: Item) extends PartColorableMate
   override def toString: String = {
     return this.getClass.getSimpleName + this.hashCode
   }
+
+  def getNode : INode = node
+
+  def setNode(n : INode) { node = n}
 }

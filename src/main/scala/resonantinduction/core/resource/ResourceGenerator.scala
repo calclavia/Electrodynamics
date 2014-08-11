@@ -21,10 +21,9 @@ import resonant.lib.recipe.Recipes
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.utility.nbt.NBTUtility
 import resonant.lib.wrapper.StringWrapper._
-import resonantinduction.core.ResonantInduction.RecipeType
 import resonantinduction.core.prefab.FluidColored
 import resonantinduction.core.resource.fluid.{BlockFluidMaterial, BlockFluidMixture}
-import resonantinduction.core.{CoreContent, Reference, Settings}
+import resonantinduction.core.{RecipeType, CoreContent, Reference, Settings}
 
 import scala.collection.JavaConversions._
 import scala.collection.mutable

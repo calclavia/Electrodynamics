@@ -1,7 +1,7 @@
 package resonantinduction.compatibility.nei;
 
 import resonant.lib.utility.LanguageUtility;
-import resonantinduction.core.ResonantInduction.RecipeType;
+import resonantinduction.core.RecipeType;
 
 public class RIGrinderRecipeHandler extends RITemplateRecipeHandler
 {

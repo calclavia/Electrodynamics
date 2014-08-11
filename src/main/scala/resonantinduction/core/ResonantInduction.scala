@@ -28,17 +28,6 @@ object ResonantInduction
   @SidedProxy(clientSide = "resonantinduction.core.ClientProxy", serverSide = "resonantinduction.core.CommonProxy")
   var proxy: CommonProxy = _
 
-  /** Recipe Types */
-  final object RecipeType extends Enumeration
-  {
-    final val CRUSHER, GRINDER, MIXER, SMELTER, SAWMILL = Value
-
-    implicit class ExtendedValue(value: Value)
-    {
-      def name = value.toString
-    }
-  }
-
   @EventHandler
   def preInit(evt: FMLPreInitializationEvent)
   {
