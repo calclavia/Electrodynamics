@@ -1,12 +1,12 @@
 package resonantinduction.archaic.fluid.gutter;
 
 import net.minecraftforge.common.util.ForgeDirection;
+import resonantinduction.core.grid.fluid.TileTankNode;
 import resonantinduction.core.grid.fluid.pressure.FluidPressureNode;
-import resonantinduction.core.grid.fluid.IPressureNodeProvider;
 
 public class FluidGravityNode extends FluidPressureNode
 {
-	public FluidGravityNode(IPressureNodeProvider parent)
+	public FluidGravityNode(TileTankNode parent)
 	{
 		super(parent);
 	}

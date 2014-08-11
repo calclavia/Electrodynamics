@@ -2,14 +2,13 @@ package resonantinduction.archaic.waila;
 
 import java.util.List;
 
-import archaic.crate.TileCrate;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import resonant.lib.utility.LanguageUtility;
-import archaic.crate.TileCrate;
+import resonantinduction.archaic.crate.TileCrate;
 
 /** Waila support for crates
  * 

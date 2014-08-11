@@ -1,8 +1,8 @@
 package resonantinduction.archaic.waila;
 
-import resonant.lib.modproxy.ICompatProxy;
-import resonant.lib.utility.Mods;
 import cpw.mods.fml.common.event.FMLInterModComms;
+import resonant.lib.compat.Mods;
+import resonant.lib.loadable.ICompatProxy;
 
 /**
  * @since 21/03/14

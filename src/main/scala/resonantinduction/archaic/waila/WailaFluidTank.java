@@ -22,7 +22,7 @@ public class WailaFluidTank implements IWailaDataProvider
         TileEntity tile = accessor.getTileEntity();
         if (tile instanceof TileTank)
         {
-            FluidTank tank = ((TileTank) tile).getForwardTank();
+            FluidTank tank = ((TileTank) tile).getTank();
             if (tank != null && tank.getFluid() != null)
             {
                 currenttip.add(LanguageUtility.getLocal("info.waila.tank.fluid") + " " + tank.getFluid().getFluid().getLocalizedName());

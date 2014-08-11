@@ -8,7 +8,7 @@ import net.minecraft.block.material.Material
 import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.util.IIcon
+import net.minecraft.util.{ChatComponentText, IIcon}
 import net.minecraft.world.IBlockAccess
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.Fluid
@@ -67,7 +67,7 @@ class TileGrate extends TilePressureNode( Material.rock ) with IRotatable {
 
     rotationMask = java.lang.Byte.parseByte( "111111", 2 )
 
-    node = new FluidPressureNode( this )
+    tankNode = new FluidPressureNode( this )
 
     node.maxFlowRate = getPressureTank.getCapacity
 
@@ -85,10 +85,10 @@ class TileGrate extends TilePressureNode( Material.rock ) with IRotatable {
 
     protected override def configure( player : EntityPlayer, side : Int, hit : Vector3 ) : Boolean = {
         if ( !player.isSneaking ) {
-            if ( !world().isRemote ) {
+            if ( !world.isRemote ) {
                 fillOver = !fillOver
-                player.addChatMessage( "Grate now set to " + ( if ( fillOver ) "" else "not " ) +
-                    "fill higher than itself." )
+                player.addChatMessage(new ChatComponentText( "Grate now set to " + ( if ( fillOver ) "" else "not " ) +
+                    "fill higher than itself." ))
                 gratePath = null
             }
             return true
@@ -189,20 +189,7 @@ class TileGrate extends TilePressureNode( Material.rock ) with IRotatable {
             if ( check == this.start ) {
                 return true
             }
-            do {
-                check = this.navigationMap.get( check )
-                if ( check == null ) {
-                    return false
-                }
-                if ( check == this.start ) {
-                    return true
-                }
-            } while ( FluidUtility.getFluidFromBlock( TileGrate.this.worldObj, check ) !=
-                null &&
-                fluidType.getID ==
-                FluidUtility.getFluidFromBlock( TileGrate.this.worldObj, check )
-                .getID );
-            false
+            return false
         }
 
         def startFill( start : Vector3, fluidID : Int ) {

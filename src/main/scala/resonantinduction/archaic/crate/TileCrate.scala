@@ -60,7 +60,7 @@ class TileCrate extends SpatialTile(Material.rock) with TInventory with TPacketR
     super.updateEntity
     if (!worldObj.isRemote) {
       this.writeToNBT(new NBTTagCompound)
-      if (ticks % updateTick eq 0) {
+      if (ticks % updateTick == 0) {
         updateTick = 5 + worldObj.rand.nextInt(50)
         doUpdate = true
       }
@@ -209,7 +209,7 @@ class TileCrate extends SpatialTile(Material.rock) with TInventory with TPacketR
     }
   }
 
-  override def getDescriptionPacket: PacketTile = {
+  override def getDescPacket: PacketTile = {
     var packet: PacketTile = null
     this.buildSampleStack
     val stack: ItemStack = this.getSampleStack

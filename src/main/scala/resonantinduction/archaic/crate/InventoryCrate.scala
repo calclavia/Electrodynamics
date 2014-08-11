@@ -17,7 +17,7 @@ class InventoryCrate(crate: IInventoryProvider) extends ExternalInventory(crate:
     {
       var baseStack: ItemStack = sampleStack.copy
       var itemsLeft: Int = baseStack.stackSize
-        for(slot <- this.getContainedItems.length)
+        for(slot <- 0 until this.getContainedItems.length)
         {
             val stackL: Int = Math.min(Math.min(itemsLeft, baseStack.getMaxStackSize), this.getInventoryStackLimit)
             var st = baseStack.copy

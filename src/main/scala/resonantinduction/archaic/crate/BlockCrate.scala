@@ -201,12 +201,16 @@ class BlockCrate extends SpatialBlock(Material.iron) {
     }
     if (requestStack != null && requestStack.getItem != Item.getItemFromBlock(ArchaicBlocks.blockCrate)) {
       var success: Boolean = false
-        for (i <- player.inventory.getSizeInventory) {
+        for (i <- 0 until player.inventory.getSizeInventory)
+        {
             val currentStack: ItemStack = player.inventory.getStackInSlot(i)
-            if (currentStack != null) {
-              if (requestStack.isItemEqual(currentStack)) {
+            if (currentStack != null)
+            {
+              if (requestStack.isItemEqual(currentStack))
+              {
                 player.inventory.setInventorySlotContents(i, BlockCrate.addStackToCrate(tileEntity, currentStack))
-                if (player.isInstanceOf[EntityPlayerMP]) {
+                if (player.isInstanceOf[EntityPlayerMP])
+                {
                   (player.asInstanceOf[EntityPlayerMP]).sendContainerToPlayer(player.inventoryContainer)
                 }
                 success = true
@@ -225,12 +229,12 @@ class BlockCrate extends SpatialBlock(Material.iron) {
     * @param requestSize - The maximum stack size to take out. Default should be 64.
     * @return True on success */
   def ejectItems(tileEntity: TileCrate, player: EntityPlayer, requestSize: Int): Boolean = {
-    val world: World = tileEntity.worldObj
+    val world: World = tileEntity.getWorldObj
     if (!world.isRemote) {
       val sampleStack: ItemStack = tileEntity.getSampleStack
       var ammountEjected: Int = 0
       if (sampleStack != null && requestSize > 0) {
-          for (slot <- tileEntity.getInventory.getSizeInventory) {
+          for (slot <- 0 until tileEntity.getInventory.getSizeInventory) {
             {
               val slotStack: ItemStack = tileEntity.getInventory.getStackInSlot(slot)
               if (slotStack != null && slotStack.stackSize > 0) {

@@ -4,19 +4,19 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.{FluidStack, FluidTank, IFluidHandler}
 import resonantinduction.core.grid.MultipartNode
-import resonantinduction.core.grid.fluid.distribution.TFluidDistributor
+import resonantinduction.core.grid.fluid.TileTankNode
 import universalelectricity.api.core.grid.INodeProvider
 
 import scala.collection.convert.wrapAll._
 
-class FluidPressureNode(parent: INodeProvider) extends MultipartNode[AnyRef](parent)
+class FluidPressureNode(parent: TileTankNode) extends MultipartNode[AnyRef](parent)
 {
   var maxFlowRate: Int = 20
   var maxPressure: Int = 100
   protected var connectionMap: Byte = java.lang.Byte.parseByte("111111", 2)
   private var pressure = 0
 
-  def genericParent = parent.asInstanceOf[TFluidDistributor]
+  def genericParent = parent.asInstanceOf[TileTankNode]
 
   def setConnection(connectionMap: Byte): FluidPressureNode =
   {

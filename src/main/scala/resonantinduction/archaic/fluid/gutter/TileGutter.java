@@ -25,8 +25,6 @@ import org.lwjgl.opengl.GL11;
 
 import resonant.api.recipe.MachineRecipes;
 import resonant.api.recipe.RecipeResource;
-import resonant.lib.content.module.TileRender;
-import resonant.lib.prefab.vector.Cuboid;
 import resonant.lib.render.FluidRenderUtility;
 import resonant.lib.render.RenderUtility;
 import resonant.lib.utility.FluidUtility;
@@ -35,9 +33,10 @@ import resonant.lib.utility.inventory.InventoryUtility;
 import resonantinduction.archaic.fluid.grate.TileGrate;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction.RecipeType;
+import resonantinduction.core.grid.fluid.TileTankNode;
 import resonantinduction.core.grid.fluid.pressure.FluidPressureNode;
-import resonantinduction.core.grid.fluid.IPressureNodeProvider;
 import resonantinduction.core.grid.fluid.pressure.TilePressureNode;
+import universalelectricity.core.transform.region.Cuboid;
 import universalelectricity.core.transform.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -52,68 +51,57 @@ public class TileGutter extends TilePressureNode
 	public TileGutter()
 	{
 		super(Material.rock);
-		textureName = "material_wood_surface";
-		isOpaqueCube = false;
-		normalRender = false;
-		bounds = new Cuboid(0, 0, 0, 1, 0.99, 1);
+		setTextureName("material_wood_surface");
+		isOpaqueCube(false);
+		normalRender(false);
+		bounds(new Cuboid(0, 0, 0, 1, 0.99, 1));
 
-		node = new FluidGravityNode(this)
-		{
-			@Override
-			public void doRecache()
-			{
-				connections.clear();
-				byte previousConnections = renderSides;
-				renderSides = 0;
+		tankNode_$eq(new FluidGravityNode(this) {
+            @Override
+            public void doRecache() {
+                connections.clear();
+                byte previousConnections = renderSides;
+                renderSides = 0;
 
-				for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
-				{
-					TileEntity tile = position().add(dir).getTileEntity(world());
+                for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+                    TileEntity tile = position().add(dir).getTileEntity(world());
 
-					if (tile instanceof IFluidHandler)
-					{
-						if (tile instanceof IPressureNodeProvider)
-						{
-							FluidPressureNode check = (FluidPressureNode) ((IPressureNodeProvider) tile).getNode(FluidPressureNode.class, dir.getOpposite());
+                    if (tile instanceof IFluidHandler) {
+                        if (tile instanceof TileTankNode) {
+                            FluidPressureNode check = (FluidPressureNode) ((TileTankNode) tile).getNode(FluidPressureNode.class, dir.getOpposite());
 
-							if (check != null && canConnect(dir, check) && check.canConnect(dir.getOpposite(), this))
-							{
-								connections.put(check, dir);
+                            if (check != null && canConnect(dir, check) && check.canConnect(dir.getOpposite(), this)) {
+                                connections.put(check, dir);
 
-								if (tile instanceof TileGutter)
-								{
-									renderSides = WorldUtility.setEnableSide(renderSides, dir, true);
-								}
+                                if (tile instanceof TileGutter) {
+                                    renderSides = WorldUtility.setEnableSide(renderSides, dir, true);
+                                }
 
-							}
-						}
-						else
-						{
-							connections.put(tile, dir);
+                            }
+                        } else {
+                            connections.put(tile, dir);
 
-							if (tile instanceof TileGrate)
-							{
-								renderSides = WorldUtility.setEnableSide(renderSides, dir, true);
-							}
-						}
-					}
-				}
+                            if (tile instanceof TileGrate) {
+                                renderSides = WorldUtility.setEnableSide(renderSides, dir, true);
+                            }
+                        }
+                    }
+                }
 
-				/** Only send packet updates if visuallyConnected changed. */
-				if (previousConnections != renderSides)
-				{
-					sendRenderUpdate();
-				}
-			}
-		};
+                /** Only send packet updates if visuallyConnected changed. */
+                if (previousConnections != renderSides) {
+                    sendRenderUpdate();
+                }
+            }
+        });
 	}
 
 	@Override
-	public void updateEntity()
+	public void update()
 	{
-		super.updateEntity();
+		super.update();
 
-		if (!this.world().isRemote && this.ticks % 20 == 0)
+		if (!this.world().isRemote && this.ticks() % 20 == 0)
 		{
 			/** Drain block above if it is a fluid. */
 			Vector3 drainPos = position().add(0, 1, 0);
@@ -123,15 +111,15 @@ public class TileGutter extends TilePressureNode
 			{
 				ArrayList<IFluidTank> tanks = new ArrayList<IFluidTank>();
 
-				synchronized (node.getGrid().getNodes())
+				synchronized (tankNode().getGrid().getNodes())
 				{
-					for (Object check : node.getGrid().getNodes())
+					for (Object check : tankNode().getGrid().getNodes())
 					{
 						if (check instanceof FluidPressureNode)
 						{
-							if (((FluidPressureNode) check).parent instanceof TileGutter)
+							if (((FluidPressureNode) check).genericParent() instanceof TileGutter)
 							{
-								tanks.add(((FluidPressureNode) check).parent.getPressureTank());
+								tanks.add(((FluidPressureNode) check).genericParent());
 							}
 						}
 					}
@@ -142,13 +130,13 @@ public class TileGutter extends TilePressureNode
 					FluidUtility.fillAllTanks(tanks, drain, true);
 					FluidUtility.drainBlock(worldObj, drainPos, true);
 
-					synchronized (node.getGrid().getNodes())
+					synchronized (tankNode().getGrid().getNodes())
 					{
-						for (Object check : node.getGrid().getNodes())
+						for (Object check : tankNode().getGrid().getNodes())
 						{
 							if (check instanceof FluidPressureNode)
 							{
-								((FluidPressureNode) check).parent.onFluidChanged();
+								((FluidPressureNode) check).genericParent().onFluidChanged();
 							}
 						}
 					}

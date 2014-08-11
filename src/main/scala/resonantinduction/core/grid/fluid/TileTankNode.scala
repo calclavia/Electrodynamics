@@ -28,9 +28,9 @@ object TileTankNode extends Enumeration
   final val PACKET_DESCRIPTION, PACKET_RENDER, PACKET_TANK = Value
 }
 
-abstract class TileTankNode(material: Material) extends SpatialTile(material) with INodeProvider with IFluidHandler with IPacketIDReceiver with TPacketIDSender
+class TileTankNode(material: Material) extends SpatialTile(material) with INodeProvider with IFluidHandler with IPacketIDReceiver with TPacketIDSender
 {
-  protected var tank: FluidTank
+  protected var tank: FluidTank = new FluidTank(1000);
   protected var pressure = 0
   protected var colorID: Int = 0
 
@@ -102,7 +102,7 @@ abstract class TileTankNode(material: Material) extends SpatialTile(material) wi
     }
   }
 
-  def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType)
+  override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType) : Boolean =
   {
     if (world.isRemote)
     {
@@ -111,20 +111,24 @@ abstract class TileTankNode(material: Material) extends SpatialTile(material) wi
         colorID = buf.readInt
         renderSides = buf.readByte
         tank = buf.readTank()
+        return true
       }
       else if (id == TileTankNode.PACKET_RENDER.id)
       {
         colorID = buf.readInt
         renderSides = buf.readByte
         markRender
+        return true
       }
       else if (id == TileTankNode.PACKET_TANK.id)
       {
         tank = buf.readTank()
         pressure = buf.readInt
         updateLight()
+        return true
       }
     }
+    return false
   }
 
   override def getDescriptionPacket: Packet = ResonantInduction.packetHandler.toMCPacket(PacketManager.request(this, TileTankNode.PACKET_DESCRIPTION.id))
