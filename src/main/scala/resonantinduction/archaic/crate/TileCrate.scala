@@ -53,8 +53,8 @@ class TileCrate extends TileInventory(Material.rock) with TPacketReceiver with I
 
   override def getSizeInventory: Int = TileCrate.getSlotCount(getBlockMetadata)
 
-  override def updateEntity {
-    super.updateEntity
+  override def update {
+    super.update
     if (!worldObj.isRemote) {
       this.writeToNBT(new NBTTagCompound)
       if (ticks % updateTick == 0) {

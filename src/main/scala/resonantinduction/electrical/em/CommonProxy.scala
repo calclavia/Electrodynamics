@@ -3,6 +3,7 @@ package resonantinduction.electrical.em
 import net.minecraft.block.Block
 import net.minecraft.world.World
 import resonant.lib.prefab.AbstractProxy
+import universalelectricity.core.transform.vector.Vector3
 
 /**
  * @author Calclavia

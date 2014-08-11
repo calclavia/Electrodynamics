@@ -8,6 +8,8 @@ import net.minecraftforge.common.util.ForgeDirection
 import resonantinduction.electrical.em.ElectromagneticCoherence
 import resonantinduction.electrical.em.laser.focus.IFocus
 import resonantinduction.electrical.em.laser.{ILaserHandler, Laser, TileBase}
+import universalelectricity.core.transform.rotation.Quaternion
+import universalelectricity.core.transform.vector.Vector3
 
 /**
  * Redirects lasers to one point
@@ -32,7 +34,7 @@ class TileFocusCrystal extends TileBase with ILaserHandler with IFocus
 
         if (rotateAngle > 0)
         {
-          normal = normal.rotate(Math.toRadians(rotateAngle), axis).normalize
+          normal = normal.transform(new Quaternion(Math.toRadians(rotateAngle), axis)).normalize
         }
       }
 
@@ -93,7 +95,7 @@ class TileFocusCrystal extends TileBase with ILaserHandler with IFocus
   {
     super.writeToNBT(nbt)
     val normalNBT = new NBTTagCompound()
-    normal.writeToNBT(normalNBT)
+    normal.writeNBT(normalNBT)
     nbt.setTag("normal", normalNBT)
   }
 }

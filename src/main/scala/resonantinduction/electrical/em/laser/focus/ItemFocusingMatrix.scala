@@ -8,6 +8,7 @@ import net.minecraft.util.{ChatComponentText, EnumChatFormatting}
 import net.minecraft.world.World
 import resonantinduction.core.ResonantTab
 import resonantinduction.electrical.em.ElectromagneticCoherence
+import universalelectricity.core.transform.rotation.Quaternion
 import universalelectricity.core.transform.vector.Vector3
 
 import scala.collection.convert.wrapAsScala._
@@ -83,13 +84,13 @@ class ItemFocusingMatrix extends Item
                 val random_index = rand.nextInt(cachedHits.size)
                 val incident = cachedHits(random_index).normalize
 
-                val targetDirection = (new Vector3(x, y, z) - controlVec).normalize
+                val targetDirection : Vector3 = (new Vector3(x, y, z) - controlVec).normalize
 
                 if (targetDirection.magnitude > 0)
                 {
                   val angle = Math.acos(incident $ targetDirection)
-                  val axis = incident x targetDirection
-                  var focusDirection = incident.clone.rotate(-90 - Math.toDegrees(angle / 2), axis).normalize
+                  val axis : Vector3 = incident.cross(targetDirection)
+                  var focusDirection = incident.clone.transform(new Quaternion(-90 - Math.toDegrees(angle / 2), axis)).normalize
 
                   if (focusDirection.magnitude == 0 || focusDirection.magnitude.equals(Double.NaN))
                   {

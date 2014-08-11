@@ -51,7 +51,7 @@ class EntityLaserFX(par1World: World, start: Vector3, end: Vector3, color: Vecto
   val length = start.distance(end)
 
   val difference = end - start
-  val angles = difference.eulerAngles
+  val angles = difference.toEulerAngle
 
   val modifierTranslation = (length / 2) + endSize;
 
@@ -91,8 +91,8 @@ class EntityLaserFX(par1World: World, start: Vector3, end: Vector3, color: Vecto
     /**
      * Rotate the beam
      */
-    glRotated(angles.x(), 0, 1, 0)
-    glRotated(angles.y(), 1, 0, 0)
+    glRotated(angles.yaw, 0, 1, 0)
+    glRotated(angles.pitch, 1, 0, 0)
 
     glRotated(90, 1, 0, 0)
 

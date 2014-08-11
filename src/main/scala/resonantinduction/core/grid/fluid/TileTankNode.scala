@@ -7,7 +7,7 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.network.Packet
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
-import resonant.content.spatial.block.SpatialTile
+import resonant.content.prefab.java.TileAdvanced
 import resonant.lib.network.ByteBufWrapper.ByteBufWrapper
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{IPacketIDReceiver, TPacketIDSender}
@@ -28,7 +28,7 @@ object TileTankNode extends Enumeration
   final val PACKET_DESCRIPTION, PACKET_RENDER, PACKET_TANK = Value
 }
 
-class TileTankNode(material: Material) extends SpatialTile(material) with INodeProvider with IFluidHandler with IPacketIDReceiver with TPacketIDSender
+class TileTankNode(material: Material) extends TileAdvanced(material) with INodeProvider with IFluidHandler with IPacketIDReceiver with TPacketIDSender
 {
   protected var tank: FluidTank = new FluidTank(1000);
   protected var pressure = 0
@@ -173,9 +173,9 @@ class TileTankNode(material: Material) extends SpatialTile(material) with INodeP
 
   tankNode.onChange = () => sendRenderUpdate
 
-  override def start()
+  override def initiate()
   {
-    super.start()
+    super.initiate()
     tankNode.reconstruct()
   }
 

@@ -34,7 +34,7 @@ import resonantinduction.mechanical.turbine.{TileElectricTurbine, RenderElectric
 
 class ClientProxy extends CommonProxy {
   override def preInit {
-    RenderingRegistry.registerBlockHandler(new BlockRenderingHandler.type)
+    RenderingRegistry.registerBlockHandler(BlockRenderingHandler)
   }
 
   override def getArmorIndex(armor: String): Int = {

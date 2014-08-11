@@ -1,9 +1,8 @@
 package resonantinduction.archaic.fluid.grate
 
-import java.util.Collections
-import java.util.Comparator
-import java.util.HashMap
-import java.util.PriorityQueue
+import java.util.{Collections, Comparator, HashMap, PriorityQueue}
+
+import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.block.material.Material
 import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.entity.player.EntityPlayer
@@ -11,23 +10,14 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.{ChatComponentText, IIcon}
 import net.minecraft.world.IBlockAccess
 import net.minecraftforge.common.util.ForgeDirection
-import net.minecraftforge.fluids.Fluid
-import net.minecraftforge.fluids.FluidContainerRegistry
-import net.minecraftforge.fluids.FluidRegistry
-import net.minecraftforge.fluids.FluidStack
-import net.minecraftforge.fluids.FluidTankInfo
+import net.minecraftforge.fluids.{Fluid, FluidContainerRegistry, FluidRegistry, FluidStack, FluidTankInfo}
 import resonant.api.IRotatable
 import resonant.lib.config.Config
 import resonant.lib.utility.FluidUtility
+import resonantinduction.archaic.fluid.grate.TileGrate._
 import resonantinduction.core.Reference
-import resonantinduction.core.grid.fluid.pressure.FluidPressureNode
-import resonantinduction.core.grid.fluid.pressure.TilePressureNode
+import resonantinduction.core.grid.fluid.pressure.{FluidPressureNode, TilePressureNode}
 import universalelectricity.core.transform.vector.Vector3
-import cpw.mods.fml.relauncher.Side
-import cpw.mods.fml.relauncher.SideOnly
-import TileGrate._
-//remove if not needed
-import scala.collection.JavaConversions._
 
 object TileGrate {
 
@@ -65,11 +55,11 @@ class TileGrate extends TilePressureNode( Material.rock ) with IRotatable {
 
     normalRender = true
 
-    rotationMask = java.lang.Byte.parseByte( "111111", 2 )
+    //rotationMask = java.lang.Byte.parseByte( "111111", 2 )
 
     tankNode = new FluidPressureNode( this )
 
-    node.maxFlowRate = getPressureTank.getCapacity
+    tankNode.maxFlowRate = getPressureTank.getCapacity
 
     override def getIcon( world : IBlockAccess, side : Int ) : IIcon = {
         if ( side == getDirection.ordinal() ) iconFront else iconSide
@@ -112,11 +102,11 @@ class TileGrate extends TilePressureNode( Material.rock ) with IRotatable {
 
     override def canDrain( from : ForgeDirection, fluid : Fluid ) : Boolean = getDirection != from
 
-    override def updateEntity() {
-        super.updateEntity()
+    override def update() {
+        super.update()
         if ( !world.isRemote ) {
             if ( ticks % 10 == 0 ) {
-                val pressure = node.getPressure( getDirection )
+                val pressure = tankNode.getPressure( getDirection )
                 val blockEffect = Math.abs( pressure * grateEffectMultiplier ).toInt
                 getPressureTank.setCapacity( Math.max( blockEffect * FluidContainerRegistry.BUCKET_VOLUME * grateDrainSpeedMultiplier,
                     FluidContainerRegistry.BUCKET_VOLUME ).toInt )
@@ -174,11 +164,11 @@ class TileGrate extends TilePressureNode( Material.rock ) with IRotatable {
         var navigationMap : HashMap[ Vector3, Vector3 ] = new HashMap[ Vector3, Vector3 ]()
 
         var workingNodes : PriorityQueue[ ComparableVector ] = if ( checkVertical ) new PriorityQueue[ ComparableVector ]() else new PriorityQueue[ ComparableVector ]( 1024,
-            new Comparator() {
+            new Comparator[ComparableVector]() {
 
-                override def compare( a : AnyRef, b : AnyRef ) : Int = {
-                    var wa = a.asInstanceOf[ TileGrate.ComparableVector ]
-                    var wb = b.asInstanceOf[ TileGrate.ComparableVector ]
+                override def compare( a : ComparableVector, b : ComparableVector ) : Int = {
+                    val wa = a.asInstanceOf[ TileGrate.ComparableVector ]
+                    val wb = b.asInstanceOf[ TileGrate.ComparableVector ]
                     wa.iterations - wb.iterations
                 }
             } )

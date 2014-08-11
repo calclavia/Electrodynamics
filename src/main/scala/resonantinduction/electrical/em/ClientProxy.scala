@@ -10,6 +10,7 @@ import resonantinduction.electrical.em.laser.emitter.{RenderLaserEmitter, TileLa
 import resonantinduction.electrical.em.laser.focus.crystal.{RenderFocusCrystal, TileFocusCrystal}
 import resonantinduction.electrical.em.laser.focus.mirror.{RenderMirror, TileMirror}
 import resonantinduction.electrical.em.laser.fx.{EntityBlockParticleFX, EntityLaserFX, EntityScorchFX}
+import universalelectricity.core.transform.vector.Vector3
 
 /**
  * @author Calclavia

@@ -28,9 +28,9 @@ object RenderMirror extends TileEntitySpecialRenderer
 
     val tile = tileEntity.asInstanceOf[TileMirror]
 
-    val angle = tile.normal.eulerAngles
-    glRotated(angle.x, 0, 1, 0)
-    glRotated(angle.y, 1, 0, 0)
+    val angle = tile.normal.toEulerAngle
+    glRotated(angle.yaw, 0, 1, 0)
+    glRotated(angle.pitch, 1, 0, 0)
     glRotated(90, 1, 0, 0)
     model.renderOnly("mirror", "mirrorBacking", "standConnector")
 

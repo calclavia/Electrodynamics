@@ -9,6 +9,7 @@ import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11._
 import resonantinduction.electrical.em.ElectromagneticCoherence
+import universalelectricity.core.transform.vector.Vector3
 
 /**
  * @author Calclavia

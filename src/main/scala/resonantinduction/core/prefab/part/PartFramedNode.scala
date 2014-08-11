@@ -44,6 +44,7 @@ abstract class PartFramedNode[M](insulationType: Item) extends PartColorableMate
   }
 
   override def getSubParts: Iterable[IndexedCuboid6] = {
+    super.getSubParts
     val currentSides: Array[IndexedCuboid6] = if (isInsulated) PartFramedNode.insulatedSides.clone() else PartFramedNode.sides.clone()
     if (tile != null) {
       for (side <- ForgeDirection.VALID_DIRECTIONS) {

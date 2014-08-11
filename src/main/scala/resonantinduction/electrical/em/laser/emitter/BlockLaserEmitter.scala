@@ -17,7 +17,6 @@ class BlockLaserEmitter extends BlockContainer(Material.rock)
 {
   setBlockName(ElectromagneticCoherence.PREFIX + "laserEmitter")
   setBlockTextureName("stone")
-  setCreativeTab(TabEC)
 
   /**
    * Called when the block is placed in the world.

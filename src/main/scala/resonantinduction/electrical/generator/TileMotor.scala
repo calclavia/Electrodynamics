@@ -89,14 +89,6 @@ class TileMotor extends TileElectric(Material.iron) with IRotatable {
     return dirs
   }
 
-  def getDirection: ForgeDirection = {
-    return ForgeDirection.getOrientation(this.getBlockMetadata)
-  }
-
-  def setDirection(dir: ForgeDirection) {
-    this.worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, dir.ordinal, 3)
-  }
-
   override def readFromNBT(nbt: NBTTagCompound) {
     super.readFromNBT(nbt)
     isInversed = nbt.getBoolean("isInversed")

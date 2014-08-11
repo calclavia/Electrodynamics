@@ -17,7 +17,6 @@ class BlockLaserReceiver extends BlockContainer(Material.rock)
 {
   setBlockName(ElectromagneticCoherence.PREFIX + "laserReceiver")
   setBlockTextureName("stone")
-  setCreativeTab(TabEC)
 
   /**
    * Called when the block is placed in the world.

@@ -2,6 +2,7 @@ package resonantinduction.electrical.em.laser
 
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.util.ForgeDirection
+import universalelectricity.core.transform.vector.Vector3
 
 /**
  * @author Calclavia

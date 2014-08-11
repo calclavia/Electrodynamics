@@ -62,11 +62,11 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
   normalRender = false
   customItemRender = true
 
-  override protected def onWorldJoin {
+  override def onWorldJoin {
     updatePositionStatus
   }
 
-  override protected def onNeighborChanged(block : Block) {
+  override def onNeighborChanged(block : Block) {
     updatePositionStatus
   }
 
@@ -305,7 +305,7 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
     return height
   }
 
-  override def getDescriptionPacket: Any = {
+  override def getDescPacket: PacketAnnotation = {
     return new PacketAnnotation(this)
   }
 

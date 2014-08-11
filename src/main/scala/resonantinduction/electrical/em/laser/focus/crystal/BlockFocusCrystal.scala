@@ -15,7 +15,6 @@ class BlockFocusCrystal extends BlockFocusBase(Material.rock)
 {
   setBlockName(ElectromagneticCoherence.PREFIX + "focusCrystal")
   setBlockTextureName("glass")
-  setCreativeTab(TabEC)
 
   override def createNewTileEntity(world: World, metadata: Int): TileEntity =
   {

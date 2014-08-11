@@ -1,22 +1,17 @@
 package resonantinduction.core.grid.fluid.pressure
 
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.{FluidStack, FluidTank, IFluidHandler}
-import resonantinduction.core.grid.MultipartNode
 import resonantinduction.core.grid.fluid.TileTankNode
+import resonantinduction.core.grid.fluid.distribution.TankNode
 import universalelectricity.api.core.grid.INodeProvider
 
 import scala.collection.convert.wrapAll._
 
-class FluidPressureNode(parent: TileTankNode) extends MultipartNode[AnyRef](parent)
+class FluidPressureNode(parent: TileTankNode) extends TankNode(parent)
 {
-  var maxFlowRate: Int = 20
-  var maxPressure: Int = 100
   protected var connectionMap: Byte = java.lang.Byte.parseByte("111111", 2)
   private var pressure = 0
-
-  def genericParent = parent.asInstanceOf[TileTankNode]
 
   def setConnection(connectionMap: Byte): FluidPressureNode =
   {
@@ -153,28 +148,6 @@ class FluidPressureNode(parent: TileTankNode) extends MultipartNode[AnyRef](pare
     }
   }
 
-  def getMaxFlowRate: Int =
-  {
-    return maxFlowRate
-  }
-
-  def setPressure(newPressure: Int)
-  {
-    if (newPressure > 0)
-    {
-      pressure = Math.min(maxPressure, newPressure)
-    }
-    else
-    {
-      pressure = Math.max(-maxPressure, newPressure)
-    }
-  }
-
-  def getPressure(dir: ForgeDirection): Int =
-  {
-    return pressure
-  }
-
   /**
    * Recache the connections. This is the default connection implementation.
    */
@@ -200,17 +173,5 @@ class FluidPressureNode(parent: TileTankNode) extends MultipartNode[AnyRef](pare
   override def canConnect(from: ForgeDirection, source: AnyRef): Boolean =
   {
     return (source.isInstanceOf[FluidPressureNode]) && (connectionMap & (1 << from.ordinal)) != 0
-  }
-
-  override def load(nbt: NBTTagCompound)
-  {
-    super.load(nbt)
-    pressure = nbt.getInteger("pressure")
-  }
-
-  override def save(nbt: NBTTagCompound)
-  {
-    super.save(nbt)
-    nbt.setInteger("pressure", pressure)
   }
 }

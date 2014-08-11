@@ -30,9 +30,9 @@ object RenderFocusCrystal extends TileEntitySpecialRenderer
 
     val focusCrystal = tileEntity.asInstanceOf[TileFocusCrystal]
 
-    val angle = focusCrystal.normal.eulerAngles
-    glRotated(angle.x, 0, 1, 0)
-    glRotated(angle.y, 1, 0, 0)
+    val angle = focusCrystal.normal.toEulerAngle
+    glRotated(angle.yaw, 0, 1, 0)
+    glRotated(angle.pitch, 1, 0, 0)
 
     glRotated(180, 0, 1, 0)
 

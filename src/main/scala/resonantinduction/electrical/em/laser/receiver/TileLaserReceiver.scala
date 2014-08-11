@@ -3,6 +3,7 @@ package resonantinduction.electrical.em.laser.receiver
 import net.minecraft.util.MovingObjectPosition
 import net.minecraftforge.common.util.ForgeDirection
 import resonantinduction.electrical.em.laser.{ILaserHandler, Laser, TileBase}
+import universalelectricity.core.transform.vector.Vector3
 
 /**
  * @author Calclavia

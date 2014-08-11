@@ -8,6 +8,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import resonantinduction.electrical.em.ElectromagneticCoherence
 import resonantinduction.electrical.em.laser.focus.IFocus
 import resonantinduction.electrical.em.laser.{ILaserHandler, Laser, TileBase}
+import universalelectricity.core.transform.rotation.Quaternion
 import universalelectricity.core.transform.vector.Vector3
 
 import scala.collection.convert.wrapAsJava._
@@ -33,7 +34,7 @@ class TileMirror extends TileBase with ILaserHandler with IFocus
 
         if (rotateAngle > 0)
         {
-          normal = normal.rotate(Math.toRadians(rotateAngle), axis).normalize
+          normal = normal.transform(new Quaternion(Math.toRadians(rotateAngle), axis)).normalize
         }
       }
 
@@ -75,12 +76,12 @@ class TileMirror extends TileBase with ILaserHandler with IFocus
      * Calculate Reflection
      */
     val angle = Math.acos(incidentDirection $ normal)
-    val axisOfReflection = incidentDirection x normal
+    val axisOfReflection = incidentDirection.cross(normal)
     val rotateAngle = 180 - Math.toDegrees(2 * angle)
 
     if (Math.toDegrees(rotateAngle) < 180)
     {
-      val newDirection = (incidentDirection.clone.rotate(rotateAngle, axisOfReflection)).normalize
+      val newDirection = (incidentDirection.clone.transform(new Quaternion(rotateAngle, axisOfReflection))).normalize
       Laser.spawn(worldObj, position + 0.5 + newDirection * 0.9, position + 0.5, newDirection, color, energy / 1.2)
     }
 

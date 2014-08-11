@@ -3,15 +3,11 @@ package resonantinduction.electrical
 import cpw.mods.fml.common.Mod.{EventHandler, Instance}
 import cpw.mods.fml.common.event.{FMLInitializationEvent, FMLPostInitializationEvent, FMLPreInitializationEvent}
 import cpw.mods.fml.common.network.NetworkRegistry
-import cpw.mods.fml.common.registry.GameRegistry
-import cpw.mods.fml.common.{Loader, Mod, ModMetadata, SidedProxy}
-import ic2.api.item.IC2Items
-import net.minecraft.init.{Blocks, Items}
+import cpw.mods.fml.common.{Mod, ModMetadata, SidedProxy}
 import net.minecraft.item.ItemStack
-import net.minecraftforge.oredict.{OreDictionary, ShapedOreRecipe, ShapelessOreRecipe}
+import net.minecraftforge.oredict.OreDictionary
 import resonant.content.loader.ModManager
 import resonant.lib.loadable.LoadableHandler
-import resonant.lib.recipe.UniversalRecipe
 import resonantinduction.atomic.gate.ItemQuantumGlyph
 import resonantinduction.core.resource.ItemResourcePart
 import resonantinduction.core.{Reference, ResonantTab, Settings}
@@ -73,42 +69,6 @@ object Electrical {
   }
 
   @EventHandler def postInit(evt: FMLPostInitializationEvent) {
-    GameRegistry.addRecipe(new ShapedOreRecipe(ElectricalContent.blockTesla, "WEW", " C ", "DID", 'W', "wire", 'E', Items.ender_eye, 'C', UniversalRecipe.BATTERY.get, 'D', Items.diamond, 'I', UniversalRecipe.PRIMARY_PLATE.get))
-    GameRegistry.addRecipe(new ShapedOreRecipe(ElectricalContent.itemMultimeter, "WWW", "ICI", 'W', "wire", 'C', UniversalRecipe.BATTERY.get, 'I', UniversalRecipe.PRIMARY_METAL.get))
-    val tierOneBattery: ItemStack = ItemBlockBattery.setTier(new ItemStack(ElectricalContent.blockBattery, 1, 0), 0.asInstanceOf[Byte])
-    val tierTwoBattery: ItemStack = ItemBlockBattery.setTier(new ItemStack(ElectricalContent.blockBattery, 1, 0), 1.asInstanceOf[Byte])
-    val tierThreeBattery: ItemStack = ItemBlockBattery.setTier(new ItemStack(ElectricalContent.blockBattery, 1, 0), 2.asInstanceOf[Byte])
-    GameRegistry.addRecipe(new ShapedOreRecipe(tierOneBattery, "III", "IRI", "III", 'R', Blocks.redstone_block, 'I', UniversalRecipe.PRIMARY_METAL.get))
-    GameRegistry.addRecipe(new ShapedOreRecipe(tierTwoBattery, "RRR", "RIR", "RRR", 'R', tierOneBattery, 'I', UniversalRecipe.PRIMARY_PLATE.get))
-    GameRegistry.addRecipe(new ShapedOreRecipe(tierThreeBattery, "RRR", "RIR", "RRR", 'R', tierTwoBattery, 'I', Blocks.diamond_block))
-    GameRegistry.addRecipe(new ShapedOreRecipe(EnumWireMaterial.COPPER.getWire(3), "MMM", 'M', "ingotCopper"))
-    GameRegistry.addRecipe(new ShapedOreRecipe(EnumWireMaterial.TIN.getWire(3), "MMM", 'M', "ingotTin"))
-    GameRegistry.addRecipe(new ShapedOreRecipe(EnumWireMaterial.IRON.getWire(3), "MMM", 'M', Items.iron_ingot))
-    GameRegistry.addRecipe(new ShapedOreRecipe(EnumWireMaterial.ALUMINUM.getWire(3), "MMM", 'M', "ingotAluminum"))
-    GameRegistry.addRecipe(new ShapedOreRecipe(EnumWireMaterial.SILVER.getWire, "MMM", 'M', "ingotSilver"))
-    GameRegistry.addRecipe(new ShapedOreRecipe(EnumWireMaterial.SUPERCONDUCTOR.getWire(3), "MMM", 'M', "ingotSuperconductor"))
-    GameRegistry.addRecipe(new ShapedOreRecipe(EnumWireMaterial.SUPERCONDUCTOR.getWire(3), "MMM", "MEM", "MMM", 'M', Items.gold_ingot, 'E', Items.ender_eye))
-    GameRegistry.addRecipe(new ShapedOreRecipe(ElectricalContent.itemCharger, "WWW", "ICI", 'W', "wire", 'I', UniversalRecipe.PRIMARY_METAL.get, 'C', UniversalRecipe.CIRCUIT_T1.get))
-    GameRegistry.addRecipe(new ShapedOreRecipe(ElectricalContent.itemTransformer, "WWW", "WWW", "III", 'W', "wire", 'I', UniversalRecipe.PRIMARY_METAL.get))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ElectricalContent.itemQuantumGlyph, 1, 0), " CT", "LBL", "TCT", 'B', Blocks.diamond_block, 'L', ElectricalContent.itemLevitator, 'C', ElectricalContent.itemCharger, 'T', ElectricalContent.blockTesla))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ElectricalContent.itemQuantumGlyph, 1, 1), "TCT", "LBL", " CT", 'B', Blocks.diamond_block, 'L', ElectricalContent.itemLevitator, 'C', ElectricalContent.itemCharger, 'T', ElectricalContent.blockTesla))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ElectricalContent.itemQuantumGlyph, 1, 2), "TC ", "LBL", "TCT", 'B', Blocks.diamond_block, 'L', ElectricalContent.itemLevitator, 'C', ElectricalContent.itemCharger, 'T', ElectricalContent.blockTesla))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ElectricalContent.itemQuantumGlyph, 1, 3), "TCT", "LBL", "TC ", 'B', Blocks.diamond_block, 'L', ElectricalContent.itemLevitator, 'C', ElectricalContent.itemCharger, 'T', ElectricalContent.blockTesla))
-    GameRegistry.addRecipe(new ShapedOreRecipe(ElectricalContent.blockSolarPanel, "CCC", "WWW", "III", 'W', "wire", 'C', Items.coal, 'I', UniversalRecipe.PRIMARY_METAL.get))
-    GameRegistry.addRecipe(new ShapedOreRecipe(ElectricalContent.blockMotor, "SRS", "SMS", "SWS", 'W', "wire", 'R', Items.redstone, 'M', Blocks.iron_block, 'S', UniversalRecipe.PRIMARY_METAL.get))
-    GameRegistry.addRecipe(new ShapedOreRecipe(ElectricalContent.blockThermopile, "ORO", "OWO", "OOO", 'W', "wire", 'O', Blocks.obsidian, 'R', Items.redstone))
-    //GameRegistry.addRecipe(new ShapedOreRecipe(ElectricalContent.itemLaserGun, "RDR", "RDR", "ICB", 'R', Items.redstone, 'D', Items.diamond, 'I', Items.gold_ingot, 'C', UniversalRecipe.CIRCUIT_T2.get, 'B', ItemBlockBattery.setTier(new ItemStack(Electrical.blockBattery, 1, 0), 0.asInstanceOf[Byte])))
-    if (Loader.isModLoaded("IC2")) {
-      GameRegistry.addRecipe(new ShapelessOreRecipe(EnumWireMaterial.COPPER.getWire, IC2Items.getItem("copperCableItem")))
-      GameRegistry.addRecipe(new ShapelessOreRecipe(EnumWireMaterial.TIN.getWire, IC2Items.getItem("tinCableItem")))
-      GameRegistry.addRecipe(new ShapelessOreRecipe(EnumWireMaterial.IRON.getWire, IC2Items.getItem("ironCableItem")))
-      GameRegistry.addRecipe(new ShapelessOreRecipe(IC2Items.getItem("copperCableItem"), EnumWireMaterial.COPPER.getWire))
-      GameRegistry.addRecipe(new ShapelessOreRecipe(IC2Items.getItem("tinCableItem"), EnumWireMaterial.TIN.getWire))
-      GameRegistry.addRecipe(new ShapelessOreRecipe(IC2Items.getItem("ironCableItem"), EnumWireMaterial.IRON.getWire))
-    }
-    if (Loader.isModLoaded("Mekanism")) {
-      GameRegistry.addRecipe(new ShapelessOreRecipe(EnumWireMaterial.COPPER.getWire, "universalCable"))
-    }
     Electrical.proxy.postInit
     modproxies.postInit
   }

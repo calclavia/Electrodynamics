@@ -4,7 +4,6 @@ import net.minecraft.block.material.Material
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.{FluidStack, FluidTank, FluidTankInfo}
 import resonantinduction.core.grid.fluid.TileTankNode
-import universalelectricity.api.core.grid.INode
 
 /**
  * A prefab class for tiles that use the fluid network.
@@ -13,19 +12,6 @@ import universalelectricity.api.core.grid.INode
  */
 abstract class TilePressureNode(material: Material) extends TileTankNode(material)
 {
-  protected val pressureNode: FluidPressureNode
-
-  override def start
-  {
-    super.start
-    pressureNode.reconstruct
-  }
-
-  override def invalidate
-  {
-    pressureNode.deconstruct
-    super.invalidate
-  }
 
   override def fill(from: ForgeDirection, resource: FluidStack, doFill: Boolean): Int =
   {
@@ -64,13 +50,5 @@ abstract class TilePressureNode(material: Material) extends TileTankNode(materia
   def getPressureTank: FluidTank =
   {
     return tank
-  }
-
-  override def getNode(nodeType: Class[_ <: INode], from: ForgeDirection): INode =
-  {
-    if (nodeType.isAssignableFrom(pressureNode.getClass))
-      return pressureNode
-
-    return null
   }
 }

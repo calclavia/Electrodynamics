@@ -1,7 +1,7 @@
 package resonantinduction.electrical.em.laser;
 
 import net.minecraft.util.MovingObjectPosition;
-import resonantinduction.electrical.em.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 /**
  * @author Calclavia
