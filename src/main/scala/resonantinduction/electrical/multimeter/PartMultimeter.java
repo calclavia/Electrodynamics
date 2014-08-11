@@ -165,7 +165,7 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
             return true;
         }
 
-        player.openGui(Electrical.INSTANCE, placementSide.ordinal(), world(), x(), y(), z());
+        player.openGui(Electrical.INSTANCE(), placementSide.ordinal(), world(), x(), y(), z());
         return true;
     }
 

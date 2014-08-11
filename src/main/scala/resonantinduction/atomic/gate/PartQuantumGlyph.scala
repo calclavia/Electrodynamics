@@ -118,9 +118,7 @@ class PartQuantumGlyph extends JCuboidPart with TSlottedPart with JNormalOcclusi
     return new Cuboid6(0, 0, 0, 0.5, 0.5, 0.5)
   }
 
-  override def getOcclusionBoxes: Iterable[codechicken.lib.vec.Cuboid6] = {
-    return Array[Cuboid6](getBounds)
-  }
+  override def getOcclusionBoxes: Iterable[codechicken.lib.vec.Cuboid6] = return Array[Cuboid6](getBounds)
 
   def getSlotMask: Int = {
     return 1 << slot
@@ -134,7 +132,7 @@ class PartQuantumGlyph extends JCuboidPart with TSlottedPart with JNormalOcclusi
     super.getDrops
     val drops: Array[ItemStack] = new Array[ItemStack](1)
     drops(0) = getItem
-    return drops
+    return wrapRefArray(drops)
   }
 
   override def pickItem(hit: MovingObjectPosition): ItemStack = {

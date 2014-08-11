@@ -7,14 +7,13 @@ import java.util.List;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import resonant.lib.utility.LanguageUtility;
-import universalelectricity.api.energy.UnitDisplay;
-import universalelectricity.api.energy.UnitDisplay.Unit;
-import universalelectricity.api.net.IUpdate;
+import universalelectricity.api.UnitDisplay;
+import universalelectricity.api.core.grid.IUpdate;
+import universalelectricity.core.grid.TickingGrid;
+import universalelectricity.core.grid.UpdateTicker;
 import universalelectricity.core.transform.vector.Vector3;
-import universalelectricity.core.net.Network;
-import universalelectricity.core.net.NetworkTickHandler;
 
-public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter> implements IUpdate
+public class MultimeterNetwork extends TickingGrid<PartMultimeter> implements IUpdate
 {
 	public final List<String> displayInformation = new ArrayList<String>();
 
@@ -84,25 +83,25 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 		String graphValue = "";
 
 		if (graph == energyGraph)
-			graphValue = UnitDisplay.getDisplay(energyGraph.get(), Unit.JOULES);
+			graphValue = new UnitDisplay(UnitDisplay.Unit.JOULES, energyGraph.get()).toString();
 
 		if (graph == powerGraph)
-			graphValue = UnitDisplay.getDisplay(powerGraph.get(), Unit.WATT);
+			graphValue = new UnitDisplay(UnitDisplay.Unit.WATT, powerGraph.get()).toString();
 
 		if (graph == energyCapacityGraph)
-			graphValue = UnitDisplay.getDisplay(energyCapacityGraph.get(), Unit.JOULES);
+			graphValue = new UnitDisplay(UnitDisplay.Unit.JOULES, energyCapacityGraph.get()).toString();
 
 		if (graph == voltageGraph)
-			graphValue = UnitDisplay.getDisplay(voltageGraph.get(), Unit.VOLTAGE);
+			graphValue = new UnitDisplay(UnitDisplay.Unit.VOLTAGE, voltageGraph.get()).toString();
 
 		if (graph == torqueGraph)
-			graphValue = UnitDisplay.getDisplayShort(torqueGraph.get(), Unit.NEWTON_METER);
+			graphValue = new UnitDisplay(UnitDisplay.Unit.NEWTON_METER, torqueGraph.get(),  true).toString();
 
 		if (graph == angularVelocityGraph)
 			graphValue = UnitDisplay.roundDecimals(angularVelocityGraph.get()) + " rad/s";
 
 		if (graph == fluidGraph)
-			graphValue = UnitDisplay.getDisplay(fluidGraph.get(), Unit.LITER);
+			graphValue = new UnitDisplay(UnitDisplay.Unit.LITER, fluidGraph.get()).toString();
 
 		if (graph == thermalGraph)
 			graphValue = UnitDisplay.roundDecimals(thermalGraph.get()) + " K";
@@ -122,13 +121,6 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 	public boolean isPrimary(PartMultimeter check)
 	{
 		return primaryMultimeter == check;
-	}
-
-	@Override
-	public void addConnector(PartMultimeter connector)
-	{
-		super.addConnector(connector);
-		NetworkTickHandler.addNetwork(this);
 	}
 
 	@Override
@@ -181,12 +173,12 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 			 */
 			upperBound.subtract(center);
 			lowerBound.subtract(center);
-			size = new Vector3(Math.abs(upperBound.x) + Math.abs(lowerBound.x), Math.abs(upperBound.y) + Math.abs(lowerBound.y), Math.abs(upperBound.z) + Math.abs(lowerBound.z));
+			size = new Vector3(Math.abs(upperBound.x()) + Math.abs(lowerBound.x()), Math.abs(upperBound.y()) + Math.abs(lowerBound.y()), Math.abs(upperBound.z()) + Math.abs(lowerBound.z()));
 
-			double area = (size.x != 0 ? size.x : 1) * (size.y != 0 ? size.y : 1) * (size.z != 0 ? size.z : 1);
+			double area = (size.x() != 0 ? size.x() : 1) * (size.y() != 0 ? size.y() : 1) * (size.z() != 0 ? size.z() : 1);
 			isEnabled = area == getConnectors().size();
 
-			NetworkTickHandler.addNetwork(this);
+            UpdateTicker.addUpdater(this);
 
 			Iterator<PartMultimeter> it = this.getConnectors().iterator();
 
@@ -223,19 +215,13 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 		lowerBound = lowerBound.min(node.getPosition());
 	}
 
-	@Override
-	public MultimeterNetwork newInstance()
-	{
-		return new MultimeterNetwork();
-	}
-
 	public void load(NBTTagCompound nbt)
 	{
-		NBTTagList nbtList = nbt.getTagList("graphs");
+		NBTTagList nbtList = nbt.getTagList("graphs", 0);
 
 		for (int i = 0; i < nbtList.tagCount(); ++i)
 		{
-			NBTTagCompound nbtCompound = (NBTTagCompound) nbtList.tagAt(i);
+			NBTTagCompound nbtCompound = (NBTTagCompound) nbtList.getCompoundTagAt(i);
 			graphs.get(i).load(nbtCompound);
 		}
 	}

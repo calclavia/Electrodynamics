@@ -34,11 +34,11 @@ public class GraphD extends Graph<Double>
 	{
 		super.load(nbt);
 
-		NBTTagList nbtList = nbt.getTagList("DataPoints");
+		NBTTagList nbtList = nbt.getTagList("DataPoints", 0);
 
 		for (int i = 0; i < nbtList.tagCount(); ++i)
 		{
-			NBTTagCompound nbtPoint = (NBTTagCompound) nbtList.tagAt(i);
+			NBTTagCompound nbtPoint = (NBTTagCompound) nbtList.getCompoundTagAt(i);
 			points.add(nbtPoint.getDouble("data"));
 		}
 	}

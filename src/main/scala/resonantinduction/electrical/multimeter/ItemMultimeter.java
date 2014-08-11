@@ -29,11 +29,6 @@ public class ItemMultimeter extends JItemMultiPart implements IHighlight
 {
 	private IIcon[] icons = new IIcon[EnumWireMaterial.values().length];
 
-	public ItemMultimeter(int id)
-	{
-		super(id);
-	}
-
 	@Override
 	public TMultiPart newPart(ItemStack itemStack, EntityPlayer player, World world, BlockCoord pos, int side, Vector3 hit)
 	{

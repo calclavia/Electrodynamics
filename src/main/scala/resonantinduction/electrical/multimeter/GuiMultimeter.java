@@ -38,7 +38,7 @@ public class GuiMultimeter extends GuiContainerBase
 		this.buttonList.add(new GuiButton(0, this.width / 2 + 20, this.height / 2 - 23, 50, 20, LanguageUtility.getLocal("gui.resonantinduction.multimeter.toggle")));
 		this.buttonList.add(new GuiButton(1, this.width / 2 - 80, this.height / 2 - 75, 100, 20, LanguageUtility.getLocal("gui.resonantinduction.multimeter.toggleDetection")));
 		this.buttonList.add(new GuiButton(2, this.width / 2 - 80, this.height / 2 + 0, 80, 20, LanguageUtility.getLocal("gui.resonantinduction.multimeter.toggleGraph")));
-		this.textFieldLimit = new GuiTextField(fontRenderer, 9, 90, 90, 12);
+		this.textFieldLimit = new GuiTextField(fontRendererObj, 9, 90, 90, 12);
 		this.textFieldLimit.setMaxStringLength(8);
 		this.textFieldLimit.setText("" + this.multimeter.redstoneTriggerLimit);
 	}
@@ -89,11 +89,11 @@ public class GuiMultimeter extends GuiContainerBase
 		String graphName = multimeter.getNetwork().getLocalized(multimeter.getNetwork().graphs.get(multimeter.graphType));
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 		String s = LanguageUtility.getLocal("item.resonantinduction:multimeter.name");
-		this.fontRenderer.drawString(s, this.xSize / 2 - this.fontRenderer.getStringWidth(s) / 2, 6, 4210752);
-		this.fontRenderer.drawString(EnumColor.INDIGO + "Detection Type", 9, 20, 4210752);
-		this.fontRenderer.drawString(multimeter.getNetwork().getDisplay(multimeter.detectType), 9, 60, 4210752);
-		this.fontRenderer.drawString(LanguageUtility.getLocal("gui.resonantinduction.multimeter.logic")+" " + EnumColor.RED + LanguageUtility.getLocal("gui.resonantinduction.multimeter." + this.multimeter.getMode().display), 9, 75, 4210752);
-		this.fontRenderer.drawString(graphName, 95, 115, 4210752);
+		this.fontRendererObj.drawString(s, this.xSize / 2 - this.fontRendererObj.getStringWidth(s) / 2, 6, 4210752);
+		this.fontRendererObj.drawString(EnumColor.INDIGO + "Detection Type", 9, 20, 4210752);
+		this.fontRendererObj.drawString(multimeter.getNetwork().getDisplay(multimeter.detectType), 9, 60, 4210752);
+		this.fontRendererObj.drawString(LanguageUtility.getLocal("gui.resonantinduction.multimeter.logic")+" " + EnumColor.RED + LanguageUtility.getLocal("gui.resonantinduction.multimeter." + this.multimeter.getMode().display), 9, 75, 4210752);
+		this.fontRendererObj.drawString(graphName, 95, 115, 4210752);
 		this.textFieldLimit.drawTextBox();
 	}
 

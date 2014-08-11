@@ -4,15 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
-import resonant.api.items.ISimpleItemRenderer;
+import resonant.content.prefab.scala.render.ISimpleItemRenderer;
 import resonant.lib.render.RenderUtility;
 import resonant.lib.utility.LanguageUtility;
+import resonantinduction.core.CoreContent;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import universalelectricity.core.transform.vector.Vector3;
@@ -31,10 +34,10 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class RenderMultimeter implements ISimpleItemRenderer
 {
 	public static final RenderMultimeter INSTANCE = new RenderMultimeter();
-	private final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "multimeter.png");
+	private final ResourceLocation TEXTURE = new ResourceLocation(Reference.domain(), Reference.modelPath() + "multimeter.png");
 
 	@Override
-	public void renderInventoryItem(ItemStack itemStack)
+	public void renderInventoryItem(IItemRenderer.ItemRenderType type, ItemStack itemStack, Object... data)
 	{
 		render();
 	}
@@ -45,14 +48,14 @@ public class RenderMultimeter implements ISimpleItemRenderer
 		GL11.glRotatef(90, 1, 0, 0);
 		RenderUtility.bind(TextureMap.locationBlocksTexture);
 		// Render the main panel
-		RenderUtility.renderCube(-0.5, -0.05, -0.5, 0.5, 0.05, 0.5, ResonantInduction.blockIndustrialStone, RenderUtility.loadedIconMap.get(Reference.PREFIX + "multimeter_screen"));
+		RenderUtility.renderCube(-0.5, -0.05, -0.5, 0.5, 0.05, 0.5, Blocks.iron_block, RenderUtility.loadedIconMap.get(Reference.prefix() + "multimeter_screen"));
 		ForgeDirection dir = ForgeDirection.NORTH;
 		final int metadata = 8;
 		// Render edges
 		// UP
-		RenderUtility.renderCube(-0.501, -0.0501, -0.501, 0.501, 0.0501, -0.44, ResonantInduction.blockIndustrialStone, null, metadata);
+		RenderUtility.renderCube(-0.501, -0.0501, -0.501, 0.501, 0.0501, -0.44, Blocks.iron_block, null, metadata);
 		// DOWN
-		RenderUtility.renderCube(-0.501, -0.0501, 0.44, 0.501, 0.0501, 0.501, ResonantInduction.blockIndustrialStone, null, metadata);
+		RenderUtility.renderCube(-0.501, -0.0501, 0.44, 0.501, 0.0501, 0.501, Blocks.iron_block, null, metadata);
 
 		for (int i = 0; i < 6; i++)
 		{
@@ -62,22 +65,22 @@ public class RenderMultimeter implements ISimpleItemRenderer
 			{
 				if (dir.offsetX != check.offsetZ)
 				{
-					RenderUtility.renderCube(-0.501, -0.0501, -0.501, -0.44, 0.0501, 0.501, ResonantInduction.blockIndustrialStone, null, metadata);
+					RenderUtility.renderCube(-0.501, -0.0501, -0.501, -0.44, 0.0501, 0.501, Blocks.iron_block, null, metadata);
 				}
 				else if (dir.offsetX == check.offsetZ)
 				{
-					RenderUtility.renderCube(0.44, -0.0501, -0.501, 0.501, 0.0501, 0.501, ResonantInduction.blockIndustrialStone, null, metadata);
+					RenderUtility.renderCube(0.44, -0.0501, -0.501, 0.501, 0.0501, 0.501, Blocks.iron_block, null, metadata);
 				}
 			}
 			if (dir.offsetZ != 0 && check.offsetX != 0)
 			{
 				if (dir.offsetZ == check.offsetX)
 				{
-					RenderUtility.renderCube(-0.501, -0.0501, -0.501, -0.44, 0.0501, 0.501, ResonantInduction.blockIndustrialStone, null, metadata);
+					RenderUtility.renderCube(-0.501, -0.0501, -0.501, -0.44, 0.0501, 0.501, Blocks.iron_block, null, metadata);
 				}
 				else if (dir.offsetZ != check.offsetX)
 				{
-					RenderUtility.renderCube(0.44, -0.0501, -0.501, 0.501, 0.0501, 0.501, ResonantInduction.blockIndustrialStone, null, metadata);
+					RenderUtility.renderCube(0.44, -0.0501, -0.501, 0.501, 0.0501, 0.501, Blocks.iron_block, null, metadata);
 				}
 			}
 		}
@@ -97,7 +100,7 @@ public class RenderMultimeter implements ISimpleItemRenderer
 		RenderUtility.rotateFaceBlockToSideOutwards(part.getDirection().getOpposite());
 		RenderUtility.bind(TextureMap.locationBlocksTexture);
 		// Render the main panel
-		RenderUtility.renderCube(-0.5, -0.05, -0.5, 0.5, 0.05, 0.5, ResonantInduction.blockIndustrialStone, RenderUtility.loadedIconMap.get(Reference.PREFIX + "multimeter_screen"));
+		RenderUtility.renderCube(-0.5, -0.05, -0.5, 0.5, 0.05, 0.5, Blocks.iron_block, RenderUtility.loadedIconMap.get(Reference.prefix() + "multimeter_screen"));
 		final int metadata = 8;
 
 		// Render edges
@@ -112,16 +115,16 @@ public class RenderMultimeter implements ISimpleItemRenderer
 					if (check.offsetZ != 0)
 					{
 						if (dir.offsetX != check.offsetZ)
-							RenderUtility.renderCube(-0.501, -0.0501, -0.501, -0.44, 0.0501, 0.501, ResonantInduction.blockIndustrialStone, null, metadata);
+							RenderUtility.renderCube(-0.501, -0.0501, -0.501, -0.44, 0.0501, 0.501, Blocks.iron_block, null, metadata);
 						else if (dir.offsetX == check.offsetZ)
-							RenderUtility.renderCube(0.44, -0.0501, -0.501, 0.501, 0.0501, 0.501, ResonantInduction.blockIndustrialStone, null, metadata);
+							RenderUtility.renderCube(0.44, -0.0501, -0.501, 0.501, 0.0501, 0.501, Blocks.iron_block, null, metadata);
 					}
 					else if (check.offsetY != 0)
 					{
 						if (check.offsetY > 0)
-							RenderUtility.renderCube(-0.501, -0.0501, -0.501, 0.501, 0.0501, -0.44, ResonantInduction.blockIndustrialStone, null, metadata);
+							RenderUtility.renderCube(-0.501, -0.0501, -0.501, 0.501, 0.0501, -0.44, Blocks.iron_block, null, metadata);
 						else
-							RenderUtility.renderCube(-0.501, -0.0501, 0.44, 0.501, 0.0501, 0.501, ResonantInduction.blockIndustrialStone, null, metadata);
+							RenderUtility.renderCube(-0.501, -0.0501, 0.44, 0.501, 0.0501, 0.501, Blocks.iron_block, null, metadata);
 					}
 				}
 
@@ -130,16 +133,16 @@ public class RenderMultimeter implements ISimpleItemRenderer
 					if (check.offsetX != 0)
 					{
 						if (dir.offsetZ == check.offsetX)
-							RenderUtility.renderCube(-0.501, -0.0501, -0.501, -0.44, 0.0501, 0.501, ResonantInduction.blockIndustrialStone, null, metadata);
+							RenderUtility.renderCube(-0.501, -0.0501, -0.501, -0.44, 0.0501, 0.501, Blocks.iron_block, null, metadata);
 						else if (dir.offsetZ != check.offsetX)
-							RenderUtility.renderCube(0.44, -0.0501, -0.501, 0.501, 0.0501, 0.501, ResonantInduction.blockIndustrialStone, null, metadata);
+							RenderUtility.renderCube(0.44, -0.0501, -0.501, 0.501, 0.0501, 0.501, Blocks.iron_block, null, metadata);
 					}
 					else if (check.offsetY != 0)
 					{
 						if (check.offsetY > 0)
-							RenderUtility.renderCube(-0.501, -0.0501, -0.501, 0.501, 0.0501, -0.44, ResonantInduction.blockIndustrialStone, null, metadata);
+							RenderUtility.renderCube(-0.501, -0.0501, -0.501, 0.501, 0.0501, -0.44, Blocks.iron_block, null, metadata);
 						else
-							RenderUtility.renderCube(-0.501, -0.0501, 0.44, 0.501, 0.0501, 0.501, ResonantInduction.blockIndustrialStone, null, metadata);
+							RenderUtility.renderCube(-0.501, -0.0501, 0.44, 0.501, 0.0501, 0.501, Blocks.iron_block, null, metadata);
 					}
 				}
 
@@ -148,16 +151,16 @@ public class RenderMultimeter implements ISimpleItemRenderer
 					if (check.offsetX != 0)
 					{
 						if (dir.offsetY != check.offsetX)
-							RenderUtility.renderCube(0.44, -0.0501, -0.501, 0.501, 0.0501, 0.501, ResonantInduction.blockIndustrialStone, null, metadata);
+							RenderUtility.renderCube(0.44, -0.0501, -0.501, 0.501, 0.0501, 0.501, Blocks.iron_block, null, metadata);
 						else if (dir.offsetY == check.offsetX)
-							RenderUtility.renderCube(-0.501, -0.0501, -0.501, -0.44, 0.0501, 0.501, ResonantInduction.blockIndustrialStone, null, metadata);
+							RenderUtility.renderCube(-0.501, -0.0501, -0.501, -0.44, 0.0501, 0.501, Blocks.iron_block, null, metadata);
 					}
 					else if (check.offsetZ != 0)
 					{
 						if (dir.offsetY != check.offsetZ)
-							RenderUtility.renderCube(-0.501, -0.0501, 0.44, 0.501, 0.0501, 0.501, ResonantInduction.blockIndustrialStone, null, metadata);
+							RenderUtility.renderCube(-0.501, -0.0501, 0.44, 0.501, 0.0501, 0.501, Blocks.iron_block, null, metadata);
 						else if (dir.offsetY == check.offsetZ)
-							RenderUtility.renderCube(-0.501, -0.0501, -0.501, 0.501, 0.0501, -0.44, ResonantInduction.blockIndustrialStone, null, metadata);
+							RenderUtility.renderCube(-0.501, -0.0501, -0.501, 0.501, 0.0501, -0.44, Blocks.iron_block, null, metadata);
 					}
 				}
 
@@ -174,8 +177,8 @@ public class RenderMultimeter implements ISimpleItemRenderer
 		{
 			GL11.glPushMatrix();
 			GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
-			Vector3 centerTranslation = part.getNetwork().center.clone().subtract(part.x(), part.y(), part.z()).add(-0.5);
-			GL11.glTranslated(centerTranslation.x, centerTranslation.y, centerTranslation.z);
+			Vector3 centerTranslation = part.getNetwork().center.clone().subtract(new Vector3(part.x(), part.y(), part.z())).add(-0.5);
+			GL11.glTranslated(centerTranslation.x(), centerTranslation.y(), centerTranslation.z());
 			RenderUtility.rotateFaceBlockToSideOutwards(part.getDirection().getOpposite());
 
 			if (part.getDirection().offsetY != 0)
@@ -200,7 +203,7 @@ public class RenderMultimeter implements ISimpleItemRenderer
 				information.add(LanguageUtility.getLocal("tooltip.noInformation"));
 
 			float displacement = 0.72f / information.size();
-			float maxScale = (float) (part.getNetwork().size.x + part.getNetwork().size.z) * 0.004f;
+			float maxScale = (float) (part.getNetwork().size.x() + part.getNetwork().size.z()) * 0.004f;
 			GL11.glTranslatef(0, 0, -displacement * (information.size() / 2f));
 
 			for (int i = 0; i < information.size(); i++)
@@ -211,11 +214,11 @@ public class RenderMultimeter implements ISimpleItemRenderer
 				GL11.glTranslatef(0, 0, displacement * i);
 
 				if (dir.offsetX != 0)
-					RenderUtility.renderText(info, (float) (part.getNetwork().size.z * 0.9f), maxScale);
+					RenderUtility.renderText(info, (float) (part.getNetwork().size.z() * 0.9f), maxScale);
 				else if (dir.offsetY != 0)
-					RenderUtility.renderText(info, (float) (Math.min(part.getNetwork().size.x, part.getNetwork().size.z) * 0.9f), maxScale);
+					RenderUtility.renderText(info, (float) (Math.min(part.getNetwork().size.x(), part.getNetwork().size.z()) * 0.9f), maxScale);
 				else if (dir.offsetZ != 0)
-					RenderUtility.renderText(info, (float) (part.getNetwork().size.x * 0.9f), maxScale);
+					RenderUtility.renderText(info, (float) (part.getNetwork().size.x() * 0.9f), maxScale);
 				GL11.glPopMatrix();
 			}
 
