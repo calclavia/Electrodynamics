@@ -13,7 +13,7 @@ import universalelectricity.api.UnitDisplay;
 
 public class GuiQuantumAssembler extends GuiContainerBase
 {
-    public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.domain(), Atomic.GUI_TEXTURE_DIRECTORY + "gui_atomic_assembler.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.domain(), Reference.guiDirectory() + "gui_atomic_assembler.png");
 
     private TileQuantumAssembler tileEntity;
 

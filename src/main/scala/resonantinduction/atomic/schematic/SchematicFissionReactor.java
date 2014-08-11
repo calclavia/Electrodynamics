@@ -9,6 +9,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import resonant.lib.schematic.Schematic;
 import resonant.lib.type.Pair;
 import resonantinduction.atomic.Atomic;
+import resonantinduction.atomic.AtomicContent;
 import universalelectricity.core.transform.vector.Vector3;
 
 public class SchematicFissionReactor extends Schematic
@@ -45,21 +46,21 @@ public class SchematicFissionReactor extends Schematic
                 for (int z = -r; z <= r; z++)
                 {
                     Vector3 targetPosition = new Vector3(x, 1, z);
-                    returnMap.put(targetPosition, new Pair(Atomic.blockElectricTurbine, 0));
+                    returnMap.put(targetPosition, new Pair(Block.getBlockFromName("electricTurbine"), 0));
 
                     if (!((x == -r || x == r) && (z == -r || z == r)) && new Vector3(x, 0, z).magnitude() <= 1)
                     {
-                        returnMap.put(new Vector3(x, -1, z), new Pair(Atomic.blockControlRod, 0));
+                        returnMap.put(new Vector3(x, -1, z), new Pair(AtomicContent.blockControlRod(), 0));
                         returnMap.put(new Vector3(x, -2, z), new Pair(Blocks.sticky_piston, 1));
                     }
                 }
             }
 
-            returnMap.put(new Vector3(0, -1, 0), new Pair(Atomic.blockThermometer, 0));
+            returnMap.put(new Vector3(0, -1, 0), new Pair(AtomicContent.blockThermometer(), 0));
             // TODO: IF Siren is a Tile, don't do this. Redstone can't hold it.
-            returnMap.put(new Vector3(0, -3, 0), new Pair(Atomic.blockSiren, 0));
+            returnMap.put(new Vector3(0, -3, 0), new Pair(AtomicContent.blockSiren(), 0));
             returnMap.put(new Vector3(0, -2, 0), new Pair(Blocks.redstone_wire, 0));
-            returnMap.put(new Vector3(), new Pair(Atomic.blockReactorCell, 0));
+            returnMap.put(new Vector3(), new Pair(AtomicContent.blockReactorCell(), 0));
         }
         else
         {
@@ -78,7 +79,7 @@ public class SchematicFissionReactor extends Schematic
                         {
                             if (targetPosition.distance(leveledPosition) == 2)
                             {
-                                returnMap.put(targetPosition, new Pair(Atomic.blockControlRod, 0));
+                                returnMap.put(targetPosition, new Pair(AtomicContent.blockControlRod(), 0));
 
                                 /** Place piston base to push control rods in. */
                                 int rotationMetadata = 0;
@@ -102,7 +103,7 @@ public class SchematicFissionReactor extends Schematic
                             }
                             else if (x == 0 && z == 0)
                             {
-                                returnMap.put(targetPosition, new Pair(Atomic.blockReactorCell, 0));
+                                returnMap.put(targetPosition, new Pair(AtomicContent.blockReactorCell(), 0));
                             }
                             else
                             {
@@ -111,7 +112,7 @@ public class SchematicFissionReactor extends Schematic
                         }
                         else if (targetPosition.distance(leveledPosition) < 2)
                         {
-                            returnMap.put(targetPosition, new Pair(Atomic.blockElectricTurbine, 0));
+                            returnMap.put(targetPosition, new Pair(Block.getBlockFromName("electricTurbine"), 0));
                         }
                     }
                 }

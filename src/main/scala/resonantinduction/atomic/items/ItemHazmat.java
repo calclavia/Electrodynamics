@@ -19,7 +19,7 @@ public class ItemHazmat extends ItemArmor implements IAntiPoisonArmor
     public static final ItemArmor.ArmorMaterial hazmatArmorMaterial = EnumHelper.addArmorMaterial("HAZMAT", 0, new int[]{0, 0, 0, 0}, 0);
     public ItemHazmat(String name, int slot)
     {
-        super(hazmatArmorMaterial, Atomic.proxy.getArmorIndex("hazmat"), slot);
+        super(hazmatArmorMaterial, Atomic.proxy().getArmorIndex("hazmat"), slot);
         this.setUnlocalizedName(Reference.prefix() + name);
         this.setCreativeTab(ResonantTab.tab());
         this.setMaxDamage(200000);

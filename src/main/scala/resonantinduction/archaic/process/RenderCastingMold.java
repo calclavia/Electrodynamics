@@ -2,6 +2,7 @@ package resonantinduction.archaic.process;
 
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 
@@ -17,7 +18,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class RenderCastingMold extends TileEntitySpecialRenderer
 {
 	public static RenderCastingMold INSTANCE = new RenderCastingMold();
-	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "castingMold.tcn");
+	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelDirectory() + "castingMold.tcn"));
 
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float var8)
@@ -30,11 +31,11 @@ public class RenderCastingMold extends TileEntitySpecialRenderer
 			GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
 			GL11.glTranslated(0, -0.25, 0);
 			GL11.glScalef(0.5f, 0.5f, 0.5f);
-			RenderUtility.bind(Reference.DOMAIN, Reference.MODEL_PATH + "castingMold.png");
+			RenderUtility.bind(Reference.domain(), Reference.modelPath() + "castingMold.png");
 			MODEL.renderAll();
 			GL11.glPopMatrix();
 
-			if (tile.worldObj != null)
+			if (tile.getWorldObj() != null)
 				RenderItemOverlayUtility.renderItemOnSides(tileEntity, tile.getStackInSlot(0), x, y, z, "");
 		}
 	}

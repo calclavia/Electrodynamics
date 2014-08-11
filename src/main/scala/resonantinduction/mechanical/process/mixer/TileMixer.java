@@ -4,9 +4,9 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import net.minecraft.init.Blocks;
 import resonantinduction.mechanical.energy.grid.TileMechanical;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockFluid;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -23,6 +23,7 @@ import resonantinduction.core.ResonantInduction.RecipeType;
 import resonantinduction.core.Timer;
 import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
+import universalelectricity.core.transform.rotation.Quaternion;
 import universalelectricity.core.transform.vector.Vector3;
 
 /**
@@ -40,16 +41,17 @@ public class TileMixer extends TileMechanical implements IInventory
 	{
 		super(Material.iron);
 		mechanicalNode = new MixerNode(this).setConnection(Byte.parseByte("000011", 2));
-		isOpaqueCube = false;
-		normalRender = false;
-		customItemRender = true;
-		textureName = "material_metal_top";
+		isOpaqueCube(false);
+		normalRender(false);
+		customItemRender(true);
+		setTextureName("material_metal_top");
 	}
 
 	@Override
-	public void updateEntity()
+	public void update()
 	{
-		if (!world().isRemote && ticks % 20 == 0)
+        super.update();
+		if (!world().isRemote && ticks() % 20 == 0)
 		{
 		    this.areaBlockedFromMoving = false;
 			for (int x = -1; x <= 1; x++)
@@ -58,10 +60,9 @@ public class TileMixer extends TileMechanical implements IInventory
 				{
 					if (x != 0 && z != 0)
 					{
-						int id = position().add(x, 0, z).getBlock(world());
-						Block block = Block.blocksList[id];
+						Block block = position().add(x, 0, z).getBlock(world());
 
-						if (block != null && !(block instanceof IFluidBlock) && !(block instanceof BlockFluid))
+						if (block != null && !(block instanceof IFluidBlock))
 						{
 							this.areaBlockedFromMoving = true;
 							return;
@@ -94,7 +95,7 @@ public class TileMixer extends TileMechanical implements IInventory
 		boolean didWork = false;
 
 		// Search for an item to "process"
-		AxisAlignedBB aabb = AxisAlignedBB.getAABBPool().getAABB(this.xCoord - 1, this.yCoord, this.zCoord - 1, this.xCoord + 2, this.yCoord + 1, this.zCoord + 2);
+		AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(this.xCoord - 1, this.yCoord, this.zCoord - 1, this.xCoord + 2, this.yCoord + 1, this.zCoord + 2);
 		List<Entity> entities = this.worldObj.getEntitiesWithinAABB(Entity.class, aabb);
 		Set<EntityItem> processItems = new LinkedHashSet<EntityItem>();
 
@@ -105,16 +106,16 @@ public class TileMixer extends TileMechanical implements IInventory
 			 */
 			Vector3 originalPosition = new Vector3(entity);
 			Vector3 relativePosition = originalPosition.clone().subtract(new Vector3(this).add(0.5));
-			relativePosition.rotate(-mechanicalNode.getAngularSpeed(), 0, 0);
+			relativePosition.transform(new Quaternion(- mechanicalNode.getAngularSpeed(), new Vector3(1,0,0)));
 			Vector3 newPosition = new Vector3(this).add(0.5).add(relativePosition);
-			Vector3 difference = newPosition.difference(originalPosition).scale(0.5);
+			Vector3 difference = newPosition.subtract(originalPosition).multiply(0.5);
 
-			entity.addVelocity(difference.x, difference.y, difference.z);
+			entity.addVelocity(difference.x(), difference.y(), difference.z());
 			entity.onGround = false;
 
 			if (entity instanceof EntityItem)
 			{
-				if (MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER.name(), ((EntityItem) entity).getEntityItem()).length > 0)
+				if (MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER().toString(), ((EntityItem) entity).getEntityItem()).length > 0)
 				{
 					processItems.add((EntityItem) entity);
 				}
@@ -128,7 +129,7 @@ public class TileMixer extends TileMechanical implements IInventory
 				timer.put(processingItem, PROCESS_TIME);
 			}
 
-			if (!processingItem.isDead && new Vector3(this).add(0.5).distance(processingItem) < 2)
+			if (!processingItem.isDead && new Vector3(this).add(0.5).distance(new Vector3(processingItem)) < 2)
 			{
 				int timeLeft = timer.decrease(processingItem);
 
@@ -165,9 +166,9 @@ public class TileMixer extends TileMechanical implements IInventory
 
 		if (didWork)
 		{
-			if (this.ticks % 20 == 0)
+			if (this.ticks() % 20 == 0)
 			{
-				this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, Reference.PREFIX + "mixer", 0.5f, 1);
+				this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, Reference.prefix() + "mixer", 0.5f, 1);
 			}
 		}
 	}
@@ -176,9 +177,9 @@ public class TileMixer extends TileMechanical implements IInventory
 	{
 		Vector3 mixPosition = new Vector3(entity.posX, yCoord, entity.posZ);
 
-		if (mixPosition.getBlock(world()) != blockID())
+		if (mixPosition.getBlock(world()) != getBlockType())
 		{
-			Block block = Block.blocksList[mixPosition.getBlock(worldObj)];
+			Block block = mixPosition.getBlock(worldObj);
 			Block blockFluidFinite = ResourceGenerator.getMixture(ResourceGenerator.getName(entity.getEntityItem()));
 
 			if (blockFluidFinite != null)
@@ -193,9 +194,9 @@ public class TileMixer extends TileMechanical implements IInventory
 						return true;
 					}
 				}
-				else if (block != null && (block.blockID == Block.waterStill.blockID || block.blockID == Block.waterMoving.blockID))
+				else if (block != null && (block == Blocks.water || block == Blocks.flowing_water))
 				{
-					mixPosition.setBlock(worldObj, blockFluidFinite.blockID);
+					mixPosition.setBlock(worldObj, blockFluidFinite);
 				}
 			}
 		}
@@ -237,45 +238,39 @@ public class TileMixer extends TileMechanical implements IInventory
 		}
 	}
 
-	@Override
-	public String getInvName()
-	{
-		return null;
-	}
+    @Override
+    public String getInventoryName() {
+        return "Mixer";
+    }
 
-	@Override
-	public boolean isInvNameLocalized()
-	{
-		return false;
-	}
+    @Override
+    public boolean hasCustomInventoryName() {
+        return true;
+    }
 
-	@Override
-	public int getInventoryStackLimit()
-	{
-		return 64;
-	}
+    @Override
+    public int getInventoryStackLimit() {
+        return 64;
+    }
 
-	@Override
-	public boolean isUseableByPlayer(EntityPlayer entityplayer)
-	{
-		return false;
-	}
+    @Override
+    public boolean isUseableByPlayer(EntityPlayer p_70300_1_) {
+        return false;
+    }
 
-	@Override
-	public void openChest()
-	{
+    @Override
+    public void openInventory() {
 
-	}
+    }
 
-	@Override
-	public void closeChest()
-	{
+    @Override
+    public void closeInventory() {
 
-	}
+    }
 
-	@Override
+    @Override
 	public boolean isItemValidForSlot(int i, ItemStack itemstack)
 	{
-		return MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER.name(), itemstack).length > 0;
+		return MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER().toString(), itemstack).length > 0;
 	}
 }

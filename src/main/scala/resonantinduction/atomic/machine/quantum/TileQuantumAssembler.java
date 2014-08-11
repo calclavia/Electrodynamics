@@ -14,6 +14,7 @@ import resonant.lib.network.discriminator.PacketTile;
 import resonant.lib.network.discriminator.PacketType;
 import resonant.lib.network.handle.IPacketReceiver;
 import resonantinduction.atomic.Atomic;
+import resonantinduction.atomic.AtomicContent;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import universalelectricity.core.transform.vector.Vector3;
@@ -52,7 +53,7 @@ public class TileQuantumAssembler extends TileElectricInventory implements IPack
     public boolean use(EntityPlayer player, int side, Vector3 hit)
     {
         if (!world().isRemote)
-            player.openGui(Atomic.INSTANCE, 0, world(), x(), y(), z());
+            player.openGui(Atomic.INSTANCE(), 0, world(), x(), y(), z());
 
         return true;
     }
@@ -175,7 +176,7 @@ public class TileQuantumAssembler extends TileElectricInventory implements IPack
                 {
                     if (getStackInSlot(i) == null)
                         return false;
-                    if (getStackInSlot(i).getItem() != Atomic.itemDarkMatter)
+                    if (getStackInSlot(i).getItem() != AtomicContent.itemDarkMatter())
                         return false;
                 }
                 return getStackInSlot(6).stackSize < 64;
@@ -225,6 +226,6 @@ public class TileQuantumAssembler extends TileElectricInventory implements IPack
         {
             return true;
         }
-        return itemStack.getItem() == Atomic.itemDarkMatter;
+        return itemStack.getItem() == AtomicContent.itemDarkMatter();
     }
 }

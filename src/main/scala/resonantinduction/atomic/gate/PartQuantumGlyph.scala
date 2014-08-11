@@ -14,7 +14,7 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.{ChatComponentText, MovingObjectPosition}
 import resonant.api.blocks.IBlockFrequency
 import resonant.api.mffs.fortron.FrequencyGridRegistry
-import resonantinduction.electrical.ElectricalContent
+import resonantinduction.atomic.AtomicContent
 import universalelectricity.core.transform.vector.VectorWorld
 
 import scala.collection.JavaConversions._
@@ -118,21 +118,21 @@ class PartQuantumGlyph extends JCuboidPart with TSlottedPart with JNormalOcclusi
     return new Cuboid6(0, 0, 0, 0.5, 0.5, 0.5)
   }
 
-  override def getOcclusionBoxes: Iterable[codechicken.lib.vec.Cuboid6] = return Array[Cuboid6](getBounds)
+  override def getOcclusionBoxes: Array[codechicken.lib.vec.Cuboid6] = return Array[Cuboid6](getBounds)
 
   def getSlotMask: Int = {
     return 1 << slot
   }
 
   protected def getItem: ItemStack = {
-    return new ItemStack(ElectricalContent.itemQuantumGlyph, 1, number)
+    return new ItemStack(AtomicContent.itemQuantumGlyph, 1, number)
   }
 
-  override def getDrops: Iterable[net.minecraft.item.ItemStack] = {
+  override def getDrops: Array[ItemStack] = {
     super.getDrops
     val drops: Array[ItemStack] = new Array[ItemStack](1)
     drops(0) = getItem
-    return wrapRefArray(drops)
+    return drops
   }
 
   override def pickItem(hit: MovingObjectPosition): ItemStack = {

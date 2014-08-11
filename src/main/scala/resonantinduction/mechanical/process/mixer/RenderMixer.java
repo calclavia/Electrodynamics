@@ -8,12 +8,13 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 
 import org.lwjgl.opengl.GL11;
 
-import resonant.api.items.ISimpleItemRenderer;
+import resonant.content.prefab.scala.render.ISimpleItemRenderer;
 import resonant.lib.render.RenderUtility;
 import resonantinduction.core.Reference;
 import cpw.mods.fml.relauncher.Side;
@@ -26,8 +27,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderMixer extends TileEntitySpecialRenderer implements ISimpleItemRenderer
 {
-	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "mixer.tcn");
-	public static ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "mixer.png");
+	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(),Reference.modelDirectory() + "mixer.tcn"));
+	public static ResourceLocation TEXTURE = new ResourceLocation(Reference.domain(), Reference.modelPath() + "mixer.png");
 
 	@Override
 	public void renderTileEntityAt(TileEntity t, double x, double y, double z, float f)
@@ -48,7 +49,7 @@ public class RenderMixer extends TileEntitySpecialRenderer implements ISimpleIte
 	}
 
 	@Override
-	public void renderInventoryItem(ItemStack itemStack)
+	public void renderInventoryItem(IItemRenderer.ItemRenderType type, ItemStack itemStack, Object... data)
 	{
 		glPushMatrix();
 		GL11.glScalef(0.5f, 0.5f, 0.5f);

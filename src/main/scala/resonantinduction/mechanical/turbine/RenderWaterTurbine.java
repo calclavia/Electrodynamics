@@ -3,12 +3,14 @@ package resonantinduction.mechanical.turbine;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 
 import org.lwjgl.opengl.GL11;
 
-import resonant.api.items.ISimpleItemRenderer;
+import resonant.content.prefab.scala.render.ISimpleItemRenderer;
 import resonant.lib.render.RenderUtility;
 import resonantinduction.core.Reference;
 import cpw.mods.fml.relauncher.Side;
@@ -17,7 +19,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderWaterTurbine extends TileEntitySpecialRenderer implements ISimpleItemRenderer
 {
-	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "waterTurbines.obj");
+	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelDirectory() + "waterTurbines.obj"));
 
 	@Override
 	public void renderTileEntityAt(TileEntity t, double x, double y, double z, float f)
@@ -64,7 +66,7 @@ public class RenderWaterTurbine extends TileEntitySpecialRenderer implements ISi
 	}
 
 	@Override
-	public void renderInventoryItem(ItemStack itemStack)
+	public void renderInventoryItem(IItemRenderer.ItemRenderType type, ItemStack itemStack, Object... data)
 	{
 		GL11.glPushMatrix();
 		GL11.glTranslatef(0.5f, 0.5f, 0.5f);
@@ -81,13 +83,13 @@ public class RenderWaterTurbine extends TileEntitySpecialRenderer implements ISi
 
 			GL11.glPushMatrix();
 			GL11.glScalef(1, 1.6f, 1);
-			RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "cobblestone.png");
+			RenderUtility.bind(Reference.blockTextureDirectory() + "cobblestone.png");
 			MODEL.renderOnly("bigwheel_endknot", "horizontal_centre_shaft");
 			GL11.glPopMatrix();
 
 			GL11.glPushMatrix();
 			GL11.glScalef(1, 1.4f, 1);
-			RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "planks_spruce.png");
+			RenderUtility.bind(Reference.blockTextureDirectory() + "planks_spruce.png");
 			MODEL.renderOnly("bigwheel_supporters");
 			bindTexture(tier);
 			MODEL.renderOnly("bigwheel_scoops", "bigwheel_supportercircle");
@@ -98,7 +100,7 @@ public class RenderWaterTurbine extends TileEntitySpecialRenderer implements ISi
 		{
 			GL11.glPushMatrix();
 			GL11.glScalef(0.7f, 1, 0.7f);
-			RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "cobblestone.png");
+			RenderUtility.bind(Reference.blockTextureDirectory() + "cobblestone.png");
 			MODEL.renderOnly("small_waterwheel_endknot");
 			bindTexture(tier);
 			MODEL.renderOnly("small_waterwheel", "small_waterwheel_supporters", "horizontal_centre_shaft");
@@ -120,7 +122,7 @@ public class RenderWaterTurbine extends TileEntitySpecialRenderer implements ISi
 		{
 			GL11.glPushMatrix();
 			GL11.glScalef(0.9f, 1f, 0.9f);
-			RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "log_oak.png");
+			RenderUtility.bind(Reference.blockTextureDirectory() + "log_oak.png");
 			MODEL.renderOnly("small_waterwheel_endknot");
 			bindTexture(tier);
 			MODEL.renderOnly("small_turbine_blades");
@@ -133,13 +135,13 @@ public class RenderWaterTurbine extends TileEntitySpecialRenderer implements ISi
 		switch (tier)
 		{
 			case 0:
-				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "planks_oak.png");
+				RenderUtility.bind(Reference.blockTextureDirectory() + "planks_oak.png");
 				break;
 			case 1:
-				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "cobblestone.png");
+				RenderUtility.bind(Reference.blockTextureDirectory() + "cobblestone.png");
 				break;
 			case 2:
-				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "iron_block.png");
+				RenderUtility.bind(Reference.blockTextureDirectory() + "iron_block.png");
 				break;
 		}
 	}

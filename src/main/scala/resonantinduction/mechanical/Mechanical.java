@@ -47,7 +47,7 @@ import universalelectricity.api.core.grid.NodeRegistry;
  * 
  * @author DarkCow, Calclavia
  */
-@Mod(modid = Mechanical.ID, name = Mechanical.NAME, version = Reference.version(), dependencies = "before:ThermalExpansion;required-after:" + ResonantInduction.ID + ";after:ResonantInduction|Archaic")
+@Mod(modid = Mechanical.ID, name = "Resonant Induction Mechanical", version = Reference.version(), dependencies = "before:ThermalExpansion;required-after:" + ResonantInduction.ID + ";after:ResonantInduction|Archaic")
 public class Mechanical
 {
 	/** Mod Information */
@@ -106,8 +106,8 @@ public class Mechanical
 		itemGearShaft = contentRegistry.newItem(ItemGearShaft.class);
         itemPipe = contentRegistry.newItem(ItemPipe.class);
 
-        blockWindTurbine = contentRegistry.newBlock(BlockWindTurbine.class, ItemBlockMetadata.class, TileWindTurbine.class);
-		blockWaterTurbine = contentRegistry.newBlock(BlockWaterTurbine.class, ItemBlockMetadata.class, TileWaterTurbine.class);
+        blockWindTurbine = contentRegistry.newBlock(TileWindTurbine.class);
+		blockWaterTurbine = contentRegistry.newBlock(TileWaterTurbine.class);
 		blockDetector = contentRegistry.newBlock(TileDetector.class);
 		blockPump = contentRegistry.newBlock(TilePump.class);
 

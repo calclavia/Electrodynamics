@@ -1,5 +1,6 @@
 package resonantinduction.atomic.machine.accelerator;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import resonant.lib.gui.GuiContainerBase;
 import universalelectricity.api.UnitDisplay;
@@ -12,9 +13,9 @@ public class GuiAccelerator extends GuiContainerBase
     private int containerWidth;
     private int containerHeight;
 
-    public GuiAccelerator(InventoryPlayer par1InventoryPlayer, TileAccelerator tileEntity)
+    public GuiAccelerator(EntityPlayer player, TileAccelerator tileEntity)
     {
-        super(new ContainerAccelerator(par1InventoryPlayer, tileEntity));
+        super(new ContainerAccelerator(player, tileEntity));
         this.tileEntity = tileEntity;
     }
 

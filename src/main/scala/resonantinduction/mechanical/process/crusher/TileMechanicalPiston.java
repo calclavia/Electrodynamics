@@ -53,17 +53,17 @@ public class TileMechanicalPiston extends TileMechanical implements IRotatable
 
         }.setLoad(0.5f);
 
-        isOpaqueCube = false;
-        normalRender = false;
-        customItemRender = true;
-        rotationMask = Byte.parseByte("111111", 2);
-        textureName = "material_steel_dark";
+        isOpaqueCube(false);
+        normalRender(false);
+        customItemRender(true);
+        //rotationMask = Byte.parseByte("111111", 2);
+        setTextureName("material_steel_dark");
     }
 
     @Override
-    public void updateEntity()
+    public void update()
     {
-        super.updateEntity();
+        super.update();
 
         if (markRevolve)
         {
@@ -88,15 +88,15 @@ public class TileMechanicalPiston extends TileMechanical implements IRotatable
 
     public boolean hitOreBlock(Vector3 blockPos)
     {
-        Block block = Block.blocksList[blockPos.getBlock(world())];
+        Block block = blockPos.getBlock(world());
 
         if (block != null)
         {
-            int breakCount = (int) (mechanicalPistonMultiplier * block.blockHardness);
+            int breakCount = (int) (mechanicalPistonMultiplier * block.getBlockHardness(world(), blockPos.xi(), blockPos.yi(), blockPos.zi()));
             final int startBreakCount = breakCount;
 
             ItemStack blockStack = new ItemStack(block);
-            RecipeResource[] resources = MachineRecipes.INSTANCE.getOutput(ResonantInduction.RecipeType.CRUSHER.name(), blockStack);
+            RecipeResource[] resources = MachineRecipes.INSTANCE.getOutput(ResonantInduction.RecipeType.CRUSHER().toString(), blockStack);
 
             if (resources.length > 0)
             {
@@ -104,7 +104,7 @@ public class TileMechanicalPiston extends TileMechanical implements IRotatable
                 {
                     int breakStatus = (int) (((float) (startBreakCount - breakCount) / (float) startBreakCount) * 10f);
                     world().destroyBlockInWorldPartially(0, blockPos.xi(), blockPos.yi(), blockPos.zi(), breakStatus);
-                    ResonantInduction.LOGGER.info("[Mechanical Piston] Break Count: " + breakCount);
+                    //ResonantInduction.LOGGER.info("[Mechanical Piston] Break Count: " + breakCount);
                     
                     if (breakCount >= mechanicalPistonMultiplier)
                     {
@@ -116,11 +116,11 @@ public class TileMechanicalPiston extends TileMechanical implements IRotatable
                             }
                         }
 
-                        getWorldObj().destroyBlock(blockPos.xi(), blockPos.yi(), blockPos.zi(), false);
+                        blockPos.setBlockToAir(world());
                     }
                 }
 
-                ResonantInduction.proxy.renderBlockParticle(worldObj, blockPos.clone().add(0.5), new Vector3((Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3), block.blockID, 1);
+                ResonantInduction.proxy().renderBlockParticle(worldObj, blockPos.clone().add(0.5), new Vector3((Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3), Block.getIdFromBlock(block), 1);
                 breakCount--;
                 return true;
             }
@@ -134,12 +134,6 @@ public class TileMechanicalPiston extends TileMechanical implements IRotatable
         return false;
     }
 
-    @Override
-    public void onRemove(int par5, int par6)
-    {
-        super.onRemove(par5, par6);
-    }
-
     public boolean canMove(Vector3 from, Vector3 to)
     {
         TileEntity tileEntity = from.getTileEntity(worldObj);
@@ -150,9 +144,9 @@ public class TileMechanicalPiston extends TileMechanical implements IRotatable
         }
 
         /** Check Target */
-        int targetBlock = to.getBlock(worldObj);
+        Block targetBlock = to.getBlock(worldObj);
 
-        if (!(worldObj.isAirBlock(to.xi(), to.yi(), to.zi()) || (targetBlock > 0 && (Block.blocksList[targetBlock].isBlockReplaceable(worldObj, to.xi(), to.yi(), to.zi())))))
+        if (!(worldObj.isAirBlock(to.xi(), to.yi(), to.zi()) || (targetBlock != null && (targetBlock.canBeReplacedByLeaves(worldObj, to.xi(), to.yi(), to.zi())))))
         {
             return false;
         }
@@ -162,7 +156,7 @@ public class TileMechanicalPiston extends TileMechanical implements IRotatable
 
     public void move(Vector3 from, Vector3 to)
     {
-        int blockID = from.getBlock(worldObj);
+        Block blockID = from.getBlock(worldObj);
         int blockMetadata = from.getBlockMetadata(worldObj);
 
         TileEntity tileEntity = from.getTileEntity(worldObj);
@@ -174,7 +168,7 @@ public class TileMechanicalPiston extends TileMechanical implements IRotatable
             tileEntity.writeToNBT(tileData);
         }
 
-        MovementUtility.setBlockSneaky(worldObj, from, 0, 0, null);
+        MovementUtility.setBlockSneaky(worldObj, from, null, 0, null);
 
         if (tileEntity != null && tileData != null)
         {

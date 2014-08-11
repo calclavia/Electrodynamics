@@ -23,6 +23,7 @@ import net.minecraftforge.fluids.IFluidHandler;
 import resonant.api.IRotatable;
 import resonant.lib.network.Synced;
 import resonantinduction.atomic.Atomic;
+import resonantinduction.atomic.AtomicContent;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
 
@@ -37,9 +38,9 @@ public class TileNuclearBoiler extends TileElectricInventory implements IPacketR
     public final static long DIAN = 50000;
     public final int SHI_JIAN = 20 * 15;
     @Synced
-    public final FluidTank waterTank = new FluidTank(Atomic.FLUIDSTACK_WATER.copy(), FluidContainerRegistry.BUCKET_VOLUME * 5);
+    public final FluidTank waterTank = new FluidTank(AtomicContent.FLUIDSTACK_WATER().copy(), FluidContainerRegistry.BUCKET_VOLUME * 5);
     @Synced
-    public final FluidTank gasTank = new FluidTank(Atomic.FLUIDSTACK_URANIUM_HEXAFLOURIDE.copy(), FluidContainerRegistry.BUCKET_VOLUME * 5);
+    public final FluidTank gasTank = new FluidTank(AtomicContent.FLUIDSTACK_URANIUM_HEXAFLOURIDE().copy(), FluidContainerRegistry.BUCKET_VOLUME * 5);
     // How many ticks has this item been extracting for?
     @Synced
     public int timer = 0;
@@ -71,7 +72,7 @@ public class TileNuclearBoiler extends TileElectricInventory implements IPacketR
                 {
                     FluidStack liquid = FluidContainerRegistry.getFluidForFilledItem(getStackInSlot(1));
 
-                    if (liquid.isFluidEqual(Atomic.FLUIDSTACK_WATER))
+                    if (liquid.isFluidEqual(AtomicContent.FLUIDSTACK_WATER()))
                     {
                         if (this.fill(ForgeDirection.UNKNOWN, liquid, false) > 0)
                         {
@@ -139,8 +140,8 @@ public class TileNuclearBoiler extends TileElectricInventory implements IPacketR
         try
         {
             this.timer = data.readInt();
-            this.waterTank.setFluid(new FluidStack(Atomic.FLUIDSTACK_WATER.fluidID, data.readInt()));
-            this.gasTank.setFluid(new FluidStack(Atomic.FLUIDSTACK_URANIUM_HEXAFLOURIDE.fluidID, data.readInt()));
+            this.waterTank.setFluid(new FluidStack(AtomicContent.FLUIDSTACK_WATER().fluidID, data.readInt()));
+            this.gasTank.setFluid(new FluidStack(AtomicContent.FLUIDSTACK_URANIUM_HEXAFLOURIDE().fluidID, data.readInt()));
         }
         catch (Exception e)
         {
@@ -174,7 +175,7 @@ public class TileNuclearBoiler extends TileElectricInventory implements IPacketR
     @Override
     public boolean use(EntityPlayer player, int side, Vector3 hit)
     {
-        openGui(player, Atomic.INSTANCE);
+        openGui(player, Atomic.INSTANCE());
         return true;
     }
 
@@ -187,7 +188,7 @@ public class TileNuclearBoiler extends TileElectricInventory implements IPacketR
             {
                 if (getStackInSlot(3) != null)
                 {
-                    if (Atomic.itemYellowCake == getStackInSlot(3).getItem() || Atomic.isItemStackUraniumOre(getStackInSlot(3)))
+                    if (AtomicContent.itemYellowCake() == getStackInSlot(3).getItem() || Atomic.isItemStackUraniumOre(getStackInSlot(3)))
                     {
                         if (Atomic.getFluidAmount(this.gasTank.getFluid()) < this.gasTank.getCapacity())
                         {
@@ -207,7 +208,7 @@ public class TileNuclearBoiler extends TileElectricInventory implements IPacketR
         if (this.nengYong())
         {
             this.waterTank.drain(FluidContainerRegistry.BUCKET_VOLUME, true);
-            FluidStack liquid = Atomic.FLUIDSTACK_URANIUM_HEXAFLOURIDE.copy();
+            FluidStack liquid = AtomicContent.FLUIDSTACK_URANIUM_HEXAFLOURIDE().copy();
             liquid.amount = Settings.uraniumHexaflourideRatio() * 2;
             this.gasTank.fill(liquid, true);
             this.decrStackSize(3, 1);
@@ -254,7 +255,7 @@ public class TileNuclearBoiler extends TileElectricInventory implements IPacketR
     @Override
     public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
     {
-        if (Atomic.FLUIDSTACK_WATER.isFluidEqual(resource))
+        if (AtomicContent.FLUIDSTACK_WATER().isFluidEqual(resource))
         {
             return this.waterTank.fill(resource, doFill);
         }
@@ -265,7 +266,7 @@ public class TileNuclearBoiler extends TileElectricInventory implements IPacketR
     @Override
     public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
     {
-        if (Atomic.FLUIDSTACK_URANIUM_HEXAFLOURIDE.isFluidEqual(resource))
+        if (AtomicContent.FLUIDSTACK_URANIUM_HEXAFLOURIDE().isFluidEqual(resource))
         {
             return this.gasTank.drain(resource.amount, doDrain);
         }
@@ -282,13 +283,13 @@ public class TileNuclearBoiler extends TileElectricInventory implements IPacketR
     @Override
     public boolean canFill(ForgeDirection from, Fluid fluid)
     {
-        return Atomic.FLUIDSTACK_WATER.fluidID == fluid.getID();
+        return AtomicContent.FLUIDSTACK_WATER().fluidID == fluid.getID();
     }
 
     @Override
     public boolean canDrain(ForgeDirection from, Fluid fluid)
     {
-        return Atomic.FLUIDSTACK_URANIUM_HEXAFLOURIDE.fluidID == fluid.getID();
+        return AtomicContent.FLUIDSTACK_URANIUM_HEXAFLOURIDE().fluidID == fluid.getID();
     }
 
     @Override
@@ -308,7 +309,7 @@ public class TileNuclearBoiler extends TileElectricInventory implements IPacketR
         }
         else if (slotID == 3)
         {
-            return itemStack.getItem() == Atomic.itemYellowCake;
+            return itemStack.getItem() == AtomicContent.itemYellowCake();
         }
 
         return false;

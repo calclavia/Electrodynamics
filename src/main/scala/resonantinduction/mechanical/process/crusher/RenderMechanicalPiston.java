@@ -18,8 +18,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderMechanicalPiston extends TileEntitySpecialRenderer
 {
-    public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "piston/mechanicalPiston.tcn");
-    public static ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "piston/mechanicalPiston_iron.png");
+    public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.modelDirectory() + "piston/mechanicalPiston.tcn"));
+    public static ResourceLocation TEXTURE = new ResourceLocation(Reference.domain(), Reference.modelPath() + "piston/mechanicalPiston_iron.png");
 
     @Override
     public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float f)
@@ -31,7 +31,7 @@ public class RenderMechanicalPiston extends TileEntitySpecialRenderer
         GL11.glRotated(-90, 0, 1, 0);
         GL11.glRotated(180, 0, 0, 1);
 
-        if (tile.worldObj != null)
+        if (tile.getWorldObj() != null)
         {
             if (tile.getDirection() != ForgeDirection.UP && tile.getDirection() != ForgeDirection.DOWN)
                 RenderUtility.rotateBlockBasedOnDirection(tile.getDirection().getOpposite());
@@ -55,7 +55,7 @@ public class RenderMechanicalPiston extends TileEntitySpecialRenderer
         /** Render Piston Shaft */
         GL11.glPushMatrix();
 
-        if (tile.worldObj != null)
+        if (tile.getWorldObj() != null)
         {
             ForgeDirection dir = tile.getDirection();
 

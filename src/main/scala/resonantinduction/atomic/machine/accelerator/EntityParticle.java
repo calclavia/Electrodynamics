@@ -109,7 +109,7 @@ public class EntityParticle extends Entity implements IEntityAdditionalSpawnData
 
         if (this.updateTicket == null)
         {
-            this.updateTicket = ForgeChunkManager.requestTicket(Atomic.INSTANCE, this.worldObj, Type.ENTITY);
+            this.updateTicket = ForgeChunkManager.requestTicket(Atomic.INSTANCE(), this.worldObj, Type.ENTITY);
             this.updateTicket.getModData();
             this.updateTicket.bindEntity(this);
         }
@@ -225,11 +225,14 @@ public class EntityParticle extends Entity implements IEntityAdditionalSpawnData
      * @return The new velocity. */
     private double turn()
     {
-        ForgeDirection zuoFangXiang = VectorHelper.getOrientationFromSide(this.movementDirection, ForgeDirection.EAST);
+        int[][] RELATIVE_MATRIX = { { 3, 2, 1, 0, 5, 4 }, { 4, 5, 0, 1, 2, 3 }, { 0, 1, 3, 2, 4, 5 }, { 0, 1, 2, 3, 5, 4 }, { 0, 1, 5, 4, 3, 2 }, { 0, 1, 4, 5, 2, 3 } };
+
+        ForgeDirection zuoFangXiang = ForgeDirection.getOrientation(RELATIVE_MATRIX[this.movementDirection.ordinal()][ForgeDirection.EAST.ordinal()]);
+
         Vector3 zuoBian = new Vector3(this).floor();
         zuoBian.add(zuoFangXiang);
 
-        ForgeDirection youFangXiang = VectorHelper.getOrientationFromSide(this.movementDirection, ForgeDirection.WEST);
+        ForgeDirection youFangXiang = ForgeDirection.getOrientation(RELATIVE_MATRIX[this.movementDirection.ordinal()][ForgeDirection.WEST.ordinal()]);
         Vector3 youBian = new Vector3(this).floor();
         youBian.add(youFangXiang);
 

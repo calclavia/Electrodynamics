@@ -14,6 +14,8 @@ import resonantinduction.core.{Reference, ResonantTab}
  */
 object AtomicContent extends ContentHolder
 {
+
+
   manager.setTab(ResonantTab).setPrefix(Reference.prefix)
 
   /** Block and Items */
@@ -50,6 +52,7 @@ object AtomicContent extends ContentHolder
   var itemHazmatBody: Item = null
   var itemHazmatLeggings: Item = null
   var itemHazmatBoots: Item = null
+  val itemQuantumGlyph: Item = null
 
   /** Water, Uranium Hexafluoride, Steam, Deuterium, Toxic waste */
   var FLUIDSTACK_WATER: FluidStack = null

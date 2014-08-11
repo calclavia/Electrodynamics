@@ -7,6 +7,7 @@ import static org.lwjgl.opengl.GL11.glScalef;
 import static org.lwjgl.opengl.GL11.glTranslatef;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -22,7 +23,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderGrindingWheel extends TileEntitySpecialRenderer
 {
-	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "grinder.obj");
+	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.modelDirectory() + "grinder.obj"));
 
 	@Override
 	public void renderTileEntityAt(TileEntity t, double x, double y, double z, float f)
@@ -37,9 +38,9 @@ public class RenderGrindingWheel extends TileEntitySpecialRenderer
 			//dir = ForgeDirection.getOrientation(!(dir.ordinal() % 2 == 0) ? dir.ordinal() - 1 : dir.ordinal());
 			RenderUtility.rotateBlockBasedOnDirection(dir);
 			glRotatef((float) Math.toDegrees(tile.mechanicalNode.renderAngle), 0, 0, 1);
-			RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "planks_oak.png");
+			RenderUtility.bind(Reference.blockTextureDirectory() + "planks_oak.png");
 			MODEL.renderAllExcept("teeth");
-			RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "cobblestone.png");
+			RenderUtility.bind(Reference.blockTextureDirectory() + "cobblestone.png");
 			MODEL.renderOnly("teeth");
 			glPopMatrix();
 		}

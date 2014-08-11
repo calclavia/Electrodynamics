@@ -32,7 +32,7 @@ public class PipePressureNode extends FluidPressureNode
         if (world() != null)
         {
             byte previousConnections = pipe().getAllCurrentConnections();
-            pipe().currentConnections = 0;
+            pipe().currentConnections(0);
 
             for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
             {

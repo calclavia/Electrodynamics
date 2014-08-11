@@ -1,5 +1,6 @@
 package resonantinduction.mechanical.process.grinder;
 
+import resonant.lib.prefab.damage.CustomDamageSource;
 import resonantinduction.mechanical.energy.grid.TileMechanical;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -10,12 +11,11 @@ import net.minecraftforge.common.util.ForgeDirection;
 import resonant.api.IRotatable;
 import resonant.api.recipe.MachineRecipes;
 import resonant.api.recipe.RecipeResource;
-import resonant.lib.prefab.CustomDamageSource;
-import resonant.lib.prefab.vector.Cuboid;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.ResonantInduction.RecipeType;
 import resonantinduction.core.Timer;
+import universalelectricity.core.transform.region.Cuboid;
 import universalelectricity.core.transform.vector.Vector3;
 
 /**
@@ -38,18 +38,18 @@ public class TileGrindingWheel extends TileMechanical implements IRotatable
 	{
 		super(Material.rock);
 		mechanicalNode = new GrinderNode(this).setLoad(2);
-		bounds = new Cuboid(0.05f, 0.05f, 0.05f, 0.95f, 0.95f, 0.95f);
-		isOpaqueCube = false;
-		normalRender = false;
-		customItemRender = true;
-		rotationMask = Byte.parseByte("111111", 2);
-		textureName = "material_steel_dark";
+		bounds(new Cuboid(0.05f, 0.05f, 0.05f, 0.95f, 0.95f, 0.95f));
+		isOpaqueCube(false);
+		normalRender(false);
+		customItemRender(true);
+		//rotationMask = Byte.parseByte("111111", 2);
+		setTextureName("material_steel_dark");
 	}
 
 	@Override
-	public void updateEntity()
+	public void update()
 	{
-		super.updateEntity();
+		super.update();
 		counter = Math.max(counter + Math.abs(mechanicalNode.torque), 0);
 		doWork();
 	}
@@ -133,7 +133,7 @@ public class TileGrindingWheel extends TileMechanical implements IRotatable
 
 			if (grindingItem != null)
 			{
-				if (timer.containsKey(grindingItem) && !grindingItem.isDead && new Vector3(this).add(0.5).distance(grindingItem) < 1)
+				if (timer.containsKey(grindingItem) && !grindingItem.isDead && new Vector3(this).add(0.5).distance(new Vector3(grindingItem)) < 1)
 				{
 					int timeLeft = timer.decrease(grindingItem);
 
@@ -161,7 +161,7 @@ public class TileGrindingWheel extends TileMechanical implements IRotatable
 
 						if (grindingItem.getEntityItem().getItem() instanceof ItemBlock)
 						{
-							ResonantInduction.proxy.renderBlockParticle(worldObj, new Vector3(grindingItem), new Vector3((Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3), ((ItemBlock) grindingItem.getEntityItem().getItem()).getBlock(), 1);
+							ResonantInduction.proxy().renderBlockParticle(worldObj, new Vector3(grindingItem), new Vector3((Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3), 3, 1);
 						}
 						else
 						{
@@ -180,9 +180,9 @@ public class TileGrindingWheel extends TileMechanical implements IRotatable
 
 			if (didWork)
 			{
-				if (this.ticks % 8 == 0)
+				if (this.ticks() % 8 == 0)
 				{
-					worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, Reference.PREFIX + "grinder", 0.5f, 1);
+					worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, Reference.prefix() + "grinder", 0.5f, 1);
 				}
 
 				counter -= requiredTorque;
@@ -192,14 +192,14 @@ public class TileGrindingWheel extends TileMechanical implements IRotatable
 
 	public boolean canGrind(ItemStack itemStack)
 	{
-		return MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER.name(), itemStack).length > 0;
+		return MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER().toString(), itemStack).length > 0;
 	}
 
 	private boolean doGrind(EntityItem entity)
 	{
 		ItemStack itemStack = entity.getEntityItem();
 
-		RecipeResource[] results = MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER.name(), itemStack);
+		RecipeResource[] results = MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER().toString(), itemStack);
 
 		for (RecipeResource resource : results)
 		{

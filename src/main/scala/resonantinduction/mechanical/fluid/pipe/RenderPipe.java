@@ -5,6 +5,7 @@ import java.awt.Color;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -12,7 +13,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
 
-import resonant.api.items.ISimpleItemRenderer;
+import resonant.content.prefab.scala.render.ISimpleItemRenderer;
 import resonant.lib.render.FluidRenderUtility;
 import resonant.lib.render.RenderUtility;
 import resonant.lib.utility.WorldUtility;
@@ -25,20 +26,20 @@ public class RenderPipe implements ISimpleItemRenderer
 {
 	public static final RenderPipe INSTANCE = new RenderPipe();
 
-	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "pipe.tcn");
-	public static ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "pipe.png");
+	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.modelDirectory() + "pipe.tcn"));
+	public static ResourceLocation TEXTURE = new ResourceLocation(Reference.domain(), Reference.modelPath() + "pipe.png");
 
 	public void render(PartPipe part, double x, double y, double z, float f)
 	{
 		GL11.glPushMatrix();
 		GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
-		render(part.getMaterialID(), part.getColor() > 0 ? ItemDye.dyeColors[part.getColor()] : -1, part.getAllCurrentConnections());
+		render(part.getMaterialID(), part.getColor() > 0 ? ItemDye.field_150922_c[part.getColor()] : -1, part.getAllCurrentConnections());
 		GL11.glPopMatrix();
 
 		GL11.glPushMatrix();
 
-		FluidStack fluid = part.getPressureTank().getFluid();
-		int capacity = part.getPressureTank().getCapacity();
+		FluidStack fluid = part.tank.getFluid();
+		int capacity = part.tank.getCapacity();
 		byte renderSides = part.getAllCurrentConnections();
 
 		if (fluid != null && fluid.amount > 0)
@@ -169,7 +170,7 @@ public class RenderPipe implements ISimpleItemRenderer
 	}
 
 	@Override
-	public void renderInventoryItem(ItemStack itemStack)
+	public void renderInventoryItem(IItemRenderer.ItemRenderType type, ItemStack itemStack, Object... data)
 	{
 		GL11.glPushMatrix();
 		render(itemStack.getItemDamage(), -1, Byte.parseByte("001100", 2));

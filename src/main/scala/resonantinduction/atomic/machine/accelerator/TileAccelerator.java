@@ -6,6 +6,7 @@ import resonant.engine.ResonantEngine;
 import resonant.lib.network.discriminator.PacketAnnotation;
 import resonant.lib.utility.BlockUtility;
 import resonantinduction.atomic.Atomic;
+import resonantinduction.atomic.AtomicContent;
 import resonantinduction.atomic.items.ItemAntimatter;
 import resonantinduction.atomic.items.ItemDarkMatter;
 import net.minecraft.block.Block;
@@ -86,7 +87,7 @@ public class TileAccelerator extends TileElectricInventory implements IElectroma
                         if (getStackInSlot(2) != null)
                         {
                             // Increase the existing amount of anti-matter if stack already exists.
-                            if (getStackInSlot(2).getItem() == Atomic.itemAntimatter)
+                            if (getStackInSlot(2).getItem() == AtomicContent.itemAntimatter())
                             {
                                 ItemStack newStack = getStackInSlot(2).copy();
                                 if (newStack.stackSize < newStack.getMaxStackSize())
@@ -106,7 +107,7 @@ public class TileAccelerator extends TileElectricInventory implements IElectroma
                             // Remove some of the internal reserves of anti-matter and use it to craft an individual item.
                             antimatter -= 125;
                             decrStackSize(1, 1);
-                            setInventorySlotContents(2, new ItemStack(Atomic.itemAntimatter));
+                            setInventorySlotContents(2, new ItemStack(AtomicContent.itemAntimatter()));
                         }
                     }
                 }
@@ -152,7 +153,7 @@ public class TileAccelerator extends TileElectricInventory implements IElectroma
                             {
                                 if (worldObj.rand.nextFloat() <= Settings.darkMatterSpawnChance())
                                 {
-                                    incrStackSize(3, new ItemStack(Atomic.itemDarkMatter));
+                                    incrStackSize(3, new ItemStack(AtomicContent.itemDarkMatter()));
                                 }
                             }
 
@@ -220,7 +221,7 @@ public class TileAccelerator extends TileElectricInventory implements IElectroma
     {
         if (!world().isRemote)
         {
-            player.openGui(Atomic.INSTANCE, 0, world(), x(), y(), z());
+            player.openGui(Atomic.INSTANCE(), 0, world(), x(), y(), z());
         }
         return true;
     }

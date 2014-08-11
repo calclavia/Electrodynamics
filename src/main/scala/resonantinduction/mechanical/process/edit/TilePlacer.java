@@ -2,13 +2,15 @@ package resonantinduction.mechanical.process.edit;
 
 import java.util.EnumSet;
 
+import cpw.mods.fml.common.network.ByteBufUtils;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -16,12 +18,10 @@ import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
 import resonant.api.IRotatable;
-import resonant.lib.content.module.TileRender;
-import resonant.lib.content.module.prefab.TileInventory;
-import resonant.lib.network.IPacketReceiver;
-import resonant.lib.network.PacketHandler;
+import resonant.lib.network.discriminator.PacketTile;
+import resonant.lib.network.discriminator.PacketType;
+import resonant.lib.network.handle.IPacketReceiver;
 import resonant.lib.render.RenderItemOverlayUtility;
-import resonant.lib.render.RotatedTextureRenderer;
 import resonant.lib.utility.LanguageUtility;
 import resonant.lib.utility.inventory.InternalInventoryHandler;
 import resonant.lib.utility.inventory.InventoryUtility;
@@ -32,6 +32,7 @@ import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import resonant.lib.content.prefab.java.TileInventory;
 
 /**
  * @author tgame14
@@ -49,9 +50,9 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
 	public TilePlacer()
 	{
 		super(Material.rock);
-		normalRender = false;
-		maxSlots = 1;
-		rotationMask = Byte.parseByte("111111", 2);
+		normalRender(false);
+		setSizeInventory(1);
+		//rotationMask = Byte.parseByte("111111", 2);
 	}
 
 	public InternalInventoryHandler getInvHandler()
@@ -70,7 +71,7 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
 	}
 
 	@Override
-	public void onNeighborChanged()
+	public void onNeighborChanged(Block block)
 	{
 		work();
 	}
@@ -82,9 +83,10 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
 	}
 
 	@Override
-	public void updateEntity()
+	public void update()
 	{
-		if (autoPullItems && this.ticks % 5 == 0)
+        super.update();
+		if (autoPullItems && this.ticks() % 5 == 0)
 		{
 			if (getStackInSlot(0) == null)
 			{
@@ -136,37 +138,37 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
 	}
 
 	@Override
-	protected boolean use(EntityPlayer player, int hitSide, Vector3 hit)
+	public boolean use(EntityPlayer player, int hitSide, Vector3 hit)
 	{
 		interactCurrentItem(this, 0, player);
 		return true;
 	}
 
-	protected boolean configure(EntityPlayer player, int side, Vector3 hit)
+	public boolean configure(EntityPlayer player, int side, Vector3 hit)
 	{
 		if (player.isSneaking())
 		{
 			this.autoPullItems = !this.autoPullItems;
-			player.sendChatToPlayer(ChatMessageComponent.createFromText("AutoExtract: " + this.autoPullItems));
+			player.addChatComponentMessage(new ChatComponentText("AutoExtract: " + this.autoPullItems));
 			return true;
 		}
 		return super.configure(player, side, hit);
 	}
 
 	@Override
-	public Packet getDescriptionPacket()
+	public PacketTile getDescPacket()
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 		writeToNBT(nbt);
-		return ResonantInduction.PACKET_TILE.getPacket(this, nbt);
+		return new PacketTile(this, nbt);
 	}
 
 	@Override
-	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
+	public void read(ByteBuf data, EntityPlayer player, PacketType type)
 	{
 		try
 		{
-			readFromNBT(PacketHandler.readNBTTagCompound(data));
+			readFromNBT(ByteBufUtils.readTag(data));
 		}
 		catch (Exception e)
 		{
@@ -240,27 +242,18 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
 		iconBack = iconRegister.registerIcon(getTextureName() + "_back");
 	}
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	protected TileRender newRenderer()
-	{
-		return new RotatedTextureRenderer(this)
-		{
-			@Override
-			public boolean renderDynamic(Vector3 position, boolean isItem, float frame)
-			{
-				if (world() != null && !isItem)
-				{
-					EnumSet set = EnumSet.allOf(ForgeDirection.class);
-					set.remove(getDirection());
-					set.remove(getDirection().getOpposite());
-					GL11.glPushMatrix();
-					RenderItemOverlayUtility.renderItemOnSides(tile(), getStackInSlot(0), position.x, position.y, position.z, LanguageUtility.getLocal("tooltip.noOutput"), set);
-					GL11.glPopMatrix();
-				}
 
-				return false;
-			}
-		};
-	}
+    @Override
+    public void renderDynamic(Vector3 position, float frame, int pass)
+    {
+        if (world() != null)
+        {
+            EnumSet set = EnumSet.allOf(ForgeDirection.class);
+            set.remove(getDirection());
+            set.remove(getDirection().getOpposite());
+            GL11.glPushMatrix();
+            RenderItemOverlayUtility.renderItemOnSides(tile(), getStackInSlot(0), position.x(), position.y(), position.z(), LanguageUtility.getLocal("tooltip.noOutput"), set);
+            GL11.glPopMatrix();
+        }
+    }
 }

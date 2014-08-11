@@ -8,6 +8,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import resonantinduction.atomic.Atomic;
+import resonantinduction.atomic.AtomicContent;
 
 /* Atomic assembler container */
 public class ContainerQuantumAssembler extends Container
@@ -71,7 +72,7 @@ public class ContainerQuantumAssembler extends Container
 
             if (par1 > 6)
             {
-                if (itemStack.getItem() == Atomic.itemDarkMatter)
+                if (itemStack.getItem() == AtomicContent.itemDarkMatter())
                 {
                     if (!this.mergeItemStack(itemStack, 0, 6, false))
                     {

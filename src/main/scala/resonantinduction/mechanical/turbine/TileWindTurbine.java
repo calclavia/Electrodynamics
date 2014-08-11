@@ -1,6 +1,9 @@
 package resonantinduction.mechanical.turbine;
 
 import net.minecraft.block.Block;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -10,6 +13,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 import resonant.lib.utility.inventory.InventoryUtility;
 import resonantinduction.core.Settings;
 import universalelectricity.core.transform.vector.Vector3;
+
+import java.util.List;
 
 /** The vertical wind turbine collects airflow. The horizontal wind turbine collects steam from steam
  * power plants.
@@ -24,13 +29,13 @@ public class TileWindTurbine extends TileTurbine
 
 
     @Override
-    public void updateEntity()
+    public void update()
     {
         /** Break under storm. */
         if (tier == 0 && getDirection().offsetY == 0 && worldObj.isRaining() && worldObj.isThundering() && worldObj.rand.nextFloat() < 0.00000008)
         {
-            InventoryUtility.dropItemStack(worldObj, new Vector3(this), new ItemStack(Block.cloth, 1 + worldObj.rand.nextInt(2)));
-            InventoryUtility.dropItemStack(worldObj, new Vector3(this), new ItemStack(Item.stick, 3 + worldObj.rand.nextInt(8)));
+            InventoryUtility.dropItemStack(worldObj, new Vector3(this), new ItemStack(Blocks.wool, 1 + worldObj.rand.nextInt(2)));
+            InventoryUtility.dropItemStack(worldObj, new Vector3(this), new ItemStack(Items.stick, 3 + worldObj.rand.nextInt(8)));
             worldObj.setBlockToAir(xCoord, yCoord, zCoord);
             return;
         }
@@ -44,7 +49,7 @@ public class TileWindTurbine extends TileTurbine
         {
             maxPower = 3000;
 
-            if (ticks % 20 == 0 && !worldObj.isRemote)
+            if (ticks() % 20 == 0 && !worldObj.isRemote)
                 computePower();
 
             getMultiBlock().get().power += windPower;
@@ -109,6 +114,13 @@ public class TileWindTurbine extends TileTurbine
         boolean hasBonus = biome instanceof BiomeGenOcean || biome instanceof BiomeGenPlains || biome == BiomeGenBase.river;
 
         float windSpeed = (worldObj.rand.nextFloat() / 8) + (yCoord / 256f) * (hasBonus ? 1.2f : 1) + worldObj.getRainStrength(1.5f);
-        windPower = (long) Math.min(materialMultiplier * multiblockMultiplier * windSpeed * efficiency * Settings.WIND_POWER_RATIO, maxPower * Settings.WIND_POWER_RATIO);
+        windPower = (long) Math.min(materialMultiplier * multiblockMultiplier * windSpeed * efficiency * Settings.WIND_POWER_RATIO(), maxPower * Settings.WIND_POWER_RATIO());
+    }
+
+    @Override
+    public void getSubBlocks(Item par1, CreativeTabs par2CreativeTabs, List par3List)
+    {
+        for (int i = 0; i < 3; i++)
+            par3List.add(new ItemStack(par1, 1, i));
     }
 }

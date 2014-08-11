@@ -17,7 +17,7 @@ public class GearMultiBlockHandler extends MultiBlockHandler<PartGear>
 	@Override
 	public PartGear getWrapperAt(Vector3 position)
 	{
-		TileEntity tile = position.getTileEntity(self.getWorld());
+		TileEntity tile = position.getTileEntity(this.tile.getWorld());
 
 		if (tile instanceof TileMultipart)
 		{
@@ -25,7 +25,7 @@ public class GearMultiBlockHandler extends MultiBlockHandler<PartGear>
 
 			if (part instanceof PartGear)
 			{
-				if (((PartGear) part).tier == self.tier)
+				if (((PartGear) part).tier == this.tile.tier)
 				{
 					return (PartGear) part;
 				}
@@ -37,6 +37,6 @@ public class GearMultiBlockHandler extends MultiBlockHandler<PartGear>
 
 	public ForgeDirection getPlacementSide()
 	{
-		return self.placementSide;
+		return tile.placementSide;
 	}
 }

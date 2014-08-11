@@ -8,7 +8,7 @@ import universalelectricity.api.core.grid.INodeProvider
 
 import scala.collection.convert.wrapAll._
 
-class FluidPressureNode(parent: TileTankNode) extends TankNode(parent)
+class FluidPressureNode(parent: INodeProvider) extends TankNode(parent)
 {
   protected var connectionMap: Byte = java.lang.Byte.parseByte("111111", 2)
   private var pressure = 0

@@ -19,16 +19,20 @@ import codechicken.multipart.JNormalOcclusion;
 import codechicken.multipart.TSlottedPart;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import universalelectricity.api.core.grid.INode;
+
+import java.util.Set;
 
 /** Fluid transport pipe
  * 
  * @author Calclavia, Darkguardsman */
-public class PartPipe extends PartFramedNode<EnumPipeMaterial, PipePressureNode, PartPipe> implements TSlottedPart, JNormalOcclusion, IFluidHandler
+public class PartPipe extends PartFramedNode<EnumPipeMaterial> implements TSlottedPart, JNormalOcclusion, IFluidHandler
 {
     protected final FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
     /** Computes the average fluid for client to render. */
     private EvictingList<Integer> averageTankData = new EvictingList<Integer>(20);
     private boolean markPacket = true;
+    private PipePressureNode node = null;
 
     public PartPipe()
     {
@@ -200,17 +204,28 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial, PipePressureNode,
     {
         super.load(nbt);
         tank.readFromNBT(nbt);
-        node.setMaxFlowRate(getMaterial().maxFlowRate);
-        node.setMaxPressure(getMaterial().maxPressure);
+        node().setMaxFlowRate(getMaterial().maxFlowRate);
+        node().setMaxPressure(getMaterial().maxPressure);
     }
 
     @Override
-    public Iterable<Cuboid6> getOcclusionBoxes() {
+    public Set<Cuboid6> getOcclusionBoxes() {
         return null;
     }
 
     @Override
     public int getSlotMask() {
         return 0;
+    }
+
+    @Override
+    public INode node() {
+        return node;
+    }
+
+    @Override
+    public void node_$eq(INode node) {
+        if(node instanceof PipePressureNode)
+            this.node = (PipePresureNode)node;
     }
 }

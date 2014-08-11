@@ -10,6 +10,7 @@ import resonant.lib.gui.ContainerBase;
 import resonant.lib.prefab.slot.SlotEnergyItem;
 import resonant.lib.prefab.slot.SlotSpecific;
 import resonantinduction.atomic.Atomic;
+import resonantinduction.atomic.AtomicContent;
 
 /** Nuclear boiler container */
 public class ContainerNuclearBoiler extends ContainerBase
@@ -28,7 +29,7 @@ public class ContainerNuclearBoiler extends ContainerBase
         // Gas Output
         this.addSlotToContainer(new Slot((IInventory)tileEntity, 2, 136, 50));
         // Yellowcake Input
-        this.addSlotToContainer(new SlotSpecific((IInventory)tileEntity, 3, 81, 26, new ItemStack(Atomic.itemYellowCake), new ItemStack(Atomic.blockUraniumOre)));
+        this.addSlotToContainer(new SlotSpecific((IInventory)tileEntity, 3, 81, 26, new ItemStack(AtomicContent.itemYellowCake()), new ItemStack(AtomicContent.blockUraniumOre())));
         this.addPlayerInventory(player);
     }
 
@@ -59,7 +60,7 @@ public class ContainerNuclearBoiler extends ContainerBase
                         return null;
                     }
                 }
-                else if (Atomic.FLUIDSTACK_WATER.isFluidEqual(FluidContainerRegistry.getFluidForFilledItem(itemStack)))
+                else if (AtomicContent.FLUIDSTACK_WATER().isFluidEqual(FluidContainerRegistry.getFluidForFilledItem(itemStack)))
                 {
                     if (!this.mergeItemStack(itemStack, 1, 2, false))
                     {

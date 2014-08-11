@@ -23,7 +23,6 @@ import resonant.lib.network.discriminator.PacketTile;
 import resonant.lib.utility.inventory.InventoryUtility;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.electrical.em.laser.TileBase;
 import universalelectricity.core.transform.vector.Vector3;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;

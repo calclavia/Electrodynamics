@@ -2,6 +2,7 @@ package resonantinduction.mechanical.turbine;
 
 import java.util.HashMap;
 
+import net.minecraft.block.Block;
 import net.minecraftforge.common.util.ForgeDirection;
 import resonant.lib.schematic.Schematic;
 import resonant.lib.type.Pair;
@@ -17,9 +18,9 @@ public class SchematicWindTurbine extends Schematic
 	}
 
 	@Override
-	public HashMap<Vector3, Pair<Integer, Integer>> getStructure(ForgeDirection dir, int size)
+	public HashMap<Vector3, Pair<Block, Integer>> getStructure(ForgeDirection dir, int size)
 	{
-		HashMap<Vector3, Pair<Integer, Integer>> returnMap = new HashMap<Vector3, Pair<Integer, Integer>>();
+		HashMap<Vector3, Pair<Block, Integer>> returnMap = new HashMap<Vector3, Pair<Block, Integer>>();
 
 		int r = size;
 
@@ -32,7 +33,7 @@ public class SchematicWindTurbine extends Schematic
 					if ((dir.offsetX != 0 && x == 0) || (dir.offsetY != 0 && y == 0) || (dir.offsetZ != 0 && z == 0))
 					{
 						Vector3 targetPosition = new Vector3(x, y, z);
-						returnMap.put(targetPosition, new Pair(Mechanical.blockWindTurbine.blockID, dir.ordinal()));
+						returnMap.put(targetPosition, new Pair(Mechanical.blockWindTurbine, dir.ordinal()));
 					}
 				}
 			}

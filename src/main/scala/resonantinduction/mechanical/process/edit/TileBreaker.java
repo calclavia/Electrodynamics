@@ -2,37 +2,37 @@ package resonantinduction.mechanical.process.edit;
 
 import java.util.ArrayList;
 
+import cpw.mods.fml.common.network.ByteBufUtils;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.packet.Packet;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 import resonant.api.IRotatable;
-import resonant.lib.content.module.TileBase;
-import resonant.lib.content.module.TileRender;
-import resonant.lib.network.IPacketReceiver;
-import resonant.lib.network.PacketHandler;
-import resonant.lib.render.RotatedTextureRenderer;
+import resonant.content.prefab.java.TileAdvanced;
+import resonant.lib.network.discriminator.PacketTile;
+import resonant.lib.network.discriminator.PacketType;
+import resonant.lib.network.handle.IPacketReceiver;
 import resonant.lib.utility.inventory.InternalInventoryHandler;
 import resonantinduction.core.ResonantInduction;
 import universalelectricity.core.transform.vector.Vector3;
-import universalelectricity.api.vector.VectorWorld;
 
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import universalelectricity.core.transform.vector.VectorWorld;
 
 /**
  * @author tgame14
  * @since 18/03/14
  */
-public class TileBreaker extends TileBase implements IRotatable, IPacketReceiver
+public class TileBreaker extends TileAdvanced implements IRotatable, IPacketReceiver
 {
 	@SideOnly(Side.CLIENT)
 	private static IIcon iconFront, iconBack;
@@ -43,8 +43,8 @@ public class TileBreaker extends TileBase implements IRotatable, IPacketReceiver
 	public TileBreaker()
 	{
 		super(Material.iron);
-		normalRender = false;
-		rotationMask = Byte.parseByte("111111", 2);
+		normalRender(false);
+		//rotationMask = Byte.parseByte("111111", 2);
 	}
 
 	public InternalInventoryHandler getInvHandler()
@@ -63,13 +63,13 @@ public class TileBreaker extends TileBase implements IRotatable, IPacketReceiver
 	}
 
 	@Override
-	public void onNeighborChanged()
+	public void onNeighborChanged(Block block)
 	{
 		work();
 	}
 
 	@Override
-	public void updateEntity()
+	public void update()
 	{
 		if (doWork)
 		{
@@ -104,7 +104,7 @@ public class TileBreaker extends TileBase implements IRotatable, IPacketReceiver
 			Vector3 check = position().add(dir);
 			VectorWorld put = (VectorWorld) position().add(dir.getOpposite());
 
-			Block block = Block.blocksList[check.getBlock(world())];
+			Block block = check.getBlock(world());
 
 			if (block != null)
 			{
@@ -112,7 +112,7 @@ public class TileBreaker extends TileBase implements IRotatable, IPacketReceiver
 				boolean flag = true;
 
 				//Get items dropped
-				ArrayList<ItemStack> drops = block.getBlockDropped(getWorldObj(), check.xi(), check.yi(), check.zi(), candidateMeta, 0);
+				ArrayList<ItemStack> drops = block.getDrops(getWorldObj(), check.xi(), check.yi(), check.zi(), candidateMeta, 0);
 
 				for (ItemStack stack : drops)
 				{
@@ -127,9 +127,9 @@ public class TileBreaker extends TileBase implements IRotatable, IPacketReceiver
 				}
 
 				//Destroy block
-				ResonantInduction.proxy.renderBlockParticle(worldObj, check.xi(), check.yi(), check.zi(), new Vector3((Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3), world().getBlockId(check.xi(), check.yi(), check.zi()), 1);
+				ResonantInduction.proxy().renderBlockParticle(worldObj, check.xi(), check.yi(), check.zi(), new Vector3((Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3), Block.getIdFromBlock(block), 1);
 
-				getWorldObj().destroyBlock(check.xi(), check.yi(), check.zi(), false);
+				getWorldObj().setBlockToAir(check.xi(), check.yi(), check.zi());
 				getWorldObj().playAuxSFX(1012, check.xi(), check.yi(), check.zi(), 0);
 
 			}
@@ -137,11 +137,11 @@ public class TileBreaker extends TileBase implements IRotatable, IPacketReceiver
 	}
 
 	@Override
-	public Packet getDescriptionPacket()
+	public PacketTile getDescPacket()
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 		writeToNBT(nbt);
-		return ResonantInduction.PACKET_TILE.getPacket(this, nbt);
+		return new PacketTile(this, nbt);
 	}
 
 	@Override
@@ -188,18 +188,11 @@ public class TileBreaker extends TileBase implements IRotatable, IPacketReceiver
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	protected TileRender newRenderer()
-	{
-		return new RotatedTextureRenderer(this);
-	}
-
-	@Override
-	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
+	public void read(ByteBuf data, EntityPlayer player, PacketType type)
 	{
 		try
 		{
-			readFromNBT(PacketHandler.readNBTTagCompound(data));
+			readFromNBT(ByteBufUtils.readTag(data));
 		}
 		catch (Exception e)
 		{

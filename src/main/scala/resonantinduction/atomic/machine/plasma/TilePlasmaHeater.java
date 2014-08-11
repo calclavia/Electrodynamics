@@ -8,6 +8,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -21,8 +22,10 @@ import resonant.lib.config.Config;
 import resonant.lib.network.discriminator.PacketTile;
 import resonant.lib.network.discriminator.PacketType;
 import resonant.lib.network.handle.IPacketReceiver;
+import resonant.lib.utility.FluidUtility;
 import resonant.lib.utility.LanguageUtility;
 import resonantinduction.atomic.Atomic;
+import resonantinduction.atomic.AtomicContent;
 import resonantinduction.core.ResonantInduction;
 import universalelectricity.api.UnitDisplay;
 import universalelectricity.core.transform.vector.Vector3;
@@ -68,7 +71,7 @@ public class TilePlasmaHeater extends TileElectric implements IPacketReceiver, I
                 {
                     tankInputDeuterium.drain(plasmaHeatAmount, true);
                     tankInputTritium.drain(plasmaHeatAmount, true);
-                    tankOutput.fill(new FluidStack(Atomic.FLUID_PLASMA, tankOutput.getCapacity()), true);
+                    tankOutput.fill(new FluidStack(AtomicContent.FLUID_PLASMA(), tankOutput.getCapacity()), true);
                     electricNode().energy().extractEnergy();
                 }
             }
@@ -170,12 +173,12 @@ public class TilePlasmaHeater extends TileElectric implements IPacketReceiver, I
     @Override
     public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
     {
-        if (resource.isFluidEqual(Atomic.FLUIDSTACK_DEUTERIUM))
+        if (resource.isFluidEqual(AtomicContent.FLUIDSTACK_DEUTERIUM()))
         {
             return tankInputDeuterium.fill(resource, doFill);
         }
 
-        if (resource.isFluidEqual(Atomic.FLUIDSTACK_TRITIUM))
+        if (resource.isFluidEqual(AtomicContent.FLUIDSTACK_TRITIUM()))
         {
             return tankInputTritium.fill(resource, doFill);
         }
@@ -198,13 +201,13 @@ public class TilePlasmaHeater extends TileElectric implements IPacketReceiver, I
     @Override
     public boolean canFill(ForgeDirection from, Fluid fluid)
     {
-        return fluid.getID() == Atomic.FLUID_DEUTERIUM.getID() || fluid.getID() == Atomic.FLUID_TRITIUM.getID();
+        return fluid.getID() == AtomicContent.FLUID_DEUTERIUM().getID() || fluid.getID() == AtomicContent.FLUID_TRITIUM().getID();
     }
 
     @Override
     public boolean canDrain(ForgeDirection from, Fluid fluid)
     {
-        return fluid == Atomic.FLUID_PLASMA;
+        return fluid == AtomicContent.FLUID_PLASMA();
     }
 
     @Override
@@ -212,6 +215,12 @@ public class TilePlasmaHeater extends TileElectric implements IPacketReceiver, I
     {
         return new FluidTankInfo[]
         { tankInputDeuterium.getInfo(), tankInputTritium.getInfo(), tankOutput.getInfo() };
+    }
+
+    @Override
+    public boolean use(EntityPlayer player, int side, Vector3 hit)
+    {
+        return FluidUtility.playerActivatedFluidItem(world(), x(), y(), z(), player, side);
     }
 
 }

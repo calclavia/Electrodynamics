@@ -20,6 +20,7 @@ import net.minecraftforge.fluids.IFluidHandler;
 import resonant.api.IRotatable;
 import resonant.lib.network.Synced;
 import resonantinduction.atomic.Atomic;
+import resonantinduction.atomic.AtomicContent;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
 import universalelectricity.compatibility.Compatibility;
@@ -128,7 +129,7 @@ public class TileChemicalExtractor extends TileProcess implements IFluidHandler
     @Override
     public boolean use(EntityPlayer player, int side, Vector3 hit)
     {
-        openGui(player, Atomic.INSTANCE);
+        openGui(player, Atomic.INSTANCE());
         return true;
     }
 
@@ -139,7 +140,7 @@ public class TileChemicalExtractor extends TileProcess implements IFluidHandler
         {
             if (inputTank.getFluid().amount >= FluidContainerRegistry.BUCKET_VOLUME && Atomic.isItemStackUraniumOre(getStackInSlot(inputSlot)))
             {
-                if (isItemValidForSlot(outputSlot, new ItemStack(Atomic.itemYellowCake)))
+                if (isItemValidForSlot(outputSlot, new ItemStack(AtomicContent.itemYellowCake())))
                 {
                     return true;
                 }
@@ -147,9 +148,9 @@ public class TileChemicalExtractor extends TileProcess implements IFluidHandler
 
             if (outputTank.getFluidAmount() < outputTank.getCapacity())
             {
-                if (inputTank.getFluid().getFluid().getID() == Atomic.FLUID_DEUTERIUM.getID() && inputTank.getFluid().amount >= Settings.deutermiumPerTritium() * EXTRACT_SPEED)
+                if (inputTank.getFluid().getFluid().getID() == AtomicContent.FLUID_DEUTERIUM().getID() && inputTank.getFluid().amount >= Settings.deutermiumPerTritium() * EXTRACT_SPEED)
                 {
-                    if (outputTank.getFluid() == null || Atomic.FLUIDSTACK_TRITIUM.equals(outputTank.getFluid()))
+                    if (outputTank.getFluid() == null || AtomicContent.FLUIDSTACK_TRITIUM().equals(outputTank.getFluid()))
                     {
                         return true;
                     }
@@ -157,7 +158,7 @@ public class TileChemicalExtractor extends TileProcess implements IFluidHandler
 
                 if (inputTank.getFluid().getFluid().getID() == FluidRegistry.WATER.getID() && inputTank.getFluid().amount >= Settings.waterPerDeutermium() * EXTRACT_SPEED)
                 {
-                    if (outputTank.getFluid() == null || Atomic.FLUIDSTACK_DEUTERIUM.equals(outputTank.getFluid()))
+                    if (outputTank.getFluid() == null || AtomicContent.FLUIDSTACK_DEUTERIUM().equals(outputTank.getFluid()))
                     {
                         return true;
                     }
@@ -176,7 +177,7 @@ public class TileChemicalExtractor extends TileProcess implements IFluidHandler
             if (Atomic.isItemStackUraniumOre(getStackInSlot(inputSlot)))
             {
                 inputTank.drain(FluidContainerRegistry.BUCKET_VOLUME, true);
-                incrStackSize(outputSlot, new ItemStack(Atomic.itemYellowCake, 3));
+                incrStackSize(outputSlot, new ItemStack(AtomicContent.itemYellowCake(), 3));
                 decrStackSize(inputSlot, 1);
                 return true;
             }
@@ -193,7 +194,7 @@ public class TileChemicalExtractor extends TileProcess implements IFluidHandler
 
             if (drain != null && drain.amount >= 1 && drain.getFluid().getID() == FluidRegistry.WATER.getID())
             {
-                if (outputTank.fill(new FluidStack(Atomic.FLUIDSTACK_DEUTERIUM, EXTRACT_SPEED), true) >= EXTRACT_SPEED)
+                if (outputTank.fill(new FluidStack(AtomicContent.FLUIDSTACK_DEUTERIUM(), EXTRACT_SPEED), true) >= EXTRACT_SPEED)
                 {
                     inputTank.drain(Settings.waterPerDeutermium() * EXTRACT_SPEED, true);
                     return true;
@@ -212,9 +213,9 @@ public class TileChemicalExtractor extends TileProcess implements IFluidHandler
 
             FluidStack drain = inputTank.drain(Settings.deutermiumPerTritium() * EXTRACT_SPEED, false);
 
-            if (drain != null && drain.amount >= 1 && drain.getFluid().getID() == Atomic.FLUID_DEUTERIUM.getID())
+            if (drain != null && drain.amount >= 1 && drain.getFluid().getID() == AtomicContent.FLUID_DEUTERIUM().getID())
             {
-                if (outputTank.fill(new FluidStack(Atomic.FLUIDSTACK_TRITIUM, EXTRACT_SPEED), true) >= EXTRACT_SPEED)
+                if (outputTank.fill(new FluidStack(AtomicContent.FLUIDSTACK_TRITIUM(), EXTRACT_SPEED), true) >= EXTRACT_SPEED)
                 {
                     inputTank.drain(Settings.deutermiumPerTritium() * EXTRACT_SPEED, true);
                     return true;
@@ -287,7 +288,7 @@ public class TileChemicalExtractor extends TileProcess implements IFluidHandler
     @Override
     public boolean canFill(ForgeDirection from, Fluid fluid)
     {
-        return FluidRegistry.WATER.getID() == fluid.getID() || Atomic.FLUID_DEUTERIUM.getID() == fluid.getID();
+        return FluidRegistry.WATER.getID() == fluid.getID() || AtomicContent.FLUID_DEUTERIUM().getID() == fluid.getID();
     }
 
     @Override

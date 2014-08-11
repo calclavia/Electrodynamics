@@ -1,5 +1,6 @@
 package resonantinduction.core.prefab.part
 
+import java.util
 import java.util.{Collection, HashSet, Set}
 
 import codechicken.lib.data.{MCDataInput, MCDataOutput}
@@ -43,23 +44,25 @@ abstract class PartFramedNode[M](insulationType: Item) extends PartColorableMate
     return NormalOcclusionTest.apply(this, other)
   }
 
-  override def getSubParts: Iterable[IndexedCuboid6] = {
+  override def getSubParts: java.lang.Iterable[IndexedCuboid6] = {
     super.getSubParts
     val currentSides: Array[IndexedCuboid6] = if (isInsulated) PartFramedNode.insulatedSides.clone() else PartFramedNode.sides.clone()
-    if (tile != null) {
-      for (side <- ForgeDirection.VALID_DIRECTIONS) {
-        val ord: Int = side.ordinal
-        if (PartFramedNode.connectionMapContainsSide(getAllCurrentConnections, side) || side == testingSide) currentSides(ord) = null
+    val list : util.LinkedList[IndexedCuboid6]  = new util.LinkedList[IndexedCuboid6]
+    if (tile != null)
+    {
+      for (side <- ForgeDirection.VALID_DIRECTIONS)
+      {
+        if (PartFramedNode.connectionMapContainsSide(getAllCurrentConnections, side) || side == testingSide) list.add(currentSides(side.ordinal()))
       }
     }
-    return currentSides
+    return list
   }
 
   /** Rendering and block bounds. */
-  override def getCollisionBoxes: Iterable[Cuboid6] = {
+  override def getCollisionBoxes: Set[Cuboid6] = {
     val collisionBoxes: Set[Cuboid6] = new HashSet[Cuboid6]
     collisionBoxes.addAll(getSubParts.asInstanceOf[Collection[_ <: Cuboid6]])
-    return collisionBoxes.toArray().asInstanceOf[Array[Cuboid6]];
+    return collisionBoxes;
   }
 
   override def getStrength(hit: MovingObjectPosition, player: EntityPlayer): Float = {
@@ -70,7 +73,7 @@ abstract class PartFramedNode[M](insulationType: Item) extends PartColorableMate
     return new Cuboid6(0.375, 0.375, 0.375, 0.625, 0.625, 0.625)
   }
 
-  def getBreakingIcon(subPart: AnyRef, side: Int): IIcon = {
+  override def getBreakingIcon(subPart: Any, side: Int): IIcon = {
     return breakIcon
   }
 
@@ -78,7 +81,7 @@ abstract class PartFramedNode[M](insulationType: Item) extends PartColorableMate
     return breakIcon
   }
 
-  def getOcclusionBoxes: Iterable[Cuboid6] = {
+  def getOcclusionBoxes: Set[Cuboid6] = {
     return getCollisionBoxes
   }
 

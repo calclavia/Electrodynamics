@@ -1,5 +1,6 @@
 package resonantinduction.atomic.machine.centrifuge;
 
+import net.minecraft.inventory.IInventory;
 import resonantinduction.atomic.Atomic;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -18,18 +19,17 @@ public class ContainerCentrifuge extends ContainerBase
 
     public ContainerCentrifuge(InventoryPlayer par1InventoryPlayer, TileCentrifuge tileEntity)
     {
-        super(tileEntity);
+        super((IInventory)tileEntity);
         this.tileEntity = tileEntity;
         // Electric Item
-        this.addSlotToContainer(new SlotEnergyItem(tileEntity, 0, 131, 26));
+        this.addSlotToContainer(new SlotEnergyItem((IInventory) tileEntity, 0, 131, 26));
         // Uranium Gas Tank
-        this.addSlotToContainer(new Slot(tileEntity, 1, 25, 50));
+        this.addSlotToContainer(new Slot((IInventory)tileEntity, 1, 25, 50));
         // Output Uranium 235
-        this.addSlotToContainer(new SlotFurnace(par1InventoryPlayer.player, tileEntity, 2, 81, 26));
+        this.addSlotToContainer(new SlotFurnace(par1InventoryPlayer.player, (IInventory)tileEntity, 2, 81, 26));
         // Output Uranium 238
-        this.addSlotToContainer(new SlotFurnace(par1InventoryPlayer.player, tileEntity, 3, 101, 26));
+        this.addSlotToContainer(new SlotFurnace(par1InventoryPlayer.player, (IInventory)tileEntity, 3, 101, 26));
         this.addPlayerInventory(par1InventoryPlayer.player);
-        tileEntity.openChest();
     }
 
     @Override

@@ -8,6 +8,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import resonantinduction.atomic.Atomic;
 import net.minecraft.util.Vec3;
 import resonant.api.explosion.ExplosionEvent.DoExplosionEvent;
+import resonantinduction.atomic.AtomicContent;
 import universalelectricity.core.transform.vector.Vector3;
 
 /** Atomic Science Event Handling. */
@@ -51,7 +52,7 @@ public class FulminationHandler
 
                             if (juLi <= evt.iExplosion.getRadius() && juLi > 0)
                             {
-                                float miDu = evt.world.getBlockDensity(Vec3.createVectorHelper(evt.x, evt.y, evt.z), Atomic.blockFulmination.getCollisionBoundingBoxFromPool(evt.world, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord));
+                                float miDu = evt.world.getBlockDensity(Vec3.createVectorHelper(evt.x, evt.y, evt.z), AtomicContent.blockFulmination().getCollisionBoundingBoxFromPool(evt.world, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord));
 
                                 if (miDu < 1)
                                 {
@@ -67,7 +68,7 @@ public class FulminationHandler
 
                 for (TileFulmination tileEntity : avaliableGenerators)
                 {
-                    float density = evt.world.getBlockDensity(Vec3.createVectorHelper(evt.x, evt.y, evt.z), Atomic.blockFulmination.getCollisionBoundingBoxFromPool(evt.world, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord));
+                    float density = evt.world.getBlockDensity(Vec3.createVectorHelper(evt.x, evt.y, evt.z), AtomicContent.blockFulmination().getCollisionBoundingBoxFromPool(evt.world, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord));
                     double juLi = new Vector3(tileEntity).distance(new Vector3(evt.x, evt.y, evt.z));
 
                     long energy = (long) Math.min(maxEnergyPerGenerator, maxEnergyPerGenerator / (juLi / evt.iExplosion.getRadius()));

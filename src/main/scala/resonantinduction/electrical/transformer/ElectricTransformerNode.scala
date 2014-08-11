@@ -3,7 +3,7 @@ package resonantinduction.electrical.transformer
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.util.ForgeDirection
 import universalelectricity.api.core.grid.INodeProvider
-import universalelectricity.api.core.grid.electric.IEnergyNode
+import universalelectricity.compatibility.Compatibility
 import universalelectricity.core.grid.node.ElectricNode
 import universalelectricity.core.transform.vector.VectorWorld
 
@@ -53,12 +53,10 @@ class ElectricTransformerNode(parent: INodeProvider) extends ElectricNode(parent
   def sendEnergy(wattage: Double, doAdd: Boolean): Double =
   {
     val tile : TileEntity = new VectorWorld(parent.asInstanceOf[TileEntity]).add(connectionDirection).getTileEntity
-    if(tile.isInstanceOf[INodeProvider] && tile.asInstanceOf[INodeProvider].getNode(Class[IEnergyNode], connectionDirection.getOpposite).isInstanceOf[IEnergyNode])
+    if(Compatibility.isHandler(tile))
     {
-      val node :IEnergyNode = tile.asInstanceOf[INodeProvider].getNode(Class[IEnergyNode], connectionDirection.getOpposite).asInstanceOf[IEnergyNode]
-      return node.addEnergy(wattage, doAdd)
+      return Compatibility.fill(tile, connectionDirection.getOpposite, wattage, doAdd)
     }
-
     return 0
   }
 

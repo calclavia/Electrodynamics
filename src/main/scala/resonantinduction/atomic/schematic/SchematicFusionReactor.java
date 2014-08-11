@@ -7,6 +7,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import resonant.lib.schematic.Schematic;
 import resonant.lib.type.Pair;
 import resonantinduction.atomic.Atomic;
+import resonantinduction.atomic.AtomicContent;
 import universalelectricity.core.transform.vector.Vector3;
 
 public class SchematicFusionReactor extends Schematic
@@ -47,12 +48,12 @@ public class SchematicFusionReactor extends Schematic
                             {
                                 double yDeviation = (y == 0 ? size / 3 : -size / 3) + (y == 0 ? -1 : 1) * Math.sin(magnitude / radius * Math.PI) * size / 2d;
                                 Vector3 newPos = position.clone().add(0, yDeviation, 0);
-                                returnMap.put(newPos.round(), new Pair(Atomic.blockElectromagnet, 1));
+                                returnMap.put(newPos.round(), new Pair(AtomicContent.blockElectromagnet(), 1));
                             }
                         }
                         else if (magnitude > radius - 1)
                         {
-                            returnMap.put(position, new Pair(Atomic.blockElectromagnet, 0));
+                            returnMap.put(position, new Pair(AtomicContent.blockElectromagnet(), 0));
                         }
                     }
                 }
@@ -61,14 +62,14 @@ public class SchematicFusionReactor extends Schematic
         /** Fusion Core */
         for (int y = 0; y < size; y++)
         {
-            returnMap.put(new Vector3(0, y, 0), new Pair(Atomic.blockReactorCell, 0));
-            returnMap.put(new Vector3(1, y, 0), new Pair(Atomic.blockElectromagnet, 0));
-            returnMap.put(new Vector3(0, y, 1), new Pair(Atomic.blockElectromagnet, 0));
-            returnMap.put(new Vector3(0, y, -1), new Pair(Atomic.blockElectromagnet, 0));
-            returnMap.put(new Vector3(-1, y, 0), new Pair(Atomic.blockElectromagnet, 0));
+            returnMap.put(new Vector3(0, y, 0), new Pair(AtomicContent.blockReactorCell(), 0));
+            returnMap.put(new Vector3(1, y, 0), new Pair(AtomicContent.blockElectromagnet(), 0));
+            returnMap.put(new Vector3(0, y, 1), new Pair(AtomicContent.blockElectromagnet(), 0));
+            returnMap.put(new Vector3(0, y, -1), new Pair(AtomicContent.blockElectromagnet(), 0));
+            returnMap.put(new Vector3(-1, y, 0), new Pair(AtomicContent.blockElectromagnet(), 0));
         }
 
-        returnMap.put(new Vector3(0, 0, 0), new Pair(Atomic.blockReactorCell, 0));
+        returnMap.put(new Vector3(0, 0, 0), new Pair(AtomicContent.blockReactorCell(), 0));
 
         return returnMap;
     }

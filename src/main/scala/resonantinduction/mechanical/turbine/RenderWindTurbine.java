@@ -3,12 +3,14 @@ package resonantinduction.mechanical.turbine;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 
 import org.lwjgl.opengl.GL11;
 
-import resonant.api.items.ISimpleItemRenderer;
+import resonant.content.prefab.scala.render.ISimpleItemRenderer;
 import resonant.lib.render.RenderUtility;
 import resonantinduction.core.Reference;
 import cpw.mods.fml.relauncher.Side;
@@ -17,7 +19,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderWindTurbine extends TileEntitySpecialRenderer implements ISimpleItemRenderer
 {
-	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "windTurbines.obj");
+	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelDirectory() + "windTurbines.obj"));
 
 	@Override
 	public void renderTileEntityAt(TileEntity t, double x, double y, double z, float f)
@@ -44,7 +46,7 @@ public class RenderWindTurbine extends TileEntitySpecialRenderer implements ISim
 	}
 
 	@Override
-	public void renderInventoryItem(ItemStack itemStack)
+	public void renderInventoryItem(IItemRenderer.ItemRenderType type, ItemStack itemStack, Object... data)
 	{
 		GL11.glPushMatrix();
 		GL11.glTranslatef(0.5f, 0.5f, 0.5f);
@@ -57,13 +59,13 @@ public class RenderWindTurbine extends TileEntitySpecialRenderer implements ISim
 		switch (tier)
 		{
 			case 0:
-				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "planks_oak.png");
+				RenderUtility.bind(Reference.blockTextureDirectory() + "planks_oak.png");
 				break;
 			case 1:
-				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "cobblestone.png");
+				RenderUtility.bind(Reference.blockTextureDirectory() + "cobblestone.png");
 				break;
 			case 2:
-				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "iron_block.png");
+				RenderUtility.bind(Reference.blockTextureDirectory() + "iron_block.png");
 				break;
 		}
 
@@ -84,14 +86,14 @@ public class RenderWindTurbine extends TileEntitySpecialRenderer implements ISim
 				GL11.glScalef(1f, 2f, 1f);
 				GL11.glTranslatef(0, -0.05f, 0);
 				MODEL.renderOnly("LargeHub");
-				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "wool_colored_white.png");
+				RenderUtility.bind(Reference.blockTextureDirectory() + "wool_colored_white.png");
 				MODEL.renderOnly("LargeBlade");
 			}
 		}
 		else
 		{
 			MODEL.renderOnly("SmallBlade");
-			RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "log_oak.png");
+			RenderUtility.bind(Reference.blockTextureDirectory() + "log_oak.png");
 			MODEL.renderOnly("SmallHub");
 		}
 

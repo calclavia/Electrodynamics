@@ -3,14 +3,19 @@ package resonantinduction.mechanical.turbine;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
 import resonant.lib.multiblock.reference.IMultiBlockStructure;
 import resonant.lib.network.handle.IPacketIDReceiver;
+import resonantinduction.core.Reference;
 import resonantinduction.mechanical.energy.grid.TileMechanical;
 import net.minecraft.block.material.Material;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import resonantinduction.mechanical.gear.ItemHandCrank;
 import universalelectricity.api.core.grid.INodeProvider;
 import universalelectricity.core.transform.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
@@ -39,7 +44,18 @@ public class TileTurbine extends TileMechanical implements IMultiBlockStructure<
     public TileTurbine()
     {
         super(Material.wood);
+        normalRender(false);
+        isOpaqueCube(false);
+        setTextureName("material_wood_surface");
         mechanicalNode = new TurbineNode(this);
+        //rotationMask = Byte.parseByte("111111", 2);
+    }
+
+    @Override
+    public void onRemove(Block block, int par1)
+    {
+        super.onRemove(block, par1);
+        getMultiBlock().deconstruct();
     }
 
     @Override
@@ -111,7 +127,7 @@ public class TileTurbine extends TileMechanical implements IMultiBlockStructure<
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getRenderBoundingBox()
     {
-        return AxisAlignedBB.getAABBPool().getAABB(this.xCoord - multiBlockRadius, this.yCoord - multiBlockRadius, this.zCoord - multiBlockRadius, this.xCoord + 1 + multiBlockRadius, this.yCoord + 1 + multiBlockRadius, this.zCoord + 1 + multiBlockRadius);
+        return AxisAlignedBB.getBoundingBox(this.xCoord - multiBlockRadius, this.yCoord - multiBlockRadius, this.zCoord - multiBlockRadius, this.xCoord + 1 + multiBlockRadius, this.yCoord + 1 + multiBlockRadius, this.zCoord + 1 + multiBlockRadius);
     }
 
     @Override
@@ -156,7 +172,7 @@ public class TileTurbine extends TileMechanical implements IMultiBlockStructure<
     @Override
     public void onMultiBlockChanged()
     {
-        worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, getBlockType() != null ? getBlockType().blockID : 0);
+        worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, getBlockType() != null ? getBlockType() : null);
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 
@@ -164,5 +180,67 @@ public class TileTurbine extends TileMechanical implements IMultiBlockStructure<
     public World getWorld()
     {
         return worldObj;
+    }
+
+    @Override
+    public boolean use(EntityPlayer player, int side, Vector3 hit)
+    {
+        if (player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().getItem() instanceof ItemHandCrank)
+        {
+                if (!world().isRemote)
+                {
+                    mechanicalNode.torque = -mechanicalNode.torque;
+                    mechanicalNode.angularVelocity = -mechanicalNode.angularVelocity;
+                }
+                return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean configure(EntityPlayer player, int side, Vector3 hit)
+    {
+        if(!player.isSneaking()) {
+            if (getMultiBlock().isConstructed()) {
+                getMultiBlock().deconstruct();
+                multiBlockRadius++;
+
+                if (!getMultiBlock().construct()) {
+                    multiBlockRadius = 1;
+                }
+
+                return true;
+            } else {
+                if (!getMultiBlock().construct()) {
+                    multiBlockRadius = 1;
+                    getMultiBlock().construct();
+                }
+            }
+        }else
+        {
+            Set<TileTurbine> toFlip = new HashSet<TileTurbine>();
+
+            if (!getMultiBlock().isConstructed())
+            {
+                toFlip.add(this);
+            }
+            else
+            {
+                Set<TileTurbine> str = getMultiBlock().getPrimary().getMultiBlock().getStructure();
+
+                if (str != null)
+                    toFlip.addAll(str);
+            }
+
+            for (TileTurbine turbine : toFlip)
+            {
+                if (side == turbine.getDirection().ordinal())
+                    world().setBlockMetadataWithNotify(turbine.xCoord, turbine.yCoord, turbine.zCoord, side ^ 1, 3);
+                else
+                    world().setBlockMetadataWithNotify(turbine.xCoord, turbine.yCoord, turbine.zCoord, side, 3);
+            }
+        }
+
+        return true;
     }
 }

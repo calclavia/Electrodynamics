@@ -12,6 +12,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import resonant.api.IReactor;
 import resonant.api.IReactorComponent;
+import resonantinduction.atomic.AtomicContent;
 import resonantinduction.atomic.machine.reactor.TileReactorCell;
 import resonantinduction.core.Settings;
 import universalelectricity.core.transform.vector.Vector3;
@@ -86,7 +87,7 @@ public class ItemFissileFuel extends ItemRadioactive implements IReactorComponen
             // Create toxic waste.
             if (Settings.allowToxicWaste() && worldObj.rand.nextFloat() > 0.5)
             {
-                FluidStack fluid = Atomic.FLUIDSTACK_TOXIC_WASTE.copy();
+                FluidStack fluid = AtomicContent.FLUIDSTACK_TOXIC_WASTE().copy();
                 fluid.amount = 1;
                 reactor.fill(ForgeDirection.UNKNOWN, fluid, true);
             }

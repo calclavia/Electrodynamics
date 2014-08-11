@@ -9,7 +9,6 @@ import net.minecraftforge.client.model.IModelCustom;
 import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.opengl.GL11;
 
-import resonant.lib.prefab.turbine.TileTurbine;
 import resonantinduction.core.Reference;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -17,10 +16,10 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderElectricTurbine extends TileEntitySpecialRenderer
 {
-    public static final IModelCustom MODEL_SMALL = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "turbineSmall.tcn");
-    public static final IModelCustom MODEL_LARGE = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "turbineLarge.tcn");
-    public static final ResourceLocation SMALL_TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "turbineSmall.png");
-    public static final ResourceLocation LARGE_TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "turbineLarge.png");
+    public static final IModelCustom MODEL_SMALL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(),Reference.modelDirectory() + "turbineSmall.tcn"));
+    public static final IModelCustom MODEL_LARGE = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(),Reference.modelDirectory() + "turbineLarge.tcn"));
+    public static final ResourceLocation SMALL_TEXTURE = new ResourceLocation(Reference.domain(), Reference.modelPath() + "turbineSmall.png");
+    public static final ResourceLocation LARGE_TEXTURE = new ResourceLocation(Reference.domain(), Reference.modelPath() + "turbineLarge.png");
 
     @Override
     public void renderTileEntityAt(TileEntity t, double x, double y, double z, float f)
@@ -45,13 +44,13 @@ public class RenderElectricTurbine extends TileEntitySpecialRenderer
                 { "LargeBlade1", "LargeBlade2", "LargeBlade3", "LargeBlade4", "LargeBlade5", "LargeBlade6" };
 
                 GL11.glPushMatrix();
-                GL11.glRotated(Math.toDegrees(tile.rotation), 0, 1, 0);
+                GL11.glRotated(Math.toDegrees(tile.mechanicalNode.renderAngle), 0, 1, 0);
                 MODEL_LARGE.renderOnly(blades);
                 MODEL_LARGE.renderOnly(largeBlades);
                 GL11.glPopMatrix();
 
                 GL11.glPushMatrix();
-                GL11.glRotated(-Math.toDegrees(tile.rotation), 0, 1, 0);
+                GL11.glRotated(-Math.toDegrees(tile.mechanicalNode.renderAngle), 0, 1, 0);
                 MODEL_LARGE.renderOnly(mediumBlades);
                 GL11.glPopMatrix();
 
@@ -90,12 +89,12 @@ public class RenderElectricTurbine extends TileEntitySpecialRenderer
                 final String[] renderB = ArrayUtils.addAll(bladesB, sheildsB);
 
                 GL11.glPushMatrix();
-                GL11.glRotated(Math.toDegrees(tile.rotation), 0, 1, 0);
+                GL11.glRotated(Math.toDegrees(tile.mechanicalNode.renderAngle), 0, 1, 0);
                 MODEL_SMALL.renderOnly(renderA);
                 GL11.glPopMatrix();
 
                 GL11.glPushMatrix();
-                GL11.glRotated(-Math.toDegrees(tile.rotation), 0, 1, 0);
+                GL11.glRotated(-Math.toDegrees(tile.mechanicalNode.renderAngle), 0, 1, 0);
                 MODEL_SMALL.renderOnly(renderB);
                 GL11.glPopMatrix();
 

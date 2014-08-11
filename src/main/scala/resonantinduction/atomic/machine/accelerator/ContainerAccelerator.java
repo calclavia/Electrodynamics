@@ -9,6 +9,7 @@ import net.minecraft.inventory.SlotFurnace;
 import net.minecraft.item.ItemStack;
 import resonant.lib.gui.ContainerBase;
 import resonantinduction.atomic.Atomic;
+import resonantinduction.atomic.AtomicContent;
 
 /** Accelerator container */
 public class ContainerAccelerator extends ContainerBase
@@ -42,7 +43,7 @@ public class ContainerAccelerator extends ContainerBase
 
             if (par1 > 2)
             {
-                if (itemStack.getItem() == Atomic.itemCell)
+                if (itemStack.getItem() == AtomicContent.itemCell())
                 {
                     if (!this.mergeItemStack(itemStack, 1, 2, false))
                     {

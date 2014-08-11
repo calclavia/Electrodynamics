@@ -1,9 +1,9 @@
 package resonantinduction.mechanical.process.mixer;
 
 import net.minecraftforge.common.util.ForgeDirection;
-import resonant.api.grid.INodeProvider;
 import resonantinduction.core.interfaces.IMechanicalNode;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
+import universalelectricity.api.core.grid.INodeProvider;
 
 public class MixerNode extends MechanicalNode
 {

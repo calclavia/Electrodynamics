@@ -29,12 +29,11 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
 import cpw.mods.fml.client.registry.ClientRegistry
 import cpw.mods.fml.client.registry.RenderingRegistry
-import resonantinduction.electrical.em.laser.BlockRenderingHandler
 import resonantinduction.mechanical.turbine.{TileElectricTurbine, RenderElectricTurbine}
 
 class ClientProxy extends CommonProxy {
   override def preInit {
-    RenderingRegistry.registerBlockHandler(BlockRenderingHandler)
+    //RenderingRegistry.registerBlockHandler(BlockRenderingHandler)
   }
 
   override def getArmorIndex(armor: String): Int = {
@@ -63,7 +62,7 @@ class ClientProxy extends CommonProxy {
       return new GuiChemicalExtractor(player.inventory, (tileEntity.asInstanceOf[TileChemicalExtractor]))
     }
     else if (tileEntity.isInstanceOf[TileAccelerator]) {
-      return new GuiAccelerator(player.inventory, (tileEntity.asInstanceOf[TileAccelerator]))
+      return new GuiAccelerator(player, (tileEntity.asInstanceOf[TileAccelerator]))
     }
     else if (tileEntity.isInstanceOf[TileQuantumAssembler]) {
       return new GuiQuantumAssembler(player.inventory, (tileEntity.asInstanceOf[TileQuantumAssembler]))

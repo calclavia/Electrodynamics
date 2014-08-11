@@ -22,6 +22,7 @@ import resonant.lib.network.discriminator.PacketTile;
 import resonant.lib.network.discriminator.PacketType;
 import resonant.lib.network.handle.IPacketReceiver;
 import resonantinduction.atomic.Atomic;
+import resonantinduction.atomic.AtomicContent;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
 import universalelectricity.compatibility.Compatibility;
@@ -36,7 +37,7 @@ public class TileCentrifuge extends TileElectricInventory implements IPacketRece
     public static final int SHI_JIAN = 20 * 60;
 
     public static final long DIAN = 500000;
-    public final FluidTank gasTank = new FluidTank(Atomic.FLUIDSTACK_URANIUM_HEXAFLOURIDE.copy(), FluidContainerRegistry.BUCKET_VOLUME * 5);
+    public final FluidTank gasTank = new FluidTank(AtomicContent.FLUIDSTACK_URANIUM_HEXAFLOURIDE().copy(), FluidContainerRegistry.BUCKET_VOLUME * 5);
     public int timer = 0;
     public float rotation = 0;
 
@@ -75,7 +76,7 @@ public class TileCentrifuge extends TileElectricInventory implements IPacketRece
 
                         if (fluidHandler != null)
                         {
-                            FluidStack requestFluid = Atomic.FLUIDSTACK_URANIUM_HEXAFLOURIDE.copy();
+                            FluidStack requestFluid = AtomicContent.FLUIDSTACK_URANIUM_HEXAFLOURIDE().copy();
                             requestFluid.amount = this.gasTank.getCapacity() - Atomic.getFluidAmount(this.gasTank.getFluid());
                             FluidStack receiveFluid = fluidHandler.drain(direction.getOpposite(), requestFluid, true);
 
@@ -141,7 +142,7 @@ public class TileCentrifuge extends TileElectricInventory implements IPacketRece
     @Override
     public boolean use(EntityPlayer player, int side, Vector3 hit)
     {
-        openGui(player, Atomic.INSTANCE);
+        openGui(player, Atomic.INSTANCE());
         return true;
     }
 
@@ -151,7 +152,7 @@ public class TileCentrifuge extends TileElectricInventory implements IPacketRece
         try
         {
             this.timer = data.readInt();
-            this.gasTank.setFluid(new FluidStack(Atomic.FLUIDSTACK_URANIUM_HEXAFLOURIDE.fluidID, data.readInt()));
+            this.gasTank.setFluid(new FluidStack(AtomicContent.FLUIDSTACK_URANIUM_HEXAFLOURIDE().fluidID, data.readInt()));
         }
         catch (Exception e)
         {
@@ -172,7 +173,7 @@ public class TileCentrifuge extends TileElectricInventory implements IPacketRece
         {
             if (this.gasTank.getFluid().amount >= Settings.uraniumHexaflourideRatio())
             {
-                return isItemValidForSlot(2, new ItemStack(Atomic.itemUranium)) && isItemValidForSlot(3, new ItemStack(Atomic.itemUranium, 1, 1));
+                return isItemValidForSlot(2, new ItemStack(AtomicContent.itemUranium())) && isItemValidForSlot(3, new ItemStack(AtomicContent.itemUranium(), 1, 1));
             }
         }
 
@@ -188,11 +189,11 @@ public class TileCentrifuge extends TileElectricInventory implements IPacketRece
 
             if (this.worldObj.rand.nextFloat() > 0.6)
             {
-                this.incrStackSize(2, new ItemStack(Atomic.itemUranium));
+                this.incrStackSize(2, new ItemStack(AtomicContent.itemUranium()));
             }
             else
             {
-                this.incrStackSize(3, new ItemStack(Atomic.itemUranium, 1, 1));
+                this.incrStackSize(3, new ItemStack(AtomicContent.itemUranium(), 1, 1));
             }
         }
     }
@@ -227,7 +228,7 @@ public class TileCentrifuge extends TileElectricInventory implements IPacketRece
     @Override
     public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
     {
-        if (Atomic.FLUIDSTACK_URANIUM_HEXAFLOURIDE.isFluidEqual(resource))
+        if (AtomicContent.FLUIDSTACK_URANIUM_HEXAFLOURIDE().isFluidEqual(resource))
         {
             return this.gasTank.fill(resource, doFill);
         }
@@ -250,7 +251,7 @@ public class TileCentrifuge extends TileElectricInventory implements IPacketRece
     @Override
     public boolean canFill(ForgeDirection from, Fluid fluid)
     {
-        return Atomic.FLUIDSTACK_URANIUM_HEXAFLOURIDE.fluidID == fluid.getID();
+        return AtomicContent.FLUIDSTACK_URANIUM_HEXAFLOURIDE().fluidID == fluid.getID();
     }
 
     @Override
@@ -297,9 +298,9 @@ public class TileCentrifuge extends TileElectricInventory implements IPacketRece
         case 1:
             return true;
         case 2:
-            return itemStack.getItem() == Atomic.itemUranium;
+            return itemStack.getItem() == AtomicContent.itemUranium();
         case 3:
-            return itemStack.getItem() == Atomic.itemUranium;
+            return itemStack.getItem() == AtomicContent.itemUranium();
         }
 
         return false;
