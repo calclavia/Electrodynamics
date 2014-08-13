@@ -20,8 +20,6 @@ import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantTab;
 import resonantinduction.electrical.wire.flat.PartFlatWire;
 import resonantinduction.electrical.wire.flat.RenderFlatWire;
-import resonantinduction.electrical.wire.framed.PartFramedWire;
-import resonantinduction.electrical.wire.framed.RenderFramedWire;
 import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
 import codechicken.multipart.ControlKeyModifer;
@@ -49,19 +47,6 @@ public class ItemWire extends JItemMultiPart
 	{
 		BlockCoord onPos = pos.copy().offset(side ^ 1);
 
-		if (player.isSneaking() && !ControlKeyModifer.isControlDown(player))
-		{
-			PartFramedWire wire = (PartFramedWire) MultiPartRegistry.createPart("resonant_induction_wire", false);
-
-			if (wire != null)
-			{
-				wire.preparePlacement(itemStack.getItemDamage());
-			}
-
-			return wire;
-		}
-		else
-		{
 			if (!MultipartUtility.canPlaceWireOnSide(world, onPos.x, onPos.y, onPos.z, ForgeDirection.getOrientation(side), false))
 			{
 				return null;
@@ -75,7 +60,6 @@ public class ItemWire extends JItemMultiPart
 			}
 
 			return wire;
-		}
 	}
 
 	@Override
@@ -119,8 +103,8 @@ public class ItemWire extends JItemMultiPart
 	public void registerIcons(IIconRegister register)
 	{
 		RenderFlatWire.flatWireTexture = register.registerIcon(Reference.prefix() + "models/flatWire");
-		RenderFramedWire.wireIcon = register.registerIcon(Reference.prefix() + "models/wire");
-		RenderFramedWire.insulationIcon = register.registerIcon(Reference.prefix() + "models/insulation");
+		//RenderFramedWire.wireIcon = register.registerIcon(Reference.prefix() + "models/wire");
+		//RenderFramedWire.insulationIcon = register.registerIcon(Reference.prefix() + "models/insulation");
 		super.registerIcons(register);
 	}
 
