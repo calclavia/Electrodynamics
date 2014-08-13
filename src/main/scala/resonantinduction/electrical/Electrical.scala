@@ -1,10 +1,14 @@
 package resonantinduction.electrical
 
-import cpw.mods.fml.common.Mod.{EventHandler, Instance}
+import cpw.mods.fml.common.Mod.EventHandler
 import cpw.mods.fml.common.event.{FMLInitializationEvent, FMLPostInitializationEvent, FMLPreInitializationEvent}
+import cpw.mods.fml.common.eventhandler.SubscribeEvent
 import cpw.mods.fml.common.network.NetworkRegistry
+import cpw.mods.fml.common.registry.GameRegistry
 import cpw.mods.fml.common.{Mod, ModMetadata, SidedProxy}
+import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
+import net.minecraftforge.event.entity.EntityJoinWorldEvent
 import net.minecraftforge.oredict.OreDictionary
 import resonant.content.loader.ModManager
 import resonant.lib.loadable.LoadableHandler
@@ -13,6 +17,11 @@ import resonantinduction.core.resource.ItemResourcePart
 import resonantinduction.core.{Reference, ResonantTab, Settings}
 import resonantinduction.electrical.battery.{BlockBattery, ItemBlockBattery, TileBattery}
 import resonantinduction.electrical.generator.{TileMotor, TileSolarPanel, TileThermopile}
+import resonantinduction.electrical.laser.emitter.BlockLaserEmitter
+import resonantinduction.electrical.laser.focus.ItemFocusingMatrix
+import resonantinduction.electrical.laser.focus.crystal.BlockFocusCrystal
+import resonantinduction.electrical.laser.focus.mirror.BlockMirror
+import resonantinduction.electrical.laser.receiver.BlockLaserReceiver
 import resonantinduction.electrical.levitator.ItemLevitator
 import resonantinduction.electrical.multimeter.ItemMultimeter
 import resonantinduction.electrical.tesla.TileTesla
@@ -22,22 +31,46 @@ import resonantinduction.electrical.wire.{EnumWireMaterial, ItemWire}
 /** Resonant Induction Electrical Module
   *
   * @author Calclavia */
+
+@Mod(modid = "ResonantInduction|Electrical", name = "Resonant Induction Electrical", version = Reference.version, dependencies = "before:ThermalExpansion;before:Mekanism;after:ResonantInduction|Mechanical;required-after:" + Reference.coreID, modLanguage = "scala")
 object Electrical {
   /** Mod Information */
   final val ID: String = "ResonantInduction|Electrical"
   final val NAME: String = Reference.name + " Electrical"
-  @Instance("ResonantInduction|Electrical") var INSTANCE: Electrical = null
-  @SidedProxy(clientSide = "ClientProxy", serverSide = "CommonProxy") var proxy: CommonProxy = null
-  @Mod.Metadata("ResonantInduction|Electrical") var metadata: ModMetadata = null
+
+  var INSTANCE  = this
+
+  @SidedProxy(clientSide = "ClientProxy", serverSide = "CommonProxy")
+  var proxy: CommonProxy = null
+
+  @Mod.Metadata("ResonantInduction|Electrical")
+  var metadata: ModMetadata = null
+
   final val contentRegistry: ModManager = new ModManager().setPrefix(Reference.prefix).setTab(ResonantTab.tab)
 
-}
+  var modproxies: LoadableHandler = null
 
-@Mod(modid = "ResonantInduction|Electrical", name = "Resonant Induction Electrical", version = Reference.version, dependencies = "before:ThermalExpansion;before:Mekanism;after:ResonantInduction|Mechanical;required-after:" + Reference.coreID) class Electrical {
-  @EventHandler def preInit(evt: FMLPreInitializationEvent) {
+  @EventHandler
+  def preInit(evt: FMLPreInitializationEvent)
+  {
     modproxies = new LoadableHandler
     NetworkRegistry.INSTANCE.registerGuiHandler(this, Electrical.proxy)
     Settings.config.load
+    //ElectromagneticCoherence content TODO convert
+    ElectricalContent.blockLaserEmitter = new BlockLaserEmitter()
+    ElectricalContent.blockLaserReceiver = new BlockLaserReceiver()
+    ElectricalContent.blockMirror = new BlockMirror()
+    ElectricalContent.blockFocusCrystal = new BlockFocusCrystal()
+
+    ElectricalContent.itemFocusingMatrix = new ItemFocusingMatrix()
+
+    GameRegistry.registerBlock(ElectricalContent.blockLaserEmitter, "LaserEmitter")
+    GameRegistry.registerBlock(ElectricalContent.blockLaserReceiver, "LaserReceiver")
+    GameRegistry.registerBlock(ElectricalContent.blockMirror, "Mirror")
+    GameRegistry.registerBlock(ElectricalContent.blockFocusCrystal, "FocusCrystal")
+
+    GameRegistry.registerItem(ElectricalContent.itemFocusingMatrix, "FocusingMatrix")
+    //-------------------
     ElectricalContent.itemWire = Electrical.contentRegistry.newItem(classOf[ItemWire])
     ElectricalContent.itemMultimeter = Electrical.contentRegistry.newItem(classOf[ItemMultimeter])
     ElectricalContent.itemTransformer = Electrical.contentRegistry.newItem(classOf[ItemElectricTransformer])
@@ -73,5 +106,20 @@ object Electrical {
     modproxies.postInit
   }
 
-  var modproxies: LoadableHandler = null
+  @SubscribeEvent
+  def joinWorldEvent(evt: EntityJoinWorldEvent)
+  {
+    if (evt.entity.isInstanceOf[EntityPlayer])
+    {
+      val player = evt.entity.asInstanceOf[EntityPlayer]
+      val nbt = player.getEntityData
+
+      if (!nbt.getBoolean("EC_receiveBook"))
+      {
+        player.inventory.addItemStackToInventory(ElectricalContent.guideBook)
+        nbt.setBoolean("EC_receiveBook", true)
+      }
+    }
+  }
+
 }

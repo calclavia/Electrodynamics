@@ -2,6 +2,7 @@ package resonantinduction.electrical.transformer;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.obj.WavefrontObject;
 
@@ -18,13 +19,13 @@ public class RenderTransformer implements ISimpleItemRenderer
 {
 	public static final RenderTransformer INSTANCE = new RenderTransformer();
 
-	public static final WavefrontObject MODEL = (WavefrontObject) AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "transformer.obj");
-	public static final ResourceLocation TEXTURE_COIL = new ResourceLocation(Reference.domain(), Reference.MODEL_PATH + "transformer_winding.png");
-	public static final ResourceLocation TEXTURE_STONE = new ResourceLocation(Reference.BLOCK_TEXTURE_DIRECTORY + "stone.png");
-	public static final ResourceLocation TEXTURE_IRON = new ResourceLocation(Reference.BLOCK_TEXTURE_DIRECTORY + "iron_block.png");
+	public static final WavefrontObject MODEL = (WavefrontObject) AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelDirectory() + "transformer.obj"));
+	public static final ResourceLocation TEXTURE_COIL = new ResourceLocation(Reference.domain(), Reference.modelPath() + "transformer_winding.png");
+	public static final ResourceLocation TEXTURE_STONE = new ResourceLocation(Reference.blockTextureDirectory() + "stone.png");
+	public static final ResourceLocation TEXTURE_IRON = new ResourceLocation(Reference.blockTextureDirectory() + "iron_block.png");
 
 	@Override
-	public void renderInventoryItem(ItemStack itemStack)
+	public void renderInventoryItem(IItemRenderer.ItemRenderType type, ItemStack itemStack, Object... data)
 	{
 		GL11.glTranslated(0, -0.2f, 0);
 		doRender();
@@ -51,7 +52,7 @@ public class RenderTransformer implements ISimpleItemRenderer
 		GL11.glScalef(0.5f, 0.5f, 0.5f);
 		FMLClientHandler.instance().getClient().renderEngine.bindTexture(TEXTURE_COIL);
 
-		switch (part.multiplier)
+		switch (part.multiplier())
 		{
 			case 0:
 				MODEL.renderOnly("InsulatorLayerLow", "OuterWindingLowBox", "InnerWindingLowBox");
@@ -72,5 +73,4 @@ public class RenderTransformer implements ISimpleItemRenderer
 		MODEL.renderOnly("base");
 		GL11.glPopMatrix();
 	}
-
 }

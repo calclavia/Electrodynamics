@@ -1,30 +1,30 @@
 package resonantinduction.electrical.multimeter;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-import resonant.api.grid.INodeProvider;
-import resonant.lib.network.IPacketReceiver;
+import resonant.api.IRemovable;
+import resonant.engine.ResonantEngine;
+import resonant.lib.network.discriminator.PacketType;
+import resonant.lib.network.handle.IPacketReceiver;
 import resonant.lib.utility.WrenchUtility;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.grid.fluid.pressure.FluidPressureNode;
-import resonantinduction.core.grid.fluid.IPressureNodeProvider;
 import resonantinduction.core.interfaces.IMechanicalNode;
 import resonantinduction.core.prefab.part.PartFace;
 import resonantinduction.electrical.Electrical;
-import universalelectricity.api.CompatibilityModule;
-import universalelectricity.api.electricity.IElectricalNetwork;
-import universalelectricity.api.energy.IConductor;
-import universalelectricity.api.energy.IEnergyNetwork;
-import universalelectricity.api.net.IConnector;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import codechicken.lib.vec.Cuboid6;
@@ -35,15 +35,18 @@ import codechicken.multipart.TileMultipart;
 
 import com.google.common.io.ByteArrayDataInput;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import resonantinduction.electrical.ElectricalContent;
+import universalelectricity.api.core.grid.INodeProvider;
+import universalelectricity.compatibility.Compatibility;
 
 /** Block that detects power.
  * 
  * @author Calclavia */
-public class PartMultimeter extends PartFace implements IConnector<MultimeterNetwork>, IRedstonePart, IPacketReceiver
+public class PartMultimeter extends PartFace implements IRedstonePart, IPacketReceiver, IRemovable.ISneakWrenchable
 {
+
     public enum DetectMode
     {
         NONE("none"),
@@ -83,26 +86,7 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
     public void preRemove()
     {
         if (!world().isRemote)
-            getNetwork().split(this);
-    }
-
-    public void refresh()
-    {
-        if (world() != null)
-        {
-            if (!world().isRemote)
-            {
-                for (Object obj : getConnections())
-                {
-                    if (obj instanceof PartMultimeter)
-                    {
-                        getNetwork().merge(((PartMultimeter) obj).getNetwork());
-                    }
-                }
-
-                getNetwork().reconstruct();
-            }
-        }
+            getNetwork().remove(this);
     }
 
     public void updateDesc()
@@ -113,24 +97,6 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
     public void updateGraph()
     {
         writeGraph(getWriteStream());
-    }
-
-    @Override
-    public void onWorldJoin()
-    {
-        refresh();
-    }
-
-    @Override
-    public void onNeighborChanged()
-    {
-        refresh();
-    }
-
-    @Override
-    public void onPartChanged(TMultiPart part)
-    {
-        refresh();
     }
 
     /** Gets the multimeter on the same plane. */
@@ -159,7 +125,7 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
             if (!this.world().isRemote)
             {
                 doDetect = !doDetect;
-                player.addChatMessage("Multimeter detection set to: " + doDetect);
+                player.addChatMessage(new ChatComponentText("Multimeter detection set to: " + doDetect));
                 WrenchUtility.damageWrench(player, player.inventory.getCurrentItem(), x(), y(), z());
             }
             return true;
@@ -233,35 +199,7 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
     {
         ForgeDirection receivingSide = getDirection().getOpposite();
         TileEntity tileEntity = getDetectedTile();
-
-        /** Update Energy Graph */
-        if (tileEntity instanceof IConductor)
-        {
-            IConnector<IEnergyNetwork> instance = ((IConductor) tileEntity).getInstance(receivingSide);
-
-            for (ForgeDirection dir : ForgeDirection.values())
-            {
-                if (instance != null)
-                {
-                    break;
-                }
-
-                instance = ((IConnector) tileEntity).getInstance(dir);
-            }
-
-            if (instance != null)
-            {
-                if (instance.getNetwork() instanceof IEnergyNetwork)
-                {
-                    IEnergyNetwork network = instance.getNetwork();
-                    getNetwork().energyGraph.queue(Math.max(network.getBuffer(), network.getLastBuffer()));
-                    getNetwork().powerGraph.queue(getNetwork().energyGraph.getAverage() * 20);
-
-                    if (instance.getNetwork() instanceof IElectricalNetwork)
-                        getNetwork().voltageGraph.queue(((IElectricalNetwork) network).getVoltage());
-                }
-            }
-        }
+        //TODO add energy detection
 
         if (tileEntity instanceof INodeProvider)
         {
@@ -281,7 +219,7 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
             {
                 getNetwork().torqueGraph.queue(instance.getTorque());
                 getNetwork().angularVelocityGraph.queue(instance.getAngularSpeed());
-                getNetwork().powerGraph.queue((long) instance.getPower());
+                getNetwork().powerGraph.queue(instance.getPower());
             }
         }
 
@@ -300,15 +238,10 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
             }
         }
 
-        if (tileEntity instanceof IPressureNodeProvider)
-        {
-            getNetwork().pressureGraph.queue(((FluidPressureNode) ((IPressureNodeProvider) tileEntity).getNode(FluidPressureNode.class, receivingSide)).getPressure(receivingSide));
-        }
-
-        getNetwork().energyGraph.queue(CompatibilityModule.getEnergy(tileEntity, receivingSide));
+        getNetwork().energyGraph.queue(Compatibility.getEnergy(tileEntity, receivingSide));
 
         /** Update Energy Capacity Graph */
-        getNetwork().energyCapacityGraph.queue(CompatibilityModule.getMaxEnergy(tileEntity, receivingSide));
+        getNetwork().energyCapacityGraph.queue(Compatibility.getMaxEnergy(tileEntity, receivingSide));
     }
 
     @Override
@@ -334,8 +267,8 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
         packet.writeByte(detectMode.ordinal());
         packet.writeByte(detectType);
         packet.writeByte(graphType);
-        packet.writeNBTTagCompound(getNetwork().center.writeToNBT(new NBTTagCompound()));
-        packet.writeNBTTagCompound(getNetwork().size.writeToNBT(new NBTTagCompound()));
+        packet.writeNBTTagCompound(getNetwork().center.writeNBT(new NBTTagCompound()));
+        packet.writeNBTTagCompound(getNetwork().size.writeNBT(new NBTTagCompound()));
         packet.writeBoolean(getNetwork().isEnabled);
     }
 
@@ -369,7 +302,6 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
                 getNetwork().center = new universalelectricity.core.transform.vector.Vector3(packet.readNBTTagCompound());
                 getNetwork().size = new universalelectricity.core.transform.vector.Vector3(packet.readNBTTagCompound());
                 getNetwork().isEnabled = packet.readBoolean();
-                refresh();
                 break;
             }
             case 1:
@@ -389,7 +321,14 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
     }
 
     @Override
-    public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
+    public List<ItemStack> getRemovedItems(EntityPlayer entity) {
+        List<ItemStack> list = new ArrayList<ItemStack>();
+        list.add(new ItemStack(ElectricalContent.itemMultimeter()));
+        return list;
+    }
+
+    @Override
+    public void read(ByteBuf data, EntityPlayer player, PacketType type)
     {
         detectMode = DetectMode.values()[data.readByte()];
         detectType = data.readByte();
@@ -428,7 +367,7 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 
     public void updateServer()
     {
-        PacketDispatcher.sendPacketToServer(ResonantInduction.PACKET_MULTIPART.getPacket(new universalelectricity.core.transform.vector.Vector3(x(), y(), z()), placementSide.ordinal(), (byte) detectMode.ordinal(), detectType, graphType, redstoneTriggerLimit));
+        //ResonantEngine.instance.packetHandler.sendToServer(new PACKET_MULTIPART.getPacket(new universalelectricity.core.transform.vector.Vector3(x(), y(), z()), placementSide.ordinal(), (byte) detectMode.ordinal(), detectType, graphType, redstoneTriggerLimit));
     }
 
     @Override
@@ -481,7 +420,7 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
     @Override
     protected ItemStack getItem()
     {
-        return new ItemStack(Electrical.itemMultimeter);
+        return new ItemStack(ElectricalContent.itemMultimeter());
     }
 
     @Override
@@ -512,31 +451,31 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
         return redstoneOn ? 14 : 0;
     }
 
-    @Override
+
     public MultimeterNetwork getNetwork()
     {
         if (network == null)
         {
             network = new MultimeterNetwork();
-            network.addConnector(this);
+            network.add(this);
         }
 
         return network;
     }
 
-    @Override
+
     public void setNetwork(MultimeterNetwork network)
     {
         this.network = network;
     }
 
-    @Override
+
     public boolean canConnect(ForgeDirection direction, Object obj)
     {
         return obj instanceof PartMultimeter;
     }
 
-    @Override
+
     public Object[] getConnections()
     {
         Object[] connections = new Object[6];
@@ -557,12 +496,6 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
         return connections;
     }
 
-    @Override
-    public IConnector<MultimeterNetwork> getInstance(ForgeDirection dir)
-    {
-        return this;
-    }
-
     public universalelectricity.core.transform.vector.Vector3 getPosition()
     {
         return new universalelectricity.core.transform.vector.Vector3(x(), y(), z());
@@ -573,7 +506,7 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
     public Cuboid6 getRenderBounds()
     {
         if (isPrimary)
-            return Cuboid6.full.copy().expand(new Vector3(getNetwork().size.x, getNetwork().size.y, getNetwork().size.z));
+            return Cuboid6.full.copy().expand(new Vector3(getNetwork().size.x(), getNetwork().size.y(), getNetwork().size.z()));
         return Cuboid6.full;
     }
 

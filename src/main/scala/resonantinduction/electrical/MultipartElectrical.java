@@ -34,11 +34,11 @@ public class MultipartElectrical implements IPartFactory
 	@Override
 	public TMultiPart createPart(String name, boolean client)
 	{
-		if (name.equals("resonant_induction_wire"))
-			return new PartFramedWire();
-		else if (name.equals("resonant_induction_switch_wire"))
-			return new PartFramedSwitchWire();
-		else if (name.equals("resonant_induction_flat_wire"))
+		//if (name.equals("resonant_induction_wire"))
+			//return new PartFramedWire();
+		//else if (name.equals("resonant_induction_switch_wire"))
+			//return new PartFramedSwitchWire();
+		if (name.equals("resonant_induction_flat_wire"))
 			return new PartFlatWire();
 		else if (name.equals("resonant_induction_flat_switch_wire"))
 			return new PartFlatSwitchWire();
@@ -46,14 +46,10 @@ public class MultipartElectrical implements IPartFactory
 			return new PartMultimeter();
 		else if (name.equals("resonant_induction_transformer"))
 			return new PartElectricTransformer();
-		else if (name.equals("resonant_induction_charger"))
-			return new PartCharger();
 		else if (name.equals("resonant_induction_levitator"))
 			return new PartLevitator();
 		else if (name.equals("resonant_induction_quantum_glyph"))
 			return new PartQuantumGlyph();
-		else if (name.equals("resonant_induction_itemrailing"))
-			return new PartRailing();
 
 		return null;
 	}

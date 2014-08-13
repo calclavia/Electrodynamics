@@ -2,29 +2,29 @@ package resonantinduction.atomic
 
 import java.util.List
 
-import cpw.mods.fml.common.Mod.{EventHandler, Instance}
-import cpw.mods.fml.common.{Loader, Mod, ModMetadata, SidedProxy}
+import cpw.mods.fml.common.Mod.EventHandler
 import cpw.mods.fml.common.event.{FMLInitializationEvent, FMLPostInitializationEvent, FMLPreInitializationEvent}
 import cpw.mods.fml.common.eventhandler.{Event, SubscribeEvent}
 import cpw.mods.fml.common.network.NetworkRegistry
 import cpw.mods.fml.common.registry.{EntityRegistry, GameRegistry}
+import cpw.mods.fml.common.{Loader, Mod, ModMetadata, SidedProxy}
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import ic2.api.item.IC2Items
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.creativetab.CreativeTabs
-import net.minecraft.init.{Blocks, Items}
+import net.minecraft.init.Items
 import net.minecraft.item.{Item, ItemBucket, ItemStack}
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.MovingObjectPosition
 import net.minecraft.world.World
 import net.minecraftforge.client.event.TextureStitchEvent
 import net.minecraftforge.common.ForgeChunkManager.Type
-import net.minecraftforge.common.{ForgeChunkManager, MinecraftForge}
 import net.minecraftforge.common.config.Configuration
+import net.minecraftforge.common.{ForgeChunkManager, MinecraftForge}
 import net.minecraftforge.event.entity.player.FillBucketEvent
 import net.minecraftforge.fluids.{Fluid, FluidContainerRegistry, FluidRegistry, FluidStack}
-import net.minecraftforge.oredict.{OreDictionary, ShapedOreRecipe, ShapelessOreRecipe}
+import net.minecraftforge.oredict.{OreDictionary, ShapelessOreRecipe}
 import resonant.api.IElectromagnet
 import resonant.api.event.PlasmaEvent
 import resonant.api.recipe.QuantumAssemblerRecipes
@@ -32,7 +32,6 @@ import resonant.content.loader.ModManager
 import resonant.engine.content.debug.TileCreativeBuilder
 import resonant.engine.grid.thermal.EventThermal
 import resonant.lib.ore.OreGenReplaceStone
-import resonant.lib.recipe.UniversalRecipe
 import resonant.lib.render.RenderUtility
 import resonantinduction.atomic.blocks._
 import resonantinduction.atomic.items._
@@ -50,6 +49,7 @@ import resonantinduction.atomic.schematic.{SchematicAccelerator, SchematicBreedi
 import resonantinduction.core.{Reference, ResonantTab, Settings}
 import universalelectricity.core.transform.vector.VectorWorld
 
+@Mod(modid = "ResonantInduction|Atomic", name = "Resonant Induction Atomic", version = Reference.version, dependencies = "required-after:ResonantEngine;after:IC2;after:ResonantInduction|Electrical;required-after:" + Reference.coreID, modLanguage = "scala")
 object Atomic {
   /** Is this ItemStack a cell?
     *
@@ -104,15 +104,10 @@ object Atomic {
   final val NAME: String = Reference.name + " Atomic"
   final val contentRegistry: ModManager = new ModManager().setPrefix(Reference.prefix).setTab(ResonantTab.tab)
   private final val SUPPORTED_LANGUAGES: Array[String] = Array[String]("en_US", "pl_PL", "de_DE", "ru_RU")
-  @Instance("ResonantInduction|Atomic") var INSTANCE: Atomic = null
+  var INSTANCE = this
   @SidedProxy(clientSide = "ClientProxy", serverSide = "CommonProxy") var proxy: CommonProxy = null
   @Mod.Metadata("ResonantInduction|Atomic") var metadata: ModMetadata = null
 
-
-}
-
-@Mod(modid = "ResonantInduction|Atomic", name = "Resonant Induction Atomic", version = Reference.version, dependencies = "required-after:ResonantEngine;after:IC2;after:ResonantInduction|Electrical;required-after:" + Reference.coreID)
-class Atomic {
   @EventHandler def preInit(event: FMLPreInitializationEvent) {
     Atomic.INSTANCE = this
     MinecraftForge.EVENT_BUS.register(this)

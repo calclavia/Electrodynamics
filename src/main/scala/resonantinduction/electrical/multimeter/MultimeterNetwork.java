@@ -9,11 +9,12 @@ import net.minecraft.nbt.NBTTagList;
 import resonant.lib.utility.LanguageUtility;
 import universalelectricity.api.UnitDisplay;
 import universalelectricity.api.core.grid.IUpdate;
+import universalelectricity.core.grid.Grid;
 import universalelectricity.core.grid.TickingGrid;
 import universalelectricity.core.grid.UpdateTicker;
 import universalelectricity.core.transform.vector.Vector3;
 
-public class MultimeterNetwork extends TickingGrid<PartMultimeter> implements IUpdate
+public class MultimeterNetwork extends Grid<PartMultimeter> implements IUpdate
 {
 	public final List<String> displayInformation = new ArrayList<String>();
 
@@ -124,7 +125,7 @@ public class MultimeterNetwork extends TickingGrid<PartMultimeter> implements IU
 	}
 
 	@Override
-	public void update()
+	public void update(double delta)
 	{
 		for (Graph graph : graphs)
 		{
@@ -148,11 +149,11 @@ public class MultimeterNetwork extends TickingGrid<PartMultimeter> implements IU
 	@Override
 	public boolean continueUpdate()
 	{
-		return getConnectors().size() > 0;
+		return getNodes().size() > 0;
 	}
 
 	@Override
-	public boolean isValidConnector(Object node)
+	public boolean isValidNode(Object node)
 	{
 		return node instanceof PartMultimeter && ((PartMultimeter) node).world() != null && ((PartMultimeter) node).tile() != null;
 	}
@@ -160,7 +161,7 @@ public class MultimeterNetwork extends TickingGrid<PartMultimeter> implements IU
 	@Override
 	public void reconstruct()
 	{
-		if (getConnectors().size() > 0)
+		if (getNodes().size() > 0)
 		{
 			primaryMultimeter = null;
 			upperBound = null;
@@ -176,11 +177,11 @@ public class MultimeterNetwork extends TickingGrid<PartMultimeter> implements IU
 			size = new Vector3(Math.abs(upperBound.x()) + Math.abs(lowerBound.x()), Math.abs(upperBound.y()) + Math.abs(lowerBound.y()), Math.abs(upperBound.z()) + Math.abs(lowerBound.z()));
 
 			double area = (size.x() != 0 ? size.x() : 1) * (size.y() != 0 ? size.y() : 1) * (size.z() != 0 ? size.z() : 1);
-			isEnabled = area == getConnectors().size();
+			isEnabled = area == getNodes().size();
 
             UpdateTicker.addUpdater(this);
 
-			Iterator<PartMultimeter> it = this.getConnectors().iterator();
+			Iterator<PartMultimeter> it = this.getNodes().iterator();
 
 			while (it.hasNext())
 			{
@@ -194,7 +195,7 @@ public class MultimeterNetwork extends TickingGrid<PartMultimeter> implements IU
 	}
 
 	@Override
-	protected void reconstructConnector(PartMultimeter node)
+	protected void reconstructNode(PartMultimeter node)
 	{
 		node.setNetwork(this);
 

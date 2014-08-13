@@ -23,6 +23,7 @@ import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import codechicken.multipart.IRedstonePart;
 import codechicken.multipart.TMultiPart;
+import universalelectricity.compatibility.Compatibility;
 
 /** @author Calclavia */
 @Deprecated
@@ -53,12 +54,8 @@ public abstract class PartAdvancedWire extends PartConductor
                 return true;
             }
         }
-        else if (!(obj instanceof IConductor))
-        {
-            return CompatibilityModule.isHandler(obj);
-        }
 
-        return false;
+        return Compatibility.isHandler(obj);
     }
 
     protected boolean canConnectTo(Object obj, ForgeDirection dir)
@@ -77,19 +74,8 @@ public abstract class PartAdvancedWire extends PartConductor
                 return true;
             }
         }
-        else if (!(obj instanceof IConductor))
-        {
-            return CompatibilityModule.canConnect(obj, dir.getOpposite(), this);
-        }
 
-        return false;
-    }
-
-    @Override
-    public void onEntityCollision(Entity entity)
-    {
-        if (!this.isInsulated() && this.getNetwork() instanceof IElectricalNetwork)
-            ElectricalDamage.handleElectrocution(entity, this, (IElectricalNetwork) this.getNetwork());
+        return Compatibility.isHandler(obj);
     }
 
     @Override

@@ -10,7 +10,7 @@ public class TileEnergyDistribution extends TileElectric
 {
     public boolean markClientUpdate = false;
     public boolean markDistributionUpdate = false;
-    public long renderEnergyAmount = 0;
+    public double renderEnergyAmount = 0;
     private EnergyDistributionNetwork network;
 
     public TileEnergyDistribution()

@@ -14,13 +14,15 @@ import java.util.List;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
-import resonant.api.items.ISimpleItemRenderer;
+import resonant.content.prefab.scala.render.ISimpleItemRenderer;
 import resonant.lib.render.RenderUtility;
 import resonantinduction.core.Reference;
 import universalelectricity.core.transform.vector.Vector3;
@@ -36,15 +38,15 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class RenderBattery extends TileEntitySpecialRenderer implements ISimpleItemRenderer
 {
 	public static RenderBattery INSTANCE = new RenderBattery();
-	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "battery/battery.tcn");
+	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelDirectory() + "battery/battery.tcn"));
 
 	@Override
-	public void renderInventoryItem(ItemStack itemStack)
+	public void renderInventoryItem(IItemRenderer.ItemRenderType type, ItemStack itemStack, Object... data)
 	{
 		glPushMatrix();
 		GL11.glTranslated(0, 0, 0);
 		int energyLevel = (int) (((double) ((ItemBlockBattery) itemStack.getItem()).getEnergy(itemStack) / (double) ((ItemBlockBattery) itemStack.getItem()).getEnergyCapacity(itemStack)) * 8);
-		RenderUtility.bind(Reference.DOMAIN, Reference.MODEL_PATH + "battery/battery.png");
+		RenderUtility.bind(Reference.domain(), Reference.modelPath() + "battery/battery.png");
 
 		List<String> disabledParts = new ArrayList<String>();
 		disabledParts.addAll(Arrays.asList(new String[] { "connector", "connectorIn", "connectorOut" }));
@@ -82,15 +84,15 @@ public class RenderBattery extends TileEntitySpecialRenderer implements ISimpleI
 
 		TileBattery tile = (TileBattery) t;
 
-		int energyLevel = (int) Math.round(((double) tile.getEnergyHandler().getEnergy() / (double) TileBattery.getEnergyForTier(tile.getBlockMetadata())) * 8);
-		RenderUtility.bind(Reference.DOMAIN, Reference.MODEL_PATH + "battery/battery.png");
+		int energyLevel = (int) Math.round(((double) tile.energy().getEnergy() / (double) TileBattery.getEnergyForTier(tile.getBlockMetadata())) * 8);
+		RenderUtility.bind(Reference.domain(), Reference.modelPath() + "battery/battery.png");
 
 		List<String> disabledParts = new ArrayList();
 		List<String> enabledParts = new ArrayList();
 
 		for (ForgeDirection check : ForgeDirection.VALID_DIRECTIONS)
 		{
-			if (new Vector3(t).add(check).getTileEntity(t.worldObj) instanceof TileBattery)
+			if (new Vector3(t).add(check).getTileEntity(t.getWorldObj()) instanceof TileBattery)
 			{
 				disabledParts.addAll(Arrays.asList(partToDisable[check.ordinal()]));
 
@@ -111,7 +113,7 @@ public class RenderBattery extends TileEntitySpecialRenderer implements ISimpleI
 					{
 						if (sideCheck.offsetY == 0)
 						{
-							if (new Vector3(t).add(sideCheck).getTileEntity(t.worldObj) instanceof TileBattery)
+							if (new Vector3(t).add(sideCheck).getTileEntity(t.getWorldObj()) instanceof TileBattery)
 							{
 								connectionParts.removeAll(Arrays.asList(connectionPartToEnable[sideCheck.ordinal()]));
 								// connectionParts.addAll(Arrays.asList(connectionPartSideToEnable[sideCheck.ordinal()]));

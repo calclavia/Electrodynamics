@@ -3,7 +3,7 @@ package resonantinduction.electrical.multimeter;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
-public class GraphL extends Graph<Long>
+public class GraphL extends Graph<Double>
 {
 	public GraphL(String name, int maxPoints)
 	{
@@ -11,7 +11,7 @@ public class GraphL extends Graph<Long>
 	}
 
 	@Override
-	public void queue(Long value)
+	public void queue(Double value)
 	{
 		queue += value;
 	}
@@ -20,13 +20,13 @@ public class GraphL extends Graph<Long>
 	public void doneQueue()
 	{
 		super.doneQueue();
-		queue = 0L;
+		queue = 0.0;
 	}
 
 	@Override
-	public Long getDefault()
+	public Double getDefault()
 	{
-		return 0L;
+		return 0.0;
 	}
 
 	@Override
@@ -38,7 +38,7 @@ public class GraphL extends Graph<Long>
 		for (int i = 0; i < nbtList.tagCount(); ++i)
 		{
 			NBTTagCompound nbtPoint = (NBTTagCompound) nbtList.getCompoundTagAt(i);
-			points.add(nbtPoint.getLong("data"));
+			points.add(nbtPoint.getDouble("data"));
 		}
 	}
 
@@ -48,10 +48,10 @@ public class GraphL extends Graph<Long>
 		NBTTagCompound nbt = new NBTTagCompound();
 		NBTTagList data = new NBTTagList();
 
-		for (long value : points)
+		for (Double value : points)
 		{
 			NBTTagCompound nbtPoint = new NBTTagCompound();
-			nbtPoint.setLong("data", value);
+			nbtPoint.setDouble("data", value);
 			data.appendTag(nbtPoint);
 		}
 
@@ -66,13 +66,13 @@ public class GraphL extends Graph<Long>
 	}
 
 	@Override
-	public Long getAverage()
+	public Double getAverage()
 	{
 		if (points.size() > 0)
 		{
-			long average = 0;
+			double average = 0;
 
-			for (long point : points)
+			for (Double point : points)
 			{
 				average += point;
 			}
@@ -82,7 +82,7 @@ public class GraphL extends Graph<Long>
 			return average;
 		}
 
-		return 0L;
+		return 0.0;
 	}
 
 }

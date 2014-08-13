@@ -10,18 +10,17 @@ import universalelectricity.core.grid.Grid;
 import universalelectricity.core.grid.NodeGrid;
 import universalelectricity.core.grid.TickingGrid;
 import universalelectricity.core.grid.node.EnergyNode;
-import universalelectricity.core.net.Network;
 
 /** Energy network designed to allow several tiles to act as if they share the same energy
  * level */
-public class EnergyDistributionNetwork extends TickingGrid<EnergyNode>
+public class EnergyDistributionNetwork extends Grid<TileEnergyDistribution>
 {
     public long totalEnergy = 0;
     public long totalCapacity = 0;
 
-    public EnergyDistributionNetwork(ClassTag<IEnergyNode> evidence$1)
+    public EnergyDistributionNetwork()
     {
-        super(evidence$1);
+        super(EnergyNode.class);
     }
 
     public void redistribute(TileEnergyDistribution... exclusion)
@@ -31,10 +30,10 @@ public class EnergyDistributionNetwork extends TickingGrid<EnergyNode>
         totalEnergy = 0;
         totalCapacity = 0;
 
-        for (TileEnergyDistribution connector : this.getConnectors())
+        for (TileEnergyDistribution connector : this.getNodes())
         {
-            totalEnergy += connector.getEnergyHandler().getEnergy();
-            totalCapacity += connector.getEnergyHandler().getEnergyCapacity();
+            totalEnergy += connector.energy().getEnergy();
+            totalCapacity += connector.energy().getEnergyCapacity();
 
             lowestY = Math.min(connector.yCoord, lowestY);
             highestY = Math.max(connector.yCoord, highestY);
@@ -49,7 +48,7 @@ public class EnergyDistributionNetwork extends TickingGrid<EnergyNode>
         {
             Set<TileEnergyDistribution> connectorsInlevel = new LinkedHashSet<TileEnergyDistribution>();
 
-            for (TileEnergyDistribution connector : this.getConnectors())
+            for (TileEnergyDistribution connector : this.getNodes())
             {
                 if (connector.yCoord == y)
                 {
@@ -62,7 +61,7 @@ public class EnergyDistributionNetwork extends TickingGrid<EnergyNode>
 
             for (TileEnergyDistribution connector : connectorsInlevel)
             {
-                long tryInject = Math.min(remainingRenderEnergy / levelSize, connector.getEnergyHandler().getEnergyCapacity());
+                double tryInject = Math.min(remainingRenderEnergy / levelSize, connector.energy().getEnergyCapacity());
                 connector.renderEnergyAmount = tryInject;
                 used += tryInject;
             }
@@ -78,38 +77,26 @@ public class EnergyDistributionNetwork extends TickingGrid<EnergyNode>
         long energyLoss = (long) (percentageLoss * 100);
         totalEnergy -= energyLoss;
 
-        int amountOfNodes = this.getConnectors().size() - exclusion.length;
+        int amountOfNodes = this.getNodes().size() - exclusion.length;
 
         if (totalEnergy > 0 && amountOfNodes > 0)
         {
             long remainingEnergy = totalEnergy;
 
-            TileEnergyDistribution firstNode = this.getFirstConnector();
+            TileEnergyDistribution firstNode = this.getFirstNode();
 
-            for (TileEnergyDistribution node : this.getConnectors())
+            for (TileEnergyDistribution node : this.getNodes())
             {
                 if (node != firstNode && !Arrays.asList(exclusion).contains(node))
                 {
-                    double percentage = ((double) node.getEnergyHandler().getEnergyCapacity() / (double) totalCapacity);
+                    double percentage = ((double) node.energy().getEnergyCapacity() / (double) totalCapacity);
                     long energyForBattery = Math.max(Math.round(totalEnergy * percentage), 0);
-                    node.getEnergyHandler().setEnergy(energyForBattery);
+                    node.energy().setEnergy(energyForBattery);
                     remainingEnergy -= energyForBattery;
                 }
             }
 
-            firstNode.getEnergyHandler().setEnergy(Math.max(remainingEnergy, 0));
+            firstNode.energy().setEnergy(Math.max(remainingEnergy, 0));
         }
-    }
-
-    @Override
-    protected void reconstructConnector(TileEnergyDistribution node)
-    {
-        node.setNetwork(this);
-    }
-
-    @Override
-    public EnergyDistributionNetwork newInstance()
-    {
-        return new EnergyDistributionNetwork();
     }
 }
