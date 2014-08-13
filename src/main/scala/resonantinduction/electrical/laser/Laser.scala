@@ -10,7 +10,7 @@ import net.minecraft.item.ItemDye
 import net.minecraft.tileentity.TileEntityFurnace
 import net.minecraft.util.{DamageSource, MovingObjectPosition}
 import net.minecraft.world.World
-import resonantinduction.electrical.em.ElectromagneticCoherence
+import resonantinduction.electrical.Electrical
 import universalelectricity.core.transform.vector.Vector3
 
 import scala.collection.mutable
@@ -67,12 +67,12 @@ object Laser
           {
             if (!hitTile.asInstanceOf[ILaserHandler].onLaserHit(renderStart, direction, hit, color, energy))
             {
-              ElectromagneticCoherence.proxy.renderLaser(world, renderStart, hitVec, color, energy)
+              Electrical.proxy.renderLaser(world, renderStart, hitVec, color, energy)
             }
           }
           else if (hitBlock.getMaterial == Material.glass)
           {
-            ElectromagneticCoherence.proxy.renderLaser(world, renderStart, hitVec, color, energy)
+            Electrical.proxy.renderLaser(world, renderStart, hitVec, color, energy)
             var newColor = color
 
             if (hitBlock.isInstanceOf[BlockStainedGlass] || hitBlock.isInstanceOf[BlockStainedGlassPane])
@@ -168,13 +168,13 @@ object Laser
             /**
              * Render laser hit
              */
-            ElectromagneticCoherence.proxy.renderLaser(world, renderStart, hitVec, color, energy)
+            Electrical.proxy.renderLaser(world, renderStart, hitVec, color, energy)
 
             /**
              * Render scorch and particles
              */
-            ElectromagneticCoherence.proxy.renderScorch(world, hitVec - (direction * 0.02), hit.sideHit)
-            ElectromagneticCoherence.proxy.renderBlockParticle(world, hitVec, hitBlock, hit.sideHit)
+            Electrical.proxy.renderScorch(world, hitVec - (direction * 0.02), hit.sideHit)
+            Electrical.proxy.renderBlockParticle(world, hitVec, hitBlock, hit.sideHit)
           }
         }
         else if (hit.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY)
@@ -190,13 +190,13 @@ object Laser
             }
           }
 
-          ElectromagneticCoherence.proxy.renderLaser(world, renderStart, new Vector3(hit.hitVec), color, energy)
+          Electrical.proxy.renderLaser(world, renderStart, new Vector3(hit.hitVec), color, energy)
         }
 
         return
       }
 
-      ElectromagneticCoherence.proxy.renderLaser(world, renderStart, maxPos, color, energy)
+      Electrical.proxy.renderLaser(world, renderStart, maxPos, color, energy)
     }
   }
 

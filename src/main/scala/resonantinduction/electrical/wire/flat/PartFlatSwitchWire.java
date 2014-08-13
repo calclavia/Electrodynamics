@@ -5,6 +5,8 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
@@ -49,7 +51,7 @@ public class PartFlatSwitchWire extends PartFlatWire
 		TileMultipart tile = tile();
 		World w = world();
 
-		if (item.getItem().itemID == Block.lever.blockID)
+		if (item.getItem() == Item.getItemFromBlock(Blocks.lever))
 		{
 			if (!w.isRemote)
 			{
@@ -63,7 +65,7 @@ public class PartFlatSwitchWire extends PartFlatWire
 
 					if (!player.capabilities.isCreativeMode)
 					{
-						tile.dropItems(Collections.singletonList(new ItemStack(Block.lever, 1)));
+						tile.dropItems(Collections.singletonList(new ItemStack(Blocks.lever, 1)));
 					}
 				}
 			}
@@ -78,7 +80,7 @@ public class PartFlatSwitchWire extends PartFlatWire
 	@Override
 	public void drop()
 	{
-		tile().dropItems(Collections.singletonList(new ItemStack(Block.lever, 1)));
+		tile().dropItems(Collections.singletonList(new ItemStack(Blocks.lever, 1)));
 		super.drop();
 	}
 
@@ -86,7 +88,7 @@ public class PartFlatSwitchWire extends PartFlatWire
 	public Iterable<ItemStack> getDrops()
 	{
 		List<ItemStack> drops = (List<ItemStack>) super.getDrops();
-		drops.add(new ItemStack(Block.lever, 1));
+		drops.add(new ItemStack(Blocks.lever, 1));
 
 		return drops;
 	}

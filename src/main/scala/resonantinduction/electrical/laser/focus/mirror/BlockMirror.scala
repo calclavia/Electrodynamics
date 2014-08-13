@@ -4,8 +4,7 @@ import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.block.material.Material
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
-import resonantinduction.core.ResonantTab
-import resonantinduction.electrical.em.ElectromagneticCoherence
+import resonantinduction.core.{Reference, ResonantTab}
 import resonantinduction.electrical.laser.BlockRenderingHandler
 import resonantinduction.electrical.laser.focus.BlockFocusBase
 
@@ -14,7 +13,7 @@ import resonantinduction.electrical.laser.focus.BlockFocusBase
  */
 class BlockMirror extends BlockFocusBase(Material.rock)
 {
-  setBlockName(ElectromagneticCoherence.PREFIX + "mirror")
+  setBlockName(Reference.prefix + "mirror")
   setBlockTextureName("stone")
   setCreativeTab(ResonantTab)
 

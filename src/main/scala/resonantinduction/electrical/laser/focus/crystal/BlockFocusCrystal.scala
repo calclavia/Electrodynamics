@@ -4,7 +4,7 @@ import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.block.material.Material
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
-import resonantinduction.electrical.em.ElectromagneticCoherence
+import resonantinduction.core.Reference
 import resonantinduction.electrical.laser.BlockRenderingHandler
 import resonantinduction.electrical.laser.focus.BlockFocusBase
 
@@ -13,7 +13,7 @@ import resonantinduction.electrical.laser.focus.BlockFocusBase
  */
 class BlockFocusCrystal extends BlockFocusBase(Material.rock)
 {
-  setBlockName(ElectromagneticCoherence.PREFIX + "focusCrystal")
+  setBlockName(Reference.prefix + "focusCrystal")
   setBlockTextureName("glass")
 
   override def createNewTileEntity(world: World, metadata: Int): TileEntity =

@@ -6,8 +6,7 @@ import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.{ChatComponentText, EnumChatFormatting}
 import net.minecraft.world.World
-import resonantinduction.core.ResonantTab
-import resonantinduction.electrical.em.ElectromagneticCoherence
+import resonantinduction.core.{Reference, ResonantTab}
 import universalelectricity.core.transform.rotation.Quaternion
 import universalelectricity.core.transform.vector.Vector3
 
@@ -19,8 +18,8 @@ import scala.util.Random
  */
 class ItemFocusingMatrix extends Item
 {
-  setUnlocalizedName(ElectromagneticCoherence.PREFIX + "focusingMatrix")
-  setTextureName(ElectromagneticCoherence.PREFIX + "focusingMatrix")
+  setUnlocalizedName(Reference.prefix + "focusingMatrix")
+  setTextureName(Reference.prefix + "focusingMatrix")
   setCreativeTab(ResonantTab)
 
   /**

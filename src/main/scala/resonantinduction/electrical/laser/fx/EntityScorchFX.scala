@@ -8,7 +8,8 @@ import net.minecraft.util.ResourceLocation
 import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11._
-import resonantinduction.electrical.em.ElectromagneticCoherence
+import resonantinduction.core.Reference
+import resonantinduction.electrical.ElectricalContent
 import universalelectricity.core.transform.vector.Vector3
 
 /**
@@ -18,7 +19,7 @@ import universalelectricity.core.transform.vector.Vector3
 @SideOnly(Side.CLIENT)
 class EntityScorchFX(par1World: World, position: Vector3, side: Int) extends EntityFX(par1World, position.x, position.y, position.z)
 {
-  val texture = new ResourceLocation(ElectromagneticCoherence.DOMAIN, ElectromagneticCoherence.FX_DIRECTORY + "scorch.png")
+  val texture = new ResourceLocation(Reference.domain, Reference.FX_DIRECTORY + "scorch.png")
 
   lastTickPosX = posX
   lastTickPosY = posY
@@ -101,7 +102,7 @@ class EntityScorchFX(par1World: World, position: Vector3, side: Int) extends Ent
 
     glPopMatrix()
 
-    FMLClientHandler.instance().getClient().renderEngine.bindTexture(ElectromagneticCoherence.particleTextures)
+    FMLClientHandler.instance().getClient().renderEngine.bindTexture(ElectricalContent.particleTextures)
     tessellator.startDrawingQuads()
   }
 

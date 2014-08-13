@@ -9,7 +9,7 @@ import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL11._
-import resonantinduction.electrical.em.ElectromagneticCoherence
+import resonantinduction.core.Reference
 
 /**
  * @author Calclavia
@@ -17,8 +17,8 @@ import resonantinduction.electrical.em.ElectromagneticCoherence
 @SideOnly(Side.CLIENT)
 object RenderLaserReceiver extends TileEntitySpecialRenderer
 {
-  val model = AdvancedModelLoader.loadModel(new ResourceLocation(ElectromagneticCoherence.DOMAIN, ElectromagneticCoherence.MODEL_PATH_NAME + "laserReceiver.tcn"))
-  val texture = new ResourceLocation(ElectromagneticCoherence.DOMAIN, ElectromagneticCoherence.MODEL_PATH_NAME + "laserReceiver.png")
+  val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "laserReceiver.tcn"))
+  val texture = new ResourceLocation(Reference.domain, Reference.modelPath + "laserReceiver.png")
 
   def renderTileEntityAt(tileEntity: TileEntity, x: Double, y: Double, z: Double, f: Float)
   {

@@ -7,7 +7,7 @@ import net.minecraft.entity.EntityLivingBase
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.{IBlockAccess, World}
-import resonantinduction.electrical.em.ElectromagneticCoherence
+import resonantinduction.core.Reference
 import resonantinduction.electrical.laser.{BlockRenderingHandler, Laser}
 
 /**
@@ -15,7 +15,7 @@ import resonantinduction.electrical.laser.{BlockRenderingHandler, Laser}
  */
 class BlockLaserEmitter extends BlockContainer(Material.rock)
 {
-  setBlockName(ElectromagneticCoherence.PREFIX + "laserEmitter")
+  setBlockName(Reference.prefix + "laserEmitter")
   setBlockTextureName("stone")
 
   /**

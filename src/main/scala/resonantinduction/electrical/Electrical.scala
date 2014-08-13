@@ -15,7 +15,7 @@ import resonant.lib.loadable.LoadableHandler
 import resonantinduction.atomic.gate.ItemQuantumGlyph
 import resonantinduction.core.resource.ItemResourcePart
 import resonantinduction.core.{Reference, ResonantTab, Settings}
-import resonantinduction.electrical.battery.{BlockBattery, ItemBlockBattery, TileBattery}
+import resonantinduction.electrical.battery.{ItemBlockBattery, TileBattery}
 import resonantinduction.electrical.generator.{TileMotor, TileSolarPanel, TileThermopile}
 import resonantinduction.electrical.laser.emitter.BlockLaserEmitter
 import resonantinduction.electrical.laser.focus.ItemFocusingMatrix
@@ -75,7 +75,7 @@ object Electrical {
     ElectricalContent.itemMultimeter = Electrical.contentRegistry.newItem(classOf[ItemMultimeter])
     ElectricalContent.itemTransformer = Electrical.contentRegistry.newItem(classOf[ItemElectricTransformer])
     ElectricalContent.blockTesla = Electrical.contentRegistry.newBlock(classOf[TileTesla])
-    ElectricalContent.blockBattery = Electrical.contentRegistry.newBlock(classOf[BlockBattery], classOf[ItemBlockBattery], classOf[TileBattery])
+    ElectricalContent.blockBattery = Electrical.contentRegistry.newBlock(classOf[TileBattery])
     ElectricalContent.itemLevitator = Electrical.contentRegistry.newItem(classOf[ItemLevitator])
     ElectricalContent.itemInsulation = Electrical.contentRegistry.newItem("insulation", classOf[ItemResourcePart])
     ElectricalContent.blockSolarPanel = Electrical.contentRegistry.newBlock(classOf[TileSolarPanel])

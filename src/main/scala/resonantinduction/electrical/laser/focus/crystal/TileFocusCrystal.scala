@@ -5,7 +5,7 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity
 import net.minecraft.network.{NetworkManager, Packet}
 import net.minecraft.util.MovingObjectPosition
 import net.minecraftforge.common.util.ForgeDirection
-import resonantinduction.electrical.em.ElectromagneticCoherence
+import resonantinduction.electrical.Electrical
 import resonantinduction.electrical.laser.focus.IFocus
 import resonantinduction.electrical.laser.{ILaserHandler, Laser, TileBase}
 import universalelectricity.core.transform.rotation.Quaternion
@@ -66,7 +66,7 @@ class TileFocusCrystal extends TileBase with ILaserHandler with IFocus
 
   override def onLaserHit(renderStart: Vector3, incidentDirection: Vector3, hit: MovingObjectPosition, color: Vector3, energy: Double): Boolean =
   {
-    ElectromagneticCoherence.proxy.renderLaser(worldObj, renderStart, position + 0.5, color, energy)
+    Electrical.proxy.renderLaser(worldObj, renderStart, position + 0.5, color, energy)
     this.energy += energy
     this.color = (this.color + color) / 2
     return true

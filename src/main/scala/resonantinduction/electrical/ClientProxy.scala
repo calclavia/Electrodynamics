@@ -2,14 +2,13 @@ package resonantinduction.electrical
 
 import codechicken.multipart.{TMultiPart, TileMultipart}
 import cpw.mods.fml.client.FMLClientHandler
-import cpw.mods.fml.client.registry.{ClientRegistry, RenderingRegistry}
+import cpw.mods.fml.client.registry.ClientRegistry
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.block.Block
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
 import resonantinduction.electrical.battery.{RenderBattery, TileBattery}
-import resonantinduction.electrical.laser.BlockRenderingHandler
 import resonantinduction.electrical.laser.fx.{EntityBlockParticleFX, EntityLaserFX, EntityScorchFX}
 import resonantinduction.electrical.multimeter.{GuiMultimeter, PartMultimeter}
 import resonantinduction.electrical.render.FXElectricBolt
@@ -24,7 +23,7 @@ import universalelectricity.core.transform.vector.Vector3
   }
 
   override def init {
-    RenderingRegistry.registerBlockHandler(new BlockRenderingHandler.type)
+    //RenderingRegistry.registerBlockHandler(new BlockRenderingHandler.type)
     //ClientRegistry.bindTileEntitySpecialRenderer(classOf(TileLaserEmitter), RenderLaserEmitter)
     //ClientRegistry.bindTileEntitySpecialRenderer(classOf(TileMirror), RenderMirror)
     //ClientRegistry.bindTileEntitySpecialRenderer(classOf(TileFocusCrystal), RenderFocusCrystal)

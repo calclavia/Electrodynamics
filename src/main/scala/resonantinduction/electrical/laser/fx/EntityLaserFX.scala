@@ -7,7 +7,8 @@ import net.minecraft.client.renderer.Tessellator
 import net.minecraft.util.ResourceLocation
 import net.minecraft.world.World
 import org.lwjgl.opengl.GL11._
-import resonantinduction.electrical.em.ElectromagneticCoherence
+import resonantinduction.core.Reference
+import resonantinduction.electrical.ElectricalContent
 import resonantinduction.electrical.laser.Laser
 import universalelectricity.core.transform.vector.Vector3
 
@@ -17,10 +18,10 @@ import universalelectricity.core.transform.vector.Vector3
 @SideOnly(Side.CLIENT)
 class EntityLaserFX(par1World: World, start: Vector3, end: Vector3, color: Vector3, energy: Double) extends EntityFX(par1World, start.x, start.y, start.z)
 {
-  val laserStartTexture = new ResourceLocation(ElectromagneticCoherence.DOMAIN, ElectromagneticCoherence.FX_DIRECTORY + "laserStart.png")
-  val laserMiddleTexture = new ResourceLocation(ElectromagneticCoherence.DOMAIN, ElectromagneticCoherence.FX_DIRECTORY + "laserMiddle.png")
-  val laserEndTexture = new ResourceLocation(ElectromagneticCoherence.DOMAIN, ElectromagneticCoherence.FX_DIRECTORY + "laserEnd.png")
-  val laserNoiseTexture = new ResourceLocation(ElectromagneticCoherence.DOMAIN, ElectromagneticCoherence.FX_DIRECTORY + "noise.png")
+  val laserStartTexture = new ResourceLocation(Reference.domain, Reference.FX_DIRECTORY + "laserStart.png")
+  val laserMiddleTexture = new ResourceLocation(Reference.domain, Reference.FX_DIRECTORY + "laserMiddle.png")
+  val laserEndTexture = new ResourceLocation(Reference.domain, Reference.FX_DIRECTORY + "laserEnd.png")
+  val laserNoiseTexture = new ResourceLocation(Reference.domain, Reference.FX_DIRECTORY + "noise.png")
 
   val energyPercentage = Math.min(energy / Laser.maxEnergy, 1).toFloat
 
@@ -187,7 +188,7 @@ class EntityLaserFX(par1World: World, start: Vector3, end: Vector3, color: Vecto
 
     glPopMatrix()
 
-    FMLClientHandler.instance().getClient().renderEngine.bindTexture(ElectromagneticCoherence.particleTextures)
+    FMLClientHandler.instance().getClient().renderEngine.bindTexture(ElectricalContent.particleTextures)
     tessellator.startDrawingQuads()
   }
 
