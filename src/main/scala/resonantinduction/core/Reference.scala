@@ -10,7 +10,7 @@ import java.util.logging.Logger
 final object Reference
 {
   final val idPrefix = "ResonantInduction"
-  final val coreID = idPrefix + ":Core"
+  final val coreID = idPrefix + "Core"
 
   /** The official name of the mod */
   final val name = "Resonant Induction"

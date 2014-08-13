@@ -4,7 +4,7 @@ import cpw.mods.fml.common.Mod.EventHandler
 import cpw.mods.fml.common.event.{FMLInitializationEvent, FMLPostInitializationEvent, FMLPreInitializationEvent}
 import cpw.mods.fml.common.network.NetworkRegistry
 import cpw.mods.fml.common.registry.GameRegistry
-import cpw.mods.fml.common.{Mod, ModMetadata, SidedProxy}
+import cpw.mods.fml.common.{Mod, SidedProxy}
 import net.minecraft.init.{Blocks, Items}
 import net.minecraft.item.ItemStack
 import net.minecraftforge.oredict.{OreDictionary, ShapedOreRecipe}
@@ -20,7 +20,7 @@ import resonantinduction.archaic.fluid.tank.TileTank
 import resonantinduction.archaic.process.{TileCastingMold, TileMillstone}
 import resonantinduction.core.{Reference, ResonantTab, Settings}
 import resonantinduction.mechanical.gear.ItemHandCrank
-@Mod( modid = Archaic.ID, name = Archaic.NAME, version = Reference.version, dependencies = "required-after:" + Reference.coreID, modLanguage = "scala" )
+@Mod( modid = Archaic.ID, name = Archaic.NAME, version = Reference.version, modLanguage = "scala" , dependencies = "required-after:" + Reference.coreID)
 object Archaic {
 
     final val ID = "ResonantInduction|Archaic"
@@ -33,9 +33,6 @@ object Archaic {
 
     @SidedProxy( clientSide = "resonantinduction.archaic.ClientProxy", serverSide = "resonantinduction.archaic.CommonProxy" )
     var proxy : CommonProxy = _
-
-    @Mod.Metadata( ID )
-    var metadata : ModMetadata = _
 
     @EventHandler
     def preInit( evt : FMLPreInitializationEvent ) {

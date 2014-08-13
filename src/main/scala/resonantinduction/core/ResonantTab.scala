@@ -19,7 +19,7 @@ object ResonantTab extends CreativeTabs(CreativeTabs.getNextID, "ResonantInducti
   {
     if(itemStack != null )
       return itemStack.getItem
-    else 
+    else
       return Items.iron_ingot
   }
 

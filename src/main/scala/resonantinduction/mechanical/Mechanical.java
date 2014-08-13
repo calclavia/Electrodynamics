@@ -49,7 +49,7 @@ import java.sql.Ref;
  * 
  * @author DarkCow, Calclavia
  */
-@Mod(modid = Mechanical.ID, name = "Resonant Induction Mechanical", version = "", dependencies = "before:ThermalExpansion;required-after:ResonantInduction:Core;after:ResonantInduction|Archaic", modLanguage = "scala")
+@Mod(modid = Mechanical.ID, name = "Resonant Induction Mechanical", version = "", dependencies = "before:ThermalExpansion;required-after:ResonantInductionCore;after:ResonantInduction|Archaic", modLanguage = "scala")
 public class Mechanical
 {
 	/** Mod Information */
