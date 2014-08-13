@@ -38,7 +38,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class RenderBattery extends TileEntitySpecialRenderer implements ISimpleItemRenderer
 {
 	public static RenderBattery INSTANCE = new RenderBattery();
-	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelDirectory() + "battery/battery.tcn"));
+	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelPath() + "battery/battery.tcn"));
 
 	@Override
 	public void renderInventoryItem(IItemRenderer.ItemRenderType type, ItemStack itemStack, Object... data)
