@@ -17,7 +17,7 @@ import resonantinduction.core.Reference
 @SideOnly(Side.CLIENT)
 object RenderLaserEmitter extends TileEntitySpecialRenderer
 {
-  val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelDirectory + "laserEmitter.tcn"))
+  val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "laserEmitter.tcn"))
   val texture = new ResourceLocation(Reference.domain, Reference.modelPath + "laserEmitter.png")
 
   def renderTileEntityAt(tileEntity: TileEntity, x: Double, y: Double, z: Double, f: Float)

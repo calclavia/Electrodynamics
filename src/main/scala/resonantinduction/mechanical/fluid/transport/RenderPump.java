@@ -16,8 +16,8 @@ import resonantinduction.core.Reference;
 
 public class RenderPump extends TileEntitySpecialRenderer
 {
-	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelDirectory() + "pump.tcn"));
-	public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.domain(), Reference.modelDirectory() + "pump.png");
+	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelPath() + "pump.tcn"));
+	public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.domain(), Reference.modelPath() + "pump.png");
 
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float f)

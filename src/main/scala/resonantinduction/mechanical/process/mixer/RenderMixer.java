@@ -27,7 +27,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderMixer extends TileEntitySpecialRenderer implements ISimpleItemRenderer
 {
-	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(),Reference.modelDirectory() + "mixer.tcn"));
+	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(),Reference.modelPath() + "mixer.tcn"));
 	public static ResourceLocation TEXTURE = new ResourceLocation(Reference.domain(), Reference.modelPath() + "mixer.png");
 
 	@Override

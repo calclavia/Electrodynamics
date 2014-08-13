@@ -18,7 +18,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class RenderCastingMold extends TileEntitySpecialRenderer
 {
 	public static RenderCastingMold INSTANCE = new RenderCastingMold();
-	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelDirectory() + "castingMold.tcn"));
+	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelPath() + "castingMold.tcn"));
 
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float var8)

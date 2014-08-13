@@ -16,8 +16,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderElectricTurbine extends TileEntitySpecialRenderer
 {
-    public static final IModelCustom MODEL_SMALL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(),Reference.modelDirectory() + "turbineSmall.tcn"));
-    public static final IModelCustom MODEL_LARGE = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(),Reference.modelDirectory() + "turbineLarge.tcn"));
+    public static final IModelCustom MODEL_SMALL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(),Reference.modelPath() + "turbineSmall.tcn"));
+    public static final IModelCustom MODEL_LARGE = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(),Reference.modelPath() + "turbineLarge.tcn"));
     public static final ResourceLocation SMALL_TEXTURE = new ResourceLocation(Reference.domain(), Reference.modelPath() + "turbineSmall.png");
     public static final ResourceLocation LARGE_TEXTURE = new ResourceLocation(Reference.domain(), Reference.modelPath() + "turbineLarge.png");
 

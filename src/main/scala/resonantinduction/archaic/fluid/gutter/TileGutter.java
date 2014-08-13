@@ -310,7 +310,7 @@ public class TileGutter extends TilePressureNode
     {
         if(MODEL == null)
         {
-            MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(),Reference.modelDirectory() + "gutter.tcn"));
+            MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(),Reference.modelPath() + "gutter.tcn"));
         }
         if (TEXTURE == null)
         {

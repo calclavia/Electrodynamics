@@ -8,6 +8,8 @@ import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.MultiPartRegistry.IPartFactory;
 import codechicken.multipart.MultipartGenerator;
 import codechicken.multipart.TMultiPart;
+import resonantinduction.electrical.wire.flat.PartFlatSwitchWire;
+import resonantinduction.electrical.wire.flat.PartFlatWire;
 
 public class MultipartElectrical implements IPartFactory
 {
@@ -19,11 +21,11 @@ public class MultipartElectrical implements IPartFactory
 	{
 		MultiPartRegistry.registerParts(this, PART_TYPES);
 		//MultipartGenerator.registerPassThroughInterface("universalelectricity.api.electricity.IVoltageOutput");
-		MultipartGenerator.registerTrait("IQuantumGate", "TraitQuantumGate");
+		//MultipartGenerator.registerTrait("IQuantumGate", "TraitQuantumGate");
 		//MultipartGenerator.registerTrait("universalelectricity.api.energy.IConductor", "TraitConductor");
         //TODO check if traits are already registered
-		MultipartGenerator.registerTrait("cofh.api.energy.IEnergyHandler", "TraitEnergyHandler");
-		MultipartGenerator.registerTrait("ic2.api.energy.tile.IEnergySink", "TraitEnergySink");
+		//MultipartGenerator.registerTrait("cofh.api.energy.IEnergyHandler", "TraitEnergyHandler");
+		//MultipartGenerator.registerTrait("ic2.api.energy.tile.IEnergySink", "TraitEnergySink");
 	}
 
 	@Override
@@ -33,11 +35,11 @@ public class MultipartElectrical implements IPartFactory
 			//return new PartFramedWire();
 		//else if (name.equals("resonant_induction_switch_wire"))
 			//return new PartFramedSwitchWire();
-		//if (name.equals("resonant_induction_flat_wire"))
-			//return new PartFlatWire();
-		//else if (name.equals("resonant_induction_flat_switch_wire"))
-			//return new PartFlatSwitchWire();
-		if (name.equals("resonant_induction_multimeter"))
+		if (name.equals("resonant_induction_flat_wire"))
+			return new PartFlatWire();
+		else if (name.equals("resonant_induction_flat_switch_wire"))
+			return new PartFlatSwitchWire();
+		else if (name.equals("resonant_induction_multimeter"))
 			return new PartMultimeter();
 		else if (name.equals("resonant_induction_transformer"))
 			return new PartElectricTransformer();

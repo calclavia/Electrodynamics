@@ -19,7 +19,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderWaterTurbine extends TileEntitySpecialRenderer implements ISimpleItemRenderer
 {
-	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelDirectory() + "waterTurbines.obj"));
+	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelPath() + "waterTurbines.obj"));
 
 	@Override
 	public void renderTileEntityAt(TileEntity t, double x, double y, double z, float f)

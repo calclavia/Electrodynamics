@@ -16,7 +16,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderChemicalExtractor extends TileEntitySpecialRenderer
 {
-    public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.modelDirectory() + "chemicalExtractor.tcn"));
+    public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.modelPath() + "chemicalExtractor.tcn"));
     public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.domain(), Reference.modelPath() + "chemicalExtractor.png");
 
     public void render(TileChemicalExtractor tileEntity, double x, double y, double z, float f)

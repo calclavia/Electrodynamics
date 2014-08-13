@@ -16,7 +16,7 @@ import resonantinduction.core.Reference
 @SideOnly(Side.CLIENT)
 object RenderFocusCrystal extends TileEntitySpecialRenderer
 {
-  val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelDirectory + "focusCrystal.tcn"))
+  val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "focusCrystal.tcn"))
   val texture = new ResourceLocation(Reference.domain, Reference.modelPath + "focusCrystal.png")
 
   def renderTileEntityAt(tileEntity: TileEntity, x: Double, y: Double, z: Double, f: Float)

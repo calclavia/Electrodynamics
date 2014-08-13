@@ -16,7 +16,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderCentrifuge extends TileEntitySpecialRenderer
 {
-    public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.modelDirectory() + "centrifuge.tcn"));
+    public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(),Reference.modelPath() + "centrifuge.tcn"));
     public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.domain(), Reference.modelPath() + "centrifuge.png");
 
     public void render(TileCentrifuge tileEntity, double x, double y, double z, float f)

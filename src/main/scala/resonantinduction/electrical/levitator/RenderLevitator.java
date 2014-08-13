@@ -17,7 +17,7 @@ public class RenderLevitator implements ISimpleItemRenderer
 {
 	public static final RenderLevitator INSTANCE = new RenderLevitator();
 
-	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelDirectory() + "levitator.tcn"));
+	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelPath() + "levitator.tcn"));
 	public static final ResourceLocation TEXTURE_ON = new ResourceLocation(Reference.domain(), Reference.modelPath() + "levitator_on.png");
 	public static final ResourceLocation TEXTURE_OFF = new ResourceLocation(Reference.domain(), Reference.modelPath() + "levitator_off.png");
 

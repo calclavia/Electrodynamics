@@ -16,7 +16,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderNuclearBoiler extends TileEntitySpecialRenderer
 {
-    public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelDirectory() + "nuclearBoiler.tcn"));
+    public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelPath() + "nuclearBoiler.tcn"));
     public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.domain(), Reference.modelPath() + "nuclearBoiler.png");
 
     public void renderAModelAt(TileNuclearBoiler tileEntity, double x, double y, double z, float f)

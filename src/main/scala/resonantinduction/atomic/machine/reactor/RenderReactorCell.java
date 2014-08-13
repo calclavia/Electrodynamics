@@ -17,9 +17,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderReactorCell extends TileEntitySpecialRenderer
 {
-    public static final IModelCustom MODEL_TOP = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelDirectory() + "reactorCellTop.tcn"));
-    public static final IModelCustom MODEL_MIDDLE = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelDirectory() + "reactorCellMiddle.tcn"));
-    public static final IModelCustom MODEL_BOTTOM = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelDirectory() + "reactorCellBottom.tcn"));
+    public static final IModelCustom MODEL_TOP = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelPath() + "reactorCellTop.tcn"));
+    public static final IModelCustom MODEL_MIDDLE = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelPath() + "reactorCellMiddle.tcn"));
+    public static final IModelCustom MODEL_BOTTOM = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelPath() + "reactorCellBottom.tcn"));
 
     public static final ResourceLocation TEXTURE_TOP = new ResourceLocation(Reference.domain(), Reference.modelPath() + "reactorCellTop.png");
     public static final ResourceLocation TEXTURE_MIDDLE = new ResourceLocation(Reference.domain(), Reference.modelPath() + "reactorCellMiddle.png");

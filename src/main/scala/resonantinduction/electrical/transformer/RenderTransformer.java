@@ -19,7 +19,7 @@ public class RenderTransformer implements ISimpleItemRenderer
 {
 	public static final RenderTransformer INSTANCE = new RenderTransformer();
 
-	public static final WavefrontObject MODEL = (WavefrontObject) AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelDirectory() + "transformer.obj"));
+	public static final WavefrontObject MODEL = (WavefrontObject) AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelPath() + "transformer.obj"));
 	public static final ResourceLocation TEXTURE_COIL = new ResourceLocation(Reference.domain(), Reference.modelPath() + "transformer_winding.png");
 	public static final ResourceLocation TEXTURE_STONE = new ResourceLocation(Reference.blockTextureDirectory() + "stone.png");
 	public static final ResourceLocation TEXTURE_IRON = new ResourceLocation(Reference.blockTextureDirectory() + "iron_block.png");
