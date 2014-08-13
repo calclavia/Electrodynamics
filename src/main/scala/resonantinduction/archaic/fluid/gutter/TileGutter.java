@@ -1,10 +1,9 @@
 package resonantinduction.archaic.fluid.gutter;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -31,8 +30,8 @@ import resonant.lib.utility.FluidUtility;
 import resonant.lib.utility.WorldUtility;
 import resonant.lib.utility.inventory.InventoryUtility;
 import resonantinduction.archaic.fluid.grate.TileGrate;
+import resonantinduction.core.RecipeType;
 import resonantinduction.core.Reference;
-import resonantinduction.core.ResonantInduction.RecipeType;
 import resonantinduction.core.grid.fluid.TileTankNode;
 import resonantinduction.core.grid.fluid.pressure.FluidPressureNode;
 import resonantinduction.core.grid.fluid.pressure.TilePressureNode;
@@ -48,6 +47,11 @@ import cpw.mods.fml.relauncher.SideOnly;
  */
 public class TileGutter extends TilePressureNode
 {
+    @SideOnly(Side.CLIENT)
+    IModelCustom MODEL;
+    @SideOnly(Side.CLIENT)
+    ResourceLocation TEXTURE;
+
 	public TileGutter()
 	{
 		super(Material.rock);
@@ -59,9 +63,9 @@ public class TileGutter extends TilePressureNode
 		tankNode_$eq(new FluidGravityNode(this) {
             @Override
             public void doRecache() {
-                connections.clear();
-                byte previousConnections = renderSides;
-                renderSides = 0;
+                connections().clear();
+                byte previousConnections = renderSides();
+                renderSides_$eq((byte)0);
 
                 for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
                     TileEntity tile = position().add(dir).getTileEntity(world());
@@ -71,25 +75,25 @@ public class TileGutter extends TilePressureNode
                             FluidPressureNode check = (FluidPressureNode) ((TileTankNode) tile).getNode(FluidPressureNode.class, dir.getOpposite());
 
                             if (check != null && canConnect(dir, check) && check.canConnect(dir.getOpposite(), this)) {
-                                connections.put(check, dir);
+                                connections().put(check, dir);
 
                                 if (tile instanceof TileGutter) {
-                                    renderSides = WorldUtility.setEnableSide(renderSides, dir, true);
+                                    renderSides_$eq(WorldUtility.setEnableSide(renderSides(), dir, true));
                                 }
 
                             }
                         } else {
-                            connections.put(tile, dir);
+                            connections().put(tile, dir);
 
                             if (tile instanceof TileGrate) {
-                                renderSides = WorldUtility.setEnableSide(renderSides, dir, true);
+                                renderSides_$eq(WorldUtility.setEnableSide(renderSides(), dir, true));
                             }
                         }
                     }
                 }
 
                 /** Only send packet updates if visuallyConnected changed. */
-                if (previousConnections != renderSides) {
+                if (previousConnections != renderSides()) {
                     sendRenderUpdate();
                 }
             }
@@ -117,9 +121,9 @@ public class TileGutter extends TilePressureNode
 					{
 						if (check instanceof FluidPressureNode)
 						{
-							if (((FluidPressureNode) check).genericParent() instanceof TileGutter)
+							if (((FluidPressureNode) check).getParent() instanceof TileGutter)
 							{
-								tanks.add(((FluidPressureNode) check).genericParent());
+								//tanks.add(((FluidPressureNode) check).getParent());
 							}
 						}
 					}
@@ -136,7 +140,7 @@ public class TileGutter extends TilePressureNode
 						{
 							if (check instanceof FluidPressureNode)
 							{
-								((FluidPressureNode) check).genericParent().onFluidChanged();
+								//((FluidPressureNode) check).getParent().onFluidChanged();
 							}
 						}
 					}
@@ -152,26 +156,26 @@ public class TileGutter extends TilePressureNode
 
 		float thickness = 0.1F;
 
-		if (!WorldUtility.isEnabledSide(renderSides, ForgeDirection.DOWN))
+		if (!WorldUtility.isEnabledSide(renderSides(), ForgeDirection.DOWN))
 		{
 			list.add(new Cuboid(0.0F, 0.0F, 0.0F, 1.0F, thickness, 1.0F));
 		}
 
-		if (!WorldUtility.isEnabledSide(renderSides, ForgeDirection.WEST))
+		if (!WorldUtility.isEnabledSide(renderSides(), ForgeDirection.WEST))
 		{
 			list.add(new Cuboid(0.0F, 0.0F, 0.0F, thickness, 1.0F, 1.0F));
 		}
-		if (!WorldUtility.isEnabledSide(renderSides, ForgeDirection.NORTH))
+		if (!WorldUtility.isEnabledSide(renderSides(), ForgeDirection.NORTH))
 		{
 			list.add(new Cuboid(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, thickness));
 		}
 
-		if (!WorldUtility.isEnabledSide(renderSides, ForgeDirection.EAST))
+		if (!WorldUtility.isEnabledSide(renderSides(), ForgeDirection.EAST))
 		{
 			list.add(new Cuboid(1.0F - thickness, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F));
 		}
 
-		if (!WorldUtility.isEnabledSide(renderSides, ForgeDirection.SOUTH))
+		if (!WorldUtility.isEnabledSide(renderSides(), ForgeDirection.SOUTH))
 		{
 			list.add(new Cuboid(0.0F, 0.0F, 1.0F - thickness, 1.0F, 1.0F, 1.0F));
 		}
@@ -182,19 +186,19 @@ public class TileGutter extends TilePressureNode
 	@Override
 	public void collide(Entity entity)
 	{
-		if (getInternalTank().getFluidAmount() > 0)
+		if (getTank().getFluidAmount() > 0)
 		{
 			for (int i = 2; i < 6; i++)
 			{
 				ForgeDirection dir = ForgeDirection.getOrientation(i);
-				int pressure = node.getPressure(dir);
+				int pressure = tankNode().getPressure(dir);
 				Vector3 position = position().add(dir);
 
 				TileEntity checkTile = position.getTileEntity(world());
 
 				if (checkTile instanceof TileGutter)
 				{
-					int deltaPressure = pressure - ((TileGutter) checkTile).node.getPressure(dir.getOpposite());
+					int deltaPressure = pressure - ((TileGutter) checkTile).tankNode().getPressure(dir.getOpposite());
 
 					entity.motionX += 0.01 * dir.offsetX * deltaPressure;
 					entity.motionY += 0.01 * dir.offsetY * deltaPressure;
@@ -202,7 +206,7 @@ public class TileGutter extends TilePressureNode
 				}
 			}
 
-			if (getInternalTank().getFluid().getFluid().getTemperature() >= 373)
+			if (getTank().getFluid().getFluid().getTemperature() >= 373)
 			{
 				entity.setFire(5);
 			}
@@ -264,44 +268,6 @@ public class TileGutter extends TilePressureNode
 			}
 		}
 
-		if (!world().isRemote)
-		{
-			ArrayList<IFluidTank> tanks = new ArrayList<IFluidTank>();
-
-			synchronized (node.getGrid().getNodes())
-			{
-				for (Object check : node.getGrid().getNodes())
-				{
-					if (check instanceof FluidPressureNode)
-					{
-						if (((FluidPressureNode) check).parent instanceof TileGutter)
-						{
-							tanks.add(((FluidPressureNode) check).parent.getPressureTank());
-						}
-					}
-				}
-			}
-
-			if (FluidUtility.playerActivatedFluidItem(tanks, player, side))
-			{
-				synchronized (node.getGrid().getNodes())
-				{
-					for (Object check : node.getGrid().getNodes())
-					{
-						if (check instanceof FluidPressureNode)
-						{
-							((FluidPressureNode) check).parent.onFluidChanged();
-						}
-					}
-				}
-
-				return true;
-			}
-
-			return false;
-
-		}
-
 		return true;
 	}
 
@@ -337,106 +303,90 @@ public class TileGutter extends TilePressureNode
 		return from != ForgeDirection.UP && !fluid.isGaseous();
 	}
 
-	@SideOnly(Side.CLIENT)
-	@Override
-	protected TileRender newRenderer()
-	{
-		return new TileRender()
-		{
-			public final IModelCustom MODEL = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "gutter.tcn");
-			public final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "gutter.png");
 
-			@Override
-			public boolean renderStatic(RenderBlocks renderer, Vector3 position)
-			{
-				return true;
-			}
 
-			@Override
-			public boolean renderDynamic(Vector3 position, boolean isItem, float frame)
-			{
-				GL11.glPushMatrix();
-				GL11.glTranslated(position.x + 0.5, position.y + 0.5, position.z + 0.5);
+    @Override
+    public void renderDynamic(Vector3 position, float frame, int pass)
+    {
+        if(MODEL == null)
+        {
+            MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(),Reference.modelDirectory() + "gutter.tcn"));
+        }
+        if (TEXTURE == null)
+        {
+            TEXTURE = new ResourceLocation(Reference.domain(), Reference.modelPath() + "gutter.png");
+        }
+        GL11.glPushMatrix();
+        GL11.glTranslated(position.x() + 0.5, position.y() + 0.5, position.z() + 0.5);
 
-				FluidStack liquid = getInternalTank().getFluid();
-				int capacity = getInternalTank().getCapacity();
+        FluidStack liquid = getTank().getFluid();
+        int capacity = getTank().getCapacity();
 
-				render(0, renderSides);
+        render(0, renderSides());
 
-				if (world() != null)
-				{
-					FluidTank tank = getInternalTank();
-					double percentageFilled = (double) tank.getFluidAmount() / (double) tank.getCapacity();
+        if (world() != null)
+        {
+            FluidTank tank = getTank();
+            double percentageFilled = (double) tank.getFluidAmount() / (double) tank.getCapacity();
 
-					if (percentageFilled > 0.1)
-					{
-						GL11.glPushMatrix();
-						GL11.glScaled(0.990, 0.99, 0.990);
+            if (percentageFilled > 0.1)
+            {
+                GL11.glPushMatrix();
+                GL11.glScaled(0.990, 0.99, 0.990);
 
-						double ySouthEast = FluidUtility.getAveragePercentageFilledForSides(TileGutter.class, percentageFilled, world(), position(), ForgeDirection.SOUTH, ForgeDirection.EAST);
-						double yNorthEast = FluidUtility.getAveragePercentageFilledForSides(TileGutter.class, percentageFilled, world(), position(), ForgeDirection.NORTH, ForgeDirection.EAST);
-						double ySouthWest = FluidUtility.getAveragePercentageFilledForSides(TileGutter.class, percentageFilled, world(), position(), ForgeDirection.SOUTH, ForgeDirection.WEST);
-						double yNorthWest = FluidUtility.getAveragePercentageFilledForSides(TileGutter.class, percentageFilled, world(), position(), ForgeDirection.NORTH, ForgeDirection.WEST);
+                double ySouthEast = FluidUtility.getAveragePercentageFilledForSides(TileGutter.class, percentageFilled, world(), position(), ForgeDirection.SOUTH, ForgeDirection.EAST);
+                double yNorthEast = FluidUtility.getAveragePercentageFilledForSides(TileGutter.class, percentageFilled, world(), position(), ForgeDirection.NORTH, ForgeDirection.EAST);
+                double ySouthWest = FluidUtility.getAveragePercentageFilledForSides(TileGutter.class, percentageFilled, world(), position(), ForgeDirection.SOUTH, ForgeDirection.WEST);
+                double yNorthWest = FluidUtility.getAveragePercentageFilledForSides(TileGutter.class, percentageFilled, world(), position(), ForgeDirection.NORTH, ForgeDirection.WEST);
 
-						FluidRenderUtility.renderFluidTesselation(tank, ySouthEast, yNorthEast, ySouthWest, yNorthWest);
-						GL11.glPopMatrix();
-					}
-				}
+                FluidRenderUtility.renderFluidTesselation(tank, ySouthEast, yNorthEast, ySouthWest, yNorthWest);
+                GL11.glPopMatrix();
+            }
+        }
 
-				GL11.glPopMatrix();
-				return true;
-			}
+        GL11.glPopMatrix();
+    }
 
-			@Override
-			public boolean renderItem(ItemStack itemStack)
-			{
-				GL11.glTranslated(0.5, 0.5, 0.5);
-				render(itemStack.getItemDamage(), Byte.parseByte("001100", 2));
-				return true;
-			}
+    public void render(int meta, byte sides)
+    {
+        RenderUtility.bind(TEXTURE);
 
-			public void render(int meta, byte sides)
-			{
-				RenderUtility.bind(TEXTURE);
+        double thickness = 0.055;
+        double height = 0.5;
 
-				double thickness = 0.055;
-				double height = 0.5;
+        for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+        {
+            if (dir != ForgeDirection.UP && dir != ForgeDirection.DOWN)
+            {
+                GL11.glPushMatrix();
+                RenderUtility.rotateBlockBasedOnDirection(dir);
 
-				for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
-				{
-					if (dir != ForgeDirection.UP && dir != ForgeDirection.DOWN)
-					{
-						GL11.glPushMatrix();
-						RenderUtility.rotateBlockBasedOnDirection(dir);
+                if (WorldUtility.isEnabledSide(sides, ForgeDirection.DOWN))
+                {
+                    GL11.glTranslatef(0, -0.075f, 0);
+                    GL11.glScalef(1, 1.15f, 1);
+                }
 
-						if (WorldUtility.isEnabledSide(sides, ForgeDirection.DOWN))
-						{
-							GL11.glTranslatef(0, -0.075f, 0);
-							GL11.glScalef(1, 1.15f, 1);
-						}
+                if (!WorldUtility.isEnabledSide(sides, dir))
+                {
+                    /** Render sides */
+                    MODEL.renderOnly("left");
+                }
 
-						if (!WorldUtility.isEnabledSide(sides, dir))
-						{
-							/** Render sides */
-							MODEL.renderOnly("left");
-						}
+                if (!WorldUtility.isEnabledSide(sides, dir) || !WorldUtility.isEnabledSide(sides, dir.getRotation(ForgeDirection.UP)))
+                {
+                    /** Render strips */
+                    MODEL.renderOnly("backCornerL");
+                }
+                GL11.glPopMatrix();
+            }
+        }
 
-						if (!WorldUtility.isEnabledSide(sides, dir) || !WorldUtility.isEnabledSide(sides, dir.getRotation(ForgeDirection.UP)))
-						{
-							/** Render strips */
-							MODEL.renderOnly("backCornerL");
-						}
-						GL11.glPopMatrix();
-					}
-				}
+        if (!WorldUtility.isEnabledSide(sides, ForgeDirection.DOWN))
+        {
+            MODEL.renderOnly("base");
+        }
 
-				if (!WorldUtility.isEnabledSide(sides, ForgeDirection.DOWN))
-				{
-					MODEL.renderOnly("base");
-				}
-
-			}
-		};
-	}
+    }
 
 }

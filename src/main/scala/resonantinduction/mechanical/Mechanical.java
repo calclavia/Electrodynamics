@@ -42,12 +42,14 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import universalelectricity.api.core.grid.NodeRegistry;
 
+import java.sql.Ref;
+
 /**
  * Resonant Induction Mechanical Module
  * 
  * @author DarkCow, Calclavia
  */
-@Mod(modid = Mechanical.ID, name = "Resonant Induction Mechanical", version = Reference.version(), dependencies = "before:ThermalExpansion;required-after:" + ResonantInduction.ID + ";after:ResonantInduction|Archaic")
+@Mod(modid = Mechanical.ID, name = "Resonant Induction Mechanical", version = "", dependencies = "before:ThermalExpansion;required-after:ResonantInduction:Core;after:ResonantInduction|Archaic")
 public class Mechanical
 {
 	/** Mod Information */

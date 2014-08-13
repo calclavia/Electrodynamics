@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import net.minecraft.init.Blocks;
+import resonantinduction.core.RecipeType;
 import resonantinduction.mechanical.energy.grid.TileMechanical;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -19,7 +20,6 @@ import net.minecraftforge.fluids.IFluidBlock;
 import resonant.api.recipe.MachineRecipes;
 import resonant.lib.utility.inventory.InventoryUtility;
 import resonantinduction.core.Reference;
-import resonantinduction.core.ResonantInduction.RecipeType;
 import resonantinduction.core.Timer;
 import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
@@ -115,7 +115,7 @@ public class TileMixer extends TileMechanical implements IInventory
 
 			if (entity instanceof EntityItem)
 			{
-				if (MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER().toString(), ((EntityItem) entity).getEntityItem()).length > 0)
+				if (MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER.name(), ((EntityItem) entity).getEntityItem()).length > 0)
 				{
 					processItems.add((EntityItem) entity);
 				}
@@ -271,6 +271,6 @@ public class TileMixer extends TileMechanical implements IInventory
     @Override
 	public boolean isItemValidForSlot(int i, ItemStack itemstack)
 	{
-		return MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER().toString(), itemstack).length > 0;
+		return MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER.name(), itemstack).length > 0;
 	}
 }

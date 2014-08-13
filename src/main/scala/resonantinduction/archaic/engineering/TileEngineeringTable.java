@@ -46,9 +46,9 @@ import resonant.lib.utility.WorldUtility;
 import resonant.lib.utility.inventory.AutoCraftingManager;
 import resonant.lib.utility.inventory.AutoCraftingManager.IAutoCrafter;
 import resonant.lib.utility.inventory.InventoryUtility;
+import resonantinduction.core.RecipeType;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.ResonantInduction.RecipeType;
 import resonantinduction.archaic.blocks.ItemImprint;
 import universalelectricity.core.transform.region.Cuboid;
 import universalelectricity.core.transform.rotation.Quaternion;
@@ -151,7 +151,7 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
 
                     if (oreName != null && !oreName.equals("Unknown"))
                     {
-                        RecipeResource[] outputs = MachineRecipes.INSTANCE.getOutput(RecipeType.CRUSHER().toString(), oreName);
+                        RecipeResource[] outputs = MachineRecipes.INSTANCE.getOutput(RecipeType.CRUSHER.name(), oreName);
 
                         if (outputs != null && outputs.length > 0)
                         {

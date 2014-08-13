@@ -22,9 +22,9 @@ import resonant.lib.network.discriminator.PacketType;
 import resonant.lib.network.handle.IPacketReceiver;
 import resonant.lib.utility.FluidUtility;
 import resonant.lib.utility.inventory.InventoryUtility;
+import resonantinduction.core.RecipeType;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.ResonantInduction.RecipeType;
 import universalelectricity.core.transform.vector.Vector3;
 import resonant.lib.content.prefab.java.TileInventory;
 import com.google.common.io.ByteArrayDataInput;
@@ -93,7 +93,7 @@ public class TileCastingMold extends TileInventory implements IFluidHandler, IPa
 		Vector3 checkPos = new Vector3(this).add(0, 1, 0);
 		FluidStack drainStack = FluidUtility.drainBlock(worldObj, checkPos, false);
 
-		if (MachineRecipes.INSTANCE.getOutput(RecipeType.SMELTER().toString(), drainStack).length > 0)
+		if (MachineRecipes.INSTANCE.getOutput(RecipeType.SMELTER.name(), drainStack).length > 0)
 		{
 			if (drainStack.amount == tank.fill(drainStack, false))
 			{
@@ -106,7 +106,7 @@ public class TileCastingMold extends TileInventory implements IFluidHandler, IPa
 		 */
 		while (tank.getFluidAmount() >= amountPerIngot && (getStackInSlot(0) == null || getStackInSlot(0).stackSize < getStackInSlot(0).getMaxStackSize()))
 		{
-			RecipeResource[] outputs = MachineRecipes.INSTANCE.getOutput(RecipeType.SMELTER().toString(), tank.getFluid());
+			RecipeResource[] outputs = MachineRecipes.INSTANCE.getOutput(RecipeType.SMELTER.name(), tank.getFluid());
 
 			for (RecipeResource output : outputs)
 			{

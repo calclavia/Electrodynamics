@@ -13,7 +13,7 @@ import resonant.api.recipe.MachineRecipes;
 import resonant.api.recipe.RecipeResource;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.ResonantInduction.RecipeType;
+import resonantinduction.core.RecipeType;
 import resonantinduction.core.Timer;
 import universalelectricity.core.transform.region.Cuboid;
 import universalelectricity.core.transform.vector.Vector3;
@@ -192,14 +192,14 @@ public class TileGrindingWheel extends TileMechanical implements IRotatable
 
 	public boolean canGrind(ItemStack itemStack)
 	{
-		return MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER().toString(), itemStack).length > 0;
+		return MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER.name(), itemStack).length > 0;
 	}
 
 	private boolean doGrind(EntityItem entity)
 	{
 		ItemStack itemStack = entity.getEntityItem();
 
-		RecipeResource[] results = MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER().toString(), itemStack);
+		RecipeResource[] results = MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER.name(), itemStack);
 
 		for (RecipeResource resource : results)
 		{

@@ -2,6 +2,7 @@ package resonantinduction.mechanical.process.crusher;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.ReflectionHelper;
+import resonantinduction.core.RecipeType;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
 import resonantinduction.mechanical.energy.grid.TileMechanical;
 import net.minecraft.block.Block;
@@ -96,7 +97,7 @@ public class TileMechanicalPiston extends TileMechanical implements IRotatable
             final int startBreakCount = breakCount;
 
             ItemStack blockStack = new ItemStack(block);
-            RecipeResource[] resources = MachineRecipes.INSTANCE.getOutput(ResonantInduction.RecipeType.CRUSHER().toString(), blockStack);
+            RecipeResource[] resources = MachineRecipes.INSTANCE.getOutput(RecipeType.CRUSHER.name(), blockStack);
 
             if (resources.length > 0)
             {

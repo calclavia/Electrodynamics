@@ -9,7 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.fluids.FluidStack;
 import resonant.api.recipe.MachineRecipes;
-import resonantinduction.core.ResonantInduction.RecipeType;
+import resonantinduction.core.RecipeType;
 import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.TileMaterial;
 
@@ -38,7 +38,7 @@ public class TileFluidMixture extends TileMaterial
 
 	public boolean mix(ItemStack itemStack)
 	{
-		if (MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER().toString(), itemStack).length > 0 && getBlockMetadata() < 8)
+		if (MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER.name(), itemStack).length > 0 && getBlockMetadata() < 8)
 		{
 			// TODO: Maybe we need to merge the stacks?
 			items.add(itemStack);

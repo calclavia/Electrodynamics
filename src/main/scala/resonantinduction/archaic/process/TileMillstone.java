@@ -22,7 +22,7 @@ import resonant.lib.network.handle.IPacketReceiver;
 import resonant.lib.utility.inventory.InventoryUtility;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.ResonantInduction.RecipeType;
+import resonantinduction.core.RecipeType;
 import resonantinduction.mechanical.gear.ItemHandCrank;
 import universalelectricity.core.transform.vector.Vector3;
 import resonant.lib.content.prefab.java.TileInventory;
@@ -45,7 +45,7 @@ public class TileMillstone extends TileInventory implements IPacketReceiver
 
 	public void doGrind(Vector3 spawnPos)
 	{
-		RecipeResource[] outputs = MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER().toString(), getStackInSlot(0));
+		RecipeResource[] outputs = MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER.name(), getStackInSlot(0));
 
 		if (outputs.length > 0)
 		{
@@ -71,7 +71,7 @@ public class TileMillstone extends TileInventory implements IPacketReceiver
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemStack)
 	{
-		return MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER().toString(), itemStack).length > 0;
+		return MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER.name(), itemStack).length > 0;
 	}
 
 	@Override

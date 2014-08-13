@@ -10,7 +10,7 @@ import universalelectricity.core.grid.{TickingGrid, UpdateTicker}
  *
  * @author DarkCow, Calclavia
  */
-abstract class FluidDistributionGrid extends TickingGrid[TankNode] with IFluidHandler
+abstract class FluidDistributionGrid extends TickingGrid[TankNode](classOf[TankNode]) with IFluidHandler
 {
   val tank = new FluidTank(0)
   var needsUpdate = false
