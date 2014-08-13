@@ -1,35 +1,20 @@
 package resonantinduction.electrical
 
-import cpw.mods.fml.client.registry.RenderingRegistry
+import codechicken.multipart.{TMultiPart, TileMultipart}
+import cpw.mods.fml.client.FMLClientHandler
+import cpw.mods.fml.client.registry.{ClientRegistry, RenderingRegistry}
+import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.block.Block
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
-import net.minecraftforge.client.MinecraftForgeClient
-import net.minecraftforge.client.model.AdvancedModelLoader
-import resonantinduction.electrical.battery.RenderBattery
-import resonantinduction.electrical.battery.TileBattery
+import resonantinduction.electrical.battery.{RenderBattery, TileBattery}
 import resonantinduction.electrical.laser.BlockRenderingHandler
-import resonantinduction.electrical.laser.emitter.RenderLaserEmitter
-import resonantinduction.electrical.laser.focus.crystal.RenderFocusCrystal
-import resonantinduction.electrical.laser.focus.mirror.RenderMirror
-import resonantinduction.electrical.laser.fx.{EntityLaserFX, EntityBlockParticleFX, EntityScorchFX}
-import resonantinduction.electrical.levitator.RenderLevitator
-import resonantinduction.electrical.multimeter.GuiMultimeter
-import resonantinduction.electrical.multimeter.PartMultimeter
-import resonantinduction.electrical.multimeter.RenderMultimeter
+import resonantinduction.electrical.laser.fx.{EntityBlockParticleFX, EntityLaserFX, EntityScorchFX}
+import resonantinduction.electrical.multimeter.{GuiMultimeter, PartMultimeter}
 import resonantinduction.electrical.render.FXElectricBolt
-import resonantinduction.electrical.tesla.RenderTesla
-import resonantinduction.electrical.tesla.TileTesla
-import resonantinduction.electrical.transformer.RenderTransformer
-import resonantinduction.atomic.gate.RenderQuantumGlyph
+import resonantinduction.electrical.tesla.{RenderTesla, TileTesla}
 import universalelectricity.core.transform.vector.Vector3
-import codechicken.multipart.TMultiPart
-import codechicken.multipart.TileMultipart
-import cpw.mods.fml.client.FMLClientHandler
-import cpw.mods.fml.client.registry.ClientRegistry
-import cpw.mods.fml.relauncher.Side
-import cpw.mods.fml.relauncher.SideOnly
 
 /** @author Calclavia */
 @SideOnly(Side.CLIENT) class ClientProxy extends CommonProxy {
@@ -40,9 +25,9 @@ import cpw.mods.fml.relauncher.SideOnly
 
   override def init {
     RenderingRegistry.registerBlockHandler(new BlockRenderingHandler.type)
-    ClientRegistry.bindTileEntitySpecialRenderer(classOf(TileLaserEmitter), RenderLaserEmitter)
-    ClientRegistry.bindTileEntitySpecialRenderer(classOf(TileMirror), RenderMirror)
-    ClientRegistry.bindTileEntitySpecialRenderer(classOf(TileFocusCrystal), RenderFocusCrystal)
+    //ClientRegistry.bindTileEntitySpecialRenderer(classOf(TileLaserEmitter), RenderLaserEmitter)
+    //ClientRegistry.bindTileEntitySpecialRenderer(classOf(TileMirror), RenderMirror)
+    //ClientRegistry.bindTileEntitySpecialRenderer(classOf(TileFocusCrystal), RenderFocusCrystal)
   }
 
   override def postInit {

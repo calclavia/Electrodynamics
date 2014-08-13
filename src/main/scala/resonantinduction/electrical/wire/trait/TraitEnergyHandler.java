@@ -110,7 +110,7 @@ public class TraitEnergyHandler extends TileMultipart implements IEnergyHandler
 	}
 
 	@Override
-	public boolean canInterface(ForgeDirection from)
+	public boolean canConnectEnergy(ForgeDirection from)
 	{
 		if (this.partMap(from.ordinal()) == null)
 		{
@@ -122,7 +122,7 @@ public class TraitEnergyHandler extends TileMultipart implements IEnergyHandler
 
 					if (this.teConductorInterfaces.contains(part))
 					{
-						return ((IEnergyHandler) part).canInterface(from);
+						return ((IEnergyHandler) part).canConnectEnergy(from);
 					}
 				}
 			}
@@ -130,7 +130,7 @@ public class TraitEnergyHandler extends TileMultipart implements IEnergyHandler
 
 		for (IEnergyHandler handler : this.teInterfaces)
 		{
-			return handler.canInterface(from);
+			return handler.canConnectEnergy(from);
 		}
 
 		return false;

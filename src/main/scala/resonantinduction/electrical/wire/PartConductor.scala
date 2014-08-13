@@ -1,18 +1,16 @@
 package resonantinduction.electrical.wire
 
-import ic2.api.energy.event.EnergyTileLoadEvent
-import ic2.api.energy.event.EnergyTileUnloadEvent
+import codechicken.multipart.TMultiPart
+import ic2.api.energy.event.{EnergyTileLoadEvent, EnergyTileUnloadEvent}
 import ic2.api.energy.tile.IEnergyTile
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
-import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.common.MinecraftForge
+import net.minecraftforge.common.util.ForgeDirection
 import resonantinduction.core.prefab.part.TraitPart
-import universalelectricity.api.UniversalClass
 import universalelectricity.compatibility.Compatibility
-import universalelectricity.core.transform.vector.Vector3
-import codechicken.multipart.TMultiPart
-import universalelectricity.core.transform.vector.VectorWorld
+import universalelectricity.core.transform.vector.{Vector3, VectorWorld}
+
 import scala.util.control.Breaks._
 
 
@@ -74,14 +72,13 @@ abstract class PartConductor extends TMultiPart with TraitPart {
   {
     if (!world.isRemote)
     {
-      this.getNetwork.split(this)
+      //this.getNetwork.split(this)
       if (tile.isInstanceOf[IEnergyTile]) {
         var foundAnotherPart: Boolean = false
-        var i: Int = 0
         for(i <- 0 until tile.partList.size)
         {
           val part: TMultiPart = tile.partMap(i)
-          if (part.isInstanceOf[IEnergyTile] && part ne this) {
+          if (part.isInstanceOf[IEnergyTile] && part != this) {
             foundAnotherPart = true
             break //todo: break is not supported
           }

@@ -3,10 +3,7 @@ package resonantinduction.electrical.wire.flat;
 import java.util.Arrays;
 import java.util.LinkedList;
 
-import codechicken.lib.render.uv.IconTransformation;
-import codechicken.lib.render.uv.UV;
-import codechicken.lib.render.uv.UVScale;
-import codechicken.lib.render.uv.UVTranslation;
+import codechicken.lib.render.uv.*;
 import net.minecraft.util.IIcon;
 import codechicken.lib.lighting.LightModel;
 import codechicken.lib.math.MathHelper;
@@ -24,7 +21,7 @@ public class RenderFlatWire
 {
 	public static IIcon flatWireTexture;
 
-	public static class UVT implements IUVTransformation
+	public static class UVT extends UVTransformation
 	{
 		public Transformation t;
 		private Vector3 vec = new Vector3();
@@ -34,13 +31,18 @@ public class RenderFlatWire
 			this.t = t;
 		}
 
-		@Override
-		public void transform(UV uv)
-		{
-			vec.set(uv.u, 0, uv.v).apply(t);
-			uv.set(vec.x, vec.z);
-		}
-	}
+        @Override
+        public void apply(UV uv)
+        {
+            vec.set(uv.u, 0, uv.v).apply(t);
+            uv.set(vec.x, vec.z);
+        }
+
+        @Override
+        public UVTransformation inverse() {
+            return null;
+        }
+    }
 
 	public static int[] reorientSide = new int[] { 0, 3, 3, 0, 0, 3 };
 
@@ -285,7 +287,7 @@ public class RenderFlatWire
 
 			if (r != 0)
 			{
-				IUVTransformation uvt = new UVT(Rotation.quarterRotations[r % 4].at(new Vector3(8, 0, 16)));
+				UVTransformation uvt = new UVT(Rotation.quarterRotations[r % 4].at(new Vector3(8, 0, 16)));
 				for (Vertex5 vert : verts)
 					vert.apply(uvt);
 			}
@@ -408,9 +410,10 @@ public class RenderFlatWire
 
 	public static void render(PartFlatWire w, Vector3 pos)
 	{
-		IVertexModifier m = w.getColour().pack() == -1 ? ColourModifier.instance : new ColourMultiplier(w.getColour());
-		CCModel model = getOrGenerateModel(modelKey(w));
-		model.render(new Translation(pos), new IconTransformation(w.getIcon()), m);
+        //TODO
+		//IVertexModifier m = w.getColour().pack() == -1 ? ColourModifier.instance : new ColourMultiplier(w.getColour());
+		//CCModel model = getOrGenerateModel(modelKey(w));
+		//model.render(new Translation(pos), new IconTransformation(w.getIcon()), m);
 	}
 
 	public static void renderInv(int thickness, Transformation t, IIcon icon)
@@ -463,7 +466,7 @@ public class RenderFlatWire
 			}
 		}
 
-		for (Cuboid6 box : boxes)
-			RenderUtils.renderBlock(box, 0, new Translation(wire.x(), wire.y(), wire.z()), new IconTransformation(icon), null);
+		//TODO for (Cuboid6 box : boxes)
+			//RenderUtils.renderBlock(box, 0, new Translation(wire.x(), wire.y(), wire.z()), new IconTransformation(icon), null);
 	}
 }

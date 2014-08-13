@@ -16,9 +16,6 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.util.ForgeDirection;
 import resonant.lib.prefab.damage.ElectricalDamage;
 import resonantinduction.core.prefab.part.MultipartUtility;
-import universalelectricity.api.CompatibilityModule;
-import universalelectricity.api.electricity.IElectricalNetwork;
-import universalelectricity.api.energy.IConductor;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import codechicken.multipart.IRedstonePart;
@@ -78,13 +75,13 @@ public abstract class PartAdvancedWire extends PartConductor
         return Compatibility.isHandler(obj);
     }
 
-    @Override
+    //@Override
     public float getResistance()
     {
         return this.getMaterial().resistance;
     }
 
-    @Override
+    //@Override
     public long getCurrentCapacity()
     {
         return this.getMaterial().maxAmps;
@@ -190,7 +187,7 @@ public abstract class PartAdvancedWire extends PartConductor
                 this.setColor(dyeColor);
                 return true;
             }
-            else if (itemStack.itemID == insulationType.itemID)
+            else if (itemStack.getItem() == insulationType.getItem())
             {
                 if (this.isInsulated())
                 {
@@ -209,7 +206,7 @@ public abstract class PartAdvancedWire extends PartConductor
                         player.inventory.decrStackSize(player.inventory.currentItem, 1);
                     }
 
-                    this.setInsulated(BlockColored.getDyeFromBlock(itemStack.getItemDamage()));
+                    this.setInsulated(itemStack.getItemDamage());
                     return true;
                 }
             }
@@ -229,7 +226,7 @@ public abstract class PartAdvancedWire extends PartConductor
     }
 
     @Override
-    protected ItemStack getItem()
+    public ItemStack getItem()
     {
         return EnumWireMaterial.values()[getMaterialID()].getWire();
     }
@@ -304,7 +301,7 @@ public abstract class PartAdvancedWire extends PartConductor
     }
 
     @Override
-    protected boolean checkRedstone(int side)
+    public boolean checkRedstone(int side)
     {
         if (this.world().isBlockIndirectlyGettingPowered(x(), y(), z()))
         {

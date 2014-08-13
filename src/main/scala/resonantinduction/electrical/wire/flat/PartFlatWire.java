@@ -25,7 +25,6 @@ import codechicken.lib.colour.Colour;
 import codechicken.lib.colour.ColourARGB;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
-import codechicken.lib.lighting.LazyLightMatrix;
 import codechicken.lib.raytracer.IndexedCuboid6;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.TextureUtils;
@@ -345,12 +344,12 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 
                         if (this.canConnectTo(tp, ForgeDirection.getOrientation(absDir)))
                         {
-                            this.connections[absDir] = tp;
+                            this.connections()[absDir] = tp;
 
                             if (tp instanceof PartFlatWire)
                             {
                                 // We found a wire, merge networks!
-                                this.getNetwork().merge(((PartFlatWire) tp).getNetwork());
+                                //this.getNetwork().merge(((PartFlatWire) tp).getNetwork());
                             }
 
                             calculatedSides[absDir] = true;
@@ -379,11 +378,11 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
                 if (this.canConnectTo(tp))
                 {
                     // We found a wire! Merge networks!
-                    this.connections[absDir] = tp;
+                    this.connections()[absDir] = tp;
 
                     if (tp instanceof PartFlatWire)
                     {
-                        this.getNetwork().merge(((PartFlatWire) tp).getNetwork());
+                        //this.getNetwork().merge(((PartFlatWire) tp).getNetwork());
                     }
                     continue;
                 }
@@ -398,7 +397,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
         // Connect to the face of the block the wire is placed on.
         this.setExternalConnection(-1, this.side);
 
-        this.getNetwork().reconstruct();
+        //this.getNetwork().reconstruct();
     }
 
     public boolean setExternalConnection(int r, int absSide)
@@ -420,15 +419,15 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
                 if (tp instanceof PartFlatWire && ((PartFlatWire) tp).canConnectTo(this, ForgeDirection.getOrientation(absSide).getOpposite()) && ((PartFlatWire) tp).maskOpen(otherR))
                 {
                     // We found a wire! Merge connection.
-                    connections[absSide] = tp;
-                    getNetwork().merge(((PartFlatWire) tp).getNetwork());
+                    connections()[absSide] = tp;
+                    //getNetwork().merge(((PartFlatWire) tp).getNetwork());
                     return true;
                 }
 
                 /** Check for a micro-energy block */
                 if (canConnectTo(tp))
                 {
-                    connections[absSide] = tp;
+                    connections()[absSide] = tp;
                     return true;
                 }
             }
@@ -441,7 +440,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 
         if (this.canConnectTo(tileEntity, ForgeDirection.getOrientation(absSide)))
         {
-            this.connections[absSide] = tileEntity;
+            this.connections()[absSide] = tileEntity;
             return true;
         }
 
@@ -454,17 +453,17 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
     {
         if (!this.world().isRemote)
         {
-            if (this.connections[i] != null)
+            if (this.connections()[i] != null)
             {
-                if (this.connections[i] instanceof PartFlatWire)
+                if (this.connections()[i] instanceof PartFlatWire)
                 {
-                    PartFlatWire wire = (PartFlatWire) this.connections[i];
-                    this.connections[i] = null;
-                    this.getNetwork().split(this, wire);
+                    PartFlatWire wire = (PartFlatWire) this.connections()[i];
+                    this.connections()[i] = null;
+                    //this.getNetwork().split(this, wire);
                 }
                 else
                 {
-                    this.connections[i] = null;
+                    this.connections()[i] = null;
                 }
             }
         }
@@ -473,7 +472,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
     @Override
     public Object[] getConnections()
     {
-        return this.connections;
+        return this.connections();
     }
 
     public boolean canStay()
@@ -908,14 +907,16 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void renderStatic(Vector3 pos, LazyLightMatrix olm, int pass)
+    public boolean renderStatic(Vector3 pos, int pass)
     {
         if (pass == 0 && useStaticRenderer())
         {
             CCRenderState.setBrightness(world(), x(), y(), z());
             RenderFlatWire.render(this, pos);
             CCRenderState.setColour(-1);
+            return true;
         }
+        return false;
     }
 
     @Override
@@ -926,7 +927,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
         {
             GL11.glDisable(GL11.GL_LIGHTING);
             TextureUtils.bindAtlas(0);
-            CCRenderState.useModelColours(true);
+            //CCRenderState.useModelColours(true);
             CCRenderState.startDrawing(7);
             RenderFlatWire.render(this, pos);
             CCRenderState.draw();
@@ -951,12 +952,12 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
     {
         this.isInsulated = otherCable.isInsulated;
         this.color = otherCable.color;
-        this.connections = otherCable.connections;
+        this.connections_$eq(otherCable.connections());
         this.material = otherCable.material;
         this.side = otherCable.side;
         this.connMap = otherCable.connMap;
-        this.setNetwork(otherCable.getNetwork());
-        this.getNetwork().setBufferFor(this, otherCable.getNetwork().getBufferOf(otherCable));
+        //this.setNetwork(otherCable.getNetwork());
+        //this.getNetwork().setBufferFor(this, otherCable.getNetwork().getBufferOf(otherCable));
     }
 
     @Override
