@@ -1,14 +1,8 @@
 package resonantinduction.electrical;
 
-import resonantinduction.electrical.charger.PartCharger;
-import resonantinduction.electrical.itemrailing.PartRailing;
 import resonantinduction.electrical.levitator.PartLevitator;
 import resonantinduction.electrical.multimeter.PartMultimeter;
 import resonantinduction.electrical.transformer.PartElectricTransformer;
-import resonantinduction.electrical.wire.flat.PartFlatSwitchWire;
-import resonantinduction.electrical.wire.flat.PartFlatWire;
-import resonantinduction.electrical.wire.framed.PartFramedSwitchWire;
-import resonantinduction.electrical.wire.framed.PartFramedWire;
 import resonantinduction.atomic.gate.PartQuantumGlyph;
 import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.MultiPartRegistry.IPartFactory;
@@ -38,11 +32,11 @@ public class MultipartElectrical implements IPartFactory
 			//return new PartFramedWire();
 		//else if (name.equals("resonant_induction_switch_wire"))
 			//return new PartFramedSwitchWire();
-		if (name.equals("resonant_induction_flat_wire"))
-			return new PartFlatWire();
-		else if (name.equals("resonant_induction_flat_switch_wire"))
-			return new PartFlatSwitchWire();
-		else if (name.equals("resonant_induction_multimeter"))
+		//if (name.equals("resonant_induction_flat_wire"))
+			//return new PartFlatWire();
+		//else if (name.equals("resonant_induction_flat_switch_wire"))
+			//return new PartFlatSwitchWire();
+		if (name.equals("resonant_induction_multimeter"))
 			return new PartMultimeter();
 		else if (name.equals("resonant_induction_transformer"))
 			return new PartElectricTransformer();
