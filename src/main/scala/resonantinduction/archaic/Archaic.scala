@@ -11,7 +11,7 @@ import net.minecraftforge.oredict.{OreDictionary, ShapedOreRecipe}
 import resonant.content.loader.ModManager
 import resonant.lib.recipe.UniversalRecipe
 import resonantinduction.archaic.blocks.{ItemImprint, TileImprinter, TileTurntable}
-import resonantinduction.archaic.crate.{BlockCrate, CrateRecipe, ItemBlockCrate, TileCrate}
+import resonantinduction.archaic.crate.CrateRecipe
 import resonantinduction.archaic.engineering.{ItemHammer, TileEngineeringTable}
 import resonantinduction.archaic.firebox.{TileFirebox, TileHotPlate}
 import resonantinduction.archaic.fluid.grate.TileGrate
@@ -39,7 +39,7 @@ object Archaic {
         NetworkRegistry.INSTANCE.registerGuiHandler( this, proxy )
         Settings.config.load()
         ArchaicBlocks.blockEngineeringTable = contentRegistry.newBlock(classOf[ TileEngineeringTable])
-        ArchaicBlocks.blockCrate = contentRegistry.newBlock( classOf[ BlockCrate ], classOf[ ItemBlockCrate ], classOf[ TileCrate ] )
+        //ArchaicBlocks.blockCrate = contentRegistry.newBlock( classOf[ BlockCrate ], classOf[ ItemBlockCrate ], classOf[ TileCrate ] )
         ArchaicBlocks.blockImprinter = contentRegistry.newBlock(classOf[ TileImprinter ] )
         ArchaicBlocks.blockTurntable = contentRegistry.newBlock( classOf[ TileTurntable ] )
         ArchaicBlocks.blockFirebox = contentRegistry.newBlock(classOf[ TileFirebox ] )

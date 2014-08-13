@@ -105,7 +105,7 @@ object Atomic {
   final val contentRegistry: ModManager = new ModManager().setPrefix(Reference.prefix).setTab(ResonantTab.tab)
   private final val SUPPORTED_LANGUAGES: Array[String] = Array[String]("en_US", "pl_PL", "de_DE", "ru_RU")
   var INSTANCE = this
-  @SidedProxy(clientSide = "ClientProxy", serverSide = "CommonProxy") var proxy: CommonProxy = null
+  @SidedProxy(clientSide = "resonantinduction.atomic.ClientProxy", serverSide = "resonantinduction.atomic.CommonProxy") var proxy: CommonProxy = null
   @Mod.Metadata("ResonantInduction|Atomic") var metadata: ModMetadata = null
 
   @EventHandler def preInit(event: FMLPreInitializationEvent) {

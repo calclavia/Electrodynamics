@@ -49,7 +49,7 @@ import java.sql.Ref;
  * 
  * @author DarkCow, Calclavia
  */
-@Mod(modid = Mechanical.ID, name = "Resonant Induction Mechanical", version = "", dependencies = "before:ThermalExpansion;required-after:ResonantInductionCore;after:ResonantInduction|Archaic", modLanguage = "scala")
+@Mod(modid = Mechanical.ID, name = "Resonant Induction Mechanical", version = "", dependencies = "before:ThermalExpansion;required-after:ResonantInductionCore;after:ResonantInduction|Archaic")
 public class Mechanical
 {
 	/** Mod Information */
@@ -59,7 +59,7 @@ public class Mechanical
 	@Instance(ID)
 	public static Mechanical INSTANCE;
 
-	@SidedProxy(clientSide = "ClientProxy", serverSide = "CommonProxy")
+	@SidedProxy(clientSide = "resonantinduction.mechanical.ClientProxy", serverSide = "resonantinduction.mechanical.CommonProxy")
 	public static CommonProxy proxy;
 
 	@Mod.Metadata(ID)

@@ -40,7 +40,7 @@ object Electrical {
 
   var INSTANCE  = this
 
-  @SidedProxy(clientSide = "ClientProxy", serverSide = "CommonProxy")
+  @SidedProxy(clientSide = "resonantinduction.electrical.ClientProxy", serverSide = "resonantinduction.electrical.CommonProxy")
   var proxy: CommonProxy = null
 
   @Mod.Metadata("ResonantInduction|Electrical")
