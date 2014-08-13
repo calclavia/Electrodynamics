@@ -15,7 +15,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderPlasmaHeater extends RenderTaggedTile
 {
-    public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.modelPath() + "fusionReactor.tcn"));
+    public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelPath() + "fusionReactor.tcn"));
     public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.domain(), Reference.modelPath() + "fusionReactor.png");
 
     @Override
