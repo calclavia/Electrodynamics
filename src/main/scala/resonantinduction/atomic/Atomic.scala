@@ -135,9 +135,15 @@ object Atomic {
     AtomicContent.FLUIDSTACK_DEUTERIUM = new FluidStack(FluidRegistry.getFluidID("deuterium"), 0)
     AtomicContent.FLUIDSTACK_TRITIUM = new FluidStack(FluidRegistry.getFluidID("tritium"), 0)
     AtomicContent.FLUIDSTACK_TOXIC_WASTE = new FluidStack(FluidRegistry.getFluidID("toxicwaste"), 0)
+
     AtomicContent.blockRadioactive = new BlockRadioactive(Material.rock).setBlockName(Reference.prefix + "radioactive").setBlockTextureName(Reference.prefix + "radioactive").setCreativeTab(CreativeTabs.tabBlock)
     AtomicContent.blockUraniumOre = new BlockUraniumOre
     AtomicContent.blockToxicWaste = new BlockToxicWaste().setCreativeTab(null)
+
+    GameRegistry.registerBlock(AtomicContent.blockRadioactive, "blockRadioactive");
+    GameRegistry.registerBlock(AtomicContent.blockUraniumOre, "blockUraniumOre");
+    GameRegistry.registerBlock(AtomicContent.blockToxicWaste, "blockToxicWaste");
+
     AtomicContent.blockCentrifuge = Atomic.contentRegistry.newBlock(classOf[TileCentrifuge])
     AtomicContent.blockReactorCell = Atomic.contentRegistry.newBlock(classOf[TileReactorCell])
     AtomicContent.blockNuclearBoiler = Atomic.contentRegistry.newBlock(classOf[TileNuclearBoiler])
@@ -152,6 +158,7 @@ object Atomic {
     AtomicContent.blockAccelerator = Atomic.contentRegistry.newBlock(classOf[TileAccelerator])
     AtomicContent.blockFulmination = Atomic.contentRegistry.newBlock(classOf[TileFulmination])
     AtomicContent.blockQuantumAssembler = Atomic.contentRegistry.newBlock(classOf[TileQuantumAssembler])
+
     AtomicContent.itemHazmatTop = new ItemHazmat("HazmatMask", 0)
     AtomicContent.itemHazmatBody = new ItemHazmat("HazmatBody", 1)
     AtomicContent.itemHazmatLeggings = new ItemHazmat("HazmatLeggings", 2)
@@ -166,15 +173,34 @@ object Atomic {
     AtomicContent.itemBreedingRod = new ItemBreederFuel().setUnlocalizedName("rodBreederFuel")
     AtomicContent.itemYellowCake = new ItemRadioactive().setUnlocalizedName("yellowcake")
     AtomicContent.itemUranium = Atomic.contentRegistry.newItem(classOf[ItemUranium])
+
+    GameRegistry.registerItem(AtomicContent.itemHazmatTop, "HazmatMask", "ResonantInduction|Atomic");
+    GameRegistry.registerItem(AtomicContent.itemHazmatBody, "HazmatBody", "ResonantInduction|Atomic");
+    GameRegistry.registerItem(AtomicContent.itemHazmatLeggings, "HazmatLeggins", "ResonantInduction|Atomic");
+    GameRegistry.registerItem(AtomicContent.itemHazmatBoots, "HazmatBoots", "ResonantInduction|Atomic");
+    GameRegistry.registerItem(AtomicContent.itemCell, "cellEmpty", "ResonantInduction|Atomic");
+    GameRegistry.registerItem(AtomicContent.itemFissileFuel, "FissileFuel", "ResonantInduction|Atomic");
+    GameRegistry.registerItem(AtomicContent.itemDeuteriumCell, "DeuteriumCell", "ResonantInduction|Atomic");
+    GameRegistry.registerItem(AtomicContent.itemTritiumCell, "TritiumCell", "ResonantInduction|Atomic");
+    GameRegistry.registerItem(AtomicContent.itemWaterCell, "WaterCell", "ResonantInduction|Atomic");
+    GameRegistry.registerItem(AtomicContent.itemDarkMatter, "DarkMatter", "ResonantInduction|Atomic");
+    GameRegistry.registerItem(AtomicContent.itemAntimatter, "ItemAntimatter", "ResonantInduction|Atomic");
+    GameRegistry.registerItem(AtomicContent.itemBreedingRod, "BreedingRod", "ResonantInduction|Atomic");
+    GameRegistry.registerItem(AtomicContent.itemYellowCake, "YellowCake", "ResonantInduction|Atomic");
+    GameRegistry.registerItem(AtomicContent.itemUranium, "ItemUranium", "ResonantInduction|Atomic");
+
     AtomicContent.FLUID_PLASMA.setBlock(AtomicContent.blockPlasma)
     AtomicContent.itemBucketToxic = new ItemBucket(AtomicContent.blockPlasma).setCreativeTab(ResonantTab.tab).setUnlocalizedName(Reference.prefix + "bucketToxicWaste").setContainerItem(Items.bucket).setTextureName(Reference.prefix + "bucketToxicWaste")
     FluidContainerRegistry.registerFluidContainer(FluidRegistry.getFluid("toxicwaste"), new ItemStack(AtomicContent.itemBucketToxic), new ItemStack(Items.bucket))
     FluidContainerRegistry.registerFluidContainer(FluidRegistry.WATER, new ItemStack(AtomicContent.itemWaterCell), new ItemStack(AtomicContent.itemCell))
     FluidContainerRegistry.registerFluidContainer(new FluidStack(FluidRegistry.getFluid("deuterium"), 200), new ItemStack(AtomicContent.itemDeuteriumCell), new ItemStack(AtomicContent.itemCell))
     FluidContainerRegistry.registerFluidContainer(new FluidStack(FluidRegistry.getFluid("tritium"), 200), new ItemStack(AtomicContent.itemTritiumCell), new ItemStack(AtomicContent.itemCell))
-    if (OreDictionary.getOres("oreUranium").size > 1 && Settings.config.get(Configuration.CATEGORY_GENERAL, "Auto Disable Uranium If Exist", false).getBoolean(false)) {
+    if (OreDictionary.getOres("oreUranium").size > 1 && Settings.config.get(Configuration.CATEGORY_GENERAL, "Auto Disable Uranium If Exist", false).getBoolean(false))
+    {
+
     }
-    else {
+    else
+    {
       AtomicContent.uraniumOreGeneration = new OreGenReplaceStone("Uranium Ore", new ItemStack(AtomicContent.blockUraniumOre), 25, 9, 3)
       AtomicContent.uraniumOreGeneration.enable(Settings.config)
       //OreGenerator.addOre(AtomicContent.uraniumOreGeneration)
