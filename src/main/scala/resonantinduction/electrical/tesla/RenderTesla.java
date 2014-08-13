@@ -23,9 +23,9 @@ public class RenderTesla extends TileEntitySpecialRenderer
 	public static final ResourceLocation TEXTURE_MIDDLE = new ResourceLocation(Reference.domain(), Reference.modelPath() + "tesla_middle.png");
 	public static final ResourceLocation TEXTURE_TOP = new ResourceLocation(Reference.domain(), Reference.modelPath() + "tesla_top.png");
 
-	public static final IModelCustom MODEL_BOTTOM = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelDirectory() + "teslaBottom.tcn"));
-	public static final IModelCustom MODEL_MIDDLE = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelDirectory() + "teslaMiddle.tcn"));
-	public static final IModelCustom MODEL_TOP = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelDirectory() + "teslaTop.tcn"));
+	public static final IModelCustom MODEL_BOTTOM = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelPath() + "teslaBottom.tcn"));
+	public static final IModelCustom MODEL_MIDDLE = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelPath() + "teslaMiddle.tcn"));
+	public static final IModelCustom MODEL_TOP = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelPath() + "teslaTop.tcn"));
 
 	@Override
 	public void renderTileEntityAt(TileEntity t, double x, double y, double z, float f)

@@ -187,7 +187,6 @@ object Atomic {
     GameRegistry.registerItem(AtomicContent.itemAntimatter, "ItemAntimatter", "ResonantInduction|Atomic");
     GameRegistry.registerItem(AtomicContent.itemBreedingRod, "BreedingRod", "ResonantInduction|Atomic");
     GameRegistry.registerItem(AtomicContent.itemYellowCake, "YellowCake", "ResonantInduction|Atomic");
-    GameRegistry.registerItem(AtomicContent.itemUranium, "ItemUranium", "ResonantInduction|Atomic");
 
     AtomicContent.FLUID_PLASMA.setBlock(AtomicContent.blockPlasma)
     AtomicContent.itemBucketToxic = new ItemBucket(AtomicContent.blockPlasma).setCreativeTab(ResonantTab.tab).setUnlocalizedName(Reference.prefix + "bucketToxicWaste").setContainerItem(Items.bucket).setTextureName(Reference.prefix + "bucketToxicWaste")
