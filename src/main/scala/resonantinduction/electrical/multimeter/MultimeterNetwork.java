@@ -10,7 +10,6 @@ import resonant.lib.utility.LanguageUtility;
 import universalelectricity.api.UnitDisplay;
 import universalelectricity.api.core.grid.IUpdate;
 import universalelectricity.core.grid.Grid;
-import universalelectricity.core.grid.TickingGrid;
 import universalelectricity.core.grid.UpdateTicker;
 import universalelectricity.core.transform.vector.Vector3;
 

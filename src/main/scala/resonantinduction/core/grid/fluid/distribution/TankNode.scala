@@ -5,9 +5,9 @@ import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.{Fluid, FluidStack, FluidTankInfo, IFluidHandler}
 import resonant.lib.utility.WorldUtility
 import resonantinduction.core.grid.MultipartNode
-import universalelectricity.api.core.grid.INodeProvider
+import universalelectricity.api.core.grid.{ISave, IGridNode, INodeProvider}
 
-class TankNode(parent: INodeProvider) extends MultipartNode[Any](parent) with IFluidHandler
+class TankNode(parent: INodeProvider) extends MultipartNode(parent) with IFluidHandler with ISave with IGridNode
 {
   var maxFlowRate: Int = 20
   var maxPressure: Int = 100
@@ -80,15 +80,13 @@ class TankNode(parent: INodeProvider) extends MultipartNode[Any](parent) with IF
 
   override protected def newGrid() = new TankGrid
 
-  override def load(nbt: NBTTagCompound)
+  def load(nbt: NBTTagCompound)
   {
-    super.load(nbt)
     pressure = nbt.getInteger("pressure")
   }
 
-  override def save(nbt: NBTTagCompound)
+  def save(nbt: NBTTagCompound)
   {
-    super.save(nbt)
     nbt.setInteger("pressure", pressure)
   }
 

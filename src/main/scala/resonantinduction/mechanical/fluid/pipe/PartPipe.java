@@ -41,7 +41,6 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial> implements TSlott
     public void setMaterial(int i)
     {
         setMaterial(EnumPipeMaterial.values()[i]);
-
     }
 
     @Override

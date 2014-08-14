@@ -3,14 +3,14 @@ package resonantinduction.core.grid.fluid.distribution
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import resonantinduction.core.grid.fluid.TileTankNode
-import universalelectricity.core.grid.{TickingGrid, UpdateTicker}
+import universalelectricity.core.grid.{GridTicking, UpdateTicker}
 
 /**
  * Used for multiblock tanks to distribute fluid.
  *
  * @author DarkCow, Calclavia
  */
-abstract class FluidDistributionGrid extends TickingGrid[TankNode](classOf[TankNode]) with IFluidHandler
+abstract class FluidDistributionGrid extends GridTicking[TankNode](classOf[TankNode]) with IFluidHandler
 {
   val tank = new FluidTank(0)
   var needsUpdate = false

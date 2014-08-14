@@ -4,13 +4,13 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.util.ForgeDirection
 import universalelectricity.api.core.grid.INodeProvider
 import universalelectricity.compatibility.Compatibility
-import universalelectricity.core.grid.node.ElectricNode
+import universalelectricity.core.grid.node.NodeElectric
 import universalelectricity.core.transform.vector.VectorWorld
 
 /**
  * Created by robert on 8/11/2014.
  */
-class ElectricTransformerNode(parent: INodeProvider) extends ElectricNode(parent: INodeProvider)
+class ElectricTransformerNode(parent: INodeProvider) extends NodeElectric(parent: INodeProvider)
 {
   var connectionDirection : ForgeDirection = ForgeDirection.NORTH
   var input : Boolean = true;
