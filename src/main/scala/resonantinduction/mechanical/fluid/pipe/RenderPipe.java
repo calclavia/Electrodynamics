@@ -26,7 +26,7 @@ public class RenderPipe implements ISimpleItemRenderer
 {
 	public static final RenderPipe INSTANCE = new RenderPipe();
 
-	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.modelPath() + "pipe.tcn"));
+	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelPath() + "pipe.tcn"));
 	public static ResourceLocation TEXTURE = new ResourceLocation(Reference.domain(), Reference.modelPath() + "pipe.png");
 
 	public void render(PartPipe part, double x, double y, double z, float f)

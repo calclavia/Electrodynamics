@@ -18,7 +18,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderMechanicalPiston extends TileEntitySpecialRenderer
 {
-    public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.modelPath() + "piston/mechanicalPiston.tcn"));
+    public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelPath() + "piston/mechanicalPiston.tcn"));
     public static ResourceLocation TEXTURE = new ResourceLocation(Reference.domain(), Reference.modelPath() + "piston/mechanicalPiston_iron.png");
 
     @Override

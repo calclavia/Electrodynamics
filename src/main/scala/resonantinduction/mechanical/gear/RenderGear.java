@@ -19,7 +19,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class RenderGear implements ISimpleItemRenderer
 {
 	public static final RenderGear INSTANCE = new RenderGear();
-	public final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), "gears.obj"));
+	public final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelPath() + "gears.obj"));
 	
 
 	public void renderGear(int side, int tier, boolean isLarge, double angle)

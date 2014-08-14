@@ -41,7 +41,6 @@ public class TileGrindingWheel extends TileMechanical implements IRotatable
 		bounds(new Cuboid(0.05f, 0.05f, 0.05f, 0.95f, 0.95f, 0.95f));
 		isOpaqueCube(false);
 		normalRender(false);
-		customItemRender(true);
 		//rotationMask = Byte.parseByte("111111", 2);
 		setTextureName("material_steel_dark");
 	}

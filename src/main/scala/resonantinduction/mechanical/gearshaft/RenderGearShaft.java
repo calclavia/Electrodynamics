@@ -21,7 +21,7 @@ import cpw.mods.fml.relauncher.Side;
 public class RenderGearShaft implements ISimpleItemRenderer
 {
 	public static final RenderGearShaft INSTANCE = new RenderGearShaft();
-	public final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), "gears.obj"));
+	public final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelPath() + "gears.obj"));
 
 	@Override
 	public void renderInventoryItem(IItemRenderer.ItemRenderType type, ItemStack itemStack, Object... data)
