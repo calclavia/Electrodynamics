@@ -1,5 +1,6 @@
-package resonantinduction.core.prefab
+package resonantinduction.core.prefab.node
 
+import resonantinduction.core.prefab.TFluidHandler
 import universalelectricity.api.core.grid.INodeProvider
 
 /**

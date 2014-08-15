@@ -8,10 +8,9 @@ import net.minecraft.item.ItemStack
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.config.Configuration
 import org.modstats.{ModstatInfo, Modstats}
-import resonant.engine.References
+import resonant.engine.{References, ResonantEngine}
 import resonant.lib.config.ConfigHandler
 import resonant.lib.loadable.LoadableHandler
-import resonant.lib.network.netty.PacketManager
 import resonantinduction.core.handler.TextureHookHandler
 import resonantinduction.core.resource.ResourceGenerator
 
@@ -25,7 +24,7 @@ import scala.collection.convert.wrapAll._
 object ResonantInduction
 {
   /** Packets */
-  val packetHandler = new PacketManager(Reference.channel)
+  val packetHandler = ResonantEngine.instance.packetHandler
   val loadables = new LoadableHandler
 
   @SidedProxy(clientSide = "resonantinduction.core.ClientProxy", serverSide = "resonantinduction.core.CommonProxy")
