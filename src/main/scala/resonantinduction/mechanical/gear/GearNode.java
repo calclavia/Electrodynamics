@@ -81,11 +81,9 @@ public class GearNode extends MechanicalNode
 	}
 
 	@Override
-	public void recache()
+	public void buildConnections()
 	{
-		synchronized (this)
-		{
-			getConnections().clear();
+			connections.clear();
 
 			/** Only call refresh if this is the main block of a multiblock gear or a single gear block. */
 			if (!gear().getMultiBlock().isPrimary() || world() == null)
@@ -102,7 +100,7 @@ public class GearNode extends MechanicalNode
 
 				if (instance != null && instance != this && !(instance.getParent() instanceof PartGearShaft) && instance.canConnect(gear().placementSide.getOpposite(), this))
 				{
-					getConnections().put(instance, gear().placementSide);
+					addConnection(instance, gear().placementSide);
 				}
 			}
 
@@ -125,9 +123,9 @@ public class GearNode extends MechanicalNode
 					 * (the center), then we try to look for a gear shaft in the center. */
 					MechanicalNode instance = (MechanicalNode) ((INodeProvider) tile).getNode(MechanicalNode.class, checkDir == gear().placementSide.getOpposite() ? ForgeDirection.UNKNOWN : checkDir);
 
-					if (!getConnections().containsValue(checkDir) && instance != this && checkDir != gear().placementSide && instance != null && instance.canConnect(checkDir.getOpposite(), this))
+					if (!connections.containsValue(checkDir) && instance != this && checkDir != gear().placementSide && instance != null && instance.canConnect(checkDir.getOpposite(), this))
 					{
-						getConnections().put(instance, checkDir);
+						addConnection(instance, checkDir);
 					}
 				}
 			}
@@ -145,17 +143,16 @@ public class GearNode extends MechanicalNode
 				ForgeDirection checkDir = ForgeDirection.getOrientation(Rotation.rotateSide(gear().placementSide.ordinal(), i));
 				TileEntity checkTile = new universalelectricity.core.transform.vector.Vector3(gear().tile()).add(checkDir).getTileEntity(world());
 
-				if (!getConnections().containsValue(checkDir) && checkTile instanceof INodeProvider)
+				if (!connections.containsValue(checkDir) && checkTile instanceof INodeProvider)
 				{
 					MechanicalNode instance = (MechanicalNode) ((INodeProvider) checkTile).getNode(MechanicalNode.class, gear().placementSide);
 
 					if (instance != null && instance != this && instance.canConnect(checkDir.getOpposite(), this) && !(instance.getParent() instanceof PartGearShaft))
 					{
-						getConnections().put(instance, checkDir);
+						addConnection(instance, checkDir);
 					}
 				}
 			}
-		}
 	}
 
 	/**

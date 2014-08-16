@@ -19,6 +19,7 @@ import codechicken.multipart.TFacePart;
 import resonant.engine.ResonantEngine;
 import universalelectricity.api.core.grid.INode;
 import universalelectricity.api.core.grid.INodeProvider;
+import universalelectricity.core.transform.vector.VectorWorld;
 
 /** We assume all the force acting on the gear is 90 degrees.
  * 
@@ -220,14 +221,14 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
         return getItem();
     }
 
-    public universalelectricity.core.transform.vector.Vector3 getPosition()
+    public VectorWorld getPosition()
     {
-        return new universalelectricity.core.transform.vector.Vector3(x(), y(), z());
+        return new VectorWorld(world(), x(), y(), z());
     }
 
     @Override
     public String toString()
     {
-        return "[PartMech]" + x() + "x " + y() + "y " + z() + "z " + getSlotMask() + "s ";
+        return "[" + getClass().getSimpleName() +"]" + x() + "x " + y() + "y " + z() + "z " + getSlotMask() + "s ";
     }
 }

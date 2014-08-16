@@ -11,67 +11,42 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import resonant.lib.utility.nbt.ISaveObj;
 import resonantinduction.core.interfaces.IMechanicalNode;
+import resonantinduction.core.prefab.node.MultipartNode;
+import resonantinduction.mechanical.Mechanical;
 import universalelectricity.api.core.grid.INode;
 import universalelectricity.api.core.grid.INodeProvider;
 import universalelectricity.core.transform.vector.IVectorWorld;
 import universalelectricity.core.transform.vector.Vector3;
 import codechicken.multipart.TMultiPart;
+import universalelectricity.core.transform.vector.VectorWorld;
 
 /**
  * A resonantinduction.mechanical node for resonantinduction.mechanical energy.
  *
  * @author Calclavia, Darkguardsman
  */
-public class MechanicalNode implements IMechanicalNode, ISaveObj, IVectorWorld
+public class MechanicalNode extends MultipartNode implements IMechanicalNode, ISaveObj, IVectorWorld
 {
-	/**
-	 * Is debug enabled for the node
-	 */
-	public boolean doDebug = false;
-	/**
-	 * Used to note that you should trigger a packet update for rotation
-	 */
 	public boolean markRotationUpdate = false;
 	public boolean markTorqueUpdate = false;
-	/**
-	 * Which section of debug is enabled
-	 */
-	public int debugCue = 0, maxDebugCue = 1, minDebugCue = 0;
-	public static final int UPDATE_DEBUG = 0, CONNECTION_DEBUG = 1;
-	/**
-	 * Rotational Force
-	 */
+
 	public double torque = 0, prevTorque;
-	/**
-	 * Rotational speed
-	 */
 	public double prevAngularVelocity, angularVelocity = 0;
-	/**
-	 * Rotational acceleration
-	 */
+    public double renderAngle = 0, prev_angle = 0;
+
 	public float acceleration = 2f;
 
-	/**
-	 * The current rotation of the resonantinduction.mechanical node.
-	 */
-	public double renderAngle = 0, prev_angle = 0;
-	/**
-	 * Limits the max distance an object can rotate in a single update
-	 */
-	protected double maxDeltaAngle = Math.toRadians(180);
 
+	protected double maxDeltaAngle = Math.toRadians(120);
 	protected double load = 2;
-	protected byte connectionMap = Byte.parseByte("111111", 2);
 
 	private double power = 0;
-	private INodeProvider parent;
-	private long ticks = 0;
 
-	private final AbstractMap<MechanicalNode, ForgeDirection> connections = new WeakHashMap<MechanicalNode, ForgeDirection>();
+	private long ticks = 0;
 
 	public MechanicalNode(INodeProvider parent)
 	{
-		this.setParent(parent);
+		super(parent);
 	}
 
 	@Override
@@ -105,11 +80,6 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj, IVectorWorld
 		if (ticks >= Long.MAX_VALUE)
 		{
 			ticks = 1;
-		}
-		//temp, TODO find a better way to trigger this
-		if (ticks % 100 == 0)
-		{
-			this.recache();
 		}
 		//-----------------------------------
 		// Render Update
@@ -164,55 +134,52 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj, IVectorWorld
 			}
 
 			power = getEnergy() / deltaTime;
+            Iterator<Entry<Object, ForgeDirection>> it = connections.entrySet().iterator();
 
-			//-----------------------------------
-			// Connection application of force and speed
-			//-----------------------------------
-			synchronized (getConnections())
-			{
-				Iterator<Entry<MechanicalNode, ForgeDirection>> it = getConnections().entrySet().iterator();
+            while (it.hasNext())
+            {
+                MechanicalNode adjacentMech = null;
+                Entry<Object, ForgeDirection> entry = it.next();
+                ForgeDirection dir = entry.getValue();
 
-				while (it.hasNext())
-				{
-					Entry<MechanicalNode, ForgeDirection> entry = it.next();
+                if (entry.getKey() instanceof Mechanical) adjacentMech = (MechanicalNode) entry.getKey();
+                if (entry.getKey() instanceof INodeProvider)
+                {
+                    INode node = ((INodeProvider) entry.getKey()).getNode(MechanicalNode.class, dir.getOpposite());
+                    if(node instanceof MechanicalNode)
+                        adjacentMech = (MechanicalNode) node;
+                }
+                if (adjacentMech != null)
+                {
+                    /** Calculate angular velocity and torque. */
+                    float ratio = adjacentMech.getRatio(dir.getOpposite(), this) / getRatio(dir, adjacentMech);
+                    boolean inverseRotation = inverseRotation(dir, adjacentMech) && adjacentMech.inverseRotation(dir.getOpposite(), this);
 
-					ForgeDirection dir = entry.getValue();
-					MechanicalNode adjacentMech = entry.getKey();
-					/** Calculate angular velocity and torque. */
-					float ratio = adjacentMech.getRatio(dir.getOpposite(), this) / getRatio(dir, adjacentMech);
-					boolean inverseRotation = inverseRotation(dir, adjacentMech) && adjacentMech.inverseRotation(dir.getOpposite(), this);
+                    int inversion = inverseRotation ? -1 : 1;
 
-					int inversion = inverseRotation ? -1 : 1;
+                    double targetTorque = inversion * adjacentMech.getTorque() / ratio;
+                    double applyTorque = targetTorque * acceleration;
 
-					double targetTorque = inversion * adjacentMech.getTorque() / ratio;
-					double applyTorque = targetTorque * acceleration;
+                    if (Math.abs(torque + applyTorque) < Math.abs(targetTorque)) {
+                        torque += applyTorque;
+                    } else if (Math.abs(torque - applyTorque) > Math.abs(targetTorque)) {
+                        torque -= applyTorque;
+                    }
 
-					if (Math.abs(torque + applyTorque) < Math.abs(targetTorque))
-					{
-						torque += applyTorque;
-					}
-					else if (Math.abs(torque - applyTorque) > Math.abs(targetTorque))
-					{
-						torque -= applyTorque;
-					}
+                    double targetVelocity = inversion * adjacentMech.getAngularSpeed() * ratio;
+                    double applyVelocity = targetVelocity * acceleration;
 
-					double targetVelocity = inversion * adjacentMech.getAngularSpeed() * ratio;
-					double applyVelocity = targetVelocity * acceleration;
+                    if (Math.abs(angularVelocity + applyVelocity) < Math.abs(targetVelocity)) {
+                        angularVelocity += applyVelocity;
+                    } else if (Math.abs(angularVelocity - applyVelocity) > Math.abs(targetVelocity)) {
+                        angularVelocity -= applyVelocity;
+                    }
 
-					if (Math.abs(angularVelocity + applyVelocity) < Math.abs(targetVelocity))
-					{
-						angularVelocity += applyVelocity;
-					}
-					else if (Math.abs(angularVelocity - applyVelocity) > Math.abs(targetVelocity))
-					{
-						angularVelocity -= applyVelocity;
-					}
-
-					/** Set all current rotations */
-					// adjacentMech.angle = Math.abs(angle) * (adjacentMech.angle >= 0 ? 1 : -1);
-				}
-			}
-		}
+                    /** Set all current rotations */
+                    // adjacentMech.angle = Math.abs(angle) * (adjacentMech.angle >= 0 ? 1 : -1);
+                }
+            }
+        }
 
 		onUpdate();
 		prev_angle = renderAngle;
@@ -285,19 +252,6 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj, IVectorWorld
 		return load;
 	}
 
-	/**
-	 * Checks to see if a connection is allowed from side and from a source
-	 */
-	public boolean canConnect(ForgeDirection from, Object source)
-	{
-		if (source instanceof MechanicalNode)
-		{
-			boolean flag = (connectionMap & (1 << from.ordinal())) != 0;
-			return flag;
-		}
-		return false;
-	}
-
 	@Override
 	public double getEnergy()
 	{
@@ -324,115 +278,14 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj, IVectorWorld
 		nbt.setDouble("angularVelocity", angularVelocity);
 	}
 
-	@Override
-	public void reconstruct()
-	{
-		recache();
-	}
-
-	@Override
-	public void deconstruct()
-	{
-		for (Entry<MechanicalNode, ForgeDirection> entry : getConnections().entrySet())
-		{
-			entry.getKey().getConnections().remove(this);
-			entry.getKey().recache();
-		}
-		getConnections().clear();
-	}
-
-
-	public void recache()
-	{
-		synchronized (this)
-		{
-			getConnections().clear();
-
-			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
-			{
-				TileEntity tile = position().add(dir).getTileEntity(world());
-				if (tile instanceof INodeProvider)
-				{
-					INode node = ((INodeProvider) tile).getNode(MechanicalNode.class, dir.getOpposite());
-					if (node instanceof MechanicalNode)
-					{
-						MechanicalNode check = (MechanicalNode) node;
-						boolean canConnect = canConnect(dir, check);
-						boolean canOtherConnect = check.canConnect(dir.getOpposite(), this);
-						if (canConnect && canOtherConnect)
-						{
-							getConnections().put(check, dir);
-						}
-					}
-				}
-			}
-		}
-	}
-    /**
-	 * Gets the node provider for this node
-	 */
-	public INodeProvider getParent()
-	{
-		return parent;
-	}
-
-	/**
-	 * Sets the node provider for the node
-	 */
-	public void setParent(INodeProvider parent)
-	{
-		this.parent = parent;
-	}
-
-	@Override
-	public String toString()
-	{
-		return this.getClass().getSimpleName() + this.hashCode();
-	}
-
-	public AbstractMap<MechanicalNode, ForgeDirection> getConnections()
-	{
-		return connections;
-	}
-
-	@Override
-	public World world()
-	{
-		return getParent() instanceof TMultiPart ? ((TMultiPart) getParent()).world() : getParent() instanceof TileEntity ? ((TileEntity) getParent()).getWorldObj() : null;
-	}
-
-	public Vector3 position()
-	{
-		return new Vector3(x(), y(), z());
-	}
-
-	@Override
-	public double z()
-	{
-		if (this.getParent() instanceof TileEntity)
-		{
-			return ((TileEntity) this.getParent()).zCoord;
-		}
-		return this.getParent() instanceof TMultiPart && ((TMultiPart) this.getParent()).tile() != null ? ((TMultiPart) this.getParent()).z() : 0;
-	}
-
-	@Override
-	public double x()
-	{
-		if (this.getParent() instanceof TileEntity)
-		{
-			return ((TileEntity) this.getParent()).xCoord;
-		}
-		return this.getParent() instanceof TMultiPart && ((TMultiPart) this.getParent()).tile() != null ? ((TMultiPart) this.getParent()).x() : 0;
-	}
-
-	@Override
-	public double y()
-	{
-		if (this.getParent() instanceof TileEntity)
-		{
-			return ((TileEntity) this.getParent()).yCoord;
-		}
-		return this.getParent() instanceof TMultiPart && ((TMultiPart) this.getParent()).tile() != null ? ((TMultiPart) this.getParent()).y() : 0;
-	}
+    @Override
+    public boolean canConnect(ForgeDirection direction, Object object)
+    {
+        if(canConnect(direction)) {
+            if (object instanceof INodeProvider) {
+                return ((INodeProvider) object).getNode(MechanicalNode.class, direction.getOpposite()) instanceof MechanicalNode;
+            }
+        }
+        return false;
+    }
 }
