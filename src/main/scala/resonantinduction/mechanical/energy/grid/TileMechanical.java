@@ -13,6 +13,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
 import net.minecraftforge.common.util.ForgeDirection;
 import resonant.content.prefab.java.TileAdvanced;
+import resonant.content.prefab.java.TileNode;
 import resonant.engine.ResonantEngine;
 import resonant.lib.network.ByteBufWrapper;
 import resonant.lib.network.discriminator.PacketTile;
@@ -29,7 +30,7 @@ import com.google.common.io.ByteArrayDataInput;
 /** Prefab for resonantinduction.mechanical tiles
  * 
  * @author Calclavia */
-public abstract class TileMechanical extends TileAdvanced implements INodeProvider, IPacketIDReceiver
+public abstract class TileMechanical extends TileNode implements INodeProvider, IPacketIDReceiver
 {
     protected static final int PACKET_NBT = 0;
     protected static final int PACKET_VELOCITY = 1;
@@ -53,24 +54,9 @@ public abstract class TileMechanical extends TileAdvanced implements INodeProvid
     }
 
     @Override
-    public void initiate()
-    {
-        mechanicalNode.reconstruct();
-        super.initiate();
-    }
-
-    @Override
-    public void invalidate()
-    {
-        mechanicalNode.deconstruct();
-        super.invalidate();
-    }
-
-    @Override
     public void update()
     {
         super.update();
-        mechanicalNode.update();
         
         if(frame != null)
         {
