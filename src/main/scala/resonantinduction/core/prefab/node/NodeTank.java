@@ -22,7 +22,7 @@ import universalelectricity.core.grid.node.NodeConnector;
  */
 public class NodeTank extends NodeConnector implements IFluidTank, IFluidHandler, ISave, IPacketIDReceiver
 {
-    FluidTank tank;
+    LimitedTank tank;
     static final int PACKET_DESCRIPTION = 100, PACKET_TANK = 101;
 
     public NodeTank(INodeProvider parent)
@@ -163,5 +163,20 @@ public class NodeTank extends NodeConnector implements IFluidTank, IFluidHandler
         NBTTagCompound tag = new NBTTagCompound();
         save(tag);
         ResonantEngine.instance.packetHandler.sendToAllAround(new PacketTile((int)x(), (int)y(), (int)z(), tag), this, 64);
+    }
+
+    public void setCapacity(int capacity)
+    {
+        tank.setCapacity(capacity);
+    }
+
+    public int maxInput()
+    {
+        return tank.maxInput;
+    }
+
+    public int maxOutput()
+    {
+        return tank.maxOutput;
     }
 }

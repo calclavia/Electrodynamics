@@ -10,7 +10,7 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.IBlockAccess
 import net.minecraftforge.client.IItemRenderer
 import net.minecraftforge.common.util.ForgeDirection
-import net.minecraftforge.fluids.{FluidContainerRegistry, FluidStack, FluidTank}
+import net.minecraftforge.fluids.{IFluidTank, FluidContainerRegistry, FluidStack, FluidTank}
 import org.lwjgl.opengl.GL11
 import resonant.api.IRemovable.ISneakPickup
 import resonant.content.prefab.scala.render.ISimpleItemRenderer
@@ -19,7 +19,7 @@ import resonant.lib.utility.FluidUtility
 import resonant.lib.utility.render.RenderBlockUtility
 import resonantinduction.archaic.ArchaicBlocks
 import resonantinduction.core.Reference
-import resonantinduction.core.grid.fluid.TileTankNode
+import resonantinduction.core.prefab.node.TileTankNode
 import universalelectricity.core.transform.vector.Vector3
 
 /**
@@ -85,7 +85,7 @@ class TileTank extends TileTankNode(Material.iron) with ISneakPickup {
     isOpaqueCube(false)
     normalRender(false)
     itemBlock(classOf[ItemBlockTank])
-    this.tank.setCapacity(16 * FluidContainerRegistry.BUCKET_VOLUME)
+    setCapacity(16 * FluidContainerRegistry.BUCKET_VOLUME)
 
   override def shouldSideBeRendered(access: IBlockAccess, x: Int, y: Int, z: Int, side: Int): Boolean = {
     return access.getBlock(x, y, z) ne getBlockType
@@ -113,7 +113,7 @@ class TileTank extends TileTankNode(Material.iron) with ISneakPickup {
         GL11.glPushMatrix
         if (!fluid.getFluid.isGaseous) {
           GL11.glScaled(0.99, 0.99, 0.99)
-          val tank: FluidTank = getTank
+          val tank: IFluidTank = getTank
           val percentageFilled: Double = tank.getFluidAmount.asInstanceOf[Double] / tank.getCapacity.asInstanceOf[Double]
           val ySouthEast: Double = FluidUtility.getAveragePercentageFilledForSides(classOf[TileTank], percentageFilled, world, new Vector3(this), ForgeDirection.SOUTH, ForgeDirection.EAST)
           val yNorthEast: Double = FluidUtility.getAveragePercentageFilledForSides(classOf[TileTank], percentageFilled, world, new Vector3(this), ForgeDirection.NORTH, ForgeDirection.EAST)

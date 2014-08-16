@@ -49,7 +49,7 @@ public class TileNuclearBoiler extends TileElectricInventory implements IPacketR
     public TileNuclearBoiler()
     {
         super(Material.iron);
-        electricNode().energy().setCapacity(DIAN * 2);
+        energy().setCapacity(DIAN * 2);
         this.setSizeInventory(4);
     }
 
@@ -97,7 +97,7 @@ public class TileNuclearBoiler extends TileElectricInventory implements IPacketR
             {
                 this.discharge(getStackInSlot(0));
 
-                if (electricNode().energy().extractEnergy(DIAN, false) >= TileNuclearBoiler.DIAN)
+                if (energy().extractEnergy(DIAN, false) >= TileNuclearBoiler.DIAN)
                 {
                     if (this.timer == 0)
                     {
@@ -119,7 +119,7 @@ public class TileNuclearBoiler extends TileElectricInventory implements IPacketR
                         this.timer = 0;
                     }
 
-                    electricNode().energy().extractEnergy(DIAN, true);
+                    energy().extractEnergy(DIAN, true);
                 }
             }
             else

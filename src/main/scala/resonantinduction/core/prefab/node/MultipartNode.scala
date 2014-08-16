@@ -1,4 +1,4 @@
-package resonantinduction.core.grid
+package resonantinduction.core.prefab.node
 
 import codechicken.multipart.TMultiPart
 import net.minecraft.tileentity.TileEntity
@@ -19,16 +19,16 @@ abstract class MultipartNode(parent: INodeProvider) extends NodeConnector(parent
 
   override def x: Double =
   {
-    return if (parent.isInstanceOf[TMultiPart]) (parent.asInstanceOf[TMultiPart]).x else if (parent.isInstanceOf[TileEntity]) (parent.asInstanceOf[TileEntity]).xCoord else null
+    return if (parent.isInstanceOf[TMultiPart]) (parent.asInstanceOf[TMultiPart]).x else if (parent.isInstanceOf[TileEntity]) (parent.asInstanceOf[TileEntity]).xCoord else 0
   }
 
   override def y: Double =
   {
-    return if (parent.isInstanceOf[TMultiPart]) (parent.asInstanceOf[TMultiPart]).y else if (parent.isInstanceOf[TileEntity]) (parent.asInstanceOf[TileEntity]).yCoord else null
+    return if (parent.isInstanceOf[TMultiPart]) (parent.asInstanceOf[TMultiPart]).y else if (parent.isInstanceOf[TileEntity]) (parent.asInstanceOf[TileEntity]).yCoord else 0
   }
 
   override def z: Double =
   {
-    return if (parent.isInstanceOf[TMultiPart]) (parent.asInstanceOf[TMultiPart]).z else if (parent.isInstanceOf[TileEntity]) (parent.asInstanceOf[TileEntity]).zCoord else null
+    return if (parent.isInstanceOf[TMultiPart]) (parent.asInstanceOf[TMultiPart]).z else if (parent.isInstanceOf[TileEntity]) (parent.asInstanceOf[TileEntity]).zCoord else 0
   }
 }

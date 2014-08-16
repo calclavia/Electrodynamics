@@ -4,7 +4,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonant.lib.utility.WorldUtility;
-import resonantinduction.core.grid.fluid.pressure.FluidPressureNode;
+import resonantinduction.core.prefab.node.NodePressure;
 import resonantinduction.core.prefab.part.PartColorableMaterial;
 import universalelectricity.api.core.grid.INode;
 import universalelectricity.api.core.grid.INodeProvider;
@@ -12,7 +12,7 @@ import universalelectricity.api.core.grid.INodeProvider;
 /** Pressure node for the pipe
  * 
  * @author Calclavia, Darkguardsman */
-public class PipePressureNode extends FluidPressureNode
+public class PipePressureNode extends NodePressure
 {
     public PipePressureNode(PartPipe parent)
     {
@@ -24,10 +24,10 @@ public class PipePressureNode extends FluidPressureNode
         return (PartPipe) this.getParent();
     }
 
-    @Override
+
     public void doRecache()
     {
-        connections().clear();
+        connections.clear();
 
         if (world() != null)
         {
@@ -46,23 +46,23 @@ public class PipePressureNode extends FluidPressureNode
                         INode check = null;
                         try
                         {
-                            check = ((INodeProvider) tile).getNode(FluidPressureNode.class, dir.getOpposite());
+                            check = ((INodeProvider) tile).getNode(NodePressure.class, dir.getOpposite());
                         }
                         catch (Exception err)
                         {
                             check = null;
                         }
 
-                        if (check != null && check instanceof FluidPressureNode && canConnect(dir, check) && ((FluidPressureNode) check).canConnect(dir.getOpposite(), this))
+                        if (check != null && check instanceof NodePressure && canConnect(dir, check) && ((NodePressure) check).canConnect(dir.getOpposite(), this))
                         {
                             pipe().currentConnections_$eq(WorldUtility.setEnableSide(pipe().currentConnections(), dir, true));
-                            connections().put((resonantinduction.core.grid.fluid.distribution.TankNode) check, dir);
+                            connections.put(check, dir);
                         }
                     }
                     else if (canConnect(dir, tile))
                     {
                         pipe().currentConnections_$eq(WorldUtility.setEnableSide(pipe().currentConnections(), dir, true));
-                        connections().put((IFluidHandler) tile, dir);
+                        connections.put(tile, dir);
                     }
                 }
             }
@@ -80,9 +80,9 @@ public class PipePressureNode extends FluidPressureNode
     {
         if (!pipe().isBlockedOnSide(from))
         {
-            if (source instanceof FluidPressureNode)
+            if (source instanceof NodePressure)
             {
-                FluidPressureNode otherNode = (FluidPressureNode) source;
+                NodePressure otherNode = (NodePressure) source;
 
                 if (otherNode.getParent() instanceof PartPipe)
                 {

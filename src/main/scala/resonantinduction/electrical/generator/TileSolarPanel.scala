@@ -3,6 +3,7 @@ package resonantinduction.electrical.generator
 import net.minecraft.block.material.Material
 import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.util.IIcon
+import net.minecraftforge.common.util.ForgeDirection
 import resonant.content.spatial.block.SpatialBlock
 import resonantinduction.core.Reference
 import resonantinduction.core.Settings
@@ -13,7 +14,7 @@ import universalelectricity.core.transform.region.Cuboid
 
 class TileSolarPanel extends TileEnergyDistribution(Material.iron) {
 
-    electricNode.energy.setCapacity(Settings.SOLAR_ENERGY * 20)
+    energy.setCapacity(Settings.SOLAR_ENERGY * 20)
     ioMap_$eq(728.asInstanceOf[Short])
     setTextureName("solarPanel_top")
     bounds(new Cuboid(0, 0, 0, 1, 0.3f, 1))
@@ -41,7 +42,7 @@ class TileSolarPanel extends TileEnergyDistribution(Material.iron) {
       if (this.worldObj.canBlockSeeTheSky(xCoord, yCoord + 1, zCoord) && !this.worldObj.provider.hasNoSky) {
         if (this.worldObj.isDaytime) {
           if (!(this.worldObj.isThundering || this.worldObj.isRaining)) {
-            this.electricNode.addEnergy(Settings.SOLAR_ENERGY, true)
+            this.electricNode.addEnergy(ForgeDirection.UNKNOWN, Settings.SOLAR_ENERGY, true)
           }
         }
       }

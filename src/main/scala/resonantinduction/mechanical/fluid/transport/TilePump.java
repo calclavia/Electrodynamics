@@ -1,6 +1,7 @@
 package resonantinduction.mechanical.fluid.transport;
 
 import net.minecraft.block.material.Material;
+import resonantinduction.core.prefab.node.NodePressure;
 import resonantinduction.mechanical.energy.grid.TileMechanical;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -9,13 +10,12 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonant.api.IRotatable;
-import resonantinduction.core.grid.fluid.pressure.FluidPressureNode;
 import universalelectricity.api.core.grid.INode;
 import universalelectricity.core.transform.vector.Vector3;
 
 public class TilePump extends TileMechanical implements IRotatable, IFluidHandler
 {
-	private final FluidPressureNode pressureNode;
+	private final NodePressure pressureNode;
 
 	public TilePump()
 	{
@@ -25,7 +25,7 @@ public class TilePump extends TileMechanical implements IRotatable, IFluidHandle
         isOpaqueCube(false);
         customItemRender(true);
         setTextureName("material_steel");
-		pressureNode = new FluidPressureNode(this)
+		pressureNode = new NodePressure(this)
 		{
 			@Override
 			public int getPressure(ForgeDirection dir)
@@ -43,12 +43,6 @@ public class TilePump extends TileMechanical implements IRotatable, IFluidHandle
 				}
 
 				return 0;
-			}
-
-			@Override
-			public int getMaxFlowRate()
-			{
-				return (int) Math.abs(mechanicalNode.getAngularSpeed() * 1000);
 			}
 
 			@Override
@@ -88,7 +82,7 @@ public class TilePump extends TileMechanical implements IRotatable, IFluidHandle
 
 			if (tileIn instanceof IFluidHandler)
 			{
-				FluidStack drain = ((IFluidHandler) tileIn).drain(getDirection(), pressureNode.getMaxFlowRate(), false);
+				FluidStack drain = ((IFluidHandler) tileIn).drain(getDirection(), pressureNode.maxOutput(), false);
 
 				if (drain != null)
 				{

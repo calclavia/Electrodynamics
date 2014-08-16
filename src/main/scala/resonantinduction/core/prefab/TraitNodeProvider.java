@@ -1,4 +1,4 @@
-package resonantinduction.core.grid;
+package resonantinduction.core.prefab;
 
 import codechicken.multipart.PartMap;
 import codechicken.multipart.TMultiPart;

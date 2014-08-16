@@ -10,8 +10,8 @@ import net.minecraftforge.fluids.FluidTank;
  */
 public class LimitedTank extends FluidTank
 {
-    protected int maxInput;
-    protected int maxOutput;
+    public int maxInput;
+    public int maxOutput;
 
     public LimitedTank(int capacity)
     {

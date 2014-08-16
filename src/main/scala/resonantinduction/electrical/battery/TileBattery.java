@@ -55,7 +55,7 @@ public class TileBattery extends TileEnergyDistribution implements IPacketReceiv
     @Override
     public void read(ByteBuf data, EntityPlayer player, PacketType type)
     {
-        this.electricNode().energy().setEnergy(data.readLong());
+        this.energy().setEnergy(data.readLong());
         this.ioMap_$eq(data.readShort());
     }
 

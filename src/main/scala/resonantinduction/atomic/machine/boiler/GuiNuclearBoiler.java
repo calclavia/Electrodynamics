@@ -3,6 +3,7 @@ package resonantinduction.atomic.machine.boiler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.StatCollector;
+import net.minecraftforge.common.util.ForgeDirection;
 import resonant.lib.gui.GuiContainerBase;
 import universalelectricity.api.UnitDisplay;
 
@@ -23,7 +24,7 @@ public class GuiNuclearBoiler extends GuiContainerBase
         this.fontRendererObj.drawString("Boiler", 52, 6, 4210752);
 
         this.renderUniversalDisplay(8, 112, TileNuclearBoiler.DIAN * 20, mouseX, mouseY, UnitDisplay.Unit.WATT);
-        this.renderUniversalDisplay(110, 112, tileEntity.electricNode().voltage(), mouseX, mouseY, UnitDisplay.Unit.VOLTAGE);
+        this.renderUniversalDisplay(110, 112, tileEntity.electricNode().getVoltage(ForgeDirection.UNKNOWN), mouseX, mouseY, UnitDisplay.Unit.VOLTAGE);
 
         this.fontRendererObj.drawString("The nuclear boiler can boil", 8, 75, 4210752);
         this.fontRendererObj.drawString("yellow cake into uranium", 8, 85, 4210752);

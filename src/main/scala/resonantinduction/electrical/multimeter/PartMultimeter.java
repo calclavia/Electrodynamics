@@ -21,7 +21,6 @@ import resonant.lib.network.discriminator.PacketType;
 import resonant.lib.network.handle.IPacketReceiver;
 import resonant.lib.utility.WrenchUtility;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.grid.fluid.pressure.FluidPressureNode;
 import resonantinduction.core.interfaces.IMechanicalNode;
 import resonantinduction.core.prefab.part.PartFace;
 import resonantinduction.electrical.Electrical;

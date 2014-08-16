@@ -2,6 +2,7 @@ package resonantinduction.archaic.waila;
 
 import java.util.List;
 
+import net.minecraftforge.fluids.IFluidTank;
 import resonantinduction.archaic.fluid.tank.TileTank;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
@@ -22,7 +23,7 @@ public class WailaFluidTank implements IWailaDataProvider
         TileEntity tile = accessor.getTileEntity();
         if (tile instanceof TileTank)
         {
-            FluidTank tank = ((TileTank) tile).getTank();
+            IFluidTank tank = ((TileTank) tile).getTank();
             if (tank != null && tank.getFluid() != null)
             {
                 currenttip.add(LanguageUtility.getLocal("info.waila.tank.fluid") + " " + tank.getFluid().getFluid().getLocalizedName());

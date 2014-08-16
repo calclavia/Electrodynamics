@@ -1,10 +1,10 @@
 package resonantinduction.archaic.fluid.gutter;
 
 import net.minecraftforge.common.util.ForgeDirection;
-import resonantinduction.core.grid.fluid.TileTankNode;
-import resonantinduction.core.grid.fluid.pressure.FluidPressureNode;
+import resonantinduction.core.prefab.node.NodePressure;
+import resonantinduction.core.prefab.node.TileTankNode;
 
-public class FluidGravityNode extends FluidPressureNode
+public class FluidGravityNode extends NodePressure
 {
 	public FluidGravityNode(TileTankNode parent)
 	{
@@ -21,11 +21,5 @@ public class FluidGravityNode extends FluidPressureNode
 			return 2;
 
 		return 0;
-	}
-
-	@Override
-	public int getMaxFlowRate()
-	{
-		return 20;
 	}
 }

@@ -1,5 +1,6 @@
 package resonantinduction.atomic.machine.quantum;
 
+import net.minecraftforge.common.util.ForgeDirection;
 import resonantinduction.atomic.Atomic;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -48,7 +49,7 @@ public class GuiQuantumAssembler extends GuiContainerBase
         }
 
         this.fontRendererObj.drawString(displayText, 9, this.ySize - 106, 4210752);
-        this.renderUniversalDisplay(100, this.ySize - 94, this.tileEntity.electricNode().voltage(), mouseX, mouseY, UnitDisplay.Unit.VOLTAGE);
+        this.renderUniversalDisplay(100, this.ySize - 94, this.tileEntity.electricNode().getVoltage(ForgeDirection.UNKNOWN), mouseX, mouseY, UnitDisplay.Unit.VOLTAGE);
         this.renderUniversalDisplay(8, this.ySize - 95, tileEntity.MAX_TIME, mouseX, mouseY, UnitDisplay.Unit.WATT);
     }
 

@@ -17,9 +17,6 @@ class ElectricTransformerNode(parent: INodeProvider) extends NodeElectric(parent
   var otherNode : ElectricTransformerNode = null
   var step : Int = 2
 
-  //Default constructor
-  setResistance(0)
-
   def this(parent: INodeProvider, side: ForgeDirection, in : Boolean) =
   {
     this(parent)    
@@ -27,13 +24,13 @@ class ElectricTransformerNode(parent: INodeProvider) extends NodeElectric(parent
     input = in
   }
 
-  override def getVoltage: Double =
+  def getVoltage: Double =
   {
     if(!input)
     {
       return otherNode.getVoltage * step
     }
-    return voltage
+    return 120
   }
 
   override def canConnect(from: ForgeDirection, source: AnyRef): Boolean =
@@ -41,7 +38,7 @@ class ElectricTransformerNode(parent: INodeProvider) extends NodeElectric(parent
     return source.isInstanceOf[INodeProvider] && from == connectionDirection
   }
 
-  override def addEnergy(wattage: Double, doAdd: Boolean): Double =
+  override def addEnergy(dir: ForgeDirection, wattage: Double, doAdd: Boolean): Double =
   {
     if(input)
     {
@@ -61,7 +58,7 @@ class ElectricTransformerNode(parent: INodeProvider) extends NodeElectric(parent
   }
 
 
-  override def removeEnergy(wattage: Double, doRemove: Boolean) : Double =
+  override def removeEnergy(dir: ForgeDirection, wattage: Double, doRemove: Boolean) : Double =
   {
     return 0
   }

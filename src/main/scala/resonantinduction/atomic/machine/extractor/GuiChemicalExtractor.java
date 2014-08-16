@@ -2,6 +2,7 @@ package resonantinduction.atomic.machine.extractor;
 
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.StatCollector;
+import net.minecraftforge.common.util.ForgeDirection;
 import resonant.lib.gui.GuiContainerBase;
 import universalelectricity.api.UnitDisplay;
 
@@ -22,7 +23,7 @@ public class GuiChemicalExtractor extends GuiContainerBase
         this.fontRendererObj.drawString("Chemical Extractor", 45, 6, 4210752);
 
         this.renderUniversalDisplay(8, 112, TileChemicalExtractor.ENERGY * 20, mouseX, mouseY, UnitDisplay.Unit.WATT);
-        this.renderUniversalDisplay(100, 112, this.tileEntity.electricNode().getVoltage(), mouseX, mouseY, UnitDisplay.Unit.VOLTAGE);
+        this.renderUniversalDisplay(100, 112, this.tileEntity.electricNode().getVoltage(ForgeDirection.UNKNOWN), mouseX, mouseY, UnitDisplay.Unit.VOLTAGE);
 
         this.fontRendererObj.drawString("The extractor can extract", 8, 75, 4210752);
         this.fontRendererObj.drawString("uranium, deuterium and tritium.", 8, 85, 4210752);

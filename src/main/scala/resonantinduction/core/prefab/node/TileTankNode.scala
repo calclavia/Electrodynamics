@@ -1,4 +1,4 @@
-package resonantinduction.core.grid.fluid
+package resonantinduction.core.prefab.node
 
 import cpw.mods.fml.common.network.ByteBufUtils
 import io.netty.buffer.ByteBuf
@@ -10,7 +10,6 @@ import net.minecraftforge.fluids._
 import resonant.content.prefab.java.TileAdvanced
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.{IPacketIDReceiver, TPacketIDSender}
-import resonantinduction.core.prefab.node.NodeTank
 import universalelectricity.api.core.grid.{INode, INodeProvider}
 
 /**
@@ -114,4 +113,11 @@ class TileTankNode(material: Material) extends TileAdvanced(material) with INode
     tankNode.deconstruct()
     super.invalidate()
   }
+
+  def setCapacity(capacity: Int)
+  {
+    tankNode.setCapacity(capacity)
+  }
+
+  def getFluidAmount : Int = tankNode.getFluidAmount
 }

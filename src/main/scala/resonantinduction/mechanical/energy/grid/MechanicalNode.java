@@ -218,7 +218,17 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj, IVectorWorld
 		prev_angle = renderAngle;
 	}
 
-	protected void onUpdate()
+    @Override
+    public boolean canUpdate() {
+        return true;
+    }
+
+    @Override
+    public boolean continueUpdate() {
+        return true;
+    }
+
+    protected void onUpdate()
 	{
 
 	}
@@ -331,7 +341,7 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj, IVectorWorld
 		getConnections().clear();
 	}
 
-	@Override
+
 	public void recache()
 	{
 		synchronized (this)

@@ -52,9 +52,6 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial> implements TSlott
     public void setMaterial(EnumPipeMaterial material)
     {
         super.setMaterial(material);
-        ((PipePressureNode)getNode()).setMaxFlowRate(getMaterial().maxFlowRate);
-        ((PipePressureNode)getNode()).setMaxPressure(getMaterial().maxPressure);
-        tank.setCapacity(((PipePressureNode)getNode()).maxFlowRate());
     }
 
     @Override
@@ -198,8 +195,6 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial> implements TSlott
     {
         super.load(nbt);
         tank.readFromNBT(nbt);
-        ((PipePressureNode)getNode()).setMaxFlowRate(getMaterial().maxFlowRate);
-        ((PipePressureNode)getNode()).setMaxPressure(getMaterial().maxPressure);
     }
 
     @Override

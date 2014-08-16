@@ -2,6 +2,7 @@ package resonantinduction.atomic.machine.accelerator;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraftforge.common.util.ForgeDirection;
 import resonant.lib.gui.GuiContainerBase;
 import universalelectricity.api.UnitDisplay;
 import universalelectricity.core.transform.vector.Vector3;
@@ -50,7 +51,7 @@ public class GuiAccelerator extends GuiContainerBase
         this.fontRendererObj.drawString("Antimatter: " + this.tileEntity.antimatter + " mg", 8, 80, 4210752);
         this.fontRendererObj.drawString("Status:", 8, 90, 4210752);
         this.fontRendererObj.drawString(status, 8, 100, 4210752);
-        this.fontRendererObj.drawString("Buffer: " + this.tileEntity.electricNode().getEnergy() + "/" + new UnitDisplay(UnitDisplay.Unit.JOULES, this.tileEntity.electricNode().getEnergyCapacity(),true ), 8, 110,
+        this.fontRendererObj.drawString("Buffer: " + this.tileEntity.electricNode().getEnergy(ForgeDirection.UNKNOWN) + "/" + new UnitDisplay(UnitDisplay.Unit.JOULES, this.tileEntity.electricNode().getEnergyCapacity(ForgeDirection.UNKNOWN),true ), 8, 110,
                 4210752);
         this.fontRendererObj.drawString("Facing: " + this.tileEntity.getDirection().getOpposite(), 100, 123, 4210752);
     }

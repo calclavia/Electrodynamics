@@ -40,8 +40,8 @@ public class TileQuantumAssembler extends TileElectricInventory implements IPack
     {
         super(Material.iron);
         setSizeInventory(7);
-        electricNode().energy().setCapacity(ENERGY);
-        electricNode().energy().setMaxTransfer(ENERGY / 10);
+        energy().setCapacity(ENERGY);
+        energy().setMaxTransfer(ENERGY / 10);
         isOpaqueCube(false);
         normalRender(false);
         customItemRender(true);
@@ -68,7 +68,7 @@ public class TileQuantumAssembler extends TileElectricInventory implements IPack
         {
             if (this.canProcess())
             {
-                if (electricNode().energy().checkExtract())
+                if (energy().checkExtract())
                 {
                     if (this.time == 0)
                     {
@@ -87,7 +87,7 @@ public class TileQuantumAssembler extends TileElectricInventory implements IPack
                     {
                         this.time = 0;
                     }
-                    electricNode().energy().extractEnergy(ENERGY, true);
+                    energy().extractEnergy(ENERGY, true);
                 }
             }
             else

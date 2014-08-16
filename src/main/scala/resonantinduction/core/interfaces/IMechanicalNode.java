@@ -2,12 +2,13 @@ package resonantinduction.core.interfaces;
 
 import net.minecraftforge.common.util.ForgeDirection;
 import universalelectricity.api.core.grid.INode;
+import universalelectricity.api.core.grid.IUpdate;
 import universalelectricity.core.transform.vector.Vector3;
 
 /** Applied to any node that will act as a resonantinduction.mechanical object in the network
  * 
  * @author Darkguardsman */
-public interface IMechanicalNode extends INode
+public interface IMechanicalNode extends INode, IUpdate
 {
     /** Gets the radius of the gear in meters. Used to calculate torque and gear ratio */
     public double getRadius();

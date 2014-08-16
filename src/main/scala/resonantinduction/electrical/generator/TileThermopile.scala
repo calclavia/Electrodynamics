@@ -43,7 +43,7 @@ class TileThermopile extends TileElectric(Material.rock) {
       }
       val multiplier: Int = (3 - Math.abs(heatSources - coolingSources))
       if (multiplier > 0 && coolingSources > 0 && heatSources > 0) {
-        electricNode.addEnergy(15 * multiplier, true)
+        electricNode.addEnergy(ForgeDirection.UNKNOWN, 15 * multiplier, true)
         if (({
           usingTicks += 1; usingTicks
         }) >= MAX_USE_TICKS) {

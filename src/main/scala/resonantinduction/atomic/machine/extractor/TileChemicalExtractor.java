@@ -45,7 +45,7 @@ public class TileChemicalExtractor extends TileProcess implements IFluidHandler
     public TileChemicalExtractor()
     {
         super(Material.iron);
-        electricNode().energy().setCapacity(ENERGY * 2);
+        energy().setCapacity(ENERGY * 2);
         this.setSizeInventory(7);
         this.isOpaqueCube(true);
         this.normalRender(false);
@@ -73,7 +73,7 @@ public class TileChemicalExtractor extends TileProcess implements IFluidHandler
             {
                 discharge(getStackInSlot(0));
 
-                if (electricNode().energy().checkExtract(ENERGY))
+                if (energy().checkExtract(ENERGY))
                 {
                     if (time == 0)
                     {
@@ -103,7 +103,7 @@ public class TileChemicalExtractor extends TileProcess implements IFluidHandler
                     }
                 }
 
-                electricNode().energy().extractEnergy(ENERGY, true);
+                energy().extractEnergy(ENERGY, true);
             }
             else
             {

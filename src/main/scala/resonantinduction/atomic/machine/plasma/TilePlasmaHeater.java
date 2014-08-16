@@ -49,8 +49,8 @@ public class TilePlasmaHeater extends TileElectric implements IPacketReceiver, I
     public TilePlasmaHeater()
     {
         super(Material.iron);
-        electricNode().energy().setCapacity(joules);
-        electricNode().energy().setMaxTransfer(joules / 20);
+        energy().setCapacity(joules);
+        energy().setMaxTransfer(joules / 20);
     }
 
     @Override
@@ -58,11 +58,11 @@ public class TilePlasmaHeater extends TileElectric implements IPacketReceiver, I
     {
         super.update();
 
-        rotation += electricNode().energy().getEnergy() / 10000f;
+        rotation += energy().getEnergy() / 10000f;
 
         if (!worldObj.isRemote)
         {
-            if (electricNode().energy().checkExtract())
+            if (energy().checkExtract())
             {
                 // Creates plasma if there is enough Deuterium, Tritium AND Plasma output is not full.
                 if (tankInputDeuterium.getFluidAmount() >= plasmaHeatAmount &&
@@ -72,7 +72,7 @@ public class TilePlasmaHeater extends TileElectric implements IPacketReceiver, I
                     tankInputDeuterium.drain(plasmaHeatAmount, true);
                     tankInputTritium.drain(plasmaHeatAmount, true);
                     tankOutput.fill(new FluidStack(AtomicContent.FLUID_PLASMA(), tankOutput.getCapacity()), true);
-                    electricNode().energy().extractEnergy();
+                    energy().extractEnergy();
                 }
             }
         }
@@ -147,9 +147,9 @@ public class TilePlasmaHeater extends TileElectric implements IPacketReceiver, I
     @Override
     public float addInformation(HashMap<String, Integer> map, EntityPlayer player)
     {
-        if (electricNode().energy() != null)
+        if (energy() != null)
         {
-            map.put(LanguageUtility.getLocal("tooltip.energy") + ": " + new UnitDisplay(UnitDisplay.Unit.JOULES, electricNode().energy().getEnergy()), 0xFFFFFF);
+            map.put(LanguageUtility.getLocal("tooltip.energy") + ": " + new UnitDisplay(UnitDisplay.Unit.JOULES, energy().getEnergy()), 0xFFFFFF);
         }
 
         if (tankInputDeuterium.getFluidAmount() > 0)

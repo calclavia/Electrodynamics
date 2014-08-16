@@ -66,7 +66,7 @@ public class TileAccelerator extends TileElectricInventory implements IElectroma
 
         if (!worldObj.isRemote)
         {
-            clientEnergy = electricNode().energy().getEnergy();
+            clientEnergy = energy().getEnergy();
             velocity = 0;
 
             // Calculate accelerated particle velocity if it is spawned.
@@ -116,7 +116,7 @@ public class TileAccelerator extends TileElectricInventory implements IElectroma
             // Check if redstone signal is currently being applied.
             if (worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord))
             {
-                if (electricNode().energy().checkExtract())
+                if (energy().checkExtract())
                 {
                     if (entityParticle == null)
                     {
@@ -182,7 +182,7 @@ public class TileAccelerator extends TileElectricInventory implements IElectroma
                         }
                     }
 
-                    electricNode().energy().extractEnergy();
+                    energy().extractEnergy();
                 }
                 else
                 {

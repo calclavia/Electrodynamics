@@ -12,6 +12,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.util.ForgeDirection;
+import universalelectricity.api.core.grid.IConnector;
 import universalelectricity.api.core.grid.INode;
 import universalelectricity.core.transform.vector.Vector3;
 import codechicken.lib.data.MCDataInput;
@@ -159,9 +160,9 @@ public abstract class PartFramedConnection<M extends Enum> extends PartColorable
     {
         boolean notPrevented = !isConnectionPrevented(tile, side);
 
-        if (getConnector(tile) != null)
+        if (getConnector(tile) instanceof IConnector)
         {
-            notPrevented &= getConnector(tile).canConnect(side.getOpposite(), this);
+            notPrevented &= ((IConnector)getConnector(tile)).canConnect(side.getOpposite(), this);
         }
 
         return notPrevented;

@@ -46,7 +46,7 @@ public class TileCentrifuge extends TileElectricInventory implements IPacketRece
         super(Material.iron);
         isOpaqueCube(true);
         normalRender(false);
-        electricNode().energy().setCapacity(DIAN * 2);
+        energy().setCapacity(DIAN * 2);
         setSizeInventory(4);
     }
 
@@ -99,7 +99,7 @@ public class TileCentrifuge extends TileElectricInventory implements IPacketRece
             {
                 this.discharge(getStackInSlot(0));
 
-                if (electricNode().energy().extractEnergy(TileCentrifuge.DIAN, false) >= DIAN)
+                if (energy().extractEnergy(TileCentrifuge.DIAN, false) >= DIAN)
                 {
                     if (this.timer == 0)
                     {
@@ -121,7 +121,7 @@ public class TileCentrifuge extends TileElectricInventory implements IPacketRece
                         this.timer = 0;
                     }
 
-                    electricNode().energy().extractEnergy(DIAN, true);
+                    energy().extractEnergy(DIAN, true);
                 }
             }
             else

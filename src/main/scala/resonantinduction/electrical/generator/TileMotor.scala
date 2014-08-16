@@ -51,7 +51,7 @@ class TileMotor extends TileElectric(Material.iron) with IRotatable {
 
   def receiveMechanical {
     val power: Double = mech_node.getEnergy
-    val receive: Double = electricNode.addEnergy(power, true)
+    val receive: Double = electricNode.addEnergy(ForgeDirection.UNKNOWN, power, true)
     if (receive > 0) {
       val percentageUsed: Double = receive / power
       mech_node.apply(this, -mech_node.getTorque * percentageUsed, -mech_node.getAngularSpeed * percentageUsed)
@@ -59,7 +59,7 @@ class TileMotor extends TileElectric(Material.iron) with IRotatable {
   }
 
   def produceMechanical {
-    val extract: Double = electricNode.removeEnergy(electricNode.getEnergy, false)
+    val extract: Double = electricNode.removeEnergy(ForgeDirection.UNKNOWN, electricNode.getEnergy(ForgeDirection.UNKNOWN), false)
     if (extract > 0) {
       val torqueRatio: Long = ((gearRatio + 1) / 2.2d * (extract)).asInstanceOf[Long]
       if (torqueRatio > 0) {
@@ -72,7 +72,7 @@ class TileMotor extends TileElectric(Material.iron) with IRotatable {
         val currentVelo: Double = Math.abs(mech_node.getAngularSpeed)
         if (currentVelo != 0) setAngularVelocity = Math.min(+setAngularVelocity, maxAngularVelocity) * (mech_node.getAngularSpeed / currentVelo)
         mech_node.apply(this, setTorque - mech_node.getTorque, setAngularVelocity - mech_node.getAngularSpeed)
-        electricNode.removeEnergy(Math.abs(setTorque * setAngularVelocity).asInstanceOf[Long], true)
+        electricNode.removeEnergy(ForgeDirection.UNKNOWN, Math.abs(setTorque * setAngularVelocity).asInstanceOf[Long], true)
       }
     }
   }

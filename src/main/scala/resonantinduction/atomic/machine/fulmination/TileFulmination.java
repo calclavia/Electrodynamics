@@ -17,7 +17,7 @@ public class TileFulmination extends TileElectric
     public TileFulmination()
     {
         super(Material.iron);
-        electricNode().energy().setCapacity(DIAN * 2);
+        energy().setCapacity(DIAN * 2);
         this.blockHardness(10);
         this.blockResistance(25000);
     }
@@ -34,7 +34,7 @@ public class TileFulmination extends TileElectric
     {
         super.update();
         // Slowly lose energy.
-        electricNode().energy().extractEnergy(10, true);
+        energy().extractEnergy(10, true);
     }
 
     @Override

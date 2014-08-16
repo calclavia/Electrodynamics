@@ -73,7 +73,7 @@ public class FulminationHandler
 
                     long energy = (long) Math.min(maxEnergyPerGenerator, maxEnergyPerGenerator / (juLi / evt.iExplosion.getRadius()));
                     energy = (long) Math.max((1 - density) * energy, 0);
-                    tileEntity.electricNode().energy().receiveEnergy(energy, true);
+                    tileEntity.energy().receiveEnergy(energy, true);
                 }
             }
         }

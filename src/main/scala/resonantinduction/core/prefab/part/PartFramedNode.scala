@@ -14,7 +14,7 @@ import net.minecraft.item.Item
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.{IIcon, MovingObjectPosition}
 import net.minecraftforge.common.util.ForgeDirection
-import universalelectricity.api.core.grid.{INode, INodeProvider}
+import universalelectricity.api.core.grid.{ISave, INode, INodeProvider}
 
 object PartFramedNode {
   def connectionMapContainsSide(connections: Byte, side: ForgeDirection): Boolean = {
@@ -180,12 +180,14 @@ abstract class PartFramedNode[M](insulationType: Item) extends PartColorableMate
 
   override def save(nbt: NBTTagCompound) {
     super.save(nbt)
-    node.save(nbt)
+    if(node.isInstanceOf[ISave])
+      node.asInstanceOf[ISave].save(nbt)
   }
 
   override def load(nbt: NBTTagCompound) {
     super.load(nbt)
-    node.load(nbt)
+    if(node.isInstanceOf[ISave])
+      node.asInstanceOf[ISave].load(nbt)
   }
 
   override def toString: String = {
