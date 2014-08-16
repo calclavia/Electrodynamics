@@ -10,6 +10,8 @@ import resonant.engine.ResonantEngine;
 import resonant.lib.network.discriminator.PacketTile;
 import resonant.lib.network.discriminator.PacketType;
 import resonant.lib.network.handle.IPacketIDReceiver;
+import resonant.lib.utility.WorldUtility;
+import resonant.lib.wrapper.ObjectOrWrapper;
 import resonantinduction.core.prefab.LimitedTank;
 import universalelectricity.api.core.grid.INodeProvider;
 import universalelectricity.api.core.grid.ISave;
@@ -23,6 +25,7 @@ import universalelectricity.core.grid.node.NodeConnector;
 public class NodeTank extends NodeConnector implements IFluidTank, IFluidHandler, ISave, IPacketIDReceiver
 {
     LimitedTank tank;
+    byte renderSides = 0;
     static final int PACKET_DESCRIPTION = 100, PACKET_TANK = 101;
 
     public NodeTank(INodeProvider parent)
@@ -165,6 +168,31 @@ public class NodeTank extends NodeConnector implements IFluidTank, IFluidHandler
         ResonantEngine.instance.packetHandler.sendToAllAround(new PacketTile((int)x(), (int)y(), (int)z(), tag), this, 64);
     }
 
+
+    @Override
+    protected void addConnection(Object obj, ForgeDirection dir)
+    {
+        super.addConnection(obj, dir);
+        if(showConnectionsFor(obj, dir))
+            renderSides = WorldUtility.setEnableSide(getRenderSides(), dir, true);
+    }
+
+    protected boolean showConnectionsFor(Object obj, ForgeDirection dir)
+    {
+        if(obj != null)
+        {
+            if(obj.getClass().isAssignableFrom(getClass()))
+            {
+                return true;
+            }
+            else if(obj instanceof INodeProvider)
+            {
+                return ((INodeProvider) obj).getNode(getClass(), dir) != null;
+            }
+        }
+        return false;
+    }
+
     public void setCapacity(int capacity)
     {
         tank.setCapacity(capacity);
@@ -178,5 +206,10 @@ public class NodeTank extends NodeConnector implements IFluidTank, IFluidHandler
     public int maxOutput()
     {
         return tank.maxOutput;
+    }
+
+    public byte getRenderSides()
+    {
+        return renderSides;
     }
 }

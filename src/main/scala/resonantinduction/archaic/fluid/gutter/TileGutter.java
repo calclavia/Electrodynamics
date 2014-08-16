@@ -26,6 +26,7 @@ import resonant.lib.utility.WorldUtility;
 import resonant.lib.utility.inventory.InventoryUtility;
 import resonantinduction.core.RecipeType;
 import resonantinduction.core.Reference;
+import resonantinduction.core.prefab.node.NodePressure;
 import resonantinduction.core.prefab.node.TilePressureNode;
 import resonantinduction.core.prefab.node.TileTankNode;
 import universalelectricity.core.transform.region.Cuboid;
@@ -48,6 +49,7 @@ public class TileGutter extends TilePressureNode
 	public TileGutter()
 	{
 		super(Material.rock);
+        tankNode_$eq(new FluidGravityNode(this));
 		setTextureName("material_wood_surface");
 		isOpaqueCube(false);
 		normalRender(false);
@@ -184,31 +186,6 @@ public class TileGutter extends TilePressureNode
 			fill(ForgeDirection.UP, new FluidStack(FluidRegistry.WATER, 10), true);
 		}
 	}
-
-	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
-	{
-		if (!resource.getFluid().isGaseous())
-		{
-			return super.fill(from, resource, doFill);
-		}
-
-		return 0;
-	}
-
-	@Override
-	public boolean canFill(ForgeDirection from, Fluid fluid)
-	{
-		return from != ForgeDirection.UP && !fluid.isGaseous();
-	}
-
-	@Override
-	public boolean canDrain(ForgeDirection from, Fluid fluid)
-	{
-		return from != ForgeDirection.UP && !fluid.isGaseous();
-	}
-
-
 
     @Override
     public void renderDynamic(Vector3 position, float frame, int pass)

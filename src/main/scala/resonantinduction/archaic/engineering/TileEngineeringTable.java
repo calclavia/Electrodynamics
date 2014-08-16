@@ -189,9 +189,9 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
                 final double regionLength = 1d / 3d;
 
                 // Rotate the hit vector based on direction of the tile.
-                hitVector.add(new Vector3(-0.5, 0, -0.5));
-                hitVector.transform(new Quaternion(WorldUtility.getAngleFromForgeDirection(getDirection()), Vector3.up()));
-                hitVector.add(new Vector3(0.5, 0, 0.5));
+                //hitVector.add(new Vector3(-0.5, 0, -0.5));
+                //hitVector.transform(new Quaternion(WorldUtility.getAngleFromForgeDirection(getDirection()), Vector3.up()));
+                //hitVector.add(new Vector3(0.5, 0, 0.5));
 
                 /** Crafting Matrix */
                 matrix:
