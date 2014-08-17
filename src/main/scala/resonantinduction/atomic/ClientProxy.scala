@@ -15,8 +15,7 @@ import resonantinduction.atomic.machine.extractor.RenderChemicalExtractor
 import resonantinduction.atomic.machine.extractor.TileChemicalExtractor
 import resonantinduction.atomic.machine.plasma.RenderPlasmaHeater
 import resonantinduction.atomic.machine.plasma.TilePlasmaHeater
-import resonantinduction.atomic.machine.quantum.GuiQuantumAssembler
-import resonantinduction.atomic.machine.quantum.TileQuantumAssembler
+import resonantinduction.atomic.machine.quantum.{RenderQuantumAssembler, GuiQuantumAssembler, TileQuantumAssembler}
 import resonantinduction.atomic.machine.reactor.GuiReactorCell
 import resonantinduction.atomic.machine.reactor.RenderReactorCell
 import resonantinduction.atomic.machine.reactor.TileReactorCell
@@ -49,6 +48,7 @@ class ClientProxy extends CommonProxy {
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileThermometer], new RenderThermometer)
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileChemicalExtractor], new RenderChemicalExtractor)
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileReactorCell], new RenderReactorCell)
+    ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileQuantumAssembler], new RenderQuantumAssembler)
     RenderingRegistry.registerEntityRenderingHandler(classOf[EntityParticle], new RenderParticle)
   }
 

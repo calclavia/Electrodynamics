@@ -4,6 +4,8 @@ import cpw.mods.fml.client.registry.ClientRegistry;
 import net.minecraft.item.Item;
 import resonant.content.wrapper.ItemRenderHandler;
 import resonantinduction.mechanical.fluid.pipe.RenderPipe;
+import resonantinduction.mechanical.fluid.transport.RenderPump;
+import resonantinduction.mechanical.fluid.transport.TilePump;
 import resonantinduction.mechanical.gear.RenderGear;
 import resonantinduction.mechanical.gearshaft.RenderGearShaft;
 import resonantinduction.mechanical.process.crusher.RenderMechanicalPiston;
@@ -32,5 +34,6 @@ public class ClientProxy extends CommonProxy
         ClientRegistry.bindTileEntitySpecialRenderer(TileWaterTurbine.class, new RenderWaterTurbine());
         ClientRegistry.bindTileEntitySpecialRenderer(TileWindTurbine.class, new RenderWindTurbine());
         ClientRegistry.bindTileEntitySpecialRenderer(TileElectricTurbine.class, new RenderElectricTurbine());
+        ClientRegistry.bindTileEntitySpecialRenderer(TilePump.class, new RenderPump());
     }
 }

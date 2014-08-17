@@ -28,17 +28,6 @@ public class RenderPlasmaHeater extends RenderTaggedTile
             super.renderTileEntityAt(t, x, y, z, f);
         }
 
-        GL11.glPushMatrix();
-        GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
 
-        bindTexture(TEXTURE);
-
-        GL11.glPushMatrix();
-        GL11.glRotated(Math.toDegrees(tileEntity.rotation), 0, 1, 0);
-        MODEL.renderOnly("rrot", "srot");
-        GL11.glPopMatrix();
-
-        MODEL.renderAllExcept("rrot", "srot");
-        GL11.glPopMatrix();
     }
 }

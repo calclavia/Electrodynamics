@@ -19,7 +19,6 @@ class TileSolarPanel extends TileEnergyDistribution(Material.iron) {
     setTextureName("solarPanel_top")
     bounds(new Cuboid(0, 0, 0, 1, 0.3f, 1))
     isOpaqueCube(false)
-    normalRender(false)
 
   @SideOnly(Side.CLIENT) override def registerIcons(iconReg: IIconRegister) {
     SpatialBlock.icon.put("solarPanel_side", iconReg.registerIcon(Reference.prefix + "solarPanel_side"))

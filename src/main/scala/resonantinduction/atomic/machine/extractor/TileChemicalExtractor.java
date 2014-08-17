@@ -47,7 +47,7 @@ public class TileChemicalExtractor extends TileProcess implements IFluidHandler
         super(Material.iron);
         energy().setCapacity(ENERGY * 2);
         this.setSizeInventory(7);
-        this.isOpaqueCube(true);
+        this.isOpaqueCube(false);
         this.normalRender(false);
         inputSlot = 1;
         outputSlot = 2;

@@ -99,7 +99,6 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
         super(Material.wood);
         bounds(new Cuboid(0, 0, 0, 1, 0.9f, 1));
         isOpaqueCube(false);
-        normalRender(false);
         itemBlock(ItemBlockSaved.class);
     }
 

@@ -35,8 +35,6 @@ public class TileDetector extends TileFilterable implements IPacketIDReceiver
     {
         super();
         setTextureName(Reference.prefix() + "material_metal_side");
-        this.isOpaqueCube(false);
-        this.normalRender(false);
         this.canProvidePower(true);
     }
 

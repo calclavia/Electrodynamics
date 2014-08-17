@@ -50,7 +50,6 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
 	public TilePlacer()
 	{
 		super(Material.rock);
-		normalRender(false);
 		setSizeInventory(1);
 		//rotationMask = Byte.parseByte("111111", 2);
 	}

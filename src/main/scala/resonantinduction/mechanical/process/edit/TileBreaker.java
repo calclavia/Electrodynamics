@@ -43,7 +43,6 @@ public class TileBreaker extends TileAdvanced implements IRotatable, IPacketRece
 	public TileBreaker()
 	{
 		super(Material.iron);
-		normalRender(false);
 		//rotationMask = Byte.parseByte("111111", 2);
 	}
 

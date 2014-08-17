@@ -9,6 +9,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
 import resonantinduction.electrical.battery.{RenderBattery, TileBattery}
+import resonantinduction.electrical.generator.{TileMotor, RenderMotor}
 import resonantinduction.electrical.laser.emitter.{RenderLaserEmitter, TileLaserEmitter}
 import resonantinduction.electrical.laser.focus.crystal.{RenderFocusCrystal, TileFocusCrystal}
 import resonantinduction.electrical.laser.focus.mirror.{RenderMirror, TileMirror}
@@ -28,6 +29,7 @@ import universalelectricity.core.transform.vector.Vector3
 
   override def init {
     //RenderingRegistry.registerBlockHandler(new BlockRenderingHandler.type)
+    ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileMotor], new RenderMotor)
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileTesla], new RenderTesla)
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileBattery], new RenderBattery)
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileLaserEmitter], RenderLaserEmitter)

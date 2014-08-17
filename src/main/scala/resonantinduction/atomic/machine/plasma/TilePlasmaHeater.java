@@ -6,6 +6,7 @@ import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.world.World;
@@ -16,6 +17,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
+import org.lwjgl.opengl.GL11;
 import resonant.api.ITagRender;
 import resonant.engine.ResonantEngine;
 import resonant.lib.config.Config;
@@ -224,5 +226,4 @@ public class TilePlasmaHeater extends TileElectric implements IPacketReceiver, I
     {
         return FluidUtility.playerActivatedFluidItem(world(), x(), y(), z(), player, side);
     }
-
 }

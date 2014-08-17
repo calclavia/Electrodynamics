@@ -12,6 +12,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
+import org.lwjgl.opengl.GL11;
 import resonant.api.event.PlasmaEvent.SpawnPlasmaEvent;
 import resonant.content.prefab.java.TileAdvanced;
 import resonant.engine.grid.thermal.ThermalGrid;
@@ -103,4 +104,5 @@ public class TilePlasma extends TileAdvanced
     {
         temperature = newTemperature;
     }
+
 }
