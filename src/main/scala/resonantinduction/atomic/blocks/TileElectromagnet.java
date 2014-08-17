@@ -26,6 +26,8 @@ public class TileElectromagnet extends SpatialBlock implements IElectromagnet
     {
         super(Material.iron);
         blockResistance(20);
+        forceStandardRender(true);
+        normalRender(false);
         isOpaqueCube(false);
         this.itemBlock(ItemBlockMetadata.class);
     }

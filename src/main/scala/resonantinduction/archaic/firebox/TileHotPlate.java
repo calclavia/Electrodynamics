@@ -47,6 +47,7 @@ public class TileHotPlate extends TileInventory implements IPacketReceiver
 		setSizeInventory(4);
         bounds(new Cuboid(0, 0, 0, 1, 0.2f, 1));
         normalRender(false);
+        forceStandardRender(true);
         isOpaqueCube(false);
 	}
 

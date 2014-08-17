@@ -84,6 +84,7 @@ class TileTank extends TileTankNode(Material.iron) with ISneakPickup {
 
     isOpaqueCube(false)
     normalRender(false)
+    forceStandardRender(true)
     itemBlock(classOf[ItemBlockTank])
     setCapacity(16 * FluidContainerRegistry.BUCKET_VOLUME)
 
