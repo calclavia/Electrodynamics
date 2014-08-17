@@ -72,7 +72,7 @@ public class TileMixer extends TileMechanical implements IInventory
 			}
 		}
 
-		super.updateEntity();
+		super.update();
 
 		if (canWork())
 		{
