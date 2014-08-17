@@ -9,7 +9,11 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
 import resonantinduction.electrical.battery.{RenderBattery, TileBattery}
+import resonantinduction.electrical.laser.emitter.{RenderLaserEmitter, TileLaserEmitter}
+import resonantinduction.electrical.laser.focus.crystal.{RenderFocusCrystal, TileFocusCrystal}
+import resonantinduction.electrical.laser.focus.mirror.{RenderMirror, TileMirror}
 import resonantinduction.electrical.laser.fx.{EntityBlockParticleFX, EntityLaserFX, EntityScorchFX}
+import resonantinduction.electrical.laser.receiver.{RenderLaserReceiver, TileLaserReceiver}
 import resonantinduction.electrical.multimeter.{GuiMultimeter, PartMultimeter}
 import resonantinduction.electrical.render.FXElectricBolt
 import resonantinduction.electrical.tesla.{RenderTesla, TileTesla}
@@ -17,16 +21,19 @@ import universalelectricity.core.transform.vector.Vector3
 
 /** @author Calclavia */
 @SideOnly(Side.CLIENT) class ClientProxy extends CommonProxy {
-  override def preInit {
-    ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileTesla], new RenderTesla)
-    ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileBattery], new RenderBattery)
+  override def preInit
+  {
+
   }
 
   override def init {
     //RenderingRegistry.registerBlockHandler(new BlockRenderingHandler.type)
-    //ClientRegistry.bindTileEntitySpecialRenderer(classOf(TileLaserEmitter), RenderLaserEmitter)
-    //ClientRegistry.bindTileEntitySpecialRenderer(classOf(TileMirror), RenderMirror)
-    //ClientRegistry.bindTileEntitySpecialRenderer(classOf(TileFocusCrystal), RenderFocusCrystal)
+    ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileTesla], new RenderTesla)
+    ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileBattery], new RenderBattery)
+    ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileLaserEmitter], RenderLaserEmitter)
+    ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileLaserReceiver], RenderLaserReceiver)
+    ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileMirror], RenderMirror)
+    ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileFocusCrystal], RenderFocusCrystal)
   }
 
   override def postInit {

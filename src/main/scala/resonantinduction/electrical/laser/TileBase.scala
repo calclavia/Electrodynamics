@@ -1,25 +1,15 @@
 package resonantinduction.electrical.laser
 
-import net.minecraft.tileentity.TileEntity
+import net.minecraft.block.material.Material
 import net.minecraftforge.common.util.ForgeDirection
-import universalelectricity.core.transform.vector.Vector3
+import resonant.content.prefab.java.TileAdvanced
 
 /**
  * @author Calclavia
  */
-class TileBase extends TileEntity
+class TileBase extends TileAdvanced(Material.iron)
 {
-  def world = worldObj
-
   def isPowered(): Boolean = getWorldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord)
 
   def direction: ForgeDirection = ForgeDirection.getOrientation(getBlockMetadata)
-
-  def position: Vector3 = new Vector3(this)
-
-  def x = xCoord
-
-  def y = yCoord
-
-  def z = zCoord
 }

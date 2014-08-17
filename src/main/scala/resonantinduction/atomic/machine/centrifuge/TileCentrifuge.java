@@ -44,7 +44,7 @@ public class TileCentrifuge extends TileElectricInventory implements IPacketRece
     public TileCentrifuge()
     {
         super(Material.iron);
-        isOpaqueCube(true);
+        isOpaqueCube(false);
         normalRender(false);
         energy().setCapacity(DIAN * 2);
         setSizeInventory(4);

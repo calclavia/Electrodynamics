@@ -9,6 +9,7 @@ import net.minecraftforge.client.model.IModelCustom;
 import org.lwjgl.opengl.GL11;
 
 import resonant.lib.render.RenderUtility;
+import resonant.lib.render.model.FixedTechneModel;
 import resonantinduction.core.Reference;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -31,11 +32,19 @@ public class RenderChemicalExtractor extends TileEntitySpecialRenderer
 
         bindTexture(TEXTURE);
 
-        //GL11.glPushMatrix();
-        //MODEL.renderOnlyAroundPivot(Math.toDegrees(tileEntity.rotation), 0, 0, 1, "MAIN CHAMBER-ROTATES", "MAGNET 1-ROTATES", "MAGNET 2-ROTATES");
-        //GL11.glPopMatrix();
-        MODEL.renderAll();
-        //MODEL.renderAllExcept("MAIN CHAMBER-ROTATES", "MAGNET 1-ROTATES", "MAGNET 2-ROTATES");
+        if(MODEL instanceof FixedTechneModel)
+        {
+            GL11.glPushMatrix();
+            ((FixedTechneModel)MODEL).renderOnlyAroundPivot(Math.toDegrees(tileEntity.rotation), 0, 0, 1, "MAIN CHAMBER-ROTATES", "MAGNET 1-ROTATES", "MAGNET 2-ROTATES");
+            GL11.glPopMatrix();
+
+            MODEL.renderAllExcept("MAIN CHAMBER-ROTATES", "MAGNET 1-ROTATES", "MAGNET 2-ROTATES");
+        }else
+        {
+            MODEL.renderAll();
+        }
+
+
         GL11.glPopMatrix();
     }
 

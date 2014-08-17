@@ -102,11 +102,13 @@ object Atomic {
   final val ENTITY_ID_PREFIX: Int = 49
   final val SECOND_IN_TICKS: Int = 20
   final val NAME: String = Reference.name + " Atomic"
-  final val contentRegistry: ModManager = new ModManager().setPrefix(Reference.prefix).setTab(ResonantTab.tab)
+  final val contentRegistry: ModManager = new ModManager().setPrefix(Reference.prefix).setTab(ResonantTab)
   private final val SUPPORTED_LANGUAGES: Array[String] = Array[String]("en_US", "pl_PL", "de_DE", "ru_RU")
   var INSTANCE = this
-  @SidedProxy(clientSide = "resonantinduction.atomic.ClientProxy", serverSide = "resonantinduction.atomic.CommonProxy") var proxy: CommonProxy = null
-  @Mod.Metadata("ResonantInduction|Atomic") var metadata: ModMetadata = null
+  @SidedProxy(clientSide = "resonantinduction.atomic.ClientProxy", serverSide = "resonantinduction.atomic.CommonProxy")
+  var proxy: CommonProxy = null
+  @Mod.Metadata("ResonantInduction|Atomic")
+  var metadata: ModMetadata = null
 
   @EventHandler def preInit(event: FMLPreInitializationEvent) {
     Atomic.INSTANCE = this
@@ -159,20 +161,20 @@ object Atomic {
     AtomicContent.blockFulmination = Atomic.contentRegistry.newBlock(classOf[TileFulmination])
     AtomicContent.blockQuantumAssembler = Atomic.contentRegistry.newBlock(classOf[TileQuantumAssembler])
 
-    AtomicContent.itemHazmatTop = new ItemHazmat("HazmatMask", 0)
-    AtomicContent.itemHazmatBody = new ItemHazmat("HazmatBody", 1)
-    AtomicContent.itemHazmatLeggings = new ItemHazmat("HazmatLeggings", 2)
-    AtomicContent.itemHazmatBoots = new ItemHazmat("HazmatBoots", 3)
-    AtomicContent.itemCell = new Item().setUnlocalizedName("cellEmpty")
-    AtomicContent.itemFissileFuel = new ItemFissileFuel().setUnlocalizedName("rodFissileFuel")
-    AtomicContent.itemDeuteriumCell = new ItemCell().setUnlocalizedName("cellDeuterium")
-    AtomicContent.itemTritiumCell = new ItemCell().setUnlocalizedName("cellTritium")
-    AtomicContent.itemWaterCell = new ItemCell().setUnlocalizedName("cellWater")
-    AtomicContent.itemDarkMatter = new ItemDarkMatter().setUnlocalizedName("darkMatter")
-    AtomicContent.itemAntimatter = new ItemAntimatter().setUnlocalizedName("antimatter")
-    AtomicContent.itemBreedingRod = new ItemBreederFuel().setUnlocalizedName("rodBreederFuel")
-    AtomicContent.itemYellowCake = new ItemRadioactive().setUnlocalizedName("yellowcake")
-    AtomicContent.itemUranium = Atomic.contentRegistry.newItem(classOf[ItemUranium])
+    AtomicContent.itemHazmatTop = new ItemHazmat("HazmatMask", 0).setCreativeTab(ResonantTab)
+    AtomicContent.itemHazmatBody = new ItemHazmat("HazmatBody", 1).setCreativeTab(ResonantTab)
+    AtomicContent.itemHazmatLeggings = new ItemHazmat("HazmatLeggings", 2).setCreativeTab(ResonantTab)
+    AtomicContent.itemHazmatBoots = new ItemHazmat("HazmatBoots", 3).setCreativeTab(ResonantTab)
+    AtomicContent.itemCell = new Item().setUnlocalizedName("cellEmpty").setCreativeTab(ResonantTab)
+    AtomicContent.itemFissileFuel = new ItemFissileFuel().setUnlocalizedName("rodFissileFuel").setCreativeTab(ResonantTab)
+    AtomicContent.itemDeuteriumCell = new ItemCell().setUnlocalizedName("cellDeuterium").setCreativeTab(ResonantTab)
+    AtomicContent.itemTritiumCell = new ItemCell().setUnlocalizedName("cellTritium").setCreativeTab(ResonantTab)
+    AtomicContent.itemWaterCell = new ItemCell().setUnlocalizedName("cellWater").setCreativeTab(ResonantTab)
+    AtomicContent.itemDarkMatter = new ItemDarkMatter().setUnlocalizedName("darkMatter").setCreativeTab(ResonantTab)
+    AtomicContent.itemAntimatter = new ItemAntimatter().setUnlocalizedName("antimatter").setCreativeTab(ResonantTab)
+    AtomicContent.itemBreedingRod = new ItemBreederFuel().setUnlocalizedName("rodBreederFuel").setCreativeTab(ResonantTab)
+    AtomicContent.itemYellowCake = new ItemRadioactive().setUnlocalizedName("yellowcake").setCreativeTab(ResonantTab)
+    AtomicContent.itemUranium = Atomic.contentRegistry.newItem(classOf[ItemUranium]).setCreativeTab(ResonantTab)
 
     GameRegistry.registerItem(AtomicContent.itemHazmatTop, "HazmatMask", "ResonantInduction|Atomic");
     GameRegistry.registerItem(AtomicContent.itemHazmatBody, "HazmatBody", "ResonantInduction|Atomic");
@@ -237,6 +239,7 @@ object Atomic {
     })
     Settings.config.save
     ResonantTab.itemStack(new ItemStack(AtomicContent.blockReactorCell))
+    Atomic.proxy.preInit
   }
 
   @EventHandler def init(evt: FMLInitializationEvent) {

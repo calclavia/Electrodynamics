@@ -51,6 +51,8 @@ public class TileNuclearBoiler extends TileElectricInventory implements IPacketR
         super(Material.iron);
         energy().setCapacity(DIAN * 2);
         this.setSizeInventory(4);
+        normalRender(false);
+        isOpaqueCube(false);
     }
 
     @Override

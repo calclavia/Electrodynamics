@@ -9,6 +9,7 @@ import net.minecraftforge.client.model.IModelCustom;
 import org.lwjgl.opengl.GL11;
 
 import resonant.lib.render.RenderUtility;
+import resonant.lib.render.model.FixedTechneModel;
 import resonantinduction.core.Reference;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -32,10 +33,15 @@ public class RenderNuclearBoiler extends TileEntitySpecialRenderer
 
         bindTexture(TEXTURE);
 
-        MODEL.renderAll(); //TODO re-add rotation
-        //MODEL.renderOnlyAroundPivot(Math.toDegrees(tileEntity.rotation), 0, 1, 0, "FUEL BAR SUPPORT 1 ROTATES", "FUEL BAR 1 ROTATES");
-        //MODEL.renderOnlyAroundPivot(-Math.toDegrees(tileEntity.rotation), 0, 1, 0, "FUEL BAR SUPPORT 2 ROTATES", "FUEL BAR 2 ROTATES");
-        //MODEL.renderAllExcept("FUEL BAR SUPPORT 1 ROTATES", "FUEL BAR SUPPORT 2 ROTATES", "FUEL BAR 1 ROTATES", "FUEL BAR 2 ROTATES");
+        if(MODEL instanceof FixedTechneModel)
+        {
+            ((FixedTechneModel)MODEL).renderOnlyAroundPivot(Math.toDegrees(tileEntity.rotation), 0, 1, 0, "FUEL BAR SUPPORT 1 ROTATES", "FUEL BAR 1 ROTATES");
+            ((FixedTechneModel)MODEL).renderOnlyAroundPivot(-Math.toDegrees(tileEntity.rotation), 0, 1, 0, "FUEL BAR SUPPORT 2 ROTATES", "FUEL BAR 2 ROTATES");
+            MODEL.renderAllExcept("FUEL BAR SUPPORT 1 ROTATES", "FUEL BAR SUPPORT 2 ROTATES", "FUEL BAR 1 ROTATES", "FUEL BAR 2 ROTATES");
+        }else
+        {
+            MODEL.renderAll();
+        }
         GL11.glPopMatrix();
     }
 

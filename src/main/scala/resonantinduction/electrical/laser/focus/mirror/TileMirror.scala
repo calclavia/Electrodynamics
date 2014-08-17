@@ -22,7 +22,7 @@ class TileMirror extends TileBase with ILaserHandler with IFocus
 
   private var cachedHits = List[Vector3]()
 
-  override def updateEntity()
+  override def update()
   {
     if (isPowered())
     {

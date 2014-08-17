@@ -29,7 +29,7 @@ object RenderLaserEmitter extends TileEntitySpecialRenderer
     glEnable(GL_BLEND)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
-    tileEntity.asInstanceOf[TileLaserEmitter].direction match
+    tileEntity.asInstanceOf[TileLaserEmitter].getDirection match
     {
       case ForgeDirection.UNKNOWN =>
       case ForgeDirection.UP => glRotatef(-90, 1, 0, 0)
@@ -40,7 +40,7 @@ object RenderLaserEmitter extends TileEntitySpecialRenderer
       case ForgeDirection.EAST => glRotatef(0, 0, 1, 0)
     }
 
-    if (tileEntity.asInstanceOf[TileLaserEmitter].direction.offsetY == 0)
+    if (tileEntity.asInstanceOf[TileLaserEmitter].getDirection.offsetY == 0)
       glRotatef(-90, 0, 1, 0)
     else
       glRotatef(180, 1, 0, 0)

@@ -22,7 +22,7 @@ class TileFocusCrystal extends TileBase with ILaserHandler with IFocus
   var energy = 0D
   var color = new Vector3(1, 1, 1)
 
-  override def updateEntity()
+  override def update()
   {
     if (isPowered())
     {

@@ -36,6 +36,7 @@ public class TileBattery extends TileEnergyDistribution implements IPacketReceiv
         this.saveIOMap_$eq(true);
         this.normalRender(false);
         this.isOpaqueCube(false);
+        this.itemBlock(ItemBlockBattery.class);
 
     }
 

@@ -15,7 +15,7 @@ class TileLaserReceiver extends TileBase with ILaserHandler
   var redstoneValue = 0
   private var prevRedstoneValue = 0;
 
-  override def updateEntity()
+  override def update()
   {
     if (energy > 0)
     {

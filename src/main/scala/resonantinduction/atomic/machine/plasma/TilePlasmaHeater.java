@@ -51,6 +51,8 @@ public class TilePlasmaHeater extends TileElectric implements IPacketReceiver, I
         super(Material.iron);
         energy().setCapacity(joules);
         energy().setMaxTransfer(joules / 20);
+        normalRender(false);
+        isOpaqueCube(false);
     }
 
     @Override

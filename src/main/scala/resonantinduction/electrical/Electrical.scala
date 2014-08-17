@@ -17,11 +17,11 @@ import resonantinduction.core.resource.ItemResourcePart
 import resonantinduction.core.{Reference, ResonantTab, Settings}
 import resonantinduction.electrical.battery.{ItemBlockBattery, TileBattery}
 import resonantinduction.electrical.generator.{TileMotor, TileSolarPanel, TileThermopile}
-import resonantinduction.electrical.laser.emitter.BlockLaserEmitter
+import resonantinduction.electrical.laser.emitter.{TileLaserEmitter, BlockLaserEmitter}
 import resonantinduction.electrical.laser.focus.ItemFocusingMatrix
-import resonantinduction.electrical.laser.focus.crystal.BlockFocusCrystal
-import resonantinduction.electrical.laser.focus.mirror.BlockMirror
-import resonantinduction.electrical.laser.receiver.BlockLaserReceiver
+import resonantinduction.electrical.laser.focus.crystal.{TileFocusCrystal, BlockFocusCrystal}
+import resonantinduction.electrical.laser.focus.mirror.{TileMirror, BlockMirror}
+import resonantinduction.electrical.laser.receiver.{TileLaserReceiver, BlockLaserReceiver}
 import resonantinduction.electrical.levitator.ItemLevitator
 import resonantinduction.electrical.multimeter.ItemMultimeter
 import resonantinduction.electrical.tesla.TileTesla
@@ -61,6 +61,11 @@ object Electrical {
     ElectricalContent.blockLaserReceiver = new BlockLaserReceiver()
     ElectricalContent.blockMirror = new BlockMirror()
     ElectricalContent.blockFocusCrystal = new BlockFocusCrystal()
+
+    GameRegistry.registerTileEntity(classOf[TileLaserEmitter], "EMLaserEmitter");
+    GameRegistry.registerTileEntity(classOf[TileLaserReceiver], "EMLaserReceiver");
+    GameRegistry.registerTileEntity(classOf[TileMirror], "EMLaserMirror");
+    GameRegistry.registerTileEntity(classOf[TileFocusCrystal], "EMFocusCrystal");
 
     ElectricalContent.itemFocusingMatrix = new ItemFocusingMatrix()
 
