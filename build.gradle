@@ -61,13 +61,13 @@ allprojects {
         url "http://mobiusstrip.eu/maven"
     }
     maven {
-        name 'CB Repo'
+        name "CB Repo"
         url "https://chickenbones.net/maven/"
     }
-        maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
-        }
+    maven {
+        name = "forge"
+        url = "http://files.minecraftforge.net/maven"
+    }
 		ivy {
 			name 'FMP'
 			artifactPattern "http://files.minecraftforge.net/[module]/[module]-dev-[revision].[ext]"
