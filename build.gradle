@@ -74,7 +74,8 @@ allprojects {
 	}
 		mavenCentral()
     }
-    
+
+}    
     dependencies {
         compile group: 'universalelectricity', name: 'Universal-Electricity', version: "${rootProject.config.version.universalelectricity}", classifier: "dev"
 		if (System.getenv().JOB_NAME != null && System.getenv().JOB_NAME == "Resonant-Induction-Development")
