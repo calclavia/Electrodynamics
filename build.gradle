@@ -52,10 +52,18 @@ allprojects {
         version += ".${System.getenv("BUILD_NUMBER")}"
         
 	repositories {
-        maven {
-            name 'Calclavia Maven'
-            url 'http://calclavia.com/maven'
-        }
+       repositories {
+    maven {
+        url 'http://calclavia.com/maven'
+    }
+    maven {
+        name "Mobius Repo"
+        url "http://mobiusstrip.eu/maven"
+    }
+    maven {
+        name 'CB Repo'
+        url "https://chickenbones.net/maven/"
+    }
         maven {
             name = "forge"
             url = "http://files.minecraftforge.net/maven"
