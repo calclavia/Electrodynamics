@@ -51,8 +51,7 @@ allprojects {
     if (System.getenv("BUILD_NUMBER") != null)
         version += ".${System.getenv("BUILD_NUMBER")}"
         
-	repositories {
-       repositories {
+repositories {
     maven {
         url 'http://calclavia.com/maven'
     }
@@ -62,7 +61,7 @@ allprojects {
     }
     maven {
         name "CB Repo"
-        url "https://chickenbones.net/maven/"
+        url "https://chickenbones.net/maven"
     }
     maven {
         name = "forge"
@@ -106,7 +105,7 @@ allprojects {
 			}
 		}
 	}
-}
+
  
 subprojects {
     archivesBaseName = "${System.getenv().JOB_NAME}"    
