@@ -8,6 +8,7 @@ import net.minecraft.tileentity.TileEntity
 import org.lwjgl.opengl.GL11
 import resonant.api.mffs.machine.{IFieldMatrix, IProjector}
 import universalelectricity.core.transform.region.Cuboid
+import universalelectricity.core.transform.rotation.EulerAngle
 import universalelectricity.core.transform.vector.Vector3
 
 class ItemModePyramid extends ItemMode
@@ -82,7 +83,7 @@ class ItemModePyramid extends ItemMode
     projectorPos.add(projector.getTranslation)
     projectorPos.add(new Vector3(0, -negScale.yi + 1, 0))
     val relativePosition: Vector3 = position.clone.subtract(projectorPos)
-    relativePosition.apply(new Rotation(-projector.getRotationYaw, -projector.getRotationPitch, 0))
+    relativePosition.transform(new EulerAngle(-projector.getRotationYaw, -projector.getRotationPitch, 0))
     val region: Cuboid = new Cuboid(-negScale, posScale)
 
     if (region.intersects(relativePosition) && relativePosition.y > 0)

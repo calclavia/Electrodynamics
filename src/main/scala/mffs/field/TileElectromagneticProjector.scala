@@ -2,7 +2,6 @@ package mffs.field
 
 import java.util.{Set => JSet}
 
-import com.mojang.authlib.GameProfile
 import cpw.mods.fml.common.network.ByteBufUtils
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import io.netty.buffer.ByteBuf
@@ -23,7 +22,6 @@ import net.minecraft.world.{IBlockAccess, World}
 import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import resonant.api.mffs.machine.IProjector
 import resonant.api.mffs.modules.{IModule, IProjectorMode}
-import resonant.lib.access.java.Permission
 import resonant.lib.network.ByteBufWrapper.ByteBufWrapper
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import universalelectricity.core.transform.region.Cuboid
@@ -86,15 +84,15 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
     }
   }
 
-  override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType)
+  override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType) : Boolean =
   {
-    super.read(buf, id, player, packet)
 
     if (worldObj.isRemote)
     {
       if (id == TilePacketType.description.id)
       {
         isInverted = buf.readBoolean()
+        return true
       }
       else if (id == TilePacketType.effect.id)
       {
@@ -112,12 +110,14 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
           ModularForceFieldSystem.proxy.renderBeam(this.worldObj, vector, root, FieldColor.red, 40)
           ModularForceFieldSystem.proxy.renderHologramMoving(this.worldObj, vector, FieldColor.red, 50)
         }
+        return true
       }
       else if (id == TilePacketType.field.id)
       {
         val nbt = ByteBufUtils.readTag(buf)
         val nbtList = nbt.getTagList("blockList", 10)
         calculatedField = mutable.Set(((0 until nbtList.tagCount) map (i => new Vector3(nbtList.getCompoundTagAt(i)))).toArray: _ *)
+        return true
       }
     }
     else
@@ -125,8 +125,10 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
       if (id == TilePacketType.toggleMode2.id)
       {
         isInverted = !isInverted
+        return true
       }
     }
+    return  super.read(buf, id, player, packet)
   }
 
   def sendFieldToClient

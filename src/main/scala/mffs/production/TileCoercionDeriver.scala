@@ -11,6 +11,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
+import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.mffs.modules.IModule
 import resonant.lib.content.prefab.TElectric
 import resonant.lib.network.ByteBufWrapper.ByteBufWrapper
@@ -75,10 +76,10 @@ class TileCoercionDeriver extends TileModuleAcceptor with TElectric
         if (isInversed && Settings.enableElectricity)
         {
           //TODO: Check this
-          if (electricNode.getVoltage < 100)
+          if (electricNode.getVoltage(ForgeDirection.UNKNOWN) < 100)
           {
             val withdrawnElectricity = (requestFortron(productionRate / 20, true) / TileCoercionDeriver.ueToFortronRatio)
-            electricNode.applyPower(withdrawnElectricity * TileCoercionDeriver.energyConversionPercentage)
+            electricNode.addEnergy(ForgeDirection.UNKNOWN, withdrawnElectricity * TileCoercionDeriver.energyConversionPercentage, true)
           }
 
           recharge(getStackInSlot(TileCoercionDeriver.slotBattery))
@@ -88,12 +89,12 @@ class TileCoercionDeriver extends TileModuleAcceptor with TElectric
           if (getFortronEnergy < getFortronCapacity)
           {
             discharge(getStackInSlot(TileCoercionDeriver.slotBattery))
-            val energy = electricNode.getEnergy(getVoltage)
+            val energy = electricNode.getEnergy(ForgeDirection.UNKNOWN)
 
             if (energy >= getPower || (!Settings.enableElectricity && isItemValidForSlot(TileCoercionDeriver.slotFuel, getStackInSlot(TileCoercionDeriver.slotFuel))))
             {
               fortronTank.fill(FortronUtility.getFortron(productionRate), true)
-              electricNode.drawPower(getPower)
+              electricNode.removeEnergy(ForgeDirection.UNKNOWN, getPower, true)
 
               if (processTime == 0 && isItemValidForSlot(TileCoercionDeriver.slotFuel, getStackInSlot(TileCoercionDeriver.slotFuel)))
               {
@@ -182,16 +183,15 @@ class TileCoercionDeriver extends TileModuleAcceptor with TElectric
     }
   }
 
-  override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType)
+  override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType) : Boolean =
   {
-    super.read(buf, id, player, packet)
-
     if (world.isRemote)
     {
       if (id == TilePacketType.description.id)
       {
         isInversed = buf.readBoolean()
         processTime = buf.readInt()
+        return true
       }
     }
     else
@@ -199,8 +199,10 @@ class TileCoercionDeriver extends TileModuleAcceptor with TElectric
       if (id == TilePacketType.toggleMoe.id)
       {
         isInversed = !isInversed
+        return true
       }
     }
+    return super.read(buf, id, player, packet)
   }
 
   override def readFromNBT(nbt: NBTTagCompound)

@@ -17,6 +17,7 @@ import resonant.api.mffs.Blacklist
 import resonant.api.mffs.event.EventStabilize
 import resonant.api.mffs.machine.IProjector
 import resonant.lib.network.discriminator.PacketTile
+import universalelectricity.core.transform.rotation.EulerAngle
 import universalelectricity.core.transform.vector.{Vector3, VectorWorld}
 
 class ItemModuleStabilize extends ItemModule
@@ -45,7 +46,7 @@ class ItemModuleStabilize extends ItemModule
         val fieldBlocks = projector.getMode.asInstanceOf[ItemModeCustom].getFieldBlockMap(projector, projector.getModeStack)
         val fieldCenter: Vector3 = new Vector3(tile) + projector.getTranslation
         val relativePosition: Vector3 = position.clone.subtract(fieldCenter)
-        relativePosition.apply(new Rotation(-projector.getRotationYaw, -projector.getRotationPitch, 0))
+        relativePosition.transform(new EulerAngle(-projector.getRotationYaw, -projector.getRotationPitch, 0))
         blockInfo = fieldBlocks(relativePosition.round)
       }
 

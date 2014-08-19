@@ -85,18 +85,19 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
     }
   }
 
-  override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType)
+  override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType) : Boolean =
   {
-    super.read(buf, id, player, packet)
-
     if (id == TilePacketType.description.id)
     {
       transferMode = TransferMode(buf.readInt)
+      return true
     }
     else if (id == TilePacketType.toggleMoe.id)
     {
       transferMode = this.transferMode.toggle
+      return true
     }
+    return super.read(buf, id, player, packet)
   }
 
   override def readFromNBT(nbt: NBTTagCompound)

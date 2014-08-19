@@ -29,14 +29,14 @@ abstract class TileMFFSInventory extends TileMFFS with TInventory with TPrefabIn
     }
   }
 
-  override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType)
+  override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType) : Boolean =
   {
-    super.read(buf, id, player, packet)
-
     if (id == TilePacketType.description.id || id == TilePacketType.inventory.id)
     {
       getInventory.load(buf.readTag())
+      return true;
     }
+    return super.read(buf, id, player, packet)
   }
 
   def sendInventoryToClients

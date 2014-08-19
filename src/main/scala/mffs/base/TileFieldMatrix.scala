@@ -18,6 +18,7 @@ import resonant.lib.content.prefab.TRotatable
 import resonant.lib.network.ByteBufWrapper.ByteBufWrapper
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.utility.RotationUtility
+import universalelectricity.core.transform.rotation.EulerAngle
 import universalelectricity.core.transform.vector.Vector3
 
 import scala.collection.convert.wrapAll._
@@ -68,15 +69,15 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     }
   }
 
-  override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType)
+  override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType) : Boolean =
   {
-    super.read(buf, id, player, packet)
 
     if (world.isRemote)
     {
       if (id == TilePacketType.description.id)
       {
         absoluteDirection = buf.readBoolean()
+        return true
       }
     }
     else
@@ -84,8 +85,11 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
       if (id == TilePacketType.toggleMode4.id)
       {
         absoluteDirection = !absoluteDirection
+        return true
       }
     }
+
+    return super.read(buf, id, player, packet)
   }
 
   override def isItemValidForSlot(slotID: Int, itemStack: ItemStack): Boolean =
@@ -346,11 +350,11 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     val rotationYaw = getRotationYaw
     val rotationPitch = getRotationPitch
 
-    val rotation = new Rotation(rotationYaw, rotationPitch, 0)
+    val rotation : EulerAngle = new EulerAngle(rotationYaw, rotationPitch)
 
     val maxHeight = world.getHeight
 
-    field = mutable.Set((field.view.par map (pos => (pos.apply(rotation) + position + translation).round) filter (position => position.yi <= maxHeight && position.yi >= 0)).seq.toSeq: _ *)
+    field = mutable.Set((field.view.par map (pos => (pos.transform(rotation) + position + translation).round) filter (position => position.yi <= maxHeight && position.yi >= 0)).seq.toSeq: _ *)
 
     getModules() foreach (_.onPostCalculate(this, field))
 
@@ -378,10 +382,10 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     val translation = getTranslation
     val rotationYaw = getRotationYaw
     val rotationPitch = getRotationPitch
-    val rotation = new Rotation(rotationYaw, rotationPitch, 0)
+    val rotation = new EulerAngle(rotationYaw, rotationPitch, 0)
     val maxHeight = world.getHeight
 
-    val field = mutable.Set((newField.view.par map (pos => (pos.apply(rotation) + position + translation).round) filter (position => position.yi <= maxHeight && position.yi >= 0)).seq.toSeq: _ *)
+    val field = mutable.Set((newField.view.par map (pos => (pos.transform(rotation) + position + translation).round) filter (position => position.yi <= maxHeight && position.yi >= 0)).seq.toSeq: _ *)
 
     cache(cacheID, field)
     return field

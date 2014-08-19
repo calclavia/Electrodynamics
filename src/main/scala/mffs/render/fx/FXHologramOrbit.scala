@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.{OpenGlHelper, RenderBlocks, Tessellator}
 import net.minecraft.world.World
 import org.lwjgl.opengl.GL11
 import resonant.lib.render.RenderUtility
+import universalelectricity.core.transform.rotation.EulerAngle
 import universalelectricity.core.transform.vector.Vector3
 
 /**
@@ -27,7 +28,7 @@ class FXHologramOrbit(par1World: World, orbitPosition: Vector3, position: Vector
     val speed: Double = this.maxSpeed * (this.particleAge.asInstanceOf[Float] / this.particleMaxAge.asInstanceOf[Float])
     val originalPosition: Vector3 = new Vector3(this)
     val relativePosition: Vector3 = originalPosition.clone.subtract(this.orbitPosition)
-    relativePosition.apply(new Rotation(speed, 0, 0))
+    relativePosition.transform(new EulerAngle(speed, 0, 0))
     val newPosition: Vector3 = this.orbitPosition.clone.add(relativePosition)
     this.rotation += speed
     this.moveEntity(newPosition.x - originalPosition.x, newPosition.y - originalPosition.y, newPosition.z - originalPosition.z)

@@ -7,6 +7,7 @@ import net.minecraft.tileentity.TileEntity
 import org.lwjgl.opengl.GL11
 import resonant.api.mffs.machine.{IFieldMatrix, IProjector}
 import resonant.lib.render.block.ModelCube
+import universalelectricity.core.transform.rotation.EulerAngle
 import universalelectricity.core.transform.vector.Vector3
 
 /**
@@ -73,7 +74,7 @@ class ItemModeCylinder extends ItemMode
     val projectorPos: Vector3 = new Vector3(projector.asInstanceOf[TileEntity])
     projectorPos.add(projector.getTranslation)
     val relativePosition: Vector3 = position.clone.subtract(projectorPos)
-    relativePosition.apply(new Rotation(-projector.getRotationYaw, -projector.getRotationPitch, 0))
+    relativePosition.transform(new EulerAngle(-projector.getRotationYaw, -projector.getRotationPitch, 0))
     if (relativePosition.x * relativePosition.x + relativePosition.z * relativePosition.z + radiusExpansion <= radius * radius)
     {
       return true

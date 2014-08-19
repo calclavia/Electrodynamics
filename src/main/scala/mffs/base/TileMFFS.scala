@@ -17,7 +17,7 @@ import resonant.lib.content.prefab.TRotatable
 import resonant.lib.network.ByteBufWrapper.ByteBufWrapper
 import resonant.lib.network.IPlayerUsing
 import resonant.lib.network.discriminator.PacketType
-import resonant.lib.network.handle.{TPacketIDReceiver, TPacketIDSender}
+import resonant.lib.network.handle.{IPacketIDReceiver, TPacketIDSender}
 import resonant.lib.network.netty.PacketManager
 import resonant.lib.utility.inventory.InventoryUtility
 import universalelectricity.core.transform.vector.Vector3
@@ -28,7 +28,7 @@ import scala.collection.convert.wrapAll._
  * A base tile class for all MFFS blocks to inherit.
  * @author Calclavia
  */
-abstract class TileMFFS extends SpatialTile(Material.iron) with ICamouflageMaterial with TPacketIDReceiver with TPacketIDSender with IActivatable with IPlayerUsing
+abstract class TileMFFS extends SpatialTile(Material.iron) with ICamouflageMaterial with IPacketIDReceiver with TPacketIDSender with IActivatable with IPlayerUsing
 {
   /**
    * Used for client side animations.
@@ -123,7 +123,7 @@ abstract class TileMFFS extends SpatialTile(Material.iron) with ICamouflageMater
 
   def getDescPacket: PacketType = PacketManager.request(this, TilePacketType.description.id)
 
-  override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType)
+  override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType) : Boolean =
   {
     if (id == TilePacketType.description.id)
     {
@@ -135,6 +135,7 @@ abstract class TileMFFS extends SpatialTile(Material.iron) with ICamouflageMater
       {
         markRender()
       }
+      return true
     }
     else if (id == TilePacketType.toggleActivation.id)
     {
@@ -148,7 +149,9 @@ abstract class TileMFFS extends SpatialTile(Material.iron) with ICamouflageMater
       {
         setActive(false)
       }
+      return true
     }
+    return false
   }
 
   override def write(buf: ByteBuf, id: Int)

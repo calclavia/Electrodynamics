@@ -16,6 +16,7 @@ import resonant.api.mffs.fortron.FrequencyGridRegistry
 import resonant.api.mffs.machine.IProjector
 import resonant.engine.grid.frequency.FrequencyGrid
 import resonant.lib.access.java.Permission
+import universalelectricity.core.transform.rotation.EulerAngle
 import universalelectricity.core.transform.vector.Vector3
 
 import scala.collection.JavaConversions._
@@ -133,7 +134,7 @@ object MFFSUtility
             {
               val fieldCenter = new Vector3(projector.asInstanceOf[TileEntity]) + projector.getTranslation()
               var relativePosition: Vector3 = position - fieldCenter
-              relativePosition = relativePosition.apply(new Rotation(-projector.getRotationYaw, -projector.getRotationPitch, 0))
+              relativePosition = relativePosition.transform(new EulerAngle(-projector.getRotationYaw, -projector.getRotationPitch, 0))
 
               val blockInfo = fieldMap(relativePosition.round)
 
