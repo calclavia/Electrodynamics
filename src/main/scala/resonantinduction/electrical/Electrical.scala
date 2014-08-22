@@ -7,13 +7,12 @@ import cpw.mods.fml.common.network.NetworkRegistry
 import cpw.mods.fml.common.registry.GameRegistry
 import cpw.mods.fml.common.{Mod, ModMetadata, SidedProxy}
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.item.ItemStack
+import net.minecraft.item.{Item, ItemStack}
 import net.minecraftforge.event.entity.EntityJoinWorldEvent
 import net.minecraftforge.oredict.OreDictionary
 import resonant.content.loader.ModManager
 import resonant.lib.loadable.LoadableHandler
 import resonantinduction.atomic.gate.ItemQuantumGlyph
-import resonantinduction.core.resource.ItemResourcePart
 import resonantinduction.core.{Reference, ResonantTab, Settings}
 import resonantinduction.electrical.battery.{ItemBlockBattery, TileBattery}
 import resonantinduction.electrical.generator.{TileMotor, TileSolarPanel, TileThermopile}
@@ -82,7 +81,7 @@ object Electrical {
     ElectricalContent.blockTesla = Electrical.contentRegistry.newBlock(classOf[TileTesla])
     ElectricalContent.blockBattery = Electrical.contentRegistry.newBlock(classOf[TileBattery])
     ElectricalContent.itemLevitator = Electrical.contentRegistry.newItem(classOf[ItemLevitator])
-    ElectricalContent.itemInsulation = Electrical.contentRegistry.newItem("insulation", classOf[ItemResourcePart])
+    ElectricalContent.itemInsulation = Electrical.contentRegistry.newItem("insulation", classOf[Item])
     ElectricalContent.blockSolarPanel = Electrical.contentRegistry.newBlock(classOf[TileSolarPanel])
     ElectricalContent.blockMotor = Electrical.contentRegistry.newBlock(classOf[TileMotor])
     ElectricalContent.blockThermopile = Electrical.contentRegistry.newBlock(classOf[TileThermopile])

@@ -11,8 +11,7 @@ import resonant.lib.network.discriminator.PacketTile;
 import resonant.lib.network.discriminator.PacketType;
 import resonant.lib.network.handle.IPacketIDReceiver;
 import resonant.lib.utility.WorldUtility;
-import resonant.lib.wrapper.ObjectOrWrapper;
-import resonantinduction.core.prefab.LimitedTank;
+import resonant.lib.prefab.fluid.LimitedTank;
 import universalelectricity.api.core.grid.INodeProvider;
 import universalelectricity.api.core.grid.ISave;
 import universalelectricity.core.grid.node.NodeConnector;
@@ -181,13 +180,9 @@ public class NodeTank extends NodeConnector implements IFluidTank, IFluidHandler
     {
         if(obj != null)
         {
-            if(obj.getClass().isAssignableFrom(getClass()))
+            if(obj.getClass().isAssignableFrom(getParent().getClass()))
             {
                 return true;
-            }
-            else if(obj instanceof INodeProvider)
-            {
-                return ((INodeProvider) obj).getNode(getClass(), dir) != null;
             }
         }
         return false;

@@ -1,7 +1,7 @@
 package resonantinduction.compatibility.nei;
 
 import resonant.lib.utility.LanguageUtility;
-import resonantinduction.core.RecipeType;
+import resonant.content.factory.resources.RecipeType;
 
 public class RISawmillRecipeHandler extends RITemplateRecipeHandler
 {

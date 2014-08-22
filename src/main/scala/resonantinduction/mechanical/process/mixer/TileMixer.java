@@ -5,7 +5,8 @@ import java.util.List;
 import java.util.Set;
 
 import net.minecraft.init.Blocks;
-import resonantinduction.core.RecipeType;
+import resonant.content.factory.resources.RecipeType;
+import resonant.engine.ResonantEngine;
 import resonantinduction.mechanical.energy.grid.TileMechanical;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -21,8 +22,7 @@ import resonant.api.recipe.MachineRecipes;
 import resonant.lib.utility.inventory.InventoryUtility;
 import resonantinduction.core.Reference;
 import resonantinduction.core.Timer;
-import resonantinduction.core.resource.ResourceGenerator;
-import resonantinduction.core.resource.fluid.BlockFluidMixture;
+import resonant.content.factory.resources.block.BlockFluidMixture;
 import universalelectricity.core.transform.rotation.Quaternion;
 import universalelectricity.core.transform.vector.Vector3;
 
@@ -180,7 +180,7 @@ public class TileMixer extends TileMechanical implements IInventory
 		if (mixPosition.getBlock(world()) != getBlockType())
 		{
 			Block block = mixPosition.getBlock(worldObj);
-			Block blockFluidFinite = ResourceGenerator.getMixture(ResourceGenerator.getName(entity.getEntityItem()));
+			Block blockFluidFinite = ResonantEngine.resourceFactory.getMixture(ResonantEngine.resourceFactory.getName(entity.getEntityItem()));
 
 			if (blockFluidFinite != null)
 			{

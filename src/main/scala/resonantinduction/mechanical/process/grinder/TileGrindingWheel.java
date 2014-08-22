@@ -13,7 +13,7 @@ import resonant.api.recipe.MachineRecipes;
 import resonant.api.recipe.RecipeResource;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.RecipeType;
+import resonant.content.factory.resources.RecipeType;
 import resonantinduction.core.Timer;
 import universalelectricity.core.transform.region.Cuboid;
 import universalelectricity.core.transform.vector.Vector3;

@@ -6,8 +6,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -22,12 +20,10 @@ import resonant.lib.network.discriminator.PacketType;
 import resonant.lib.network.handle.IPacketReceiver;
 import resonant.lib.utility.FluidUtility;
 import resonant.lib.utility.inventory.InventoryUtility;
-import resonantinduction.core.RecipeType;
+import resonant.content.factory.resources.RecipeType;
 import resonantinduction.core.Reference;
-import resonantinduction.core.ResonantInduction;
 import universalelectricity.core.transform.vector.Vector3;
 import resonant.lib.content.prefab.java.TileInventory;
-import com.google.common.io.ByteArrayDataInput;
 
 /**
  * Turns molten fuilds into ingots.

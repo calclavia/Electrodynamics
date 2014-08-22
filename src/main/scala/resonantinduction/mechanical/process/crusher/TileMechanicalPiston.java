@@ -2,7 +2,7 @@ package resonantinduction.mechanical.process.crusher;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.ReflectionHelper;
-import resonantinduction.core.RecipeType;
+import resonant.content.factory.resources.RecipeType;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
 import resonantinduction.mechanical.energy.grid.TileMechanical;
 import net.minecraft.block.Block;

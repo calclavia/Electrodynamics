@@ -10,18 +10,13 @@ import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.util.IIcon;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
 import resonant.content.spatial.block.SpatialBlock;
 import resonant.engine.grid.thermal.BoilEvent;
 import resonant.engine.grid.thermal.ThermalPhysics;
 import resonant.lib.network.discriminator.PacketAnnotation;
-import resonant.lib.network.discriminator.PacketTile;
 import resonant.lib.network.discriminator.PacketType;
 import resonant.lib.network.handle.IPacketReceiver;
 import resonant.lib.utility.FluidUtility;
-import resonantinduction.archaic.Archaic;
-import resonantinduction.archaic.fluid.gutter.TileGutter;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -40,12 +35,8 @@ import net.minecraftforge.fluids.IFluidHandler;
 import resonant.lib.network.Synced;
 import resonantinduction.core.CoreContent;
 import resonantinduction.core.Reference;
-import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.resource.ResourceGenerator;
-import resonantinduction.core.resource.TileMaterial;
 import universalelectricity.core.transform.vector.Vector3;
 import resonant.lib.content.prefab.java.TileElectricInventory;
-import com.google.common.io.ByteArrayDataInput;
 
 import java.util.List;
 
@@ -133,35 +124,7 @@ public class TileFirebox extends TileElectricInventory implements IPacketReceive
 				heatEnergy += POWER / 20;
 				boolean usedHeat = false;
 
-				if (block == CoreContent.blockDust()|| block == CoreContent.blockRefinedDust())
-				{
-					usedHeat = true;
-
-					TileEntity dustTile = worldObj.getTileEntity(xCoord, yCoord + 1, zCoord);
-
-					if (dustTile instanceof TileMaterial)
-					{
-						String name = ((TileMaterial) dustTile).name();
-						int meta = worldObj.getBlockMetadata(xCoord, yCoord + 1, zCoord);
-
-						if (heatEnergy >= getMeltIronEnergy(((meta + 1) / 7f) * 1000))
-						{
-							int volumeMeta = block == CoreContent.blockRefinedDust() ? meta : meta / 2;
-
-							worldObj.setBlock(xCoord, yCoord + 1, zCoord, ResourceGenerator.getMolten(name), volumeMeta, 3);
-
-							TileEntity tile = worldObj.getTileEntity(xCoord, yCoord + 1, zCoord);
-
-							if (tile instanceof TileMaterial)
-							{
-								((TileMaterial) tile).name_$eq(name);
-							}
-
-							heatEnergy = 0;
-						}
-					}
-				}
-				else if (block == Blocks.water)
+                if (block == Blocks.water)
 				{
 					usedHeat = true;
 					int volume = 100;

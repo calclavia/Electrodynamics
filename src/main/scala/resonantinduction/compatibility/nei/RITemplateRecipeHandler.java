@@ -19,7 +19,7 @@ import resonant.api.recipe.RecipeResource.FluidStackResource;
 import resonant.api.recipe.RecipeResource.ItemStackResource;
 import resonant.api.recipe.RecipeResource.OreDictResource;
 import resonant.lib.utility.LanguageUtility;
-import resonantinduction.core.RecipeType;
+import resonant.content.factory.resources.RecipeType;
 import resonantinduction.core.Reference;
 import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.GuiRecipe;
