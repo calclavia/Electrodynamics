@@ -142,7 +142,7 @@ public class MechanicalNode extends MultipartNode implements IMechanicalNode, IS
                 Entry<Object, ForgeDirection> entry = it.next();
                 ForgeDirection dir = entry.getValue();
 
-                if (entry.getKey() instanceof Mechanical) adjacentMech = (MechanicalNode) entry.getKey();
+                if (entry.getKey() instanceof MechanicalNode) adjacentMech = (MechanicalNode) entry.getKey();
                 if (entry.getKey() instanceof INodeProvider)
                 {
                     INode node = ((INodeProvider) entry.getKey()).getNode(MechanicalNode.class, dir.getOpposite());

@@ -14,21 +14,45 @@ abstract class MultipartNode(parent: INodeProvider) extends NodeConnector(parent
 {
   override def world: World =
   {
-    return if (parent.isInstanceOf[TMultiPart]) (parent.asInstanceOf[TMultiPart]).world else if (parent.isInstanceOf[TileEntity]) (parent.asInstanceOf[TileEntity]).getWorldObj else null
+    if(parent != null) {
+      if (parent.isInstanceOf[TMultiPart])
+        return parent.asInstanceOf[TMultiPart].world
+      else if (parent.isInstanceOf[TileEntity])
+        return parent.asInstanceOf[TileEntity].getWorldObj
+    }
+    return null
   }
 
   override def x: Double =
   {
-    return if (parent.isInstanceOf[TMultiPart]) (parent.asInstanceOf[TMultiPart]).x else if (parent.isInstanceOf[TileEntity]) (parent.asInstanceOf[TileEntity]).xCoord else 0
+    if(parent != null) {
+      if (parent.isInstanceOf[TMultiPart])
+        return (parent.asInstanceOf[TMultiPart]).x
+      else if (parent.isInstanceOf[TileEntity])
+        return (parent.asInstanceOf[TileEntity]).xCoord
+    }
+    return 0
   }
 
   override def y: Double =
   {
-    return if (parent.isInstanceOf[TMultiPart]) (parent.asInstanceOf[TMultiPart]).y else if (parent.isInstanceOf[TileEntity]) (parent.asInstanceOf[TileEntity]).yCoord else 0
+    if(parent != null) {
+      if (parent.isInstanceOf[TMultiPart])
+        return (parent.asInstanceOf[TMultiPart]).y
+      else if (parent.isInstanceOf[TileEntity])
+        return (parent.asInstanceOf[TileEntity]).yCoord
+    }
+    return 0
   }
 
   override def z: Double =
   {
-    return if (parent.isInstanceOf[TMultiPart]) (parent.asInstanceOf[TMultiPart]).z else if (parent.isInstanceOf[TileEntity]) (parent.asInstanceOf[TileEntity]).zCoord else 0
+    if(parent != null) {
+      if (parent.isInstanceOf[TMultiPart])
+        return (parent.asInstanceOf[TMultiPart]).z
+      else if (parent.isInstanceOf[TileEntity])
+        return (parent.asInstanceOf[TileEntity]).zCoord
+    }
+    return 0
   }
 }

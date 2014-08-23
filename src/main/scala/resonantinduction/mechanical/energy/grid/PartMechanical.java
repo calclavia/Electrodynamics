@@ -3,6 +3,7 @@ package resonantinduction.mechanical.energy.grid;
 import java.util.ArrayList;
 import java.util.List;
 
+import codechicken.multipart.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -12,10 +13,6 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.util.ForgeDirection;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
-import codechicken.multipart.ControlKeyModifer;
-import codechicken.multipart.JCuboidPart;
-import codechicken.multipart.JNormalOcclusion;
-import codechicken.multipart.TFacePart;
 import resonant.engine.ResonantEngine;
 import universalelectricity.api.core.grid.INode;
 import universalelectricity.api.core.grid.INodeProvider;
@@ -47,6 +44,23 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
     }
 
     @Override
+    public void onNeighborChanged()
+    {
+        super.onNeighborChanged();
+        node.reconstruct();
+    }
+
+    @Override
+    public void onPartChanged(TMultiPart part)
+    {
+        super.onPartChanged(part);
+        if(part instanceof INodeProvider)
+        {
+            node.reconstruct();
+        }
+    }
+
+    @Override
     public void update()
     {
         ticks++;
@@ -54,7 +68,6 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
         {
             ticks = 0;
         }
-        
         //Make sure to update on both sides
         this.node.update();
         
@@ -112,7 +125,9 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
     public INode getNode(Class<? extends INode> nodeType, ForgeDirection from)
     {
         if (nodeType.isAssignableFrom(node.getClass()))
+        {
             return node;
+        }
         return null;
     }
 

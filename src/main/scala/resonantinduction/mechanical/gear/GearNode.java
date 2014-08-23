@@ -37,13 +37,11 @@ public class GearNode extends MechanicalNode
 			angularVelocity = 0;
 		}
 		else
-		{
-			if (gear().tier == 10)
-			{
-				torque = 100;
-				angularVelocity = 100;
-			}
-		}
+        if (gear().tier == 10)
+        {
+            torque = 100;
+            angularVelocity = 100;
+        }
 	}
 
 	@Override
