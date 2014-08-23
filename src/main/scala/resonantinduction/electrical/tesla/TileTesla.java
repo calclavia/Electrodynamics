@@ -5,7 +5,6 @@ package resonantinduction.electrical.tesla;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -15,16 +14,13 @@ import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import resonant.lib.multiblock.reference.IMultiBlockStructure;
@@ -32,19 +28,15 @@ import resonant.lib.multiblock.reference.MultiBlockHandler;
 import resonant.lib.network.discriminator.PacketTile;
 import resonant.lib.network.discriminator.PacketType;
 import resonant.lib.network.handle.IPacketReceiver;
-import resonant.lib.prefab.damage.ElectricalDamage;
 import resonant.lib.render.EnumColor;
 import resonant.lib.utility.LanguageUtility;
 import resonant.lib.utility.LinkUtility;
-import resonant.lib.utility.WrenchUtility;
 import resonantinduction.core.Reference;
-import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.part.MultipartUtility;
 import resonantinduction.electrical.Electrical;
 import universalelectricity.core.transform.vector.Vector3;
 
-import com.google.common.io.ByteArrayDataInput;
 import resonant.lib.content.prefab.java.TileElectric;
 import universalelectricity.core.transform.vector.VectorWorld;
 
@@ -104,9 +96,9 @@ public class TileTesla extends TileElectric implements IMultiBlockStructure<Tile
 	}
 
 	@Override
-	public void initiate()
+	public void start()
 	{
-		super.initiate();
+		super.start();
 		TeslaGrid.instance().register(this);
 	}
 

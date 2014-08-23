@@ -1,12 +1,6 @@
 package resonantinduction.atomic.machine.fulmination;
 
-import java.util.EnumSet;
-
 import net.minecraft.block.material.Material;
-import net.minecraftforge.common.util.ForgeDirection;
-import resonantinduction.core.Reference;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import resonant.lib.content.prefab.java.TileElectric;
 
 /** Fulmination TileEntity */
@@ -23,9 +17,9 @@ public class TileFulmination extends TileElectric
     }
 
     @Override
-    public void initiate()
+    public void start()
     {
-        super.initiate();
+        super.start();
         FulminationHandler.INSTANCE.register(this);
     }
 
@@ -41,6 +35,6 @@ public class TileFulmination extends TileElectric
     public void invalidate()
     {
         FulminationHandler.INSTANCE.unregister(this);
-        super.initiate();
+        super.start();
     }
 }

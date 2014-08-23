@@ -23,12 +23,8 @@ import universalelectricity.core.transform.vector.Vector3;
 
 import java.lang.reflect.Method;
 
-public class TileMechanicalPiston extends TileMechanical implements IRotatable
+public class TileMechanicalPiston extends TileMechanical
 {
-    @Config(comment = "Outdated, not used anymore. use mechanicalPistonMultiplier as its based on block hardness now")
-    @Deprecated
-    private static int mechanicalPistonBreakCount = 5;
-
     @Config
     private static int mechanicalPistonMultiplier = 2;
 
@@ -40,6 +36,7 @@ public class TileMechanicalPiston extends TileMechanical implements IRotatable
 
         mechanicalNode = new MechanicalNode(this)
         {
+            public void onUpdate() { super.onUpdate(); System.out.println("MechPistonTick");}
             @Override
             protected void revolve()
             {
@@ -57,7 +54,7 @@ public class TileMechanicalPiston extends TileMechanical implements IRotatable
         isOpaqueCube(false);
         normalRender(false);
         customItemRender(true);
-        //rotationMask = Byte.parseByte("111111", 2);
+        rotationMask_$eq(Byte.parseByte("111111", 2));
         setTextureName("material_steel_dark");
     }
 

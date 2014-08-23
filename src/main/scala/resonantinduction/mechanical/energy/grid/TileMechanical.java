@@ -41,12 +41,6 @@ public abstract class TileMechanical extends TileNode implements INodeProvider, 
     /** External debug GUI */
     DebugFrameMechanical frame = null;
 
-    @Deprecated
-    public TileMechanical()
-    {
-        this(null);
-    }
-
     public TileMechanical(Material material)
     {
         super(material);

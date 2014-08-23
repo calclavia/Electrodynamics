@@ -55,10 +55,10 @@ public class TilePump extends TileMechanical implements IRotatable, IFluidHandle
 	}
 
 	@Override
-	public void initiate()
+	public void start()
 	{
 		pressureNode.reconstruct();
-		super.initiate();
+		super.start();
 	}
 
 	@Override

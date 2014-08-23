@@ -102,9 +102,9 @@ class TileTankNode(material: Material) extends TileAdvanced(material) with INode
   override def getTankInfo(from: ForgeDirection): Array[FluidTankInfo] = tankNode.getTankInfo(from)
 
 
-  override def initiate()
+  override def start()
   {
-    super.initiate()
+    super.start()
     tankNode.reconstruct()
   }
 

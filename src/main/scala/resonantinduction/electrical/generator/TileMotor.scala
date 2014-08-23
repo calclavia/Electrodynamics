@@ -26,8 +26,8 @@ class TileMotor extends TileElectric(Material.iron) with IRotatable {
     return ((gearRatio + 1) % 3).asInstanceOf[Byte]
   }
 
-  override def initiate {
-    super.initiate
+  override def start {
+    super.start
     if (mech_node != null) mech_node.reconstruct
   }
 

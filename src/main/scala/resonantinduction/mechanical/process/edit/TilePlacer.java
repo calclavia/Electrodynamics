@@ -25,10 +25,7 @@ import resonant.lib.render.RenderItemOverlayUtility;
 import resonant.lib.utility.LanguageUtility;
 import resonant.lib.utility.inventory.InternalInventoryHandler;
 import resonant.lib.utility.inventory.InventoryUtility;
-import resonantinduction.core.ResonantInduction;
 import universalelectricity.core.transform.vector.Vector3;
-
-import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -76,9 +73,9 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
 	}
 
 	@Override
-	public void initiate()
+	public void start()
 	{
-		super.initiate();
+		super.start();
 	}
 
 	@Override
