@@ -36,7 +36,6 @@ public class TileMechanicalPiston extends TileMechanical
 
         mechanicalNode = new MechanicalNode(this)
         {
-            public void onUpdate() { super.onUpdate(); System.out.println("MechPistonTick");}
             @Override
             protected void revolve()
             {

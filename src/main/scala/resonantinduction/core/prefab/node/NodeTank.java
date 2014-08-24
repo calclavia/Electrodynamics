@@ -157,14 +157,14 @@ public class NodeTank extends NodeConnector implements IFluidTank, IFluidHandler
 
     public void sendTank()
     {
-        ResonantEngine.instance.packetHandler.sendToAllAround(new PacketTile((int)x(), (int)y(), (int)z(), tank.writeToNBT(new NBTTagCompound())), this, 64);
+        ResonantEngine.instance.packetHandler.sendToAllAround(new PacketTile((int)x(), (int)y(), (int)z(), PACKET_TANK, tank.writeToNBT(new NBTTagCompound())), this, 64);
     }
 
     public void sendUpdate()
     {
         NBTTagCompound tag = new NBTTagCompound();
         save(tag);
-        ResonantEngine.instance.packetHandler.sendToAllAround(new PacketTile((int)x(), (int)y(), (int)z(), tag), this, 64);
+        ResonantEngine.instance.packetHandler.sendToAllAround(new PacketTile((int)x(), (int)y(), (int)z(), PACKET_DESCRIPTION, tag), this, 64);
     }
 
 

@@ -9,7 +9,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import resonant.content.prefab.java.TileAdvanced
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
-import resonant.lib.network.handle.{IPacketIDReceiver, TPacketIDSender}
+import resonant.lib.network.handle.IPacketIDReceiver
 import universalelectricity.api.core.grid.{INode, INodeProvider}
 
 /**
@@ -17,7 +17,7 @@ import universalelectricity.api.core.grid.{INode, INodeProvider}
  *
  * @author DarkGuardsman
  */
-class TileTankNode(material: Material) extends TileAdvanced(material) with INodeProvider with IFluidHandler with IPacketIDReceiver with TPacketIDSender
+class TileTankNode(material: Material) extends TileAdvanced(material) with INodeProvider with IFluidHandler with IPacketIDReceiver
 {
   val PACKET_DESCRIPTION = 0
   val PACKET_RENDER = 1
