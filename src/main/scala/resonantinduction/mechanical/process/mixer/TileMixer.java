@@ -23,6 +23,7 @@ import resonant.lib.utility.inventory.InventoryUtility;
 import resonantinduction.core.Reference;
 import resonantinduction.core.Timer;
 import resonant.content.factory.resources.block.BlockFluidMixture;
+import universalelectricity.api.core.grid.INode;
 import universalelectricity.core.transform.rotation.Quaternion;
 import universalelectricity.core.transform.vector.Vector3;
 
@@ -40,12 +41,19 @@ public class TileMixer extends TileMechanical implements IInventory
 	public TileMixer()
 	{
 		super(Material.iron);
-		mechanicalNode = new MixerNode(this).setConnection(Byte.parseByte("000011", 2));
+		mechanicalNode = new MixerNode(this);
 		isOpaqueCube(false);
 		normalRender(false);
 		customItemRender(true);
 		setTextureName("material_metal_top");
 	}
+
+    @Override
+    public void getNodes(List<INode> nodes)
+    {
+        if(mechanicalNode != null)
+            nodes.add(this.mechanicalNode);
+    }
 
 	@Override
 	public void update()
@@ -71,8 +79,6 @@ public class TileMixer extends TileMechanical implements IInventory
 				}
 			}
 		}
-
-		super.update();
 
 		if (canWork())
 		{

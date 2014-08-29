@@ -68,13 +68,13 @@ public class MechanicalNode extends MultipartNode implements IMechanicalNode, IS
 		return 0.5;
 	}
 
-	public void update()
+	final public void update()
 	{
 		update(0.05f);
 	}
 
 	@Override
-	public void update(double deltaTime)
+	final public void update(double deltaTime)
 	{
 		ticks++;
 		if (ticks >= Long.MAX_VALUE)
@@ -282,9 +282,11 @@ public class MechanicalNode extends MultipartNode implements IMechanicalNode, IS
     public boolean canConnect(ForgeDirection direction, Object object)
     {
         if(canConnect(direction)) {
-            if (object instanceof INodeProvider) {
+            if (object instanceof INodeProvider)
+            {
                 return ((INodeProvider) object).getNode(MechanicalNode.class, direction.getOpposite()) instanceof MechanicalNode;
             }
+            return object instanceof MechanicalNode;
         }
         return false;
     }

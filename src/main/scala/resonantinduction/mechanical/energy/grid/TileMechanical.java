@@ -1,6 +1,7 @@
 package resonantinduction.mechanical.energy.grid;
 
 import java.io.IOException;
+import java.util.List;
 
 import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
@@ -20,6 +21,7 @@ import resonant.lib.network.discriminator.PacketTile;
 import resonant.lib.network.discriminator.PacketType;
 import resonant.lib.network.handle.IPacketIDReceiver;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.mechanical.Mechanical;
 import universalelectricity.api.core.grid.INode;
 import universalelectricity.api.core.grid.INodeProvider;
 import universalelectricity.core.transform.vector.Vector3;
@@ -35,7 +37,7 @@ public abstract class TileMechanical extends TileNode implements INodeProvider, 
     protected static final int PACKET_NBT = 0;
     protected static final int PACKET_VELOCITY = 1;
 
-    /** Node that handles most resonantinduction.mechanical actions */
+    /** Node that handles most mechanical actions */
     public MechanicalNode mechanicalNode;
     
     /** External debug GUI */
@@ -108,9 +110,7 @@ public abstract class TileMechanical extends TileNode implements INodeProvider, 
     @Override
     public INode getNode(Class<? extends INode> nodeType, ForgeDirection from)
     {
-        if (nodeType.isAssignableFrom(mechanicalNode.getClass()))
-            return mechanicalNode;
-        return null;
+        return mechanicalNode;
     }
     
     @Override

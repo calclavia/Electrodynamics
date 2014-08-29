@@ -19,42 +19,39 @@ import resonant.lib.config.Config;
 import resonant.lib.utility.MovementUtility;
 import resonant.lib.utility.inventory.InventoryUtility;
 import resonantinduction.core.ResonantInduction;
+import universalelectricity.api.core.grid.INode;
 import universalelectricity.core.transform.vector.Vector3;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
+/**
+ * Mechanical driven piston that can be used to move basic blocks and crush ores
+ * @author Calclavia
+ */
 public class TileMechanicalPiston extends TileMechanical
 {
     @Config
     private static int mechanicalPistonMultiplier = 2;
 
-    private boolean markRevolve = false;
+    protected boolean markRevolve = false;
 
     public TileMechanicalPiston()
     {
         super(Material.piston);
-
-        mechanicalNode = new MechanicalNode(this)
-        {
-            @Override
-            protected void revolve()
-            {
-                markRevolve = true;
-            }
-
-            @Override
-            public boolean canConnect(ForgeDirection from, Object source)
-            {
-                return from != getDirection();
-            }
-
-        }.setLoad(0.5f);
-
+        mechanicalNode = new NodeMechanicalPiston(this);
         isOpaqueCube(false);
         normalRender(false);
         customItemRender(true);
         rotationMask_$eq(Byte.parseByte("111111", 2));
         setTextureName("material_steel_dark");
+    }
+
+    @Override
+    public void getNodes(List<INode> nodes)
+    {
+        if(mechanicalNode != null)
+            nodes.add(this.mechanicalNode);
     }
 
     @Override
@@ -85,13 +82,11 @@ public class TileMechanicalPiston extends TileMechanical
 
     public boolean hitOreBlock(Vector3 blockPos)
     {
+        //TODO add a crushing head to enforce block breaking on all block types
         Block block = blockPos.getBlock(world());
 
         if (block != null)
         {
-            int breakCount = (int) (mechanicalPistonMultiplier * block.getBlockHardness(world(), blockPos.xi(), blockPos.yi(), blockPos.zi()));
-            final int startBreakCount = breakCount;
-
             ItemStack blockStack = new ItemStack(block);
             RecipeResource[] resources = MachineRecipes.INSTANCE.getOutput(RecipeType.CRUSHER.name(), blockStack);
 
@@ -99,26 +94,18 @@ public class TileMechanicalPiston extends TileMechanical
             {
                 if (!worldObj.isRemote)
                 {
-                    int breakStatus = (int) (((float) (startBreakCount - breakCount) / (float) startBreakCount) * 10f);
-                    world().destroyBlockInWorldPartially(0, blockPos.xi(), blockPos.yi(), blockPos.zi(), breakStatus);
-                    //ResonantInduction.LOGGER.info("[Mechanical Piston] Break Count: " + breakCount);
-                    
-                    if (breakCount >= mechanicalPistonMultiplier)
+                    for (RecipeResource recipe : resources)
                     {
-                        for (RecipeResource recipe : resources)
+                        if (Math.random() <= recipe.getChance())
                         {
-                            if (Math.random() <= recipe.getChance())
-                            {
-                                InventoryUtility.dropItemStack(world(), blockPos.clone().add(0.5), recipe.getItemStack(), 10, 0);
-                            }
+                            InventoryUtility.dropItemStack(world(), blockPos.clone().add(0.5), recipe.getItemStack(), 10, 0);
                         }
-
-                        blockPos.setBlockToAir(world());
                     }
+
+                    blockPos.setBlockToAir(world());
                 }
 
                 ResonantInduction.proxy().renderBlockParticle(worldObj, blockPos.clone().add(0.5), new Vector3((Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3), Block.getIdFromBlock(block), 1);
-                breakCount--;
                 return true;
             }
         }
@@ -133,8 +120,6 @@ public class TileMechanicalPiston extends TileMechanical
 
     public boolean canMove(Vector3 from, Vector3 to)
     {
-        TileEntity tileEntity = from.getTileEntity(worldObj);
-
         if (this.equals(to.getTileEntity(getWorldObj())))
         {
             return false;
