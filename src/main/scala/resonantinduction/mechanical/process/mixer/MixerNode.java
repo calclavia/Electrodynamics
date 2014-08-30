@@ -15,6 +15,8 @@ public class MixerNode extends MechanicalNode
     public MixerNode(INodeProvider parent)
     {
         super(parent);
+        maxDeltaAngle = Math.toRadians(45);
+        sharePower = false;
     }
 
     @Override
@@ -24,7 +26,7 @@ public class MixerNode extends MechanicalNode
     }
 
     @Override
-    public boolean inverseRotation(ForgeDirection dir, IMechanicalNode with)
+    public boolean inverseRotation(ForgeDirection dir)
     {
         return dir == ForgeDirection.DOWN;
     }

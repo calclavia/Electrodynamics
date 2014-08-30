@@ -109,7 +109,7 @@ public class GearShaftNode extends MechanicalNode
 	}
 
 	@Override
-	public boolean inverseRotation(ForgeDirection dir, IMechanicalNode with)
+	public boolean inverseRotation(ForgeDirection dir)
 	{
 		if (shaft().placementSide.offsetY != 0 || shaft().placementSide.offsetZ != 0)
 		{

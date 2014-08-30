@@ -79,7 +79,7 @@ public class DebugFrameMechanical extends FrameNodeDebug
                     case 1:
                         return "Tile";
                     case 2:
-                        return "Torque";
+                        return "Force";
                     case 3:
                         return "Speed";
                 }
@@ -107,8 +107,8 @@ public class DebugFrameMechanical extends FrameNodeDebug
                     {
                         case 0: return dir;
                         case 1: return node;
-                        case 2: return node.getTorque();
-                        case 3: return node.getAngularSpeed();
+                        case 2: return node.getForce(dir);
+                        case 3: return node.getAngularSpeed(dir);
                     }
                 }
                 return "00000";

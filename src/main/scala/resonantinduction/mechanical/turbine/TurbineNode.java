@@ -29,14 +29,8 @@ public class TurbineNode extends MechanicalNode
 	}
 
 	@Override
-	public boolean inverseRotation(ForgeDirection dir, IMechanicalNode with)
+	public boolean inverseRotation(ForgeDirection dir)
 	{
 		return dir == turbine().getDirection().getOpposite();
-	}
-
-	@Override
-	public float getRatio(ForgeDirection dir, IMechanicalNode with)
-	{
-		return turbine().getMultiBlock().isConstructed() ? turbine().multiBlockRadius - 0.5f : 0.5f;
 	}
 }

@@ -13,7 +13,8 @@ public class NodeMechanicalPiston extends MechanicalNode
     public NodeMechanicalPiston(TileMechanicalPiston parent)
     {
         super(parent);
-        setLoad(0.5);
+        maxDeltaAngle = Math.toRadians(45);
+        sharePower = false;
     }
 
     @Override

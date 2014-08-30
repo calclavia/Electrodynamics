@@ -9,6 +9,8 @@ import codechicken.lib.vec.Rotation;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 import universalelectricity.api.core.grid.INodeProvider;
+import universalelectricity.core.transform.vector.IVectorWorld;
+import universalelectricity.core.transform.vector.VectorWorld;
 
 /**
  * Node for the gear
@@ -275,9 +277,9 @@ public class GearNode extends MechanicalNode
 	}
 
 	@Override
-	public float getRatio(ForgeDirection dir, IMechanicalNode with)
+	public double getRadius(ForgeDirection dir, IMechanicalNode with)
 	{
-		universalelectricity.core.transform.vector.Vector3 deltaPos = with.position().subtract(position());
+		universalelectricity.core.transform.vector.Vector3 deltaPos = new VectorWorld((IVectorWorld)with).subtract(position());
 
 		boolean caseX = gear().placementSide.offsetX != 0 && deltaPos.y() == 0 && deltaPos.z() == 0;
 		boolean caseY = gear().placementSide.offsetY != 0 && deltaPos.x() == 0 && deltaPos.z() == 0;
@@ -285,10 +287,10 @@ public class GearNode extends MechanicalNode
 
 		if (caseX || caseY || caseZ)
 		{
-			return super.getRatio(dir, with);
+			return super.getRadius(dir, with);
 		}
 
-		return gear().getMultiBlock().isConstructed() ? 1.5f : super.getRatio(dir, with);
+		return gear().getMultiBlock().isConstructed() ? 1.5f : super.getRadius(dir, with);
 	}
 
 }

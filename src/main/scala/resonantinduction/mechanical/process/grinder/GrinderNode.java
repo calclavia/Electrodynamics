@@ -12,6 +12,7 @@ public class GrinderNode extends MechanicalNode
     public GrinderNode(TileGrindingWheel parent)
     {
         super(parent);
+        sharePower = false;
     }
 
     public TileGrindingWheel grider()
@@ -30,7 +31,7 @@ public class GrinderNode extends MechanicalNode
     }
 
     @Override
-    public boolean inverseRotation(ForgeDirection dir, IMechanicalNode with)
+    public boolean inverseRotation(ForgeDirection dir)
     {
         return !(dir.offsetX > 0 || dir.offsetZ < 0 || dir.offsetY < 0);
     }

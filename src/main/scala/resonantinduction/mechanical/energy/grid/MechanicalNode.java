@@ -15,24 +15,36 @@ import resonantinduction.core.prefab.node.MultipartNode;
 import resonantinduction.mechanical.Mechanical;
 import universalelectricity.api.core.grid.INode;
 import universalelectricity.api.core.grid.INodeProvider;
+import universalelectricity.api.core.grid.IUpdate;
 import universalelectricity.core.transform.vector.IVectorWorld;
 import universalelectricity.core.transform.vector.Vector3;
 import codechicken.multipart.TMultiPart;
 import universalelectricity.core.transform.vector.VectorWorld;
 
 /**
- * A resonantinduction.mechanical node for resonantinduction.mechanical energy.
+ * Prefab node for the mechanical system used by almost ever mechanical object in Resonant Induction. Handles connections to other tiles, and shares power with them
  *
  * @author Calclavia, Darkguardsman
  */
-public class MechanicalNode extends MultipartNode implements IMechanicalNode, ISaveObj, IVectorWorld
+public class MechanicalNode extends MultipartNode implements IMechanicalNode, ISaveObj, IVectorWorld, IUpdate
 {
+    /** Marks that the rotation has changed and should be updated client side */
 	public boolean markRotationUpdate = false;
+
+    /** Makrs that the torque value has changed and should be updated client side */
 	public boolean markTorqueUpdate = false;
+
+    /** Allows the node to share its power with other nodes*/
+    public boolean sharePower = true;
 
 	public double torque = 0, prevTorque;
 	public double prevAngularVelocity, angularVelocity = 0;
-    public double renderAngle = 0, prev_angle = 0;
+
+    /** Current angle of rotation, mainly used for rendering */
+    public double renderAngle = 0;
+
+    /** Angle of rotation of last update */
+    public double prev_angle = 0;
 
 	public float acceleration = 2f;
 
@@ -42,18 +54,12 @@ public class MechanicalNode extends MultipartNode implements IMechanicalNode, IS
 
 	private double power = 0;
 
+    /** Current update tick # */
 	private long ticks = 0;
 
 	public MechanicalNode(INodeProvider parent)
 	{
 		super(parent);
-	}
-
-	@Override
-	public MechanicalNode setLoad(double load)
-	{
-		this.load = load;
-		return this;
 	}
 
 	public MechanicalNode setConnection(byte connectionMap)
@@ -63,12 +69,30 @@ public class MechanicalNode extends MultipartNode implements IMechanicalNode, IS
 	}
 
 	@Override
-	public double getRadius()
+	public double getRadius(ForgeDirection dir, IMechanicalNode with)
 	{
 		return 0.5;
 	}
 
-	final public void update()
+    @Override
+    public double getAngularSpeed(ForgeDirection side)
+    {
+        return angularVelocity;
+    }
+
+    @Override
+    public double getForce(ForgeDirection side)
+    {
+        return torque;
+    }
+
+    @Override
+    public boolean inverseRotation(ForgeDirection side)
+    {
+        return false;
+    }
+
+    final public void update()
 	{
 		update(0.05f);
 	}
@@ -79,12 +103,14 @@ public class MechanicalNode extends MultipartNode implements IMechanicalNode, IS
 		ticks++;
 		if (ticks >= Long.MAX_VALUE)
 		{
-			ticks = 1;
+			ticks = 0;
 		}
+
 		//-----------------------------------
 		// Render Update
 		//-----------------------------------
 
+        // Updates rotation angle and prevents it from rotating too fast
 		if (angularVelocity >= 0)
 		{
 			renderAngle += Math.min(angularVelocity, this.maxDeltaAngle) * deltaTime;
@@ -94,10 +120,11 @@ public class MechanicalNode extends MultipartNode implements IMechanicalNode, IS
 			renderAngle += Math.max(angularVelocity, -this.maxDeltaAngle) * deltaTime;
 		}
 
-		if (renderAngle % (Math.PI * 2) != renderAngle)
+        // Cap rotation angle to prevent render issues
+		if (renderAngle >= Math.PI * 2)
 		{
 			revolve();
-			renderAngle = renderAngle % (Math.PI * 2);
+            renderAngle = renderAngle % (Math.PI * 2);
 		}
 
 		//-----------------------------------
@@ -134,49 +161,64 @@ public class MechanicalNode extends MultipartNode implements IMechanicalNode, IS
 			}
 
 			power = getEnergy() / deltaTime;
-            Iterator<Entry<Object, ForgeDirection>> it = connections.entrySet().iterator();
 
-            while (it.hasNext())
+            if(sharePower)
             {
-                MechanicalNode adjacentMech = null;
-                Entry<Object, ForgeDirection> entry = it.next();
-                ForgeDirection dir = entry.getValue();
+                // Power sharing calculations
+                Iterator<Entry<Object, ForgeDirection>> it = connections.entrySet().iterator();
 
-                if (entry.getKey() instanceof MechanicalNode) adjacentMech = (MechanicalNode) entry.getKey();
-                if (entry.getKey() instanceof INodeProvider)
+                while (it.hasNext())
                 {
-                    INode node = ((INodeProvider) entry.getKey()).getNode(MechanicalNode.class, dir.getOpposite());
-                    if(node instanceof MechanicalNode)
-                        adjacentMech = (MechanicalNode) node;
-                }
-                if (adjacentMech != null)
-                {
-                    /** Calculate angular velocity and torque. */
-                    float ratio = adjacentMech.getRatio(dir.getOpposite(), this) / getRatio(dir, adjacentMech);
-                    boolean inverseRotation = inverseRotation(dir, adjacentMech) && adjacentMech.inverseRotation(dir.getOpposite(), this);
+                    MechanicalNode adjacentMech = null;
+                    Entry<Object, ForgeDirection> entry = it.next();
+                    ForgeDirection dir = entry.getValue();
 
-                    int inversion = inverseRotation ? -1 : 1;
-
-                    double targetTorque = inversion * adjacentMech.getTorque() / ratio;
-                    double applyTorque = targetTorque * acceleration;
-
-                    if (Math.abs(torque + applyTorque) < Math.abs(targetTorque)) {
-                        torque += applyTorque;
-                    } else if (Math.abs(torque - applyTorque) > Math.abs(targetTorque)) {
-                        torque -= applyTorque;
+                    // Get mech node
+                    if (entry.getKey() instanceof MechanicalNode)
+                    {
+                        adjacentMech = (MechanicalNode) entry.getKey();
+                    }
+                    else if (entry.getKey() instanceof INodeProvider)
+                    {
+                        INode node = ((INodeProvider) entry.getKey()).getNode(MechanicalNode.class, dir.getOpposite());
+                        if (node instanceof MechanicalNode)
+                            adjacentMech = (MechanicalNode) node;
+                    }
+                    else
+                    {
+                        it.remove();
                     }
 
-                    double targetVelocity = inversion * adjacentMech.getAngularSpeed() * ratio;
-                    double applyVelocity = targetVelocity * acceleration;
+                    // If node is not null apply power
+                    if (adjacentMech != null)
+                    {
+                        /** Calculate angular velocity and torque. */
+                        double ratio = adjacentMech.getRadius(dir.getOpposite(), this) / getRadius(dir, adjacentMech);
+                        boolean inverseRotation = inverseRotation(dir) && adjacentMech.inverseRotation(dir.getOpposite());
 
-                    if (Math.abs(angularVelocity + applyVelocity) < Math.abs(targetVelocity)) {
-                        angularVelocity += applyVelocity;
-                    } else if (Math.abs(angularVelocity - applyVelocity) > Math.abs(targetVelocity)) {
-                        angularVelocity -= applyVelocity;
+                        int inversion = inverseRotation ? -1 : 1;
+
+                        double targetTorque = inversion * adjacentMech.getTorque() / ratio;
+                        double applyTorque = targetTorque * acceleration;
+
+                        if (Math.abs(torque + applyTorque) < Math.abs(targetTorque)) {
+                            torque += applyTorque;
+                        } else if (Math.abs(torque - applyTorque) > Math.abs(targetTorque)) {
+                            torque -= applyTorque;
+                        }
+
+                        double targetVelocity = inversion * adjacentMech.getAngularSpeed() * ratio;
+                        double applyVelocity = targetVelocity * acceleration;
+
+                        if (Math.abs(angularVelocity + applyVelocity) < Math.abs(targetVelocity)) {
+                            angularVelocity += applyVelocity;
+                        } else if (Math.abs(angularVelocity - applyVelocity) > Math.abs(targetVelocity)) {
+                            angularVelocity -= applyVelocity;
+                        }
+
+                        /** Set all current rotations */
+                        // adjacentMech.angle = Math.abs(angle) * (adjacentMech.angle >= 0 ? 1 : -1);
                     }
-
-                    /** Set all current rotations */
-                    // adjacentMech.angle = Math.abs(angle) * (adjacentMech.angle >= 0 ? 1 : -1);
                 }
             }
         }
@@ -215,28 +257,14 @@ public class MechanicalNode extends MultipartNode implements IMechanicalNode, IS
 		this.angularVelocity += angularVelocity;
 	}
 
-	@Override
-	public double getTorque()
+	private double getTorque()
 	{
 		return angularVelocity != 0 ? torque : 0;
 	}
 
-	@Override
-	public double getAngularSpeed()
+	private double getAngularSpeed()
 	{
 		return torque != 0 ? angularVelocity : 0;
-	}
-
-	@Override
-	public float getRatio(ForgeDirection dir, IMechanicalNode with)
-	{
-		return 0.5f;
-	}
-
-	@Override
-	public boolean inverseRotation(ForgeDirection dir, IMechanicalNode with)
-	{
-		return true;
 	}
 
 	/**
@@ -252,13 +280,11 @@ public class MechanicalNode extends MultipartNode implements IMechanicalNode, IS
 		return load;
 	}
 
-	@Override
 	public double getEnergy()
 	{
 		return getTorque() * getAngularSpeed();
 	}
 
-	@Override
 	public double getPower()
 	{
 		return power;

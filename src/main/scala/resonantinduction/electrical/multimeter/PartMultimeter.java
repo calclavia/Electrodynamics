@@ -216,9 +216,9 @@ public class PartMultimeter extends PartFace implements IRedstonePart, IPacketRe
 
             if (instance != null)
             {
-                getNetwork().torqueGraph.queue(instance.getTorque());
-                getNetwork().angularVelocityGraph.queue(instance.getAngularSpeed());
-                getNetwork().powerGraph.queue(instance.getPower());
+                getNetwork().torqueGraph.queue(instance.getForce(receivingSide));
+                getNetwork().angularVelocityGraph.queue(instance.getAngularSpeed(receivingSide));
+                getNetwork().powerGraph.queue(instance.getForce(receivingSide) * instance.getAngularSpeed(receivingSide));
             }
         }
 

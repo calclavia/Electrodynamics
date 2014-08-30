@@ -37,7 +37,7 @@ public class TileGrindingWheel extends TileMechanical implements IRotatable
 	public TileGrindingWheel()
 	{
 		super(Material.rock);
-		mechanicalNode = new GrinderNode(this).setLoad(2);
+		mechanicalNode = new GrinderNode(this);
 		bounds(new Cuboid(0.05f, 0.05f, 0.05f, 0.95f, 0.95f, 0.95f));
 		isOpaqueCube(false);
 		normalRender(false);
@@ -89,12 +89,12 @@ public class TileGrindingWheel extends TileMechanical implements IRotatable
 
 		}
 
-		if (mechanicalNode.getAngularSpeed() != 0)
+		if (mechanicalNode.getAngularSpeed(ForgeDirection.UNKNOWN) != 0)
 		{
 			// Move entity based on the direction of the block.
 			ForgeDirection dir = getDirection();
 			dir = ForgeDirection.getOrientation(!(dir.ordinal() % 2 == 0) ? dir.ordinal() - 1 : dir.ordinal()).getOpposite();
-			double speed = mechanicalNode.getAngularSpeed() / 20;
+			double speed = mechanicalNode.getAngularSpeed(ForgeDirection.UNKNOWN) / 20;
 			double speedX = dir.offsetX * speed;
 			double speedZ = dir.offsetZ * speed;
 			double speedY = Math.random() * speed;

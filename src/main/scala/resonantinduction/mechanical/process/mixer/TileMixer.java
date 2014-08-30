@@ -92,7 +92,7 @@ public class TileMixer extends TileMechanical
 	 */
 	public boolean canWork()
 	{
-		return mechanicalNode.getAngularSpeed() != 0 && !areaBlockedFromMoving;
+		return mechanicalNode.getAngularSpeed(ForgeDirection.UNKNOWN) != 0 && !areaBlockedFromMoving;
 	}
 
 	public void doWork()
@@ -111,7 +111,7 @@ public class TileMixer extends TileMechanical
 			 */
 			Vector3 originalPosition = new Vector3(entity);
 			Vector3 relativePosition = originalPosition.clone().subtract(new Vector3(this).add(0.5));
-			relativePosition.transform(new Quaternion(- mechanicalNode.getAngularSpeed(), new Vector3(1,0,0)));
+			relativePosition.transform(new Quaternion(- mechanicalNode.getAngularSpeed(ForgeDirection.UNKNOWN), new Vector3(1,0,0)));
 			Vector3 newPosition = new Vector3(this).add(0.5).add(relativePosition);
 			Vector3 difference = newPosition.subtract(originalPosition).multiply(0.5);
 

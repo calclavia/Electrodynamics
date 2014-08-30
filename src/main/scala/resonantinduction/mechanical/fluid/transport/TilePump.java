@@ -34,11 +34,11 @@ public class TilePump extends TileMechanical implements IRotatable, IFluidHandle
 				{
 					if (dir == getDirection())
 					{
-						return (int) Math.max(Math.abs(mechanicalNode.getTorque() / 8000d), 2);
+						return (int) Math.max(Math.abs(mechanicalNode.getForce(ForgeDirection.UNKNOWN) / 8000d), 2);
 					}
 					else if (dir == getDirection().getOpposite())
 					{
-						return (int) -Math.max(Math.abs(mechanicalNode.getTorque() / 8000d), 2);
+						return (int) -Math.max(Math.abs(mechanicalNode.getForce(ForgeDirection.UNKNOWN) / 8000d), 2);
 					}
 				}
 
