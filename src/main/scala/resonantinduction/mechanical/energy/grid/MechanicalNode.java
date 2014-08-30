@@ -290,4 +290,10 @@ public class MechanicalNode extends MultipartNode implements IMechanicalNode, IS
         }
         return false;
     }
+
+    @Override
+    public boolean isValidConnection(Object object)
+    {
+        return true;
+    }
 }

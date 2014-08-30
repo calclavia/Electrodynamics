@@ -30,9 +30,8 @@ import universalelectricity.core.transform.vector.Vector3;
 /**
  * @author Calclavia
  */
-public class TileMixer extends TileMechanical implements IInventory
+public class TileMixer extends TileMechanical
 {
-	public static final long POWER = 500000;
 	public static final int PROCESS_TIME = 12 * 20;
 	public static final Timer<EntityItem> timer = new Timer<EntityItem>();
 	
@@ -208,75 +207,5 @@ public class TileMixer extends TileMechanical implements IInventory
 		}
 
 		return false;
-	}
-
-	@Override
-	public int getSizeInventory()
-	{
-		return 1;
-	}
-
-	@Override
-	public ItemStack getStackInSlot(int i)
-	{
-		return null;
-	}
-
-	@Override
-	public ItemStack decrStackSize(int i, int j)
-	{
-		return null;
-	}
-
-	@Override
-	public ItemStack getStackInSlotOnClosing(int i)
-	{
-		return null;
-	}
-
-	@Override
-	public void setInventorySlotContents(int i, ItemStack itemstack)
-	{
-		if (!worldObj.isRemote)
-		{
-			Vector3 spawnVector = new Vector3(this).add(ForgeDirection.getOrientation(worldObj.rand.nextInt(4) + 2)).add(0.5);
-			InventoryUtility.dropItemStack(worldObj, spawnVector, itemstack, 20, 0);
-		}
-	}
-
-    @Override
-    public String getInventoryName() {
-        return "Mixer";
-    }
-
-    @Override
-    public boolean hasCustomInventoryName() {
-        return true;
-    }
-
-    @Override
-    public int getInventoryStackLimit() {
-        return 64;
-    }
-
-    @Override
-    public boolean isUseableByPlayer(EntityPlayer p_70300_1_) {
-        return false;
-    }
-
-    @Override
-    public void openInventory() {
-
-    }
-
-    @Override
-    public void closeInventory() {
-
-    }
-
-    @Override
-	public boolean isItemValidForSlot(int i, ItemStack itemstack)
-	{
-		return MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER.name(), itemstack).length > 0;
 	}
 }
