@@ -86,7 +86,7 @@ repositories {
 		    compile name: 'ForgeMultipart', version: "${config.version.minecraft}-${config.version.fmp}", ext: 'jar'
 		    compile name: 'NotEnoughItems', version: "${config.version.nei}", ext: 'jar'
 		    compile name: 'CodeChickenCore', version: "${config.version.cccore}", ext: 'jar'
-		    compile name 'Universal-Electricity, version: "${config.version.universalelectricity}", ext: 'jar'
+		    compile name: 'UniversalElectricity', version: "${config.version.universalelectricity}", ext: 'jar'
 	}
     
     jar {
