@@ -159,3 +159,8 @@ task createChangelog(type: ChangelogTask) {
 }
 
 build.dependsOn "apiZip", "copyBuildXml", "createChangelog"
+
+dependencies 
+{
+    compile 'dev.calclavia.universalelectricity:universal-electricity:+:dev'
+    }
