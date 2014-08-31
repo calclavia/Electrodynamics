@@ -53,6 +53,7 @@ allprojects {
         
 repositories {
     maven {
+        name "Calclavia maven"
         url 'http://calclavia.com/maven'
     }
     maven {
