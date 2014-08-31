@@ -54,7 +54,7 @@ allprojects {
 repositories {
     maven {
         name "Calclavia maven"
-        url 'http://calclavia.com/maven'
+        url "http://calclavia.com/maven"
     }
     maven {
         name "Mobius Repo"
