@@ -7,7 +7,6 @@ import mffs.security.MFFSPermissions
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.ChatComponentText
 import resonant.api.mffs.machine.IProjector
-import resonant.lib.utility.LanguageUtility
 import universalelectricity.core.transform.vector.Vector3
 
 class ItemModuleConfiscate extends ItemModuleDefense
@@ -45,7 +44,8 @@ class ItemModuleConfiscate extends ItemModuleDefense
 
           if (relevantSlots.size > 0)
           {
-            player.addChatMessage(new ChatComponentText("[" + proj.getInventoryName + "] " + LanguageUtility.getLocal("message.moduleConfiscate.confiscate").replaceAll("#p", "" + relevantSlots.size)))
+            player.addChatMessage(new ChatComponentText("[" + proj.getInventoryName + "] " + relevantSlots.size + " of your item(s) has been confiscated."))
+            // LanguageUtility.getLocal("message.moduleConfiscate.confiscate")
           }
         }
       )
