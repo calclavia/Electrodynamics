@@ -56,13 +56,11 @@ class ItemModuleStabilize extends ItemModule
 
         if (tileEntity.isInstanceOf[IInventory])
         {
-          val inventory: IInventory = (tileEntity.asInstanceOf[IInventory])
+          val inventory = tileEntity.asInstanceOf[IInventory]
 
-          var i: Int = 0
-
-          while (i < inventory.getSizeInventory)
+          for (i <- 0 until inventory.getSizeInventory)
           {
-            val checkStack: ItemStack = inventory.getStackInSlot(i)
+            val checkStack = inventory.getStackInSlot(i)
 
             if (checkStack != null)
             {
@@ -81,7 +79,7 @@ class ItemModuleStabilize extends ItemModule
                     {
                       if (world.canPlaceEntityOnSide(itemBlock, position.xi, position.yi, position.zi, false, 0, null, checkStack))
                       {
-                        val metadata = if (blockInfo != null) blockInfo._2 else (if (checkStack.getHasSubtypes) checkStack.getItemDamage else 0)
+                        val metadata = if (blockInfo != null) blockInfo._2 else if (checkStack.getHasSubtypes) checkStack.getItemDamage else 0
                         val block = if (blockInfo != null) blockInfo._1 else null
 
                         if (Blacklist.stabilizationBlacklist.contains(block) || block.isInstanceOf[BlockLiquid] || block.isInstanceOf[IFluidBlock])
@@ -122,7 +120,6 @@ class ItemModuleStabilize extends ItemModule
                 return 1
               }
             }
-            i += 1
           }
 
         }

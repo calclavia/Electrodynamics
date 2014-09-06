@@ -84,7 +84,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
     }
   }
 
-  override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType) : Boolean =
+  override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType): Boolean =
   {
     super.read(buf, id, player, packet)
 
@@ -270,10 +270,11 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
             {
               var flag = 0
 
-              relevantModules.exists({ module =>
-                flag = module.onProject(this, vector)
-                flag == 0
-                                     })
+              for (module <- relevantModules)
+              {
+                if (flag == 0)
+                  flag = module.onProject(this, vector)
+              }
 
               if (flag != 1 && flag != 2)
               {
