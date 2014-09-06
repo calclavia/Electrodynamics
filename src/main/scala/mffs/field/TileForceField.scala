@@ -41,6 +41,7 @@ class TileForceField extends SpatialTile(Material.glass) with TPacketReceiver wi
   creativeTab = null
   isOpaqueCube = false
   normalRender = false
+  renderStaticBlock = true
 
   override def canSilkHarvest(player: EntityPlayer, metadata: Int): Boolean = false
 
@@ -127,7 +128,6 @@ class TileForceField extends SpatialTile(Material.glass) with TPacketReceiver wi
             }
           }
         }
-
       return true
     }
 

@@ -222,7 +222,7 @@ class TileCoercionDeriver extends TileModuleAcceptor with TEnergyBridge
   {
     if (itemStack != null)
     {
-      if (slotID >= this.startModuleIndex)
+      if (slotID >= startModuleIndex)
       {
         return itemStack.getItem.isInstanceOf[IModule]
       }
