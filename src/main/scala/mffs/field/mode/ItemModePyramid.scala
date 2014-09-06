@@ -17,34 +17,36 @@ class ItemModePyramid extends ItemMode
 
   def getExteriorPoints(projector: IFieldMatrix): Set[Vector3] =
   {
-    val fieldBlocks: Set[Vector3] = new HashSet[Vector3]
-    val posScale: Vector3 = projector.getPositiveScale
-    val negScale: Vector3 = projector.getNegativeScale
-    val xStretch = posScale.xi + negScale.xi
-    val yStretch = posScale.yi + negScale.yi
-    val zStretch = posScale.zi + negScale.zi
-    val translation = new Vector3(0, -negScale.yi, 0)
-    val inverseThickness: Int = Math.max((yStretch + zStretch) / 4f, 1).asInstanceOf[Int]
+    val fieldBlocks = new HashSet[Vector3]
 
-    for (x <- -xStretch to xStretch by step; y <- 0 to yStretch by step; z <- -zStretch to zStretch by step)
+    val posScale = projector.getPositiveScale
+    val negScale = projector.getNegativeScale
+
+    var xSize = Math.max(posScale.x, Math.abs(negScale.x))
+    var zSize = Math.max(posScale.z, Math.abs(negScale.z))
+    val ySize = Math.max(posScale.y, Math.abs(negScale.y)).asInstanceOf[Int]
+
+    val initX = xSize.asInstanceOf[Int]
+    val initZ = xSize.asInstanceOf[Int]
+
+    val xDecr = xSize / (ySize * 2)
+    val zDecr = zSize / (ySize * 2)
+
+    //Create pyramid
+    for (y <- -ySize to ySize)
     {
-      val yTest: Double = (y / yStretch) * inverseThickness
-      val xzPositivePlane: Double = (1 - (x / xStretch) - (z / zStretch)) * inverseThickness
-      val xzNegativePlane: Double = (1 + (x / xStretch) - (z / zStretch)) * inverseThickness
-      if (x >= 0 && z >= 0 && Math.round(xzPositivePlane) == Math.round(yTest))
+      for (x <- -initX to initX; z <- -initZ to initZ)
       {
-        fieldBlocks.add(new Vector3(x, y, z).add(translation))
-        fieldBlocks.add(new Vector3(x, y, -z).add(translation))
+        if (Math.abs(x) == Math.round(xSize) && Math.abs(z) <= Math.round(zSize))
+          fieldBlocks.add(new Vector3(x, y, z))
+        else if (Math.abs(z) == Math.round(zSize) && Math.abs(x) <= Math.round(xSize))
+          fieldBlocks.add(new Vector3(x, y, z))
+        else if (y == -ySize)
+          fieldBlocks.add(new Vector3(x, y, z))
       }
-      if (x <= 0 && z >= 0 && Math.round(xzNegativePlane) == Math.round(yTest))
-      {
-        fieldBlocks.add(new Vector3(x, y, -z).add(translation))
-        fieldBlocks.add(new Vector3(x, y, z).add(translation))
-      }
-      if (y == 0 && (Math.abs(x) + Math.abs(z)) < (xStretch + yStretch) / 2)
-      {
-        fieldBlocks.add(new Vector3(x, y, z).add(translation))
-      }
+
+      xSize -= xDecr
+      zSize -= zDecr
     }
 
     return fieldBlocks
