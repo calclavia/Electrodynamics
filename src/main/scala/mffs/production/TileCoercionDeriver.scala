@@ -47,7 +47,7 @@ object TileCoercionDeriver
 }
 
 @UniversalClass
-class TileCoercionDeriver extends TileModuleAcceptor with TElectric
+class TileCoercionDeriver extends TileModuleAcceptor with TEnergyBridge
 {
   var processTime: Int = 0
   var isInversed: Boolean = false
@@ -75,12 +75,8 @@ class TileCoercionDeriver extends TileModuleAcceptor with TElectric
       {
         if (isInversed && Settings.enableElectricity)
         {
-          //TODO: Check this
-          if (electricNode.getVoltage(ForgeDirection.UNKNOWN) < 100)
-          {
-            val withdrawnElectricity = (requestFortron(productionRate / 20, true) / TileCoercionDeriver.ueToFortronRatio)
-            electricNode.addEnergy(ForgeDirection.UNKNOWN, withdrawnElectricity * TileCoercionDeriver.energyConversionPercentage, true)
-          }
+          val withdrawnElectricity = (requestFortron(productionRate / 20, true) / TileCoercionDeriver.ueToFortronRatio)
+          electricNode.addEnergy(ForgeDirection.UNKNOWN, withdrawnElectricity * TileCoercionDeriver.energyConversionPercentage, true)
 
           recharge(getStackInSlot(TileCoercionDeriver.slotBattery))
         }
@@ -183,7 +179,7 @@ class TileCoercionDeriver extends TileModuleAcceptor with TElectric
     }
   }
 
-  override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType) : Boolean =
+  override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType): Boolean =
   {
     super.read(buf, id, player, packet)
 
@@ -204,7 +200,7 @@ class TileCoercionDeriver extends TileModuleAcceptor with TElectric
         return true
       }
     }
-    
+
     return false
   }
 
