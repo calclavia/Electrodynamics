@@ -185,6 +185,8 @@ class TileCoercionDeriver extends TileModuleAcceptor with TElectric
 
   override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType) : Boolean =
   {
+    super.read(buf, id, player, packet)
+
     if (world.isRemote)
     {
       if (id == TilePacketType.description.id)
@@ -202,7 +204,8 @@ class TileCoercionDeriver extends TileModuleAcceptor with TElectric
         return true
       }
     }
-    return super.read(buf, id, player, packet)
+    
+    return false
   }
 
   override def readFromNBT(nbt: NBTTagCompound)

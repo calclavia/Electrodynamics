@@ -331,6 +331,8 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
 
   override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType) : Boolean =
   {
+    super.read(buf, id, player, packet)
+
     if (world.isRemote)
     {
       if (id == TilePacketType.effect.id)
@@ -399,17 +401,14 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
             hologramRenderPoints foreach (ModularForceFieldSystem.proxy.renderHologram(world, _, FieldColor.red, 30, null))
           }
         }
-        return true
       }
       else if (id == TilePacketType.render.id)
       {
         canRenderMove = false
-        return true
       }
       else if (id == TilePacketType.field.id)
       {
         this.moveEntities
-        return true
       }
       else if (id == TilePacketType.description.id)
       {
@@ -417,7 +416,6 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
         previewMode = buf.readInt()
         doAnchor = buf.readBoolean()
         clientMoveTime = buf.readInt
-        return true
       }
     }
     else
@@ -426,20 +424,17 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
       {
         anchor = new Vector3()
         markDirty()
-        return true
       }
       else if (id == TilePacketType.toggleMode2.id)
       {
         previewMode = (previewMode + 1) % 3
-        return true
       }
       else if (id == TilePacketType.toggleMode3.id)
       {
         doAnchor = !doAnchor
-        return true
       }
     }
-    return super.read(buf, id, player, packet)
+    return false
   }
 
   override def doGetFortronCost: Int = round(super.doGetFortronCost + (if (this.anchor != null) this.anchor.magnitude * 1000 else 0)).toInt
