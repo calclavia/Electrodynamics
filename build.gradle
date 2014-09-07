@@ -158,6 +158,10 @@ repositories {
         name "chickenbones"
         url "http://chickenbones.net/maven"
     }
+    maven { 
+        name 'OC Maven'
+        url = "http://maven.cil.li/" 
+    }
 	
     mavenCentral()
 }
@@ -167,11 +171,13 @@ dependencies {
 	{
 		compile group: 'dev.calclavia.universalelectricity', name: 'universal-electricity', version: "${rootProject.config.version.universalelectricity}", classifier: "dev"
 		compile group: 'dev.calclavia.resonantengine', name: 'resonant-engine', version: "${config.version.resonantengine}", classifier: "dev"
+        compile "li.cil.oc:OpenComputers:MC1.7.10-1.3.4.+:dev"
 	}
 	else
 	{
 		compile group: 'com.calclavia.universalelectricity', name: 'universal-electricity', version: "${rootProject.config.version.universalelectricity}", classifier: "dev"
 		compile group: 'com.calclavia.resonantengine', name: 'resonant-engine', version: "${config.version.resonantengine}", classifier: "dev"
+        compile "li.cil.oc:OpenComputers:MC1.7.10-1.3.4.+:dev"
 	}
 	
     compile "codechicken:CodeChickenLib:${config.version.minecraft}-${config.version.cclib}:dev"
