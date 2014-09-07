@@ -18,6 +18,7 @@ import resonant.lib.wrapper.WrapList._
 import resonantinduction.archaic.ArchaicBlocks
 import resonantinduction.core.Reference
 
+import scala.collection.JavaConversions._
 import scala.util.control.Breaks._
 
 /** A block that allows the placement of mass amount of a specific item within it. It will be allowed
@@ -32,7 +33,7 @@ object BlockCrate
   /** Puts an itemStack into the crate.
     *
     * @param tileEntity
-    * @param itemStack*/
+    * @param itemStack */
   def addStackToCrate(tileEntity: TileCrate, itemStack: ItemStack): ItemStack =
   {
     if (itemStack == null || itemStack.getItem.isDamageable && itemStack.getItem.getDamage(itemStack) > 0)
@@ -228,16 +229,15 @@ class BlockCrate extends SpatialBlock(Material.iron)
     * in. */
   def tryInsert(tileEntity: TileCrate, player: EntityPlayer, allMode: Boolean, doSearch: Boolean)
   {
-    val success: Boolean = if (allMode) this.insertAllItems(tileEntity, player) else this.insertCurrentItem(timport scala.collection.JavaConversions._Search)
+    val success: Boolean = if (allMode) insertAllItems(tileEntity, player) else insertCurrentItem(tileEntity, player)
+
+    val pathfinder: PathfinderCrate = new PathfinderCrate().init(tileEntity)
+
+    for (checkTile <- pathfinder.iteratedNodes)
     {
-      val pathfinder: PathfinderCrate = new PathfinderCrate().init(tileEntity)
-      import scala.collection.JavaConversions._
-      for (checkTile <- pathfinder.iteratedNodes)
+      if (checkTile.isInstanceOf[TileCrate])
       {
-        if (checkTile.isInstanceOf[TileCrate])
-        {
-          this.tryInsert((checkTile.asInstanceOf[TileCrate]), player, allMode, false)
-        }
+        this.tryInsert((checkTile.asInstanceOf[TileCrate]), player, allMode, false)
       }
     }
   }

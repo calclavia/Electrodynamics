@@ -13,7 +13,9 @@ import resonant.content.prefab.RenderRotatedTexture
 import resonant.content.spatial.block.SpatialBlock
 import resonant.lib.content.prefab.TRotatable
 import resonantinduction.core.Reference
-import universalelectricity.core.transform.vector.Vector3ject TileTurntable
+import universalelectricity.core.transform.vector.Vector3
+
+object TileTurntable
 {
   var top: IIcon = null
 }
