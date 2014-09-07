@@ -15,46 +15,140 @@ buildscript {
     }
 }
 
-apply plugin: 'idea'
 apply plugin: 'scala'
 apply plugin: 'forge'
-apply plugin: 'maven'
 apply plugin: 'maven-publish'
 
 ext.buildProps = file "build.properties"
- 
+
 buildProps.withReader {
     def prop = new Properties()
     prop.load(it)
     ext.config = new ConfigSlurper().parse prop
 }
- 
-group = "resonantinduction"
-archivesBaseName = "${System.getenv().JOB_NAME}"
- 
-minecraft {
-    version = "${rootProject.config.version.minecraft}-${rootProject.config.version.forge}"
-    
-    replaceIn "Reference.java"
-    replace "@MAJOR@", rootProject.config.version.mod.major
-    replace "@MINOR@", rootProject.config.version.mod.minor
-    replace "@REVIS@", rootProject.config.version.mod.revis
-    replace "@BUILD@", "${System.getenv().BUILD_NUMBER}"
+
+version = "${config.version.mod.major}.${config.version.mod.minor}.${config.version.mod.revis}"
+
+if (System.getenv("TEAMCITY_BUILDCONF_NAME").equalsIgnoreCase("Production")) {
+    group = "com.calclavia.resonantinduction"
+    archivesBaseName = System.getenv("TEAMCITY_PROJECT_NAME").replaceAll(" ", "-")
+} else {
+    group = "dev.calclavia.resonantinduction"
+    archivesBaseName = System.getenv("TEAMCITY_PROJECT_NAME").replaceAll(" ", "-") + "-" + System.getenv("TEAMCITY_BUILDCONF_NAME")
 }
 
-subprojects*.apply plugin: 'java'
-subprojects*.apply plugin: 'scala'
+minecraft {
+    version = "${config.version.minecraft}-${config.version.forge}"
 
-allprojects {
-    version = "${config.version.mod.major}.${config.version.mod.minor}.${config.version.mod.revis}"
-    
-    if (System.getenv("BUILD_NUMBER") != null)
-        version += ".${System.getenv("BUILD_NUMBER")}"
-        
+    replaceIn "References.java"
+    replace "@MAJOR@", config.version.mod.major
+    replace "@MINOR@", config.version.mod.minor
+    replace "@REVIS@", config.version.mod.revis
+    replace "@BUILD@", System.getenv("BUILD_NUMBER")
+}
+
+if (System.getenv("BUILD_NUMBER") != null)
+    version += ".${System.getenv("BUILD_NUMBER")}"
+
+processResources {
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    // replace stuff in text files, not binary ones.
+    from(sourceSets.main.resources.srcDirs) {
+        include '**/*.info'
+
+        // replace version and MCVersion
+        // forge version is also accessible via project.minecraftforgeVersion
+        // it contains the full minecraft version, including buildNumber
+        expand 'version': project.version, 'mcversion': project.minecraft.version
+    }
+
+    // copy everything else, thats not text
+    from 'build.properties'
+}
+
+task copyBuildXml(type: Copy) {
+    from 'build.properties'
+    into 'output'
+}
+
+/**
+ * Generates a TeamCity XML changelog via the REST API.
+ */
+task("createChangelog").doLast {
+
+    def teamCityURL = "http://ci.calclavia.com/"
+
+    /**
+     * Create a new file
+     */
+    def file = new FileOutputStream("output/changelog.xml")
+    def out = new BufferedOutputStream(file)
+
+    /**
+     * Grab the build first, parse the XML to find the changelog XML URL
+     */
+    def changesXML = new XmlSlurper().parse(teamCityURL + "guestAuth/app/rest/changes?locator=build:(id:" + teamcity["teamcity.build.id"] + ")")
+    def changes = changesXML.change
+
+    /**
+     * Add the XML definition header in the front of the file and remove all other occurrences of the XML header
+     */
+    out << ("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><changes>")
+
+    println("createChangelog: Identified " + changes.size() + " changes to be written into the changelog.")
+
+    for (int i = 0; i < changes.size(); i++) {
+        /**
+         * Write each changelog XML into the URL
+         */
+        def changelogURL = teamCityURL + "guestAuth/app/rest/changes/id:" + changes[i].@id.text()
+        out << new URL(changelogURL).getText().replaceAll("<\\?xml version=\"1\\.0\" encoding=\"UTF-8\" standalone=\"yes\"\\?>", "")
+    }
+
+    out << "</changes>"
+
+    out.close()
+}
+
+jar {
+    dependsOn copyBuildXml, createChangelog
+    classifier = 'core'
+    destinationDir = file 'output'
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact jar
+
+            artifact("output/changelog.xml") {
+                classifier "changelog"
+                extension "xml"
+            }
+
+            artifact("output/build.properties") {
+                classifier "build"
+                extension "properties"
+            }
+        }
+    }
+    repositories {
+        maven {
+            url "file://var/www/maven"
+        }
+    }
+}
+
 repositories {
     maven {
-        name "Calclavia maven"
-        url "http://calclavia.com/maven"
+        name 'Calclavia Maven'
+        url 'http://calclavia.com/maven'
+    }
+    maven {
+        name = "forge"
+        url = "http://files.minecraftforge.net/maven"
     }
     maven {
         name "Mobius Repo"
@@ -64,99 +158,24 @@ repositories {
         name "CB Repo"
         url "https://chickenbones.net/maven"
     }
-    maven {
-        name = "forge"
-        url = "http://files.minecraftforge.net/maven"
-    }
-    ivy {
-		name 'FMP'
-		artifactPattern "http://files.minecraftforge.net/[module]/[module]-dev-[revision].[ext]"
-	}
-		mavenCentral()
-    }
-
-}    
-    dependencies {
-        compile group: 'universalelectricity', name: 'Universal-Electricity', version: "${rootProject.config.version.universalelectricity}", classifier: "dev"
-		if (System.getenv().JOB_NAME != null && System.getenv().JOB_NAME == "Resonant-Induction-Development")
-			compile group: 'resonant-engine-development', name: 'resonant-engine', version: "${config.version.resonantengine}", classifier: "dev"
-		else
-			compile group: 'resonant-engine', name: 'resonant-engine', version: "${config.version.resonantengine}", classifier: "dev"
-		    compile name: 'CodeChickenLib', version: "${config.version.minecraft}-${config.version.cclib}", ext: 'jar'
-		    compile name: 'ForgeMultipart', version: "${config.version.minecraft}-${config.version.fmp}", ext: 'jar'
-		    compile name: 'NotEnoughItems', version: "${config.version.nei}", ext: 'jar'
-		    compile name: 'CodeChickenCore', version: "${config.version.cccore}", ext: 'jar'
-		    compile name: 'UniversalElectricity', version: "${config.version.universalelectricity}", ext: 'jar'
-	}
-    
-    jar {
-		classifier = project.name
-        dependsOn ":copyBuildXml"
-        destinationDir = file (rootProject.getRootDir().getPath() + '/output')
-    }
 	
-	publishing {
-		publications {
-			mavenJava(MavenPublication) {
-				artifact jar
-			}
-		}
-		repositories {
-			maven {
-				url "file://var/www/maven"
-			}
-		}
+    mavenCentral()
+}
+
+dependencies {
+	if (System.getenv().JOB_NAME != null && System.getenv().JOB_NAME == "Resonant-Induction-Development")
+	{
+		compile group: 'dev.calclavia.universalelectricity', name: 'Universal-Electricity', version: "${rootProject.config.version.universalelectricity}", classifier: "dev"
+		compile group: 'dev.calclavia.resonantengine', name: 'Resonant-Engine', version: "${config.version.resonantengine}", classifier: "dev"
 	}
-
- 
-subprojects {
-    archivesBaseName = "${System.getenv().JOB_NAME}"    
-	sourceSets.main.compileClasspath += rootProject.sourceSets.api.output
-    dependencies {
-        compile rootProject
-    }
-    
-    rootProject.tasks.reobf {
-        reobf(tasks.jar) { spec ->
-            spec.classpath = sourceSets.main.compileClasspath
-        }
-    }
-}
-
-processResources {
-	from 'build.properties'
-}
- 
-task copyBuildXml(type: Copy) {
-    from 'build.properties'
-    into 'output'
-}
- 
-task apiZip(type: Zip) {
-    classifier = 'api'
-    from sourceSets*.allSource
-    include 'resonantinduction/api/**'
-    destinationDir = file 'output'
-}
+	else
+	{
+		compile group: 'com.calclavia.universalelectricity', name: 'Universal-Electricity', version: "${rootProject.config.version.universalelectricity}", classifier: "dev"
+		compile group: 'com.calclavia.resonantengine', name: 'Resonant-Engine', version: "${config.version.resonantengine}", classifier: "dev"
+	}
 	
-artifacts {
-    archives apiZip
+	compile group: 'codechicken', name: 'CodeChickenLib', version: "${config.version.minecraft}-${config.version.cclib}", ext: 'jar'
+	compile group: 'codechicken', name: 'ForgeMultipart', version: "${config.version.minecraft}-${config.version.fmp}", ext: 'jar'
+	compile group: 'codechicken', name: 'NotEnoughItems', version: "${config.version.nei}", ext: 'jar'
+	compile group: 'codechicken', name: 'CodeChickenCore', version: "${config.version.cccore}", ext: 'jar'
 }
-
-import net.minecraftforge.gradle.tasks.dev.ChangelogTask
-import net.minecraftforge.gradle.common.Constants
-import net.minecraftforge.gradle.delayed.*
-
-task createChangelog(type: ChangelogTask) {
-    def jobName = "${System.getenv().JOB_NAME}"
-    def buildNumber = "${System.getenv().BUILD_NUMBER}"
-    
-    setServerRoot(new DelayedString(project, 'http://ci.calclavia.com/'))
-    setJobName(new DelayedString(project, jobName.toString()));
-    setAuthName(new DelayedString(project, 'console_script'));
-    setAuthPassword(new DelayedString(project, '625d2ac53190be3422faa0c474fb299b'));
-    setTargetBuild({buildNumber.toString()});
-    setOutput(new DelayedFile(project, 'output/' + jobName + "-${project.version}" + '-changelog' + '.txt'));
-}
-
-build.dependsOn "apiZip", "copyBuildXml", "createChangelog"
