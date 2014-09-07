@@ -163,7 +163,7 @@ repositories {
 }
 
 dependencies {
-	if (System.getenv().JOB_NAME != null && System.getenv().JOB_NAME == "Resonant-Induction-Development")
+	if (System.getenv("TEAMCITY_BUILDCONF_NAME") == "Development")
 	{
 		compile group: 'dev.calclavia.universalelectricity', name: 'Universal-Electricity', version: "${rootProject.config.version.universalelectricity}", classifier: "dev"
 		compile group: 'dev.calclavia.resonantengine', name: 'Resonant-Engine', version: "${config.version.resonantengine}", classifier: "dev"
