@@ -19,6 +19,8 @@ import universalelectricity.core.transform.vector.{Vector3, VectorWorld}
  */
 object MultipartUtility
 {
+  val dyes: Array[String] = Array("dyeBlack", "dyeRed", "dyeGreen", "dyeBrown", "dyeBlue", "dyePurple", "dyeCyan", "dyeLightGray", "dyeGray", "dyePink", "dyeLime", "dyeYellow", "dyeLightBlue", "dyeMagenta", "dyeOrange", "dyeWhite")
+
   def getMultipartTile(access: IBlockAccess, pos: BlockCoord): TileMultipart =
   {
     val te: TileEntity = access.getTileEntity(pos.x, pos.y, pos.z)
@@ -53,8 +55,6 @@ object MultipartUtility
     if (b == Blocks.glowstone || b == Blocks.piston || b == Blocks.sticky_piston || b == Blocks.piston_extension) return true
     return b.isSideSolid(w, x, y, z, side)
   }
-
-  val dyes: Array[String] = Array("dyeBlack", "dyeRed", "dyeGreen", "dyeBrown", "dyeBlue", "dyePurple", "dyeCyan", "dyeLightGray", "dyeGray", "dyePink", "dyeLime", "dyeYellow", "dyeLightBlue", "dyeMagenta", "dyeOrange", "dyeWhite")
 
   def isDye(is: ItemStack): Int =
   {

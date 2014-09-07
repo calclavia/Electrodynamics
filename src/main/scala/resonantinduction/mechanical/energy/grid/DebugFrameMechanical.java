@@ -19,7 +19,7 @@ import universalelectricity.api.core.grid.INode;
 import universalelectricity.api.core.grid.INodeProvider;
 
 /** Java GUI used to help debug gear information
- * 
+ *
  * @author Darkguardsman */
 @SuppressWarnings("serial")
 public class DebugFrameMechanical extends FrameNodeDebug
@@ -59,7 +59,7 @@ public class DebugFrameMechanical extends FrameNodeDebug
 
     @Override
     public void buildCenter(UpdatePanel panel)
-    {        
+    {
         panel.setLayout(new BorderLayout());
         TableModel dataModel = new AbstractTableModel()
         {
@@ -121,10 +121,10 @@ public class DebugFrameMechanical extends FrameNodeDebug
         tableScroll.setPreferredSize(new Dimension(tablePreferred.width, tablePreferred.height / 3));
 
         panel.add(tableScroll, BorderLayout.SOUTH);
-        
+
         UpdatePanel topPanel = new UpdatePanel();
         topPanel.setLayout(new GridLayout(1, 3, 0, 0));
-        
+
         UpdatedLabel velLabel = new UpdatedLabel("Vel: ")
         {
             @Override

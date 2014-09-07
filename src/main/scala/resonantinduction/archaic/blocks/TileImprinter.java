@@ -1,9 +1,5 @@
 package resonantinduction.archaic.blocks;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
 import codechicken.multipart.ControlKeyModifer;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.relauncher.Side;
@@ -30,20 +26,23 @@ import resonant.lib.network.discriminator.PacketType;
 import resonant.lib.network.handle.IPacketReceiver;
 import resonant.lib.render.RenderItemOverlayUtility;
 import resonant.lib.utility.inventory.InventoryUtility;
-
 import resonantinduction.core.Reference;
 import universalelectricity.core.transform.vector.Vector2;
 import universalelectricity.core.transform.vector.Vector3;
 import universalelectricity.core.transform.vector.VectorWorld;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
 public class TileImprinter extends TileAdvanced implements ISidedInventory, IPacketReceiver
 {
 	public ItemStack[] inventory = new ItemStack[10];
 
-    public TileImprinter()
-    {
-        super(Material.circuits);
-    }
+	public TileImprinter()
+	{
+		super(Material.circuits);
+	}
 
 	@Override
 	public Packet getDescriptionPacket()
@@ -94,17 +93,19 @@ public class TileImprinter extends TileAdvanced implements ISidedInventory, IPac
 		}
 	}
 
-    @Override
-    public String getInventoryName() {
-        return null;
-    }
+	@Override
+	public String getInventoryName()
+	{
+		return null;
+	}
 
-    @Override
-    public boolean hasCustomInventoryName() {
-        return false;
-    }
+	@Override
+	public boolean hasCustomInventoryName()
+	{
+		return false;
+	}
 
-    @Override
+	@Override
 	public ItemStack decrStackSize(int i, int amount)
 	{
 		if (this.getStackInSlot(i) != null)
@@ -172,7 +173,9 @@ public class TileImprinter extends TileAdvanced implements ISidedInventory, IPac
 		this.onInventoryChanged();
 	}
 
-	/** Updates all the output slots. Call this to update the Imprinter. */
+	/**
+	 * Updates all the output slots. Call this to update the Imprinter.
+	 */
 	public void onInventoryChanged()
 	{
 		if (!this.worldObj.isRemote)
@@ -199,7 +202,9 @@ public class TileImprinter extends TileAdvanced implements ISidedInventory, IPac
 						for (ItemStack check : toBeImprinted)
 						{
 							if (check.isItemEqual(stackInInventory))
+							{
 								continue check;
+							}
 						}
 
 						toBeImprinted.add(stackInInventory);
@@ -224,7 +229,9 @@ public class TileImprinter extends TileAdvanced implements ISidedInventory, IPac
 					}
 
 					if (!removed)
+					{
 						toAdd.add(stackInInventory);
+					}
 				}
 
 				filters.addAll(toAdd);
@@ -238,7 +245,10 @@ public class TileImprinter extends TileAdvanced implements ISidedInventory, IPac
 	// ///////////////////////////////////////
 	// // Save And Data processing //////
 	// ///////////////////////////////////////
-	/** NBT Data */
+
+	/**
+	 * NBT Data
+	 */
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
@@ -259,7 +269,9 @@ public class TileImprinter extends TileAdvanced implements ISidedInventory, IPac
 		}
 	}
 
-	/** Writes a tile entity to NBT. */
+	/**
+	 * Writes a tile entity to NBT.
+	 */
 	@Override
 	public void writeToNBT(NBTTagCompound nbt)
 	{
@@ -321,154 +333,154 @@ public class TileImprinter extends TileAdvanced implements ISidedInventory, IPac
 		return this.isItemValidForSlot(slot, itemstack);
 	}
 
-    @Override
-    public void renderDynamic(Vector3 position, float frame, int pass)
-    {
-        GL11.glPushMatrix();
-        RenderItemOverlayUtility.renderTopOverlay(this, inventory, ForgeDirection.EAST, x(), y(), z());
-        RenderItemOverlayUtility.renderItemOnSides(this, getStackInSlot(9), x(), y(), z());
-        GL11.glPopMatrix();
-    }
+	@Override
+	public void renderDynamic(Vector3 position, float frame, int pass)
+	{
+		GL11.glPushMatrix();
+		RenderItemOverlayUtility.renderTopOverlay(this, inventory, ForgeDirection.EAST, x(), y(), z());
+		RenderItemOverlayUtility.renderItemOnSides(this, getStackInSlot(9), x(), y(), z());
+		GL11.glPopMatrix();
+	}
 
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void registerIcons(IIconRegister iconReg)
-    {
-        super.registerIcons(iconReg);
-        SpatialBlock.icon().put("imprinter_side", iconReg.registerIcon(Reference.prefix() + "imprinter_side"));
-        SpatialBlock.icon().put("imprinter_top", iconReg.registerIcon(Reference.prefix() + "imprinter_top"));
-        SpatialBlock.icon().put("imprinter_bottom", iconReg.registerIcon(Reference.prefix() + "imprinter_bottom"));
-    }
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void registerIcons(IIconRegister iconReg)
+	{
+		super.registerIcons(iconReg);
+		SpatialBlock.icon().put("imprinter_side", iconReg.registerIcon(Reference.prefix() + "imprinter_side"));
+		SpatialBlock.icon().put("imprinter_top", iconReg.registerIcon(Reference.prefix() + "imprinter_top"));
+		SpatialBlock.icon().put("imprinter_bottom", iconReg.registerIcon(Reference.prefix() + "imprinter_bottom"));
+	}
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public IIcon getIcon(int side, int meta)
-    {
-        if (side == 1)
-        {
-            return SpatialBlock.icon().get("imprinter_top");
+	@Override
+	@SideOnly(Side.CLIENT)
+	public IIcon getIcon(int side, int meta)
+	{
+		if (side == 1)
+		{
+			return SpatialBlock.icon().get("imprinter_top");
 
-        }
-        else if (side == 0)
-        {
-            return SpatialBlock.icon().get("imprinter_bottom");
+		}
+		else if (side == 0)
+		{
+			return SpatialBlock.icon().get("imprinter_bottom");
 
-        }
+		}
 
-        return SpatialBlock.icon().get("imprinter_side");
-    }
+		return SpatialBlock.icon().get("imprinter_side");
+	}
 
-    public boolean use(EntityPlayer player, int hitSide, Vector3 hit)
-    {
-        ItemStack current = player.inventory.getCurrentItem();
+	public boolean use(EntityPlayer player, int hitSide, Vector3 hit)
+	{
+		ItemStack current = player.inventory.getCurrentItem();
 
-        if (hitSide == 1)
-        {
-            if (!world().isRemote)
-            {
-                Vector2 hitVector = new Vector2(hit.x(), hit.z());
-                double regionLength = 1d / 3d;
+		if (hitSide == 1)
+		{
+			if (!world().isRemote)
+			{
+				Vector2 hitVector = new Vector2(hit.x(), hit.z());
+				double regionLength = 1d / 3d;
 
-                /**
-                 * Crafting Matrix
-                 */
-                matrix:
-                for (int j = 0; j < 3; j++)
-                {
-                    for (int k = 0; k < 3; k++)
-                    {
-                        Vector2 check = new Vector2(j, k).multiply(regionLength);
+				/**
+				 * Crafting Matrix
+				 */
+				matrix:
+				for (int j = 0; j < 3; j++)
+				{
+					for (int k = 0; k < 3; k++)
+					{
+						Vector2 check = new Vector2(j, k).multiply(regionLength);
 
-                        if (check.distance(hitVector) < regionLength)
-                        {
-                            int slotID = j * 3 + k;
-                            boolean didInsert = false;
-                            ItemStack checkStack = inventory[slotID];
+						if (check.distance(hitVector) < regionLength)
+						{
+							int slotID = j * 3 + k;
+							boolean didInsert = false;
+							ItemStack checkStack = inventory[slotID];
 
-                            if (current != null)
-                            {
-                                if (checkStack == null || checkStack.isItemEqual(current))
-                                {
-                                    if (ControlKeyModifer.isControlDown(player))
-                                    {
-                                        if (checkStack == null)
-                                        {
-                                            inventory[slotID] = current;
-                                        }
-                                        else
-                                        {
-                                            inventory[slotID].stackSize += current.stackSize;
-                                            current.stackSize = 0;
-                                        }
+							if (current != null)
+							{
+								if (checkStack == null || checkStack.isItemEqual(current))
+								{
+									if (ControlKeyModifer.isControlDown(player))
+									{
+										if (checkStack == null)
+										{
+											inventory[slotID] = current;
+										}
+										else
+										{
+											inventory[slotID].stackSize += current.stackSize;
+											current.stackSize = 0;
+										}
 
-                                        current = null;
-                                    }
-                                    else
-                                    {
-                                        if (checkStack == null)
-                                        {
-                                            inventory[slotID] = current.splitStack(1);
-                                        }
-                                        else
-                                        {
-                                            inventory[slotID].stackSize++;
-                                            current.stackSize--;
-                                        }
-                                    }
+										current = null;
+									}
+									else
+									{
+										if (checkStack == null)
+										{
+											inventory[slotID] = current.splitStack(1);
+										}
+										else
+										{
+											inventory[slotID].stackSize++;
+											current.stackSize--;
+										}
+									}
 
-                                    if (current == null || current.stackSize <= 0)
-                                    {
-                                        player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
-                                    }
+									if (current == null || current.stackSize <= 0)
+									{
+										player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+									}
 
-                                    didInsert = true;
-                                }
-                            }
+									didInsert = true;
+								}
+							}
 
-                            if (!didInsert && checkStack != null)
-                            {
-                                InventoryUtility.dropItemStack(world(), new Vector3(player), checkStack, 0);
-                                inventory[slotID] = null;
-                            }
+							if (!didInsert && checkStack != null)
+							{
+								InventoryUtility.dropItemStack(world(), new Vector3(player), checkStack, 0);
+								inventory[slotID] = null;
+							}
 
-                            break matrix;
-                        }
-                    }
-                }
+							break matrix;
+						}
+					}
+				}
 
-                world().markBlockForUpdate(x(), y(), z());
-            }
+				world().markBlockForUpdate(x(), y(), z());
+			}
 
-            return true;
-        }
-        else if (hitSide != 0)
-        {
+			return true;
+		}
+		else if (hitSide != 0)
+		{
 
-            ItemStack output = getStackInSlot(9);
+			ItemStack output = getStackInSlot(9);
 
-            if (output != null)
-            {
-                InventoryUtility.dropItemStack(world(), new Vector3(player), output, 0);
-                setInventorySlotContents(9, null);
-            }
-            else if (current != null && current.getItem() instanceof ItemImprint)
-            {
-                setInventorySlotContents(9, current);
-                player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
-            }
-        }
-        return false;
-    }
+			if (output != null)
+			{
+				InventoryUtility.dropItemStack(world(), new Vector3(player), output, 0);
+				setInventorySlotContents(9, null);
+			}
+			else if (current != null && current.getItem() instanceof ItemImprint)
+			{
+				setInventorySlotContents(9, current);
+				player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+			}
+		}
+		return false;
+	}
 
-    @Override
-    public void onNeighborChanged(Block block)
-    {
-        VectorWorld vec = new VectorWorld(this);
-        Block b = vec.add(ForgeDirection.getOrientation(1)).getBlock();
+	@Override
+	public void onNeighborChanged(Block block)
+	{
+		VectorWorld vec = new VectorWorld(this);
+		Block b = vec.add(ForgeDirection.getOrientation(1)).getBlock();
 
-        if (Blocks.piston_head == b)
-        {
-            onInventoryChanged();
-        }
-    }
+		if (Blocks.piston_head == b)
+		{
+			onInventoryChanged();
+		}
+	}
 }

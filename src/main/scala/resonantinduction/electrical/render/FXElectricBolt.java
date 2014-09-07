@@ -35,9 +35,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * Electric shock Fxs.
- * 
+ *
  * @author Calclavia
- * 
+ *
  */
 @SideOnly(Side.CLIENT)
 public class FXElectricBolt extends EntityFX
@@ -127,7 +127,7 @@ public class FXElectricBolt extends EntityFX
 
 	/**
 	 * Slits a large segment into multiple smaller ones.
-	 * 
+	 *
 	 * @param splitAmount - The amount of splits
 	 * @param offset - The multiplier scale for the offset.
 	 * @param splitChance - The chance of creating a split.

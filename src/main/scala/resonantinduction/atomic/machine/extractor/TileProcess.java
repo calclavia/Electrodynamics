@@ -9,100 +9,106 @@ import resonant.api.recipe.MachineRecipes;
 import resonant.api.recipe.RecipeResource;
 import resonant.lib.content.prefab.java.TileElectricInventory;
 
-/** General class for all machines that do traditional recipe processing
- * 
- * @author Calclavia */
+/**
+ * General class for all machines that do traditional recipe processing
+ *
+ * @author Calclavia
+ */
 public abstract class TileProcess extends TileElectricInventory
 {
-    protected int inputSlot;
-    protected int outputSlot;
+	protected int inputSlot;
+	protected int outputSlot;
 
-    protected int tankInputFillSlot;
-    protected int tankInputDrainSlot;
-    protected int tankOutputFillSlot;
-    protected int tankOutputDrainSlot;
+	protected int tankInputFillSlot;
+	protected int tankInputDrainSlot;
+	protected int tankOutputFillSlot;
+	protected int tankOutputDrainSlot;
 
-    protected String machineName;
+	protected String machineName;
 
-    public TileProcess(Material material)
-    {
-        super(material);
-    }
+	public TileProcess(Material material)
+	{
+		super(material);
+	}
 
-    @Override
-    public void update()
-    {
-        super.update();
+	@Override
+	public void update()
+	{
+		super.update();
 
-        if (getInputTank() != null)
-        {
-            fillOrDrainTank(tankInputFillSlot, tankInputDrainSlot, getInputTank());
-        }
-        if (getOutputTank() != null)
-        {
-            fillOrDrainTank(tankOutputFillSlot, tankOutputDrainSlot, getOutputTank());
-        }
-    }
+		if (getInputTank() != null)
+		{
+			fillOrDrainTank(tankInputFillSlot, tankInputDrainSlot, getInputTank());
+		}
+		if (getOutputTank() != null)
+		{
+			fillOrDrainTank(tankOutputFillSlot, tankOutputDrainSlot, getOutputTank());
+		}
+	}
 
-    /** Takes an fluid container item and try to fill the tank, dropping the remains in the output slot. */
-    public void fillOrDrainTank(int containerInput, int containerOutput, FluidTank tank)
-    {
-        ItemStack inputStack = getStackInSlot(containerInput);
-        ItemStack outputStack = getStackInSlot(containerOutput);
+	/**
+	 * Takes an fluid container item and try to fill the tank, dropping the remains in the output slot.
+	 */
+	public void fillOrDrainTank(int containerInput, int containerOutput, FluidTank tank)
+	{
+		ItemStack inputStack = getStackInSlot(containerInput);
+		ItemStack outputStack = getStackInSlot(containerOutput);
 
-        if (FluidContainerRegistry.isFilledContainer(inputStack))
-        {
-            FluidStack fluidStack = FluidContainerRegistry.getFluidForFilledItem(inputStack);
-            ItemStack result = inputStack.getItem().getContainerItem(inputStack);
+		if (FluidContainerRegistry.isFilledContainer(inputStack))
+		{
+			FluidStack fluidStack = FluidContainerRegistry.getFluidForFilledItem(inputStack);
+			ItemStack result = inputStack.getItem().getContainerItem(inputStack);
 
-            if (result != null && tank.fill(fluidStack, false) >= fluidStack.amount && (outputStack == null || result.isItemEqual(outputStack)))
-            {
-                tank.fill(fluidStack, true);
-                decrStackSize(containerInput, 1);
-                incrStackSize(containerOutput, result);
-            }
-        }
-        else if (FluidContainerRegistry.isEmptyContainer(inputStack))
-        {
-            FluidStack avaliable = tank.getFluid();
+			if (result != null && tank.fill(fluidStack, false) >= fluidStack.amount && (outputStack == null || result.isItemEqual(outputStack)))
+			{
+				tank.fill(fluidStack, true);
+				decrStackSize(containerInput, 1);
+				incrStackSize(containerOutput, result);
+			}
+		}
+		else if (FluidContainerRegistry.isEmptyContainer(inputStack))
+		{
+			FluidStack avaliable = tank.getFluid();
 
-            if (avaliable != null)
-            {
-                ItemStack result = FluidContainerRegistry.fillFluidContainer(avaliable, inputStack);
-                FluidStack filled = FluidContainerRegistry.getFluidForFilledItem(result);
+			if (avaliable != null)
+			{
+				ItemStack result = FluidContainerRegistry.fillFluidContainer(avaliable, inputStack);
+				FluidStack filled = FluidContainerRegistry.getFluidForFilledItem(result);
 
-                if (result != null && filled != null && (outputStack == null || result.isItemEqual(outputStack)))
-                {
-                    decrStackSize(containerInput, 1);
-                    incrStackSize(containerOutput, result);
-                    tank.drain(filled.amount, true);
-                }
-            }
-        }
-    }
+				if (result != null && filled != null && (outputStack == null || result.isItemEqual(outputStack)))
+				{
+					decrStackSize(containerInput, 1);
+					incrStackSize(containerOutput, result);
+					tank.drain(filled.amount, true);
+				}
+			}
+		}
+	}
 
-    /** Gets the current result of the input set up.
-     * 
-     * @return */
-    public RecipeResource[] getResults()
-    {
-        ItemStack inputStack = getStackInSlot(inputSlot);
-        RecipeResource[] mixedResult = MachineRecipes.INSTANCE.getOutput(machineName, inputStack, getInputTank().getFluid());
+	/**
+	 * Gets the current result of the input set up.
+	 *
+	 * @return
+	 */
+	public RecipeResource[] getResults()
+	{
+		ItemStack inputStack = getStackInSlot(inputSlot);
+		RecipeResource[] mixedResult = MachineRecipes.INSTANCE.getOutput(machineName, inputStack, getInputTank().getFluid());
 
-        if (mixedResult.length > 0)
-        {
-            return mixedResult;
-        }
+		if (mixedResult.length > 0)
+		{
+			return mixedResult;
+		}
 
-        return MachineRecipes.INSTANCE.getOutput(machineName, inputStack);
-    }
+		return MachineRecipes.INSTANCE.getOutput(machineName, inputStack);
+	}
 
-    public boolean hasResult()
-    {
-        return getResults().length > 0;
-    }
+	public boolean hasResult()
+	{
+		return getResults().length > 0;
+	}
 
-    public abstract FluidTank getInputTank();
+	public abstract FluidTank getInputTank();
 
-    public abstract FluidTank getOutputTank();
+	public abstract FluidTank getOutputTank();
 }

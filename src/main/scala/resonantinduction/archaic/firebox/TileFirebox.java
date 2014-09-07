@@ -3,40 +3,32 @@ package resonantinduction.archaic.firebox;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.IIcon;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.*;
 import resonant.content.spatial.block.SpatialBlock;
 import resonant.engine.grid.thermal.BoilEvent;
 import resonant.engine.grid.thermal.ThermalPhysics;
+import resonant.lib.content.prefab.java.TileElectricInventory;
+import resonant.lib.network.Synced;
 import resonant.lib.network.discriminator.PacketAnnotation;
 import resonant.lib.network.discriminator.PacketType;
 import resonant.lib.network.handle.IPacketReceiver;
 import resonant.lib.utility.FluidUtility;
-import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityFurnace;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidHandler;
-import resonant.lib.network.Synced;
-import resonantinduction.core.CoreContent;
 import resonantinduction.core.Reference;
 import universalelectricity.core.transform.vector.Vector3;
-import resonant.lib.content.prefab.java.TileElectricInventory;
 
 import java.util.List;
 
@@ -63,9 +55,9 @@ public class TileFirebox extends TileElectricInventory implements IPacketReceive
 
 	public TileFirebox()
 	{
-        super(Material.rock);
-        setCapacity(POWER);
-        setMaxTransfer((POWER * 2) / 20);
+		super(Material.rock);
+		setCapacity(POWER);
+		setMaxTransfer((POWER * 2) / 20);
 		setIO(ForgeDirection.UP, 0);
 	}
 
@@ -124,7 +116,7 @@ public class TileFirebox extends TileElectricInventory implements IPacketReceive
 				heatEnergy += POWER / 20;
 				boolean usedHeat = false;
 
-                if (block == Blocks.water)
+				if (block == Blocks.water)
 				{
 					usedHeat = true;
 					int volume = 100;
@@ -212,7 +204,7 @@ public class TileFirebox extends TileElectricInventory implements IPacketReceive
 
 	@Override
 	public void read(ByteBuf data, EntityPlayer player, PacketType type)
-    {
+	{
 		this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 	}
 
@@ -273,64 +265,68 @@ public class TileFirebox extends TileElectricInventory implements IPacketReceive
 		return new FluidTankInfo[] { tank.getInfo() };
 	}
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister iconReg)
-    {
-        super.registerIcons(iconReg);
-        SpatialBlock.icon().put("firebox_side_on", iconReg.registerIcon(Reference.prefix() + "firebox_side_on"));
-        SpatialBlock.icon().put("firebox_side_off", iconReg.registerIcon(Reference.prefix() + "firebox_side_off"));
-        SpatialBlock.icon().put("firebox_top_on", iconReg.registerIcon(Reference.prefix() + "firebox_top_on"));
-        SpatialBlock.icon().put("firebox_top_off", iconReg.registerIcon(Reference.prefix() + "firebox_top_off"));
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerIcons(IIconRegister iconReg)
+	{
+		super.registerIcons(iconReg);
+		SpatialBlock.icon().put("firebox_side_on", iconReg.registerIcon(Reference.prefix() + "firebox_side_on"));
+		SpatialBlock.icon().put("firebox_side_off", iconReg.registerIcon(Reference.prefix() + "firebox_side_off"));
+		SpatialBlock.icon().put("firebox_top_on", iconReg.registerIcon(Reference.prefix() + "firebox_top_on"));
+		SpatialBlock.icon().put("firebox_top_off", iconReg.registerIcon(Reference.prefix() + "firebox_top_off"));
 
-        SpatialBlock.icon().put("firebox_electric_side_on", iconReg.registerIcon(Reference.prefix() + "firebox_electric_side_on"));
-        SpatialBlock.icon().put("firebox_electric_side_off", iconReg.registerIcon(Reference.prefix() + "firebox_electric_side_off"));
-        SpatialBlock.icon().put("firebox_electric_top_on", iconReg.registerIcon(Reference.prefix() + "firebox_electric_top_on"));
-        SpatialBlock.icon().put("firebox_electric_top_off", iconReg.registerIcon(Reference.prefix() + "firebox_electric_top_off"));
+		SpatialBlock.icon().put("firebox_electric_side_on", iconReg.registerIcon(Reference.prefix() + "firebox_electric_side_on"));
+		SpatialBlock.icon().put("firebox_electric_side_off", iconReg.registerIcon(Reference.prefix() + "firebox_electric_side_off"));
+		SpatialBlock.icon().put("firebox_electric_top_on", iconReg.registerIcon(Reference.prefix() + "firebox_electric_top_on"));
+		SpatialBlock.icon().put("firebox_electric_top_off", iconReg.registerIcon(Reference.prefix() + "firebox_electric_top_off"));
 
-    }
+	}
 
-    @Override
-    public void click(EntityPlayer player)
-    {
-        if(server())
-           extractItem((IInventory)this, 0, player);
-    }
+	@Override
+	public void click(EntityPlayer player)
+	{
+		if (server())
+		{
+			extractItem((IInventory) this, 0, player);
+		}
+	}
 
-    @Override
-    public boolean use(EntityPlayer player, int side, Vector3 hit)
-    {
+	@Override
+	public boolean use(EntityPlayer player, int side, Vector3 hit)
+	{
 
-            if (FluidUtility.playerActivatedFluidItem(world(), x(), y(), z(), player, side))
-            {
-                return true;
-            }
+		if (FluidUtility.playerActivatedFluidItem(world(), x(), y(), z(), player, side))
+		{
+			return true;
+		}
 
-            return interactCurrentItem((IInventory)this, 0, player);
-    }
+		return interactCurrentItem((IInventory) this, 0, player);
+	}
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public IIcon getIcon(int side, int meta)
-    {
-        if (side == 0)
-            return SpatialBlock.icon().get("firebox");
+	@Override
+	@SideOnly(Side.CLIENT)
+	public IIcon getIcon(int side, int meta)
+	{
+		if (side == 0)
+		{
+			return SpatialBlock.icon().get("firebox");
+		}
 
-        boolean isElectric = meta == 1;
-        boolean isBurning = false;
+		boolean isElectric = meta == 1;
+		boolean isBurning = false;
 
-        if (side == 1)
-        {
-            return isBurning ? (isElectric ? SpatialBlock.icon().get("firebox_eletric_top_on") : SpatialBlock.icon().get("firebox_top_on")) : (isElectric ? SpatialBlock.icon().get("firebox_eletric_top_off") : SpatialBlock.icon().get("firebox_top_off"));
-        }
+		if (side == 1)
+		{
+			return isBurning ? (isElectric ? SpatialBlock.icon().get("firebox_eletric_top_on") : SpatialBlock.icon().get("firebox_top_on")) : (isElectric ? SpatialBlock.icon().get("firebox_eletric_top_off") : SpatialBlock.icon().get("firebox_top_off"));
+		}
 
-        return isBurning ? (isElectric ? SpatialBlock.icon().get("firebox_eletric_side_on") : SpatialBlock.icon().get("firebox_side_on")) : (isElectric ? SpatialBlock.icon().get("firebox_eletric_side_off") : SpatialBlock.icon().get("firebox_side_off"));
-    }
+		return isBurning ? (isElectric ? SpatialBlock.icon().get("firebox_eletric_side_on") : SpatialBlock.icon().get("firebox_side_on")) : (isElectric ? SpatialBlock.icon().get("firebox_eletric_side_off") : SpatialBlock.icon().get("firebox_side_off"));
+	}
 
-    @Override
-    public void getSubBlocks(Item par1, CreativeTabs par2CreativeTabs, List par3List)
-    {
-        par3List.add(new ItemStack(par1, 1, 0));
-        par3List.add(new ItemStack(par1, 1, 1));
-    }
+	@Override
+	public void getSubBlocks(Item par1, CreativeTabs par2CreativeTabs, List par3List)
+	{
+		par3List.add(new ItemStack(par1, 1, 0));
+		par3List.add(new ItemStack(par1, 1, 1));
+	}
 }

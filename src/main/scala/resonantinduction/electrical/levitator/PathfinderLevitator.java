@@ -12,9 +12,9 @@ import universalelectricity.core.transform.vector.Vector3;
 
 /**
  * Uses the well known A* Pathfinding algorithm.
- * 
+ *
  * @author Calclavia
- * 
+ *
  */
 public class PathfinderLevitator extends PathfinderAStar
 {

@@ -19,7 +19,7 @@ class ElectricTransformerNode(parent: INodeProvider) extends NodeElectric(parent
 
   def this(parent: INodeProvider, side: ForgeDirection, in : Boolean) =
   {
-    this(parent)    
+    this(parent)
     connectionDirection = side
     input = in
   }

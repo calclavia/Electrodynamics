@@ -1,7 +1,5 @@
 package resonantinduction.atomic.gate;
 
-import java.util.HashMap;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -10,6 +8,8 @@ import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.Teleporter;
 import net.minecraft.world.WorldServer;
 import universalelectricity.core.transform.vector.VectorWorld;
+
+import java.util.HashMap;
 
 public class QuantumGateManager
 {

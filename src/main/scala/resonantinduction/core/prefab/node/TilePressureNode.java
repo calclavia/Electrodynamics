@@ -8,19 +8,19 @@ import net.minecraftforge.common.util.ForgeDirection;
  */
 public class TilePressureNode extends TileTankNode
 {
-    public TilePressureNode(Material material)
-    {
-        super(material);
-        tankNode_$eq(new NodePressure(this));
-    }
+	public TilePressureNode(Material material)
+	{
+		super(material);
+		tankNode_$eq(new NodePressure(this));
+	}
 
-    public NodePressure getPressureNode()
-    {
-        return (NodePressure) tankNode();
-    }
+	public NodePressure getPressureNode()
+	{
+		return (NodePressure) tankNode();
+	}
 
-    public int getPressure(ForgeDirection direction)
-    {
-        return getPressureNode().getPressure(direction);
-    }
+	public int getPressure(ForgeDirection direction)
+	{
+		return getPressureNode().getPressure(direction);
+	}
 }

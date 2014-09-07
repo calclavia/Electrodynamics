@@ -12,19 +12,19 @@ import universalelectricity.api.core.grid.INodeProvider;
  */
 public class TraitNodeProvider extends TileMultipart implements INodeProvider
 {
-    @Override
-    public INode getNode(Class<? extends INode> nodeType, ForgeDirection from)
-    {
-        TMultiPart nodePart = partMap(from.ordinal());
+	@Override
+	public INode getNode(Class<? extends INode> nodeType, ForgeDirection from)
+	{
+		TMultiPart nodePart = partMap(from.ordinal());
 
-        if (nodePart == null)
-        {
-            nodePart = partMap(PartMap.CENTER.ordinal());
-        }
-        if (nodePart instanceof INodeProvider)
-        {
-            return ((INodeProvider)nodePart).getNode(nodeType, from);
-        }
-        return null;
-    }
+		if (nodePart == null)
+		{
+			nodePart = partMap(PartMap.CENTER.ordinal());
+		}
+		if (nodePart instanceof INodeProvider)
+		{
+			return ((INodeProvider) nodePart).getNode(nodeType, from);
+		}
+		return null;
+	}
 }

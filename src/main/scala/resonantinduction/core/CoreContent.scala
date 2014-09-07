@@ -22,8 +22,8 @@ object CoreContent extends ContentHolder
   override def postInit()
   {
     recipes += shaped(new ItemStack(decoration, 8, 3), "XXX", "XCX", "XXX", 'X', Blocks.cobblestone, 'C', new ItemStack(Items.coal, 1, 1))
-    recipes += (new ItemStack(decoration, 3), new ItemStack(decoration, 1, 5), 5)
-    recipes += (decoration, new ItemStack(decoration, 1, 4), 5)
+    recipes +=(new ItemStack(decoration, 3), new ItemStack(decoration, 1, 5), 5)
+    recipes +=(decoration, new ItemStack(decoration, 1, 4), 5)
     recipes += shaped(new ItemStack(decoration, 8, 7), "XXX", "XVX", "XXX", 'X', new ItemStack(decoration), 'V', Blocks.vine)
     recipes += shaped(new ItemStack(decoration, 4), "XX ", "XX ", "   ", 'X', new ItemStack(decoration, 1, 5))
     recipes += shaped(new ItemStack(decoration, 4, 1), "XXX", "XXX", "XX ", 'X', Blocks.stone_slab)

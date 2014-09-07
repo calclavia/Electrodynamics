@@ -22,7 +22,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author Calclavia
- * 
+ *
  */
 @SideOnly(Side.CLIENT)
 public class RenderMixer extends TileEntitySpecialRenderer implements ISimpleItemRenderer

@@ -7,7 +7,8 @@ import resonant.content.loader.ContentHolder
 import resonant.lib.recipe.UniversalRecipe
 ;
 
-object ArchaicBlocks extends ContentHolder {
+object ArchaicBlocks extends ContentHolder
+{
 
   var blockEngineeringTable: Block = _
   var blockCrate: Block = _
@@ -22,7 +23,8 @@ object ArchaicBlocks extends ContentHolder {
   var blockGutter: Block = _
   var blockTank: Block = _
 
-  override def postInit() {
+  override def postInit()
+  {
     recipes += shaped(ArchaicBlocks.blockEngineeringTable, "P", "C", 'P', Blocks.wooden_pressure_plate, 'C', Blocks.crafting_table)
     //recipes += shaped(ArchaicBlocks.blockFilter, "B", "P", "B", 'B', Blocks.iron_bars, 'P', Items.paper)
 

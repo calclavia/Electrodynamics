@@ -22,9 +22,9 @@ import cpw.mods.fml.relauncher.ReflectionHelper;
 /**
  * The vertical water turbine collects flowing water flowing on X axis.
  * The horizontal water turbine collects flowing water on Z axis.
- * 
+ *
  * @author Calclavia
- * 
+ *
  */
 public class TileWaterTurbine extends TileTurbine
 {
@@ -127,7 +127,7 @@ public class TileWaterTurbine extends TileTurbine
 								getMultiBlock().get().power += Math.abs(getWaterPower() * vector.z() * (7 - metadata) / 7f);
 								powerTicks = 20;
 							}
-							
+
 							if (getDirection().offsetZ != 0)
 							{
 								getMultiBlock().get().power += Math.abs(getWaterPower() * vector.x() * (7 - metadata) / 7f);

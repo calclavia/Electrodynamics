@@ -36,7 +36,7 @@ public class TileTurbine extends TileMechanical implements IMultiBlockStructure<
     /** The power of the turbine this tick. In joules/tick */
     public long power = 0;
 
-    protected final long defaultTorque = 5000;  
+    protected final long defaultTorque = 5000;
 
     /** MutliBlock methods. */
     private TurbineMBlockHandler multiBlock;
@@ -101,7 +101,7 @@ public class TileTurbine extends TileMechanical implements IMultiBlockStructure<
     public void playSound()
     {
 
-    }   
+    }
 
     /** Reads a tile entity from NBT. */
     @Override

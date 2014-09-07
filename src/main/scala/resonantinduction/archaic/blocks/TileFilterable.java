@@ -1,7 +1,5 @@
 package resonantinduction.archaic.blocks;
 
-import java.util.Set;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,15 +8,17 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 import resonant.api.IFilterable;
 import resonant.api.IRotatable;
-import universalelectricity.core.transform.vector.Vector3;
 import resonant.lib.content.prefab.java.TileInventory;
+import universalelectricity.core.transform.vector.Vector3;
+
+import java.util.Set;
 
 public abstract class TileFilterable extends TileInventory implements IRotatable, IFilterable
 {
-	private ItemStack filterItem;
-	private boolean inverted;
 	public static final int FILTER_SLOT = 0;
 	public static final int BATERY_DRAIN_SLOT = 1;
+	private ItemStack filterItem;
+	private boolean inverted;
 
 	public TileFilterable()
 	{
@@ -37,7 +37,9 @@ public abstract class TileFilterable extends TileInventory implements IRotatable
 		return true;
 	}
 
-	/** Allows filters to be placed inside of this block. */
+	/**
+	 * Allows filters to be placed inside of this block.
+	 */
 	@Override
 	public boolean use(EntityPlayer player, int side, Vector3 hit)
 	{
@@ -82,7 +84,7 @@ public abstract class TileFilterable extends TileInventory implements IRotatable
 
 	/**
 	 * Looks through the things in the filter and finds out which item is being filtered.
-	 * 
+	 *
 	 * @return Is this filterable block filtering this specific ItemStack?
 	 */
 	public boolean isFiltering(ItemStack itemStack)
@@ -107,27 +109,27 @@ public abstract class TileFilterable extends TileInventory implements IRotatable
 	}
 
 	@Override
+	public ItemStack getFilter()
+	{
+		return this.filterItem;
+	}
+
+	@Override
 	public void setFilter(ItemStack filter)
 	{
 		this.filterItem = filter;
 		this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
-	@Override
-	public ItemStack getFilter()
+	public boolean isInverted()
 	{
-		return this.filterItem;
+		return this.inverted;
 	}
 
 	public void setInverted(boolean inverted)
 	{
 		this.inverted = inverted;
 		this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-	}
-
-	public boolean isInverted()
-	{
-		return this.inverted;
 	}
 
 	public void toggleInversion()

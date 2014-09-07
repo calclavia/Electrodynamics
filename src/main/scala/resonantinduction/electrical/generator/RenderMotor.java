@@ -17,7 +17,7 @@ import resonantinduction.core.Reference;
 
 /**
  * @author Calclavia
- * 
+ *
  */
 public class RenderMotor extends TileEntitySpecialRenderer implements ISimpleItemRenderer
 {

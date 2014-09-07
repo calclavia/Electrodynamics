@@ -20,7 +20,7 @@ import universalelectricity.api.core.grid.INode;
 import java.util.Set;
 
 /** Fluid transport pipe
- * 
+ *
  * @author Calclavia, Darkguardsman */
 public class PartPipe extends PartFramedNode<EnumPipeMaterial> implements TSlottedPart, JNormalOcclusion, IFluidHandler
 {

@@ -114,7 +114,7 @@ public class TileMechanicalPiston extends TileMechanical
         {
             world().destroyBlockInWorldPartially(0, blockPos.xi(), blockPos.yi(), blockPos.zi(), -1);
         }
-        
+
         return false;
     }
 

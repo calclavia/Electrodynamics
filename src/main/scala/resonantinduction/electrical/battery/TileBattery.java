@@ -18,7 +18,7 @@ import resonant.lib.network.handle.IPacketReceiver;
 import java.util.ArrayList;
 
 /** A modular battery box that allows shared connections with boxes next to it.
- * 
+ *
  * @author Calclavia */
 public class TileBattery extends TileEnergyDistribution implements IPacketReceiver
 {

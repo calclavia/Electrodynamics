@@ -10,7 +10,7 @@ import universalelectricity.api.core.grid.INode;
 import universalelectricity.api.core.grid.INodeProvider;
 
 /** Pressure node for the pipe
- * 
+ *
  * @author Calclavia, Darkguardsman */
 public class PipePressureNode extends NodePressure
 {
@@ -102,7 +102,7 @@ public class PipePressureNode extends NodePressure
 
         return false;
     }
-    
+
     @Override
     public String toString()
     {

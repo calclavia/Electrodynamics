@@ -28,7 +28,7 @@ import universalelectricity.core.transform.rotation.EulerAngle;
 import universalelectricity.core.transform.vector.VectorWorld;
 
 /** We assume all the force acting on the gear is 90 degrees.
- * 
+ *
  * @author Calclavia */
 public class PartGear extends PartMechanical implements IMultiBlockStructure<PartGear>
 {
@@ -54,7 +54,7 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
     {
         super();
         node = new GearNode(this);
-       
+
     }
 
     @Override
@@ -117,7 +117,7 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
 
     /** Is this gear block the one in the center-edge of the multiblock that can interact with other
      * gears?
-     * 
+     *
      * @return */
     public boolean isCenterMultiBlock()
     {

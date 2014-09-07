@@ -7,46 +7,41 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.*;
 import resonant.api.recipe.MachineRecipes;
 import resonant.api.recipe.RecipeResource;
+import resonant.content.factory.resources.RecipeType;
+import resonant.lib.content.prefab.java.TileInventory;
 import resonant.lib.network.discriminator.PacketTile;
 import resonant.lib.network.discriminator.PacketType;
 import resonant.lib.network.handle.IPacketReceiver;
 import resonant.lib.utility.FluidUtility;
 import resonant.lib.utility.inventory.InventoryUtility;
-import resonant.content.factory.resources.RecipeType;
 import resonantinduction.core.Reference;
 import universalelectricity.core.transform.vector.Vector3;
-import resonant.lib.content.prefab.java.TileInventory;
 
 /**
  * Turns molten fuilds into ingots.
- * 
+ * <p/>
  * 1 m^3 of molten fluid = 1 block
  * Approximately 100-110 L of fluid = 1 ingot.
- * 
+ *
  * @author Calclavia
- * 
  */
 public class TileCastingMold extends TileInventory implements IFluidHandler, IPacketReceiver
 {
-	protected FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
 	private final int amountPerIngot = 100;
+	protected FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
 
-    public TileCastingMold() {
-        super(Material.rock);
-        setTextureName(Reference.prefix() + "material_metal_side");
-        normalRender(false);
-        isOpaqueCube(false);
-    }
+	public TileCastingMold()
+	{
+		super(Material.rock);
+		setTextureName(Reference.prefix() + "material_metal_side");
+		normalRender(false);
+		isOpaqueCube(false);
+	}
 
-    @Override
+	@Override
 	public boolean canUpdate()
 	{
 		return false;
@@ -166,36 +161,38 @@ public class TileCastingMold extends TileInventory implements IFluidHandler, IPa
 		return new FluidTankInfo[] { tank.getInfo() };
 	}
 
-    @Override
-    public void click(EntityPlayer player)
-    {
-        if (!world().isRemote) {
+	@Override
+	public void click(EntityPlayer player)
+	{
+		if (!world().isRemote)
+		{
 
-            ItemStack output = getStackInSlot(0);
+			ItemStack output = getStackInSlot(0);
 
-            if (output != null) {
-                InventoryUtility.dropItemStack(world(), new Vector3(player), output, 0);
-                setInventorySlotContents(0, null);
-            }
+			if (output != null)
+			{
+				InventoryUtility.dropItemStack(world(), new Vector3(player), output, 0);
+				setInventorySlotContents(0, null);
+			}
 
-            onInventoryChanged();
-        }
-    }
+			onInventoryChanged();
+		}
+	}
 
-    @Override
-    public boolean use(EntityPlayer player, int hitSide, Vector3 hit)
-    {
-            update();
+	@Override
+	public boolean use(EntityPlayer player, int hitSide, Vector3 hit)
+	{
+		update();
 
-            ItemStack current = player.inventory.getCurrentItem();
-            ItemStack output = getStackInSlot(0);
+		ItemStack current = player.inventory.getCurrentItem();
+		ItemStack output = getStackInSlot(0);
 
-            if (output != null)
-            {
-                InventoryUtility.dropItemStack(world(), new Vector3(player), output, 0);
-                setInventorySlotContents(0, null);
-            }
+		if (output != null)
+		{
+			InventoryUtility.dropItemStack(world(), new Vector3(player), output, 0);
+			setInventorySlotContents(0, null);
+		}
 
-            return true;
-    }
+		return true;
+	}
 }

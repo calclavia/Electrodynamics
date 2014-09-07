@@ -34,10 +34,10 @@ public class RenderWaterTurbine extends TileEntitySpecialRenderer implements ISi
 
 			// Determine if the turbine is facing horizontally or vertical.
 			RenderUtility.rotateBlockBasedOnDirectionUp(tile.getDirection());
-			
+
 			// Get the rotation directly from the resonantinduction.mechanical node running client side.
 			double mechanicalNodeRenderAngle = tile.mechanicalNode.renderAngle;
-			
+
 			// We need to convert this value into something the model renderer can understand.
 			// Note: Check for NaN and if so then just defaults to zero.
 			float renderAngleInDegrees = 0;
@@ -45,7 +45,7 @@ public class RenderWaterTurbine extends TileEntitySpecialRenderer implements ISi
 			{
 			    renderAngleInDegrees = (float) Math.toDegrees(mechanicalNodeRenderAngle);
 			}
-			
+
 			// Call to actually rotate the gear model to the specified degree.
 			GL11.glRotatef(renderAngleInDegrees, 0, 1, 0);
 			//ResonantInduction.LOGGER.info("[RenderWaterTurbine] Render Angle: " + renderAngleInDegrees);

@@ -14,7 +14,8 @@ abstract class MultipartNode(parent: INodeProvider) extends NodeConnector(parent
 {
   override def world: World =
   {
-    if(parent != null) {
+    if (parent != null)
+    {
       if (parent.isInstanceOf[TMultiPart])
         return parent.asInstanceOf[TMultiPart].world
       else if (parent.isInstanceOf[TileEntity])
@@ -25,7 +26,8 @@ abstract class MultipartNode(parent: INodeProvider) extends NodeConnector(parent
 
   override def x: Double =
   {
-    if(parent != null) {
+    if (parent != null)
+    {
       if (parent.isInstanceOf[TMultiPart])
         return (parent.asInstanceOf[TMultiPart]).x
       else if (parent.isInstanceOf[TileEntity])
@@ -36,7 +38,8 @@ abstract class MultipartNode(parent: INodeProvider) extends NodeConnector(parent
 
   override def y: Double =
   {
-    if(parent != null) {
+    if (parent != null)
+    {
       if (parent.isInstanceOf[TMultiPart])
         return (parent.asInstanceOf[TMultiPart]).y
       else if (parent.isInstanceOf[TileEntity])
@@ -47,7 +50,8 @@ abstract class MultipartNode(parent: INodeProvider) extends NodeConnector(parent
 
   override def z: Double =
   {
-    if(parent != null) {
+    if (parent != null)
+    {
       if (parent.isInstanceOf[TMultiPart])
         return (parent.asInstanceOf[TMultiPart]).z
       else if (parent.isInstanceOf[TileEntity])

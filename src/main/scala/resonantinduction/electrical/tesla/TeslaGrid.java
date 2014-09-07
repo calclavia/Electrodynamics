@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package resonantinduction.electrical.tesla;
 
@@ -12,7 +12,7 @@ import resonant.api.mffs.fortron.IServerThread;
 
 /**
  * @author Calclavia
- * 
+ *
  */
 public class TeslaGrid
 {

@@ -18,7 +18,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author Calclavia
- * 
+ *
  */
 @SideOnly(Side.CLIENT)
 public class RenderGrindingWheel extends TileEntitySpecialRenderer

@@ -10,9 +10,10 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.potion.{Potion, PotionEffect}
 import net.minecraft.world.World
 import resonant.lib.utility.LanguageUtility
+import resonant.lib.wrapper.WrapList._
 
 import scala.util.control.Breaks._
-import resonant.lib.wrapper.WrapList._
+
 object ItemBlockCrate
 {
   def setContainingItemStack(itemStack: ItemStack, containingStack: ItemStack)

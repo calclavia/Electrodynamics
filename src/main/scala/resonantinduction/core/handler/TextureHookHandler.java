@@ -1,19 +1,14 @@
 package resonantinduction.core.handler;
 
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.fluids.BlockFluidFinite;
-import resonant.lib.render.RenderUtility;
-import resonantinduction.core.CoreContent;
-import resonantinduction.core.Reference;
-import resonant.lib.prefab.block.FluidColored;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.client.event.TextureStitchEvent;
+import resonant.lib.render.RenderUtility;
+import resonantinduction.core.Reference;
 
 /**
  * @author Calclavia
- * 
  */
 public class TextureHookHandler
 {

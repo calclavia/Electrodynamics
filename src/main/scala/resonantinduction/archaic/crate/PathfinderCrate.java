@@ -1,48 +1,32 @@
 package resonantinduction.archaic.crate;
 
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.ForgeDirection;
+import universalelectricity.core.transform.vector.VectorWorld;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
-import universalelectricity.core.transform.vector.Vector3;
-import universalelectricity.core.transform.vector.VectorWorld;
-
 /**
  * A class that allows flexible path finding in Minecraft Blocks. Back Ported from UE 1.3.0.
- * 
+ * <p/>
  * TODO: Will need to change when MC 1.5 comes out.
- * 
+ *
  * @author Calclavia
  */
 public class PathfinderCrate
 {
-	public interface IPathCallBack
-	{
-		/**
-		 * Is this a valid node to search for?
-		 * 
-		 * @return
-		 */
-		public boolean isValidNode(PathfinderCrate finder, ForgeDirection direction, TileEntity provider, TileEntity node);
-
-		/**
-		 * Called when looping through nodes.
-		 * 
-		 * @param finder
-		 * @param provider
-		 * @return True to stop the path finding operation.
-		 */
-		public boolean onSearch(PathfinderCrate finder, TileEntity provider);
-	}
-
-	/** A pathfinding call back interface used to call back on paths. */
+	/**
+	 * A pathfinding call back interface used to call back on paths.
+	 */
 	public IPathCallBack callBackCheck;
-
-	/** A list of nodes that the pathfinder went through. */
+	/**
+	 * A list of nodes that the pathfinder went through.
+	 */
 	public List<TileEntity> iteratedNodes;
-
-	/** The results and findings found by the pathfinder. */
+	/**
+	 * The results and findings found by the pathfinder.
+	 */
 	public List results;
 
 	public PathfinderCrate()
@@ -77,9 +61,9 @@ public class PathfinderCrate
 
 			for (int i = 0; i < 6; i++)
 			{
-                VectorWorld vec = new VectorWorld(provider);
-                vec.addEquals(ForgeDirection.getOrientation(i));
-                TileEntity connectedTile = vec.getTileEntity();
+				VectorWorld vec = new VectorWorld(provider);
+				vec.addEquals(ForgeDirection.getOrientation(i));
+				TileEntity connectedTile = vec.getTileEntity();
 
 				if (!iteratedNodes.contains(connectedTile))
 				{
@@ -99,7 +83,9 @@ public class PathfinderCrate
 		return true;
 	}
 
-	/** Called to execute the pathfinding operation. */
+	/**
+	 * Called to execute the pathfinding operation.
+	 */
 	public PathfinderCrate init(TileEntity provider)
 	{
 		this.findNodes(provider);
@@ -111,5 +97,24 @@ public class PathfinderCrate
 		this.iteratedNodes = new ArrayList<TileEntity>();
 		this.results = new ArrayList();
 		return this;
+	}
+
+	public interface IPathCallBack
+	{
+		/**
+		 * Is this a valid node to search for?
+		 *
+		 * @return
+		 */
+		public boolean isValidNode(PathfinderCrate finder, ForgeDirection direction, TileEntity provider, TileEntity node);
+
+		/**
+		 * Called when looping through nodes.
+		 *
+		 * @param finder
+		 * @param provider
+		 * @return True to stop the path finding operation.
+		 */
+		public boolean onSearch(PathfinderCrate finder, TileEntity provider);
 	}
 }

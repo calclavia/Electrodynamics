@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package resonantinduction.electrical.multimeter;
 
@@ -14,9 +14,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * Multimeter GUI
- * 
+ *
  * @author Calclavia
- * 
+ *
  */
 @SideOnly(Side.CLIENT)
 public class GuiMultimeter extends GuiContainerBase

@@ -24,11 +24,11 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * Class used to render text onto the multimeter block.
- * 
+ *
  * The more space we have, the more information and detail we render.
- * 
+ *
  * @author Calclavia
- * 
+ *
  */
 @SideOnly(Side.CLIENT)
 public class RenderMultimeter implements ISimpleItemRenderer

@@ -1,7 +1,6 @@
 package resonantinduction.atomic.machine.accelerator;
 
-import java.util.List;
-
+import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -21,309 +20,310 @@ import resonantinduction.atomic.Atomic;
 import resonantinduction.core.Reference;
 import universalelectricity.core.transform.vector.Vector3;
 
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteArrayDataOutput;
+import java.util.List;
 
-import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
-
-/** The particle entity used to determine the particle acceleration. */
+/**
+ * The particle entity used to determine the particle acceleration.
+ */
 public class EntityParticle extends Entity implements IEntityAdditionalSpawnData
 {
-    private static final int MOVE_TICK_RATE = 20;
-    public Ticket updateTicket;
-    public boolean didParticleCollide = false;
-    private int lastTurn = 60;
-    private Vector3 movementVector = new Vector3();
-    private ForgeDirection movementDirection = ForgeDirection.NORTH;
+	private static final int MOVE_TICK_RATE = 20;
+	public Ticket updateTicket;
+	public boolean didParticleCollide = false;
+	private int lastTurn = 60;
+	private Vector3 movementVector = new Vector3();
+	private ForgeDirection movementDirection = ForgeDirection.NORTH;
 
-    public EntityParticle(World par1World)
-    {
-        super(par1World);
-        this.setSize(0.3f, 0.3f);
-        this.renderDistanceWeight = 4f;
-        this.ignoreFrustumCheck = true;
-    }
+	public EntityParticle(World par1World)
+	{
+		super(par1World);
+		this.setSize(0.3f, 0.3f);
+		this.renderDistanceWeight = 4f;
+		this.ignoreFrustumCheck = true;
+	}
 
-    public EntityParticle(World world, Vector3 pos, Vector3 movementVec, ForgeDirection dir)
-    {
-        this(world);
-        this.setPosition(pos.x(), pos.y(), pos.z());
-        this.movementVector = movementVec;
-        this.movementDirection = dir;
-    }
+	public EntityParticle(World world, Vector3 pos, Vector3 movementVec, ForgeDirection dir)
+	{
+		this(world);
+		this.setPosition(pos.x(), pos.y(), pos.z());
+		this.movementVector = movementVec;
+		this.movementDirection = dir;
+	}
 
-    public static boolean canSpawnParticle(World world, Vector3 pos)
-    {
-        Block block  = pos.getBlock(world);
-        if (block != null && !block.isAir(world, pos.xi(), pos.yi(), pos.zi()))
-        {
-            return false;
-        }
+	public static boolean canSpawnParticle(World world, Vector3 pos)
+	{
+		Block block = pos.getBlock(world);
+		if (block != null && !block.isAir(world, pos.xi(), pos.yi(), pos.zi()))
+		{
+			return false;
+		}
 
-        for (int i = 0; i <= 1; i++)
-        {
-            ForgeDirection dir = ForgeDirection.getOrientation(i);
+		for (int i = 0; i <= 1; i++)
+		{
+			ForgeDirection dir = ForgeDirection.getOrientation(i);
 
-            if (!isElectromagnet(world, pos, dir))
-            {
-                return false;
-            }
-        }
+			if (!isElectromagnet(world, pos, dir))
+			{
+				return false;
+			}
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    public static boolean isElectromagnet(World world, Vector3 position, ForgeDirection dir)
-    {
-        Vector3 checkPos = position.clone().add(dir);
-        TileEntity tile = checkPos.getTileEntity(world);
+	public static boolean isElectromagnet(World world, Vector3 position, ForgeDirection dir)
+	{
+		Vector3 checkPos = position.clone().add(dir);
+		TileEntity tile = checkPos.getTileEntity(world);
 
-        if (tile instanceof IElectromagnet)
-        {
-            return ((IElectromagnet) tile).isRunning();
+		if (tile instanceof IElectromagnet)
+		{
+			return ((IElectromagnet) tile).isRunning();
 
-        }
-        return false;
-    }
+		}
+		return false;
+	}
 
-    @Override
-    public void writeSpawnData(ByteBuf data)
-    {
-        data.writeInt(this.movementVector.xi());
-        data.writeInt(this.movementVector.yi());
-        data.writeInt(this.movementVector.zi());
-        data.writeInt(this.movementDirection.ordinal());
-    }
+	@Override
+	public void writeSpawnData(ByteBuf data)
+	{
+		data.writeInt(this.movementVector.xi());
+		data.writeInt(this.movementVector.yi());
+		data.writeInt(this.movementVector.zi());
+		data.writeInt(this.movementDirection.ordinal());
+	}
 
-    @Override
-    public void readSpawnData(ByteBuf data)
-    {
-        this.movementVector = new Vector3(data);
-        this.movementDirection = ForgeDirection.getOrientation(data.readInt());
-    }
+	@Override
+	public void readSpawnData(ByteBuf data)
+	{
+		this.movementVector = new Vector3(data);
+		this.movementDirection = ForgeDirection.getOrientation(data.readInt());
+	}
 
-    @Override
-    protected void entityInit()
-    {
-        this.dataWatcher.addObject(MOVE_TICK_RATE, (byte) 3);
+	@Override
+	protected void entityInit()
+	{
+		this.dataWatcher.addObject(MOVE_TICK_RATE, (byte) 3);
 
-        if (this.updateTicket == null)
-        {
-            this.updateTicket = ForgeChunkManager.requestTicket(Atomic.INSTANCE(), this.worldObj, Type.ENTITY);
-            this.updateTicket.getModData();
-            this.updateTicket.bindEntity(this);
-        }
-    }
+		if (this.updateTicket == null)
+		{
+			this.updateTicket = ForgeChunkManager.requestTicket(Atomic.INSTANCE(), this.worldObj, Type.ENTITY);
+			this.updateTicket.getModData();
+			this.updateTicket.bindEntity(this);
+		}
+	}
 
-    @Override
-    public void onUpdate()
-    {
-        /** Play sound fxs. */
-        if (this.ticksExisted % 10 == 0)
-        {
-            this.worldObj.playSoundAtEntity(this, Reference.prefix() + "accelerator", 1f, (float) (0.6f + (0.4 * (this.getParticleVelocity() / TileAccelerator.clientParticleVelocity))));
-        }
+	@Override
+	public void onUpdate()
+	{
+		/** Play sound fxs. */
+		if (this.ticksExisted % 10 == 0)
+		{
+			this.worldObj.playSoundAtEntity(this, Reference.prefix() + "accelerator", 1f, (float) (0.6f + (0.4 * (this.getParticleVelocity() / TileAccelerator.clientParticleVelocity))));
+		}
 
-        /** Check if the accelerator tile entity exists. */
-        TileEntity t = this.worldObj.getTileEntity(this.movementVector.xi(), this.movementVector.yi(), this.movementVector.zi());
+		/** Check if the accelerator tile entity exists. */
+		TileEntity t = this.worldObj.getTileEntity(this.movementVector.xi(), this.movementVector.yi(), this.movementVector.zi());
 
-        if (!(t instanceof TileAccelerator))
-        {
-            setDead();
-            return;
-        }
+		if (!(t instanceof TileAccelerator))
+		{
+			setDead();
+			return;
+		}
 
-        TileAccelerator tileEntity = (TileAccelerator) t;
+		TileAccelerator tileEntity = (TileAccelerator) t;
 
-        if (tileEntity.entityParticle == null)
-        {
-            tileEntity.entityParticle = this;
-        }
+		if (tileEntity.entityParticle == null)
+		{
+			tileEntity.entityParticle = this;
+		}
 
-        for (int x = -1; x < 1; x++)
-        {
-            for (int z = -1; z < 1; z++)
-            {
-                ForgeChunkManager.forceChunk(this.updateTicket, new ChunkCoordIntPair(((int) this.posX >> 4) + x, ((int) this.posZ >> 4) + z));
-            }
-        }
+		for (int x = -1; x < 1; x++)
+		{
+			for (int z = -1; z < 1; z++)
+			{
+				ForgeChunkManager.forceChunk(this.updateTicket, new ChunkCoordIntPair(((int) this.posX >> 4) + x, ((int) this.posZ >> 4) + z));
+			}
+		}
 
-        try
-        {
-            if (!this.worldObj.isRemote)
-            {
-                this.dataWatcher.updateObject(MOVE_TICK_RATE, (byte) this.movementDirection.ordinal());
-            }
-            else
-            {
-                this.movementDirection = ForgeDirection.getOrientation(this.dataWatcher.getWatchableObjectByte(MOVE_TICK_RATE));
-            }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+		try
+		{
+			if (!this.worldObj.isRemote)
+			{
+				this.dataWatcher.updateObject(MOVE_TICK_RATE, (byte) this.movementDirection.ordinal());
+			}
+			else
+			{
+				this.movementDirection = ForgeDirection.getOrientation(this.dataWatcher.getWatchableObjectByte(MOVE_TICK_RATE));
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 
-        double acceleration = 0.0006f;
+		double acceleration = 0.0006f;
 
-        if ((!isElectromagnet(worldObj, new Vector3(this), movementDirection.getRotation(ForgeDirection.UP)) || !isElectromagnet(worldObj, new Vector3(this), movementDirection.getRotation(ForgeDirection.DOWN))) && this.lastTurn <= 0)
-        {
-            acceleration = turn();
-            this.motionX = 0;
-            this.motionY = 0;
-            this.motionZ = 0;
-            this.lastTurn = 40;
-        }
+		if ((!isElectromagnet(worldObj, new Vector3(this), movementDirection.getRotation(ForgeDirection.UP)) || !isElectromagnet(worldObj, new Vector3(this), movementDirection.getRotation(ForgeDirection.DOWN))) && this.lastTurn <= 0)
+		{
+			acceleration = turn();
+			this.motionX = 0;
+			this.motionY = 0;
+			this.motionZ = 0;
+			this.lastTurn = 40;
+		}
 
-        this.lastTurn--;
+		this.lastTurn--;
 
-        /** Checks if the current block condition allows the particle to exist */
-        if (!canSpawnParticle(this.worldObj, new Vector3(this)) || this.isCollided)
-        {
-            explode();
-            return;
-        }
+		/** Checks if the current block condition allows the particle to exist */
+		if (!canSpawnParticle(this.worldObj, new Vector3(this)) || this.isCollided)
+		{
+			explode();
+			return;
+		}
 
-        Vector3 dongLi = new Vector3();
-        dongLi.add(this.movementDirection);
-        dongLi.multiply(acceleration);
-        this.motionX = Math.min(dongLi.x() + this.motionX, TileAccelerator.clientParticleVelocity);
-        this.motionY = Math.min(dongLi.y() + this.motionY, TileAccelerator.clientParticleVelocity);
-        this.motionZ = Math.min(dongLi.z() + this.motionZ, TileAccelerator.clientParticleVelocity);
-        this.isAirBorne = true;
+		Vector3 dongLi = new Vector3();
+		dongLi.add(this.movementDirection);
+		dongLi.multiply(acceleration);
+		this.motionX = Math.min(dongLi.x() + this.motionX, TileAccelerator.clientParticleVelocity);
+		this.motionY = Math.min(dongLi.y() + this.motionY, TileAccelerator.clientParticleVelocity);
+		this.motionZ = Math.min(dongLi.z() + this.motionZ, TileAccelerator.clientParticleVelocity);
+		this.isAirBorne = true;
 
-        this.lastTickPosX = this.posX;
-        this.lastTickPosY = this.posY;
-        this.lastTickPosZ = this.posZ;
+		this.lastTickPosX = this.posX;
+		this.lastTickPosY = this.posY;
+		this.lastTickPosZ = this.posZ;
 
-        this.moveEntity(this.motionX, this.motionY, this.motionZ);
+		this.moveEntity(this.motionX, this.motionY, this.motionZ);
 
-        this.setPosition(this.posX, this.posY, this.posZ);
+		this.setPosition(this.posX, this.posY, this.posZ);
 
-        if (this.lastTickPosX == this.posX && this.lastTickPosY == this.posY && this.lastTickPosZ == this.posZ && this.getParticleVelocity() <= 0 && this.lastTurn <= 0)
-        {
-            this.setDead();
-        }
+		if (this.lastTickPosX == this.posX && this.lastTickPosY == this.posY && this.lastTickPosZ == this.posZ && this.getParticleVelocity() <= 0 && this.lastTurn <= 0)
+		{
+			this.setDead();
+		}
 
-        this.worldObj.spawnParticle("portal", this.posX, this.posY, this.posZ, 0, 0, 0);
-        this.worldObj.spawnParticle("largesmoke", this.posX, this.posY, this.posZ, 0, 0, 0);
+		this.worldObj.spawnParticle("portal", this.posX, this.posY, this.posZ, 0, 0, 0);
+		this.worldObj.spawnParticle("largesmoke", this.posX, this.posY, this.posZ, 0, 0, 0);
 
-        float radius = 0.5f;
+		float radius = 0.5f;
 
-        AxisAlignedBB bounds = AxisAlignedBB.getBoundingBox(this.posX - radius, this.posY - radius, this.posZ - radius, this.posX + radius, this.posY + radius, this.posZ + radius);
-        List<Entity> entitiesNearby = this.worldObj.getEntitiesWithinAABB(Entity.class, bounds);
+		AxisAlignedBB bounds = AxisAlignedBB.getBoundingBox(this.posX - radius, this.posY - radius, this.posZ - radius, this.posX + radius, this.posY + radius, this.posZ + radius);
+		List<Entity> entitiesNearby = this.worldObj.getEntitiesWithinAABB(Entity.class, bounds);
 
-        if (entitiesNearby.size() > 1)
-        {
-            this.explode();
-            return;
-        }
-    }
+		if (entitiesNearby.size() > 1)
+		{
+			this.explode();
+			return;
+		}
+	}
 
-    /** Try to move the particle left or right depending on which side is empty.
-     * 
-     * @return The new velocity. */
-    private double turn()
-    {
-        int[][] RELATIVE_MATRIX = { { 3, 2, 1, 0, 5, 4 }, { 4, 5, 0, 1, 2, 3 }, { 0, 1, 3, 2, 4, 5 }, { 0, 1, 2, 3, 5, 4 }, { 0, 1, 5, 4, 3, 2 }, { 0, 1, 4, 5, 2, 3 } };
+	/**
+	 * Try to move the particle left or right depending on which side is empty.
+	 *
+	 * @return The new velocity.
+	 */
+	private double turn()
+	{
+		int[][] RELATIVE_MATRIX = { { 3, 2, 1, 0, 5, 4 }, { 4, 5, 0, 1, 2, 3 }, { 0, 1, 3, 2, 4, 5 }, { 0, 1, 2, 3, 5, 4 }, { 0, 1, 5, 4, 3, 2 }, { 0, 1, 4, 5, 2, 3 } };
 
-        ForgeDirection zuoFangXiang = ForgeDirection.getOrientation(RELATIVE_MATRIX[this.movementDirection.ordinal()][ForgeDirection.EAST.ordinal()]);
+		ForgeDirection zuoFangXiang = ForgeDirection.getOrientation(RELATIVE_MATRIX[this.movementDirection.ordinal()][ForgeDirection.EAST.ordinal()]);
 
-        Vector3 zuoBian = new Vector3(this).floor();
-        zuoBian.add(zuoFangXiang);
+		Vector3 zuoBian = new Vector3(this).floor();
+		zuoBian.add(zuoFangXiang);
 
-        ForgeDirection youFangXiang = ForgeDirection.getOrientation(RELATIVE_MATRIX[this.movementDirection.ordinal()][ForgeDirection.WEST.ordinal()]);
-        Vector3 youBian = new Vector3(this).floor();
-        youBian.add(youFangXiang);
+		ForgeDirection youFangXiang = ForgeDirection.getOrientation(RELATIVE_MATRIX[this.movementDirection.ordinal()][ForgeDirection.WEST.ordinal()]);
+		Vector3 youBian = new Vector3(this).floor();
+		youBian.add(youFangXiang);
 
-        if (zuoBian.getBlock(this.worldObj) == null)
-        {
-            this.movementDirection = zuoFangXiang;
-        }
-        else if (youBian.getBlock(this.worldObj) == null)
-        {
-            this.movementDirection = youFangXiang;
-        }
-        else
-        {
-            setDead();
-            return 0;
-        }
+		if (zuoBian.getBlock(this.worldObj) == null)
+		{
+			this.movementDirection = zuoFangXiang;
+		}
+		else if (youBian.getBlock(this.worldObj) == null)
+		{
+			this.movementDirection = youFangXiang;
+		}
+		else
+		{
+			setDead();
+			return 0;
+		}
 
-        this.setPosition(Math.floor(this.posX) + 0.5, Math.floor(this.posY) + 0.5, Math.floor(this.posZ) + 0.5);
+		this.setPosition(Math.floor(this.posX) + 0.5, Math.floor(this.posY) + 0.5, Math.floor(this.posZ) + 0.5);
 
-        return this.getParticleVelocity() - (this.getParticleVelocity() / Math.min(Math.max(70 * this.getParticleVelocity(), 4), 30));
+		return this.getParticleVelocity() - (this.getParticleVelocity() / Math.min(Math.max(70 * this.getParticleVelocity(), 4), 30));
 
-    }
+	}
 
-    public void explode()
-    {
-        this.worldObj.playSoundAtEntity(this, Reference.prefix() + "antimatter", 1.5f, 1f - this.worldObj.rand.nextFloat() * 0.3f);
+	public void explode()
+	{
+		this.worldObj.playSoundAtEntity(this, Reference.prefix() + "antimatter", 1.5f, 1f - this.worldObj.rand.nextFloat() * 0.3f);
 
-        if (!this.worldObj.isRemote)
-        {
-            if (this.getParticleVelocity() > TileAccelerator.clientParticleVelocity / 2)
-            {
-                /* Check for nearby particles and if colliding with another one, drop strange matter. */
-                float radius = 1f;
+		if (!this.worldObj.isRemote)
+		{
+			if (this.getParticleVelocity() > TileAccelerator.clientParticleVelocity / 2)
+			{
+				/* Check for nearby particles and if colliding with another one, drop strange matter. */
+				float radius = 1f;
 
-                AxisAlignedBB bounds = AxisAlignedBB.getBoundingBox(this.posX - radius, this.posY - radius, this.posZ - radius, this.posX + radius, this.posY + radius, this.posZ + radius);
-                List<EntityParticle> entitiesNearby = this.worldObj.getEntitiesWithinAABB(EntityParticle.class, bounds);
+				AxisAlignedBB bounds = AxisAlignedBB.getBoundingBox(this.posX - radius, this.posY - radius, this.posZ - radius, this.posX + radius, this.posY + radius, this.posZ + radius);
+				List<EntityParticle> entitiesNearby = this.worldObj.getEntitiesWithinAABB(EntityParticle.class, bounds);
 
-                if (entitiesNearby.size() > 0)
-                {
-                    didParticleCollide = true;
-                    setDead();
-                    return;
-                }
-            }
+				if (entitiesNearby.size() > 0)
+				{
+					didParticleCollide = true;
+					setDead();
+					return;
+				}
+			}
 
-            this.worldObj.createExplosion(this, this.posX, this.posY, this.posZ, (float) this.getParticleVelocity() * 2.5f, true);
-        }
+			this.worldObj.createExplosion(this, this.posX, this.posY, this.posZ, (float) this.getParticleVelocity() * 2.5f, true);
+		}
 
-        float radius = 6;
+		float radius = 6;
 
-        AxisAlignedBB bounds = AxisAlignedBB.getBoundingBox(this.posX - radius, this.posY - radius, this.posZ - radius, this.posX + radius, this.posY + radius, this.posZ + radius);
-        List<EntityLiving> livingNearby = this.worldObj.getEntitiesWithinAABB(EntityLiving.class, bounds);
+		AxisAlignedBB bounds = AxisAlignedBB.getBoundingBox(this.posX - radius, this.posY - radius, this.posZ - radius, this.posX + radius, this.posY + radius, this.posZ + radius);
+		List<EntityLiving> livingNearby = this.worldObj.getEntitiesWithinAABB(EntityLiving.class, bounds);
 
-        for (EntityLiving entity : livingNearby)
-        {
-            PoisonRadiation.INSTANCE.poisonEntity(new Vector3(entity), entity);
-        }
+		for (EntityLiving entity : livingNearby)
+		{
+			PoisonRadiation.INSTANCE.poisonEntity(new Vector3(entity), entity);
+		}
 
-        setDead();
-    }
+		setDead();
+	}
 
-    public double getParticleVelocity()
-    {
-        return Math.abs(this.motionX) + Math.abs(this.motionY) + Math.abs(this.motionZ);
-    }
+	public double getParticleVelocity()
+	{
+		return Math.abs(this.motionX) + Math.abs(this.motionY) + Math.abs(this.motionZ);
+	}
 
-    @Override
-    public void applyEntityCollision(Entity par1Entity)
-    {
-        this.explode();
-    }
+	@Override
+	public void applyEntityCollision(Entity par1Entity)
+	{
+		this.explode();
+	}
 
-    @Override
-    public void setDead()
-    {
-        ForgeChunkManager.releaseTicket(this.updateTicket);
-        super.setDead();
-    }
+	@Override
+	public void setDead()
+	{
+		ForgeChunkManager.releaseTicket(this.updateTicket);
+		super.setDead();
+	}
 
-    @Override
-    protected void readEntityFromNBT(NBTTagCompound nbt)
-    {
-        this.movementVector = new Vector3(nbt.getCompoundTag("jiqi"));
-        ForgeDirection.getOrientation(nbt.getByte("fangXiang"));
-    }
+	@Override
+	protected void readEntityFromNBT(NBTTagCompound nbt)
+	{
+		this.movementVector = new Vector3(nbt.getCompoundTag("jiqi"));
+		ForgeDirection.getOrientation(nbt.getByte("fangXiang"));
+	}
 
-    @Override
-    protected void writeEntityToNBT(NBTTagCompound nbt)
-    {
-        nbt.setTag("jiqi", this.movementVector.writeNBT(new NBTTagCompound()));
-        nbt.setByte("fangXiang", (byte) this.movementDirection.ordinal());
-    }
+	@Override
+	protected void writeEntityToNBT(NBTTagCompound nbt)
+	{
+		nbt.setTag("jiqi", this.movementVector.writeNBT(new NBTTagCompound()));
+		nbt.setByte("fangXiang", (byte) this.movementDirection.ordinal());
+	}
 
 }

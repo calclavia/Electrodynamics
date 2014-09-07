@@ -50,54 +50,8 @@ import resonantinduction.core.{Reference, ResonantTab, Settings}
 import universalelectricity.core.transform.vector.VectorWorld
 
 @Mod(modid = "ResonantInduction|Atomic", name = "Resonant Induction Atomic", version = Reference.version, dependencies = "required-after:ResonantEngine;after:IC2;after:ResonantInduction|Electrical;required-after:" + Reference.coreID, modLanguage = "scala")
-object Atomic {
-  /** Is this ItemStack a cell?
-    *
-    * @param itemStack
-    * @return*/
-  def isItemStackEmptyCell(itemStack: ItemStack): Boolean = {
-    return isItemStackOreDictionaryCompatible(itemStack, "cellEmpty")
-  }
-
-  def isItemStackWaterCell(itemStack: ItemStack): Boolean = {
-    return isItemStackOreDictionaryCompatible(itemStack, "cellWater")
-  }
-
-  def isItemStackUraniumOre(itemStack: ItemStack): Boolean = {
-    return isItemStackOreDictionaryCompatible(itemStack, "dropUranium", "oreUranium")
-  }
-
-  def isItemStackDeuteriumCell(itemStack: ItemStack): Boolean = {
-    return isItemStackOreDictionaryCompatible(itemStack, "molecule_1d", "molecule_1h2", "cellDeuterium")
-  }
-
-  def isItemStackTritiumCell(itemStack: ItemStack): Boolean = {
-    return isItemStackOreDictionaryCompatible(itemStack, "molecule_h3", "cellTritium")
-  }
-
-  /** Compare to Ore Dict
-    *
-    * @param itemStack
-    * @return*/
-  def isItemStackOreDictionaryCompatible(itemStack: ItemStack, names: String*): Boolean = {
-    if (itemStack != null && names != null && names.length > 0) {
-      val name: String = OreDictionary.getOreName(OreDictionary.getOreID(itemStack))
-      for (compareName <- names) {
-        if (name == compareName) {
-          return true
-        }
-      }
-    }
-    return false
-  }
-
-  def getFluidAmount(fluid: FluidStack): Int = {
-    if (fluid != null) {
-      return fluid.amount
-    }
-    return 0
-  }
-
+object Atomic
+{
   final val ID: String = "ResonantInduction|Atomic"
   final val ENTITY_ID_PREFIX: Int = 49
   final val SECOND_IN_TICKS: Int = 20
@@ -110,7 +64,66 @@ object Atomic {
   @Mod.Metadata("ResonantInduction|Atomic")
   var metadata: ModMetadata = null
 
-  @EventHandler def preInit(event: FMLPreInitializationEvent) {
+  /** Is this ItemStack a cell?
+    *
+    * @param itemStack
+    * @return */
+  def isItemStackEmptyCell(itemStack: ItemStack): Boolean =
+  {
+    return isItemStackOreDictionaryCompatible(itemStack, "cellEmpty")
+  }
+
+  /** Compare to Ore Dict
+    *
+    * @param itemStack
+    * @return */
+  def isItemStackOreDictionaryCompatible(itemStack: ItemStack, names: String*): Boolean =
+  {
+    if (itemStack != null && names != null && names.length > 0)
+    {
+      val name: String = OreDictionary.getOreName(OreDictionary.getOreID(itemStack))
+      for (compareName <- names)
+      {
+        if (name == compareName)
+        {
+          return true
+        }
+      }
+    }
+    return false
+  }
+
+  def isItemStackWaterCell(itemStack: ItemStack): Boolean =
+  {
+    return isItemStackOreDictionaryCompatible(itemStack, "cellWater")
+  }
+
+  def isItemStackUraniumOre(itemStack: ItemStack): Boolean =
+  {
+    return isItemStackOreDictionaryCompatible(itemStack, "dropUranium", "oreUranium")
+  }
+
+  def isItemStackDeuteriumCell(itemStack: ItemStack): Boolean =
+  {
+    return isItemStackOreDictionaryCompatible(itemStack, "molecule_1d", "molecule_1h2", "cellDeuterium")
+  }
+
+  def isItemStackTritiumCell(itemStack: ItemStack): Boolean =
+  {
+    return isItemStackOreDictionaryCompatible(itemStack, "molecule_h3", "cellTritium")
+  }
+
+  def getFluidAmount(fluid: FluidStack): Int =
+  {
+    if (fluid != null)
+    {
+      return fluid.amount
+    }
+    return 0
+  }
+
+  @EventHandler def preInit(event: FMLPreInitializationEvent)
+  {
     Atomic.INSTANCE = this
     MinecraftForge.EVENT_BUS.register(this)
     NetworkRegistry.INSTANCE.registerGuiHandler(this, Atomic.proxy)
@@ -149,7 +162,7 @@ object Atomic {
     AtomicContent.blockCentrifuge = Atomic.contentRegistry.newBlock(classOf[TileCentrifuge])
     AtomicContent.blockReactorCell = Atomic.contentRegistry.newBlock(classOf[TileReactorCell])
     AtomicContent.blockNuclearBoiler = Atomic.contentRegistry.newBlock(classOf[TileNuclearBoiler])
-    AtomicContent.blockChemicalExtractor =Atomic. contentRegistry.newBlock(classOf[TileChemicalExtractor])
+    AtomicContent.blockChemicalExtractor = Atomic.contentRegistry.newBlock(classOf[TileChemicalExtractor])
     AtomicContent.blockFusionCore = Atomic.contentRegistry.newBlock(classOf[TilePlasmaHeater])
     AtomicContent.blockControlRod = Atomic.contentRegistry.newBlock(classOf[TileControlRod])
     AtomicContent.blockThermometer = Atomic.contentRegistry.newBlock(classOf[TileThermometer])
@@ -209,7 +222,8 @@ object Atomic {
     Settings.config.save
     MinecraftForge.EVENT_BUS.register(AtomicContent.itemAntimatter)
     MinecraftForge.EVENT_BUS.register(FulminationHandler.INSTANCE)
-    if (Settings.allowOreDictionaryCompatibility) {
+    if (Settings.allowOreDictionaryCompatibility)
+    {
       OreDictionary.registerOre("ingotUranium", AtomicContent.itemUranium)
       OreDictionary.registerOre("dustUranium", AtomicContent.itemYellowCake)
     }
@@ -223,13 +237,19 @@ object Atomic {
     OreDictionary.registerOre("strangeMatter", AtomicContent.itemDarkMatter)
     OreDictionary.registerOre("antimatterMilligram", new ItemStack(AtomicContent.itemAntimatter, 1, 0))
     OreDictionary.registerOre("antimatterGram", new ItemStack(AtomicContent.itemAntimatter, 1, 1))
-    ForgeChunkManager.setForcedChunkLoadingCallback(this, new ForgeChunkManager.LoadingCallback {
-      def ticketsLoaded(tickets: List[ForgeChunkManager.Ticket], world: World) {
+    ForgeChunkManager.setForcedChunkLoadingCallback(this, new ForgeChunkManager.LoadingCallback
+    {
+      def ticketsLoaded(tickets: List[ForgeChunkManager.Ticket], world: World)
+      {
         import scala.collection.JavaConversions._
-        for (ticket <- tickets) {
-          if (ticket.getType eq Type.ENTITY) {
-            if (ticket.getEntity != null) {
-              if (ticket.getEntity.isInstanceOf[EntityParticle]) {
+        for (ticket <- tickets)
+        {
+          if (ticket.getType eq Type.ENTITY)
+          {
+            if (ticket.getEntity != null)
+            {
+              if (ticket.getEntity.isInstanceOf[EntityParticle])
+              {
                 (ticket.getEntity.asInstanceOf[EntityParticle]).updateTicket = ticket
               }
             }
@@ -242,15 +262,19 @@ object Atomic {
     Atomic.proxy.preInit
   }
 
-  @EventHandler def init(evt: FMLInitializationEvent) {
+  @EventHandler def init(evt: FMLInitializationEvent)
+  {
     Atomic.proxy.init
   }
 
-  @EventHandler def postInit(event: FMLPostInitializationEvent) {
-    if (Loader.isModLoaded("IC2") && Settings.allowAlternateRecipes) {
+  @EventHandler def postInit(event: FMLPostInitializationEvent)
+  {
+    if (Loader.isModLoaded("IC2") && Settings.allowAlternateRecipes)
+    {
       OreDictionary.registerOre("cellEmpty", IC2Items.getItem("cell"))
       val cellEmptyName: String = OreDictionary.getOreName(OreDictionary.getOreID("cellEmpty"))
-      if (cellEmptyName eq "Unknown") {
+      if (cellEmptyName eq "Unknown")
+      {
       }
       GameRegistry.addRecipe(new ShapelessOreRecipe(AtomicContent.itemYellowCake, IC2Items.getItem("reactorUraniumSimple")))
       GameRegistry.addRecipe(new ShapelessOreRecipe(IC2Items.getItem("cell"), AtomicContent.itemCell))
@@ -260,11 +284,15 @@ object Atomic {
     EntityRegistry.registerModEntity(classOf[EntityParticle], "ASParticle", Atomic.ENTITY_ID_PREFIX, this, 80, 3, true)
     Atomic.proxy.init
     Settings.config.load
-    for (oreName <- OreDictionary.getOreNames) {
-      if (oreName.startsWith("ingot")) {
+    for (oreName <- OreDictionary.getOreNames)
+    {
+      if (oreName.startsWith("ingot"))
+      {
         import scala.collection.JavaConversions._
-        for (itemStack <- OreDictionary.getOres(oreName)) {
-          if (itemStack != null) {
+        for (itemStack <- OreDictionary.getOres(oreName))
+        {
+          if (itemStack != null)
+          {
             QuantumAssemblerRecipes.addRecipe(itemStack)
           }
         }
@@ -273,26 +301,33 @@ object Atomic {
     Settings.config.save
   }
 
-  @SubscribeEvent def thermalEventHandler(evt: EventThermal.EventThermalUpdate) {
+  @SubscribeEvent def thermalEventHandler(evt: EventThermal.EventThermalUpdate)
+  {
     val pos: VectorWorld = evt.position
     val block: Block = pos.getBlock
-    if (block == AtomicContent.blockElectromagnet) {
+    if (block == AtomicContent.blockElectromagnet)
+    {
       evt.heatLoss = evt.deltaTemperature * 0.6f
     }
   }
 
-  @SubscribeEvent def plasmaEvent(evt: PlasmaEvent.SpawnPlasmaEvent) {
+  @SubscribeEvent def plasmaEvent(evt: PlasmaEvent.SpawnPlasmaEvent)
+  {
     val block: Block = evt.world.getBlock(evt.x, evt.y, evt.z)
-    if (block != null && block.getBlockHardness(evt.world, evt.x, evt.y, evt.z) >= 0) {
+    if (block != null && block.getBlockHardness(evt.world, evt.x, evt.y, evt.z) >= 0)
+    {
       val tile: TileEntity = evt.world.getTileEntity(evt.x, evt.y, evt.z)
-      if (tile.isInstanceOf[TilePlasma]) {
+      if (tile.isInstanceOf[TilePlasma])
+      {
         (tile.asInstanceOf[TilePlasma]).setTemperature(evt.temperature)
         return
       }
-      else if (tile.isInstanceOf[IElectromagnet]) {
+      else if (tile.isInstanceOf[IElectromagnet])
+      {
         return
       }
-      else {
+      else
+      {
         evt.world.setBlockToAir(evt.x, evt.y, evt.z)
         evt.world.setBlock(evt.x, evt.y, evt.z, AtomicContent.blockPlasma)
       }
@@ -300,8 +335,10 @@ object Atomic {
   }
 
   @SubscribeEvent
-  @SideOnly(Side.CLIENT) def preTextureHook(event: TextureStitchEvent.Pre) {
-    if (event.map.getTextureType == 0) {
+  @SideOnly(Side.CLIENT) def preTextureHook(event: TextureStitchEvent.Pre)
+  {
+    if (event.map.getTextureType == 0)
+    {
       RenderUtility.registerIcon(Reference.prefix + "uraniumHexafluoride", event.map)
       RenderUtility.registerIcon(Reference.prefix + "steam", event.map)
       RenderUtility.registerIcon(Reference.prefix + "deuterium", event.map)
@@ -313,7 +350,8 @@ object Atomic {
   }
 
   @SubscribeEvent
-  @SideOnly(Side.CLIENT) def postTextureHook(event: TextureStitchEvent.Post) {
+  @SideOnly(Side.CLIENT) def postTextureHook(event: TextureStitchEvent.Post)
+  {
     AtomicContent.FLUID_URANIUM_HEXAFLOURIDE.setIcons(RenderUtility.loadedIconMap.get(Reference.prefix + "uraniumHexafluoride"))
     AtomicContent.FLUID_STEAM.setIcons(RenderUtility.loadedIconMap.get(Reference.prefix + "steam"))
     AtomicContent.FLUID_DEUTERIUM.setIcons(RenderUtility.loadedIconMap.get(Reference.prefix + "deuterium"))
@@ -322,10 +360,13 @@ object Atomic {
     AtomicContent.FLUID_PLASMA.setIcons(AtomicContent.blockPlasma.getIcon(0, 0))
   }
 
-  @SubscribeEvent def fillBucketEvent(evt: FillBucketEvent) {
-    if (!evt.world.isRemote && evt.target != null && evt.target.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
+  @SubscribeEvent def fillBucketEvent(evt: FillBucketEvent)
+  {
+    if (!evt.world.isRemote && evt.target != null && evt.target.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
+    {
       val pos: VectorWorld = new VectorWorld(evt.world, evt.target)
-      if (pos.getBlock eq AtomicContent.blockToxicWaste) {
+      if (pos.getBlock eq AtomicContent.blockToxicWaste)
+      {
         pos.setBlockToAir
         evt.result = new ItemStack(AtomicContent.itemBucketToxic)
         evt.setResult(Event.Result.ALLOW)

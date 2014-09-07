@@ -15,9 +15,9 @@ import resonantinduction.core.{Reference, ResonantTab}
 object AtomicContent extends ContentHolder
 {
 
-
   manager.setTab(ResonantTab).setPrefix(Reference.prefix)
 
+  val itemQuantumGlyph: Item = null
   /** Block and Items */
   var blockRadioactive: Block = null
   var blockCentrifuge: Block = null
@@ -36,7 +36,6 @@ object AtomicContent extends ContentHolder
   var blockReactorCell: Block = null
   var blockUraniumOre: Block = null
   var blockToxicWaste: Block = null
-
   var itemCell: Item = null
   var itemFissileFuel: Item = null
   var itemBreedingRod: Item = null
@@ -52,8 +51,6 @@ object AtomicContent extends ContentHolder
   var itemHazmatBody: Item = null
   var itemHazmatLeggings: Item = null
   var itemHazmatBoots: Item = null
-  val itemQuantumGlyph: Item = null
-
   /** Water, Uranium Hexafluoride, Steam, Deuterium, Toxic waste */
   var FLUIDSTACK_WATER: FluidStack = null
   var FLUIDSTACK_URANIUM_HEXAFLOURIDE: FluidStack = null
@@ -62,14 +59,12 @@ object AtomicContent extends ContentHolder
   var FLUIDSTACK_TRITIUM: FluidStack = null
   var FLUIDSTACK_TOXIC_WASTE: FluidStack = null
 
-
   var FLUID_URANIUM_HEXAFLOURIDE: Fluid = null
   var FLUID_PLASMA: Fluid = null
   var FLUID_STEAM: Fluid = null
   var FLUID_DEUTERIUM: Fluid = null
   var FLUID_TRITIUM: Fluid = null
   var FLUID_TOXIC_WASTE: Fluid = null
-
 
   var uraniumOreGeneration: OreGenerator = null
 

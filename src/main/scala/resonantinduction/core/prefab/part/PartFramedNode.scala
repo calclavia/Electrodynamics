@@ -14,40 +14,79 @@ import net.minecraft.item.Item
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.{IIcon, MovingObjectPosition}
 import net.minecraftforge.common.util.ForgeDirection
-import universalelectricity.api.core.grid.{ISave, INode, INodeProvider}
+import universalelectricity.api.core.grid.{INode, INodeProvider, ISave}
 
-object PartFramedNode {
-  def connectionMapContainsSide(connections: Byte, side: ForgeDirection): Boolean = {
+object PartFramedNode
+{
+  var sides: Array[IndexedCuboid6] = new Array[IndexedCuboid6](7)
+  var insulatedSides: Array[IndexedCuboid6] = new Array[IndexedCuboid6](7)
+
+  def connectionMapContainsSide(connections: Byte, side: ForgeDirection): Boolean =
+  {
     val tester: Byte = (1 << side.ordinal).asInstanceOf[Byte]
     return ((connections & tester) > 0)
   }
-
-  var sides: Array[IndexedCuboid6] = new Array[IndexedCuboid6](7)
-  var insulatedSides: Array[IndexedCuboid6] = new Array[IndexedCuboid6](7)
 }
 
-abstract class PartFramedNode[M](insulationType: Item) extends PartColorableMaterial[M](insulationType: Item) with INodeProvider with TSlottedPart with JNormalOcclusion with JIconHitEffects {
+abstract class PartFramedNode[M](insulationType: Item) extends PartColorableMaterial[M](insulationType: Item) with INodeProvider with TSlottedPart with JNormalOcclusion with JIconHitEffects
+{
 
-  protected var connections: Array[AnyRef] = new Array[AnyRef](6)
-  protected var node: INode = null
   /** Bitmask connections */
   var currentConnections: Byte = 0x00
+  protected var connections: Array[AnyRef] = new Array[AnyRef](6)
+  protected var node: INode = null
+  @SideOnly(Side.CLIENT) protected var breakIcon: IIcon = null
   /** Client Side */
   private var testingSide: ForgeDirection = null
-  @SideOnly(Side.CLIENT) protected var breakIcon: IIcon = null
 
-  def preparePlacement(meta: Int) {
+  def preparePlacement(meta: Int)
+  {
     this.setMaterial(meta)
   }
 
-  override def occlusionTest(other: TMultiPart): Boolean = {
+  override def occlusionTest(other: TMultiPart): Boolean =
+  {
     return NormalOcclusionTest.apply(this, other)
   }
 
-  override def getSubParts: java.lang.Iterable[IndexedCuboid6] = {
+  override def getStrength(hit: MovingObjectPosition, player: EntityPlayer): Float =
+  {
+    return 10F
+  }
+
+  def getBounds: Cuboid6 =
+  {
+    return new Cuboid6(0.375, 0.375, 0.375, 0.625, 0.625, 0.625)
+  }
+
+  override def getBreakingIcon(subPart: Any, side: Int): IIcon =
+  {
+    return breakIcon
+  }
+
+  def getBrokenIcon(side: Int): IIcon =
+  {
+    return breakIcon
+  }
+
+  def getOcclusionBoxes: Set[Cuboid6] =
+  {
+    return getCollisionBoxes
+  }
+
+  /** Rendering and block bounds. */
+  override def getCollisionBoxes: Set[Cuboid6] =
+  {
+    val collisionBoxes: Set[Cuboid6] = new HashSet[Cuboid6]
+    collisionBoxes.addAll(getSubParts.asInstanceOf[Collection[_ <: Cuboid6]])
+    return collisionBoxes;
+  }
+
+  override def getSubParts: java.lang.Iterable[IndexedCuboid6] =
+  {
     super.getSubParts
     val currentSides: Array[IndexedCuboid6] = if (isInsulated) PartFramedNode.insulatedSides.clone() else PartFramedNode.sides.clone()
-    val list : util.LinkedList[IndexedCuboid6]  = new util.LinkedList[IndexedCuboid6]
+    val list: util.LinkedList[IndexedCuboid6] = new util.LinkedList[IndexedCuboid6]
     if (tile != null)
     {
       for (side <- ForgeDirection.VALID_DIRECTIONS)
@@ -58,50 +97,33 @@ abstract class PartFramedNode[M](insulationType: Item) extends PartColorableMate
     return list
   }
 
-  /** Rendering and block bounds. */
-  override def getCollisionBoxes: Set[Cuboid6] = {
-    val collisionBoxes: Set[Cuboid6] = new HashSet[Cuboid6]
-    collisionBoxes.addAll(getSubParts.asInstanceOf[Collection[_ <: Cuboid6]])
-    return collisionBoxes;
+  def getAllCurrentConnections: Byte =
+  {
+    return (currentConnections)
   }
 
-  override def getStrength(hit: MovingObjectPosition, player: EntityPlayer): Float = {
-    return 10F
-  }
-
-  def getBounds: Cuboid6 = {
-    return new Cuboid6(0.375, 0.375, 0.375, 0.625, 0.625, 0.625)
-  }
-
-  override def getBreakingIcon(subPart: Any, side: Int): IIcon = {
-    return breakIcon
-  }
-
-  def getBrokenIcon(side: Int): IIcon = {
-    return breakIcon
-  }
-
-  def getOcclusionBoxes: Set[Cuboid6] = {
-    return getCollisionBoxes
-  }
-
-  def getSlotMask: Int = {
+  def getSlotMask: Int =
+  {
     return PartMap.CENTER.mask
   }
 
-  def getHollowSize: Int = {
+  def getHollowSize: Int =
+  {
     return if (isInsulated) 8 else 6
   }
 
-  override def addHitEffects(hit: MovingObjectPosition, effectRenderer: EffectRenderer) {
+  override def addHitEffects(hit: MovingObjectPosition, effectRenderer: EffectRenderer)
+  {
     IconHitEffects.addHitEffects(this, hit, effectRenderer)
   }
 
-  override def addDestroyEffects(effectRenderer: EffectRenderer) {
+  override def addDestroyEffects(effectRenderer: EffectRenderer)
+  {
     IconHitEffects.addDestroyEffects(this, effectRenderer, false)
   }
 
-  def isBlockedOnSide(side: ForgeDirection): Boolean = {
+  def isBlockedOnSide(side: ForgeDirection): Boolean =
+  {
     val blocker: TMultiPart = tile.partMap(side.ordinal)
     testingSide = side
     val expandable: Boolean = NormalOcclusionTest.apply(this, blocker)
@@ -109,33 +131,35 @@ abstract class PartFramedNode[M](insulationType: Item) extends PartColorableMate
     return !expandable
   }
 
-  def getAllCurrentConnections: Byte = {
-    return (currentConnections)
-  }
-
-  override def bind(t: TileMultipart) {
+  override def bind(t: TileMultipart)
+  {
     node.deconstruct
     super.bind(t)
     node.reconstruct
   }
 
-  def isCurrentlyConnected(side: ForgeDirection): Boolean = {
+  def isCurrentlyConnected(side: ForgeDirection): Boolean =
+  {
     return PartFramedNode.connectionMapContainsSide(getAllCurrentConnections, side)
   }
 
-  override def onWorldJoin {
+  override def onWorldJoin
+  {
     node.reconstruct
   }
 
-  override def onNeighborChanged {
+  override def onNeighborChanged
+  {
     node.reconstruct
   }
 
-  override def onWorldSeparate {
+  override def onWorldSeparate
+  {
     node.deconstruct
   }
 
-  def copyFrom(other: PartFramedNode[M]) {
+  def copyFrom(other: PartFramedNode[M])
+  {
     this.isInsulated = other.isInsulated
     this.color = other.color
     this.connections = other.connections
@@ -143,58 +167,71 @@ abstract class PartFramedNode[M](insulationType: Item) extends PartColorableMate
   }
 
   /** Packet Methods */
-  def sendConnectionUpdate {
+  def sendConnectionUpdate
+  {
     tile.getWriteStream(this).writeByte(0).writeByte(currentConnections)
   }
 
-  override def readDesc(packet: MCDataInput) {
+  override def readDesc(packet: MCDataInput)
+  {
     super.readDesc(packet)
     currentConnections = packet.readByte
   }
 
-  override def writeDesc(packet: MCDataOutput) {
+  override def writeDesc(packet: MCDataOutput)
+  {
     super.writeDesc(packet)
     packet.writeByte(currentConnections)
   }
 
-  override def read(packet: MCDataInput) {
+  override def read(packet: MCDataInput)
+  {
     read(packet, packet.readUByte)
   }
 
-  override def read(packet: MCDataInput, packetID: Int) {
-    if (packetID == 0) {
+  override def read(packet: MCDataInput, packetID: Int)
+  {
+    if (packetID == 0)
+    {
       currentConnections = packet.readByte
       tile.markRender
     }
-    else {
+    else
+    {
       super.read(packet, packetID)
     }
   }
 
-  @SuppressWarnings(Array("hiding")) def getNode(nodeType: Class[_ <: INode], from: ForgeDirection): INode = {
-    if (node != null && nodeType != null) {
-        return node
+  @SuppressWarnings(Array("hiding")) def getNode(nodeType: Class[_ <: INode], from: ForgeDirection): INode =
+  {
+    if (node != null && nodeType != null)
+    {
+      return node
     }
     return null
   }
 
-  override def save(nbt: NBTTagCompound) {
+  override def save(nbt: NBTTagCompound)
+  {
     super.save(nbt)
-    if(node.isInstanceOf[ISave])
+    if (node.isInstanceOf[ISave])
       node.asInstanceOf[ISave].save(nbt)
   }
 
-  override def load(nbt: NBTTagCompound) {
+  override def load(nbt: NBTTagCompound)
+  {
     super.load(nbt)
-    if(node.isInstanceOf[ISave])
+    if (node.isInstanceOf[ISave])
       node.asInstanceOf[ISave].load(nbt)
   }
 
-  override def toString: String = {
+  override def toString: String =
+  {
     return this.getClass.getSimpleName + this.hashCode
   }
 
-  def getNode : INode = node
+  def getNode: INode = node
 
-  def setNode(n : INode) { node = n}
+  def setNode(n: INode)
+  { node = n }
 }

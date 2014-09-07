@@ -3,9 +3,16 @@ package resonantinduction.atomic.gate
 import codechicken.multipart.TileMultipart
 import resonant.api.blocks.IBlockFrequency
 
-class TraitQuantumGate extends TileMultipart with IQuantumGate {
+class TraitQuantumGate extends TileMultipart with IQuantumGate
+{
 
-  def get: PartQuantumGlyph = {
+  def transport(entity: Any)
+  {
+    get.transport(entity)
+  }
+
+  def get: PartQuantumGlyph =
+  {
     for (part <- partList)
     {
       if (part.isInstanceOf[PartQuantumGlyph])
@@ -16,12 +23,8 @@ class TraitQuantumGate extends TileMultipart with IQuantumGate {
     return null
   }
 
-  def transport(entity: Any)
+  def getFrequency: Int =
   {
-    get.transport(entity)
-  }
-
-  def getFrequency: Int = {
     var frequency: Int = 0
     var i: Int = 0
     for (part <- partList)

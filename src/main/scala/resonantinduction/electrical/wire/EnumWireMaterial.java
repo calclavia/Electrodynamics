@@ -9,9 +9,9 @@ import codechicken.lib.colour.ColourRGBA;
 /**
  * An enumerator for different wire materials. The metadata of the wire determines the type of the
  * wire.
- * 
+ *
  * @author Calclavia
- * 
+ *
  */
 
 public enum EnumWireMaterial

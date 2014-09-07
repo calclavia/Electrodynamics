@@ -5,7 +5,7 @@ package resonantinduction.core
 
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.init.Items
-import net.minecraft.item.{ItemStack, Item}
+import net.minecraft.item.{Item, ItemStack}
 
 /**
  * @author Calclavia
@@ -17,13 +17,14 @@ object ResonantTab extends CreativeTabs(CreativeTabs.getNextID, "ResonantInducti
 
   override def getTabIconItem: Item =
   {
-    if(itemStack != null )
+    if (itemStack != null)
       return itemStack.getItem
     else
       return Items.iron_ingot
   }
 
-  def itemStack(item: ItemStack) { itemStack = item}
+  def itemStack(item: ItemStack)
+  { itemStack = item }
 
   def tab = this
 }

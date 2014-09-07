@@ -45,7 +45,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 /** This is the base class for all wire types. It can be used for any sub type, as it contains the
  * base calculations necessary to create a working wire. This calculates all possible connections to
  * sides, around corners, and inside corners, while checking for microblock obstructions.
- * 
+ *
  * @author Modified by Calclavia, MrTJP */
 public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormalOcclusion
 {
@@ -70,8 +70,8 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
     public byte side;
 
     /** A map of the corners.
-     * 
-     * 
+     *
+     *
      * Currently split into 4 nybbles (from lowest) 0 = Corner connections (this wire should connect
      * around a corner to something external) 1 = Straight connections (this wire should connect to
      * something external) 2 = Internal connections (this wire should connect to something internal)
@@ -498,7 +498,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
     }
 
     /** Recalculates connections to blocks outside this space
-     * 
+     *
      * @return true if a new connection was added or one was removed */
     protected boolean updateExternalConnections()
     {
@@ -552,7 +552,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
     }
 
     /** Recalculates connections to other parts within this space
-     * 
+     *
      * @return true if a new connection was added or one was removed */
     protected boolean updateInternalConnections()
     {
@@ -579,7 +579,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
     }
 
     /** Recalculates connections that can be made to other parts outside of this space
-     * 
+     *
      * @return true if external connections should be recalculated */
     protected boolean updateOpenConnections()
     {
@@ -946,7 +946,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 
     /** Utility method to aid in initializing this or subclasses, usually when you need to change the
      * wire to another type
-     * 
+     *
      * @param otherCable the wire to copy from */
     public void copyFrom(PartFlatWire otherCable)
     {

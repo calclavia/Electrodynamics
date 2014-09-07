@@ -324,7 +324,7 @@ public abstract class PartAdvancedWire extends PartConductor
 
         return false;
     }
-    
+
     @Override
     public String toString()
     {

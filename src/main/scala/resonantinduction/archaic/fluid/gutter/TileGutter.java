@@ -1,8 +1,7 @@
 package resonantinduction.archaic.fluid.gutter;
 
-import java.util.ArrayList;
-import java.util.*;
-
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -13,24 +12,25 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.*;
-
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidTank;
 import org.lwjgl.opengl.GL11;
-
 import resonant.api.recipe.MachineRecipes;
 import resonant.api.recipe.RecipeResource;
+import resonant.content.factory.resources.RecipeType;
 import resonant.lib.render.FluidRenderUtility;
 import resonant.lib.render.RenderUtility;
 import resonant.lib.utility.FluidUtility;
 import resonant.lib.utility.WorldUtility;
 import resonant.lib.utility.inventory.InventoryUtility;
-import resonant.content.factory.resources.RecipeType;
 import resonantinduction.core.Reference;
 import resonantinduction.core.prefab.node.TilePressureNode;
 import universalelectricity.core.transform.region.Cuboid;
 import universalelectricity.core.transform.vector.Vector3;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The gutter, used for fluid transfer.
@@ -39,15 +39,15 @@ import cpw.mods.fml.relauncher.SideOnly;
  */
 public class TileGutter extends TilePressureNode
 {
-    @SideOnly(Side.CLIENT)
-    IModelCustom MODEL;
-    @SideOnly(Side.CLIENT)
-    ResourceLocation TEXTURE;
+	@SideOnly(Side.CLIENT)
+	IModelCustom MODEL;
+	@SideOnly(Side.CLIENT)
+	ResourceLocation TEXTURE;
 
 	public TileGutter()
 	{
 		super(Material.rock);
-        tankNode_$eq(new FluidGravityNode(this));
+		tankNode_$eq(new FluidGravityNode(this));
 		setTextureName("material_wood_surface");
 		isOpaqueCube(false);
 		normalRender(false);
@@ -185,88 +185,88 @@ public class TileGutter extends TilePressureNode
 		}
 	}
 
-    @Override
-    public void renderDynamic(Vector3 position, float frame, int pass)
-    {
-        if(MODEL == null)
-        {
-            MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(),Reference.modelPath() + "gutter.tcn"));
-        }
-        if (TEXTURE == null)
-        {
-            TEXTURE = new ResourceLocation(Reference.domain(), Reference.modelPath() + "gutter.png");
-        }
-        GL11.glPushMatrix();
-        GL11.glTranslated(position.x() + 0.5, position.y() + 0.5, position.z() + 0.5);
+	@Override
+	public void renderDynamic(Vector3 position, float frame, int pass)
+	{
+		if (MODEL == null)
+		{
+			MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelPath() + "gutter.tcn"));
+		}
+		if (TEXTURE == null)
+		{
+			TEXTURE = new ResourceLocation(Reference.domain(), Reference.modelPath() + "gutter.png");
+		}
+		GL11.glPushMatrix();
+		GL11.glTranslated(position.x() + 0.5, position.y() + 0.5, position.z() + 0.5);
 
-        FluidStack liquid = getTank().getFluid();
-        int capacity = getTank().getCapacity();
+		FluidStack liquid = getTank().getFluid();
+		int capacity = getTank().getCapacity();
 
-        render(0, renderSides());
+		render(0, renderSides());
 
-        if (world() != null)
-        {
-            IFluidTank tank = getTank();
-            double percentageFilled = (double) tank.getFluidAmount() / (double) tank.getCapacity();
+		if (world() != null)
+		{
+			IFluidTank tank = getTank();
+			double percentageFilled = (double) tank.getFluidAmount() / (double) tank.getCapacity();
 
-            if (percentageFilled > 0.1)
-            {
-                GL11.glPushMatrix();
-                GL11.glScaled(0.990, 0.99, 0.990);
+			if (percentageFilled > 0.1)
+			{
+				GL11.glPushMatrix();
+				GL11.glScaled(0.990, 0.99, 0.990);
 
-                double ySouthEast = FluidUtility.getAveragePercentageFilledForSides(TileGutter.class, percentageFilled, world(), position(), ForgeDirection.SOUTH, ForgeDirection.EAST);
-                double yNorthEast = FluidUtility.getAveragePercentageFilledForSides(TileGutter.class, percentageFilled, world(), position(), ForgeDirection.NORTH, ForgeDirection.EAST);
-                double ySouthWest = FluidUtility.getAveragePercentageFilledForSides(TileGutter.class, percentageFilled, world(), position(), ForgeDirection.SOUTH, ForgeDirection.WEST);
-                double yNorthWest = FluidUtility.getAveragePercentageFilledForSides(TileGutter.class, percentageFilled, world(), position(), ForgeDirection.NORTH, ForgeDirection.WEST);
+				double ySouthEast = FluidUtility.getAveragePercentageFilledForSides(TileGutter.class, percentageFilled, world(), position(), ForgeDirection.SOUTH, ForgeDirection.EAST);
+				double yNorthEast = FluidUtility.getAveragePercentageFilledForSides(TileGutter.class, percentageFilled, world(), position(), ForgeDirection.NORTH, ForgeDirection.EAST);
+				double ySouthWest = FluidUtility.getAveragePercentageFilledForSides(TileGutter.class, percentageFilled, world(), position(), ForgeDirection.SOUTH, ForgeDirection.WEST);
+				double yNorthWest = FluidUtility.getAveragePercentageFilledForSides(TileGutter.class, percentageFilled, world(), position(), ForgeDirection.NORTH, ForgeDirection.WEST);
 
-                FluidRenderUtility.renderFluidTesselation(tank, ySouthEast, yNorthEast, ySouthWest, yNorthWest);
-                GL11.glPopMatrix();
-            }
-        }
+				FluidRenderUtility.renderFluidTesselation(tank, ySouthEast, yNorthEast, ySouthWest, yNorthWest);
+				GL11.glPopMatrix();
+			}
+		}
 
-        GL11.glPopMatrix();
-    }
+		GL11.glPopMatrix();
+	}
 
-    public void render(int meta, byte sides)
-    {
-        RenderUtility.bind(TEXTURE);
+	public void render(int meta, byte sides)
+	{
+		RenderUtility.bind(TEXTURE);
 
-        double thickness = 0.055;
-        double height = 0.5;
+		double thickness = 0.055;
+		double height = 0.5;
 
-        for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
-        {
-            if (dir != ForgeDirection.UP && dir != ForgeDirection.DOWN)
-            {
-                GL11.glPushMatrix();
-                RenderUtility.rotateBlockBasedOnDirection(dir);
+		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+		{
+			if (dir != ForgeDirection.UP && dir != ForgeDirection.DOWN)
+			{
+				GL11.glPushMatrix();
+				RenderUtility.rotateBlockBasedOnDirection(dir);
 
-                if (WorldUtility.isEnabledSide(sides, ForgeDirection.DOWN))
-                {
-                    GL11.glTranslatef(0, -0.075f, 0);
-                    GL11.glScalef(1, 1.15f, 1);
-                }
+				if (WorldUtility.isEnabledSide(sides, ForgeDirection.DOWN))
+				{
+					GL11.glTranslatef(0, -0.075f, 0);
+					GL11.glScalef(1, 1.15f, 1);
+				}
 
-                if (!WorldUtility.isEnabledSide(sides, dir))
-                {
-                    /** Render sides */
-                    MODEL.renderOnly("left");
-                }
+				if (!WorldUtility.isEnabledSide(sides, dir))
+				{
+					/** Render sides */
+					MODEL.renderOnly("left");
+				}
 
-                if (!WorldUtility.isEnabledSide(sides, dir) || !WorldUtility.isEnabledSide(sides, dir.getRotation(ForgeDirection.UP)))
-                {
-                    /** Render strips */
-                    MODEL.renderOnly("backCornerL");
-                }
-                GL11.glPopMatrix();
-            }
-        }
+				if (!WorldUtility.isEnabledSide(sides, dir) || !WorldUtility.isEnabledSide(sides, dir.getRotation(ForgeDirection.UP)))
+				{
+					/** Render strips */
+					MODEL.renderOnly("backCornerL");
+				}
+				GL11.glPopMatrix();
+			}
+		}
 
-        if (!WorldUtility.isEnabledSide(sides, ForgeDirection.DOWN))
-        {
-            MODEL.renderOnly("base");
-        }
+		if (!WorldUtility.isEnabledSide(sides, ForgeDirection.DOWN))
+		{
+			MODEL.renderOnly("base");
+		}
 
-    }
+	}
 
 }

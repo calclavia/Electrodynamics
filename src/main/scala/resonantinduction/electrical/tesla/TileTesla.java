@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package resonantinduction.electrical.tesla;
 
@@ -42,11 +42,11 @@ import universalelectricity.core.transform.vector.VectorWorld;
 
 /**
  * The Tesla TileEntity.
- * 
+ *
  * - Redstone (Prevent Output Toggle) - Right click (Prevent Input Toggle)
- * 
+ *
  * @author Calclavia
- * 
+ *
  */
 public class TileTesla extends TileElectric implements IMultiBlockStructure<TileTesla>, ITesla, IPacketReceiver
 {
@@ -411,7 +411,7 @@ public class TileTesla extends TileElectric implements IMultiBlockStructure<Tile
 
 	/**
 	 * Called only on bottom.
-	 * 
+	 *
 	 * @return The highest Tesla coil in this tower.
 	 */
 	public TileTesla getTopTelsa()
@@ -448,7 +448,7 @@ public class TileTesla extends TileElectric implements IMultiBlockStructure<Tile
 
 	/**
 	 * Called only on bottom.
-	 * 
+	 *
 	 * @return The highest Tesla coil in this tower.
 	 */
 	public int getHeight()

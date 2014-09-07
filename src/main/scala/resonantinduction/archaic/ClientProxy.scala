@@ -2,7 +2,7 @@ package resonantinduction.archaic
 
 import cpw.mods.fml.client.registry.ClientRegistry
 import resonantinduction.archaic.firebox.{RenderHotPlate, TileHotPlate}
-import resonantinduction.archaic.process.{RenderMillstone, TileMillstone, RenderCastingMold, TileCastingMold}
+import resonantinduction.archaic.process.{RenderCastingMold, RenderMillstone, TileCastingMold, TileMillstone}
 
 class ClientProxy extends CommonProxy
 {

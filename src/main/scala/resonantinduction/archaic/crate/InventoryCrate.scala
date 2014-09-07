@@ -4,6 +4,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import resonant.api.IInventoryProvider
 import resonant.lib.utility.inventory.ExternalInventory
+
 import scala.util.control.Breaks._
 
 class InventoryCrate(crate: IInventoryProvider) extends ExternalInventory(crate: IInventoryProvider, 512)
@@ -17,20 +18,20 @@ class InventoryCrate(crate: IInventoryProvider) extends ExternalInventory(crate:
     {
       var baseStack: ItemStack = sampleStack.copy
       var itemsLeft: Int = baseStack.stackSize
-        for(slot <- 0 until this.getContainedItems.length)
+      for (slot <- 0 until this.getContainedItems.length)
+      {
+        val stackL: Int = Math.min(Math.min(itemsLeft, baseStack.getMaxStackSize), this.getInventoryStackLimit)
+        var st = baseStack.copy
+        st.stackSize = stackL
+
+        this.setInventorySlotContents(slot, st)
+        itemsLeft -= stackL
+
+        if (baseStack.stackSize <= 0)
         {
-            val stackL: Int = Math.min(Math.min(itemsLeft, baseStack.getMaxStackSize), this.getInventoryStackLimit)
-            var st = baseStack.copy
-            st.stackSize = stackL
-
-            this.setInventorySlotContents(slot, st)
-            itemsLeft -= stackL
-
-            if (baseStack.stackSize <= 0)
-            {
-              baseStack = null
-              break
-            }
+          baseStack = null
+          break
+        }
       }
     }
   }

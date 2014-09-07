@@ -5,32 +5,32 @@ import resonant.lib.compat.Mods;
 import resonant.lib.loadable.ICompatProxy;
 
 /**
- * @since 21/03/14
  * @author tgame14
+ * @since 21/03/14
  */
 public class Waila implements ICompatProxy
 {
-    @Override
-    public void preInit ()
-    {
-        // nothing
-    }
+	@Override
+	public void preInit()
+	{
+		// nothing
+	}
 
-    @Override
-    public void init ()
-    {
-        FMLInterModComms.sendMessage(Mods.WAILA(), "register", "resonantinduction.archaic.waila.WailaRegistrar.wailaCallBack");
-    }
+	@Override
+	public void init()
+	{
+		FMLInterModComms.sendMessage(Mods.WAILA(), "register", "resonantinduction.archaic.waila.WailaRegistrar.wailaCallBack");
+	}
 
-    @Override
-    public void postInit ()
-    {
-        // nothing
-    }
+	@Override
+	public void postInit()
+	{
+		// nothing
+	}
 
-    @Override
-    public String modId ()
-    {
-        return Mods.WAILA();
-    }
+	@Override
+	public String modId()
+	{
+		return Mods.WAILA();
+	}
 }

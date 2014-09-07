@@ -5,9 +5,9 @@ import resonant.lib.type.EvictingList;
 
 /**
  * Graph for the multimeter
- * 
+ *
  * @author Calclavia
- * 
+ *
  */
 public abstract class Graph<V extends Comparable<V>>
 {

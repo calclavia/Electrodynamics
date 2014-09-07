@@ -1,13 +1,5 @@
 package resonantinduction.core.prefab.part;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraftforge.common.util.ForgeDirection;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import codechicken.lib.vec.Cuboid6;
@@ -15,11 +7,15 @@ import codechicken.lib.vec.Rotation;
 import codechicken.lib.vec.Transformation;
 import codechicken.lib.vec.Vector3;
 import codechicken.microblock.FaceMicroClass;
-import codechicken.multipart.JCuboidPart;
-import codechicken.multipart.JNormalOcclusion;
-import codechicken.multipart.NormalOcclusionTest;
-import codechicken.multipart.TFacePart;
-import codechicken.multipart.TMultiPart;
+import codechicken.multipart.*;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraftforge.common.util.ForgeDirection;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public abstract class PartFace extends JCuboidPart implements JNormalOcclusion, TFacePart
 {
@@ -37,10 +33,14 @@ public abstract class PartFace extends JCuboidPart implements JNormalOcclusion, 
 		}
 	}
 
-	/** Side of the block this is placed on. */
+	/**
+	 * Side of the block this is placed on.
+	 */
 	public ForgeDirection placementSide;
 
-	/** The relative direction this block faces. */
+	/**
+	 * The relative direction this block faces.
+	 */
 	public byte facing = 0;
 
 	protected int ticks;

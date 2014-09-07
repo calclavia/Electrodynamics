@@ -21,16 +21,15 @@ class TileTankNode(material: Material) extends TileAdvanced(material) with INode
 {
   val PACKET_DESCRIPTION = 0
   val PACKET_RENDER = 1
-  protected var colorID: Int = 0
   var renderSides: Byte = 0
+  var tankNode: NodeTank = new NodeTank(this)
+  protected var colorID: Int = 0
 
-  var tankNode : NodeTank = new NodeTank(this)
+  def getFluid(): FluidStack = getTank().getFluid
 
-  def getTank() : IFluidTank = tankNode
+  def getFluidCapacity(): Int = getTank().getCapacity
 
-  def getFluid() : FluidStack = getTank().getFluid
-
-  def getFluidCapacity() : Int = getTank().getCapacity
+  def getTank(): IFluidTank = tankNode
 
   override def readFromNBT(nbt: NBTTagCompound)
   {
@@ -50,7 +49,7 @@ class TileTankNode(material: Material) extends TileAdvanced(material) with INode
   {
     if (!world.isRemote)
     {
-      val  packet: PacketTile = new PacketTile(this);
+      val packet: PacketTile = new PacketTile(this);
       packet <<< PACKET_RENDER
       packet <<< colorID
       packet <<< renderSides
@@ -58,28 +57,28 @@ class TileTankNode(material: Material) extends TileAdvanced(material) with INode
     }
   }
 
-  override def getDescPacket() : PacketTile =
+  override def getDescPacket(): PacketTile =
   {
-      val  packet: PacketTile = new PacketTile(this);
-      packet <<< PACKET_DESCRIPTION
-      packet <<< colorID
-      packet <<< renderSides
-      val tag : NBTTagCompound = new NBTTagCompound()
-      tankNode.save(tag)
-      packet <<< tag
-      sendPacket(packet)
-      return packet;
+    val packet: PacketTile = new PacketTile(this);
+    packet <<< PACKET_DESCRIPTION
+    packet <<< colorID
+    packet <<< renderSides
+    val tag: NBTTagCompound = new NBTTagCompound()
+    tankNode.save(tag)
+    packet <<< tag
+    sendPacket(packet)
+    return packet;
   }
 
   override def read(buf: ByteBuf, id: Int, player: EntityPlayer, t: PacketType): Boolean =
   {
-    if(id == PACKET_DESCRIPTION)
+    if (id == PACKET_DESCRIPTION)
     {
       colorID = buf.readInt()
       renderSides = buf.readByte()
       tankNode.load(ByteBufUtils.readTag(buf))
     }
-    else if(id == PACKET_RENDER)
+    else if (id == PACKET_RENDER)
     {
       colorID = buf.readInt()
       renderSides = buf.readByte()
@@ -87,7 +86,7 @@ class TileTankNode(material: Material) extends TileAdvanced(material) with INode
     return tankNode.read(buf, id, player, t);
   }
 
-  override def getNode(nodeType: Class[_ <: INode], from: ForgeDirection): INode = if(nodeType.isInstanceOf[NodeTank]) return tankNode else null
+  override def getNode(nodeType: Class[_ <: INode], from: ForgeDirection): INode = if (nodeType.isInstanceOf[NodeTank]) return tankNode else null
 
   override def drain(from: ForgeDirection, resource: FluidStack, doDrain: Boolean): FluidStack = tankNode.drain(from, resource, doDrain)
 
@@ -100,7 +99,6 @@ class TileTankNode(material: Material) extends TileAdvanced(material) with INode
   override def fill(from: ForgeDirection, resource: FluidStack, doFill: Boolean): Int = tankNode.fill(from, resource, doFill)
 
   override def getTankInfo(from: ForgeDirection): Array[FluidTankInfo] = tankNode.getTankInfo(from)
-
 
   override def start()
   {
@@ -119,5 +117,5 @@ class TileTankNode(material: Material) extends TileAdvanced(material) with INode
     tankNode.setCapacity(capacity)
   }
 
-  def getFluidAmount : Int = tankNode.getFluidAmount
+  def getFluidAmount: Int = tankNode.getFluidAmount
 }

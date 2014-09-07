@@ -41,7 +41,7 @@ import universalelectricity.api.core.grid.INodeProvider;
 import universalelectricity.compatibility.Compatibility;
 
 /** Block that detects power.
- * 
+ *
  * @author Calclavia */
 public class PartMultimeter extends PartFace implements IRedstonePart, IPacketReceiver, IRemovable.ISneakWrenchable
 {

@@ -18,7 +18,7 @@ import java.util.List;
 
 /** The vertical wind turbine collects airflow. The horizontal wind turbine collects steam from steam
  * power plants.
- * 
+ *
  * @author Calclavia */
 public class TileWindTurbine extends TileTurbine
 {

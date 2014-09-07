@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package resonantinduction.electrical.multimeter;
 
@@ -10,7 +10,7 @@ import net.minecraft.inventory.Slot;
 
 /**
  * @author Calclavia
- * 
+ *
  */
 public class ContainerMultimeter extends Container
 {

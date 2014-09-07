@@ -1,9 +1,9 @@
 package resonantinduction.core;
 
-import java.util.HashMap;
-
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
+
+import java.util.HashMap;
 
 public class Timer<K>
 {

@@ -10,12 +10,15 @@ import resonant.content.prefab.scala.render.ISimpleItemRenderer
 import resonant.lib.render.RenderUtility
 import resonantinduction.core.Reference
 
-object RenderQuantumGlyph {
+object RenderQuantumGlyph
+{
   final val INSTANCE: RenderQuantumGlyph = new RenderQuantumGlyph
 }
 
-class RenderQuantumGlyph extends ISimpleItemRenderer {
-  def render(part: PartQuantumGlyph, x: Double, y: Double, z: Double) {
+class RenderQuantumGlyph extends ISimpleItemRenderer
+{
+  def render(part: PartQuantumGlyph, x: Double, y: Double, z: Double)
+  {
     GL11.glPushMatrix
     GL11.glTranslated(x, y, z)
     val bound: Cuboid6 = part.getBounds
@@ -24,7 +27,8 @@ class RenderQuantumGlyph extends ISimpleItemRenderer {
     GL11.glPopMatrix
   }
 
-  def renderInventoryItem(`type`: IItemRenderer.ItemRenderType, itemStack: ItemStack, data: AnyRef*) {
+  def renderInventoryItem(`type`: IItemRenderer.ItemRenderType, itemStack: ItemStack, data: AnyRef*)
+  {
     GL11.glPushMatrix
     GL11.glTranslated(-0.25, -0.25, -0.25)
     RenderUtility.bind(TextureMap.locationBlocksTexture)

@@ -4,7 +4,7 @@ import java.awt.Color;
 
 /**
  * Enumerator to hold info about each pipe material.
- * 
+ *
  * @author Calclavia
  */
 public enum EnumPipeMaterial

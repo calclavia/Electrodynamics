@@ -58,7 +58,8 @@ object ResonantInduction
   @EventHandler
   def init(evt: FMLInitializationEvent)
   {
-    if(ResonantInduction.metadata != null) {
+    if (ResonantInduction.metadata != null)
+    {
       ResonantInduction.metadata.modId = Reference.name
       ResonantInduction.metadata.name = Reference.name
       ResonantInduction.metadata.description = Reference.name + " is a mod... TODO add description"

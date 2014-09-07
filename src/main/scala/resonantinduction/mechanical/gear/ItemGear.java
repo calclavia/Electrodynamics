@@ -64,7 +64,7 @@ public class ItemGear extends JItemMultiPart implements IHighlight
 		{
 			listToAddTo.add(new ItemStack(itemID, 1, i));
 		}
-		
+
 		listToAddTo.add(new ItemStack(itemID, 1, 10));
 	}
 

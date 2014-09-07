@@ -19,13 +19,13 @@ import universalelectricity.api.core.grid.INodeProvider;
 import universalelectricity.core.transform.vector.VectorWorld;
 
 /** We assume all the force acting on the gear is 90 degrees.
- * 
+ *
  * @author Calclavia */
 public abstract class PartMechanical extends JCuboidPart implements JNormalOcclusion, TFacePart, INodeProvider
 {
     /** Node that handles resonantinduction.mechanical action of the machine */
     public MechanicalNode node;
-    protected double prevAngularVelocity;    
+    protected double prevAngularVelocity;
     int ticks = 0;
     /** Packets */
     boolean markPacketUpdate = false;
@@ -70,10 +70,10 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
         }
         //Make sure to update on both sides
         this.node.update();
-        
+
         if (!world().isRemote)
         {
-            checkClientUpdate();          
+            checkClientUpdate();
         }
         if (frame != null)
         {

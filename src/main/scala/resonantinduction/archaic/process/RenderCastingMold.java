@@ -1,24 +1,22 @@
 package resonantinduction.archaic.process;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
-
 import org.lwjgl.opengl.GL11;
-
 import resonant.lib.render.RenderItemOverlayUtility;
 import resonant.lib.render.RenderUtility;
 import resonantinduction.core.Reference;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class RenderCastingMold extends TileEntitySpecialRenderer
 {
-	public static RenderCastingMold INSTANCE = new RenderCastingMold();
 	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelPath() + "castingMold.tcn"));
+	public static RenderCastingMold INSTANCE = new RenderCastingMold();
 
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float var8)
@@ -36,7 +34,9 @@ public class RenderCastingMold extends TileEntitySpecialRenderer
 			GL11.glPopMatrix();
 
 			if (tile.getWorldObj() != null)
+			{
 				RenderItemOverlayUtility.renderItemOnSides(tileEntity, tile.getStackInSlot(0), x, y, z, "");
+			}
 		}
 	}
 }

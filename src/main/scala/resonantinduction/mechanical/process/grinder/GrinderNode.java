@@ -5,7 +5,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import resonantinduction.core.interfaces.IMechanicalNode;
 
 /** Node just for the grinder
- * 
+ *
  * @author Darkguardsman */
 public class GrinderNode extends MechanicalNode
 {

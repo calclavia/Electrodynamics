@@ -1,10 +1,5 @@
 package resonantinduction.archaic.blocks;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
@@ -18,7 +13,11 @@ import resonant.lib.utility.LanguageUtility;
 import resonant.lib.utility.nbt.NBTUtility;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantTab;
-import resonantinduction.core.Settings;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class ItemImprint extends Item
 {
@@ -32,43 +31,9 @@ public class ItemImprint extends Item
 		this.setMaxStackSize(1);
 	}
 
-	@Override
-	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity)
-	{
-		if (entity != null && !(entity instanceof IProjectile) && !(entity instanceof EntityPlayer))
-		{
-			String stringName = EntityList.getEntityString(entity);
-			// TODO Add to filter
-			// player.sendChatToPlayer("Target: " + stringName);
-			return true;
-		}
-		return false;
-	}
-
-	public boolean itemInteractionForEntity(ItemStack par1ItemStack, EntityLivingBase par2EntityLiving)
-	{
-		return false;
-	}
-
-	@Override
-	public void addInformation(ItemStack itemStack, EntityPlayer par2EntityPlayer, List list, boolean par4)
-	{
-		Set<ItemStack> filterItems = getFilters(itemStack);
-
-		if (filterItems.size() > 0)
-		{
-			for (ItemStack filterItem : filterItems)
-			{
-				list.add(filterItem.getDisplayName());
-			}
-		}
-		else
-		{
-			list.add(LanguageUtility.getLocal("tooltip.noImprint"));
-		}
-	}
-
-	/** Saves the list of items to filter out inside. */
+	/**
+	 * Saves the list of items to filter out inside.
+	 */
 	public static void setFilters(ItemStack itemStack, Set<ItemStack> filterStacks)
 	{
 		if (itemStack.getTagCompound() == null)
@@ -139,5 +104,41 @@ public class ItemImprint extends Item
 		}
 
 		return filterStacks;
+	}
+
+	@Override
+	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity)
+	{
+		if (entity != null && !(entity instanceof IProjectile) && !(entity instanceof EntityPlayer))
+		{
+			String stringName = EntityList.getEntityString(entity);
+			// TODO Add to filter
+			// player.sendChatToPlayer("Target: " + stringName);
+			return true;
+		}
+		return false;
+	}
+
+	public boolean itemInteractionForEntity(ItemStack par1ItemStack, EntityLivingBase par2EntityLiving)
+	{
+		return false;
+	}
+
+	@Override
+	public void addInformation(ItemStack itemStack, EntityPlayer par2EntityPlayer, List list, boolean par4)
+	{
+		Set<ItemStack> filterItems = getFilters(itemStack);
+
+		if (filterItems.size() > 0)
+		{
+			for (ItemStack filterItem : filterItems)
+			{
+				list.add(filterItem.getDisplayName());
+			}
+		}
+		else
+		{
+			list.add(LanguageUtility.getLocal("tooltip.noImprint"));
+		}
 	}
 }

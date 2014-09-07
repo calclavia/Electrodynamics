@@ -13,8 +13,8 @@ object ArchaicItems extends ContentHolder
 
   override def postInit()
   {
-    recipes += shaped(itemHandCrank, "S  ", "SSS", "  S", 'S', "stickWood" )
-    recipes += shaped(itemImprint, "PPP", "PIP", "PPP", 'P', Items.paper, 'I', new ItemStack( Items.dye, 0 ) )
-    recipes += shaped(itemHammer, "CC ", "CS ", "  S", 'C', "cobblestone", 'S', "stickWood" )
+    recipes += shaped(itemHandCrank, "S  ", "SSS", "  S", 'S', "stickWood")
+    recipes += shaped(itemImprint, "PPP", "PIP", "PPP", 'P', Items.paper, 'I', new ItemStack(Items.dye, 0))
+    recipes += shaped(itemHammer, "CC ", "CS ", "  S", 'C', "cobblestone", 'S', "stickWood")
   }
 }

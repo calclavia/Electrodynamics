@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package resonantinduction.electrical.tesla;
 
@@ -7,7 +7,7 @@ import net.minecraft.tileentity.TileEntity;
 
 /**
  * @author Calclavia
- * 
+ *
  */
 public interface ITesla
 {

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package resonantinduction.electrical.levitator;
 
@@ -7,7 +7,7 @@ import universalelectricity.core.transform.vector.Vector3;
 
 /**
  * @author Calclavia
- * 
+ *
  */
 public class ThreadLevitatorPathfinding extends Thread
 {

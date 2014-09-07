@@ -8,13 +8,13 @@ import net.minecraftforge.fluids._
  */
 trait TFluidHandler extends IFluidHandler
 {
-  var fluidTank : FluidTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME)
+  var fluidTank: FluidTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME)
 
   override def fill(from: ForgeDirection, resource: FluidStack, doFill: Boolean): Int = fluidTank.fill(resource, doFill)
 
   override def drain(from: ForgeDirection, resource: FluidStack, doDrain: Boolean): FluidStack =
   {
-    if(resource != null && resource.isFluidEqual(fluidTank.getFluid))
+    if (resource != null && resource.isFluidEqual(fluidTank.getFluid))
     {
       return drain(from, resource.amount, doDrain)
     }

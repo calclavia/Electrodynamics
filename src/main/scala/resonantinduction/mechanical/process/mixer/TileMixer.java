@@ -34,7 +34,7 @@ public class TileMixer extends TileMechanical
 {
 	public static final int PROCESS_TIME = 12 * 20;
 	public static final Timer<EntityItem> timer = new Timer<EntityItem>();
-	
+
 	private boolean areaBlockedFromMoving = false;
 
 	public TileMixer()

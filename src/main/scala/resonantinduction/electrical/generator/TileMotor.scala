@@ -22,7 +22,7 @@ class TileMotor extends TileElectric(Material.iron) with IRotatable {
   var isInversed: Boolean = true
   private var gearRatio: Byte = 0
 
-  def toggleGearRatio: Byte = {    
+  def toggleGearRatio: Byte = {
     return ((gearRatio + 1) % 3).asInstanceOf[Byte]
   }
 

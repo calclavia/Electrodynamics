@@ -30,7 +30,7 @@ import codechicken.multipart.ControlKeyModifer;
 import com.google.common.io.ByteArrayDataInput;
 
 /** Prefab for resonantinduction.mechanical tiles
- * 
+ *
  * @author Calclavia */
 public abstract class TileMechanical extends TileNode implements INodeProvider, IPacketIDReceiver
 {
@@ -39,7 +39,7 @@ public abstract class TileMechanical extends TileNode implements INodeProvider, 
 
     /** Node that handles most mechanical actions */
     public MechanicalNode mechanicalNode;
-    
+
     /** External debug GUI */
     DebugFrameMechanical frame = null;
 
@@ -53,7 +53,7 @@ public abstract class TileMechanical extends TileNode implements INodeProvider, 
     public void update()
     {
         super.update();
-        
+
         if(frame != null)
         {
             frame.update();
@@ -63,7 +63,7 @@ public abstract class TileMechanical extends TileNode implements INodeProvider, 
                 frame = null;
             }
         }
-        
+
         if (!this.getWorldObj().isRemote)
         {
             if (ticks() % 3 == 0 && (mechanicalNode.markTorqueUpdate || mechanicalNode.markRotationUpdate))
@@ -75,7 +75,7 @@ public abstract class TileMechanical extends TileNode implements INodeProvider, 
             }
         }
     }
-   
+
     @Override
     public boolean use(EntityPlayer player, int side, Vector3 hit)
     {
@@ -112,7 +112,7 @@ public abstract class TileMechanical extends TileNode implements INodeProvider, 
     {
         return mechanicalNode;
     }
-    
+
     @Override
     public Packet getDescriptionPacket()
     {

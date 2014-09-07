@@ -317,7 +317,7 @@ public class RenderFlatWire
 
 		/**
 		 * Returns a copy of vertices with the bottom face added at the start.
-		 * 
+		 *
 		 * @param start The index of the first vertex making up the top face
 		 * @param count The number of vertices making up the top face
 		 */
@@ -373,7 +373,7 @@ public class RenderFlatWire
 	 * 10 = straight
 	 * 11 = internal The
 	 * second byte contains the thickness*6+side
-	 * 
+	 *
 	 * @param side The side the wire is attached to
 	 * @param thickness The thickness of the wire -1 in 1/8th blocks. Supported
 	 * values 0, 1, 2

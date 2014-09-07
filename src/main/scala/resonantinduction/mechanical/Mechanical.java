@@ -46,7 +46,7 @@ import java.sql.Ref;
 
 /**
  * Resonant Induction Mechanical Module
- * 
+ *
  * @author DarkCow, Calclavia
  */
 @Mod(modid = Mechanical.ID, name = "Resonant Induction Mechanical", version = "", dependencies = "before:ThermalExpansion;required-after:ResonantInductionCore;after:ResonantInduction|Archaic")

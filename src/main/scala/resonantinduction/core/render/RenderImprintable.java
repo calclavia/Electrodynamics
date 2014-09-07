@@ -1,7 +1,7 @@
 package resonantinduction.core.render;
 
-import java.util.Set;
-
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,8 +12,8 @@ import resonant.lib.render.RenderUtility;
 import resonantinduction.archaic.blocks.ItemImprint;
 import resonantinduction.archaic.blocks.TileFilterable;
 import universalelectricity.core.transform.vector.Vector3;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+
+import java.util.Set;
 
 /**
  * @author Briman0094
