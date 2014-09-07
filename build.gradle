@@ -165,13 +165,13 @@ repositories {
 dependencies {
 	if (System.getenv("TEAMCITY_BUILDCONF_NAME") == "Development")
 	{
-		compile group: 'dev.calclavia.universalelectricity', name: 'Universal-Electricity', version: "${rootProject.config.version.universalelectricity}", classifier: "dev"
-		compile group: 'dev.calclavia.resonantengine', name: 'Resonant-Engine', version: "${config.version.resonantengine}", classifier: "dev"
+		compile group: 'dev.calclavia.universalelectricity', name: 'universal-electricity', version: "${rootProject.config.version.universalelectricity}", classifier: "dev"
+		compile group: 'dev.calclavia.resonantengine', name: 'resonant-engine', version: "${config.version.resonantengine}", classifier: "dev"
 	}
 	else
 	{
-		compile group: 'com.calclavia.universalelectricity', name: 'Universal-Electricity', version: "${rootProject.config.version.universalelectricity}", classifier: "dev"
-		compile group: 'com.calclavia.resonantengine', name: 'Resonant-Engine', version: "${config.version.resonantengine}", classifier: "dev"
+		compile group: 'com.calclavia.universalelectricity', name: 'universal-electricity', version: "${rootProject.config.version.universalelectricity}", classifier: "dev"
+		compile group: 'com.calclavia.resonantengine', name: 'resonant-engine', version: "${config.version.resonantengine}", classifier: "dev"
 	}
 	
 	compile group: 'codechicken', name: 'CodeChickenLib', version: "${config.version.minecraft}-${config.version.cclib}", ext: 'jar'
