@@ -155,7 +155,7 @@ repositories {
         url "http://mobiusstrip.eu/maven"
     }
     maven {
-        name "CB Repo"
+        name "chickenbones"
         url "http://chickenbones.net/maven"
     }
 	
@@ -174,8 +174,8 @@ dependencies {
 		compile group: 'com.calclavia.resonantengine', name: 'resonant-engine', version: "${config.version.resonantengine}", classifier: "dev"
 	}
 	
-	compile group: 'codechicken', name: 'CodeChickenLib', version: "${config.version.minecraft}-${config.version.cclib}", ext: 'jar'
-	compile group: 'codechicken', name: 'ForgeMultipart', version: "${config.version.minecraft}-${config.version.fmp}", ext: 'jar'
-	compile group: 'codechicken', name: 'NotEnoughItems', version: "${config.version.minecraft}-${config.version.nei}", ext: 'jar'
-	compile group: 'codechicken', name: 'CodeChickenCore', version: "${config.version.minecraft}-${config.version.cccore}", ext: 'jar'
+    compile "codechicken:CodeChickenLib:${config.version.minecraft}-${config.version.cclib}:dev"
+    compile "codechicken:ForgeMultipart:${config.version.minecraft}-${config.version.fmp}:dev"
+    compile "codechicken:CodeChickenCore:${config.version.minecraft}-${config.version.cccore}:dev"
+    compile "codechicken:NotEnoughItems:${config.version.minecraft}-${config.version.nei}:dev"
 }
