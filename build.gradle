@@ -176,6 +176,6 @@ dependencies {
 	
 	compile group: 'codechicken', name: 'CodeChickenLib', version: "${config.version.minecraft}-${config.version.cclib}", ext: 'jar'
 	compile group: 'codechicken', name: 'ForgeMultipart', version: "${config.version.minecraft}-${config.version.fmp}", ext: 'jar'
-	compile group: 'codechicken', name: 'NotEnoughItems', version: "${config.version.nei}", ext: 'jar'
-	compile group: 'codechicken', name: 'CodeChickenCore', version: "${config.version.cccore}", ext: 'jar'
+	compile group: 'codechicken', name: 'NotEnoughItems', version: "${config.version.minecraft}-${config.version.nei}", ext: 'jar'
+	compile group: 'codechicken', name: 'CodeChickenCore', version: "${config.version.minecraft}-${config.version.cccore}", ext: 'jar'
 }
