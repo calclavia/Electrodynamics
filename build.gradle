@@ -143,8 +143,8 @@ publishing {
 
 repositories {
     maven {
-        name 'Calclavia Maven'
-        url 'http://calclavia.com/maven'
+        name "Calclavia Maven"
+        url "http://calclavia.com/maven"
     }
     maven {
         name = "forge"
@@ -156,7 +156,7 @@ repositories {
     }
     maven {
         name "CB Repo"
-        url "https://chickenbones.net/maven"
+        url "http://chickenbones.net/maven"
     }
 	
     mavenCentral()
