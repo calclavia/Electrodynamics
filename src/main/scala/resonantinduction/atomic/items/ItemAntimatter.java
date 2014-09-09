@@ -8,6 +8,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import resonantinduction.core.Reference;
+import resonantinduction.core.ResonantTab;
 
 import java.util.List;
 
@@ -21,6 +23,9 @@ public class ItemAntimatter extends ItemCell
 		super();
 		this.setMaxDamage(0);
 		this.setHasSubtypes(true);
+        this.setUnlocalizedName(Reference.prefix() + "antimatter");
+        this.setTextureName(Reference.prefix() + "antimatter");
+        setCreativeTab(ResonantTab.tab());
 	}
 
 	@SideOnly(Side.CLIENT)

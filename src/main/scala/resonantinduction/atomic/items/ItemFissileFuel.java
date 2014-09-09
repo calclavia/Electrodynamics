@@ -13,6 +13,8 @@ import resonant.api.IReactor;
 import resonant.api.IReactorComponent;
 import resonantinduction.atomic.AtomicContent;
 import resonantinduction.atomic.machine.reactor.TileReactorCell;
+import resonantinduction.core.Reference;
+import resonantinduction.core.ResonantTab;
 import resonantinduction.core.Settings;
 import universalelectricity.core.transform.vector.Vector3;
 
@@ -46,6 +48,9 @@ public class ItemFissileFuel extends ItemRadioactive implements IReactorComponen
 		this.setMaxStackSize(1);
 		this.setMaxDamage(DECAY);
 		this.setNoRepair();
+        this.setUnlocalizedName(Reference.prefix() + "rodBreederFuel");
+        this.setTextureName(Reference.prefix() + "rodBreederFuel");
+        setCreativeTab(ResonantTab.tab());
 	}
 
 	@Override

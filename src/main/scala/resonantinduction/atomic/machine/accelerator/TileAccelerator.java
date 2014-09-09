@@ -17,7 +17,6 @@ import resonant.lib.utility.BlockUtility;
 import resonantinduction.atomic.Atomic;
 import resonantinduction.atomic.AtomicContent;
 import resonantinduction.atomic.items.ItemAntimatter;
-import resonantinduction.atomic.items.ItemDarkMatter;
 import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
 import universalelectricity.core.transform.vector.Vector3;
@@ -321,7 +320,7 @@ public class TileAccelerator extends TileElectricInventory implements IElectroma
 			case 2:
 				return itemStack.getItem() instanceof ItemAntimatter;
 			case 3:
-				return itemStack.getItem() instanceof ItemDarkMatter;
+				return itemStack.getItem() != null && itemStack.getItem().getUnlocalizedName().contains("DarkMatter");
 		}
 
 		return false;

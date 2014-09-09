@@ -14,7 +14,7 @@ import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.init.Items
-import net.minecraft.item.{Item, ItemBucket, ItemStack}
+import net.minecraft.item.{ItemBucket, ItemStack}
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.MovingObjectPosition
 import net.minecraft.world.World
@@ -178,15 +178,15 @@ object Atomic
     AtomicContent.itemHazmatBody = new ItemHazmat("HazmatBody", 1).setCreativeTab(ResonantTab)
     AtomicContent.itemHazmatLeggings = new ItemHazmat("HazmatLeggings", 2).setCreativeTab(ResonantTab)
     AtomicContent.itemHazmatBoots = new ItemHazmat("HazmatBoots", 3).setCreativeTab(ResonantTab)
-    AtomicContent.itemCell = new Item().setUnlocalizedName("cellEmpty").setCreativeTab(ResonantTab)
-    AtomicContent.itemFissileFuel = new ItemFissileFuel().setUnlocalizedName("rodFissileFuel").setCreativeTab(ResonantTab)
-    AtomicContent.itemDeuteriumCell = new ItemCell().setUnlocalizedName("cellDeuterium").setCreativeTab(ResonantTab)
-    AtomicContent.itemTritiumCell = new ItemCell().setUnlocalizedName("cellTritium").setCreativeTab(ResonantTab)
-    AtomicContent.itemWaterCell = new ItemCell().setUnlocalizedName("cellWater").setCreativeTab(ResonantTab)
-    AtomicContent.itemDarkMatter = new ItemDarkMatter().setUnlocalizedName("darkMatter").setCreativeTab(ResonantTab)
-    AtomicContent.itemAntimatter = new ItemAntimatter().setUnlocalizedName("antimatter").setCreativeTab(ResonantTab)
-    AtomicContent.itemBreedingRod = new ItemBreederFuel().setUnlocalizedName("rodBreederFuel").setCreativeTab(ResonantTab)
-    AtomicContent.itemYellowCake = new ItemRadioactive().setUnlocalizedName("yellowcake").setCreativeTab(ResonantTab)
+    AtomicContent.itemCell = new ItemCell("cellEmpty")
+    AtomicContent.itemFissileFuel = new ItemFissileFuel()
+    AtomicContent.itemDeuteriumCell = new ItemCell("cellDeuterium")
+    AtomicContent.itemTritiumCell = new ItemCell("cellTritium")
+    AtomicContent.itemWaterCell = new ItemCell("cellWater")
+    AtomicContent.itemDarkMatter = new ItemCell("darkMatter")
+    AtomicContent.itemAntimatter = new ItemAntimatter()
+    AtomicContent.itemBreedingRod = new ItemBreederFuel()
+    AtomicContent.itemYellowCake = new ItemRadioactive().setUnlocalizedName("yellowcake").setTextureName("yellowcake").setCreativeTab(ResonantTab)
     AtomicContent.itemUranium = Atomic.contentRegistry.newItem(classOf[ItemUranium]).setCreativeTab(ResonantTab)
 
     GameRegistry.registerItem(AtomicContent.itemHazmatTop, "HazmatMask", "ResonantInduction|Atomic");

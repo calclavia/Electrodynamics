@@ -7,6 +7,8 @@ import net.minecraft.item.ItemStack;
 import resonant.content.prefab.itemblock.ItemTooltip;
 import resonant.lib.utility.LanguageUtility;
 import resonantinduction.atomic.AtomicContent;
+import resonantinduction.core.Reference;
+import resonantinduction.core.ResonantTab;
 
 public class ItemCell extends ItemTooltip
 {
@@ -15,12 +17,14 @@ public class ItemCell extends ItemTooltip
 		setContainerItem(AtomicContent.itemCell());
 	}
 
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void registerIcons(IIconRegister iconRegister)
-	{
-		this.itemIcon = iconRegister.registerIcon(this.getUnlocalizedName().replace("item.", ""));
-	}
+    public ItemCell(String name)
+    {
+        if(!name.equalsIgnoreCase("cellEmpty"))
+            this.setContainerItem(AtomicContent.itemCell());
+        this.setUnlocalizedName(Reference.prefix() + name);
+        this.setTextureName(Reference.prefix() + name);
+        setCreativeTab(ResonantTab.tab());
+    }
 
 	@Override
 	public String getUnlocalizedName(ItemStack itemstack)
