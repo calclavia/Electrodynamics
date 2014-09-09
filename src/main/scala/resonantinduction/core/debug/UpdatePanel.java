@@ -1,32 +1,33 @@
 package resonantinduction.core.debug;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Panel;
 
-/**
- * @author Darkguardsman
- */
+import javax.swing.JPanel;
+
+/** @author Darkguardsman */
 @SuppressWarnings("serial")
 public class UpdatePanel extends JPanel implements IUpdate
 {
-	public UpdatePanel()
-	{
-	}
+    public UpdatePanel()
+    {
+    }
 
-	public UpdatePanel(BorderLayout borderLayout)
-	{
-		super(borderLayout);
-	}
+    public UpdatePanel(BorderLayout borderLayout)
+    {
+        super(borderLayout);
+    }
 
-	@Override
-	public void update()
-	{
-		for (Component component : getComponents())
-		{
-			if (component instanceof IUpdate)
-			{
-				((IUpdate) component).update();
-			}
-		}
-	}
+    @Override
+    public void update()
+    {
+        for (Component component : getComponents())
+        {
+            if (component instanceof IUpdate)
+            {
+                ((IUpdate) component).update();
+            }
+        }
+    }
 }

@@ -13,18 +13,21 @@ import universalelectricity.core.transform.vector.{Vector3, VectorWorld}
 
 import scala.util.control.Breaks._
 
-
-abstract class PartConductor extends TMultiPart with TraitPart {
-  override def doesTick: Boolean = {
+abstract class PartConductor extends TMultiPart with TraitPart
+{
+  override def doesTick: Boolean =
+  {
     return false
   }
 
-  def getConnections: Array[AnyRef] = {
+  def getConnections: Array[AnyRef] =
+  {
     return this.connections
   }
 
   /** EXTERNAL USE Can this wire be connected by another block? */
-  def canConnect(direction: ForgeDirection, source: AnyRef): Boolean = {
+  def canConnect(direction: ForgeDirection, source: AnyRef): Boolean =
+  {
     val connectPos: Vector3 = new Vector3(tile).add(direction)
     val connectTile: TileEntity = connectPos.getTileEntity(world)
     return Compatibility.isHandler(connectTile)
@@ -33,21 +36,23 @@ abstract class PartConductor extends TMultiPart with TraitPart {
   def canConnectTo(obj: AnyRef): Boolean
 
   /** Recalculates all the network connections */
-  protected def recalculateConnections {
+  protected def recalculateConnections
+  {
     this.connections = new Array[AnyRef](6)
-      for(i <- 0 until 6)
+    for (i <- 0 until 6)
+    {
+      val side: ForgeDirection = ForgeDirection.getOrientation(i)
+      val tileEntity: TileEntity = new VectorWorld(world, x, y, z).getTileEntity
+      if (this.canConnect(side, tileEntity))
       {
-          val side: ForgeDirection = ForgeDirection.getOrientation(i)
-          val tileEntity: TileEntity = new VectorWorld(world, x, y, z).getTileEntity
-          if (this.canConnect(side, tileEntity))
-          {
-            connections(i) = tileEntity
-          }
+        connections(i) = tileEntity
       }
+    }
   }
 
   /** IC2 Functions */
-  override def onWorldJoin {
+  override def onWorldJoin
+  {
     if (!world.isRemote && tile.isInstanceOf[IEnergyTile])
     {
       var foundAnotherPart: Boolean = false
@@ -73,18 +78,21 @@ abstract class PartConductor extends TMultiPart with TraitPart {
     if (!world.isRemote)
     {
       //this.getNetwork.split(this)
-      if (tile.isInstanceOf[IEnergyTile]) {
+      if (tile.isInstanceOf[IEnergyTile])
+      {
         var foundAnotherPart: Boolean = false
-        for(i <- 0 until tile.partList.size)
+        for (i <- 0 until tile.partList.size)
         {
           val part: TMultiPart = tile.partMap(i)
-          if (part.isInstanceOf[IEnergyTile] && part != this) {
+          if (part.isInstanceOf[IEnergyTile] && part != this)
+          {
             foundAnotherPart = true
             break //todo: break is not supported
           }
 
         }
-        if (!foundAnotherPart) {
+        if (!foundAnotherPart)
+        {
           MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(tile.asInstanceOf[IEnergyTile]))
         }
       }
@@ -92,15 +100,18 @@ abstract class PartConductor extends TMultiPart with TraitPart {
     super.preRemove
   }
 
-  override def save(nbt: NBTTagCompound) {
+  override def save(nbt: NBTTagCompound)
+  {
     super.save(nbt)
   }
 
-  override def load(nbt: NBTTagCompound) {
+  override def load(nbt: NBTTagCompound)
+  {
     super.load(nbt)
   }
 
-  override def toString: String = {
+  override def toString: String =
+  {
     return "[PartConductor]" + x + "x " + y + "y " + z + "z "
   }
 
