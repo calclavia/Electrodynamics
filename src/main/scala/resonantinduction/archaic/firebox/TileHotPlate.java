@@ -238,7 +238,7 @@ public class TileHotPlate extends TileInventory implements IPacketReceiver
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(int side, int meta)
 	{
-		return meta == 1 ? SpatialBlock.icon().get("electricHotPlate") : SpatialBlock.icon().get("HotPlate");
+		return meta == 1 ? SpatialBlock.icon().get("electricHotPlate") : SpatialBlock.icon().get(getTextureName());
 	}
 
 	@Override

@@ -186,7 +186,7 @@ object Atomic
     AtomicContent.itemDarkMatter = new ItemCell("darkMatter")
     AtomicContent.itemAntimatter = new ItemAntimatter()
     AtomicContent.itemBreedingRod = new ItemBreederFuel()
-    AtomicContent.itemYellowCake = new ItemRadioactive().setUnlocalizedName("yellowcake").setTextureName("yellowcake").setCreativeTab(ResonantTab)
+    AtomicContent.itemYellowCake = new ItemRadioactive().setUnlocalizedName("yellowcake").setTextureName(Reference.prefix + "yellowcake").setCreativeTab(ResonantTab)
     AtomicContent.itemUranium = Atomic.contentRegistry.newItem(classOf[ItemUranium]).setCreativeTab(ResonantTab)
 
     GameRegistry.registerItem(AtomicContent.itemHazmatTop, "HazmatMask", "ResonantInduction|Atomic");

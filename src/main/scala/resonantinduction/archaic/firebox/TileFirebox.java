@@ -282,6 +282,26 @@ public class TileFirebox extends TileElectricInventory implements IPacketReceive
 
 	}
 
+    @Override
+    @SideOnly(Side.CLIENT)
+    public IIcon getIcon(int side, int meta)
+    {
+        if (side == 0)
+        {
+            return SpatialBlock.icon().get("firebox");
+        }
+
+        boolean isElectric = meta == 1;
+        boolean isBurning = false;
+
+        if (side == 1)
+        {
+            return isBurning ? (isElectric ? SpatialBlock.icon().get("firebox_electric_top_on") : SpatialBlock.icon().get("firebox_top_on")) : (isElectric ? SpatialBlock.icon().get("firebox_electric_top_off") : SpatialBlock.icon().get("firebox_top_off"));
+        }
+
+        return isBurning ? (isElectric ? SpatialBlock.icon().get("firebox_electric_side_on") : SpatialBlock.icon().get("firebox_side_on")) : (isElectric ? SpatialBlock.icon().get("firebox_electric_side_off") : SpatialBlock.icon().get("firebox_side_off"));
+    }
+
 	@Override
 	public void click(EntityPlayer player)
 	{
@@ -301,26 +321,6 @@ public class TileFirebox extends TileElectricInventory implements IPacketReceive
 		}
 
 		return interactCurrentItem((IInventory) this, 0, player);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(int side, int meta)
-	{
-		if (side == 0)
-		{
-			return SpatialBlock.icon().get("firebox");
-		}
-
-		boolean isElectric = meta == 1;
-		boolean isBurning = false;
-
-		if (side == 1)
-		{
-			return isBurning ? (isElectric ? SpatialBlock.icon().get("firebox_eletric_top_on") : SpatialBlock.icon().get("firebox_top_on")) : (isElectric ? SpatialBlock.icon().get("firebox_eletric_top_off") : SpatialBlock.icon().get("firebox_top_off"));
-		}
-
-		return isBurning ? (isElectric ? SpatialBlock.icon().get("firebox_eletric_side_on") : SpatialBlock.icon().get("firebox_side_on")) : (isElectric ? SpatialBlock.icon().get("firebox_eletric_side_off") : SpatialBlock.icon().get("firebox_side_off"));
 	}
 
 	@Override

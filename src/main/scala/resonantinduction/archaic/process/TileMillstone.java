@@ -105,7 +105,7 @@ public class TileMillstone extends TileInventory implements IPacketReceiver
 	@Override
 	public void registerIcons(IIconRegister iconReg)
 	{
-		super.registerIcons(iconReg);
+        SpatialBlock.icon().put("millstone_side", iconReg.registerIcon(Reference.prefix() + "millstone_side"));
 		SpatialBlock.icon().put("millstone_top", iconReg.registerIcon(Reference.prefix() + "millstone_top"));
 	}
 
@@ -118,7 +118,7 @@ public class TileMillstone extends TileInventory implements IPacketReceiver
 			return SpatialBlock.icon().get("millstone_top");
 		}
 
-		return SpatialBlock.icon().get("millstone");
+		return SpatialBlock.icon().get("millstone_side");
 	}
 
 	@Override
