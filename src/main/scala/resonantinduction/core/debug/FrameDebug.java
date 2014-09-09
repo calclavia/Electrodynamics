@@ -158,17 +158,17 @@ public class FrameDebug extends Frame implements IVectorWorld
             @Override
             public String buildLabel()
             {
-                return super.buildLabel() + (tile != null && tile.getBlockType() != null ? tile.getBlockType().blockID : "-");
+                return super.buildLabel() + (tile != null && tile.getBlockType() != null ? tile.getBlockMetadata() : "-");
             }
         };
         panel.add(meta_label);
 
-        UpdatedLabel id_label = new UpdatedLabel("ID: ")
+        UpdatedLabel id_label = new UpdatedLabel("BLOCK: ")
         {
             @Override
             public String buildLabel()
             {
-                return super.buildLabel() + (tile != null && tile.getBlockType() != null ? tile.getBlockType().blockID : "-");
+                return super.buildLabel() + (tile != null && tile.getBlockType() != null ? tile.getBlockType() : "-");
             }
         };
         panel.add(id_label);
