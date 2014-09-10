@@ -159,6 +159,12 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
 		return new PacketTile(this, nbt);
 	}
 
+    @Override
+    public void onInventoryChanged()
+    {
+        sendPacket(getDescPacket());
+    }
+
 	@Override
 	public void read(ByteBuf data, EntityPlayer player, PacketType type)
 	{

@@ -334,7 +334,7 @@ class TileCrate extends TileInventory(Material.rock) with TPacketReceiver with I
     this.onInventoryChanged
   }
 
-  def onInventoryChanged
+  override def onInventoryChanged
   {
     if (worldObj != null && !worldObj.isRemote) doUpdate = true
   }
