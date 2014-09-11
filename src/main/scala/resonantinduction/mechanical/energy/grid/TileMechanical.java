@@ -121,6 +121,7 @@ public abstract class TileMechanical extends TileNode implements INodeProvider, 
         return ResonantEngine.instance.packetHandler.toMCPacket(new PacketTile(this, PACKET_NBT, tag));
     }
 
+    /** Sends the torque and angular velocity to the client */
     private void sendRotationPacket()
     {
         ResonantEngine.instance.packetHandler.sendToAllAround(new PacketTile(this, PACKET_VELOCITY, mechanicalNode.angularVelocity, mechanicalNode.torque), this);
@@ -129,27 +130,19 @@ public abstract class TileMechanical extends TileNode implements INodeProvider, 
     @Override
     public boolean read(ByteBuf data, int id, EntityPlayer player, PacketType type)
     {
-        try
+        if (world().isRemote)
         {
-            if (world().isRemote)
+            if (id == PACKET_NBT)
             {
-                if (id == PACKET_NBT)
-                {
-                    readFromNBT(ByteBufUtils.readTag(data));
-                    return true;
-                }
-                else if (id == PACKET_VELOCITY)
-                {
-                    mechanicalNode.angularVelocity = data.readDouble();
-                    mechanicalNode.torque = data.readDouble();
-                    return true;
-                }
+                readFromNBT(ByteBufUtils.readTag(data));
+                return true;
             }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            return true;
+            else if (id == PACKET_VELOCITY)
+            {
+                mechanicalNode.angularVelocity = data.readDouble();
+                mechanicalNode.torque = data.readDouble();
+                return true;
+            }
         }
         return false;
     }

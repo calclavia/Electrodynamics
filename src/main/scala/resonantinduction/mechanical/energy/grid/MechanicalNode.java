@@ -62,12 +62,6 @@ public class MechanicalNode extends MultipartNode implements IMechanicalNode, IS
 		super(parent);
 	}
 
-	public MechanicalNode setConnection(byte connectionMap)
-	{
-		this.connectionMap = connectionMap;
-		return this;
-	}
-
 	@Override
 	public double getRadius(ForgeDirection dir, IMechanicalNode with)
 	{

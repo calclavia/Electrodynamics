@@ -48,7 +48,7 @@ public class TileTurbine extends TileMechanical implements IMultiBlockStructure<
         isOpaqueCube(false);
         setTextureName("material_wood_surface");
         mechanicalNode = new TurbineNode(this);
-        //rotationMask = Byte.parseByte("111111", 2);
+        rotationMask_$eq(Byte.parseByte("111111", 2));
     }
 
     @Override
@@ -133,6 +133,7 @@ public class TileTurbine extends TileMechanical implements IMultiBlockStructure<
     @Override
     public Vector3[] getMultiBlockVectors()
     {
+        //TODO replace with helper class that takes a direction and size input
         Set<Vector3> vectors = new HashSet<Vector3>();
 
         ForgeDirection dir = getDirection();
@@ -185,6 +186,7 @@ public class TileTurbine extends TileMechanical implements IMultiBlockStructure<
     @Override
     public boolean use(EntityPlayer player, int side, Vector3 hit)
     {
+        //Rotate spin direction if the users clicks with a crank
         if (player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().getItem() instanceof ItemHandCrank)
         {
                 if (!world().isRemote)
@@ -194,12 +196,13 @@ public class TileTurbine extends TileMechanical implements IMultiBlockStructure<
                 }
                 return true;
         }
-        return false;
+        return super.use(player, side, hit);
     }
 
     @Override
     public boolean configure(EntityPlayer player, int side, Vector3 hit)
     {
+        //Build or destroy multi block if not sneaking
         if(!player.isSneaking()) {
             if (getMultiBlock().isConstructed()) {
                 getMultiBlock().deconstruct();
@@ -216,7 +219,7 @@ public class TileTurbine extends TileMechanical implements IMultiBlockStructure<
                     getMultiBlock().construct();
                 }
             }
-        }else
+        }else // Flip turbine in the opposite direction its facing
         {
             Set<TileTurbine> toFlip = new HashSet<TileTurbine>();
 
