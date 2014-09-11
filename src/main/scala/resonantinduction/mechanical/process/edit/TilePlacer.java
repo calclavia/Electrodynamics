@@ -2,12 +2,14 @@ package resonantinduction.mechanical.process.edit;
 
 import java.util.EnumSet;
 
+import com.sun.org.apache.bcel.internal.generic.FieldGenOrMethodGen;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
@@ -48,7 +50,9 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
 	{
 		super(Material.rock);
 		setSizeInventory(1);
-		//rotationMask = Byte.parseByte("111111", 2);
+        normalRender(false);
+        renderStaticBlock_$eq(true);
+        this.rotationMask_$eq(Byte.parseByte("111111", 2));
 	}
 
 	public InternalInventoryHandler getInvHandler()
@@ -253,8 +257,10 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
             EnumSet set = EnumSet.allOf(ForgeDirection.class);
             set.remove(getDirection());
             set.remove(getDirection().getOpposite());
+            set.remove(ForgeDirection.UP);
+            set.remove(ForgeDirection.DOWN);
             GL11.glPushMatrix();
-            RenderItemOverlayUtility.renderItemOnSides(tile(), getStackInSlot(0), position.x(), position.y(), position.z(), LanguageUtility.getLocal("tooltip.noOutput"), set);
+            RenderItemOverlayUtility.renderItemOnSides(this,  getStackInSlot(0), position.x(), position.y(), position.z(), LanguageUtility.getLocal("tooltip.noOutput"), set);
             GL11.glPopMatrix();
         }
     }
