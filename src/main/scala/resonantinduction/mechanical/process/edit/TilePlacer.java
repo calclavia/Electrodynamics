@@ -51,6 +51,7 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
 		super(Material.rock);
 		setSizeInventory(1);
         normalRender(false);
+        forceStandardRender(true);
         renderStaticBlock_$eq(true);
         this.rotationMask_$eq(Byte.parseByte("111111", 2));
 	}
