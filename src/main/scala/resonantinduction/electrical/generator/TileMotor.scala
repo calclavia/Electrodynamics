@@ -23,7 +23,8 @@ class TileMotor extends TileElectric(Material.iron) with IRotatable {
   private var gearRatio: Byte = 0
 
   //Constructor
-  this.normalRender(false);
+  this.normalRender(false)
+  this.isOpaqueCube(false)
 
   def toggleGearRatio: Byte = {
     return ((gearRatio + 1) % 3).asInstanceOf[Byte]
