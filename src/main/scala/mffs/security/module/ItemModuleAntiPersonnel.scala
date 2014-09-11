@@ -5,7 +5,7 @@ import java.util.Set
 import mffs.field.TileElectromagneticProjector
 import mffs.{ModularForceFieldSystem, Settings}
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.util.ChatComponentText
+import net.minecraft.util.{ChatComponentTranslation, ChatComponentText}
 import resonant.api.mffs.machine.IProjector
 import resonant.lib.utility.LanguageUtility
 import universalelectricity.core.transform.vector.Vector3
@@ -35,7 +35,7 @@ class ItemModuleAntiPersonnel extends ItemModuleDefense
             )
 
           player.attackEntityFrom(ModularForceFieldSystem.damageFieldShock, 1000)
-          player.addChatMessage(new ChatComponentText("[" + proj.getInventoryName + "] " + LanguageUtility.getLocal("message.moduleAntiPersonnel.death")))
+          player.addChatMessage(new ChatComponentTranslation("message.moduleAntiPersonnel.death"))
         }
       )
 
