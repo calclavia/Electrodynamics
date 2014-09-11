@@ -25,7 +25,7 @@ public class TurbineNode extends MechanicalNode
 	@Override
 	public boolean canConnect(ForgeDirection from, Object source)
 	{
-		return turbine().getMultiBlock().isPrimary() && source instanceof MechanicalNode && !(source instanceof TurbineNode) && from == turbine().getDirection().getOpposite();
+		return turbine().getMultiBlock().isPrimary() && source instanceof MechanicalNode && !(source instanceof TurbineNode) && from == turbine().getDirection();
 	}
 
 	@Override
