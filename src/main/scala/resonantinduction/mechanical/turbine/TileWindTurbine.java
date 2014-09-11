@@ -64,7 +64,7 @@ public class TileWindTurbine extends TileTurbine
         else
             mechanicalNode.torque = defaultTorque / 12;
 
-        super.updateEntity();
+        super.update();
     }
 
     private void computePower()
