@@ -49,7 +49,7 @@ import resonantinduction.atomic.schematic.{SchematicAccelerator, SchematicBreedi
 import resonantinduction.core.{Reference, ResonantTab, Settings}
 import universalelectricity.core.transform.vector.VectorWorld
 
-@Mod(modid = "ResonantInduction|Atomic", name = "Resonant Induction Atomic", version = Reference.version, dependencies = "required-after:ResonantEngineafter:IC2after:ResonantInduction|Electricalrequired-after:" + Reference.coreID, modLanguage = "scala")
+@Mod(modid = "ResonantInduction|Atomic", name = "Resonant Induction Atomic", version = Reference.version, dependencies = "required-after:ResonantEngine;after:IC2;after:ResonantInduction|Electrical;required-after:" + Reference.coreID, modLanguage = "scala")
 object Atomic
 {
   final val ID: String = "ResonantInduction|Atomic"
