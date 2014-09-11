@@ -11,7 +11,7 @@ import net.minecraft.item.{Item, ItemStack}
  * @author Calclavia
  *
  */
-object ResonantTab extends CreativeTabs(CreativeTabs.getNextID, "ResonantInduction")
+object ResonantTab extends CreativeTabs(CreativeTabs.getNextID, "resonantinduction")
 {
   var itemStack: ItemStack = null
 
