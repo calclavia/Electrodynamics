@@ -6,10 +6,10 @@ import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.util.ChatComponentText
+import net.minecraft.util.ChatComponentTranslation
 import net.minecraft.world.World
 import resonant.api.mffs.card.ICoordLink
-import resonant.lib.utility.LanguageUtility
+import resonant.lib.wrapper.StringWrapper._
 import resonant.lib.wrapper.WrapList._
 import universalelectricity.core.transform.vector.VectorWorld
 
@@ -32,15 +32,15 @@ class ItemCardLink extends ItemCard with ICoordLink
 
       if (block != null)
       {
-        list.add(LanguageUtility.getLocal("info.item.linkedWith") + " " + block.getLocalizedName)
+        list.add("info.item.linkedWith".getLocal + " " + block.getLocalizedName)
       }
 
       list.add(vec.xi + ", " + vec.yi + ", " + vec.zi)
-      list.add(LanguageUtility.getLocal("info.item.dimension") + " " + vec.world.provider.getDimensionName)
+      list.add("info.item.dimension".getLocal + " " + vec.world.provider.getDimensionName)
     }
     else
     {
-      list.add(LanguageUtility.getLocal("info.item.notLinked"))
+      list.add("info.item.notLinked".getLocal)
     }
   }
 
@@ -50,9 +50,10 @@ class ItemCardLink extends ItemCard with ICoordLink
     {
       val vector: VectorWorld = new VectorWorld(world, x, y, z)
       this.setLink(itemStack, vector)
+
       if (vector.getBlock(world) != null)
       {
-        player.addChatMessage(new ChatComponentText(LanguageUtility.getLocal("info.item.linkedWith") + " " + x + ", " + y + ", " + z + " - " + vector.getBlock(world).getLocalizedName))
+        player.addChatMessage(new ChatComponentTranslation("info.item.linkedWith", x + ", " + y + ", " + z + " - " + vector.getBlock(world).getLocalizedName))
       }
     }
     return true
