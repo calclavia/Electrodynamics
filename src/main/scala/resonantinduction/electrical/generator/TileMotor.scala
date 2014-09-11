@@ -22,6 +22,9 @@ class TileMotor extends TileElectric(Material.iron) with IRotatable {
   var isInversed: Boolean = true
   private var gearRatio: Byte = 0
 
+  //Constructor
+  this.normalRender(false);
+
   def toggleGearRatio: Byte = {
     return ((gearRatio + 1) % 3).asInstanceOf[Byte]
   }
@@ -106,6 +109,12 @@ class TileMotor extends TileElectric(Material.iron) with IRotatable {
       if (nodeType.isAssignableFrom(mech_node.getClass)) return mech_node
     }
     return super.getNode(nodeType, from)
+  }
+
+  override def getNodes(nodes: java.util.List[INode])
+  {
+    nodes.add(this.mech_node)
+    nodes.add(this.electricNode)
   }
 
   override def toString: String = {

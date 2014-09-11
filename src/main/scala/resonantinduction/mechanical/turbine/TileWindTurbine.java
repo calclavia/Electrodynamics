@@ -74,7 +74,7 @@ public class TileWindTurbine extends TileTurbine
         int deviation = checkCount % 7;
         ForgeDirection checkDir;
 
-        Vector3 check = new Vector3(this);
+        Vector3 check;
 
         switch (checkCount / 7 % 4)
         {
