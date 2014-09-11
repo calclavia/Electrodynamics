@@ -97,8 +97,8 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
       else if (id == TilePacketType.effect.id)
       {
         val packetType = buf.readInt
-        val vector: Vector3 = new Vector3(buf.readInt, buf.readInt, buf.readInt) + 0.5
-        val root: Vector3 = new Vector3(this) + 0.5
+        val vector = new Vector3(buf.readInt, buf.readInt, buf.readInt) + 0.5
+        val root = new Vector3(this) + 0.5
 
         if (packetType == 1)
         {
@@ -300,7 +300,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
                 val tileEntity = vector.getTileEntity(world)
 
                 if (tileEntity.isInstanceOf[TileForceField])
-                  (tileEntity.asInstanceOf[TileForceField]).setProjector(new Vector3(this))
+                  tileEntity.asInstanceOf[TileForceField].setProjector(new Vector3(this))
               })
           }
 

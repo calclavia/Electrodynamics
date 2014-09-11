@@ -39,93 +39,91 @@ class ItemModuleStabilize extends ItemModule
     val world = tile.getWorldObj
     var blockInfo: (Block, Int) = null
 
-    if (projector.getTicks % 40 == 0)
+    if (projector.getMode.isInstanceOf[ItemModeCustom] && !(projector.getModuleCount(Content.moduleCamouflage) > 0))
     {
-      if (projector.getMode.isInstanceOf[ItemModeCustom] && !(projector.getModuleCount(Content.moduleCamouflage) > 0))
-      {
-        val fieldBlocks = projector.getMode.asInstanceOf[ItemModeCustom].getFieldBlockMap(projector, projector.getModeStack)
-        val fieldCenter: Vector3 = new Vector3(tile) + projector.getTranslation
-        val relativePosition: Vector3 = position.clone.subtract(fieldCenter)
-        relativePosition.transform(new EulerAngle(-projector.getRotationYaw, -projector.getRotationPitch, 0))
-        blockInfo = fieldBlocks(relativePosition.round)
-      }
+      val fieldBlocks = projector.getMode.asInstanceOf[ItemModeCustom].getFieldBlockMap(projector, projector.getModeStack)
+      val fieldCenter: Vector3 = new Vector3(tile) + projector.getTranslation
+      val relativePosition: Vector3 = position.clone.subtract(fieldCenter)
+      relativePosition.transform(new EulerAngle(-projector.getRotationYaw, -projector.getRotationPitch, 0))
+      blockInfo = fieldBlocks(relativePosition.round)
+    }
 
-      for (direction <- ForgeDirection.VALID_DIRECTIONS)
-      {
-        val tileEntity = (new VectorWorld(tile) + direction).getTileEntity
+    for (direction <- ForgeDirection.VALID_DIRECTIONS)
+    {
+      val tileEntity = (new VectorWorld(tile) + direction).getTileEntity
 
-        if (tileEntity.isInstanceOf[IInventory])
+      if (tileEntity.isInstanceOf[IInventory])
+      {
+        val inventory = tileEntity.asInstanceOf[IInventory]
+
+        for (i <- 0 until inventory.getSizeInventory)
         {
-          val inventory = tileEntity.asInstanceOf[IInventory]
+          val checkStack = inventory.getStackInSlot(i)
 
-          for (i <- 0 until inventory.getSizeInventory)
+          if (checkStack != null)
           {
-            val checkStack = inventory.getStackInSlot(i)
+            val evt: EventStabilize = new EventStabilize(world, position.xi, position.yi, position.zi, checkStack)
+            MinecraftForge.EVENT_BUS.post(evt)
 
-            if (checkStack != null)
+            if (!evt.isCanceled)
             {
-              val evt: EventStabilize = new EventStabilize(world, position.xi, position.yi, position.zi, checkStack)
-              MinecraftForge.EVENT_BUS.post(evt)
-
-              if (!evt.isCanceled)
+              if (checkStack.getItem.isInstanceOf[ItemBlock])
               {
-                if (checkStack.getItem.isInstanceOf[ItemBlock])
+                val itemBlock = checkStack.getItem.asInstanceOf[ItemBlock].field_150939_a
+
+                if (blockInfo == null || (blockInfo._1 == itemBlock && (blockInfo._2 == checkStack.getItemDamage || projector.getModuleCount(Content.moduleApproximation) > 0)) || (projector.getModuleCount(Content.moduleApproximation) > 0 && isApproximationEqual(blockInfo._1, checkStack)))
                 {
-                  val itemBlock = checkStack.getItem.asInstanceOf[ItemBlock].field_150939_a
-
-                  if (blockInfo == null || (blockInfo._1 == itemBlock && (blockInfo._2 == checkStack.getItemDamage || projector.getModuleCount(Content.moduleApproximation) > 0)) || (projector.getModuleCount(Content.moduleApproximation) > 0 && isApproximationEqual(blockInfo._1, checkStack)))
+                  try
                   {
-                    try
+                    if (world.canPlaceEntityOnSide(itemBlock, position.xi, position.yi, position.zi, false, 0, null, checkStack))
                     {
-                      if (world.canPlaceEntityOnSide(itemBlock, position.xi, position.yi, position.zi, false, 0, null, checkStack))
+                      val metadata = if (blockInfo != null) blockInfo._2 else if (checkStack.getHasSubtypes) checkStack.getItemDamage else 0
+                      val block = if (blockInfo != null) blockInfo._1 else null
+
+                      if (Blacklist.stabilizationBlacklist.contains(block) || block.isInstanceOf[BlockLiquid] || block.isInstanceOf[IFluidBlock])
                       {
-                        val metadata = if (blockInfo != null) blockInfo._2 else if (checkStack.getHasSubtypes) checkStack.getItemDamage else 0
-                        val block = if (blockInfo != null) blockInfo._1 else null
+                        return 1
+                      }
 
-                        if (Blacklist.stabilizationBlacklist.contains(block) || block.isInstanceOf[BlockLiquid] || block.isInstanceOf[IFluidBlock])
-                        {
-                          return 1
-                        }
+                      val copyStack = checkStack.copy
+                      inventory.decrStackSize(i, 1)
+                      copyStack.getItem.asInstanceOf[ItemBlock].placeBlockAt(copyStack, null, world, position.xi, position.yi, position.zi, 0, 0, 0, 0, metadata)
+                      ModularForceFieldSystem.packetHandler.sendToAllInDimension(new PacketTile(tile) <<< TilePacketType.effect.id <<< 1 <<< position.xi <<< position.yi <<< position.zi, world)
 
-                        val copyStack = checkStack.copy
-                        inventory.decrStackSize(i, 1)
-                        (copyStack.getItem.asInstanceOf[ItemBlock]).placeBlockAt(copyStack, null, world, position.xi, position.yi, position.zi, 0, 0, 0, 0, metadata)
-                        ModularForceFieldSystem.packetHandler.sendToAllInDimension(new PacketTile(tile, TilePacketType.effect.id: Integer, 1: Integer, position.xi: Integer, position.yi: Integer, position.zi: Integer), world)
+                      blockCount += 1
 
-                        blockCount += 1;
-
-                        if (blockCount >= projector.getModuleCount(Content.moduleSpeed) / 3)
-                        {
-                          return 2
-                        }
-                        else
-                        {
-                          return 1
-                        }
+                      if (blockCount >= projector.getModuleCount(Content.moduleSpeed) / 3)
+                      {
+                        return 2
+                      }
+                      else
+                      {
+                        return 1
                       }
                     }
-                    catch
-                      {
-                        case e: Exception =>
-                        {
-                          Reference.logger.error("Stabilizer failed to place item '" + checkStack + "'. The item or block may not have correctly implemented the placement methods.")
-                          e.printStackTrace
-                        }
-                      }
                   }
+                  catch
+                    {
+                      case e: Exception =>
+                      {
+                        Reference.logger.error("Stabilizer failed to place item '" + checkStack + "'. The item or block may not have correctly implemented the placement methods.")
+                        e.printStackTrace
+                      }
+                    }
                 }
               }
-              else
-              {
-                return 1
-              }
+            }
+            else
+            {
+              return 1
             }
           }
-
         }
-      }
 
+      }
     }
+
+
     return 1
   }
 
