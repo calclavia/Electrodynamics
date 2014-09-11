@@ -49,7 +49,7 @@ import resonantinduction.atomic.schematic.{SchematicAccelerator, SchematicBreedi
 import resonantinduction.core.{Reference, ResonantTab, Settings}
 import universalelectricity.core.transform.vector.VectorWorld
 
-@Mod(modid = "ResonantInduction|Atomic", name = "Resonant Induction Atomic", version = Reference.version, dependencies = "required-after:ResonantEngine;after:IC2;after:ResonantInduction|Electrical;required-after:" + Reference.coreID, modLanguage = "scala")
+@Mod(modid = "ResonantInduction|Atomic", name = "Resonant Induction Atomic", version = Reference.version, dependencies = "required-after:ResonantEngineafter:IC2after:ResonantInduction|Electricalrequired-after:" + Reference.coreID, modLanguage = "scala")
 object Atomic
 {
   final val ID: String = "ResonantInduction|Atomic"
@@ -57,7 +57,6 @@ object Atomic
   final val SECOND_IN_TICKS: Int = 20
   final val NAME: String = Reference.name + " Atomic"
   final val contentRegistry: ModManager = new ModManager().setPrefix(Reference.prefix).setTab(ResonantTab)
-  private final val SUPPORTED_LANGUAGES: Array[String] = Array[String]("en_US", "pl_PL", "de_DE", "ru_RU")
   var INSTANCE = this
   @SidedProxy(clientSide = "resonantinduction.atomic.ClientProxy", serverSide = "resonantinduction.atomic.CommonProxy")
   var proxy: CommonProxy = null
@@ -67,7 +66,8 @@ object Atomic
   /** Is this ItemStack a cell?
     *
     * @param itemStack
-    * @return */
+    * @return
+    */
   def isItemStackEmptyCell(itemStack: ItemStack): Boolean =
   {
     return isItemStackOreDictionaryCompatible(itemStack, "cellEmpty")
@@ -76,7 +76,8 @@ object Atomic
   /** Compare to Ore Dict
     *
     * @param itemStack
-    * @return */
+    * @return
+    */
   def isItemStackOreDictionaryCompatible(itemStack: ItemStack, names: String*): Boolean =
   {
     if (itemStack != null && names != null && names.length > 0)
@@ -155,9 +156,9 @@ object Atomic
     AtomicContent.blockUraniumOre = new BlockUraniumOre
     AtomicContent.blockToxicWaste = new BlockToxicWaste().setCreativeTab(null)
 
-    GameRegistry.registerBlock(AtomicContent.blockRadioactive, "blockRadioactive");
-    GameRegistry.registerBlock(AtomicContent.blockUraniumOre, "blockUraniumOre");
-    GameRegistry.registerBlock(AtomicContent.blockToxicWaste, "blockToxicWaste");
+    GameRegistry.registerBlock(AtomicContent.blockRadioactive, "blockRadioactive")
+    GameRegistry.registerBlock(AtomicContent.blockUraniumOre, "blockUraniumOre")
+    GameRegistry.registerBlock(AtomicContent.blockToxicWaste, "blockToxicWaste")
 
     AtomicContent.blockCentrifuge = Atomic.contentRegistry.newBlock(classOf[TileCentrifuge])
     AtomicContent.blockReactorCell = Atomic.contentRegistry.newBlock(classOf[TileReactorCell])
@@ -189,19 +190,19 @@ object Atomic
     AtomicContent.itemYellowCake = new ItemRadioactive().setUnlocalizedName("yellowcake").setTextureName(Reference.prefix + "yellowcake").setCreativeTab(ResonantTab)
     AtomicContent.itemUranium = Atomic.contentRegistry.newItem(classOf[ItemUranium]).setCreativeTab(ResonantTab)
 
-    GameRegistry.registerItem(AtomicContent.itemHazmatTop, "HazmatMask", "ResonantInduction|Atomic");
-    GameRegistry.registerItem(AtomicContent.itemHazmatBody, "HazmatBody", "ResonantInduction|Atomic");
-    GameRegistry.registerItem(AtomicContent.itemHazmatLeggings, "HazmatLeggins", "ResonantInduction|Atomic");
-    GameRegistry.registerItem(AtomicContent.itemHazmatBoots, "HazmatBoots", "ResonantInduction|Atomic");
-    GameRegistry.registerItem(AtomicContent.itemCell, "cellEmpty", "ResonantInduction|Atomic");
-    GameRegistry.registerItem(AtomicContent.itemFissileFuel, "FissileFuel", "ResonantInduction|Atomic");
-    GameRegistry.registerItem(AtomicContent.itemDeuteriumCell, "DeuteriumCell", "ResonantInduction|Atomic");
-    GameRegistry.registerItem(AtomicContent.itemTritiumCell, "TritiumCell", "ResonantInduction|Atomic");
-    GameRegistry.registerItem(AtomicContent.itemWaterCell, "WaterCell", "ResonantInduction|Atomic");
-    GameRegistry.registerItem(AtomicContent.itemDarkMatter, "DarkMatter", "ResonantInduction|Atomic");
-    GameRegistry.registerItem(AtomicContent.itemAntimatter, "ItemAntimatter", "ResonantInduction|Atomic");
-    GameRegistry.registerItem(AtomicContent.itemBreedingRod, "BreedingRod", "ResonantInduction|Atomic");
-    GameRegistry.registerItem(AtomicContent.itemYellowCake, "YellowCake", "ResonantInduction|Atomic");
+    GameRegistry.registerItem(AtomicContent.itemHazmatTop, "HazmatMask", "ResonantInduction|Atomic")
+    GameRegistry.registerItem(AtomicContent.itemHazmatBody, "HazmatBody", "ResonantInduction|Atomic")
+    GameRegistry.registerItem(AtomicContent.itemHazmatLeggings, "HazmatLeggins", "ResonantInduction|Atomic")
+    GameRegistry.registerItem(AtomicContent.itemHazmatBoots, "HazmatBoots", "ResonantInduction|Atomic")
+    GameRegistry.registerItem(AtomicContent.itemCell, "cellEmpty", "ResonantInduction|Atomic")
+    GameRegistry.registerItem(AtomicContent.itemFissileFuel, "FissileFuel", "ResonantInduction|Atomic")
+    GameRegistry.registerItem(AtomicContent.itemDeuteriumCell, "DeuteriumCell", "ResonantInduction|Atomic")
+    GameRegistry.registerItem(AtomicContent.itemTritiumCell, "TritiumCell", "ResonantInduction|Atomic")
+    GameRegistry.registerItem(AtomicContent.itemWaterCell, "WaterCell", "ResonantInduction|Atomic")
+    GameRegistry.registerItem(AtomicContent.itemDarkMatter, "DarkMatter", "ResonantInduction|Atomic")
+    GameRegistry.registerItem(AtomicContent.itemAntimatter, "ItemAntimatter", "ResonantInduction|Atomic")
+    GameRegistry.registerItem(AtomicContent.itemBreedingRod, "BreedingRod", "ResonantInduction|Atomic")
+    GameRegistry.registerItem(AtomicContent.itemYellowCake, "YellowCake", "ResonantInduction|Atomic")
 
     AtomicContent.FLUID_PLASMA.setBlock(AtomicContent.blockPlasma)
     AtomicContent.itemBucketToxic = new ItemBucket(AtomicContent.blockPlasma).setCreativeTab(ResonantTab.tab).setUnlocalizedName(Reference.prefix + "bucketToxicWaste").setContainerItem(Items.bucket).setTextureName(Reference.prefix + "bucketToxicWaste")

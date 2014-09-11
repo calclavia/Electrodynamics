@@ -68,11 +68,6 @@ object AtomicContent extends ContentHolder
 
   var uraniumOreGeneration: OreGenerator = null
 
-  override def init()
-  {
-    super.init()
-  }
-
   override def postInit()
   {
     super.postInit()
