@@ -60,12 +60,13 @@ allprojects {
             name = "forge"
             url = "http://files.minecraftforge.net/maven"
         }
-		ivy {
+        ivy {
 			name 'FMP'
 			artifactPattern "http://files.minecraftforge.net/[module]/[module]-dev-[revision].[ext]"
-		}
-		ivy {
-			artifactPattern "http://www.chickenbones.craftsaddle.org/Files/New_Versions/1.6.4/[module]-dev%20[revision].[ext]"
+        }
+        maven {
+			name "chickenbones"
+			url "http://chickenbones.net/maven"
 		}
         mavenCentral()
     }
@@ -75,11 +76,10 @@ allprojects {
 		if (System.getenv().JOB_NAME != null && System.getenv().JOB_NAME == "Resonant-Induction-Development")
 			compile group: 'resonant-engine-development', name: 'resonant-engine', version: "${config.version.resonantengine}", classifier: "dev"
 		else
-			compile group: 'resonant-engine', name: 'resonant-engine', version: "${config.version.resonantengine}", classifier: "dev"
-		compile name: 'CodeChickenLib', version: "${config.version.minecraft}-${config.version.cclib}", ext: 'jar'
-		compile name: 'ForgeMultipart', version: "${config.version.minecraft}-${config.version.fmp}", ext: 'jar'
-		compile name: 'NotEnoughItems', version: "${config.version.nei}", ext: 'jar'
-		compile name: 'CodeChickenCore', version: "${config.version.cccore}", ext: 'jar'
+			    compile "codechicken:CodeChickenLib:${config.version.minecraft}-${config.version.cclib}:dev"
+                compile "codechicken:ForgeMultipart:${config.version.minecraft}-${config.version.fmp}:dev"
+                compile "codechicken:CodeChickenCore:${config.version.minecraft}-${config.version.cccore}:dev"
+                compile "codechicken:NotEnoughItems:${config.version.minecraft}-${config.version.nei}:dev"
 	}
     
     jar {
