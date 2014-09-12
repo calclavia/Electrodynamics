@@ -89,9 +89,9 @@ public class DebugFrameMechanical extends FrameNodeDebug
             @Override
             public int getRowCount()
             {
-                if (getNode() != null && getNode().getConnections(MechanicalNode.class) != null)
+                if (getNode() != null && getNode().getConnections() != null)
                 {
-                    return getNode().getConnections(MechanicalNode.class).size();
+                    return getNode().getConnections().size();
                 }
                 return 10;
             }
@@ -99,10 +99,10 @@ public class DebugFrameMechanical extends FrameNodeDebug
             @Override
             public Object getValueAt(int row, int col)
             {
-                if (getNode() != null && getNode().getConnections(MechanicalNode.class) != null)
+                if (getNode() != null && getNode().getConnections() != null)
                 {
-                    ForgeDirection dir = (ForgeDirection) getNode().getConnections(MechanicalNode.class).values().toArray()[row];
-                    MechanicalNode node = (MechanicalNode) getNode().getConnections(MechanicalNode.class).keySet().toArray()[row];
+                    ForgeDirection dir = (ForgeDirection) getNode().getConnections().values().toArray()[row];
+                    MechanicalNode node = (MechanicalNode) getNode().getConnections().keySet().toArray()[row];
                     switch(col)
                     {
                         case 0: return dir;
