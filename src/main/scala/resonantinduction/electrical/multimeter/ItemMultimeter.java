@@ -15,7 +15,7 @@ import org.lwjgl.input.Keyboard;
 import resonant.lib.render.EnumColor;
 import resonant.lib.utility.LanguageUtility;
 import resonantinduction.core.prefab.part.IHighlight;
-import resonantinduction.electrical.wire.EnumWireMaterial;
+import resonantinduction.electrical.wire.WireMaterial;
 import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
 import codechicken.microblock.FacePlacementGrid$;
@@ -27,7 +27,7 @@ import codechicken.multipart.TileMultipart;
 
 public class ItemMultimeter extends JItemMultiPart implements IHighlight
 {
-	private IIcon[] icons = new IIcon[EnumWireMaterial.values().length];
+	private IIcon[] icons = new IIcon[WireMaterial.values().length];
 
 	@Override
 	public TMultiPart newPart(ItemStack itemStack, EntityPlayer player, World world, BlockCoord pos, int side, Vector3 hit)

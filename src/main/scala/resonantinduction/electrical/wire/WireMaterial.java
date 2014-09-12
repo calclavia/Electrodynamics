@@ -14,7 +14,7 @@ import codechicken.lib.colour.ColourRGBA;
  *
  */
 
-public enum EnumWireMaterial
+public enum WireMaterial
 {
 	/** Copper: General. */
 	COPPER("Copper", 1.68f, 5, 200, 184, 115, 51),
@@ -36,7 +36,7 @@ public enum EnumWireMaterial
 	private ItemStack wire;
 	private final String name;
 
-	private EnumWireMaterial(String name, float resistance, int electrocutionDamage, long maxAmps, int r, int g, int b)
+	private WireMaterial(String name, float resistance, int electrocutionDamage, long maxAmps, int r, int g, int b)
 	{
 		this.name = name;
 		/** Multiply the realistic resistance by a factor for game balance. */

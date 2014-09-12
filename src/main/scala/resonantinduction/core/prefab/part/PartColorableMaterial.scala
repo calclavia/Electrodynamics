@@ -22,7 +22,7 @@ object PartColorableMaterial
   final val defaultColor: Int = 15
 }
 
-abstract class PartColorableMaterial[M](insulationType: Item) extends TMultiPart with TraitPart
+abstract class PartColorableMaterial[M](materialItem: Item) extends TMultiPart with TraitPart
 {
   var color: Int = PartColorableMaterial.defaultColor
   var material: M = _
@@ -131,13 +131,13 @@ abstract class PartColorableMaterial[M](insulationType: Item) extends TMultiPart
       }
       else if (requiresInsulation)
       {
-        if (itemStack.getItem eq insulationType)
+        if (itemStack.getItem == materialItem)
         {
           if (this.isInsulated)
           {
             if (!world.isRemote && player.capabilities.isCreativeMode)
             {
-              tile.dropItems(Collections.singletonList(new ItemStack(insulationType, 1, BlockColored.func_150031_c(color))))
+              tile.dropItems(Collections.singletonList(new ItemStack(materialItem, 1, BlockColored.func_150031_c(color))))
             }
             this.setInsulated(false)
             return true
@@ -156,7 +156,7 @@ abstract class PartColorableMaterial[M](insulationType: Item) extends TMultiPart
         {
           if (!world.isRemote && !player.capabilities.isCreativeMode)
           {
-            tile.dropItems(Collections.singletonList(new ItemStack(insulationType, 1, BlockColored.func_150031_c(color))))
+            tile.dropItems(Collections.singletonList(new ItemStack(materialItem, 1, BlockColored.func_150031_c(color))))
           }
           this.setInsulated(false)
         }
@@ -173,7 +173,7 @@ abstract class PartColorableMaterial[M](insulationType: Item) extends TMultiPart
 
     if (requiresInsulation && isInsulated)
     {
-      drops.add(new ItemStack(insulationType, 1, BlockColored.func_150031_c(color)))
+      drops.add(new ItemStack(materialItem, 1, BlockColored.func_150031_c(color)))
     }
 
     return drops

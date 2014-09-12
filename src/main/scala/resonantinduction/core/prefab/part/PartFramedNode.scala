@@ -6,7 +6,7 @@ import java.util.{Collection, HashSet, Set}
 import codechicken.lib.data.{MCDataInput, MCDataOutput}
 import codechicken.lib.raytracer.IndexedCuboid6
 import codechicken.lib.vec.Cuboid6
-import codechicken.multipart.{IconHitEffects, JIconHitEffects, JNormalOcclusion, NormalOcclusionTest, PartMap, TMultiPart, TSlottedPart, TileMultipart}
+import codechicken.multipart._
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.client.particle.EffectRenderer
 import net.minecraft.entity.player.EntityPlayer
@@ -28,14 +28,20 @@ object PartFramedNode
   }
 }
 
-abstract class PartFramedNode[M](insulationType: Item) extends PartColorableMaterial[M](insulationType: Item) with INodeProvider with TSlottedPart with JNormalOcclusion with JIconHitEffects
+/**
+ * Part nodes that act as a wire or pipe.
+ * @param material
+ * @tparam M
+ */
+abstract class PartFramedNode[M](material: Item) extends PartColorableMaterial[M](material: Item) with INodeProvider with TSlottedPart with TNormalOcclusion with TIconHitEffects
 {
-
   /** Bitmask connections */
   var currentConnections: Byte = 0x00
   protected var connections: Array[AnyRef] = new Array[AnyRef](6)
   protected var node: INode = null
-  @SideOnly(Side.CLIENT) protected var breakIcon: IIcon = null
+
+  @SideOnly(Side.CLIENT)
+  protected var breakIcon: IIcon = null
   /** Client Side */
   private var testingSide: ForgeDirection = null
 
@@ -112,16 +118,6 @@ abstract class PartFramedNode[M](insulationType: Item) extends PartColorableMate
     return if (isInsulated) 8 else 6
   }
 
-  override def addHitEffects(hit: MovingObjectPosition, effectRenderer: EffectRenderer)
-  {
-    IconHitEffects.addHitEffects(this, hit, effectRenderer)
-  }
-
-  override def addDestroyEffects(effectRenderer: EffectRenderer)
-  {
-    IconHitEffects.addDestroyEffects(this, effectRenderer, false)
-  }
-
   def isBlockedOnSide(side: ForgeDirection): Boolean =
   {
     val blocker: TMultiPart = tile.partMap(side.ordinal)
@@ -145,17 +141,17 @@ abstract class PartFramedNode[M](insulationType: Item) extends PartColorableMate
 
   override def onWorldJoin
   {
-    node.reconstruct
+    node.reconstruct()
   }
 
   override def onNeighborChanged
   {
-    node.reconstruct
+    node.reconstruct()
   }
 
   override def onWorldSeparate
   {
-    node.deconstruct
+    node.deconstruct()
   }
 
   def copyFrom(other: PartFramedNode[M])
@@ -202,7 +198,8 @@ abstract class PartFramedNode[M](insulationType: Item) extends PartColorableMate
     }
   }
 
-  @SuppressWarnings(Array("hiding")) def getNode(nodeType: Class[_ <: INode], from: ForgeDirection): INode =
+  @SuppressWarnings(Array("hiding"))
+  def getNode(nodeType: Class[_ <: INode], from: ForgeDirection): INode =
   {
     if (node != null && nodeType != null)
     {

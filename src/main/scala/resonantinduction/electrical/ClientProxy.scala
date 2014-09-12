@@ -9,7 +9,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
 import resonantinduction.electrical.battery.{RenderBattery, TileBattery}
-import resonantinduction.electrical.generator.{TileMotor, RenderMotor}
+import resonantinduction.electrical.generator.{RenderMotor, TileMotor}
 import resonantinduction.electrical.laser.emitter.{RenderLaserEmitter, TileLaserEmitter}
 import resonantinduction.electrical.laser.focus.crystal.{RenderFocusCrystal, TileFocusCrystal}
 import resonantinduction.electrical.laser.focus.mirror.{RenderMirror, TileMirror}
@@ -21,13 +21,15 @@ import resonantinduction.electrical.tesla.{RenderTesla, TileTesla}
 import universalelectricity.core.transform.vector.Vector3
 
 /** @author Calclavia */
-@SideOnly(Side.CLIENT) class ClientProxy extends CommonProxy {
+@SideOnly(Side.CLIENT) class ClientProxy extends CommonProxy
+{
   override def preInit
   {
 
   }
 
-  override def init {
+  override def init
+  {
     //RenderingRegistry.registerBlockHandler(new BlockRenderingHandler.type)
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileMotor], new RenderMotor)
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileTesla], new RenderTesla)
@@ -38,27 +40,31 @@ import universalelectricity.core.transform.vector.Vector3
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileFocusCrystal], RenderFocusCrystal)
   }
 
-  override def postInit {
+  override def postInit
+  {
   }
 
-  override def getClientGuiElement(id: Int, player: EntityPlayer, world: World, x: Int, y: Int, z: Int): AnyRef = {
+  override def getClientGuiElement(id: Int, player: EntityPlayer, world: World, x: Int, y: Int, z: Int): AnyRef =
+  {
     val tileEntity: TileEntity = world.getTileEntity(x, y, z)
-    if (tileEntity.isInstanceOf[TileMultipart]) {
+    if (tileEntity.isInstanceOf[TileMultipart])
+    {
       val part: TMultiPart = (tileEntity.asInstanceOf[TileMultipart]).partMap(id)
-      if (part.isInstanceOf[PartMultimeter]) {
+      if (part.isInstanceOf[PartMultimeter])
+      {
         return new GuiMultimeter(player.inventory, part.asInstanceOf[PartMultimeter])
       }
     }
     return null
   }
 
-  override def renderElectricShock(world: World, start: Vector3, target: Vector3, r: Float, g: Float, b: Float, split: Boolean) {
-    if (world.isRemote) {
+  override def renderElectricShock(world: World, start: Vector3, target: Vector3, r: Float, g: Float, b: Float, split: Boolean)
+  {
+    if (world.isRemote)
+    {
       FMLClientHandler.instance.getClient.effectRenderer.addEffect(new FXElectricBolt(world, start, target, split).setColor(r, g, b))
     }
   }
-
-
 
   override def renderScorch(world: World, position: Vector3, side: Int)
   {

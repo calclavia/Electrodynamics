@@ -13,6 +13,7 @@ import universalelectricity.core.transform.vector.{Vector3, VectorWorld}
 
 import scala.util.control.Breaks._
 
+@deprecated
 abstract class PartConductor extends TMultiPart with TraitPart
 {
   override def doesTick: Boolean =

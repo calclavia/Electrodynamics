@@ -25,7 +25,7 @@ import resonantinduction.electrical.levitator.ItemLevitator
 import resonantinduction.electrical.multimeter.ItemMultimeter
 import resonantinduction.electrical.tesla.TileTesla
 import resonantinduction.electrical.transformer.ItemElectricTransformer
-import resonantinduction.electrical.wire.{EnumWireMaterial, ItemWire}
+import resonantinduction.electrical.wire.{WireMaterial, ItemWire}
 
 /** Resonant Induction Electrical Module
   *
@@ -92,7 +92,7 @@ object Electrical {
     OreDictionary.registerOre("battery", ItemBlockBattery.setTier(new ItemStack(ElectricalContent.blockBattery, 1, 0), 0.asInstanceOf[Byte]))
     OreDictionary.registerOre("batteryBox", ItemBlockBattery.setTier(new ItemStack(ElectricalContent.blockBattery, 1, 0), 0.asInstanceOf[Byte]))
     ResonantTab.itemStack(new ItemStack(ElectricalContent.itemTransformer))
-    for (material <- EnumWireMaterial.values) {
+    for (material <- WireMaterial.values) {
       material.setWire(ElectricalContent.itemWire)
     }
     Electrical.proxy.preInit

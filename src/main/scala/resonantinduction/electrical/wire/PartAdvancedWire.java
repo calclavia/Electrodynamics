@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockColored;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemShears;
@@ -14,7 +11,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.util.ForgeDirection;
-import resonant.lib.prefab.damage.ElectricalDamage;
 import resonantinduction.core.prefab.part.MultipartUtility;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
@@ -29,7 +25,7 @@ public abstract class PartAdvancedWire extends PartConductor
     public static final int DEFAULT_COLOR = 15;
     public int color = DEFAULT_COLOR;
 
-    public EnumWireMaterial material = EnumWireMaterial.COPPER;
+    public WireMaterial material = WireMaterial.COPPER;
     public boolean isInsulated = false;
     protected ItemStack insulationType = new ItemStack(Blocks.wool);
 
@@ -88,19 +84,19 @@ public abstract class PartAdvancedWire extends PartConductor
     }
 
     /** Material Methods */
-    public EnumWireMaterial getMaterial()
+    public WireMaterial getMaterial()
     {
         return this.material;
     }
 
-    public void setMaterial(EnumWireMaterial material)
+    public void setMaterial(WireMaterial material)
     {
         this.material = material;
     }
 
     public void setMaterial(int id)
     {
-        this.setMaterial(EnumWireMaterial.values()[id]);
+        this.setMaterial(WireMaterial.values()[id]);
     }
 
     public int getMaterialID()
@@ -228,7 +224,7 @@ public abstract class PartAdvancedWire extends PartConductor
     @Override
     public ItemStack getItem()
     {
-        return EnumWireMaterial.values()[getMaterialID()].getWire();
+        return WireMaterial.values()[getMaterialID()].getWire();
     }
 
     @Override

@@ -17,7 +17,7 @@ import resonantinduction.electrical.laser.focus.ItemFocusingMatrix
 import resonantinduction.electrical.laser.focus.crystal.BlockFocusCrystal
 import resonantinduction.electrical.laser.focus.mirror.BlockMirror
 import resonantinduction.electrical.laser.receiver.BlockLaserReceiver
-import resonantinduction.electrical.wire.EnumWireMaterial
+import resonantinduction.electrical.wire.WireMaterial
 
 /**
  * Created by robert on 8/11/2014.
@@ -63,13 +63,13 @@ object ElectricalContent extends ContentHolder {
     recipes += shaped(tierOneBattery, "III", "IRI", "III", 'R', Blocks.redstone_block, 'I', UniversalRecipe.PRIMARY_METAL.get)
     recipes += shaped(tierTwoBattery, "RRR", "RIR", "RRR", 'R', tierOneBattery, 'I', UniversalRecipe.PRIMARY_PLATE.get)
     recipes += shaped(tierThreeBattery, "RRR", "RIR", "RRR", 'R', tierTwoBattery, 'I', Blocks.diamond_block)
-    recipes += shaped(EnumWireMaterial.COPPER.getWire(3), "MMM", 'M', "ingotCopper")
-    recipes += shaped(EnumWireMaterial.TIN.getWire(3), "MMM", 'M', "ingotTin")
-    recipes += shaped(EnumWireMaterial.IRON.getWire(3), "MMM", 'M', Items.iron_ingot)
-    recipes += shaped(EnumWireMaterial.ALUMINUM.getWire(3), "MMM", 'M', "ingotAluminum")
-    recipes += shaped(EnumWireMaterial.SILVER.getWire, "MMM", 'M', "ingotSilver")
-    recipes += shaped(EnumWireMaterial.SUPERCONDUCTOR.getWire(3), "MMM", 'M', "ingotSuperconductor")
-    recipes += shaped(EnumWireMaterial.SUPERCONDUCTOR.getWire(3), "MMM", "MEM", "MMM", 'M', Items.gold_ingot, 'E', Items.ender_eye)
+    recipes += shaped(WireMaterial.COPPER.getWire(3), "MMM", 'M', "ingotCopper")
+    recipes += shaped(WireMaterial.TIN.getWire(3), "MMM", 'M', "ingotTin")
+    recipes += shaped(WireMaterial.IRON.getWire(3), "MMM", 'M', Items.iron_ingot)
+    recipes += shaped(WireMaterial.ALUMINUM.getWire(3), "MMM", 'M', "ingotAluminum")
+    recipes += shaped(WireMaterial.SILVER.getWire, "MMM", 'M', "ingotSilver")
+    recipes += shaped(WireMaterial.SUPERCONDUCTOR.getWire(3), "MMM", 'M', "ingotSuperconductor")
+    recipes += shaped(WireMaterial.SUPERCONDUCTOR.getWire(3), "MMM", "MEM", "MMM", 'M', Items.gold_ingot, 'E', Items.ender_eye)
     recipes += shaped(ElectricalContent.itemCharger, "WWW", "ICI", 'W', "wire", 'I', UniversalRecipe.PRIMARY_METAL.get, 'C', UniversalRecipe.CIRCUIT_T1.get)
     recipes += shaped(ElectricalContent.itemTransformer, "WWW", "WWW", "III", 'W', "wire", 'I', UniversalRecipe.PRIMARY_METAL.get)
     recipes += shaped(new ItemStack(ElectricalContent.itemQuantumGlyph, 1, 0), " CT", "LBL", "TCT", 'B', Blocks.diamond_block, 'L', ElectricalContent.itemLevitator, 'C', ElectricalContent.itemCharger, 'T', ElectricalContent.blockTesla)
@@ -89,16 +89,16 @@ object ElectricalContent extends ContentHolder {
 
     if (Loader.isModLoaded("IC2"))
     {
-      recipes += shapeless(EnumWireMaterial.COPPER.getWire, IC2Items.getItem("copperCableItem"))
-      recipes += shapeless(EnumWireMaterial.TIN.getWire, IC2Items.getItem("tinCableItem"))
-      recipes += shapeless(EnumWireMaterial.IRON.getWire, IC2Items.getItem("ironCableItem"))
-      recipes += shapeless(IC2Items.getItem("copperCableItem"), EnumWireMaterial.COPPER.getWire)
-      recipes += shapeless(IC2Items.getItem("tinCableItem"), EnumWireMaterial.TIN.getWire)
-      recipes += shapeless(IC2Items.getItem("ironCableItem"), EnumWireMaterial.IRON.getWire)
+      recipes += shapeless(WireMaterial.COPPER.getWire, IC2Items.getItem("copperCableItem"))
+      recipes += shapeless(WireMaterial.TIN.getWire, IC2Items.getItem("tinCableItem"))
+      recipes += shapeless(WireMaterial.IRON.getWire, IC2Items.getItem("ironCableItem"))
+      recipes += shapeless(IC2Items.getItem("copperCableItem"), WireMaterial.COPPER.getWire)
+      recipes += shapeless(IC2Items.getItem("tinCableItem"), WireMaterial.TIN.getWire)
+      recipes += shapeless(IC2Items.getItem("ironCableItem"), WireMaterial.IRON.getWire)
     }
     if (Loader.isModLoaded("Mekanism"))
     {
-      GameRegistry.addRecipe(new ShapelessOreRecipe(EnumWireMaterial.COPPER.getWire, "universalCable"))
+      GameRegistry.addRecipe(new ShapelessOreRecipe(WireMaterial.COPPER.getWire, "universalCable"))
     }
 
   }
