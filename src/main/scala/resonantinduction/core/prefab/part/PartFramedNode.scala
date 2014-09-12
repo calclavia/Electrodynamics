@@ -139,31 +139,23 @@ abstract class PartFramedNode[M](material: Item) extends PartColorableMaterial[M
     return PartFramedNode.connectionMapContainsSide(getAllCurrentConnections, side)
   }
 
-  override def onWorldJoin
+  override def onWorldJoin()
   {
     node.reconstruct()
   }
 
-  override def onNeighborChanged
+  override def onNeighborChanged()
   {
     node.reconstruct()
   }
 
-  override def onWorldSeparate
+  override def onWorldSeparate()
   {
     node.deconstruct()
   }
 
-  def copyFrom(other: PartFramedNode[M])
-  {
-    this.isInsulated = other.isInsulated
-    this.color = other.color
-    this.connections = other.connections
-    this.material = other.material
-  }
-
   /** Packet Methods */
-  def sendConnectionUpdate
+  def sendConnectionUpdate()
   {
     tile.getWriteStream(this).writeByte(0).writeByte(currentConnections)
   }

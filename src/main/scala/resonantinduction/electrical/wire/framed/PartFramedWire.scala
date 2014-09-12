@@ -1,24 +1,16 @@
 package resonantinduction.electrical.wire.framed
 
 import net.minecraft.item.ItemStack
-import resonantinduction.core.prefab.part.PartFramedNode
+import resonantinduction.core.prefab.part.{PartColorableMaterial, PartFramedNode}
 import resonantinduction.electrical.ElectricalContent
 import resonantinduction.electrical.wire.WireMaterial
+import resonantinduction.electrical.wire.base.TWire
 
 /**
  * A framed version of the electrical wire
  * @author Calclavia
  */
-class PartFramedWire extends PartFramedNode[WireMaterial](ElectricalContent.itemInsulation)
+class PartFramedWire extends PartColorableMaterial[WireMaterial](ElectricalContent.itemInsulation) with TWire
 {
-  override def setMaterial(i: Int)
-  {
-    material = WireMaterial.values()(i)
-  }
-
-  override def getMaterialID = material.ordinal()
-
-  override protected def getItem = new ItemStack(ElectricalContent.itemInsulation, getMaterialID)
-
   override def getType = "FramedWire"
 }

@@ -24,7 +24,7 @@ object PartColorableMaterial
 
 abstract class PartColorableMaterial[M](materialItem: Item) extends TMultiPart with TraitPart
 {
-  var color: Int = PartColorableMaterial.defaultColor
+  var color = PartColorableMaterial.defaultColor
   var material: M = _
   var isInsulated = false
   var requiresInsulation = true
