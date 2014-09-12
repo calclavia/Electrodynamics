@@ -121,16 +121,16 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, TNormal
 	public void readDesc(MCDataInput packet)
 	{
 		super.readDesc(packet);
-		this.side = packet.readByte();
-		this.connMap = packet.readInt();
+		side = packet.readByte();
+		connMap = packet.readInt();
 	}
 
 	@Override
 	public void writeDesc(MCDataOutput packet)
 	{
 		super.writeDesc(packet);
-		packet.writeByte(this.side);
-		packet.writeInt(this.connMap);
+		packet.writeByte(side);
+		packet.writeInt(connMap);
 	}
 
 	@Override
@@ -144,7 +144,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, TNormal
 	{
 		if (packetID == 0)
 		{
-			this.connMap = packet.readInt();
+			connMap = packet.readInt();
 			tile().markRender();
 		}
 		else

@@ -16,28 +16,29 @@ import resonantinduction.atomic.gate.ItemQuantumGlyph
 import resonantinduction.core.{Reference, ResonantTab, Settings}
 import resonantinduction.electrical.battery.{ItemBlockBattery, TileBattery}
 import resonantinduction.electrical.generator.{TileMotor, TileSolarPanel, TileThermopile}
-import resonantinduction.electrical.laser.emitter.{TileLaserEmitter, BlockLaserEmitter}
+import resonantinduction.electrical.laser.emitter.{BlockLaserEmitter, TileLaserEmitter}
 import resonantinduction.electrical.laser.focus.ItemFocusingMatrix
-import resonantinduction.electrical.laser.focus.crystal.{TileFocusCrystal, BlockFocusCrystal}
-import resonantinduction.electrical.laser.focus.mirror.{TileMirror, BlockMirror}
-import resonantinduction.electrical.laser.receiver.{TileLaserReceiver, BlockLaserReceiver}
+import resonantinduction.electrical.laser.focus.crystal.{BlockFocusCrystal, TileFocusCrystal}
+import resonantinduction.electrical.laser.focus.mirror.{BlockMirror, TileMirror}
+import resonantinduction.electrical.laser.receiver.{BlockLaserReceiver, TileLaserReceiver}
 import resonantinduction.electrical.levitator.ItemLevitator
 import resonantinduction.electrical.multimeter.ItemMultimeter
 import resonantinduction.electrical.tesla.TileTesla
 import resonantinduction.electrical.transformer.ItemElectricTransformer
-import resonantinduction.electrical.wire.{WireMaterial, ItemWire}
+import resonantinduction.electrical.wire.{ItemWire, WireMaterial}
 
 /** Resonant Induction Electrical Module
   *
   * @author Calclavia */
 
 @Mod(modid = "ResonantInduction|Electrical", name = "Resonant Induction Electrical", version = Reference.version, dependencies = "before:ThermalExpansion;before:Mekanism;after:ResonantInduction|Mechanical;required-after:" + Reference.coreID, modLanguage = "scala")
-object Electrical {
+object Electrical
+{
   /** Mod Information */
   final val ID: String = "ResonantInduction|Electrical"
   final val NAME: String = Reference.name + " Electrical"
 
-  var INSTANCE  = this
+  var INSTANCE = this
 
   @SidedProxy(clientSide = "resonantinduction.electrical.ClientProxy", serverSide = "resonantinduction.electrical.CommonProxy")
   var proxy: CommonProxy = null
@@ -74,7 +75,8 @@ object Electrical {
     GameRegistry.registerBlock(ElectricalContent.blockFocusCrystal, "FocusCrystal")
 
     GameRegistry.registerItem(ElectricalContent.itemFocusingMatrix, "FocusingMatrix")
-    //-------------------
+
+
     ElectricalContent.itemWire = Electrical.contentRegistry.newItem(classOf[ItemWire])
     ElectricalContent.itemMultimeter = Electrical.contentRegistry.newItem(classOf[ItemMultimeter])
     ElectricalContent.itemTransformer = Electrical.contentRegistry.newItem(classOf[ItemElectricTransformer])
@@ -92,38 +94,23 @@ object Electrical {
     OreDictionary.registerOre("battery", ItemBlockBattery.setTier(new ItemStack(ElectricalContent.blockBattery, 1, 0), 0.asInstanceOf[Byte]))
     OreDictionary.registerOre("batteryBox", ItemBlockBattery.setTier(new ItemStack(ElectricalContent.blockBattery, 1, 0), 0.asInstanceOf[Byte]))
     ResonantTab.itemStack(new ItemStack(ElectricalContent.itemTransformer))
-    for (material <- WireMaterial.values) {
+    for (material <- WireMaterial.values)
+    {
       material.setWire(ElectricalContent.itemWire)
     }
     Electrical.proxy.preInit
-    modproxies.preInit
+    modproxies.preInit()
   }
 
-  @EventHandler def init(evt: FMLInitializationEvent) {
-    MultipartElectrical.INSTANCE = new MultipartElectrical
-    Electrical.proxy.init
-    modproxies.init
-  }
-
-  @EventHandler def postInit(evt: FMLPostInitializationEvent) {
-    Electrical.proxy.postInit
-    modproxies.postInit
-  }
-
-  @SubscribeEvent
-  def joinWorldEvent(evt: EntityJoinWorldEvent)
+  @EventHandler def init(evt: FMLInitializationEvent)
   {
-    if (evt.entity.isInstanceOf[EntityPlayer])
-    {
-      val player = evt.entity.asInstanceOf[EntityPlayer]
-      val nbt = player.getEntityData
-
-      if (!nbt.getBoolean("EC_receiveBook"))
-      {
-        player.inventory.addItemStackToInventory(ElectricalContent.guideBook)
-        nbt.setBoolean("EC_receiveBook", true)
-      }
-    }
+    Electrical.proxy.init
+    modproxies.init()
   }
 
+  @EventHandler def postInit(evt: FMLPostInitializationEvent)
+  {
+    Electrical.proxy.postInit
+    modproxies.postInit()
+  }
 }

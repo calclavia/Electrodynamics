@@ -12,5 +12,10 @@ import resonantinduction.electrical.wire.base.TWire
  */
 class PartFramedWire extends PartColorableMaterial[WireMaterial](ElectricalContent.itemInsulation) with TWire
 {
+  def preparePlacement(side: Int, meta: Int)
+  {
+    setMaterial(meta)
+  }
+
   override def getType = "FramedWire"
 }

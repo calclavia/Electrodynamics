@@ -17,7 +17,9 @@ import resonant.lib.render.EnumColor
 import resonant.lib.utility.LanguageUtility
 import resonantinduction.core.{Reference, ResonantTab}
 import resonantinduction.core.prefab.part.MultipartUtility
+import resonantinduction.electrical.wire.base.TWire
 import resonantinduction.electrical.wire.flat.{PartFlatWire, RenderFlatWire}
+import resonantinduction.electrical.wire.framed.PartFramedWire
 import universalelectricity.api.UnitDisplay
 import resonant.lib.wrapper.WrapList._
 
@@ -38,7 +40,7 @@ class ItemWire extends TItemMultiPart
       return null
     }
 
-    val wire = MultiPartRegistry.createPart("resonant_induction_flat_wire", false).asInstanceOf[PartFlatWire]
+    val wire = (if(ControlKeyHandler.isPressed) MultiPartRegistry.createPart("resonant_induction_framed_wire", false) else  MultiPartRegistry.createPart("resonant_induction_flat_wire", false)).asInstanceOf[TWire]
 
     if (wire != null)
     {
