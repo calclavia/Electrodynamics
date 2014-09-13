@@ -28,7 +28,6 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
-import resonantinduction.core.prefab.part.MultipartUtil;
 import resonantinduction.electrical.wire.base.TWire;
 import resonantinduction.electrical.wire.base.WireMaterial;
 
@@ -272,39 +271,6 @@ public class PartFlatWire extends TWire implements TFacePart, TNormalOcclusion
 			this.recalculateConnections();
 		}
 		super.onNeighborChanged();
-	}
-
-	@Override
-	public boolean activate(EntityPlayer player, MovingObjectPosition part, ItemStack item)
-	{
-		if (item != null)
-		{
-			if (Item.getIdFromItem(item.getItem()) == Block.getIdFromBlock(Blocks.lever))
-			{
-				TileMultipart tile = tile();
-				World w = world();
-
-				if (!w.isRemote)
-				{
-					PartFlatSwitchWire wire = (PartFlatSwitchWire) MultiPartRegistry.createPart("resonant_induction_flat_switch_wire", false);
-					wire.copyFrom(this);
-
-					if (tile.canReplacePart(this, wire))
-					{
-						tile.remPart(this);
-						TileMultipart.addPart(w, new BlockCoord(tile), wire);
-
-						if (!player.capabilities.isCreativeMode)
-						{
-							player.inventory.decrStackSize(player.inventory.currentItem, 1);
-						}
-					}
-				}
-				return true;
-			}
-		}
-
-		return super.activate(player, part, item);
 	}
 
 	@Override
