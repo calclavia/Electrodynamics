@@ -15,8 +15,8 @@ import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.input.Keyboard
 import resonant.lib.render.EnumColor
 import resonant.lib.utility.LanguageUtility
+import resonantinduction.core.util.MultipartUtil
 import resonantinduction.core.{Reference, ResonantTab}
-import resonantinduction.core.prefab.part.MultipartUtility
 import resonantinduction.electrical.wire.base.TWire
 import resonantinduction.electrical.wire.flat.{PartFlatWire, RenderFlatWire}
 import resonantinduction.electrical.wire.framed.PartFramedWire
@@ -35,7 +35,7 @@ class ItemWire extends TItemMultiPart
   {
     val onPos: BlockCoord = pos.copy.offset(side ^ 1)
 
-    if (!MultipartUtility.canPlaceWireOnSide(world, onPos.x, onPos.y, onPos.z, ForgeDirection.getOrientation(side), false))
+    if (!MultipartUtil.canPlaceWireOnSide(world, onPos.x, onPos.y, onPos.z, ForgeDirection.getOrientation(side), false))
     {
       return null
     }

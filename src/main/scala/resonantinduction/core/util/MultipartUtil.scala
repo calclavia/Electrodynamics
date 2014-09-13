@@ -1,14 +1,12 @@
-package resonantinduction.core.prefab.part
+package resonantinduction.core.util
 
 import codechicken.lib.vec.BlockCoord
 import codechicken.multipart.{TMultiPart, TileMultipart}
 import net.minecraft.block.Block
 import net.minecraft.init.Blocks
-import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.{IBlockAccess, World}
 import net.minecraftforge.common.util.ForgeDirection
-import net.minecraftforge.oredict.OreDictionary
 import universalelectricity.core.transform.vector.{Vector3, VectorWorld}
 
 /**
@@ -17,10 +15,8 @@ import universalelectricity.core.transform.vector.{Vector3, VectorWorld}
  * @author Calclavia
  *
  */
-object MultipartUtility
+object MultipartUtil
 {
-  val dyes: Array[String] = Array("dyeBlack", "dyeRed", "dyeGreen", "dyeBrown", "dyeBlue", "dyePurple", "dyeCyan", "dyeLightGray", "dyeGray", "dyePink", "dyeLime", "dyeYellow", "dyeLightBlue", "dyeMagenta", "dyeOrange", "dyeWhite")
-
   def getMultipartTile(access: IBlockAccess, pos: BlockCoord): TileMultipart =
   {
     val te: TileEntity = access.getTileEntity(pos.x, pos.y, pos.z)
@@ -54,10 +50,5 @@ object MultipartUtility
     if (b == null) return false
     if (b == Blocks.glowstone || b == Blocks.piston || b == Blocks.sticky_piston || b == Blocks.piston_extension) return true
     return b.isSideSolid(w, x, y, z, side)
-  }
-
-  def isDye(is: ItemStack): Int =
-  {
-    return (0 until dyes.size) find (i => OreDictionary.getOreID(is) != -1 && (OreDictionary.getOreName(OreDictionary.getOreID(is)) == dyes(i))) getOrElse (-1)
   }
 }

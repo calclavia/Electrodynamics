@@ -33,7 +33,7 @@ object PartFramedNode
  * @param material
  * @tparam M
  */
-abstract class PartFramedNode[M](material: Item) extends PartColorableMaterial[M](material: Item) with INodeProvider with TSlottedPart with TNormalOcclusion with TIconHitEffects
+abstract class PartFramedNode[M](material: Item) extends TColorable[M](material: Item) with INodeProvider with TSlottedPart with TNormalOcclusion with TIconHitEffects
 {
   /** Bitmask connections */
   var currentConnections: Byte = 0x00

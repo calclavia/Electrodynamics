@@ -7,14 +7,14 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.util.ForgeDirection
-import resonantinduction.core.prefab.part.TraitPart
+import resonantinduction.core.prefab.part.TPart
 import universalelectricity.compatibility.Compatibility
 import universalelectricity.core.transform.vector.{Vector3, VectorWorld}
 
 import scala.util.control.Breaks._
 
 @deprecated
-abstract class PartConductor extends TMultiPart with TraitPart
+abstract class PartConductor extends TMultiPart with TPart
 {
   override def doesTick: Boolean =
   {

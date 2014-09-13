@@ -22,7 +22,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class PartFramedConnection<M extends Enum> extends PartColorableMaterial<M> implements TSlottedPart, JNormalOcclusion
+public abstract class PartFramedConnection<M extends Enum> extends TColorable<M> implements TSlottedPart, JNormalOcclusion
 {
 	public static IndexedCuboid6[] sides = new IndexedCuboid6[7];
 	public static IndexedCuboid6[] insulatedSides = new IndexedCuboid6[7];

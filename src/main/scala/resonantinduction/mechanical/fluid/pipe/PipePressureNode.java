@@ -5,7 +5,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonant.lib.utility.WorldUtility;
 import resonantinduction.core.prefab.node.NodePressure;
-import resonantinduction.core.prefab.part.PartColorableMaterial;
+import resonantinduction.core.prefab.part.TColorable;
 import universalelectricity.api.core.grid.INode;
 import universalelectricity.api.core.grid.INodeProvider;
 
@@ -90,7 +90,7 @@ public class PipePressureNode extends NodePressure
 
                     if (!otherPipe.isBlockedOnSide(from.getOpposite()) && pipe().getMaterial() == otherPipe.getMaterial())
                     {
-                        return pipe().getColor() == otherPipe.getColor() || (pipe().getColor() == PartColorableMaterial.defaultColor() || otherPipe.getColor() == PartColorableMaterial.defaultColor());
+                        return pipe().getColor() == otherPipe.getColor() || (pipe().getColor() == TColorable.defaultColor() || otherPipe.getColor() == TColorable.defaultColor());
                     }
 
                     return false;

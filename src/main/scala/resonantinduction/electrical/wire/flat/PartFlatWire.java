@@ -28,7 +28,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
-import resonantinduction.core.prefab.part.MultipartUtility;
+import resonantinduction.core.prefab.part.MultipartUtil;
 import resonantinduction.electrical.wire.WireMaterial;
 import resonantinduction.electrical.wire.PartAdvancedWire;
 
@@ -334,7 +334,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, TNormal
 				if (canConnectThroughCorner(cornerPos, absDir ^ 1, this.side))
 				{
 					cornerPos.offset(this.side);
-					TileMultipart tpCorner = MultipartUtility.getMultipartTile(world(), cornerPos);
+					TileMultipart tpCorner = MultipartUtil.getMultipartTile(world(), cornerPos);
 
 					if (tpCorner != null)
 					{
@@ -403,7 +403,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, TNormal
 		BlockCoord pos = new BlockCoord(tile()).offset(absSide);
 
 		/** Look for an external wire connection. */
-		TileMultipart tileMultiPart = MultipartUtility.getMultipartTile(world(), pos);
+		TileMultipart tileMultiPart = MultipartUtil.getMultipartTile(world(), pos);
 
 		if (tileMultiPart != null && r != -1)
 		{
@@ -476,7 +476,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, TNormal
 	public boolean canStay()
 	{
 		BlockCoord pos = new BlockCoord(tile()).offset(side);
-		return MultipartUtility.canPlaceWireOnSide(world(), pos.x, pos.y, pos.z, ForgeDirection.getOrientation(side ^ 1), false);
+		return MultipartUtil.canPlaceWireOnSide(world(), pos.x, pos.y, pos.z, ForgeDirection.getOrientation(side ^ 1), false);
 	}
 
 	public boolean dropIfCantStay()
@@ -638,7 +638,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, TNormal
 		}
 
 		pos.offset(side);
-		TileMultipart t = MultipartUtility.getMultipartTile(world(), pos);
+		TileMultipart t = MultipartUtil.getMultipartTile(world(), pos);
 		if (t != null)
 		{
 			TMultiPart tp = t.partMap(absDir ^ 1);
@@ -674,7 +674,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, TNormal
 			return true;
 		}
 
-		TileMultipart t = MultipartUtility.getMultipartTile(world(), pos);
+		TileMultipart t = MultipartUtil.getMultipartTile(world(), pos);
 		if (t != null)
 		{
 			return t.partMap(side1) == null && t.partMap(side2) == null && t.partMap(PartMap.edgeBetween(side1, side2)) == null;
@@ -689,7 +689,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, TNormal
 
 		BlockCoord pos = new BlockCoord(tile()).offset(absDir);
 
-		TileMultipart t = MultipartUtility.getMultipartTile(world(), pos);
+		TileMultipart t = MultipartUtil.getMultipartTile(world(), pos);
 		if (t != null)
 		{
 			TMultiPart tp = t.partMap(side);

@@ -1,14 +1,14 @@
 package resonantinduction.electrical.wire.base
 
 import net.minecraft.item.ItemStack
-import resonantinduction.core.prefab.part.PartColorableMaterial
+import resonantinduction.core.prefab.part.TColorable
 import resonantinduction.electrical.ElectricalContent
 import resonantinduction.electrical.wire.WireMaterial
 
 /**
  * @author Calclavia
  */
-trait TWire extends PartColorableMaterial[WireMaterial]
+trait TWire extends TColorable[WireMaterial]
 {
   def preparePlacement(side: Int, meta: Int)
 

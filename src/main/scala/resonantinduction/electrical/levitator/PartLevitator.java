@@ -13,7 +13,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -27,7 +26,7 @@ import resonant.lib.render.EnumColor;
 import resonant.lib.utility.LinkUtility;
 import resonant.lib.utility.WrenchUtility;
 import resonant.lib.utility.inventory.InventoryUtility;
-import resonantinduction.core.prefab.part.MultipartUtility;
+import resonantinduction.core.prefab.part.MultipartUtil;
 import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.part.PartFace;
 import resonantinduction.electrical.Electrical;
@@ -137,7 +136,7 @@ public class PartLevitator extends PartFace
 	{
 		if (linkVector != null)
 		{
-			TMultiPart part = MultipartUtility.getMultipart(world(), linkVector, side);
+			TMultiPart part = MultipartUtil.getMultipart(world(), linkVector, side);
 
 			if (part instanceof PartLevitator)
 			{
@@ -340,13 +339,13 @@ public class PartLevitator extends PartFace
 
 	public boolean canBeMovePath(World world, Vector3 position)
 	{
-		TMultiPart partSelf = MultipartUtility.getMultipart(new VectorWorld(world, position), placementSide.ordinal());
+		TMultiPart partSelf = MultipartUtil.getMultipart(new VectorWorld(world, position), placementSide.ordinal());
 		if (partSelf == this)
 		{
 			return true;
 		}
 
-		TMultiPart partLink = MultipartUtility.getMultipart(new VectorWorld(world, position), getLink().placementSide.ordinal());
+		TMultiPart partLink = MultipartUtil.getMultipart(new VectorWorld(world, position), getLink().placementSide.ordinal());
 		if (partLink == getLink())
 		{
 			return true;
@@ -494,7 +493,7 @@ public class PartLevitator extends PartFace
 
 		if (mop != null)
 		{
-			if (MultipartUtility.getMultipart(world(), mop.blockX, mop.blockY, mop.blockZ, placementSide.getOpposite().ordinal()) instanceof PartLevitator)
+			if (MultipartUtil.getMultipart(world(), mop.blockX, mop.blockY, mop.blockZ, placementSide.getOpposite().ordinal()) instanceof PartLevitator)
 			{
 				reach = (int) Math.min(getPosition().distance(new Vector3(mop.hitVec)), reach);
 

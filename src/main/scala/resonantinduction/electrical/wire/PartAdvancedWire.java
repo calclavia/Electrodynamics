@@ -11,7 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.util.ForgeDirection;
-import resonantinduction.core.prefab.part.MultipartUtility;
+import resonantinduction.core.prefab.part.MultipartUtil;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import codechicken.multipart.IRedstonePart;
@@ -171,7 +171,7 @@ public abstract class PartAdvancedWire extends PartConductor
     {
         if (itemStack != null)
         {
-            int dyeColor = MultipartUtility.isDye(itemStack);
+            int dyeColor = MultipartUtil.isDye(itemStack);
 
             if (dyeColor != -1 && this.isInsulated())
             {

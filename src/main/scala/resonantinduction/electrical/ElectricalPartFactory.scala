@@ -11,7 +11,7 @@ import resonantinduction.electrical.wire.framed.PartFramedWire
 
 object ElectricalPartFactory extends IPartFactory
 {
-  MultiPartRegistry.registerParts(this, Array("resonant_induction_wire", "resonant_induction_switch_wire", "resonant_induction_flat_wire", "resonant_induction_flat_switch_wire", "resonant_induction_multimeter", "resonant_induction_transformer", "resonant_induction_charger", "resonant_induction_levitator"))
+  def register() = MultiPartRegistry.registerParts(this, Array("resonant_induction_flat_wire", "resonant_induction_framed_wire", "resonant_induction_multimeter", "resonant_induction_transformer", "resonant_induction_charger", "resonant_induction_levitator"))
 
   def createPart(name: String, client: Boolean): TMultiPart =
   {

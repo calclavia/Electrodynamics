@@ -17,6 +17,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * A part that acts as a face
+ * @author Calclavia
+ */
 public abstract class PartFace extends JCuboidPart implements JNormalOcclusion, TFacePart
 {
 	public static Cuboid6[][] bounds = new Cuboid6[6][2];

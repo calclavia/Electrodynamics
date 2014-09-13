@@ -104,6 +104,7 @@ object Electrical
 
   @EventHandler def init(evt: FMLInitializationEvent)
   {
+    ElectricalPartFactory.register()
     Electrical.proxy.init
     modproxies.init()
   }
