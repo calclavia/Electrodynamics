@@ -63,13 +63,13 @@ object ElectricalContent extends ContentHolder {
     recipes += shaped(tierOneBattery, "III", "IRI", "III", 'R', Blocks.redstone_block, 'I', UniversalRecipe.PRIMARY_METAL.get)
     recipes += shaped(tierTwoBattery, "RRR", "RIR", "RRR", 'R', tierOneBattery, 'I', UniversalRecipe.PRIMARY_PLATE.get)
     recipes += shaped(tierThreeBattery, "RRR", "RIR", "RRR", 'R', tierTwoBattery, 'I', Blocks.diamond_block)
-    recipes += shaped(WireMaterial.COPPER.getWire(3), "MMM", 'M', "ingotCopper")
-    recipes += shaped(WireMaterial.TIN.getWire(3), "MMM", 'M', "ingotTin")
-    recipes += shaped(WireMaterial.IRON.getWire(3), "MMM", 'M', Items.iron_ingot)
-    recipes += shaped(WireMaterial.ALUMINUM.getWire(3), "MMM", 'M', "ingotAluminum")
-    recipes += shaped(WireMaterial.SILVER.getWire, "MMM", 'M', "ingotSilver")
-    recipes += shaped(WireMaterial.SUPERCONDUCTOR.getWire(3), "MMM", 'M', "ingotSuperconductor")
-    recipes += shaped(WireMaterial.SUPERCONDUCTOR.getWire(3), "MMM", "MEM", "MMM", 'M', Items.gold_ingot, 'E', Items.ender_eye)
+    recipes += shaped(getWire(WireMaterial.COPPER, 3), "MMM", 'M', "ingotCopper")
+    recipes += shaped(getWire(WireMaterial.TIN, 3), "MMM", 'M', "ingotTin")
+    recipes += shaped(getWire(WireMaterial.IRON, 3), "MMM", 'M', Items.iron_ingot)
+    recipes += shaped(getWire(WireMaterial.ALUMINUM, 3), "MMM", 'M', "ingotAluminum")
+    recipes += shaped(getWire(WireMaterial.SILVER, 3), "MMM", 'M', "ingotSilver")
+    recipes += shaped(getWire(WireMaterial.SUPERCONDUCTOR, 3), "MMM", 'M', "ingotSuperconductor")
+    recipes += shaped(getWire(WireMaterial.SUPERCONDUCTOR, 3), "MMM", "MEM", "MMM", 'M', Items.gold_ingot, 'E', Items.ender_eye)
     recipes += shaped(ElectricalContent.itemCharger, "WWW", "ICI", 'W', "wire", 'I', UniversalRecipe.PRIMARY_METAL.get, 'C', UniversalRecipe.CIRCUIT_T1.get)
     recipes += shaped(ElectricalContent.itemTransformer, "WWW", "WWW", "III", 'W', "wire", 'I', UniversalRecipe.PRIMARY_METAL.get)
     recipes += shaped(new ItemStack(ElectricalContent.itemQuantumGlyph, 1, 0), " CT", "LBL", "TCT", 'B', Blocks.diamond_block, 'L', ElectricalContent.itemLevitator, 'C', ElectricalContent.itemCharger, 'T', ElectricalContent.blockTesla)
@@ -89,18 +89,23 @@ object ElectricalContent extends ContentHolder {
 
     if (Loader.isModLoaded("IC2"))
     {
-      recipes += shapeless(WireMaterial.COPPER.getWire, IC2Items.getItem("copperCableItem"))
-      recipes += shapeless(WireMaterial.TIN.getWire, IC2Items.getItem("tinCableItem"))
-      recipes += shapeless(WireMaterial.IRON.getWire, IC2Items.getItem("ironCableItem"))
-      recipes += shapeless(IC2Items.getItem("copperCableItem"), WireMaterial.COPPER.getWire)
-      recipes += shapeless(IC2Items.getItem("tinCableItem"), WireMaterial.TIN.getWire)
-      recipes += shapeless(IC2Items.getItem("ironCableItem"), WireMaterial.IRON.getWire)
+      recipes += shapeless(getWire(WireMaterial.COPPER, 1), IC2Items.getItem("copperCableItem"))
+      recipes += shapeless(getWire(WireMaterial.TIN, 1), IC2Items.getItem("tinCableItem"))
+      recipes += shapeless(getWire(WireMaterial.IRON, 1), IC2Items.getItem("ironCableItem"))
+      recipes += shapeless(IC2Items.getItem("copperCableItem"), getWire(WireMaterial.COPPER, 1))
+      recipes += shapeless(IC2Items.getItem("tinCableItem"), getWire(WireMaterial.TIN, 1))
+      recipes += shapeless(IC2Items.getItem("ironCableItem"), getWire(WireMaterial.IRON, 1))
     }
     if (Loader.isModLoaded("Mekanism"))
     {
-      GameRegistry.addRecipe(new ShapelessOreRecipe(WireMaterial.COPPER.getWire, "universalCable"))
+      GameRegistry.addRecipe(new ShapelessOreRecipe(getWire(WireMaterial.COPPER, 1), "universalCable"))
     }
 
+  }
+
+  def getWire(t: WireMaterial, count: Int): ItemStack =
+  {
+      return new ItemStack(itemWire, count, t.ordinal())
   }
 
   def createGuide: ItemStack = {
