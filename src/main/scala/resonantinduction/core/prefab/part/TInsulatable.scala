@@ -12,6 +12,7 @@ import scala.collection.convert.wrapAll._
 import scala.collection.mutable
 
 /**
+ * Trait applied to objects that can be insulated/enhanced by a certain item.
  * @author Calclavia
  */
 trait TInsulatable extends TMultiPart with TPart

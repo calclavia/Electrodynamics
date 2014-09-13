@@ -80,7 +80,7 @@ public abstract class PartAdvancedWire extends PartConductor
     //@Override
     public long getCurrentCapacity()
     {
-        return this.getMaterial().maxAmps;
+        return this.getMaterial().maxCurrent;
     }
 
     /** Material Methods */

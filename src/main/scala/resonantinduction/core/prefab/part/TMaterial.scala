@@ -24,7 +24,7 @@ trait TMaterial[M] extends TMultiPart
 
   override def writeDesc(packet: MCDataOutput)
   {
-    packet.writeByte(getMaterialID.asInstanceOf[Byte])
+    packet.writeByte(getMaterialID.toByte)
   }
 
   override def save(nbt: NBTTagCompound)

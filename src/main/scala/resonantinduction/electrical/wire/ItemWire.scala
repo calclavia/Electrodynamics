@@ -57,7 +57,7 @@ class ItemWire extends TItemMultiPart
 
   override def getUnlocalizedName(itemStack: ItemStack): String =
   {
-    return super.getUnlocalizedName(itemStack) + "." + WireMaterial.values()(itemStack.getItemDamage).getName.toLowerCase
+    return super.getUnlocalizedName(itemStack) + "." + WireMaterial.values()(itemStack.getItemDamage).name.toLowerCase
   }
 
   @SuppressWarnings(Array("unchecked")) override def addInformation(itemStack: ItemStack, player: EntityPlayer, list: List[_], par4: Boolean)
@@ -69,7 +69,7 @@ class ItemWire extends TItemMultiPart
     else
     {
       list.add(EnumColor.AQUA + LanguageUtility.getLocal("tooltip.wire.resistance").replace("%v", "" + EnumColor.ORANGE + new UnitDisplay(UnitDisplay.Unit.RESISTANCE, WireMaterial.values()(itemStack.getItemDamage).resistance)))
-      list.add(EnumColor.AQUA + LanguageUtility.getLocal("tooltip.wire.current").replace("%v", "" + EnumColor.ORANGE + new UnitDisplay(UnitDisplay.Unit.AMPERE, WireMaterial.values()(itemStack.getItemDamage).maxAmps)))
+      list.add(EnumColor.AQUA + LanguageUtility.getLocal("tooltip.wire.current").replace("%v", "" + EnumColor.ORANGE + new UnitDisplay(UnitDisplay.Unit.AMPERE, WireMaterial.values()(itemStack.getItemDamage).maxCurrent)))
       list.add(EnumColor.AQUA + LanguageUtility.getLocal("tooltip.wire.damage").replace("%v", "" + EnumColor.ORANGE + WireMaterial.values()(itemStack.getItemDamage).damage))
       list.addAll(LanguageUtility.splitStringPerWord(LanguageUtility.getLocal("tooltip.wire.helpText"), 5))
     }
@@ -88,7 +88,7 @@ class ItemWire extends TItemMultiPart
 
   @SideOnly(Side.CLIENT) override def getColorFromItemStack(itemStack: ItemStack, par2: Int): Int =
   {
-    return new Color(WireMaterial.values()(itemStack.getItemDamage).color.rgb).darker.getRGB
+    return new Color(WireMaterial.values()(itemStack.getItemDamage).color).darker.getRGB
   }
 
   override def getSubItems(itemID: Item, tab: CreativeTabs, listToAddTo: List[_])

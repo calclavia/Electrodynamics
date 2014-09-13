@@ -12,7 +12,7 @@ import resonantinduction.core.util.ResonantUtil
  * Trait applied to objects that can associates with a color.
  * @author Calclavia
  */
-trait TColorable[M] extends TMultiPart with TPart
+trait TColorable extends TMultiPart with TPart
 {
   val defaultColor = 15
   var colorID = defaultColor
@@ -74,7 +74,7 @@ trait TColorable[M] extends TMultiPart with TPart
   {
     if (packetID == 2)
     {
-      colorID = packet.readInt
+      colorID = packet.readInt()
       tile.markRender()
     }
   }
@@ -90,5 +90,4 @@ trait TColorable[M] extends TMultiPart with TPart
     super.load(nbt)
     this.colorID = nbt.getInteger("dyeID")
   }
-
 }
