@@ -10,6 +10,7 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenOcean;
 import net.minecraft.world.biome.BiomeGenPlains;
 import net.minecraftforge.common.util.ForgeDirection;
+import resonant.content.prefab.itemblock.ItemBlockMetadata;
 import resonant.lib.utility.inventory.InventoryUtility;
 import resonantinduction.core.Settings;
 import universalelectricity.core.transform.vector.Vector3;
@@ -26,6 +27,12 @@ public class TileWindTurbine extends TileTurbine
     private int checkCount = 0;
     private float efficiency = 0;
     private long windPower = 0;
+
+    public TileWindTurbine()
+    {
+        super();
+        this.itemBlock_$eq(ItemBlockMetadata.class);
+    }
 
 
     @Override

@@ -13,6 +13,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
+import resonant.content.prefab.itemblock.ItemBlockMetadata;
 import resonantinduction.core.Settings;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
 import universalelectricity.api.core.grid.INodeProvider;
@@ -32,6 +33,8 @@ public class TileWaterTurbine extends TileTurbine
 
 	public TileWaterTurbine()
 	{
+        super();
+        this.itemBlock_$eq(ItemBlockMetadata.class);
 	    mechanicalNode.torque = defaultTorque;
 		mechanicalNode = new TurbineNode(this)
 		{
