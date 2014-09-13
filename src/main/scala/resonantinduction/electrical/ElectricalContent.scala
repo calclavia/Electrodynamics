@@ -17,7 +17,7 @@ import resonantinduction.electrical.laser.focus.ItemFocusingMatrix
 import resonantinduction.electrical.laser.focus.crystal.BlockFocusCrystal
 import resonantinduction.electrical.laser.focus.mirror.BlockMirror
 import resonantinduction.electrical.laser.receiver.BlockLaserReceiver
-import resonantinduction.electrical.wire.WireMaterial
+import resonantinduction.electrical.wire.base.WireMaterial
 
 /**
  * Created by robert on 8/11/2014.

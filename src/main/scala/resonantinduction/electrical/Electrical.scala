@@ -25,7 +25,8 @@ import resonantinduction.electrical.levitator.ItemLevitator
 import resonantinduction.electrical.multimeter.ItemMultimeter
 import resonantinduction.electrical.tesla.TileTesla
 import resonantinduction.electrical.transformer.ItemElectricTransformer
-import resonantinduction.electrical.wire.{ItemWire, WireMaterial}
+import resonantinduction.electrical.wire.ItemWire
+import resonantinduction.electrical.wire.base.WireMaterial
 
 /** Resonant Induction Electrical Module
   *

@@ -29,8 +29,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 import resonantinduction.core.prefab.part.MultipartUtil;
-import resonantinduction.electrical.wire.WireMaterial;
-import resonantinduction.electrical.wire.PartAdvancedWire;
+import resonantinduction.electrical.wire.base.TWire;
+import resonantinduction.electrical.wire.base.WireMaterial;
 
 import java.util.Arrays;
 
@@ -41,7 +41,7 @@ import java.util.Arrays;
  *
  * @author Calclavia, MrTJP
  */
-public class PartFlatWire extends PartAdvancedWire implements TFacePart, TNormalOcclusion
+public class PartFlatWire extends TWire implements TFacePart, TNormalOcclusion
 {
 	public static Cuboid6[][] selectionBounds = new Cuboid6[3][6];
 	public static Cuboid6[][] occlusionBounds = new Cuboid6[3][6];

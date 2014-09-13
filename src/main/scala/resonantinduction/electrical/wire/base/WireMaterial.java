@@ -1,4 +1,4 @@
-package resonantinduction.electrical.wire;
+package resonantinduction.electrical.wire.base;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;

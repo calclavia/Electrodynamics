@@ -17,7 +17,7 @@ import resonant.lib.render.EnumColor
 import resonant.lib.utility.LanguageUtility
 import resonantinduction.core.util.MultipartUtil
 import resonantinduction.core.{Reference, ResonantTab}
-import resonantinduction.electrical.wire.base.TWire
+import resonantinduction.electrical.wire.base.{WireMaterial, TWire}
 import resonantinduction.electrical.wire.flat.{PartFlatWire, RenderFlatWire}
 import resonantinduction.electrical.wire.framed.PartFramedWire
 import universalelectricity.api.UnitDisplay

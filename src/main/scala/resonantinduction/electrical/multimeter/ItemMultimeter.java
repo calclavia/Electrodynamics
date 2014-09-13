@@ -15,7 +15,7 @@ import org.lwjgl.input.Keyboard;
 import resonant.lib.render.EnumColor;
 import resonant.lib.utility.LanguageUtility;
 import resonantinduction.core.prefab.part.IHighlight;
-import resonantinduction.electrical.wire.WireMaterial;
+import resonantinduction.electrical.wire.base.WireMaterial;
 import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
 import codechicken.microblock.FacePlacementGrid$;
