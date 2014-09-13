@@ -33,7 +33,7 @@ import resonant.lib.utility.LanguageUtility;
 import resonant.lib.utility.LinkUtility;
 import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
-import resonantinduction.core.prefab.part.MultipartUtil;
+import resonantinduction.core.util.ResonantUtil;
 import resonantinduction.electrical.Electrical;
 import universalelectricity.core.transform.vector.Vector3;
 
@@ -698,7 +698,7 @@ public class TileTesla extends TileElectric implements IMultiBlockStructure<Tile
     {
         if (entityPlayer.getCurrentEquippedItem() != null)
         {
-            int dyeColor = MultipartUtil.isDye(entityPlayer.getCurrentEquippedItem());
+            int dyeColor = ResonantUtil.isDye(entityPlayer.getCurrentEquippedItem());
 
             if (dyeColor != -1)
             {
