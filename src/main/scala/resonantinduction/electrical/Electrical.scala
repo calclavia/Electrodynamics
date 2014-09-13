@@ -95,10 +95,7 @@ object Electrical
     OreDictionary.registerOre("battery", ItemBlockBattery.setTier(new ItemStack(ElectricalContent.blockBattery, 1, 0), 0.asInstanceOf[Byte]))
     OreDictionary.registerOre("batteryBox", ItemBlockBattery.setTier(new ItemStack(ElectricalContent.blockBattery, 1, 0), 0.asInstanceOf[Byte]))
     ResonantTab.itemStack(new ItemStack(ElectricalContent.itemTransformer))
-    for (material <- WireMaterial.values)
-    {
-      material.setWire(ElectricalContent.itemWire)
-    }
+
     Electrical.proxy.preInit
     modproxies.preInit()
   }

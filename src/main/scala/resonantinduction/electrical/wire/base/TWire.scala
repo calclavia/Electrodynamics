@@ -1,11 +1,11 @@
 package resonantinduction.electrical.wire.base
 
-import codechicken.lib.data.{MCDataOutput, MCDataInput}
+import codechicken.lib.data.{MCDataInput, MCDataOutput}
 import codechicken.multipart.TMultiPart
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
-import resonantinduction.core.prefab.part.{TPart, TColorable, TInsulatable, TMaterial}
+import resonantinduction.core.prefab.part.{TColorable, TInsulatable, TMaterial, TPart}
 import resonantinduction.electrical.ElectricalContent
 import universalelectricity.api.core.grid.INodeProvider
 import universalelectricity.simulator.dc.DCNode
@@ -32,6 +32,14 @@ abstract class TWire extends TMultiPart with TPart with TMaterial[WireMaterial] 
   /**
    * Packet Methods
    */
+
+  override def read(packet: MCDataInput, packetID: Int)
+  {
+    super[TMaterial].read(packet)
+    super[TInsulatable].read(packet)
+    super[TColorable].read(packet)
+  }
+
   override def readDesc(packet: MCDataInput)
   {
     super[TMaterial].readDesc(packet)
@@ -62,7 +70,7 @@ abstract class TWire extends TMultiPart with TPart with TMaterial[WireMaterial] 
     super[TInsulatable].save(nbt)
     super[TColorable].save(nbt)
   }
-  
+
   /**
    * Can this conductor connect with another potential wire object?
    */

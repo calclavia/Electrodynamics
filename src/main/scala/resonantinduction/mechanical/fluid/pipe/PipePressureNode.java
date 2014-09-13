@@ -32,7 +32,7 @@ public class PipePressureNode extends NodePressure
         if (world() != null)
         {
             byte previousConnections = pipe().getAllCurrentConnections();
-            pipe().currentConnections_$eq((byte)0);
+            pipe().connectionMask_$eq((byte) 0);
 
             for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
             {
@@ -55,20 +55,20 @@ public class PipePressureNode extends NodePressure
 
                         if (check != null && check instanceof NodePressure && canConnect(dir, check) && ((NodePressure) check).canConnect(dir.getOpposite(), this))
                         {
-                            pipe().currentConnections_$eq(WorldUtility.setEnableSide(pipe().currentConnections(), dir, true));
+                            pipe().connectionMask_$eq(WorldUtility.setEnableSide(pipe().connectionMask(), dir, true));
                             connections.put(check, dir);
                         }
                     }
                     else if (canConnect(dir, tile))
                     {
-                        pipe().currentConnections_$eq(WorldUtility.setEnableSide(pipe().currentConnections(), dir, true));
+                        pipe().connectionMask_$eq(WorldUtility.setEnableSide(pipe().connectionMask(), dir, true));
                         connections.put(tile, dir);
                     }
                 }
             }
 
             /** Only send packet updates if visuallyConnected changed. */
-            if (!world().isRemote && previousConnections != pipe().currentConnections())
+            if (!world().isRemote && previousConnections != pipe().connectionMask())
             {
                 pipe().sendConnectionUpdate();
             }

@@ -14,23 +14,17 @@ import codechicken.lib.vec.Vector3;
 import codechicken.multipart.*;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemDye;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 import resonantinduction.core.util.MultipartUtil;
 import resonantinduction.electrical.wire.base.TWire;
-import resonantinduction.electrical.wire.base.WireMaterial;
 
 import java.util.Arrays;
 
@@ -59,6 +53,12 @@ public class PartFlatWire extends TWire implements TFacePart, TNormalOcclusion
 				occlusionBounds[t][s] = occlusion.copy().apply(Rotation.sideRotations[s].at(Vector3.center));
 			}
 		}
+	}
+
+	//Dummy
+	public Object[] connections()
+	{
+		return null;
 	}
 
 	public byte side;
@@ -264,7 +264,6 @@ public class PartFlatWire extends TWire implements TFacePart, TNormalOcclusion
 		super.onNeighborChanged();
 	}
 
-	@Override
 	public void recalculateConnections()
 	{
 		this.updateOpenConnections();
@@ -422,12 +421,6 @@ public class PartFlatWire extends TWire implements TFacePart, TNormalOcclusion
 				}
 			}
 		}
-	}
-
-	@Override
-	public Object[] getConnections()
-	{
-		return this.connections();
 	}
 
 	public boolean canStay()
@@ -849,7 +842,7 @@ public class PartFlatWire extends TWire implements TFacePart, TNormalOcclusion
 
 	public int getThickness()
 	{
-		return this.isInsulated ? 2 : 1;
+		return insulated ? 2 : 1;
 	}
 
 	@Override

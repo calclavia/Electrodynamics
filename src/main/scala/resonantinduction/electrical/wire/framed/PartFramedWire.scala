@@ -1,15 +1,12 @@
 package resonantinduction.electrical.wire.framed
 
-import net.minecraft.item.ItemStack
-import resonantinduction.core.prefab.part.{TColorable, PartFramedNode}
-import resonantinduction.electrical.ElectricalContent
-import resonantinduction.electrical.wire.base.{WireMaterial, TWire}
+import resonantinduction.electrical.wire.base.TWire
 
 /**
  * A framed version of the electrical wire
  * @author Calclavia
  */
-class PartFramedWire extends TColorable[WireMaterial](ElectricalContent.itemInsulation) with TWire
+class PartFramedWire extends TWire
 {
   def preparePlacement(side: Int, meta: Int)
   {

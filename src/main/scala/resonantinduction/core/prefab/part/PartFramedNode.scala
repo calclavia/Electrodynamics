@@ -8,9 +8,7 @@ import codechicken.lib.raytracer.IndexedCuboid6
 import codechicken.lib.vec.Cuboid6
 import codechicken.multipart._
 import cpw.mods.fml.relauncher.{Side, SideOnly}
-import net.minecraft.client.particle.EffectRenderer
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.item.Item
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.{IIcon, MovingObjectPosition}
 import net.minecraftforge.common.util.ForgeDirection
@@ -21,6 +19,21 @@ object PartFramedNode
   var sides: Array[IndexedCuboid6] = new Array[IndexedCuboid6](7)
   var insulatedSides: Array[IndexedCuboid6] = new Array[IndexedCuboid6](7)
 
+  sides(0) = new IndexedCuboid6(0, new Cuboid6(0.36, 0.000, 0.36, 0.64, 0.36, 0.64))
+  sides(1) = new IndexedCuboid6(1, new Cuboid6(0.36, 0.64, 0.36, 0.64, 1.000, 0.64))
+  sides(2) = new IndexedCuboid6(2, new Cuboid6(0.36, 0.36, 0.000, 0.64, 0.64, 0.36))
+  sides(3) = new IndexedCuboid6(3, new Cuboid6(0.36, 0.36, 0.64, 0.64, 0.64, 1.000))
+  sides(4) = new IndexedCuboid6(4, new Cuboid6(0.000, 0.36, 0.36, 0.36, 0.64, 0.64))
+  sides(5) = new IndexedCuboid6(5, new Cuboid6(0.64, 0.36, 0.36, 1.000, 0.64, 0.64))
+  sides(6) = new IndexedCuboid6(6, new Cuboid6(0.36, 0.36, 0.36, 0.64, 0.64, 0.64))
+  insulatedSides(0) = new IndexedCuboid6(0, new Cuboid6(0.3, 0.0, 0.3, 0.7, 0.3, 0.7))
+  insulatedSides(1) = new IndexedCuboid6(1, new Cuboid6(0.3, 0.7, 0.3, 0.7, 1.0, 0.7))
+  insulatedSides(2) = new IndexedCuboid6(2, new Cuboid6(0.3, 0.3, 0.0, 0.7, 0.7, 0.3))
+  insulatedSides(3) = new IndexedCuboid6(3, new Cuboid6(0.3, 0.3, 0.7, 0.7, 0.7, 1.0))
+  insulatedSides(4) = new IndexedCuboid6(4, new Cuboid6(0.0, 0.3, 0.3, 0.3, 0.7, 0.7))
+  insulatedSides(5) = new IndexedCuboid6(5, new Cuboid6(0.7, 0.3, 0.3, 1.0, 0.7, 0.7))
+  insulatedSides(6) = new IndexedCuboid6(6, new Cuboid6(0.3, 0.3, 0.3, 0.7, 0.7, 0.7))
+
   def connectionMapContainsSide(connections: Byte, side: ForgeDirection): Boolean =
   {
     val tester: Byte = (1 << side.ordinal).asInstanceOf[Byte]
@@ -28,27 +41,18 @@ object PartFramedNode
   }
 }
 
-/**
- * Part nodes that act as a wire or pipe.
- * @param material
- * @tparam M
- */
-abstract class PartFramedNode[M](material: Item) extends TColorable[M](material: Item) with INodeProvider with TSlottedPart with TNormalOcclusion with TIconHitEffects
+abstract class PartFramedNode extends TMultiPart with TInsulatable with INodeProvider with TSlottedPart with TNormalOcclusion with TIconHitEffects
 {
   /** Bitmask connections */
-  var currentConnections: Byte = 0x00
+  var connectionMask: Byte = 0x00
   protected var connections: Array[AnyRef] = new Array[AnyRef](6)
   protected var node: INode = null
 
   @SideOnly(Side.CLIENT)
   protected var breakIcon: IIcon = null
+  
   /** Client Side */
   private var testingSide: ForgeDirection = null
-
-  def preparePlacement(meta: Int)
-  {
-    this.setMaterial(meta)
-  }
 
   override def occlusionTest(other: TMultiPart): Boolean =
   {
@@ -91,7 +95,9 @@ abstract class PartFramedNode[M](material: Item) extends TColorable[M](material:
   override def getSubParts: java.lang.Iterable[IndexedCuboid6] =
   {
     super.getSubParts
-    val currentSides: Array[IndexedCuboid6] = if (isInsulated) PartFramedNode.insulatedSides.clone() else PartFramedNode.sides.clone()
+
+    val currentSides: Array[IndexedCuboid6] = if (insulated) PartFramedNode.insulatedSides.clone() else PartFramedNode.sides.clone()
+
     val list: util.LinkedList[IndexedCuboid6] = new util.LinkedList[IndexedCuboid6]
     if (tile != null)
     {
@@ -105,7 +111,7 @@ abstract class PartFramedNode[M](material: Item) extends TColorable[M](material:
 
   def getAllCurrentConnections: Byte =
   {
-    return (currentConnections)
+    return (connectionMask)
   }
 
   def getSlotMask: Int =
@@ -115,7 +121,7 @@ abstract class PartFramedNode[M](material: Item) extends TColorable[M](material:
 
   def getHollowSize: Int =
   {
-    return if (isInsulated) 8 else 6
+    return if (insulated) 8 else 6
   }
 
   def isBlockedOnSide(side: ForgeDirection): Boolean =
@@ -157,19 +163,19 @@ abstract class PartFramedNode[M](material: Item) extends TColorable[M](material:
   /** Packet Methods */
   def sendConnectionUpdate()
   {
-    tile.getWriteStream(this).writeByte(0).writeByte(currentConnections)
+    tile.getWriteStream(this).writeByte(0).writeByte(connectionMask)
   }
 
   override def readDesc(packet: MCDataInput)
   {
     super.readDesc(packet)
-    currentConnections = packet.readByte
+    connectionMask = packet.readByte
   }
 
   override def writeDesc(packet: MCDataOutput)
   {
     super.writeDesc(packet)
-    packet.writeByte(currentConnections)
+    packet.writeByte(connectionMask)
   }
 
   override def read(packet: MCDataInput)
@@ -181,7 +187,7 @@ abstract class PartFramedNode[M](material: Item) extends TColorable[M](material:
   {
     if (packetID == 0)
     {
-      currentConnections = packet.readByte
+      connectionMask = packet.readByte
       tile.markRender
     }
     else
