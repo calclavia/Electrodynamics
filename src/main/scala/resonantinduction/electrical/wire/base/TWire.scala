@@ -1,8 +1,11 @@
 package resonantinduction.electrical.wire.base
 
+import codechicken.lib.data.{MCDataOutput, MCDataInput}
+import codechicken.multipart.TMultiPart
 import net.minecraft.item.{Item, ItemStack}
+import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
-import resonantinduction.core.prefab.part.{TColorable, TInsulatable, TMaterial}
+import resonantinduction.core.prefab.part.{TPart, TColorable, TInsulatable, TMaterial}
 import resonantinduction.electrical.ElectricalContent
 import universalelectricity.api.core.grid.INodeProvider
 import universalelectricity.simulator.dc.DCNode
@@ -11,7 +14,7 @@ import universalelectricity.simulator.dc.DCNode
  * Trait implemented by wires
  * @author Calclavia
  */
-abstract class TWire extends TColorable with TMaterial[WireMaterial] with TInsulatable
+abstract class TWire extends TMultiPart with TPart with TMaterial[WireMaterial] with TInsulatable with TColorable
 {
   override protected val insulationItem: Item = ElectricalContent.itemInsulation
 
@@ -26,6 +29,40 @@ abstract class TWire extends TColorable with TMaterial[WireMaterial] with TInsul
 
   override protected def getItem = new ItemStack(ElectricalContent.itemInsulation, getMaterialID)
 
+  /**
+   * Packet Methods
+   */
+  override def readDesc(packet: MCDataInput)
+  {
+    super[TMaterial].readDesc(packet)
+    super[TInsulatable].readDesc(packet)
+    super[TColorable].readDesc(packet)
+  }
+
+  override def writeDesc(packet: MCDataOutput)
+  {
+    super[TMaterial].writeDesc(packet)
+    super[TInsulatable].writeDesc(packet)
+    super[TColorable].writeDesc(packet)
+  }
+
+  /**
+   * NBT Methods
+   */
+  override def load(nbt: NBTTagCompound)
+  {
+    super[TMaterial].load(nbt)
+    super[TInsulatable].load(nbt)
+    super[TColorable].load(nbt)
+  }
+
+  override def save(nbt: NBTTagCompound)
+  {
+    super[TMaterial].save(nbt)
+    super[TInsulatable].save(nbt)
+    super[TColorable].save(nbt)
+  }
+  
   /**
    * Can this conductor connect with another potential wire object?
    */

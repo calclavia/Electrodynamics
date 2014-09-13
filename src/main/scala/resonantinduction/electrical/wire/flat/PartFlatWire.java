@@ -28,6 +28,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
+import resonantinduction.core.util.MultipartUtil;
 import resonantinduction.electrical.wire.base.TWire;
 import resonantinduction.electrical.wire.base.WireMaterial;
 
@@ -81,20 +82,10 @@ public class PartFlatWire extends TWire implements TFacePart, TNormalOcclusion
 
 	}
 
-	public PartFlatWire(int typeID)
-	{
-		this(WireMaterial.values()[typeID]);
-	}
-
-	public PartFlatWire(WireMaterial type)
-	{
-		material = type;
-	}
-
 	public void preparePlacement(int side, int meta)
 	{
 		this.side = (byte) (side ^ 1);
-		this.setMaterial(meta);
+		setMaterial(meta);
 	}
 
 	/**
@@ -942,29 +933,5 @@ public class PartFlatWire extends TWire implements TFacePart, TNormalOcclusion
 	{
 		CCRenderState.reset();
 		RenderFlatWire.renderBreakingOverlay(renderBlocks.overrideBlockTexture, this);
-	}
-
-	/**
-	 * Utility method to aid in initializing this or subclasses, usually when you need to change the
-	 * wire to another type
-	 *
-	 * @param otherCable the wire to copy from
-	 */
-	public void copyFrom(PartFlatWire otherCable)
-	{
-		this.isInsulated = otherCable.isInsulated;
-		this.color = otherCable.color;
-		this.connections_$eq(otherCable.connections());
-		this.material = otherCable.material;
-		this.side = otherCable.side;
-		this.connMap = otherCable.connMap;
-		//this.setNetwork(otherCable.getNetwork());
-		//this.getNetwork().setBufferFor(this, otherCable.getNetwork().getBufferOf(otherCable));
-	}
-
-	@Override
-	public String toString()
-	{
-		return "[PartFlatWire]" + x() + "x " + y() + "y " + z() + "z " + getSlotMask() + "s ";
 	}
 }
