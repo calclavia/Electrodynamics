@@ -919,7 +919,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, TNormal
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon()
 	{
-		return RenderFlatWire.flatWireTexture;
+		return RenderFlatWire$.MODULE$.flatWireTexture();
 	}
 
 	public Colour getColour()
