@@ -78,6 +78,7 @@ item.resonantinduction:flour.name=Flour
 item.dough.name=Dough
 item.resonantinduction:laserDrill.name=Laser Drill
 item.resonantinduction:biomass.name=Biomass
+item.resonantinduction:focusingMatrix.name=Focusing Matrix
 
 ## Machines
 tile.resonantinduction:castingMold.name=Casting Mold
@@ -85,8 +86,11 @@ tile.resonantinduction:castingMold.tooltip=Pour molten metal into the cast to fo
 tile.resonantinduction:millstone.name=Millstone
 tile.resonantinduction:millstone.tooltip=Put some rubble in the millstone and use a hand crank to grind rubble into dust.
 tile.resonantinduction:imprinter.name=Imprinter
+
+tile.resonantinduction:firebox.name=Firebox
 tile.resonantinduction:firebox.0.name=Firebox
 tile.resonantinduction:firebox.1.name=Electric Firebox
+
 tile.resonantinduction:hotPlate.name=Hot Plate
 
 tile.resonantinduction:engineeringTable.name=Engineering Table
@@ -112,6 +116,7 @@ tile.resonantinduction:crate.1.tooltip=Right click to add items Left click to re
 tile.resonantinduction:crate.2.tooltip=Right click to add items Left click to remove items Ctrl Click sets itemstack filter
 
 tile.resonantinduction:tank.name=Tank
+tile.resonantinduction:tank.0.name=Tank
 tile.resonantinduction:tank.tooltip=Shift right click to pick up with fluid contained within.
 info.waila.tank.fluid=Fluid:
 info.waila.tank.vol=Volume:
@@ -123,15 +128,20 @@ item.resonantinduction:gear.0.name=Wooden Gear
 item.resonantinduction:gear.1.name=Stone Gear
 item.resonantinduction:gear.2.name=Metal Gear
 item.resonantinduction:gear.10.name=Pumpkin Gear
+
 item.resonantinduction:gearShaft.0.name=Wooden Gear Shaft
 item.resonantinduction:gearShaft.1.name=Stone Gear Shaft
 item.resonantinduction:gearShaft.2.name=Metal Gear Shaft
+
+tile.resonantinduction:windTurbine.name=Wind Turbine
 tile.resonantinduction:windTurbine.0.name=Wooden Wind Turbine
 tile.resonantinduction:windTurbine.0.tooltip=The wooden wind turbine is light, fragile and spins fast.
 tile.resonantinduction:windTurbine.1.name=Stone Wind Turbine
 tile.resonantinduction:windTurbine.1.tooltip=The stone turbine is heavy, strong and durable.
 tile.resonantinduction:windTurbine.2.name=Metal Wind Turbine
 tile.resonantinduction:windTurbine.2.tooltip=The metal wind turbine is strong and agile.
+
+tile.resonantinduction:waterTurbine.name=Water Turbine
 tile.resonantinduction:waterTurbine.0.name=Wooden Water Turbine
 tile.resonantinduction:waterTurbine.0.tooltip=The wooden water turbine is light and moves fast.
 tile.resonantinduction:waterTurbine.1.name=Stone Water Turbine
@@ -204,7 +214,7 @@ item.resonantinduction:wire.iron.name=Iron Wire
 item.resonantinduction:wire.aluminum.name=Aluminum Wire
 item.resonantinduction:wire.silver.name=Silver Wire
 item.resonantinduction:wire.superconductor.name=Superconductor Wire
-item.resonantinduction:transformer.name=Transformer
+item.resonantinduction:electricTransformer.name=Transformer
 item.resonantinduction:multimeter.name=Multimeter
 item.resonantinduction:multimeter.tooltip=Multimeter is a panel that display the energy and fluid information of a block.
 
@@ -294,18 +304,18 @@ item.resonantinduction:hazmatBoots.name=Hazmat Boots
 item.resonantinduction:bucketToxicWaste.name=Toxic Waste Bucket
 
 ## Cells
-item.resonantinduction:cellEmpty.name=Empty Cell
-item.resonantinduction:cellWater.name=Water Cell
-item.resonantinduction:cellDeuterium.name=Deuterium Cell
-item.resonantinduction:cellTritium.name=Tritium Cell
-item.resonantinduction:darkMatter.name=Dark Matter
+item.resonantinduction:cellEmpty.0.name=Empty Cell
+item.resonantinduction:cellWater.0.name=Water Cell
+item.resonantinduction:cellDeuterium.0.name=Deuterium Cell
+item.resonantinduction:cellTritium.0.name=Tritium Cell
+item.resonantinduction:darkMatter.0.name=Dark Matter
 item.resonantinduction:antimatter.0.name=Antimatter
 item.resonantinduction:antimatter.0.tooltip=125 Milligrams
 item.resonantinduction:antimatter.1.name=Antimatter
 item.resonantinduction:antimatter.1.tooltip=1 Gram
 
 ## Uranium Related Items
-item.resonantinduction:yellowcake.name=Yellowcake
+item.yellowcake.name=Yellowcake
 item.resonantinduction:uranium.0.name=Uranium-235
 item.resonantinduction:uranium.0.tooltip=Enriched Uranium
 item.resonantinduction:uranium.1.name=Uranium-238
@@ -318,8 +328,8 @@ item.resonantinduction:uraniumHexafluoride.name=Uranium Hexafluoride
 item.resonantinduction:steam.name=Steam
 
 ## Blocks
-tile.resonantinduction:uraniumOre.name=Uranium Ore
-tile.resonantinduction:uraniumOre.tooltip=A precious and useful ore used for fission reactions.
+tile.resonantinduction:oreUranium.name=Uranium Ore
+tile.resonantinduction:oreUraniumOre.tooltip=A precious and useful ore used for fission reactions.
 tile.resonantinduction:reactorDrain.name=Reactor Drain
 tile.resonantinduction:reactorDrain.tooltip=Extracts fluids out of the reactor, such as toxic waste.
 tile.resonantinduction:nuclearBoiler.name=Nuclear Boiler
@@ -337,6 +347,8 @@ tile.resonantinduction:radioactive.tooltip=Generates harmful radiation and sprea
 tile.resonantinduction:thermometer.name=Thermometer
 tile.resonantinduction:thermometer.tooltip=Reads the temperature at the current coordinate. Shift-right click to lock the reading to a specific coordinate.
 tile.resonantinduction:electromagnet.name=Electromagnet
+tile.resonantinduction:electromagnet.0.name=Electromagnet
+tile.resonantinduction:electromagnet.1.name=Electromagnet
 tile.resonantinduction:electromagnet.tooltip=Creates an electromagnetic field preventing plasma and particles from getting near.
 tile.resonantinduction:chemicalExtractor.name=Chemical Extractor
 tile.resonantinduction:chemicalExtractor.tooltip=Extracts uranium ores to yellowcake, water to deuterium and deuterium to tritium.
@@ -356,6 +368,7 @@ tile.resonantinduction:quantumAssembler.name=Quantum Assembler
 tile.resonantinduction:quantumAssembler.tooltip=Reassembles Dark Matter atoms into usable materials.
 tile.resonantinduction:toxicWaste.name=Toxic Waste
 tile.resonantinduction:toxicWaste.tooltip=Toxic, nuclear waste that pollutes the world.
+tile.resonantinduction:mirror.name = Mirror
 
 ## Tooltips
 tooltip.energy=Energy
