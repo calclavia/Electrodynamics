@@ -113,7 +113,8 @@ object Electrical
     modproxies.preInit()
   }
 
-  @EventHandler def init(evt: FMLInitializationEvent)
+  @EventHandler
+  def init(evt: FMLInitializationEvent)
   {
     Electrical.proxy.init
     modproxies.init()

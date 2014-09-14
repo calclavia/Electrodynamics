@@ -1,4 +1,4 @@
-package resonantinduction.core.prefab.part
+package resonantinduction.core.prefab.part.connector
 
 import java.util
 import java.util.{Collection, HashSet, Set}

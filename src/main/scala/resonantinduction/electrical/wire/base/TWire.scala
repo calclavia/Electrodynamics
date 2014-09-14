@@ -5,13 +5,13 @@ import codechicken.multipart.TMultiPart
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
-import resonantinduction.core.prefab.part.{TColorable, TInsulatable, TMaterial, TPart}
+import resonantinduction.core.prefab.part.connector.{TColorable, TInsulatable, TMaterial, TPart}
 import resonantinduction.electrical.ElectricalContent
 import universalelectricity.api.core.grid.INodeProvider
 import universalelectricity.simulator.dc.DCNode
 
 /**
- * Trait implemented by wires
+ * Class extended by wires
  * @author Calclavia
  */
 abstract class TWire extends TMultiPart with TPart with TMaterial[WireMaterial] with TInsulatable with TColorable

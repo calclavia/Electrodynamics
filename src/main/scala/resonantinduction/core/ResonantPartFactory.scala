@@ -12,12 +12,14 @@ object ResonantPartFactory extends IPartFactory
 {
   val prefix = Reference.prefix
 
-  private val partMap = mutable.Map.empty[String, Class[_<:TMultiPart]]
+  private val partMap = mutable.Map.empty[String, Class[_ <: TMultiPart]]
 
-  def register(part: Class[_<:TMultiPart])
+  def register(part: Class[_ <: TMultiPart])
   {
-    partMap.put(prefix + part.getClass.getSimpleName, part)
+    partMap += (prefix + part.getSimpleName -> part)
   }
+
+  def create[C <: TMultiPart](part: Class[C]): C = MultiPartRegistry.createPart((partMap map (_.swap)).get(part).get, false).asInstanceOf[C]
 
   def init() = MultiPartRegistry.registerParts(this, partMap.keys.toArray)
 

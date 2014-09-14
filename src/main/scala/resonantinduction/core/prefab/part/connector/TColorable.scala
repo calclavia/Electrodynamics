@@ -1,4 +1,4 @@
-package resonantinduction.core.prefab.part
+package resonantinduction.core.prefab.part.connector
 
 import codechicken.lib.data.{MCDataInput, MCDataOutput}
 import codechicken.multipart.TMultiPart

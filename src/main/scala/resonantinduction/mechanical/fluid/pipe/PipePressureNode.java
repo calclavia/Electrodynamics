@@ -5,8 +5,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonant.lib.utility.WorldUtility;
 import resonantinduction.core.prefab.node.NodePressure;
-import resonantinduction.core.prefab.part.TColorable;
-import resonantinduction.core.prefab.part.TColorable$;
+import resonantinduction.core.prefab.part.connector.TColorable$;
 import universalelectricity.api.core.grid.INode;
 import universalelectricity.api.core.grid.INodeProvider;
 

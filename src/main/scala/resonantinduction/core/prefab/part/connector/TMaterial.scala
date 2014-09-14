@@ -1,8 +1,7 @@
-package resonantinduction.core.prefab.part
+package resonantinduction.core.prefab.part.connector
 
 import codechicken.lib.data.{MCDataInput, MCDataOutput}
 import codechicken.multipart.TMultiPart
-import net.minecraft.item.Item
 import net.minecraft.nbt.NBTTagCompound
 
 /**

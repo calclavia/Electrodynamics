@@ -1,4 +1,4 @@
-package resonantinduction.core.prefab.part
+package resonantinduction.core.prefab.part.connector
 
 import codechicken.multipart.{IRedstonePart, TMultiPart}
 import net.minecraft.item.ItemStack

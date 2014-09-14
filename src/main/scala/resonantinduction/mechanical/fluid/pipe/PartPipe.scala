@@ -2,7 +2,7 @@ package resonantinduction.mechanical.fluid.pipe
 
 import codechicken.lib.data.MCDataInput
 import codechicken.lib.render.CCRenderState
-import codechicken.lib.vec.{Cuboid6, Vector3}
+import codechicken.lib.vec.Vector3
 import codechicken.multipart.{TNormalOcclusion, TSlottedPart}
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.client.renderer.RenderBlocks
@@ -11,7 +11,7 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import resonant.lib.`type`.EvictingList
-import resonantinduction.core.prefab.part.{PartFramedNode, TColorable, TMaterial}
+import resonantinduction.core.prefab.part.connector.{PartFramedNode, TColorable, TMaterial}
 import resonantinduction.mechanical.Mechanical
 import resonantinduction.mechanical.fluid.pipe.PipeMaterials.PipeMaterial
 
@@ -32,7 +32,7 @@ class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorab
 
   setNode(new PipePressureNode(this))
 
-  def preparePlacement(meta:Int)
+  def preparePlacement(meta: Int)
   {
     setMaterial(meta)
   }
@@ -43,7 +43,6 @@ class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorab
   }
 
   def getMaterialID: Int = material.id
-
 
   override def update()
   {
@@ -67,11 +66,11 @@ class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorab
     var averageAmount: Int = 0
     if (averageTankData.size > 0)
     {
-     for (i <- 0 until averageTankData.size)
+      for (i <- 0 until averageTankData.size)
+      {
         {
-          {
-            averageAmount += averageTankData.get(i)
-          }
+          averageAmount += averageTankData.get(i)
+        }
       }
 
       averageAmount /= averageTankData.size
