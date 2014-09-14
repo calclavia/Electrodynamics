@@ -4,6 +4,7 @@ import codechicken.lib.data.MCDataInput;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.vec.Cuboid6;
 import codechicken.multipart.JNormalOcclusion;
+import codechicken.multipart.TNormalOcclusion;
 import codechicken.multipart.TSlottedPart;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -24,7 +25,7 @@ import java.util.Set;
  *
  * @author Calclavia, Darkguardsman
  */
-public class PartPipe extends PartFramedNode<EnumPipeMaterial> implements TSlottedPart, JNormalOcclusion, IFluidHandler
+public class PartPipe extends PartFramedNode<EnumPipeMaterial> implements TSlottedPart, TNormalOcclusion, IFluidHandler
 {
 	protected final FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
 	/**

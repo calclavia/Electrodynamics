@@ -57,5 +57,7 @@ trait TPart extends TMultiPart with TraitTicker
     return false
   }
 
-  override def toString: String =  "[" + getClass.getSimpleName + "]" + x + "x " + y + "y " + z + "z"
+  override def toString: String = "[" + getClass.getSimpleName + "]" + x + "x " + y + "y " + z + "z"
+
+  override def getType: String = "ResonantInduction:" + getClass.getSimpleName
 }

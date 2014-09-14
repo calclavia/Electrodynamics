@@ -41,7 +41,7 @@ object PartFramedNode
   }
 }
 
-abstract class PartFramedNode extends TMultiPart with TInsulatable with INodeProvider with TSlottedPart with TNormalOcclusion with TIconHitEffects
+abstract class PartFramedNode extends TMultiPart with INodeProvider with TSlottedPart with TNormalOcclusion with TIconHitEffects
 {
   /** Bitmask connections */
   var connectionMask: Byte = 0x00
@@ -50,7 +50,7 @@ abstract class PartFramedNode extends TMultiPart with TInsulatable with INodePro
 
   @SideOnly(Side.CLIENT)
   protected var breakIcon: IIcon = null
-  
+
   /** Client Side */
   private var testingSide: ForgeDirection = null
 
@@ -89,16 +89,17 @@ abstract class PartFramedNode extends TMultiPart with TInsulatable with INodePro
   {
     val collisionBoxes: Set[Cuboid6] = new HashSet[Cuboid6]
     collisionBoxes.addAll(getSubParts.asInstanceOf[Collection[_ <: Cuboid6]])
-    return collisionBoxes;
+    return collisionBoxes
   }
 
   override def getSubParts: java.lang.Iterable[IndexedCuboid6] =
   {
     super.getSubParts
 
-    val currentSides: Array[IndexedCuboid6] = if (insulated) PartFramedNode.insulatedSides.clone() else PartFramedNode.sides.clone()
+    val currentSides: Array[IndexedCuboid6] = if (this.isInstanceOf[TInsulatable] && this.asInstanceOf[TInsulatable].insulated) PartFramedNode.insulatedSides.clone() else PartFramedNode.sides.clone()
 
-    val list: util.LinkedList[IndexedCuboid6] = new util.LinkedList[IndexedCuboid6]
+    val list = new util.LinkedList[IndexedCuboid6]
+
     if (tile != null)
     {
       for (side <- ForgeDirection.VALID_DIRECTIONS)
@@ -121,7 +122,7 @@ abstract class PartFramedNode extends TMultiPart with TInsulatable with INodePro
 
   def getHollowSize: Int =
   {
-    return if (insulated) 8 else 6
+    return if (this.isInstanceOf[TInsulatable] && this.asInstanceOf[TInsulatable].insulated) 8 else 6
   }
 
   def isBlockedOnSide(side: ForgeDirection): Boolean =
@@ -183,20 +184,15 @@ abstract class PartFramedNode extends TMultiPart with TInsulatable with INodePro
     read(packet, packet.readUByte)
   }
 
-  override def read(packet: MCDataInput, packetID: Int)
+  def read(packet: MCDataInput, packetID: Int)
   {
     if (packetID == 0)
     {
       connectionMask = packet.readByte
       tile.markRender
     }
-    else
-    {
-      super.read(packet, packetID)
-    }
   }
 
-  @SuppressWarnings(Array("hiding"))
   def getNode(nodeType: Class[_ <: INode], from: ForgeDirection): INode =
   {
     if (node != null && nodeType != null)
@@ -209,6 +205,7 @@ abstract class PartFramedNode extends TMultiPart with TInsulatable with INodePro
   override def save(nbt: NBTTagCompound)
   {
     super.save(nbt)
+
     if (node.isInstanceOf[ISave])
       node.asInstanceOf[ISave].save(nbt)
   }
@@ -216,13 +213,9 @@ abstract class PartFramedNode extends TMultiPart with TInsulatable with INodePro
   override def load(nbt: NBTTagCompound)
   {
     super.load(nbt)
+
     if (node.isInstanceOf[ISave])
       node.asInstanceOf[ISave].load(nbt)
-  }
-
-  override def toString: String =
-  {
-    return this.getClass.getSimpleName + this.hashCode
   }
 
   def getNode: INode = node
