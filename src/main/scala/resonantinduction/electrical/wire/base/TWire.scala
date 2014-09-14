@@ -32,14 +32,6 @@ abstract class TWire extends TMultiPart with TNodePartConnector with TPart with 
   /**
    * Packet Methods
    */
-
-  override def read(packet: MCDataInput, packetID: Int)
-  {
-    super[TMaterial].read(packet)
-    super[TInsulatable].read(packet)
-    super[TColorable].read(packet)
-  }
-
   override def readDesc(packet: MCDataInput)
   {
     super[TMaterial].readDesc(packet)
@@ -78,7 +70,6 @@ abstract class TWire extends TMultiPart with TNodePartConnector with TPart with 
 
   override def read(packet: MCDataInput, packetID: Int): Unit =
   {
-    super[TMaterial].read(packet,packetID)
     super[TInsulatable].read(packet,packetID)
     super[TColorable].read(packet,packetID)
   }
