@@ -6,7 +6,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import universalelectricity.api.core.grid.{INode, INodeProvider, ISave}
 
 /**
- * A node trait that can be mixed into any multipart nodes.
+ * A node trait that can be mixed into any multipart nodes. Mixing this trait will cause nodes to reconstruct/deconstruct when needed.
  * @author Calclavia
  */
 trait TNodePartConnector extends TMultiPart with INodeProvider

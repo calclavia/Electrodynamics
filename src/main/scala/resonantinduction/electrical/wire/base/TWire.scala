@@ -11,7 +11,7 @@ import universalelectricity.api.core.grid.{INode, INodeProvider}
 import universalelectricity.simulator.dc.DCNode
 
 /**
- * Class extended by wires
+ * Abstract class extended by both flat and framed wires to handle material, insulation, color and multipart node logic.
  * @author Calclavia
  */
 abstract class TWire extends TMultiPart with TNodePartConnector with TPart with TMaterial[WireMaterial] with TInsulatable with TColorable
@@ -74,7 +74,7 @@ abstract class TWire extends TMultiPart with TNodePartConnector with TPart with 
   /**
    * Can this conductor connect with another potential wire object?
    */
-  protected def canConnectTo(obj: AnyRef): Boolean =
+  def canConnectTo(obj: AnyRef): Boolean =
   {
     if (obj != null && obj.getClass == getClass)
     {
@@ -95,7 +95,7 @@ abstract class TWire extends TMultiPart with TNodePartConnector with TPart with 
   /**
    * Can this conductor connect with another potential wire object AND a DCNode?
    */
-  protected def canConnectTo(obj: AnyRef, from: ForgeDirection): Boolean =
+  def canConnectTo(obj: AnyRef, from: ForgeDirection): Boolean =
   {
     if (canConnectTo(obj))
       return true

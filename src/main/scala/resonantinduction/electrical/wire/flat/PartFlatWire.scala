@@ -19,7 +19,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
 import resonantinduction.core.util.MultipartUtil
 import resonantinduction.electrical.wire.base.TWire
-import universalelectricity.api.core.grid.{INodeProvider, INode}
+import universalelectricity.api.core.grid.INodeProvider
 import universalelectricity.simulator.dc.DCNode
 
 import scala.collection.convert.wrapAll._
@@ -73,19 +73,6 @@ class PartFlatWire extends TWire with TFacePart with TNormalOcclusion
 
   override lazy val node = new FlatWireNode(this)
 
-  /**
-   * Flat wire node handles all the connection logic
-   * @param provider
-   */
-  class FlatWireNode (provider:INodeProvider) extends DCNode(provider)
-  {
-
-  }
-
-  def connections: Array[AnyRef] =
-  {
-    return null
-  }
 
   def preparePlacement(side: Int, meta: Int)
   {
@@ -93,8 +80,44 @@ class PartFlatWire extends TWire with TFacePart with TNormalOcclusion
     setMaterial(meta)
   }
 
+  def canStay: Boolean =
+  {
+    val pos: BlockCoord = new BlockCoord(tile).offset(side)
+    return MultipartUtil.canPlaceWireOnSide(world, pos.x, pos.y, pos.z, ForgeDirection.getOrientation(side ^ 1), false)
+  }
+
+  def dropIfCantStay: Boolean =
+  {
+    if (!canStay)
+    {
+      drop
+      return true
+    }
+    return false
+  }
+
+  def drop
+  {
+    TileMultipart.dropItem(getItem, world, Vector3.fromTileEntityCenter(tile))
+    tile.remPart(this)
+  }
+
+  def renderThisCorner(part: PartFlatWire): Boolean =
+  {
+    if (!(part.isInstanceOf[PartFlatWire]))
+    {
+      return false
+    }
+    val wire: PartFlatWire = part
+    if (wire.getThickness == getThickness)
+    {
+      return side < wire.side
+    }
+    return wire.getThickness > getThickness
+  }
+
   /**
-   * PACKET and NBT Methods
+   * Packet Methods
    */
   override def load(tag: NBTTagCompound)
   {
@@ -142,14 +165,18 @@ class PartFlatWire extends TWire with TFacePart with TNormalOcclusion
     }
   }
 
-  def sendConnUpdate
+  def sendConnUpdate()
   {
     tile.getWriteStream(this).writeByte(0).writeInt(this.connMap)
   }
 
-  override def onRemoved
+  /**
+   * Events
+   */
+  override def onRemoved()
   {
-    super.onRemoved
+    super.onRemoved()
+
     if (!world.isRemote)
     {
       for (r <- 0 until 4)
@@ -157,36 +184,25 @@ class PartFlatWire extends TWire with TFacePart with TNormalOcclusion
         if (maskConnects(r))
         {
           if ((connMap & 1 << r) != 0)
-          {
             notifyCornerChange(r)
-          }
           else if ((connMap & 0x10 << r) != 0)
-          {
             notifyStraightChange(r)
-          }
         }
       }
     }
   }
 
-  override def onChunkLoad
+  override def onChunkLoad()
   {
     if ((connMap & 0x80000000) != 0)
     {
       if (dropIfCantStay)
-      {
         return
-      }
+
       connMap = 0
-      updateInternalConnections
-      if (updateOpenConnections)
-      {
-        updateExternalConnections
-      }
-      tile.markDirty
+      tile.markDirty()
     }
 
-    recalculateConnections()
     super.onChunkLoad()
   }
 
@@ -196,14 +212,7 @@ class PartFlatWire extends TWire with TFacePart with TNormalOcclusion
 
     if (!world.isRemote)
     {
-      updateOpenConnections
-      var changed: Boolean = updateInternalConnections
-      changed |= updateExternalConnections
-      if (changed)
-      {
-        sendConnUpdate
-      }
-      this.recalculateConnections
+      sendConnUpdate()
     }
   }
 
@@ -211,489 +220,19 @@ class PartFlatWire extends TWire with TFacePart with TNormalOcclusion
   {
     if (!world.isRemote)
     {
-      var changed: Boolean = updateInternalConnections
-      if (updateOpenConnections)
-      {
-        changed |= updateExternalConnections
-      }
-      if (changed)
-      {
-        sendConnUpdate
-      }
-      this.recalculateConnections
+      sendConnUpdate()
     }
+
     super.onPartChanged(part)
   }
 
   override def onNeighborChanged
   {
     if (!world.isRemote)
-    {
       if (dropIfCantStay)
-      {
         return
-      }
-      if (updateExternalConnections)
-      {
-        sendConnUpdate
-      }
-      this.recalculateConnections
-    }
-    super.onNeighborChanged
-  }
 
-  def recalculateConnections()
-  {
-    updateOpenConnections
-    val calculatedSides: Array[Boolean] = Array.ofDim[Boolean](6)
-
-    for (r <- 0 until 4)
-    {
-      if (maskOpen(r))
-      {
-        var skip = false
-        val absDir: Int = Rotation.rotateSide(side, r)
-
-        if (setExternalConnection(r, absDir))
-        {
-          calculatedSides(absDir) = true
-        }
-
-        val cornerPos: BlockCoord = new BlockCoord(tile)
-        cornerPos.offset(absDir)
-
-        if (canConnectThroughCorner(cornerPos, absDir ^ 1, side))
-        {
-          cornerPos.offset(side)
-          val tpCorner: TileMultipart = MultipartUtil.getMultipartTile(world, cornerPos)
-          if (tpCorner != null)
-          {
-            val tp: TMultiPart = tpCorner.partMap(absDir ^ 1)
-
-            if (canConnectTo(tp, ForgeDirection.getOrientation(absDir)))
-            {
-              connections(absDir) = tp
-              /*
-              if (tp.isInstanceOf[PartFlatWire])
-              {
-              }
-              */
-              calculatedSides(absDir) = true
-              skip = true
-            }
-          }
-        }
-
-        if (!calculatedSides(absDir) && !skip)
-        {
-          disconnect(absDir)
-        }
-      }
-    }
-
-    for (r <- 0 until 4)
-    {
-      var skip = false
-
-      val absDir: Int = Rotation.rotateSide(this.side, r)
-      if (tile.partMap(PartMap.edgeBetween(absDir, this.side)) == null)
-      {
-        val tp: TMultiPart = tile.partMap(absDir)
-        if (this.canConnectTo(tp))
-        {
-          this.connections(absDir) = tp
-          /*
-          if (tp.isInstanceOf[PartFlatWire])
-          {
-          }*/
-
-          skip = true
-        }
-      }
-      if (!calculatedSides(absDir) && !skip)
-      {
-        disconnect(absDir)
-      }
-    }
-
-    setExternalConnection(-1, this.side)
-  }
-
-  def setExternalConnection(r: Int, absSide: Int): Boolean =
-  {
-    val pos: BlockCoord = new BlockCoord(tile).offset(absSide)
-    val tileMultiPart: TileMultipart = MultipartUtil.getMultipartTile(world, pos)
-    if (tileMultiPart != null && r != -1)
-    {
-      val tp: TMultiPart = tileMultiPart.partMap(this.side)
-      if (this.canConnectTo(tp, ForgeDirection.getOrientation(absSide)))
-      {
-        val otherR: Int = (r + 2) % 4
-        if (tp.isInstanceOf[PartFlatWire] && (tp.asInstanceOf[PartFlatWire]).canConnectTo(this, ForgeDirection.getOrientation(absSide).getOpposite) && (tp.asInstanceOf[PartFlatWire]).maskOpen(otherR))
-        {
-          connections(absSide) = tp
-          return true
-        }
-        if (canConnectTo(tp))
-        {
-          connections(absSide) = tp
-          return true
-        }
-      }
-      this.disconnect(absSide)
-    }
-    val tileEntity: TileEntity = world.getTileEntity(pos.x, pos.y, pos.z)
-    if (this.canConnectTo(tileEntity, ForgeDirection.getOrientation(absSide)))
-    {
-      this.connections(absSide) = tileEntity
-      return true
-    }
-    this.disconnect(absSide)
-    return false
-  }
-
-  private def disconnect(i: Int)
-  {
-    if (!this.world.isRemote)
-    {
-      if (this.connections(i) != null)
-      {
-        if (this.connections(i).isInstanceOf[PartFlatWire])
-        {
-          val wire: PartFlatWire = this.connections(i).asInstanceOf[PartFlatWire]
-          this.connections(i) = null
-        }
-        else
-        {
-          this.connections(i) = null
-        }
-      }
-    }
-  }
-
-  def canStay: Boolean =
-  {
-    val pos: BlockCoord = new BlockCoord(tile).offset(side)
-    return MultipartUtil.canPlaceWireOnSide(world, pos.x, pos.y, pos.z, ForgeDirection.getOrientation(side ^ 1), false)
-  }
-
-  def dropIfCantStay: Boolean =
-  {
-    if (!canStay)
-    {
-      drop
-      return true
-    }
-    return false
-  }
-
-  def drop
-  {
-    TileMultipart.dropItem(getItem, world, Vector3.fromTileEntityCenter(tile))
-    tile.remPart(this)
-  }
-
-  /**
-   * Recalculates connections to blocks outside this space
-   *
-   * @return true if a new connection was added or one was removed
-   */
-  protected def updateExternalConnections: Boolean =
-  {
-    var newConn: Int = 0
-
-    for (r <- 0 until 4)
-    {
-      if (maskOpen(r))
-      {
-
-        if (connectStraight(r))
-        {
-          newConn |= 0x10 << r
-        }
-        else
-        {
-          val cnrMode: Int = connectCorner(r)
-          if (cnrMode != 0)
-          {
-            newConn |= 1 << r
-            if (cnrMode == 2)
-            {
-              newConn |= 0x100000 << r
-            }
-          }
-        }
-      }
-    }
-
-    if (newConn != (connMap & 0xF000FF))
-    {
-      val diff: Int = connMap ^ newConn
-      connMap = connMap & ~0xF000FF | newConn
-
-      for (r <- 0 until 4)
-      {
-        if ((diff & 1 << r) != 0)
-        {
-          notifyCornerChange(r)
-        }
-      }
-
-      return true
-    }
-    return false
-  }
-
-  /**
-   * Recalculates connections to other parts within this space
-   *
-   * @return true if a new connection was added or one was removed
-   */
-  protected def updateInternalConnections: Boolean =
-  {
-    var newConn: Int = 0
-
-    for (r <- 0 until 4)
-    {
-      if (connectInternal(r))
-      {
-        newConn |= 0x100 << r
-      }
-    }
-
-    if (connectCenter)
-    {
-      newConn |= 0x10000
-    }
-    if (newConn != (connMap & 0x10F00))
-    {
-      connMap = connMap & ~0x10F00 | newConn
-      return true
-    }
-    return false
-  }
-
-  /**
-   * Recalculates connections that can be made to other parts outside of this space
-   *
-   * @return true if external connections should be recalculated
-   */
-  protected def updateOpenConnections: Boolean =
-  {
-    var newConn: Int = 0
-
-    for (r <- 0 until 4)
-    {
-      if (connectionOpen(r))
-      {
-        newConn |= 0x1000 << r
-      }
-    }
-
-    if (newConn != (connMap & 0xF000))
-    {
-      connMap = connMap & ~0xF000 | newConn
-      return true
-    }
-
-    return false
-  }
-
-  def connectionOpen(r: Int): Boolean =
-  {
-    val absDir: Int = Rotation.rotateSide(side, r)
-    val facePart: TMultiPart = tile.partMap(absDir)
-    if (facePart != null && (!(facePart.isInstanceOf[PartFlatWire]) || !canConnectTo(facePart, ForgeDirection.getOrientation(absDir))))
-    {
-      return false
-    }
-    if (tile.partMap(PartMap.edgeBetween(side, absDir)) != null)
-    {
-      return false
-    }
-    return true
-  }
-
-  /**
-   * Return a corner connection state. 0 = No connection 1 = Physical connection 2 = Render
-   * connection
-   */
-  def connectCorner(r: Int): Int =
-  {
-    val absDir: Int = Rotation.rotateSide(side, r)
-    val pos: BlockCoord = new BlockCoord(tile)
-    pos.offset(absDir)
-    if (!canConnectThroughCorner(pos, absDir ^ 1, side))
-    {
-      return 0
-    }
-    pos.offset(side)
-    val t: TileMultipart = MultipartUtil.getMultipartTile(world, pos)
-    if (t != null)
-    {
-      val tp: TMultiPart = t.partMap(absDir ^ 1)
-      if (canConnectTo(tp, ForgeDirection.getOrientation(absDir)))
-      {
-        if (tp.isInstanceOf[PartFlatWire])
-        {
-          val b: Boolean = (tp.asInstanceOf[PartFlatWire]).connectCorner(this, Rotation.rotationTo(absDir ^ 1, side ^ 1))
-          if (b)
-          {
-            if (!renderThisCorner(tp.asInstanceOf[PartFlatWire]))
-            {
-              return 1
-            }
-            return 2
-          }
-        }
-        return 2
-      }
-    }
-    return 0
-  }
-
-  def canConnectThroughCorner(pos: BlockCoord, side1: Int, side2: Int): Boolean =
-  {
-    if (world.isAirBlock(pos.x, pos.y, pos.z))
-    {
-      return true
-    }
-    val t: TileMultipart = MultipartUtil.getMultipartTile(world, pos)
-    if (t != null)
-    {
-      return t.partMap(side1) == null && t.partMap(side2) == null && t.partMap(PartMap.edgeBetween(side1, side2)) == null
-    }
-    return false
-  }
-
-  def connectStraight(r: Int): Boolean =
-  {
-    val absDir: Int = Rotation.rotateSide(side, r)
-    val pos: BlockCoord = new BlockCoord(tile).offset(absDir)
-    val t: TileMultipart = MultipartUtil.getMultipartTile(world, pos)
-    if (t != null)
-    {
-      val tp: TMultiPart = t.partMap(side)
-      if (this.canConnectTo(tp, ForgeDirection.getOrientation(absDir)))
-      {
-        if (tp.isInstanceOf[PartFlatWire])
-        {
-          return (tp.asInstanceOf[PartFlatWire]).connectStraight(this, (r + 2) % 4)
-        }
-        return true
-      }
-    }
-    else
-    {
-      val tileEntity: TileEntity = world.getTileEntity(pos.x, pos.y, pos.z)
-      return this.canConnectTo(tileEntity, ForgeDirection.getOrientation(absDir))
-    }
-    return false
-  }
-
-  def connectInternal(r: Int): Boolean =
-  {
-    val absDir: Int = Rotation.rotateSide(side, r)
-    if (tile.partMap(PartMap.edgeBetween(absDir, side)) != null)
-    {
-      return false
-    }
-    val tp: TMultiPart = tile.partMap(absDir)
-    if (this.canConnectTo(tp, ForgeDirection.getOrientation(absDir)))
-    {
-      return (tp.asInstanceOf[PartFlatWire]).connectInternal(this, Rotation.rotationTo(absDir, side))
-    }
-    return connectInternalOverride(tp, r)
-  }
-
-  def connectInternalOverride(p: TMultiPart, r: Int): Boolean =
-  {
-    return false
-  }
-
-  def connectCenter: Boolean =
-  {
-    val tp: TMultiPart = tile.partMap(6)
-    if (this.canConnectTo(tp))
-    {
-      if (tp.isInstanceOf[PartFlatWire])
-      {
-        return (tp.asInstanceOf[PartFlatWire]).connectInternal(this, side)
-      }
-      return true
-    }
-    return false
-  }
-
-  def renderThisCorner(part: PartFlatWire): Boolean =
-  {
-    if (!(part.isInstanceOf[PartFlatWire]))
-    {
-      return false
-    }
-    val wire: PartFlatWire = part
-    if (wire.getThickness == getThickness)
-    {
-      return side < wire.side
-    }
-    return wire.getThickness > getThickness
-  }
-
-  def connectCorner(wire: PartFlatWire, r: Int): Boolean =
-  {
-    val absDir: Int = Rotation.rotateSide(side, r)
-    if (this.canConnectTo(wire, ForgeDirection.getOrientation(absDir)) && maskOpen(r))
-    {
-      val oldConn: Int = connMap
-      connMap |= 0x1 << r
-      if (renderThisCorner(wire))
-      {
-        connMap |= 0x100000 << r
-      }
-      if (oldConn != connMap)
-      {
-        sendConnUpdate
-      }
-      return true
-    }
-    return false
-  }
-
-  def connectStraight(wire: PartFlatWire, r: Int): Boolean =
-  {
-    val absDir: Int = Rotation.rotateSide(side, r)
-    if (this.canConnectTo(wire, ForgeDirection.getOrientation(absDir)) && maskOpen(r))
-    {
-      val oldConn: Int = connMap
-      connMap |= 0x10 << r
-      if (oldConn != connMap)
-      {
-        sendConnUpdate
-      }
-      return true
-    }
-    return false
-  }
-
-  def connectInternal(wire: PartFlatWire, r: Int): Boolean =
-  {
-    val absDir: Int = Rotation.rotateSide(side, r)
-    if (this.canConnectTo(wire, ForgeDirection.getOrientation(absDir)))
-    {
-      val oldConn: Int = connMap
-      connMap |= 0x100 << r
-      if (oldConn != connMap)
-      {
-        sendConnUpdate
-      }
-      return true
-    }
-    return false
-  }
-
-  def canConnectCorner(r: Int): Boolean =
-  {
-    return true
+    super.onNeighborChanged()
   }
 
   def notifyCornerChange(r: Int)
@@ -745,7 +284,7 @@ class PartFlatWire extends TWire with TFacePart with TNormalOcclusion
   override def solid(arg0: Int) = false
 
   /**
-   * RENDERING
+   * Rendering
    */
   @SideOnly(Side.CLIENT)
   def getIcon: IIcon =
@@ -765,10 +304,7 @@ class PartFlatWire extends TWire with TFacePart with TNormalOcclusion
     return new ColourARGB(material.color)
   }
 
-  def useStaticRenderer: Boolean =
-  {
-    return true
-  }
+  def useStaticRenderer: Boolean = true
 
   @SideOnly(Side.CLIENT)
   override def renderStatic(pos: Vector3, pass: Int): Boolean =
@@ -801,8 +337,453 @@ class PartFlatWire extends TWire with TFacePart with TNormalOcclusion
   @SideOnly(Side.CLIENT)
   override def drawBreaking(renderBlocks: RenderBlocks)
   {
-    CCRenderState.reset
+    CCRenderState.reset()
     RenderFlatWire.renderBreakingOverlay(renderBlocks.overrideBlockTexture, this)
   }
 
+  /**
+   * Flat wire node handles all the connection logic
+   * TODO: ForgeDirection may NOT be suitable. Integers are better.
+   * @param provider
+   */
+  class FlatWireNode(provider: INodeProvider) extends DCNode(provider)
+  {
+    override def buildConnections()
+    {
+      updateOpenConnections()
+
+      /**
+       * 6 bit bitmask to mark sides that are already calculated to determine which side to disconnect.
+       * TODO: Check if the bitshifting is correct
+       * E.g: 000010
+       */
+      var calculatedMask = 0x00
+
+      for (r <- 0 until 4)
+      {
+        if (maskOpen(r))
+        {
+          var skip = false
+          val absDir: Int = Rotation.rotateSide(side, r)
+
+          if (setExternalConnection(r, absDir))
+            calculatedMask = calculatedMask | (1 << absDir)
+
+          val cornerPos: BlockCoord = new BlockCoord(tile)
+          cornerPos.offset(absDir)
+
+          if (canConnectThroughCorner(cornerPos, absDir ^ 1, side))
+          {
+            cornerPos.offset(side)
+
+            val tpCorner: TileMultipart = MultipartUtil.getMultipartTile(world, cornerPos)
+
+            if (tpCorner != null)
+            {
+              val tp: TMultiPart = tpCorner.partMap(absDir ^ 1)
+              val absForgeDir = ForgeDirection.getOrientation(absDir)
+
+              if (canConnectTo(tp, absForgeDir))
+              {
+                connections.put(tp, absForgeDir)
+
+                calculatedMask = calculatedMask | (1 << absDir)
+                skip = true
+              }
+            }
+          }
+
+          if ((calculatedMask & (1 << absDir)) != 0 && !skip)
+          {
+            disconnect(absDir)
+          }
+        }
+      }
+
+      for (r <- 0 until 4)
+      {
+        var skip = false
+
+        val absDir: Int = Rotation.rotateSide(side, r)
+
+        if (tile.partMap(PartMap.edgeBetween(absDir, side)) == null)
+        {
+          val tp: TMultiPart = tile.partMap(absDir)
+
+          if (canConnectTo(tp))
+          {
+            connections.put(tp, ForgeDirection.getOrientation(absDir))
+            skip = true
+          }
+        }
+
+        if ((calculatedMask & (1 << absDir)) != 0 && !skip)
+        {
+          disconnect(absDir)
+        }
+      }
+
+      setExternalConnection(-1, side)
+    }
+
+    def setExternalConnection(r: Int, absSide: Int): Boolean =
+    {
+      val pos: BlockCoord = new BlockCoord(tile).offset(absSide)
+      val tileMultiPart: TileMultipart = MultipartUtil.getMultipartTile(world, pos)
+      if (tileMultiPart != null && r != -1)
+      {
+        val tp: TMultiPart = tileMultiPart.partMap(side)
+
+        if (canConnectTo(tp, ForgeDirection.getOrientation(absSide)))
+        {
+          val otherR = (r + 2) % 4
+          val forgeDir = ForgeDirection.getOrientation(absSide)
+
+          //Check if it's another flat wire.
+          if (tp.isInstanceOf[PartFlatWire] && (tp.asInstanceOf[PartFlatWire]).canConnectTo(this, ForgeDirection.getOrientation(absSide).getOpposite) && tp.asInstanceOf[PartFlatWire].maskOpen(otherR))
+          {
+            connections.put(tp, forgeDir)
+            return true
+          }
+
+          //Check if it's a component.
+          if (canConnectTo(tp))
+          {
+            connections.put(tp, forgeDir)
+            return true
+          }
+        }
+
+        disconnect(absSide)
+      }
+
+      val tileEntity = world.getTileEntity(pos.x, pos.y, pos.z)
+      val forgeDir = ForgeDirection.getOrientation(absSide)
+
+      if (canConnectTo(tileEntity, forgeDir))
+      {
+        connections.put(tileEntity, forgeDir)
+        return true
+      }
+
+      disconnect(absSide)
+      return false
+    }
+
+    private def disconnect(i: Int)
+    {
+      if (!world.isRemote)
+      {
+        //TODO: Refine this. It's very hacky and may cause errors when the wire connects to a block both ways
+        val inverseCon = connections.map(_.swap)
+        val forgeDir = ForgeDirection.getOrientation(i)
+        val connected = inverseCon(forgeDir)
+
+        if (connected != null)
+        {
+          connections -= connected
+        }
+      }
+    }
+
+    /**
+     * Recalculates connections to blocks outside this space
+     *
+     * @return true if a new connection was added or one was removed
+     */
+    protected def updateExternalConnections(): Boolean =
+    {
+      var newConn: Int = 0
+
+      for (r <- 0 until 4)
+      {
+        if (maskOpen(r))
+        {
+
+          if (connectStraight(r))
+          {
+            newConn |= 0x10 << r
+          }
+          else
+          {
+            val cnrMode: Int = connectCorner(r)
+            if (cnrMode != 0)
+            {
+              newConn |= 1 << r
+              if (cnrMode == 2)
+              {
+                newConn |= 0x100000 << r
+              }
+            }
+          }
+        }
+      }
+
+      if (newConn != (connMap & 0xF000FF))
+      {
+        val diff: Int = connMap ^ newConn
+        connMap = connMap & ~0xF000FF | newConn
+
+        for (r <- 0 until 4)
+        {
+          if ((diff & 1 << r) != 0)
+          {
+            notifyCornerChange(r)
+          }
+        }
+
+        return true
+      }
+      return false
+    }
+
+    /**
+     * Recalculates connections to other parts within this space
+     *
+     * @return true if a new connection was added or one was removed
+     */
+    protected def updateInternalConnections(): Boolean =
+    {
+      var newConn: Int = 0
+
+      for (r <- 0 until 4)
+      {
+        if (connectInternal(r))
+        {
+          newConn |= 0x100 << r
+        }
+      }
+
+      if (connectCenter)
+      {
+        newConn |= 0x10000
+      }
+      if (newConn != (connMap & 0x10F00))
+      {
+        connMap = connMap & ~0x10F00 | newConn
+        return true
+      }
+      return false
+    }
+
+    /**
+     * Recalculates connections that can be made to other parts outside of this space
+     *
+     * @return true if external connections should be recalculated
+     */
+    protected def updateOpenConnections(): Boolean =
+    {
+      var newConn: Int = 0
+
+      for (r <- 0 until 4)
+      {
+        if (connectionOpen(r))
+        {
+          newConn |= 0x1000 << r
+        }
+      }
+
+      if (newConn != (connMap & 0xF000))
+      {
+        connMap = connMap & ~0xF000 | newConn
+        return true
+      }
+
+      return false
+    }
+
+    def connectionOpen(r: Int): Boolean =
+    {
+      val absDir: Int = Rotation.rotateSide(side, r)
+      val facePart: TMultiPart = tile.partMap(absDir)
+      if (facePart != null && (!(facePart.isInstanceOf[PartFlatWire]) || !canConnectTo(facePart, ForgeDirection.getOrientation(absDir))))
+      {
+        return false
+      }
+      if (tile.partMap(PartMap.edgeBetween(side, absDir)) != null)
+      {
+        return false
+      }
+      return true
+    }
+
+    /**
+     * Return a corner connection state. 0 = No connection 1 = Physical connection 2 = Render
+     * connection
+     */
+    def connectCorner(r: Int): Int =
+    {
+      val absDir: Int = Rotation.rotateSide(side, r)
+      val pos: BlockCoord = new BlockCoord(tile)
+      pos.offset(absDir)
+      if (!canConnectThroughCorner(pos, absDir ^ 1, side))
+      {
+        return 0
+      }
+      pos.offset(side)
+      val t: TileMultipart = MultipartUtil.getMultipartTile(world, pos)
+
+      if (t != null)
+      {
+        val tp = t.partMap(absDir ^ 1)
+
+        if (canConnectTo(tp, ForgeDirection.getOrientation(absDir)))
+        {
+          val wire = getWireNode(tp, ForgeDirection.getOrientation(absDir))
+
+          if (wire != null)
+          {
+            if (wire.connectCorner(PartFlatWire.this, Rotation.rotationTo(absDir ^ 1, side ^ 1)))
+            {
+              if (!renderThisCorner(tp.asInstanceOf[PartFlatWire]))
+              {
+                return 1
+              }
+              return 2
+            }
+          }
+          return 2
+        }
+      }
+      return 0
+    }
+
+    def canConnectThroughCorner(pos: BlockCoord, side1: Int, side2: Int): Boolean =
+    {
+      if (world.isAirBlock(pos.x, pos.y, pos.z))
+      {
+        return true
+      }
+      val t: TileMultipart = MultipartUtil.getMultipartTile(world, pos)
+      if (t != null)
+      {
+        return t.partMap(side1) == null && t.partMap(side2) == null && t.partMap(PartMap.edgeBetween(side1, side2)) == null
+      }
+      return false
+    }
+
+    def connectStraight(r: Int): Boolean =
+    {
+      val absDir: Int = Rotation.rotateSide(side, r)
+      val pos: BlockCoord = new BlockCoord(tile).offset(absDir)
+      val t: TileMultipart = MultipartUtil.getMultipartTile(world, pos)
+      if (t != null)
+      {
+        val tp: TMultiPart = t.partMap(side)
+        if (canConnectTo(tp, ForgeDirection.getOrientation(absDir)))
+        {
+          val wire = getWireNode(tp, ForgeDirection.getOrientation(absDir))
+
+          if (wire != null)
+          {
+            return wire.connectStraight(PartFlatWire.this, (r + 2) % 4)
+          }
+          return true
+        }
+      }
+      else
+      {
+        val tileEntity: TileEntity = world.getTileEntity(pos.x, pos.y, pos.z)
+        return canConnectTo(tileEntity, ForgeDirection.getOrientation(absDir))
+      }
+      return false
+    }
+
+    def connectInternal(r: Int): Boolean =
+    {
+      val absDir: Int = Rotation.rotateSide(side, r)
+      if (tile.partMap(PartMap.edgeBetween(absDir, side)) != null)
+      {
+        return false
+      }
+      val tp: TMultiPart = tile.partMap(absDir)
+
+      if (canConnectTo(tp, ForgeDirection.getOrientation(absDir)))
+      {
+        val wire = getWireNode(tp, ForgeDirection.getOrientation(absDir))
+        if (wire != null)
+          return wire.connectInternal(PartFlatWire.this, Rotation.rotationTo(absDir, side))
+      }
+
+      return false
+    }
+
+    def connectCenter: Boolean =
+    {
+      val tp: TMultiPart = tile.partMap(6)
+
+      if (canConnectTo(tp))
+      {
+        if (tp.isInstanceOf[PartFlatWire])
+          return tp.asInstanceOf[PartFlatWire].getNode(classOf[FlatWireNode], null).asInstanceOf[FlatWireNode].connectInternal(PartFlatWire.this, side)
+
+        return true
+      }
+
+      return false
+    }
+
+    def connectCorner(wire: PartFlatWire, r: Int): Boolean =
+    {
+      val absDir: Int = Rotation.rotateSide(side, r)
+      if (canConnectTo(wire, ForgeDirection.getOrientation(absDir)) && maskOpen(r))
+      {
+        val oldConn: Int = connMap
+        connMap |= 0x1 << r
+        if (renderThisCorner(wire))
+        {
+          connMap |= 0x100000 << r
+        }
+        if (oldConn != connMap)
+        {
+          sendConnUpdate
+        }
+        return true
+      }
+      return false
+    }
+
+    def connectStraight(wire: PartFlatWire, r: Int): Boolean =
+    {
+      val absDir: Int = Rotation.rotateSide(side, r)
+      if (canConnectTo(wire, ForgeDirection.getOrientation(absDir)) && maskOpen(r))
+      {
+        val oldConn: Int = connMap
+        connMap |= 0x10 << r
+        if (oldConn != connMap)
+        {
+          sendConnUpdate
+        }
+        return true
+      }
+      return false
+    }
+
+    def connectInternal(wire: PartFlatWire, r: Int): Boolean =
+    {
+      val absDir: Int = Rotation.rotateSide(side, r)
+      if (canConnectTo(wire, ForgeDirection.getOrientation(absDir)))
+      {
+        val oldConn: Int = connMap
+        connMap |= 0x100 << r
+        if (oldConn != connMap)
+        {
+          sendConnUpdate
+        }
+        return true
+      }
+      return false
+    }
+
+    private def getWireNode(obj: AnyRef, from: ForgeDirection): FlatWireNode =
+    {
+      if (obj.isInstanceOf[FlatWireNode])
+        return obj.asInstanceOf[FlatWireNode]
+
+      if (obj.isInstanceOf[INodeProvider])
+        return getWireNode(obj.asInstanceOf[INodeProvider].getNode(classOf[FlatWireNode], from), from)
+
+      return null
+    }
+  }
 }
