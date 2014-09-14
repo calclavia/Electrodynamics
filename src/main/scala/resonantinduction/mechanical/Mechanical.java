@@ -5,9 +5,14 @@ import net.minecraft.init.Items;
 import resonant.content.loader.ModManager;
 import resonant.engine.content.debug.TileCreativeBuilder;
 import resonant.lib.network.discriminator.PacketAnnotationManager;
+import resonantinduction.core.ResonantPartFactory;
+import resonantinduction.core.ResonantPartFactory$;
 import resonantinduction.core.ResonantTab;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
+import resonantinduction.mechanical.fluid.pipe.PartPipe;
 import resonantinduction.mechanical.fluid.pipe.PipeMaterials;
+import resonantinduction.mechanical.gear.PartGear;
+import resonantinduction.mechanical.gearshaft.PartGearShaft;
 import resonantinduction.mechanical.turbine.*;
 import resonantinduction.mechanical.fluid.pipe.ItemPipe;
 import resonantinduction.mechanical.fluid.transport.TilePump;
@@ -127,12 +132,15 @@ public class Mechanical
 
 		PacketAnnotationManager.INSTANCE.register(TileWindTurbine.class);
         PacketAnnotationManager.INSTANCE.register(TileWaterTurbine.class);
+
+		ResonantPartFactory$.MODULE$.register(PartGear.class);
+		ResonantPartFactory$.MODULE$.register(PartGearShaft.class);
+		ResonantPartFactory$.MODULE$.register(PartPipe.class);
 	}
 
 	@EventHandler
 	public void init(FMLInitializationEvent evt)
 	{
-		MultipartMechanical.INSTANCE = new MultipartMechanical();
 		proxy.init();
 	}
 

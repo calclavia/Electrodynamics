@@ -73,11 +73,11 @@ class PartFlatWire extends TWire with TFacePart with TNormalOcclusion
 
   override lazy val node = new FlatWireNode(this)
 
-
   def preparePlacement(side: Int, meta: Int)
   {
     this.side = (side ^ 1).toByte
     setMaterial(meta)
+    node.setResistance(material.resistance)
   }
 
   def canStay: Boolean =
