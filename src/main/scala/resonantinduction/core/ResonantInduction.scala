@@ -58,6 +58,7 @@ object ResonantInduction
   @EventHandler
   def init(evt: FMLInitializationEvent)
   {
+    //TODO: Why is there an if statement check here?
     if (ResonantInduction.metadata != null)
     {
       ResonantInduction.metadata.modId = Reference.name

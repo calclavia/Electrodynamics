@@ -3,13 +3,12 @@ package resonantinduction.mechanical;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import resonant.content.loader.ModManager;
-import resonant.content.prefab.itemblock.ItemBlockMetadata;
 import resonant.engine.content.debug.TileCreativeBuilder;
 import resonant.lib.network.discriminator.PacketAnnotationManager;
 import resonantinduction.core.ResonantTab;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
+import resonantinduction.mechanical.fluid.pipe.PipeMaterial;
 import resonantinduction.mechanical.turbine.*;
-import resonantinduction.mechanical.fluid.pipe.EnumPipeMaterial;
 import resonantinduction.mechanical.fluid.pipe.ItemPipe;
 import resonantinduction.mechanical.fluid.transport.TilePump;
 import resonantinduction.mechanical.gear.ItemGear;
@@ -27,7 +26,6 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import resonant.lib.recipe.UniversalRecipe;
 import resonantinduction.core.Reference;
-import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.interfaces.IMechanicalNode;
 import resonantinduction.mechanical.process.mixer.TileMixer;
 import cpw.mods.fml.common.Mod;
@@ -41,8 +39,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import universalelectricity.api.core.grid.NodeRegistry;
-
-import java.sql.Ref;
 
 /**
  * Resonant Induction Mechanical Module
@@ -165,12 +161,12 @@ public class Mechanical
 
         GameRegistry.addRecipe(new ShapedOreRecipe(blockPump, "PPP", "GGG", "PPP", 'P', itemPipe, 'G', new ItemStack(itemGear, 1, 2)));
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 3, EnumPipeMaterial.CERAMIC.ordinal()), "BBB", "   ", "BBB", 'B', Items.brick));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 3, EnumPipeMaterial.BRONZE.ordinal()), "BBB", "   ", "BBB", 'B', "ingotBronze"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 3, EnumPipeMaterial.PLASTIC.ordinal()), "BBB", "   ", "BBB", 'B', UniversalRecipe.RUBBER.get()));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 3, EnumPipeMaterial.IRON.ordinal()), "BBB", "   ", "BBB", 'B', Items.iron_ingot));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 3, EnumPipeMaterial.STEEL.ordinal()), "BBB", "   ", "BBB", 'B', "ingotSteel"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 3, EnumPipeMaterial.FIBERGLASS.ordinal()), "BBB", "   ", "BBB", 'B', Items.diamond));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 3, PipeMaterial.CERAMIC.ordinal()), "BBB", "   ", "BBB", 'B', Items.brick));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 3, PipeMaterial.BRONZE.ordinal()), "BBB", "   ", "BBB", 'B', "ingotBronze"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 3, PipeMaterial.PLASTIC.ordinal()), "BBB", "   ", "BBB", 'B', UniversalRecipe.RUBBER.get()));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 3, PipeMaterial.IRON.ordinal()), "BBB", "   ", "BBB", 'B', Items.iron_ingot));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 3, PipeMaterial.STEEL.ordinal()), "BBB", "   ", "BBB", 'B', "ingotSteel"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 3, PipeMaterial.FIBERGLASS.ordinal()), "BBB", "   ", "BBB", 'B', Items.diamond));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockMechanicalPiston, "SGS", "SPS", "SRS", 'P', Blocks.piston, 'S', Items.iron_ingot, 'R', Items.redstone, 'G', new ItemStack(itemGear, 1, 2)));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockGrinderWheel, "III", "LGL", "III", 'I', UniversalRecipe.PRIMARY_METAL.get(), 'L', "logWood", 'G', itemGear));

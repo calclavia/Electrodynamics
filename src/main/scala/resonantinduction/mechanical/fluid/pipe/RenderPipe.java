@@ -14,7 +14,6 @@ import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
 
 import resonant.content.prefab.scala.render.ISimpleItemRenderer;
-import resonant.lib.render.FluidRenderUtility;
 import resonant.lib.render.RenderUtility;
 import resonant.lib.utility.WorldUtility;
 import resonantinduction.core.Reference;
@@ -117,7 +116,7 @@ public class RenderPipe implements ISimpleItemRenderer
 	{
 		RenderUtility.enableBlending();
 		RenderUtility.bind(TEXTURE);
-		EnumPipeMaterial material = EnumPipeMaterial.values()[meta];
+		PipeMaterial material = PipeMaterial.values()[meta];
 
 		GL11.glColor4f(material.color.getRed() / 255f, material.color.getGreen() / 255f, material.color.getBlue() / 255f, 1);
 		MODEL.renderOnly("Mid");

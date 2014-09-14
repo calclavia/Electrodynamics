@@ -1,30 +1,51 @@
 package resonantinduction.mechanical.fluid.pipe
 
+import codechicken.lib.data.MCDataInput
+import codechicken.lib.render.CCRenderState
+import codechicken.lib.vec.{Cuboid6, Vector3}
 import codechicken.multipart.{TNormalOcclusion, TSlottedPart}
+import cpw.mods.fml.relauncher.{Side, SideOnly}
+import net.minecraft.client.renderer.RenderBlocks
+import net.minecraft.item.ItemStack
+import net.minecraft.nbt.NBTTagCompound
+import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
+import resonant.lib.`type`.EvictingList
 import resonantinduction.core.prefab.part.{PartFramedNode, TColorable, TMaterial}
+import resonantinduction.mechanical.Mechanical
+import resonantinduction.mechanical.fluid.pipe.PipeMaterial.PipeMaterial
 
 /**
  * Fluid transport pipe
  *
- * @author Calclavia,
+ * @author Calclavia
  */
-class PartPipe extends PartFramedNode with TMaterial[EnumPipeMaterial] with TColorable with TSlottedPart with TNormalOcclusion with IFluidHandler
+class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorable with TSlottedPart with TNormalOcclusion with IFluidHandler
 {
+  protected final val tank: FluidTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME)
+
+  /**
+   * Computes the average fluid for client to render.
+   */
+  private val averageTankData = new EvictingList[Integer](20)
+  private var markPacket: Boolean = true
+
   setNode(new PipePressureNode(this))
 
   def setMaterial(i: Int)
   {
-    material = EnumPipeMaterial.values(i)
+    material = PipeMaterial(i).asInstanceOf[PipeMaterial]
   }
 
-  def getMaterialID: Int = material.ordinal
+  def getMaterialID: Int = material.id
 
 
-  override def update
+  override def update()
   {
-    super.update
+    super.update()
+
     averageTankData.add(tank.getFluidAmount)
+
     if (!world.isRemote && markPacket)
     {
       sendFluidUpdate
@@ -37,24 +58,17 @@ class PartPipe extends PartFramedNode with TMaterial[EnumPipeMaterial] with TCol
    */
   def sendFluidUpdate
   {
-    val nbt: NBTTagCompound = new NBTTagCompound
+    val nbt = new NBTTagCompound
     var averageAmount: Int = 0
     if (averageTankData.size > 0)
     {
-      {
-        var i: Int = 0
-        while (i < averageTankData.size)
+     for (i <- 0 until averageTankData.size)
         {
           {
             averageAmount += averageTankData.get(i)
           }
-          (
-          {
-            i += 1;
-            i - 1
-          })
-        }
       }
+
       averageAmount /= averageTankData.size
     }
     val tempTank: FluidTank = if (tank.getFluid != null) new FluidTank(tank.getFluid.getFluid, averageAmount, tank.getCapacity) else new FluidTank(tank.getCapacity)
@@ -75,7 +89,8 @@ class PartPipe extends PartFramedNode with TMaterial[EnumPipeMaterial] with TCol
     }
   }
 
-  @SideOnly(Side.CLIENT) override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
+  @SideOnly(Side.CLIENT)
+  override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
   {
     RenderPipe.INSTANCE.render(this, pos.x, pos.y, pos.z, frame)
   }
@@ -133,7 +148,7 @@ class PartPipe extends PartFramedNode with TMaterial[EnumPipeMaterial] with TCol
 
   override def drawBreaking(renderBlocks: RenderBlocks)
   {
-    CCRenderState.reset
+    CCRenderState.reset()
   }
 
   override def save(nbt: NBTTagCompound)
@@ -148,21 +163,9 @@ class PartPipe extends PartFramedNode with TMaterial[EnumPipeMaterial] with TCol
     tank.readFromNBT(nbt)
   }
 
-  override def getOcclusionBoxes: Set[Cuboid6] =
-  {
-    return null
-  }
-
   override def getSlotMask: Int =
   {
     return 0
   }
 
-  protected final val tank: FluidTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME)
-
-  /**
-   * Computes the average fluid for client to render.
-   */
-  private var averageTankData: EvictingList[Integer] = new EvictingList[Integer](20)
-  private var markPacket: Boolean = true
 }

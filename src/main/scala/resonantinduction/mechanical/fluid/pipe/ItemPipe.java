@@ -45,7 +45,7 @@ public class ItemPipe extends JItemMultiPart
 	@Override
 	public String getUnlocalizedName(ItemStack itemStack)
 	{
-		return super.getUnlocalizedName(itemStack) + "." + LanguageUtility.underscoreToCamel(EnumPipeMaterial.values()[itemStack.getItemDamage()].name());
+		return super.getUnlocalizedName(itemStack) + "." + LanguageUtility.underscoreToCamel(PipeMaterial.values()[itemStack.getItemDamage()].name());
 	}
 
 	@Override
@@ -58,15 +58,15 @@ public class ItemPipe extends JItemMultiPart
 		}
 		else
 		{
-			list.add(EnumColor.AQUA + LanguageUtility.getLocal("tooltip.pipe.rate").replace("%v", "" + EnumColor.ORANGE + new UnitDisplay(UnitDisplay.Unit.LITER, EnumPipeMaterial.values()[itemstack.getItemDamage()].maxFlowRate * 20) + "/s"));
-			list.add(EnumColor.AQUA + LanguageUtility.getLocal("tooltip.pipe.pressure").replace("%v", "" + EnumColor.ORANGE + EnumPipeMaterial.values()[itemstack.getItemDamage()].maxPressure + " Pa"));
+			list.add(EnumColor.AQUA + LanguageUtility.getLocal("tooltip.pipe.rate").replace("%v", "" + EnumColor.ORANGE + new UnitDisplay(UnitDisplay.Unit.LITER, PipeMaterial.values()[itemstack.getItemDamage()].maxFlowRate * 20) + "/s"));
+			list.add(EnumColor.AQUA + LanguageUtility.getLocal("tooltip.pipe.pressure").replace("%v", "" + EnumColor.ORANGE + PipeMaterial.values()[itemstack.getItemDamage()].maxPressure + " Pa"));
 		}
 	}
 
 	@Override
 	public void getSubItems(Item itemID, CreativeTabs tab, List listToAddTo)
 	{
-		for (EnumPipeMaterial material : EnumPipeMaterial.values())
+		for (PipeMaterial material : PipeMaterial.values())
 		{
 			listToAddTo.add(new ItemStack(itemID, 1, material.ordinal()));
 		}

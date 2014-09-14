@@ -12,10 +12,13 @@ import resonantinduction.core.util.ResonantUtil
  * Trait applied to objects that can associates with a color.
  * @author Calclavia
  */
-trait TColorable extends TMultiPart with TPart
+object TColorable
 {
   val defaultColor = 15
-  var colorID = defaultColor
+}
+trait TColorable extends TMultiPart with TPart
+{
+  var colorID = TColorable.defaultColor
 
   def getColor = colorID
 
