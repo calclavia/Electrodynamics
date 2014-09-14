@@ -17,6 +17,7 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.{IIcon, MovingObjectPosition}
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
+import resonantinduction.core.prefab.part.ChickenBonesWrapper._
 import resonantinduction.core.util.MultipartUtil
 import resonantinduction.electrical.wire.base.TWire
 import universalelectricity.api.core.grid.INodeProvider
@@ -147,21 +148,14 @@ class PartFlatWire extends TWire with TFacePart with TNormalOcclusion
     packet.writeInt(connMap)
   }
 
-  override def read(packet: MCDataInput)
-  {
-    read(packet, packet.readUByte)
-  }
-
   override def read(packet: MCDataInput, packetID: Int)
   {
+    super.read(packet, packetID)
+
     if (packetID == 0)
     {
       connMap = packet.readInt
       tile.markRender
-    }
-    else
-    {
-      super.read(packet, packetID)
     }
   }
 
@@ -786,4 +780,5 @@ class PartFlatWire extends TWire with TFacePart with TNormalOcclusion
       return null
     }
   }
+
 }

@@ -1,6 +1,5 @@
 package resonantinduction.core.util
 
-import codechicken.lib.vec.BlockCoord
 import codechicken.multipart.{TMultiPart, TileMultipart}
 import net.minecraft.block.Block
 import net.minecraft.init.Blocks
@@ -17,9 +16,9 @@ import universalelectricity.core.transform.vector.{Vector3, VectorWorld}
  */
 object MultipartUtil
 {
-  def getMultipartTile(access: IBlockAccess, pos: BlockCoord): TileMultipart =
+  def getMultipartTile(access: IBlockAccess, pos: Vector3): TileMultipart =
   {
-    val te: TileEntity = access.getTileEntity(pos.x, pos.y, pos.z)
+    val te = pos.getTileEntity(access)
     return if (te.isInstanceOf[TileMultipart]) te.asInstanceOf[TileMultipart] else null
   }
 

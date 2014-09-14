@@ -71,6 +71,18 @@ abstract class TWire extends TMultiPart with TNodePartConnector with TPart with 
     super[TColorable].save(nbt)
   }
 
+  override def read(packet: MCDataInput)
+  {
+    read(packet, packet.readUByte)
+  }
+
+  override def read(packet: MCDataInput, packetID: Int): Unit =
+  {
+    super[TMaterial].read(packet,packetID)
+    super[TInsulatable].read(packet,packetID)
+    super[TColorable].read(packet,packetID)
+  }
+
   /**
    * Can this conductor connect with another potential wire object?
    */
