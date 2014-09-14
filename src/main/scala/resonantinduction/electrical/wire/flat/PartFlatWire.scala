@@ -19,6 +19,8 @@ import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
 import resonantinduction.core.util.MultipartUtil
 import resonantinduction.electrical.wire.base.TWire
+import universalelectricity.api.core.grid.{INodeProvider, INode}
+import universalelectricity.simulator.dc.DCNode
 
 import scala.collection.convert.wrapAll._
 
@@ -50,7 +52,11 @@ object PartFlatWire
 
 class PartFlatWire extends TWire with TFacePart with TNormalOcclusion
 {
+  /**
+   * The current side the wire is placed on
+   */
   var side: Byte = 0
+
   /**
    * A map of the corners.
    * <p/>
@@ -65,6 +71,17 @@ class PartFlatWire extends TWire with TFacePart with TNormalOcclusion
    */
   var connMap: Int = 0x00
 
+  override lazy val node = new FlatWireNode(this)
+
+  /**
+   * Flat wire node handles all the connection logic
+   * @param provider
+   */
+  class FlatWireNode (provider:INodeProvider) extends DCNode(provider)
+  {
+
+  }
+
   def connections: Array[AnyRef] =
   {
     return null
@@ -72,7 +89,7 @@ class PartFlatWire extends TWire with TFacePart with TNormalOcclusion
 
   def preparePlacement(side: Int, meta: Int)
   {
-    this.side = (side ^ 1).asInstanceOf[Byte]
+    this.side = (side ^ 1).toByte
     setMaterial(meta)
   }
 
@@ -135,24 +152,18 @@ class PartFlatWire extends TWire with TFacePart with TNormalOcclusion
     super.onRemoved
     if (!world.isRemote)
     {
+      for (r <- 0 until 4)
       {
-        var r: Int = 0
-        while (r < 4)
+        if (maskConnects(r))
         {
+          if ((connMap & 1 << r) != 0)
           {
-            if (maskConnects(r))
-            {
-              if ((connMap & 1 << r) != 0)
-              {
-                notifyCornerChange(r)
-              }
-              else if ((connMap & 0x10 << r) != 0)
-              {
-                notifyStraightChange(r)
-              }
-            }
+            notifyCornerChange(r)
           }
-          ({r += 1; r - 1 })
+          else if ((connMap & 0x10 << r) != 0)
+          {
+            notifyStraightChange(r)
+          }
         }
       }
     }
@@ -174,13 +185,15 @@ class PartFlatWire extends TWire with TFacePart with TNormalOcclusion
       }
       tile.markDirty
     }
-    this.recalculateConnections
-    super.onChunkLoad
+
+    recalculateConnections()
+    super.onChunkLoad()
   }
 
   override def onAdded
   {
-    super.onAdded
+    super.onAdded()
+
     if (!world.isRemote)
     {
       updateOpenConnections

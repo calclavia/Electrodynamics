@@ -5,16 +5,16 @@ import codechicken.multipart.TMultiPart
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
-import resonantinduction.core.prefab.part.connector.{TColorable, TInsulatable, TMaterial, TPart}
+import resonantinduction.core.prefab.part.connector._
 import resonantinduction.electrical.ElectricalContent
-import universalelectricity.api.core.grid.INodeProvider
+import universalelectricity.api.core.grid.{INode, INodeProvider}
 import universalelectricity.simulator.dc.DCNode
 
 /**
  * Class extended by wires
  * @author Calclavia
  */
-abstract class TWire extends TMultiPart with TPart with TMaterial[WireMaterial] with TInsulatable with TColorable
+abstract class TWire extends TMultiPart with TNodePartConnector with TPart with TMaterial[WireMaterial] with TInsulatable with TColorable
 {
   override protected val insulationItem: Item = ElectricalContent.itemInsulation
 

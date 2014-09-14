@@ -41,12 +41,10 @@ object PartFramedNode
   }
 }
 
-abstract class PartFramedNode extends TMultiPart with INodeProvider with TSlottedPart with TNormalOcclusion with TIconHitEffects
+abstract class PartFramedNode extends TMultiPart with TNodePartConnector with TSlottedPart with TNormalOcclusion with TIconHitEffects
 {
   /** Bitmask connections */
   var connectionMask: Byte = 0x00
-  protected var connections: Array[AnyRef] = new Array[AnyRef](6)
-  protected var node: INode = null
 
   @SideOnly(Side.CLIENT)
   protected var breakIcon: IIcon = null
@@ -146,21 +144,6 @@ abstract class PartFramedNode extends TMultiPart with INodeProvider with TSlotte
     return PartFramedNode.connectionMapContainsSide(getAllCurrentConnections, side)
   }
 
-  override def onWorldJoin()
-  {
-    node.reconstruct()
-  }
-
-  override def onNeighborChanged()
-  {
-    node.reconstruct()
-  }
-
-  override def onWorldSeparate()
-  {
-    node.deconstruct()
-  }
-
   /** Packet Methods */
   def sendConnectionUpdate()
   {
@@ -192,34 +175,4 @@ abstract class PartFramedNode extends TMultiPart with INodeProvider with TSlotte
       tile.markRender
     }
   }
-
-  def getNode(nodeType: Class[_ <: INode], from: ForgeDirection): INode =
-  {
-    if (node != null && nodeType != null)
-    {
-      return node
-    }
-    return null
-  }
-
-  override def save(nbt: NBTTagCompound)
-  {
-    super.save(nbt)
-
-    if (node.isInstanceOf[ISave])
-      node.asInstanceOf[ISave].save(nbt)
-  }
-
-  override def load(nbt: NBTTagCompound)
-  {
-    super.load(nbt)
-
-    if (node.isInstanceOf[ISave])
-      node.asInstanceOf[ISave].load(nbt)
-  }
-
-  def getNode: INode = node
-
-  def setNode(n: INode)
-  { node = n }
 }

@@ -22,7 +22,7 @@ import resonantinduction.mechanical.fluid.pipe.PipeMaterials.PipeMaterial
  */
 class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorable with TSlottedPart with TNormalOcclusion with IFluidHandler
 {
-  protected final val tank: FluidTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME)
+  protected final val tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME)
 
   /**
    * Computes the average fluid for client to render.
@@ -30,7 +30,7 @@ class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorab
   private val averageTankData = new EvictingList[Integer](20)
   private var markPacket: Boolean = true
 
-  setNode(new PipePressureNode(this))
+  override lazy val node = new PipePressureNode(this)
 
   def preparePlacement(meta: Int)
   {
