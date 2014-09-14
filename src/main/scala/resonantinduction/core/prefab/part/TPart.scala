@@ -4,6 +4,7 @@ import codechicken.multipart.{IRedstonePart, TMultiPart}
 import net.minecraft.item.ItemStack
 import net.minecraft.util.MovingObjectPosition
 import resonant.content.spatial.block.TraitTicker
+import resonantinduction.core.ResonantPartFactory
 
 import scala.collection.convert.wrapAll._
 import scala.collection.mutable
@@ -59,5 +60,5 @@ trait TPart extends TMultiPart with TraitTicker
 
   override def toString: String = "[" + getClass.getSimpleName + "]" + x + "x " + y + "y " + z + "z"
 
-  override def getType: String = "ResonantInduction:" + getClass.getSimpleName
+  override def getType: String = ResonantPartFactory.prefix + getClass.getSimpleName
 }

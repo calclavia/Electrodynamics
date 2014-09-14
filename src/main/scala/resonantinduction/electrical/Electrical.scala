@@ -12,8 +12,8 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent
 import net.minecraftforge.oredict.OreDictionary
 import resonant.content.loader.ModManager
 import resonant.lib.loadable.LoadableHandler
-import resonantinduction.atomic.gate.ItemQuantumGlyph
-import resonantinduction.core.{Reference, ResonantTab, Settings}
+import resonantinduction.atomic.gate.{PartQuantumGlyph, ItemQuantumGlyph}
+import resonantinduction.core.{ResonantPartFactory, Reference, ResonantTab, Settings}
 import resonantinduction.electrical.battery.{ItemBlockBattery, TileBattery}
 import resonantinduction.electrical.generator.{TileMotor, TileSolarPanel, TileThermopile}
 import resonantinduction.electrical.laser.emitter.{BlockLaserEmitter, TileLaserEmitter}
@@ -21,12 +21,14 @@ import resonantinduction.electrical.laser.focus.ItemFocusingMatrix
 import resonantinduction.electrical.laser.focus.crystal.{BlockFocusCrystal, TileFocusCrystal}
 import resonantinduction.electrical.laser.focus.mirror.{BlockMirror, TileMirror}
 import resonantinduction.electrical.laser.receiver.{BlockLaserReceiver, TileLaserReceiver}
-import resonantinduction.electrical.levitator.ItemLevitator
-import resonantinduction.electrical.multimeter.ItemMultimeter
+import resonantinduction.electrical.levitator.{PartLevitator, ItemLevitator}
+import resonantinduction.electrical.multimeter.{PartMultimeter, ItemMultimeter}
 import resonantinduction.electrical.tesla.TileTesla
-import resonantinduction.electrical.transformer.ItemElectricTransformer
+import resonantinduction.electrical.transformer.{PartElectricTransformer, ItemElectricTransformer}
 import resonantinduction.electrical.wire.ItemWire
 import resonantinduction.electrical.wire.base.WireMaterial
+import resonantinduction.electrical.wire.flat.PartFlatWire
+import resonantinduction.electrical.wire.framed.PartFramedWire
 
 /** Resonant Induction Electrical Module
   *
@@ -96,13 +98,23 @@ object Electrical
     OreDictionary.registerOre("batteryBox", ItemBlockBattery.setTier(new ItemStack(ElectricalContent.blockBattery, 1, 0), 0.asInstanceOf[Byte]))
     ResonantTab.itemStack(new ItemStack(ElectricalContent.itemTransformer))
 
+
+    /**
+     * Register all parts
+     */
+    ResonantPartFactory.register(classOf[PartFramedWire])
+    ResonantPartFactory.register(classOf[PartFlatWire])
+    ResonantPartFactory.register(classOf[PartMultimeter])
+    ResonantPartFactory.register(classOf[PartElectricTransformer])
+    ResonantPartFactory.register(classOf[PartLevitator])
+    ResonantPartFactory.register(classOf[PartQuantumGlyph])
+
     Electrical.proxy.preInit
     modproxies.preInit()
   }
 
   @EventHandler def init(evt: FMLInitializationEvent)
   {
-    ElectricalPartFactory.register()
     Electrical.proxy.init
     modproxies.init()
   }
