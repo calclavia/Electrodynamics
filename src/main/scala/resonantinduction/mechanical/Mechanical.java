@@ -7,7 +7,7 @@ import resonant.engine.content.debug.TileCreativeBuilder;
 import resonant.lib.network.discriminator.PacketAnnotationManager;
 import resonantinduction.core.ResonantTab;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
-import resonantinduction.mechanical.fluid.pipe.PipeMaterial;
+import resonantinduction.mechanical.fluid.pipe.PipeMaterials;
 import resonantinduction.mechanical.turbine.*;
 import resonantinduction.mechanical.fluid.pipe.ItemPipe;
 import resonantinduction.mechanical.fluid.transport.TilePump;
@@ -161,12 +161,12 @@ public class Mechanical
 
         GameRegistry.addRecipe(new ShapedOreRecipe(blockPump, "PPP", "GGG", "PPP", 'P', itemPipe, 'G', new ItemStack(itemGear, 1, 2)));
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 3, PipeMaterial.CERAMIC.ordinal()), "BBB", "   ", "BBB", 'B', Items.brick));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 3, PipeMaterial.BRONZE.ordinal()), "BBB", "   ", "BBB", 'B', "ingotBronze"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 3, PipeMaterial.PLASTIC.ordinal()), "BBB", "   ", "BBB", 'B', UniversalRecipe.RUBBER.get()));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 3, PipeMaterial.IRON.ordinal()), "BBB", "   ", "BBB", 'B', Items.iron_ingot));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 3, PipeMaterial.STEEL.ordinal()), "BBB", "   ", "BBB", 'B', "ingotSteel"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 3, PipeMaterial.FIBERGLASS.ordinal()), "BBB", "   ", "BBB", 'B', Items.diamond));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 3, PipeMaterials.ceramic().id()), "BBB", "   ", "BBB", 'B', Items.brick));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 3, PipeMaterials.bronze().id()), "BBB", "   ", "BBB", 'B', "ingotBronze"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 3, PipeMaterials.plastic().id()), "BBB", "   ", "BBB", 'B', UniversalRecipe.RUBBER.get()));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 3, PipeMaterials.iron().id()), "BBB", "   ", "BBB", 'B', Items.iron_ingot));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 3, PipeMaterials.steel().id()), "BBB", "   ", "BBB", 'B', "ingotSteel"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 3, PipeMaterials.fiberglass().id()), "BBB", "   ", "BBB", 'B', Items.diamond));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockMechanicalPiston, "SGS", "SPS", "SRS", 'P', Blocks.piston, 'S', Items.iron_ingot, 'R', Items.redstone, 'G', new ItemStack(itemGear, 1, 2)));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockGrinderWheel, "III", "LGL", "III", 'I', UniversalRecipe.PRIMARY_METAL.get(), 'L', "logWood", 'G', itemGear));

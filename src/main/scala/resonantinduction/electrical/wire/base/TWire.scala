@@ -83,7 +83,7 @@ abstract class TWire extends TMultiPart with TPart with TMaterial[WireMaterial] 
       if (material == wire.material)
       {
         if (insulated && wire.insulated)
-          return this.getColor == wire.getColor || (getColor == defaultColor || wire.getColor == defaultColor)
+          return this.getColor == wire.getColor || (getColor == TColorable.defaultColor || wire.getColor == TColorable.defaultColor)
 
         return true
       }

@@ -13,7 +13,7 @@ import net.minecraftforge.fluids._
 import resonant.lib.`type`.EvictingList
 import resonantinduction.core.prefab.part.{PartFramedNode, TColorable, TMaterial}
 import resonantinduction.mechanical.Mechanical
-import resonantinduction.mechanical.fluid.pipe.PipeMaterial.PipeMaterial
+import resonantinduction.mechanical.fluid.pipe.PipeMaterials.PipeMaterial
 
 /**
  * Fluid transport pipe
@@ -32,9 +32,14 @@ class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorab
 
   setNode(new PipePressureNode(this))
 
+  def preparePlacement(meta:Int)
+  {
+    setMaterial(meta)
+  }
+
   def setMaterial(i: Int)
   {
-    material = PipeMaterial(i).asInstanceOf[PipeMaterial]
+    material = PipeMaterials(i).asInstanceOf[PipeMaterial]
   }
 
   def getMaterialID: Int = material.id

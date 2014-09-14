@@ -731,8 +731,6 @@ class PartFlatWire extends TWire with TFacePart with TNormalOcclusion
 
   override def solid(arg0: Int) = false
 
-  def getType: String = "resonant_induction_flat_wire"
-
   /**
    * RENDERING
    */

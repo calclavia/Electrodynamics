@@ -37,8 +37,8 @@ public class RenderPipe implements ISimpleItemRenderer
 
 		GL11.glPushMatrix();
 
-		FluidStack fluid = part.tank.getFluid();
-		int capacity = part.tank.getCapacity();
+		FluidStack fluid = part.tank().getFluid();
+		int capacity = part.tank().getCapacity();
 		byte renderSides = part.getAllCurrentConnections();
     /**
 		if (fluid != null && fluid.amount > 0)
@@ -116,9 +116,9 @@ public class RenderPipe implements ISimpleItemRenderer
 	{
 		RenderUtility.enableBlending();
 		RenderUtility.bind(TEXTURE);
-		PipeMaterial material = PipeMaterial.values()[meta];
-
-		GL11.glColor4f(material.color.getRed() / 255f, material.color.getGreen() / 255f, material.color.getBlue() / 255f, 1);
+		PipeMaterials.PipeMaterial material = (PipeMaterials.PipeMaterial) PipeMaterials.apply(meta);
+		Color matColor = new Color(material.color());
+		GL11.glColor4f(matColor.getRed() / 255f, matColor.getGreen() / 255f, matColor.getBlue() / 255f, 1);
 		MODEL.renderOnly("Mid");
 
 		/**
@@ -128,7 +128,7 @@ public class RenderPipe implements ISimpleItemRenderer
 		{
 			if (WorldUtility.isEnabledSide(sides, dir))
 			{
-				GL11.glColor4f(material.color.getRed() / 255f, material.color.getGreen() / 255f, material.color.getBlue() / 255f, 1);
+				GL11.glColor4f(matColor.getRed() / 255f, matColor.getGreen() / 255f, matColor.getBlue() / 255f, 1);
 				String prefix = null;
 
 				switch (dir)
