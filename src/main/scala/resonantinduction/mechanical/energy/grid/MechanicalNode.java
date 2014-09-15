@@ -1,32 +1,25 @@
 package resonantinduction.mechanical.energy.grid;
 
-import java.util.AbstractMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
-import java.util.WeakHashMap;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import resonant.lib.utility.nbt.ISaveObj;
 import resonantinduction.core.interfaces.IMechanicalNode;
-import resonantinduction.core.prefab.node.MultipartNode;
-import resonantinduction.mechanical.Mechanical;
+import resonantinduction.core.prefab.node.TMultipartNode;
 import universalelectricity.api.core.grid.INode;
 import universalelectricity.api.core.grid.INodeProvider;
 import universalelectricity.api.core.grid.IUpdate;
+import universalelectricity.core.grid.node.NodeConnector;
 import universalelectricity.core.transform.vector.IVectorWorld;
-import universalelectricity.core.transform.vector.Vector3;
-import codechicken.multipart.TMultiPart;
-import universalelectricity.core.transform.vector.VectorWorld;
 
 /**
  * Prefab node for the mechanical system used by almost ever mechanical object in Resonant Induction. Handles connections to other tiles, and shares power with them
  *
  * @author Calclavia, Darkguardsman
  */
-public class MechanicalNode extends MultipartNode implements IMechanicalNode, ISaveObj, IVectorWorld, IUpdate
+public class MechanicalNode extends NodeConnector implements TMultipartNode, IMechanicalNode, ISaveObj, IVectorWorld, IUpdate
 {
     /** Marks that the rotation has changed and should be updated client side */
 	public boolean markRotationUpdate = false;

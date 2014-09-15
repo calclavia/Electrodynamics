@@ -10,7 +10,7 @@ import universalelectricity.core.grid.node.NodeConnector
  * A node that works with Forge Multipart
  * @author Calclavia
  */
-abstract class MultipartNode(parent: INodeProvider) extends NodeConnector(parent)
+trait TMultipartNode extends NodeConnector
 {
   override def world: World =
   {

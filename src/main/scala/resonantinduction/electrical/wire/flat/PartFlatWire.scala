@@ -17,6 +17,7 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.{IIcon, MovingObjectPosition}
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
+import resonantinduction.core.prefab.node.TMultipartNode
 import resonantinduction.core.prefab.part.ChickenBonesWrapper._
 import resonantinduction.core.util.MultipartUtil
 import resonantinduction.electrical.wire.base.TWire
@@ -340,7 +341,7 @@ class PartFlatWire extends TWire with TFacePart with TNormalOcclusion
    * TODO: ForgeDirection may NOT be suitable. Integers are better.
    * @param provider
    */
-  class FlatWireNode(provider: INodeProvider) extends DCNode(provider)
+  class FlatWireNode(provider: INodeProvider) extends DCNode(provider) with TMultipartNode
   {
     override def buildConnections()
     {
@@ -471,11 +472,15 @@ class PartFlatWire extends TWire with TFacePart with TNormalOcclusion
         //TODO: Refine this. It's very hacky and may cause errors when the wire connects to a block both ways
         val inverseCon = connections.map(_.swap)
         val forgeDir = ForgeDirection.getOrientation(i)
-        val connected = inverseCon(forgeDir)
 
-        if (connected != null)
+        if (inverseCon.contains(forgeDir))
         {
-          connections -= connected
+          val connected = inverseCon(forgeDir)
+
+          if (connected != null)
+          {
+            connections -= connected
+          }
         }
       }
     }
