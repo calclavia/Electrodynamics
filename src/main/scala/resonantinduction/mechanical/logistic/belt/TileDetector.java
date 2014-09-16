@@ -130,16 +130,6 @@ public class TileDetector extends TileFilterable implements IPacketIDReceiver
         return true;
 	}
 
-	public int isPoweringTo(ForgeDirection side)
-	{
-		return this.powering && this.getDirection() != side.getOpposite() ? 15 : 0;
-	}
-
-	public boolean isIndirectlyPoweringTo(ForgeDirection side)
-	{
-		return this.isPoweringTo(side) > 0;
-	}
-
     @SideOnly(Side.CLIENT)
     @Override
     public void registerIcons(IIconRegister iconReg)
@@ -182,7 +172,7 @@ public class TileDetector extends TileFilterable implements IPacketIDReceiver
     @Override
     public int getStrongRedstonePower(IBlockAccess access, int side)
     {
-        if(side != getDirection().ordinal())
+        if(side != getDirection().getOpposite().ordinal())
         {
             return powering ? 15 : 0;
         }
