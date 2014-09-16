@@ -54,7 +54,7 @@ public class RenderReactorCell extends TileEntitySpecialRenderer
 				GL11.glScalef(1f, 1.15f, 1f);
 				MODEL_MIDDLE.renderAll();
 				break;
-			case 2:
+			default:
 				bindTexture(TEXTURE_TOP);
 
 				if (hasBelow)
