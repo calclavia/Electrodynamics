@@ -14,6 +14,8 @@ import org.lwjgl.input.Keyboard;
 
 import resonant.lib.render.EnumColor;
 import resonant.lib.utility.LanguageUtility;
+import resonantinduction.core.ResonantPartFactory;
+import resonantinduction.core.ResonantPartFactory$;
 import resonantinduction.core.prefab.part.IHighlight;
 import resonantinduction.electrical.wire.base.WireMaterial;
 import codechicken.lib.vec.BlockCoord;
@@ -46,7 +48,7 @@ public class ItemMultimeter extends JItemMultiPart implements IHighlight
 			}
 		}
 
-		PartMultimeter part = (PartMultimeter) MultiPartRegistry.createPart("resonant_induction_multimeter", false);
+		PartMultimeter part = ResonantPartFactory$.MODULE$.create(PartMultimeter.class);
 
 		if (part != null)
 		{
