@@ -9,7 +9,6 @@ import net.minecraft.util.IIcon
 import net.minecraft.world.{IBlockAccess, World}
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.IRotatable
-import resonant.content.prefab.RenderRotatedTexture
 import resonant.content.spatial.block.SpatialBlock
 import resonant.lib.content.prefab.TRotatable
 import resonantinduction.core.Reference
@@ -20,7 +19,7 @@ object TileTurntable
   var top: IIcon = null
 }
 
-class TileTurntable extends SpatialBlock(Material.piston) with TRotatable with RenderRotatedTexture
+class TileTurntable extends SpatialBlock(Material.piston) with TRotatable
 {
   textureName = "turntable_side"
   tickRandomly = true
