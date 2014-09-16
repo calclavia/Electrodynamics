@@ -207,19 +207,15 @@ class PartFlatWire extends TWire with TFacePart with TNormalOcclusion
     super.onAdded()
 
     if (!world.isRemote)
-    {
       sendConnUpdate()
-    }
   }
 
   override def onPartChanged(part: TMultiPart)
   {
-    if (!world.isRemote)
-    {
-      sendConnUpdate()
-    }
-
     super.onPartChanged(part)
+
+    if (!world.isRemote)
+      sendConnUpdate()
   }
 
   override def onNeighborChanged()
@@ -229,19 +225,22 @@ class PartFlatWire extends TWire with TFacePart with TNormalOcclusion
         return
 
     super.onNeighborChanged()
+
+    if (!world.isRemote)
+      sendConnUpdate()
   }
 
   def notifyCornerChange(r: Int)
   {
-    val absDir: Int = Rotation.rotateSide(side, r)
-    val pos: BlockCoord = new BlockCoord(tile).offset(absDir).offset(side)
+    val absDir = Rotation.rotateSide(side, r)
+    val pos = new BlockCoord(tile).offset(absDir).offset(side)
     world.notifyBlockOfNeighborChange(pos.x, pos.y, pos.z, tile.getBlockType)
   }
 
   def notifyStraightChange(r: Int)
   {
-    val absDir: Int = Rotation.rotateSide(side, r)
-    val pos: BlockCoord = new BlockCoord(tile).offset(absDir)
+    val absDir = Rotation.rotateSide(side, r)
+    val pos = new BlockCoord(tile).offset(absDir)
     world.notifyBlockOfNeighborChange(pos.x, pos.y, pos.z, tile.getBlockType)
   }
 
