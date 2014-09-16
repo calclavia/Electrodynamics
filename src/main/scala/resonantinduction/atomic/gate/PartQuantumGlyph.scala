@@ -127,9 +127,10 @@ class PartQuantumGlyph extends JCuboidPart with TSlottedPart with JNormalOcclusi
     return "resonant_induction_quantum_glyph"
   }
 
-  @SideOnly(Side.CLIENT) override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
+  @SideOnly(Side.CLIENT)
+  override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
   {
-    RenderQuantumGlyph.INSTANCE.render(this, pos.x, pos.y, pos.z)
+    RenderQuantumGlyph.render(this, pos.x, pos.y, pos.z)
   }
 
   override def getOcclusionBoxes: JIterable[codechicken.lib.vec.Cuboid6] = Seq[Cuboid6](getBounds)

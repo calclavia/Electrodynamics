@@ -8,6 +8,8 @@ import net.minecraft.block.Block
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
+import resonant.content.wrapper.ItemRenderHandler
+import resonantinduction.atomic.gate.RenderQuantumGlyph
 import resonantinduction.electrical.battery.{RenderBattery, TileBattery}
 import resonantinduction.electrical.generator.{RenderMotor, TileMotor}
 import resonantinduction.electrical.laser.emitter.{RenderLaserEmitter, TileLaserEmitter}
@@ -15,13 +17,16 @@ import resonantinduction.electrical.laser.focus.crystal.{RenderFocusCrystal, Til
 import resonantinduction.electrical.laser.focus.mirror.{RenderMirror, TileMirror}
 import resonantinduction.electrical.laser.fx.{EntityBlockParticleFX, EntityLaserFX, EntityScorchFX}
 import resonantinduction.electrical.laser.receiver.{RenderLaserReceiver, TileLaserReceiver}
-import resonantinduction.electrical.multimeter.{GuiMultimeter, PartMultimeter}
+import resonantinduction.electrical.levitator.RenderLevitator
+import resonantinduction.electrical.multimeter.{RenderMultimeter, GuiMultimeter, PartMultimeter}
 import resonantinduction.electrical.render.FXElectricBolt
 import resonantinduction.electrical.tesla.{RenderTesla, TileTesla}
+import resonantinduction.electrical.transformer.RenderTransformer
 import universalelectricity.core.transform.vector.Vector3
 
 /** @author Calclavia */
-@SideOnly(Side.CLIENT) class ClientProxy extends CommonProxy
+@SideOnly(Side.CLIENT)
+class ClientProxy extends CommonProxy
 {
   override def preInit
   {
@@ -30,6 +35,11 @@ import universalelectricity.core.transform.vector.Vector3
 
   override def init
   {
+    ItemRenderHandler.register(ElectricalContent.itemTransformer, RenderTransformer.INSTANCE)
+    ItemRenderHandler.register(ElectricalContent.itemLevitator, RenderLevitator.INSTANCE)
+    ItemRenderHandler.register(ElectricalContent.itemMultimeter, RenderMultimeter.INSTANCE)
+    ItemRenderHandler.register(ElectricalContent.itemQuantumGlyph, RenderQuantumGlyph)
+
     //RenderingRegistry.registerBlockHandler(new BlockRenderingHandler.type)
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileMotor], new RenderMotor)
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileTesla], new RenderTesla)

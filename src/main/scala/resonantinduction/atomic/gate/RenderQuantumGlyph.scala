@@ -10,12 +10,7 @@ import resonant.content.prefab.scala.render.ISimpleItemRenderer
 import resonant.lib.render.RenderUtility
 import resonantinduction.core.Reference
 
-object RenderQuantumGlyph
-{
-  final val INSTANCE: RenderQuantumGlyph = new RenderQuantumGlyph
-}
-
-class RenderQuantumGlyph extends ISimpleItemRenderer
+object RenderQuantumGlyph extends ISimpleItemRenderer
 {
   def render(part: PartQuantumGlyph, x: Double, y: Double, z: Double)
   {
