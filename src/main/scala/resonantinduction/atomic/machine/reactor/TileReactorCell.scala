@@ -32,7 +32,6 @@ import resonantinduction.core.Reference
 import universalelectricity.core.transform.vector.{Vector3, VectorWorld}
 
 import scala.collection.convert.wrapAll._
-import scala.util.control.Breaks._
 
 /** The primary reactor component cell used to build reactors with.
   *
@@ -108,7 +107,7 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
       }
       else
       {
-        break //todo: break is not supported
+        return lowest;
       }
       checkPosition.y -= 1
     }
@@ -330,7 +329,7 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
       }
       else
       {
-        break //todo: break is not supported
+        return vectors.toArray(new Array[Vector3](0))
       }
       checkPosition.y += 1
     }
