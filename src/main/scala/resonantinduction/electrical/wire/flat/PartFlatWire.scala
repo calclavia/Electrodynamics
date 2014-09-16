@@ -37,12 +37,15 @@ object PartFlatWire
 {
   var selectionBounds = Array.ofDim[Cuboid6](3, 6)
   var occlusionBounds = Array.ofDim[Cuboid6](3, 6)
+  init()
 
-  for (t <- 0 until 3)
+  def init()
   {
-    lazy val selection: Cuboid6 = new Cuboid6(0, 0, 0, 1, (t + 2) / 16D, 1).expand(-0.005)
-    lazy val occlusion: Cuboid6 = new Cuboid6(2 / 8D, 0, 2 / 8D, 6 / 8D, (t + 2) / 16D, 6 / 8D)
+    for (t <- 0 until 3)
     {
+      val selection = new Cuboid6(0, 0, 0, 1, (t + 2) / 16D, 1).expand(-0.005)
+      val occlusion = new Cuboid6(2 / 8D, 0, 2 / 8D, 6 / 8D, (t + 2) / 16D, 6 / 8D)
+
       for (s <- 0 until 6)
       {
         selectionBounds(t)(s) = selection.copy.apply(Rotation.sideRotations(s).at(Vector3.center))
@@ -135,13 +138,6 @@ class PartFlatWire extends TWire with TFacePart with TNormalOcclusion
     tag.setInteger("connMap", this.connMap)
   }
 
-  override def readDesc(packet: MCDataInput)
-  {
-    super.readDesc(packet)
-    side = packet.readByte
-    connMap = packet.readInt
-  }
-
   override def writeDesc(packet: MCDataOutput)
   {
     super.writeDesc(packet)
@@ -149,20 +145,27 @@ class PartFlatWire extends TWire with TFacePart with TNormalOcclusion
     packet.writeInt(connMap)
   }
 
+  override def readDesc(packet: MCDataInput)
+  {
+    super.readDesc(packet)
+    side = packet.readByte
+    connMap = packet.readInt
+  }
+
   override def read(packet: MCDataInput, packetID: Int)
   {
     super.read(packet, packetID)
-
-    if (packetID == 0)
-    {
-      connMap = packet.readInt
-      tile.markRender
-    }
+    /*
+        if (packetID == 3)
+        {
+          connMap = packet.readInt
+          tile.markRender
+        }*/
   }
 
   def sendConnUpdate()
   {
-    tile.getWriteStream(this).writeByte(0).writeInt(this.connMap)
+    //tile.getWriteStream(this).writeByte(3).writeInt(this.connMap)
   }
 
   /**
@@ -201,7 +204,7 @@ class PartFlatWire extends TWire with TFacePart with TNormalOcclusion
     super.onChunkLoad()
   }
 
-  override def onAdded
+  override def onAdded()
   {
     super.onAdded()
 
@@ -221,7 +224,7 @@ class PartFlatWire extends TWire with TFacePart with TNormalOcclusion
     super.onPartChanged(part)
   }
 
-  override def onNeighborChanged
+  override def onNeighborChanged()
   {
     if (!world.isRemote)
       if (dropIfCantStay)
@@ -262,19 +265,13 @@ class PartFlatWire extends TWire with TFacePart with TNormalOcclusion
     return 4
   }
 
-  def getSlotMask: Int =
-  {
-    return 1 << this.side
-  }
+  def getSlotMask: Int = 1 << side
 
   override def getSubParts: JIterable[IndexedCuboid6] = Seq(new IndexedCuboid6(0, PartFlatWire.selectionBounds(getThickness)(side)))
 
   def getOcclusionBoxes: JIterable[Cuboid6] = Seq(PartFlatWire.occlusionBounds(getThickness)(side))
 
-  def getThickness: Int =
-  {
-    return if (insulated) 2 else 1
-  }
+  def getThickness: Int =  if (insulated) 2 else 1
 
   override def solid(arg0: Int) = false
 
@@ -285,18 +282,6 @@ class PartFlatWire extends TWire with TFacePart with TNormalOcclusion
   def getIcon: IIcon =
   {
     return RenderFlatWire.flatWireTexture
-  }
-
-  def getColour: Colour =
-  {
-    if (insulated)
-    {
-      val color: Colour = new ColourARGB(ItemDye.field_150922_c(colorID))
-      color.a = 255.asInstanceOf[Byte]
-      return color
-    }
-
-    return new ColourARGB(material.color)
   }
 
   def useStaticRenderer: Boolean = true

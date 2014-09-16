@@ -36,7 +36,7 @@ trait TColorable extends TMultiPart with TPart
 
   def sendColorUpdate()
   {
-    tile.getWriteStream(this).writeByte(2).writeInt(this.colorID)
+    //tile.getWriteStream(this).writeByte(2).writeInt(this.colorID)
   }
 
   /**

@@ -51,7 +51,7 @@ trait TInsulatable extends TMultiPart with TPart
 
   def sendInsulationUpdate()
   {
-    tile.getWriteStream(this).writeByte(1).writeBoolean(this._insulated)
+  //  tile.getWriteStream(this).writeByte(1).writeBoolean(this._insulated)
   }
 
   /**
@@ -96,20 +96,20 @@ trait TInsulatable extends TMultiPart with TPart
       drops += new ItemStack(insulationItem)
   }
 
-  override def readDesc(packet: MCDataInput)
-  {
-    insulated = packet.readBoolean
-  }
-
   override def writeDesc(packet: MCDataOutput)
   {
     packet.writeBoolean(insulated)
   }
 
+  override def readDesc(packet: MCDataInput)
+  {
+    _insulated = packet.readBoolean
+  }
+
   def read(packet: MCDataInput, packetID: Int)
   {
     if (packetID == 1)
-      insulated = packet.readBoolean
+      _insulated = packet.readBoolean
   }
 
   override def save(nbt: NBTTagCompound)

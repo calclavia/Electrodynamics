@@ -7,11 +7,18 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import resonantinduction.core.prefab.part.connector._
 import resonantinduction.electrical.ElectricalContent
-import universalelectricity.api.core.grid.{INode, INodeProvider}
+import universalelectricity.api.core.grid.INodeProvider
 import universalelectricity.simulator.dc.DCNode
 
 /**
  * Abstract class extended by both flat and framed wires to handle material, insulation, color and multipart node logic.
+ *
+ * Packets:
+ *  0 - Desc
+ *  1 - Material
+ *  2 - Insulation
+ *  3 - Color
+ *
  * @author Calclavia
  */
 abstract class TWire extends TMultiPart with TNodePartConnector with TPart with TMaterial[WireMaterial] with TInsulatable with TColorable
@@ -32,6 +39,13 @@ abstract class TWire extends TMultiPart with TNodePartConnector with TPart with 
   /**
    * Packet Methods
    */
+  override def writeDesc(packet: MCDataOutput)
+  {
+    super[TMaterial].writeDesc(packet)
+    super[TInsulatable].writeDesc(packet)
+    super[TColorable].writeDesc(packet)
+  }
+
   override def readDesc(packet: MCDataInput)
   {
     super[TMaterial].readDesc(packet)
@@ -39,11 +53,15 @@ abstract class TWire extends TMultiPart with TNodePartConnector with TPart with 
     super[TColorable].readDesc(packet)
   }
 
-  override def writeDesc(packet: MCDataOutput)
+  override final def read(packet: MCDataInput)
   {
-    super[TMaterial].writeDesc(packet)
-    super[TInsulatable].writeDesc(packet)
-    super[TColorable].writeDesc(packet)
+    read(packet, packet.readUByte)
+  }
+
+  override def read(packet: MCDataInput, packetID: Int)
+  {
+    super[TInsulatable].read(packet, packetID)
+    super[TColorable].read(packet, packetID)
   }
 
   /**
@@ -61,17 +79,6 @@ abstract class TWire extends TMultiPart with TNodePartConnector with TPart with 
     super[TMaterial].save(nbt)
     super[TInsulatable].save(nbt)
     super[TColorable].save(nbt)
-  }
-
-  override def read(packet: MCDataInput)
-  {
-    read(packet, packet.readUByte)
-  }
-
-  override def read(packet: MCDataInput, packetID: Int): Unit =
-  {
-    super[TInsulatable].read(packet,packetID)
-    super[TColorable].read(packet,packetID)
   }
 
   /**

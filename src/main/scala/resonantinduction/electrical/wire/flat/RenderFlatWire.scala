@@ -8,9 +8,19 @@ import codechicken.lib.render._
 import codechicken.lib.render.uv._
 import codechicken.lib.vec.{Cuboid6, Rotation, Transformation, Translation, Vector3}
 import net.minecraft.util.IIcon
+import resonantinduction.core.util.ResonantUtil
 
 object RenderFlatWire
 {
+  var flatWireTexture: IIcon = null
+  var reorientSide: Array[Int] = Array[Int](0, 3, 3, 0, 0, 3)
+  /**
+   * Array of all built models. These will be generated on demand.
+   */
+  var wireModels: Array[CCModel] = new Array[CCModel](3 * 6 * 256)
+  var invModels: Array[CCModel] = new Array[CCModel](3)
+  val gen_inst = new WireModelGenerator
+
   /**
    * Puts verts into model m starting at index k
    */
@@ -79,9 +89,9 @@ object RenderFlatWire
 
   def render(wire: PartFlatWire, pos: Vector3)
   {
-    val colorCode = wire.getColour.pack
+    val colorCode = ResonantUtil.getColorHex(wire.getColor)
     val operation = if (colorCode == -1) ColourMultiplier.instance(0xFFFFFF) else new ColourMultiplier(colorCode)
-    val model: CCModel = getOrGenerateModel(modelKey(wire))
+    val model = getOrGenerateModel(modelKey(wire))
     model.render(new Translation(pos), new IconTransformation(wire.getIcon), operation)
   }
 
@@ -128,14 +138,6 @@ object RenderFlatWire
     }
   }
 
-  var flatWireTexture: IIcon = null
-  var reorientSide: Array[Int] = Array[Int](0, 3, 3, 0, 0, 3)
-  /**
-   * Array of all built models. These will be generated on demand.
-   */
-  var wireModels: Array[CCModel] = new Array[CCModel](3 * 6 * 256)
-  var invModels: Array[CCModel] = new Array[CCModel](3)
-  val gen_inst = new WireModelGenerator
 
   class UVT(t: Transformation) extends UVTransformation
   {
