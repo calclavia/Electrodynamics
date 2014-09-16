@@ -21,7 +21,7 @@ import resonant.lib.network.discriminator.PacketType;
 import resonant.lib.network.handle.IPacketReceiver;
 import resonant.lib.utility.inventory.InventoryUtility;
 import resonantinduction.core.Reference;
-import resonantinduction.mechanical.gear.ItemHandCrank;
+import resonantinduction.mechanical.mech.gear.ItemHandCrank;
 import universalelectricity.core.transform.vector.Vector3;
 
 public class TileMillstone extends TileInventory implements IPacketReceiver

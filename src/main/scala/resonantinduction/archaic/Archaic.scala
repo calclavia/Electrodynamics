@@ -16,7 +16,7 @@ import resonantinduction.archaic.fluid.gutter.TileGutter
 import resonantinduction.archaic.fluid.tank.TileTank
 import resonantinduction.archaic.process.{TileCastingMold, TileMillstone}
 import resonantinduction.core.{Reference, ResonantTab, Settings}
-import resonantinduction.mechanical.gear.ItemHandCrank
+import resonantinduction.mechanical.mech.gear.ItemHandCrank
 
 @Mod(modid = Archaic.ID, name = Archaic.NAME, version = Reference.version, modLanguage = "scala", dependencies = "required-after:" + Reference.coreID)
 object Archaic

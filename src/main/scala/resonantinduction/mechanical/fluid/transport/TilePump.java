@@ -2,7 +2,7 @@ package resonantinduction.mechanical.fluid.transport;
 
 import net.minecraft.block.material.Material;
 import resonantinduction.core.prefab.node.NodePressure;
-import resonantinduction.mechanical.energy.grid.TileMechanical;
+import resonantinduction.mechanical.mech.TileMechanical;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;

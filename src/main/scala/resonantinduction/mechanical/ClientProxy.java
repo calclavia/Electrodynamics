@@ -6,15 +6,15 @@ import resonant.content.wrapper.ItemRenderHandler;
 import resonantinduction.mechanical.fluid.pipe.RenderPipe;
 import resonantinduction.mechanical.fluid.transport.RenderPump;
 import resonantinduction.mechanical.fluid.transport.TilePump;
-import resonantinduction.mechanical.gear.RenderGear;
-import resonantinduction.mechanical.gearshaft.RenderGearShaft;
-import resonantinduction.mechanical.process.crusher.RenderMechanicalPiston;
-import resonantinduction.mechanical.process.crusher.TileMechanicalPiston;
-import resonantinduction.mechanical.process.grinder.RenderGrindingWheel;
-import resonantinduction.mechanical.process.grinder.TileGrindingWheel;
-import resonantinduction.mechanical.process.mixer.RenderMixer;
-import resonantinduction.mechanical.process.mixer.TileMixer;
-import resonantinduction.mechanical.turbine.*;
+import resonantinduction.mechanical.mech.gear.RenderGear;
+import resonantinduction.mechanical.mech.gearshaft.RenderGearShaft;
+import resonantinduction.mechanical.mech.process.crusher.RenderMechanicalPiston;
+import resonantinduction.mechanical.mech.process.crusher.TileMechanicalPiston;
+import resonantinduction.mechanical.mech.process.grinder.RenderGrindingWheel;
+import resonantinduction.mechanical.mech.process.grinder.TileGrindingWheel;
+import resonantinduction.mechanical.mech.process.mixer.RenderMixer;
+import resonantinduction.mechanical.mech.process.mixer.TileMixer;
+import resonantinduction.mechanical.mech.turbine.*;
 
 public class ClientProxy extends CommonProxy
 {

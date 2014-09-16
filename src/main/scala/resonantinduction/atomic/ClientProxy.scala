@@ -14,7 +14,7 @@ import resonantinduction.atomic.machine.plasma.{RenderPlasmaHeater, TilePlasmaHe
 import resonantinduction.atomic.machine.quantum.{GuiQuantumAssembler, RenderQuantumAssembler, TileQuantumAssembler}
 import resonantinduction.atomic.machine.reactor.{GuiReactorCell, RenderReactorCell, TileReactorCell}
 import resonantinduction.atomic.machine.thermometer.{RenderThermometer, TileThermometer}
-import resonantinduction.mechanical.turbine.{RenderElectricTurbine, TileElectricTurbine}
+import resonantinduction.mechanical.mech.turbine.{RenderElectricTurbine, TileElectricTurbine}
 
 class ClientProxy extends CommonProxy
 {
