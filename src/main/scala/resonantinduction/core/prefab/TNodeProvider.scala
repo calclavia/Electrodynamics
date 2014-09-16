@@ -14,7 +14,8 @@ class TNodeProvider extends TileMultipart with INodeProvider
 {
   def getNode(nodeType: Class[_ <: INode], from: ForgeDirection): INode =
   {
-    var nodePart: TMultiPart = partMap(from.ordinal)
+    var nodePart = partMap(from.ordinal)
+
     if (nodePart == null)
     {
       nodePart = partMap(PartMap.CENTER.ordinal)
