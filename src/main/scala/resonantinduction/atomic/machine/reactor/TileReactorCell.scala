@@ -61,6 +61,7 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
   textureName = "machine"
   isOpaqueCube = false
   normalRender = false
+  maxSlots = 1
 
   override def onWorldJoin
   {
