@@ -29,7 +29,6 @@ import resonantinduction.mechanical.Mechanical;
 public class TileDetector extends TileFilterable implements IPacketIDReceiver
 {
 	private boolean powering = false;
-    IIcon front_red, front_green, side_green, side_red;
 
     public TileDetector()
     {
@@ -177,7 +176,7 @@ public class TileDetector extends TileFilterable implements IPacketIDReceiver
             isInverted = ((TileDetector) tileEntity).isInverted();
         }
 
-        return isInverted ? (isFront ? front_red : side_red) : (isFront ? front_green : side_green);
+        return isInverted ? (isFront ? SpatialBlock.icon().get("detector_front_red") : SpatialBlock.icon().get("detector_side_red")) : (isFront ? SpatialBlock.icon().get("detector_front_green") : SpatialBlock.icon().get("detector_side_green"));
     }
 
     @Override
