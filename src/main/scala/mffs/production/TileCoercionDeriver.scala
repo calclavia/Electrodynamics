@@ -13,7 +13,6 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.mffs.modules.IModule
-import resonant.lib.content.prefab.TElectric
 import resonant.lib.network.ByteBufWrapper.ByteBufWrapper
 import resonant.lib.network.discriminator.PacketType
 import universalelectricity.api.UniversalClass
@@ -231,7 +230,7 @@ class TileCoercionDeriver extends TileModuleAcceptor with TEnergyBridge
         case TileCoercionDeriver.slotFrequency =>
           return itemStack.getItem.isInstanceOf[ItemCardFrequency]
         case TileCoercionDeriver.slotBattery =>
-          return Compatibility.isHandler(itemStack.getItem)
+          return Compatibility.isHandler(itemStack.getItem, null)
         case TileCoercionDeriver.slotFuel =>
           return itemStack.isItemEqual(new ItemStack(Items.dye, 1, 4)) || itemStack.isItemEqual(new ItemStack(Items.quartz))
       }
