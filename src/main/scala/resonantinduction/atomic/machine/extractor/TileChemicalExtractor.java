@@ -309,7 +309,7 @@ public class TileChemicalExtractor extends TileProcess implements IFluidHandler
 		// Water input for machine.
 		if (slotID == 0)
 		{
-			return Compatibility.isHandler(itemStack.getItem());
+			return Compatibility.isHandler(itemStack.getItem(), null);
 		}
 
 		if (slotID == 1)

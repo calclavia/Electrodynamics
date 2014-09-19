@@ -50,7 +50,7 @@ class ElectricTransformerNode(parent: INodeProvider) extends NodeElectric(parent
   def sendEnergy(wattage: Double, doAdd: Boolean): Double =
   {
     val tile : TileEntity = new VectorWorld(parent.asInstanceOf[TileEntity]).add(connectionDirection).getTileEntity
-    if(Compatibility.isHandler(tile))
+    if(Compatibility.isHandler(tile,connectionDirection.getOpposite))
     {
       return Compatibility.fill(tile, connectionDirection.getOpposite, wattage, doAdd)
     }

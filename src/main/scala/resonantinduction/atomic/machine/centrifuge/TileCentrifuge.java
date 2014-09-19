@@ -297,7 +297,7 @@ public class TileCentrifuge extends TileElectricInventory implements IPacketRece
 		switch (i)
 		{
 			case 0:
-				return Compatibility.isHandler(itemStack.getItem());
+				return Compatibility.isHandler(itemStack.getItem(), null);
 			case 1:
 				return true;
 			case 2:
