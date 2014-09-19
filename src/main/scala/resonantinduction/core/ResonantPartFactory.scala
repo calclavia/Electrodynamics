@@ -27,5 +27,11 @@ object ResonantPartFactory extends IPartFactory
     MultipartGenerator.registerTrait("universalelectricity.api.core.grid.INodeProvider", "resonantinduction.core.prefab.TNodeProvider")
   }
 
-  def createPart(name: String, client: Boolean): TMultiPart = partMap(name).newInstance()
+  def createPart(name: String, client: Boolean): TMultiPart =
+  {
+    if(partMap.contains(name))
+      return partMap(name).newInstance()
+    else
+      return null
+  }
 }
