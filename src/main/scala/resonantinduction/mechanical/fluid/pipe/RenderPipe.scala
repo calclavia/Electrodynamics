@@ -5,10 +5,9 @@ import java.awt.Color
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.item.{ItemDye, ItemStack}
 import net.minecraft.util.ResourceLocation
-import net.minecraftforge.client.IItemRenderer
+import net.minecraftforge.client.IItemRenderer.ItemRenderType
 import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
-import net.minecraftforge.fluids.FluidStack
 import org.lwjgl.opengl.GL11
 import resonant.content.prefab.scala.render.ISimpleItemRenderer
 import resonant.lib.render.{FluidRenderUtility, RenderUtility}
@@ -28,8 +27,9 @@ object RenderPipe extends ISimpleItemRenderer
   {
     RenderUtility.enableBlending()
     RenderUtility.bind(texture)
-    val material: PipeMaterials.PipeMaterial = PipeMaterials.apply(meta).asInstanceOf[PipeMaterials.PipeMaterial]
-    val matColor: Color = new Color(material.color)
+    val material = PipeMaterials(meta).asInstanceOf[PipeMaterials.PipeMaterial]
+    val matColor = new Color(material.color)
+
     GL11.glColor4f(matColor.getRed / 255f, matColor.getGreen / 255f, matColor.getBlue / 255f, 1)
 
     model.renderOnly("Mid")
@@ -83,8 +83,8 @@ object RenderPipe extends ISimpleItemRenderer
     render(part.getMaterialID, if (part.getColor > 0) ItemDye.field_150922_c(part.getColor) else -1, part.connectionMask)
     GL11.glPopMatrix()
     GL11.glPushMatrix()
-    val fluid: FluidStack = part.tank.getFluid
-    val renderSides: Int = part.connectionMask
+    val fluid = part.tank.getFluid
+    val renderSides = part.connectionMask
 
     if (fluid != null && fluid.amount > 0)
     {
@@ -104,9 +104,13 @@ object RenderPipe extends ISimpleItemRenderer
   /**
    * Render inventory pipe
    */
-  def renderInventoryItem(`type`: IItemRenderer.ItemRenderType, itemStack: ItemStack, data: AnyRef*)
+  def renderInventoryItem(renderType: ItemRenderType, itemStack: ItemStack, data: AnyRef*)
   {
     GL11.glPushMatrix()
+
+    if (renderType == ItemRenderType.EQUIPPED_FIRST_PERSON || renderType == ItemRenderType.EQUIPPED)
+      GL11.glTranslated(0.5, 0.5, 0.5)
+
     render(itemStack.getItemDamage, -1, 0xC)
     GL11.glPopMatrix()
   }
