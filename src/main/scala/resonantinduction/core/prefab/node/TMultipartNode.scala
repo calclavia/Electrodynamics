@@ -7,7 +7,7 @@ import universalelectricity.api.core.grid.INodeProvider
 import universalelectricity.core.grid.node.NodeConnector
 
 /**
- * A node that works with Forge Multipart
+ * A trait that allows nodes to works with Forge Multipart. This trait MUST be mixed in.
  * @author Calclavia
  */
 trait TMultipartNode extends NodeConnector

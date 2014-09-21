@@ -97,7 +97,8 @@ abstract class PartFramedNode extends PartAbstract with TNodePartConnector with 
   /** Packet Methods */
   def sendConnectionUpdate()
   {
-    tile.getWriteStream(this).writeByte(0).writeByte(connectionMask)
+    if (!world.isRemote)
+      tile.getWriteStream(this).writeByte(0).writeByte(connectionMask)
   }
 
   override def readDesc(packet: MCDataInput)
@@ -119,7 +120,7 @@ abstract class PartFramedNode extends PartAbstract with TNodePartConnector with 
     if (packetID == 0)
     {
       connectionMask = packet.readByte
-      tile.markRender
+      tile.markRender()
     }
   }
 }

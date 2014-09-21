@@ -6,6 +6,9 @@ import codechicken.lib.vec.Vector3
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.client.renderer.RenderBlocks
 import net.minecraft.nbt.NBTTagCompound
+import net.minecraftforge.common.util.ForgeDirection
+import resonant.lib.wrapper.BitmaskWrapper._
+import resonantinduction.core.prefab.node.TMultipartNode
 import resonantinduction.core.prefab.part.connector.PartFramedNode
 import resonantinduction.electrical.wire.base.TWire
 import universalelectricity.simulator.dc.DCNode
@@ -17,7 +20,25 @@ import universalelectricity.simulator.dc.DCNode
  */
 class PartFramedWire extends PartFramedNode with TWire
 {
-  override lazy val node = new DCNode(this)
+  override lazy val node = new DCNode(this) with TMultipartNode
+  {
+    override def buildConnections()
+    {
+      val prevCon = connectionMask
+      connectionMask = 0x00
+
+      super.buildConnections()
+
+      if (connectionMask != prevCon)
+        sendConnectionUpdate()
+    }
+
+    override protected def addConnection(obj: AnyRef, dir: ForgeDirection)
+    {
+      super.addConnection(obj, dir)
+      connectionMask = connectionMask.openMask(dir)
+    }
+  }
 
   override def preparePlacement(side: Int, meta: Int)
   {
