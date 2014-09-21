@@ -22,15 +22,17 @@ import resonantinduction.mechanical.fluid.pipe.PipeMaterials.PipeMaterial
  */
 class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorable with TSlottedPart with TNormalOcclusion with IFluidHandler
 {
-  protected final val tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME)
+  val tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME)
+
+  override lazy val node = new PipePressureNode(this)
 
   /**
    * Computes the average fluid for client to render.
    */
   private val averageTankData = new EvictingList[Integer](20)
-  private var markPacket: Boolean = true
+  private var markPacket = true
 
-  override lazy val node = new PipePressureNode(this)
+  material = PipeMaterials.ceramic
 
   def preparePlacement(meta: Int)
   {
@@ -60,7 +62,7 @@ class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorab
   /**
    * Sends fluid level to the client to be used in the renderer
    */
-  def sendFluidUpdate
+  def sendFluidUpdate()
   {
     val nbt = new NBTTagCompound
     var averageAmount: Int = 0
@@ -82,14 +84,12 @@ class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorab
 
   override def read(packet: MCDataInput, packetID: Int)
   {
+    super.read(packet, packetID)
+
     if (packetID == 3)
     {
       tank.setCapacity(packet.readInt)
       tank.readFromNBT(packet.readNBTTagCompound)
-    }
-    else
-    {
-      super.read(packet, packetID)
     }
   }
 

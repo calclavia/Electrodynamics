@@ -12,6 +12,7 @@ import org.lwjgl.input.Keyboard
 import resonant.lib.render.EnumColor
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.wrapper.WrapList._
+import resonantinduction.core.ResonantPartFactory
 import universalelectricity.api.UnitDisplay
 
 class ItemPipe extends TItemMultiPart
@@ -21,7 +22,7 @@ class ItemPipe extends TItemMultiPart
 
   def newPart(itemStack: ItemStack, player: EntityPlayer, world: World, pos: BlockCoord, side: Int, hit: Vector3): TMultiPart =
   {
-    val part: PartPipe = MultiPartRegistry.createPart("resonant_induction_pipe", false).asInstanceOf[PartPipe]
+    val part = ResonantPartFactory.create(classOf[PartPipe])
     part.preparePlacement(itemStack.getItemDamage)
     return part
   }

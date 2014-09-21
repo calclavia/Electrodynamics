@@ -39,7 +39,7 @@ public class RenderPipe implements ISimpleItemRenderer
 
 		FluidStack fluid = part.tank().getFluid();
 		int capacity = part.tank().getCapacity();
-		byte renderSides = part.getAllCurrentConnections();
+		int renderSides = part.getAllCurrentConnections();
     /**
 		if (fluid != null && fluid.amount > 0)
 		{
@@ -112,7 +112,7 @@ public class RenderPipe implements ISimpleItemRenderer
 	}
 
 	@SuppressWarnings("incomplete-switch")
-	public static void render(int meta, int colorCode, byte sides)
+	public static void render(int meta, int colorCode, int sides)
 	{
 		RenderUtility.enableBlending();
 		RenderUtility.bind(TEXTURE);
@@ -172,7 +172,7 @@ public class RenderPipe implements ISimpleItemRenderer
 	public void renderInventoryItem(IItemRenderer.ItemRenderType type, ItemStack itemStack, Object... data)
 	{
 		GL11.glPushMatrix();
-		render(itemStack.getItemDamage(), -1, Byte.parseByte("001100", 2));
+		render(itemStack.getItemDamage(), -1, 0xC);
 		GL11.glPopMatrix();
 	}
 }

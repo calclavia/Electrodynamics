@@ -25,7 +25,7 @@ public class NodeTank extends NodeConnector implements IFluidTank, IFluidHandler
 {
 	static final int PACKET_DESCRIPTION = 100, PACKET_TANK = 101;
 	LimitedTank tank;
-	byte renderSides = 0;
+	int renderSides = 0;
 
 	public NodeTank(INodeProvider parent)
 	{
@@ -204,7 +204,7 @@ public class NodeTank extends NodeConnector implements IFluidTank, IFluidHandler
 		return tank.maxOutput;
 	}
 
-	public byte getRenderSides()
+	public int getRenderSides()
 	{
 		return renderSides;
 	}

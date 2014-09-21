@@ -9,10 +9,8 @@ import codechicken.lib.vec.Cuboid6
 import codechicken.multipart._
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.{IIcon, MovingObjectPosition}
 import net.minecraftforge.common.util.ForgeDirection
-import universalelectricity.api.core.grid.{INode, INodeProvider, ISave}
 
 object PartFramedNode
 {
@@ -34,28 +32,23 @@ object PartFramedNode
   insulatedSides(5) = new IndexedCuboid6(5, new Cuboid6(0.7, 0.3, 0.3, 1.0, 0.7, 0.7))
   insulatedSides(6) = new IndexedCuboid6(6, new Cuboid6(0.3, 0.3, 0.3, 0.7, 0.7, 0.7))
 
-  def connectionMapContainsSide(connections: Byte, side: ForgeDirection): Boolean =
+  def connectionMapContainsSide(connections: Int, side: ForgeDirection): Boolean =
   {
-    val tester: Byte = (1 << side.ordinal).asInstanceOf[Byte]
-    return ((connections & tester) > 0)
+    val tester = 1 << side.ordinal
+    return (connections & tester) > 0
   }
 }
 
 abstract class PartFramedNode extends PartAbstract with TNodePartConnector with TSlottedPart with TNormalOcclusion with TIconHitEffects
 {
   /** Bitmask connections */
-  var connectionMask: Byte = 0x00
+  var connectionMask = 0x00
 
   @SideOnly(Side.CLIENT)
   protected var breakIcon: IIcon = null
 
   /** Client Side */
   private var testingSide: ForgeDirection = null
-
-  override def occlusionTest(other: TMultiPart): Boolean =
-  {
-    return NormalOcclusionTest.apply(this, other)
-  }
 
   override def getStrength(hit: MovingObjectPosition, player: EntityPlayer): Float =
   {
@@ -108,15 +101,9 @@ abstract class PartFramedNode extends PartAbstract with TNodePartConnector with 
     return list
   }
 
-  def getAllCurrentConnections: Byte =
-  {
-    return (connectionMask)
-  }
+  def getAllCurrentConnections = connectionMask
 
-  def getSlotMask: Int =
-  {
-    return PartMap.CENTER.mask
-  }
+  def getSlotMask = PartMap.CENTER.mask
 
   def getHollowSize: Int =
   {
