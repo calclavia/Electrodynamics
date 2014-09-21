@@ -46,7 +46,7 @@ trait TNodePartConnector extends TMultiPart with INodeProvider
 
   override def getNode(nodeType: Class[_ <: INode], from: ForgeDirection): INode =
   {
-    if (nodeType == node.getClass)
+    if (nodeType.isAssignableFrom(node.getClass) || node.getClass == nodeType)
       return node
     return null
   }

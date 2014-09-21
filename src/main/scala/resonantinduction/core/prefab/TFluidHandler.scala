@@ -4,7 +4,8 @@ import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 
 /**
- * Created by robert on 8/14/2014.
+ * Multipart Trait
+ * @author Calclavia
  */
 trait TFluidHandler extends IFluidHandler
 {

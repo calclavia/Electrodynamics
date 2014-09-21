@@ -81,9 +81,7 @@ abstract class PartFramedNode extends PartAbstract with TNodePartConnector with 
     return list
   }
 
-  def getSlotMask = PartMap.CENTER.mask
-
-  def getHollowSize: Int = if (this.isInstanceOf[TInsulatable] && this.asInstanceOf[TInsulatable].insulated) 8 else 6
+  override def getSlotMask = PartMap.CENTER.mask
 
   def isBlockedOnSide(side: ForgeDirection): Boolean =
   {

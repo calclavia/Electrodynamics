@@ -24,7 +24,8 @@ object ResonantPartFactory extends IPartFactory
   {
     MultiPartRegistry.registerParts(this, partMap.keys.toArray)
 
-    MultipartGenerator.registerTrait("universalelectricity.api.core.grid.INodeProvider", "resonantinduction.core.prefab.TNodeProvider")
+    MultipartGenerator.registerTrait("universalelectricity.api.core.grid.INodeProvider", "resonantinduction.core.prefab.pass.TNodeProvider")
+    MultipartGenerator.registerPassThroughInterface("net.minecraftforge.fluids.IFluidHandler")
   }
 
   def createPart(name: String, client: Boolean): TMultiPart =

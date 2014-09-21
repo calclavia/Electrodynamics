@@ -1,9 +1,8 @@
 package resonantinduction.mechanical.fluid.pipe
 
-import codechicken.lib.data.{MCDataOutput, MCDataInput}
+import codechicken.lib.data.{MCDataInput, MCDataOutput}
 import codechicken.lib.render.CCRenderState
 import codechicken.lib.vec.Vector3
-import codechicken.multipart.{TNormalOcclusion, TSlottedPart}
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.client.renderer.RenderBlocks
 import net.minecraft.item.ItemStack
@@ -138,65 +137,45 @@ class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorab
     RenderPipe.render(this, pos.x, pos.y, pos.z, frame)
   }
 
-  def getItem: ItemStack =
-  {
-    return new ItemStack(Mechanical.itemPipe, 1, getMaterialID)
-  }
+  def getItem: ItemStack = new ItemStack(Mechanical.itemPipe, 1, getMaterialID)
 
-  def fill(from: ForgeDirection, resource: FluidStack, doFill: Boolean): Int =
+  override def fill(from: ForgeDirection, resource: FluidStack, doFill: Boolean): Int =
   {
     if (!world.isRemote)
     {
       if (doFill)
-      {
         markPacket = true
-      }
+
       return tank.fill(resource, doFill)
     }
     return 0
   }
 
-  def drain(from: ForgeDirection, resource: FluidStack, doDrain: Boolean): FluidStack =
+  override def drain(from: ForgeDirection, resource: FluidStack, doDrain: Boolean): FluidStack =
   {
     return drain(from, resource.amount, doDrain)
   }
 
-  def drain(from: ForgeDirection, maxDrain: Int, doDrain: Boolean): FluidStack =
+  override def drain(from: ForgeDirection, maxDrain: Int, doDrain: Boolean): FluidStack =
   {
     if (!world.isRemote)
     {
       if (doDrain)
-      {
         markPacket = true
-      }
+
       return tank.drain(maxDrain, doDrain)
     }
     return null
   }
 
-  def canFill(from: ForgeDirection, fluid: Fluid): Boolean =
-  {
-    return true
-  }
+  override def canFill(from: ForgeDirection, fluid: Fluid): Boolean = true
 
-  def canDrain(from: ForgeDirection, fluid: Fluid): Boolean =
-  {
-    return true
-  }
+  override def canDrain(from: ForgeDirection, fluid: Fluid): Boolean = true
 
-  def getTankInfo(from: ForgeDirection): Array[FluidTankInfo] =
-  {
-    return Array[FluidTankInfo](tank.getInfo)
-  }
+  override def getTankInfo(from: ForgeDirection): Array[FluidTankInfo] = Array[FluidTankInfo](tank.getInfo)
 
   override def drawBreaking(renderBlocks: RenderBlocks)
   {
     CCRenderState.reset()
   }
-
-  override def getSlotMask: Int =
-  {
-    return 0
-  }
-
 }
