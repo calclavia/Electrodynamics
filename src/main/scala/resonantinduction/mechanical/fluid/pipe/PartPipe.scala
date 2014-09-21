@@ -135,7 +135,7 @@ class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorab
   @SideOnly(Side.CLIENT)
   override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
   {
-    RenderPipe.INSTANCE.render(this, pos.x, pos.y, pos.z, frame)
+    RenderPipe.render(this, pos.x, pos.y, pos.z, frame)
   }
 
   def getItem: ItemStack =
