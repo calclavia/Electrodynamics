@@ -89,10 +89,11 @@ object RenderFlatWire
 
   def render(wire: PartFlatWire, pos: Vector3)
   {
-    val colorCode = ResonantUtil.getColorHex(wire.getColor)
-    val operation = if (colorCode == -1) ColourMultiplier.instance(0xFFFFFF) else new ColourMultiplier(colorCode)
+    //If it is insulated, render the insulation color. Otherwise, render the material color.
+    val colorCode = if(wire.insulated) ResonantUtil.convertRGBtoRGBA(ResonantUtil.getColorHex(wire.getColor)) else  ResonantUtil.convertRGBtoRGBA(wire.material.color)
+
     val model = getOrGenerateModel(modelKey(wire))
-    model.render(new Translation(pos), new IconTransformation(wire.getIcon), operation)
+    model.render(new Translation(pos), new IconTransformation(wire.getIcon), new ColourMultiplier(colorCode))
   }
 
   def renderInv(thickness: Int, t: Transformation, icon: IIcon)

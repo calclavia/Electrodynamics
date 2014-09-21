@@ -51,10 +51,10 @@ object RenderFramedWire
     var name: String = side.name.toLowerCase
     name = if (name == "unknown") "center" else name
 
-    renderPart(wireIcon, models(name), wire.x, wire.y, wire.z, RGBColorToRGBA(wire.material.color))
+    renderPart(wireIcon, models(name), wire.x, wire.y, wire.z, ResonantUtil.convertRGBtoRGBA(wire.material.color))
 
     if (wire.insulated)
-      renderPart(insulationIcon, models(name + "Insulation"), wire.x, wire.y, wire.z, RGBColorToRGBA(ResonantUtil.getColorHex(wire.getColor)))
+      renderPart(insulationIcon, models(name + "Insulation"), wire.x, wire.y, wire.z, ResonantUtil.convertRGBtoRGBA(ResonantUtil.getColorHex(wire.getColor)))
   }
 
   def renderPart(icon: IIcon, cc: CCModel, x: Double, y: Double, z: Double, color: Int)
@@ -62,6 +62,4 @@ object RenderFramedWire
     val transform = Rotation.sideOrientation(0, Rotation.rotationTo(0, 2)).at(codechicken.lib.vec.Vector3.center).`with`(new Translation(x, y, z))
     cc.render(0, cc.verts.length, transform, new IconTransformation(icon), new ColourMultiplier(color))
   }
-
-  def RGBColorToRGBA(color: Int): Int = color << 8 | (255 & 0xFF)
 }

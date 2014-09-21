@@ -21,4 +21,8 @@ object ResonantUtil
    * Gets the color hex code from the color's ID
    */
   def getColorHex(id: Int): Int = dyeColors(id)
+
+
+
+  def convertRGBtoRGBA(color: Int): Int = color << 8 | (255 & 0xFF)
 }
