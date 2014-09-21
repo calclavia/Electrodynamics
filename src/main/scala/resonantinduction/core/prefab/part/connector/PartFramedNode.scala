@@ -1,7 +1,7 @@
 package resonantinduction.core.prefab.part.connector
 
-import java.util
-import java.util.{Collection, HashSet, Set}
+import java.lang.{Iterable => JIterable}
+import java.util.Set
 
 import codechicken.lib.data.{MCDataInput, MCDataOutput}
 import codechicken.lib.raytracer.IndexedCuboid6
@@ -12,10 +12,13 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.{IIcon, MovingObjectPosition}
 import net.minecraftforge.common.util.ForgeDirection
 
+import scala.collection.convert.wrapAll._
+import scala.collection.mutable
+
 object PartFramedNode
 {
-  var sides: Array[IndexedCuboid6] = new Array[IndexedCuboid6](7)
-  var insulatedSides: Array[IndexedCuboid6] = new Array[IndexedCuboid6](7)
+  var sides = new Array[IndexedCuboid6](7)
+  var insulatedSides = new Array[IndexedCuboid6](7)
 
   sides(0) = new IndexedCuboid6(0, new Cuboid6(0.36, 0.000, 0.36, 0.64, 0.36, 0.64))
   sides(1) = new IndexedCuboid6(1, new Cuboid6(0.36, 0.64, 0.36, 0.64, 1.000, 0.64))
@@ -50,86 +53,46 @@ abstract class PartFramedNode extends PartAbstract with TNodePartConnector with 
   /** Client Side */
   private var testingSide: ForgeDirection = null
 
-  override def getStrength(hit: MovingObjectPosition, player: EntityPlayer): Float =
-  {
-    return 10F
-  }
+  override def getStrength(hit: MovingObjectPosition, player: EntityPlayer): Float = 10f
 
-  def getBounds: Cuboid6 =
-  {
-    return new Cuboid6(0.375, 0.375, 0.375, 0.625, 0.625, 0.625)
-  }
+  override def getBounds: Cuboid6 = new Cuboid6(0.375, 0.375, 0.375, 0.625, 0.625, 0.625)
 
-  override def getBreakingIcon(subPart: Any, side: Int): IIcon =
-  {
-    return breakIcon
-  }
+  override def getBrokenIcon(side: Int): IIcon = breakIcon
 
-  def getBrokenIcon(side: Int): IIcon =
-  {
-    return breakIcon
-  }
-
-  def getOcclusionBoxes: Set[Cuboid6] =
-  {
-    return getCollisionBoxes
-  }
+  def getOcclusionBoxes: Set[Cuboid6] = getCollisionBoxes
 
   /** Rendering and block bounds. */
   override def getCollisionBoxes: Set[Cuboid6] =
   {
-    val collisionBoxes: Set[Cuboid6] = new HashSet[Cuboid6]
-    collisionBoxes.addAll(getSubParts.asInstanceOf[Collection[_ <: Cuboid6]])
+    val collisionBoxes = mutable.Set.empty[Cuboid6]
+    collisionBoxes += getBounds
+    collisionBoxes ++= getSubParts
     return collisionBoxes
   }
 
-  override def getSubParts: java.lang.Iterable[IndexedCuboid6] =
+  override def getSubParts: JIterable[IndexedCuboid6] =
   {
-    super.getSubParts
+    val currentSides = if (this.isInstanceOf[TInsulatable] && this.asInstanceOf[TInsulatable].insulated) PartFramedNode.insulatedSides else PartFramedNode.sides
 
-    val currentSides: Array[IndexedCuboid6] = if (this.isInstanceOf[TInsulatable] && this.asInstanceOf[TInsulatable].insulated) PartFramedNode.insulatedSides.clone() else PartFramedNode.sides.clone()
-
-    val list = new util.LinkedList[IndexedCuboid6]
-
-    if (tile != null)
-    {
-      for (side <- ForgeDirection.VALID_DIRECTIONS)
-      {
-        if (PartFramedNode.connectionMapContainsSide(getAllCurrentConnections, side) || side == testingSide) list.add(currentSides(side.ordinal()))
-      }
-    }
+    val list = mutable.Set.empty[IndexedCuboid6]
+    list ++= ForgeDirection.VALID_DIRECTIONS.filter(s => PartFramedNode.connectionMapContainsSide(connectionMask, s) || s == testingSide).map(s => currentSides(s.ordinal()))
     return list
   }
 
-  def getAllCurrentConnections = connectionMask
-
   def getSlotMask = PartMap.CENTER.mask
 
-  def getHollowSize: Int =
-  {
-    return if (this.isInstanceOf[TInsulatable] && this.asInstanceOf[TInsulatable].insulated) 8 else 6
-  }
+  def getHollowSize: Int = if (this.isInstanceOf[TInsulatable] && this.asInstanceOf[TInsulatable].insulated) 8 else 6
 
   def isBlockedOnSide(side: ForgeDirection): Boolean =
   {
     val blocker: TMultiPart = tile.partMap(side.ordinal)
     testingSide = side
-    val expandable: Boolean = NormalOcclusionTest.apply(this, blocker)
+    val expandable = NormalOcclusionTest.apply(this, blocker)
     testingSide = null
     return !expandable
   }
 
-  override def bind(t: TileMultipart)
-  {
-    node.deconstruct
-    super.bind(t)
-    node.reconstruct
-  }
-
-  def isCurrentlyConnected(side: ForgeDirection): Boolean =
-  {
-    return PartFramedNode.connectionMapContainsSide(getAllCurrentConnections, side)
-  }
+  def isCurrentlyConnected(side: ForgeDirection): Boolean = PartFramedNode.connectionMapContainsSide(connectionMask, side)
 
   /** Packet Methods */
   def sendConnectionUpdate()
@@ -151,6 +114,8 @@ abstract class PartFramedNode extends PartAbstract with TNodePartConnector with 
 
   override def read(packet: MCDataInput, packetID: Int)
   {
+    super.read(packet, packetID)
+
     if (packetID == 0)
     {
       connectionMask = packet.readByte

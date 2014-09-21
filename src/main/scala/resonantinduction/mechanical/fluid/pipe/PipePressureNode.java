@@ -32,7 +32,7 @@ public class PipePressureNode extends NodePressure
 
 		if (world() != null)
 		{
-			int previousConnections = pipe().getAllCurrentConnections();
+			int previousConnections = pipe().connectionMask();
 			pipe().connectionMask_$eq((byte) 0);
 
 			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)

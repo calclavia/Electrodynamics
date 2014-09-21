@@ -1,6 +1,6 @@
 package resonantinduction.mechanical.fluid.pipe
 
-import codechicken.lib.data.MCDataInput
+import codechicken.lib.data.{MCDataOutput, MCDataInput}
 import codechicken.lib.render.CCRenderState
 import codechicken.lib.vec.Vector3
 import codechicken.multipart.{TNormalOcclusion, TSlottedPart}
@@ -20,7 +20,7 @@ import resonantinduction.mechanical.fluid.pipe.PipeMaterials.PipeMaterial
  *
  * @author Calclavia
  */
-class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorable with TSlottedPart with TNormalOcclusion with IFluidHandler
+class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorable with IFluidHandler
 {
   val tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME)
 
@@ -54,7 +54,7 @@ class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorab
 
     if (!world.isRemote && markPacket)
     {
-      sendFluidUpdate
+      sendFluidUpdate()
       markPacket = false
     }
   }
@@ -82,15 +82,54 @@ class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorab
     tile.getWriteStream(this).writeByte(3).writeInt(tank.getCapacity).writeNBTTagCompound(nbt)
   }
 
+  /**
+   * Packet Methods
+   */
+  override def writeDesc(packet: MCDataOutput)
+  {
+    super[TMaterial].writeDesc(packet)
+    super[PartFramedNode].writeDesc(packet)
+    super[TColorable].writeDesc(packet)
+  }
+
+  override def readDesc(packet: MCDataInput)
+  {
+    super[TMaterial].readDesc(packet)
+    super[PartFramedNode].readDesc(packet)
+    super[TColorable].readDesc(packet)
+  }
+
   override def read(packet: MCDataInput, packetID: Int)
   {
-    super.read(packet, packetID)
+    super[PartFramedNode].read(packet, packetID)
+    super[TColorable].read(packet, packetID)
 
     if (packetID == 3)
     {
       tank.setCapacity(packet.readInt)
       tank.readFromNBT(packet.readNBTTagCompound)
     }
+  }
+
+  /**
+   * NBT Methods
+   */
+  override def load(nbt: NBTTagCompound)
+  {
+    super[PartFramedNode].load(nbt)
+    super[TMaterial].load(nbt)
+    super[TColorable].load(nbt)
+
+    tank.readFromNBT(nbt)
+  }
+
+  override def save(nbt: NBTTagCompound)
+  {
+    super[PartFramedNode].save(nbt)
+    super[TMaterial].save(nbt)
+    super[TColorable].save(nbt)
+
+    tank.writeToNBT(nbt)
   }
 
   @SideOnly(Side.CLIENT)
@@ -153,18 +192,6 @@ class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorab
   override def drawBreaking(renderBlocks: RenderBlocks)
   {
     CCRenderState.reset()
-  }
-
-  override def save(nbt: NBTTagCompound)
-  {
-    super.save(nbt)
-    tank.writeToNBT(nbt)
-  }
-
-  override def load(nbt: NBTTagCompound)
-  {
-    super.load(nbt)
-    tank.readFromNBT(nbt)
   }
 
   override def getSlotMask: Int =

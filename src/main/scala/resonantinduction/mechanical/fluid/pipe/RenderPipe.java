@@ -32,14 +32,14 @@ public class RenderPipe implements ISimpleItemRenderer
 	{
 		GL11.glPushMatrix();
 		GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
-		render(part.getMaterialID(), part.getColor() > 0 ? ItemDye.field_150922_c[part.getColor()] : -1, part.getAllCurrentConnections());
+		render(part.getMaterialID(), part.getColor() > 0 ? ItemDye.field_150922_c[part.getColor()] : -1, part.connectionMask());
 		GL11.glPopMatrix();
 
 		GL11.glPushMatrix();
 
 		FluidStack fluid = part.tank().getFluid();
 		int capacity = part.tank().getCapacity();
-		int renderSides = part.getAllCurrentConnections();
+		int renderSides = part.connectionMask();
     /**
 		if (fluid != null && fluid.amount > 0)
 		{
