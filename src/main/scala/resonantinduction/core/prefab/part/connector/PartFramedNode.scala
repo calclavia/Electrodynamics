@@ -20,6 +20,8 @@ object PartFramedNode
   var sides = new Array[IndexedCuboid6](7)
   var insulatedSides = new Array[IndexedCuboid6](7)
 
+  val center: IndexedCuboid6 = new IndexedCuboid6(7, new Cuboid6(0.375, 0.375, 0.375, 0.625, 0.625, 0.625))
+
   sides(0) = new IndexedCuboid6(0, new Cuboid6(0.36, 0.000, 0.36, 0.64, 0.36, 0.64))
   sides(1) = new IndexedCuboid6(1, new Cuboid6(0.36, 0.64, 0.36, 0.64, 1.000, 0.64))
   sides(2) = new IndexedCuboid6(2, new Cuboid6(0.36, 0.36, 0.000, 0.64, 0.64, 0.36))
@@ -55,7 +57,7 @@ abstract class PartFramedNode extends PartAbstract with TNodePartConnector with 
 
   override def getStrength(hit: MovingObjectPosition, player: EntityPlayer): Float = 10f
 
-  override def getBounds: Cuboid6 = new Cuboid6(0.375, 0.375, 0.375, 0.625, 0.625, 0.625)
+  override def getBounds: Cuboid6 = PartFramedNode.center
 
   override def getBrokenIcon(side: Int): IIcon = breakIcon
 
@@ -65,7 +67,6 @@ abstract class PartFramedNode extends PartAbstract with TNodePartConnector with 
   override def getCollisionBoxes: Set[Cuboid6] =
   {
     val collisionBoxes = mutable.Set.empty[Cuboid6]
-    collisionBoxes += getBounds
     collisionBoxes ++= getSubParts
     return collisionBoxes
   }
@@ -75,6 +76,7 @@ abstract class PartFramedNode extends PartAbstract with TNodePartConnector with 
     val currentSides = if (this.isInstanceOf[TInsulatable] && this.asInstanceOf[TInsulatable].insulated) PartFramedNode.insulatedSides else PartFramedNode.sides
 
     val list = mutable.Set.empty[IndexedCuboid6]
+    list += PartFramedNode.center
     list ++= ForgeDirection.VALID_DIRECTIONS.filter(s => PartFramedNode.connectionMapContainsSide(connectionMask, s) || s == testingSide).map(s => currentSides(s.ordinal()))
     return list
   }
