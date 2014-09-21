@@ -40,7 +40,7 @@ class ItemWire extends TItemMultiPart
       return null
     }
 
-    val wire = if (ControlKeyHandler.isPressed) ResonantPartFactory.create(classOf[PartFramedWire]) else ResonantPartFactory.create(classOf[PartFlatWire])
+    val wire = if (player.isSneaking) ResonantPartFactory.create(classOf[PartFramedWire]) else ResonantPartFactory.create(classOf[PartFlatWire])
 
     if (wire != null)
     {
@@ -50,17 +50,15 @@ class ItemWire extends TItemMultiPart
     return wire
   }
 
-  override def getMetadata(damage: Int): Int =
-  {
-    return damage
-  }
+  override def getMetadata(damage: Int): Int = damage
 
   override def getUnlocalizedName(itemStack: ItemStack): String =
   {
     return super.getUnlocalizedName(itemStack) + "." + WireMaterial.values()(itemStack.getItemDamage).name.toLowerCase
   }
 
-  @SuppressWarnings(Array("unchecked")) override def addInformation(itemStack: ItemStack, player: EntityPlayer, list: List[_], par4: Boolean)
+  @SuppressWarnings(Array("unchecked"))
+  override def addInformation(itemStack: ItemStack, player: EntityPlayer, list: List[_], par4: Boolean)
   {
     if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
     {
@@ -75,18 +73,8 @@ class ItemWire extends TItemMultiPart
     }
   }
 
-  @SideOnly(Side.CLIENT) override def getSpriteNumber: Int =
-  {
-    return 0
-  }
-
-  @SideOnly(Side.CLIENT) override def registerIcons(register: IIconRegister)
-  {
-    RenderFlatWire.flatWireTexture = register.registerIcon(Reference.prefix + "models/flatWire")
-    super.registerIcons(register)
-  }
-
-  @SideOnly(Side.CLIENT) override def getColorFromItemStack(itemStack: ItemStack, par2: Int): Int =
+  @SideOnly(Side.CLIENT)
+  override def getColorFromItemStack(itemStack: ItemStack, par2: Int): Int =
   {
     return new Color(WireMaterial.values()(itemStack.getItemDamage).color).darker.getRGB
   }

@@ -6,14 +6,15 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent
 import cpw.mods.fml.common.network.NetworkRegistry
 import cpw.mods.fml.common.registry.GameRegistry
 import cpw.mods.fml.common.{Mod, ModMetadata, SidedProxy}
-import net.minecraft.entity.player.EntityPlayer
+import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.item.{Item, ItemStack}
-import net.minecraftforge.event.entity.EntityJoinWorldEvent
+import net.minecraftforge.client.event.TextureStitchEvent
+import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.oredict.OreDictionary
 import resonant.content.loader.ModManager
 import resonant.lib.loadable.LoadableHandler
-import resonantinduction.atomic.gate.{PartQuantumGlyph, ItemQuantumGlyph}
-import resonantinduction.core.{ResonantPartFactory, Reference, ResonantTab, Settings}
+import resonantinduction.atomic.gate.{ItemQuantumGlyph, PartQuantumGlyph}
+import resonantinduction.core.{Reference, ResonantPartFactory, ResonantTab, Settings}
 import resonantinduction.electrical.battery.{ItemBlockBattery, TileBattery}
 import resonantinduction.electrical.generator.{TileMotor, TileSolarPanel, TileThermopile}
 import resonantinduction.electrical.laser.emitter.{BlockLaserEmitter, TileLaserEmitter}
@@ -21,25 +22,24 @@ import resonantinduction.electrical.laser.focus.ItemFocusingMatrix
 import resonantinduction.electrical.laser.focus.crystal.{BlockFocusCrystal, TileFocusCrystal}
 import resonantinduction.electrical.laser.focus.mirror.{BlockMirror, TileMirror}
 import resonantinduction.electrical.laser.receiver.{BlockLaserReceiver, TileLaserReceiver}
-import resonantinduction.electrical.levitator.{PartLevitator, ItemLevitator}
-import resonantinduction.electrical.multimeter.{PartMultimeter, ItemMultimeter}
+import resonantinduction.electrical.levitator.{ItemLevitator, PartLevitator}
+import resonantinduction.electrical.multimeter.{ItemMultimeter, PartMultimeter}
 import resonantinduction.electrical.tesla.TileTesla
-import resonantinduction.electrical.transformer.{PartElectricTransformer, ItemElectricTransformer}
+import resonantinduction.electrical.transformer.{ItemElectricTransformer, PartElectricTransformer}
 import resonantinduction.electrical.wire.ItemWire
-import resonantinduction.electrical.wire.base.WireMaterial
-import resonantinduction.electrical.wire.flat.PartFlatWire
-import resonantinduction.electrical.wire.framed.PartFramedWire
+import resonantinduction.electrical.wire.flat.{PartFlatWire, RenderFlatWire}
+import resonantinduction.electrical.wire.framed.{PartFramedWire, RenderFramedWire}
 
 /** Resonant Induction Electrical Module
   *
-  * @author Calclavia */
-
+  * @author Calclavia
+  */
 @Mod(modid = "ResonantInduction|Electrical", name = "Resonant Induction Electrical", version = Reference.version, dependencies = "before:ThermalExpansion;before:Mekanism;after:ResonantInduction|Mechanical;required-after:" + Reference.coreID, modLanguage = "scala")
 object Electrical
 {
   /** Mod Information */
-  final val ID: String = "ResonantInduction|Electrical"
-  final val NAME: String = Reference.name + " Electrical"
+  final val ID = "ResonantInduction|Electrical"
+  final val NAME = Reference.name + " Electrical"
 
   var INSTANCE = this
 
@@ -49,17 +49,18 @@ object Electrical
   @Mod.Metadata("ResonantInduction|Electrical")
   var metadata: ModMetadata = null
 
-  final val contentRegistry: ModManager = new ModManager().setPrefix(Reference.prefix).setTab(ResonantTab.tab)
+  @deprecated
+  val contentRegistry: ModManager = new ModManager().setPrefix(Reference.prefix).setTab(ResonantTab.tab)
 
-  var modproxies: LoadableHandler = null
+  val loadable = new LoadableHandler()
 
   @EventHandler
   def preInit(evt: FMLPreInitializationEvent)
   {
-    modproxies = new LoadableHandler
     NetworkRegistry.INSTANCE.registerGuiHandler(this, Electrical.proxy)
-    Settings.config.load
-    //ElectromagneticCoherence content TODO convert
+    MinecraftForge.EVENT_BUS.register(this)
+
+    Settings.config.load()
     ElectricalContent.blockLaserEmitter = new BlockLaserEmitter()
     ElectricalContent.blockLaserReceiver = new BlockLaserReceiver()
     ElectricalContent.blockMirror = new BlockMirror()
@@ -98,7 +99,6 @@ object Electrical
     OreDictionary.registerOre("batteryBox", ItemBlockBattery.setTier(new ItemStack(ElectricalContent.blockBattery, 1, 0), 0.asInstanceOf[Byte]))
     ResonantTab.itemStack(new ItemStack(ElectricalContent.itemTransformer))
 
-
     /**
      * Register all parts
      */
@@ -110,19 +110,35 @@ object Electrical
     ResonantPartFactory.register(classOf[PartQuantumGlyph])
 
     Electrical.proxy.preInit
-    modproxies.preInit()
+    loadable.preInit()
   }
 
   @EventHandler
   def init(evt: FMLInitializationEvent)
   {
     Electrical.proxy.init
-    modproxies.init()
+    loadable.init()
   }
 
-  @EventHandler def postInit(evt: FMLPostInitializationEvent)
+  @EventHandler
+  def postInit(evt: FMLPostInitializationEvent)
   {
     Electrical.proxy.postInit
-    modproxies.postInit()
+    loadable.postInit()
+  }
+
+  /**
+   * Handle wire texture
+   */
+  @SubscribeEvent
+  @SideOnly(Side.CLIENT)
+  def preTextureHook(event: TextureStitchEvent.Pre)
+  {
+    if (event.map.getTextureType() == 0)
+    {
+      RenderFlatWire.wireIcon = event.map.registerIcon(Reference.prefix + "models/flatWire")
+      RenderFramedWire.wireIcon = event.map.registerIcon(Reference.prefix + "models/wire")
+      RenderFramedWire.insulationIcon = event.map.registerIcon(Reference.prefix + "models/insulation")
+    }
   }
 }

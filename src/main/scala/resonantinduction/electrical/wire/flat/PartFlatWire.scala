@@ -279,7 +279,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
   @SideOnly(Side.CLIENT)
   def getIcon: IIcon =
   {
-    return RenderFlatWire.flatWireTexture
+    return RenderFlatWire.wireIcon
   }
 
   def useStaticRenderer: Boolean = true

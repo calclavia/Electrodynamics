@@ -1,16 +1,19 @@
 package resonantinduction.electrical.wire.framed
 
-import java.nio.FloatBuffer
-import java.util.Map
-
+import codechicken.lib.lighting.LightModel
 import codechicken.lib.render.uv.IconTransformation
 import codechicken.lib.render.{CCModel, CCRenderState, ColourMultiplier, TextureUtils}
 import codechicken.lib.vec.{Rotation, Translation}
 import cpw.mods.fml.relauncher.{Side, SideOnly}
-import net.minecraft.util.IIcon
+import net.minecraft.util.{IIcon, ResourceLocation}
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.lib.wrapper.BitmaskWrapper._
+import resonantinduction.core.Reference
+import resonantinduction.core.render.InvertX
 import resonantinduction.core.util.ResonantUtil
+
+import scala.collection.convert.wrapAll._
+import scala.collection.mutable
 
 /**
  * Renderer for framed wires
@@ -19,17 +22,18 @@ import resonantinduction.core.util.ResonantUtil
 @SideOnly(Side.CLIENT)
 object RenderFramedWire
 {
-  val models: Map[String, CCModel] = null
-  var wireIIcon: IIcon = null
-  var insulationIIcon: IIcon = null
+  var models = mutable.Map.empty[String, CCModel]
+  var wireIcon: IIcon = null
+  var insulationIcon: IIcon = null
   var breakIIcon: IIcon = null
 
-  def loadBuffer(buffer: FloatBuffer, src: Float*)
+  models = CCModel.parseObjModels(new ResourceLocation(Reference.domain, "models/wire.obj"), 7, new InvertX())
+  models.values.foreach(c =>
   {
-    buffer.clear
-    buffer.put(src.toArray)
-    buffer.flip
-  }
+    c.apply(new Translation(.5, 0, .5))
+    c.computeLighting(LightModel.standardLightModel)
+    c.shrinkUVs(0.0005)
+  })
 
   def renderStatic(wire: PartFramedWire)
   {
@@ -47,14 +51,17 @@ object RenderFramedWire
     var name: String = side.name.toLowerCase
     name = if (name == "unknown") "center" else name
 
-    renderPart(wireIIcon, models.get(name), wire.x, wire.y, wire.z, wire.material.color)
+    renderPart(wireIcon, models(name), wire.x, wire.y, wire.z, RGBColorToRGBA(wire.material.color))
 
     if (wire.insulated)
-      renderPart(insulationIIcon, models.get(name + "Insulation"), wire.x, wire.y, wire.z, ResonantUtil.getColorHex(wire.getColor))
+      renderPart(insulationIcon, models(name + "Insulation"), wire.x, wire.y, wire.z, RGBColorToRGBA(ResonantUtil.getColorHex(wire.getColor)))
   }
 
   def renderPart(icon: IIcon, cc: CCModel, x: Double, y: Double, z: Double, color: Int)
   {
-    cc.render(0, cc.verts.length, Rotation.sideOrientation(0, Rotation.rotationTo(0, 2)).at(codechicken.lib.vec.Vector3.center).`with`(new Translation(x, y, z)), new IconTransformation(icon), new ColourMultiplier(color))
+    val transform = Rotation.sideOrientation(0, Rotation.rotationTo(0, 2)).at(codechicken.lib.vec.Vector3.center).`with`(new Translation(x, y, z))
+    cc.render(0, cc.verts.length, transform, new IconTransformation(icon), new ColourMultiplier(color))
   }
+
+  def RGBColorToRGBA(color: Int): Int = color << 8 | (255 & 0xFF)
 }

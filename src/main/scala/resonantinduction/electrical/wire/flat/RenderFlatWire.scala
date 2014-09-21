@@ -12,7 +12,7 @@ import resonantinduction.core.util.ResonantUtil
 
 object RenderFlatWire
 {
-  var flatWireTexture: IIcon = null
+  var wireIcon: IIcon = null
   var reorientSide: Array[Int] = Array[Int](0, 3, 3, 0, 0, 3)
   /**
    * Array of all built models. These will be generated on demand.

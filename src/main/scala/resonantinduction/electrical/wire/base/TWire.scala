@@ -24,7 +24,7 @@ trait TWire extends PartAbstract with TNodePartConnector with TMaterial[WireMate
 {
   override protected val insulationItem: Item = ElectricalContent.itemInsulation
   material = WireMaterial.COPPER
-  
+
   def preparePlacement(side: Int, meta: Int)
 
   override def setMaterial(i: Int)
