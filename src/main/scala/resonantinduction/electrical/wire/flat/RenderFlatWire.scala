@@ -76,7 +76,7 @@ object RenderFlatWire
 
   def modelKey(w: PartFlatWire): Int =
   {
-    return modelKey(w.side, w.getThickness, w.connMap)
+    return modelKey(w.side, w.getThickness, w.connectionMask)
   }
 
   def getOrGenerateModel(key: Int): CCModel =

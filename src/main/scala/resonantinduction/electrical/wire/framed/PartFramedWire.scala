@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.RenderBlocks
 import net.minecraft.nbt.NBTTagCompound
 import resonantinduction.core.prefab.part.connector.PartFramedNode
 import resonantinduction.electrical.wire.base.TWire
+import universalelectricity.simulator.dc.DCNode
 
 /**
  * Fluid transport pipe
@@ -16,9 +17,12 @@ import resonantinduction.electrical.wire.base.TWire
  */
 class PartFramedWire extends PartFramedNode with TWire
 {
+  override lazy val node = new DCNode(this)
+
   override def preparePlacement(side: Int, meta: Int)
   {
     setMaterial(meta)
+    node.setResistance(material.resistance)
   }
 
   /**
@@ -58,9 +62,10 @@ class PartFramedWire extends PartFramedNode with TWire
   }
 
   @SideOnly(Side.CLIENT)
-  override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
+  override def renderStatic(pos: Vector3, pass: Int): Boolean =
   {
-    // RenderPipe.render(this, pos.x, pos.y, pos.z, frame)
+    RenderFramedWire.renderStatic(this)
+    return true
   }
 
   override def drawBreaking(renderBlocks: RenderBlocks)

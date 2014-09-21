@@ -51,7 +51,7 @@ trait TInsulatable extends PartAbstract
 
   def sendInsulationUpdate()
   {
-  //  tile.getWriteStream(this).writeByte(1).writeBoolean(this._insulated)
+    tile.getWriteStream(this).writeByte(1).writeBoolean(this._insulated)
   }
 
   /**

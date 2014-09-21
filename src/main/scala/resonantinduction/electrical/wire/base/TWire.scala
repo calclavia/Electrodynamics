@@ -23,7 +23,8 @@ import universalelectricity.simulator.dc.DCNode
 trait TWire extends PartAbstract with TNodePartConnector with TMaterial[WireMaterial] with TInsulatable with TColorable
 {
   override protected val insulationItem: Item = ElectricalContent.itemInsulation
-
+  material = WireMaterial.COPPER
+  
   def preparePlacement(side: Int, meta: Int)
 
   override def setMaterial(i: Int)

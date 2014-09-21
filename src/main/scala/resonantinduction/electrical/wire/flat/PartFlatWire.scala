@@ -73,7 +73,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
    * Like corner connections but set to low if the other wire part is smaller than this (they
    * render to us not us to them)
    */
-  var connMap = 0x00
+  var connectionMask = 0x00
 
   override lazy val node = new FlatWireNode(this)
 
@@ -127,28 +127,28 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
   {
     super.load(tag)
     side = tag.getByte("side")
-    connMap = tag.getInteger("connMap")
+    connectionMask = tag.getInteger("connMap")
   }
 
   override def save(tag: NBTTagCompound)
   {
     super.save(tag)
     tag.setByte("side", side)
-    tag.setInteger("connMap", connMap)
+    tag.setInteger("connMap", connectionMask)
   }
 
   override def writeDesc(packet: MCDataOutput)
   {
     super.writeDesc(packet)
     packet.writeByte(side)
-    packet.writeInt(connMap)
+    packet.writeInt(connectionMask)
   }
 
   override def readDesc(packet: MCDataInput)
   {
     super.readDesc(packet)
     side = packet.readByte
-    connMap = packet.readInt
+    connectionMask = packet.readInt
   }
 
   override def read(packet: MCDataInput, packetID: Int)
@@ -157,14 +157,14 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
 
     if (packetID == 3)
     {
-      connMap = packet.readInt
+      connectionMask = packet.readInt
       tile.markRender
     }
   }
 
   def sendConnUpdate()
   {
-    tile.getWriteStream(this).writeByte(3).writeInt(connMap)
+    tile.getWriteStream(this).writeByte(3).writeInt(connectionMask)
   }
 
   /**
@@ -180,9 +180,9 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
       {
         if (maskConnects(r))
         {
-          if ((connMap & 1 << r) != 0)
+          if ((connectionMask & 1 << r) != 0)
             notifyCornerChange(r)
-          else if ((connMap & 0x10 << r) != 0)
+          else if ((connectionMask & 0x10 << r) != 0)
             notifyStraightChange(r)
         }
       }
@@ -191,12 +191,12 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
 
   override def onChunkLoad()
   {
-    if ((connMap & 0x80000000) != 0)
+    if ((connectionMask & 0x80000000) != 0)
     {
       if (dropIfCantStay)
         return
 
-      connMap = 0
+      connectionMask = 0
       tile.markDirty()
     }
 
@@ -247,12 +247,12 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
 
   def maskConnects(r: Int): Boolean =
   {
-    return (connMap & 0x111 << r) != 0
+    return (connectionMask & 0x111 << r) != 0
   }
 
   def maskOpen(r: Int): Boolean =
   {
-    return (connMap & 0x1000 << r) != 0
+    return (connectionMask & 0x1000 << r) != 0
   }
 
   /**
@@ -521,10 +521,10 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
         }
       }
 
-      if (newConn != (connMap & 0xF000FF))
+      if (newConn != (connectionMask & 0xF000FF))
       {
-        val diff: Int = connMap ^ newConn
-        connMap = connMap & ~0xF000FF | newConn
+        val diff: Int = connectionMask ^ newConn
+        connectionMask = connectionMask & ~0xF000FF | newConn
 
         for (r <- 0 until 4)
         {
@@ -560,9 +560,9 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
       {
         newConn |= 0x10000
       }
-      if (newConn != (connMap & 0x10F00))
+      if (newConn != (connectionMask & 0x10F00))
       {
-        connMap = connMap & ~0x10F00 | newConn
+        connectionMask = connectionMask & ~0x10F00 | newConn
         return true
       }
       return false
@@ -585,9 +585,9 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
         }
       }
 
-      if (newConn != (connMap & 0xF000))
+      if (newConn != (connectionMask & 0xF000))
       {
-        connMap = connMap & ~0xF000 | newConn
+        connectionMask = connectionMask & ~0xF000 | newConn
         return true
       }
 
@@ -730,13 +730,13 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
       val absDir: Int = Rotation.rotateSide(side, r)
       if (canConnectTo(wire, ForgeDirection.getOrientation(absDir)) && maskOpen(r))
       {
-        val oldConn: Int = connMap
-        connMap |= 0x1 << r
+        val oldConn: Int = connectionMask
+        connectionMask |= 0x1 << r
         if (renderThisCorner(wire))
         {
-          connMap |= 0x100000 << r
+          connectionMask |= 0x100000 << r
         }
-        if (oldConn != connMap)
+        if (oldConn != connectionMask)
         {
           sendConnUpdate
         }
@@ -750,9 +750,9 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
       val absDir: Int = Rotation.rotateSide(side, r)
       if (canConnectTo(wire, ForgeDirection.getOrientation(absDir)) && maskOpen(r))
       {
-        val oldConn: Int = connMap
-        connMap |= 0x10 << r
-        if (oldConn != connMap)
+        val oldConn: Int = connectionMask
+        connectionMask |= 0x10 << r
+        if (oldConn != connectionMask)
         {
           sendConnUpdate()
         }
@@ -766,9 +766,9 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
       val absDir: Int = Rotation.rotateSide(side, r)
       if (canConnectTo(wire, ForgeDirection.getOrientation(absDir)))
       {
-        val oldConn: Int = connMap
-        connMap |= 0x100 << r
-        if (oldConn != connMap)
+        val oldConn: Int = connectionMask
+        connectionMask |= 0x100 << r
+        if (oldConn != connectionMask)
         {
           sendConnUpdate()
         }

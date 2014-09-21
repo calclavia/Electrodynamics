@@ -20,6 +20,10 @@ trait TColorable extends PartAbstract
 {
   var colorID = TColorable.defaultColor
 
+  /**
+   * Gets the Minecraft color code
+   * @return An integer
+   */
   def getColor = colorID
 
   def setColor(dye: Int)
