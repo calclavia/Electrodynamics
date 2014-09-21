@@ -17,6 +17,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
 import resonantinduction.core.prefab.node.TMultipartNode
 import resonantinduction.core.prefab.part.ChickenBonesWrapper._
+import resonantinduction.core.prefab.part.connector.PartAbstract
 import resonantinduction.core.util.MultipartUtil
 import resonantinduction.electrical.wire.base.TWire
 import universalelectricity.api.core.grid.INodeProvider
@@ -53,7 +54,7 @@ object PartFlatWire
   }
 }
 
-class PartFlatWire extends TWire with TFacePart with TNormalOcclusion
+class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOcclusion
 {
   /**
    * The current side the wire is placed on

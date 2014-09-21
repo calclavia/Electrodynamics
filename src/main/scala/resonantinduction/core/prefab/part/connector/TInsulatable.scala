@@ -15,7 +15,7 @@ import scala.collection.mutable
  * Trait applied to objects that can be insulated/enhanced by a certain item.
  * @author Calclavia
  */
-trait TInsulatable extends TMultiPart with TPart
+trait TInsulatable extends PartAbstract
 {
   /**
    * The item that is used to insulate this object.
@@ -106,7 +106,7 @@ trait TInsulatable extends TMultiPart with TPart
     _insulated = packet.readBoolean
   }
 
-  def read(packet: MCDataInput, packetID: Int)
+  override def read(packet: MCDataInput, packetID: Int)
   {
     if (packetID == 1)
       _insulated = packet.readBoolean

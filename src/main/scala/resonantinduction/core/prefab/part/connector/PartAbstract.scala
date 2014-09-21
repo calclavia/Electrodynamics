@@ -1,5 +1,6 @@
 package resonantinduction.core.prefab.part.connector
 
+import codechicken.lib.data.MCDataInput
 import codechicken.multipart.{IRedstonePart, TMultiPart}
 import net.minecraft.item.ItemStack
 import net.minecraft.util.MovingObjectPosition
@@ -9,7 +10,7 @@ import resonantinduction.core.ResonantPartFactory
 import scala.collection.convert.wrapAll._
 import scala.collection.mutable
 
-trait TPart extends TMultiPart with TraitTicker
+abstract class PartAbstract extends TMultiPart with TraitTicker
 {
   override def update()
   {
@@ -56,6 +57,16 @@ trait TPart extends TMultiPart with TraitTicker
       }
     }
     return false
+  }
+
+  override def read(packet: MCDataInput)
+  {
+    read(packet, packet.readUByte)
+  }
+
+  def read(packet: MCDataInput, packetID: Int)
+  {
+
   }
 
   override def toString: String = "[" + getClass.getSimpleName + "]" + x + "x " + y + "y " + z + "z"

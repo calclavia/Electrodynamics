@@ -41,7 +41,7 @@ object PartFramedNode
   }
 }
 
-abstract class PartFramedNode extends TMultiPart with TNodePartConnector with TSlottedPart with TNormalOcclusion with TIconHitEffects
+abstract class PartFramedNode extends PartAbstract with TNodePartConnector with TSlottedPart with TNormalOcclusion with TIconHitEffects
 {
   /** Bitmask connections */
   var connectionMask: Byte = 0x00
@@ -162,12 +162,7 @@ abstract class PartFramedNode extends TMultiPart with TNodePartConnector with TS
     packet.writeByte(connectionMask)
   }
 
-  override def read(packet: MCDataInput)
-  {
-    read(packet, packet.readUByte)
-  }
-
-  def read(packet: MCDataInput, packetID: Int)
+  override def read(packet: MCDataInput, packetID: Int)
   {
     if (packetID == 0)
     {

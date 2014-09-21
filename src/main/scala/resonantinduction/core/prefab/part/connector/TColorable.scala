@@ -1,7 +1,6 @@
 package resonantinduction.core.prefab.part.connector
 
 import codechicken.lib.data.{MCDataInput, MCDataOutput}
-import codechicken.multipart.TMultiPart
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
@@ -16,7 +15,8 @@ object TColorable
 {
   val defaultColor = 15
 }
-trait TColorable extends TMultiPart with TPart
+
+trait TColorable extends PartAbstract
 {
   var colorID = TColorable.defaultColor
 
@@ -73,7 +73,7 @@ trait TColorable extends TMultiPart with TPart
     packet.writeByte(colorID.toByte)
   }
 
-  def read(packet: MCDataInput, packetID: Int)
+  override def read(packet: MCDataInput, packetID: Int)
   {
     if (packetID == 2)
     {

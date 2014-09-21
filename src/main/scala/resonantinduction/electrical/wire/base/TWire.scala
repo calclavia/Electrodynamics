@@ -1,7 +1,6 @@
 package resonantinduction.electrical.wire.base
 
 import codechicken.lib.data.{MCDataInput, MCDataOutput}
-import codechicken.multipart.TMultiPart
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
@@ -14,14 +13,14 @@ import universalelectricity.simulator.dc.DCNode
  * Abstract class extended by both flat and framed wires to handle material, insulation, color and multipart node logic.
  *
  * Packets:
- *  0 - Desc
- *  1 - Material
- *  2 - Insulation
- *  3 - Color
+ * 0 - Desc
+ * 1 - Material
+ * 2 - Insulation
+ * 3 - Color
  *
  * @author Calclavia
  */
-abstract class TWire extends TMultiPart with TNodePartConnector with TPart with TMaterial[WireMaterial] with TInsulatable with TColorable
+trait TWire extends PartAbstract with TNodePartConnector with TMaterial[WireMaterial] with TInsulatable with TColorable
 {
   override protected val insulationItem: Item = ElectricalContent.itemInsulation
 
@@ -51,11 +50,6 @@ abstract class TWire extends TMultiPart with TNodePartConnector with TPart with 
     super[TMaterial].readDesc(packet)
     super[TInsulatable].readDesc(packet)
     super[TColorable].readDesc(packet)
-  }
-
-  override final def read(packet: MCDataInput)
-  {
-    read(packet, packet.readUByte)
   }
 
   override def read(packet: MCDataInput, packetID: Int)
