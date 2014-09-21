@@ -3,7 +3,7 @@ package resonantinduction.mechanical.fluid.pipe
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.IFluidHandler
 import resonant.lib.wrapper.BitmaskWrapper._
-import resonantinduction.core.prefab.node.{TMultipartNode, NodePressure}
+import resonantinduction.core.prefab.node.{NodePressure, TMultipartNode}
 import resonantinduction.core.prefab.part.connector.TColorable
 import universalelectricity.api.core.grid.INodeProvider
 
