@@ -9,9 +9,15 @@ import universalelectricity.api.core.grid.{INode, INodeProvider, ISave}
  * A node trait that can be mixed into any multipart nodes. Mixing this trait will cause nodes to reconstruct/deconstruct when needed.
  * @author Calclavia
  */
-trait TNodePartConnector extends TMultiPart with INodeProvider
+trait TNodePartConnector extends PartAbstract with INodeProvider
 {
   protected lazy val node: INode = null
+
+  override def start()
+  {
+    super.start()
+    node.reconstruct()
+  }
 
   override def onWorldJoin()
   {
