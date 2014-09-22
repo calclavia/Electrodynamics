@@ -9,7 +9,7 @@ import universalelectricity.compatibility.module.ModuleThermalExpansion
  * A temporary energy bridge between TE and UE
  * @author Calclavia
  */
-trait TEnergyBridge extends TElectric with IEnergyHandler
+trait TTEBridge extends TElectric with IEnergyHandler
 {
   override def receiveEnergy(from: ForgeDirection, maxReceive: Int, simulate: Boolean): Int =
   {
@@ -23,12 +23,12 @@ trait TEnergyBridge extends TElectric with IEnergyHandler
 
   override def getEnergyStored(from: ForgeDirection): Int =
   {
-    return (electricNode.buffer().getEnergy * ModuleThermalExpansion.ratio).asInstanceOf[Int]
+    return (electricNode.buffer.getEnergy * ModuleThermalExpansion.ratio).asInstanceOf[Int]
   }
 
   override def getMaxEnergyStored(from: ForgeDirection): Int =
   {
-    return (electricNode.buffer().getEnergyCapacity * ModuleThermalExpansion.ratio).asInstanceOf[Int]
+    return (electricNode.buffer.getEnergyCapacity * ModuleThermalExpansion.ratio).asInstanceOf[Int]
   }
 
   override def canConnectEnergy(from: ForgeDirection): Boolean =

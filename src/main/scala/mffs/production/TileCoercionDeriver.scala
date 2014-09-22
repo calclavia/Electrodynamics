@@ -46,10 +46,10 @@ object TileCoercionDeriver
 }
 
 @UniversalClass
-class TileCoercionDeriver extends TileModuleAcceptor with TEnergyBridge
+class TileCoercionDeriver extends TileModuleAcceptor with TTEBridge
 {
   var processTime: Int = 0
-  var isInversed: Boolean = false
+  var isInversed = false
 
   //Client
   var animationTween = 0f
@@ -58,11 +58,6 @@ class TileCoercionDeriver extends TileModuleAcceptor with TEnergyBridge
   startModuleIndex = 3
 
   override def getSizeInventory = 6
-
-  override def start()
-  {
-    super.start()
-  }
 
   override def update()
   {
@@ -74,7 +69,7 @@ class TileCoercionDeriver extends TileModuleAcceptor with TEnergyBridge
       {
         if (isInversed && Settings.enableElectricity)
         {
-          val withdrawnElectricity = (requestFortron(productionRate / 20, true) / TileCoercionDeriver.ueToFortronRatio)
+          val withdrawnElectricity = requestFortron(productionRate / 20, true) / TileCoercionDeriver.ueToFortronRatio
           electricNode.addEnergy(ForgeDirection.UNKNOWN, withdrawnElectricity * TileCoercionDeriver.energyConversionPercentage, true)
 
           recharge(getStackInSlot(TileCoercionDeriver.slotBattery))
@@ -84,12 +79,14 @@ class TileCoercionDeriver extends TileModuleAcceptor with TEnergyBridge
           if (getFortronEnergy < getFortronCapacity)
           {
             discharge(getStackInSlot(TileCoercionDeriver.slotBattery))
-            val energy = electricNode.getEnergy(ForgeDirection.UNKNOWN)
+            val energy = electricNode.buffer.getEnergy
+            electricNode.buffer.setMaxTransfer(getPower)
+            electricNode.buffer.setCapacity(getPower)
 
             if (energy >= getPower || (!Settings.enableElectricity && isItemValidForSlot(TileCoercionDeriver.slotFuel, getStackInSlot(TileCoercionDeriver.slotFuel))))
             {
               fortronTank.fill(FortronUtility.getFortron(productionRate), true)
-              electricNode.removeEnergy(ForgeDirection.UNKNOWN, getPower, true)
+              electricNode.buffer.extractEnergy(getPower, true)
 
               if (processTime == 0 && isItemValidForSlot(TileCoercionDeriver.slotFuel, getStackInSlot(TileCoercionDeriver.slotFuel)))
               {
@@ -102,9 +99,7 @@ class TileCoercionDeriver extends TileModuleAcceptor with TEnergyBridge
                 processTime -= 1
 
                 if (processTime < 1)
-                {
                   processTime = 0
-                }
               }
               else
               {
