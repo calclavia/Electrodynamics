@@ -5,6 +5,7 @@ import net.minecraft.init.Items;
 import resonant.content.loader.ModManager;
 import resonant.engine.content.debug.TileCreativeBuilder;
 import resonant.lib.network.discriminator.PacketAnnotationManager;
+import resonant.lib.schematic.SchematicPlate;
 import resonantinduction.core.ResonantPartFactory$;
 import resonantinduction.core.ResonantTab;
 import resonantinduction.mechanical.fluid.pipe.PartPipe;
@@ -100,8 +101,9 @@ public class Mechanical
 	{
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
 		MinecraftForge.EVENT_BUS.register(new MicroblockHighlightHandler());
-		TileCreativeBuilder.register(new SchematicWindTurbine());
-		TileCreativeBuilder.register(new SchematicWaterTurbine());
+		TileCreativeBuilder.register(new SchematicPlate("schematic.waterTurbine.name", blockWaterTurbine));
+        TileCreativeBuilder.register(new SchematicPlate("schematic.windTurbine.name", blockWindTurbine));
+        TileCreativeBuilder.register(new SchematicPlate("schematic.electricTurbine.name", blockElectricTurbine));
 		NodeRegistry.register(IMechanicalNode.class, MechanicalNode.class);
 
 		itemGear = contentRegistry.newItem(ItemGear.class);
