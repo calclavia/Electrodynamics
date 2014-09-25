@@ -18,7 +18,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.IFluidBlock;
 import resonant.api.recipe.MachineRecipes;
 import resonantinduction.core.Reference;
-import resonantinduction.core.Timer;
+import resonant.lib.utility.Timer;
 import resonant.content.factory.resources.block.BlockFluidMixture;
 import universalelectricity.api.core.grid.INode;
 import universalelectricity.core.transform.rotation.Quaternion;

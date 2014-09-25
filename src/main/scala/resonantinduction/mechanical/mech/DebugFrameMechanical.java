@@ -12,9 +12,9 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
 import net.minecraftforge.common.util.ForgeDirection;
-import resonantinduction.core.debug.FrameNodeDebug;
-import resonantinduction.core.debug.UpdatePanel;
-import resonantinduction.core.debug.UpdatedLabel;
+import resonant.lib.debug.FrameNodeDebug;
+import resonant.lib.debug.UpdatePanel;
+import resonant.lib.debug.UpdatedLabel;
 import universalelectricity.api.core.grid.INode;
 import universalelectricity.api.core.grid.INodeProvider;
 
