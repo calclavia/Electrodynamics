@@ -82,7 +82,7 @@ public class TilePump extends TileMechanical implements IRotatable, IFluidHandle
 
 			if (tileIn instanceof IFluidHandler)
 			{
-				FluidStack drain = ((IFluidHandler) tileIn).drain(getDirection(), pressureNode.maxOutput(), false);
+				FluidStack drain = ((IFluidHandler) tileIn).drain(getDirection(), pressureNode.getCapacity(), false);
 
 				if (drain != null)
 				{

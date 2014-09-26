@@ -13,6 +13,7 @@ import resonant.lib.network.handle.IPacketIDReceiver;
 import resonant.lib.prefab.fluid.LimitedTank;
 import resonant.lib.prefab.fluid.NodeFluidHandler;
 import resonant.lib.utility.WorldUtility;
+import universalelectricity.api.core.grid.INode;
 import universalelectricity.api.core.grid.INodeProvider;
 import universalelectricity.api.core.grid.ISave;
 import universalelectricity.core.grid.node.NodeConnector;
@@ -22,7 +23,7 @@ import universalelectricity.core.grid.node.NodeConnector;
  *
  * @author Darkguardsman
  */
-public class NodeTank extends NodeFluidHandler implements ISave, IPacketIDReceiver
+public class NodeTank extends NodeFluidHandler implements ISave, IPacketIDReceiver, INode
 {
 	static final int PACKET_DESCRIPTION = 100, PACKET_TANK = 101;
 	int renderSides = 0;
