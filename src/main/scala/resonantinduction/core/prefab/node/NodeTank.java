@@ -11,6 +11,7 @@ import resonant.lib.network.discriminator.PacketTile;
 import resonant.lib.network.discriminator.PacketType;
 import resonant.lib.network.handle.IPacketIDReceiver;
 import resonant.lib.prefab.fluid.LimitedTank;
+import resonant.lib.prefab.fluid.NodeFluidHandler;
 import resonant.lib.utility.WorldUtility;
 import universalelectricity.api.core.grid.INodeProvider;
 import universalelectricity.api.core.grid.ISave;
@@ -21,10 +22,9 @@ import universalelectricity.core.grid.node.NodeConnector;
  *
  * @author Darkguardsman
  */
-public class NodeTank extends NodeConnector implements IFluidTank, IFluidHandler, ISave, IPacketIDReceiver
+public class NodeTank extends NodeFluidHandler implements ISave, IPacketIDReceiver
 {
 	static final int PACKET_DESCRIPTION = 100, PACKET_TANK = 101;
-	LimitedTank tank;
 	int renderSides = 0;
 
 	public NodeTank(INodeProvider parent)
@@ -34,115 +34,19 @@ public class NodeTank extends NodeConnector implements IFluidTank, IFluidHandler
 
 	public NodeTank(INodeProvider parent, int buckets)
 	{
-		super(parent);
-		tank = new LimitedTank(buckets * FluidContainerRegistry.BUCKET_VOLUME);
-	}
-
-	@Override
-	public boolean isValidConnection(Object object)
-	{
-		return super.isValidConnection(object);
-	}
-
-	@Override
-	public FluidStack getFluid()
-	{
-		return tank.getFluid();
-	}
-
-	@Override
-	public int getFluidAmount()
-	{
-		return tank.getFluidAmount();
-	}
-
-	@Override
-	public int getCapacity()
-	{
-		return tank.getCapacity();
-	}
-
-	public void setCapacity(int capacity)
-	{
-		tank.setCapacity(capacity);
-	}
-
-	@Override
-	public FluidTankInfo getInfo()
-	{
-		return tank.getInfo();
-	}
-
-	@Override
-	public int fill(FluidStack resource, boolean doFill)
-	{
-		return tank.fill(resource, doFill);
-	}
-
-	@Override
-	public FluidStack drain(int maxDrain, boolean doDrain)
-	{
-		return tank.drain(maxDrain, doDrain);
-	}
-
-	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
-	{
-		if (canConnect(from))
-		{
-			return fill(resource, doFill);
-		}
-		return 0;
-	}
-
-	@Override
-	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
-	{
-		if (canConnect(from) && resource != null && resource.isFluidEqual(getFluid()))
-		{
-			return drain(resource.amount, doDrain);
-		}
-		return null;
-	}
-
-	@Override
-	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
-	{
-		if (canConnect(from))
-		{
-			return drain(maxDrain, doDrain);
-		}
-		return null;
-	}
-
-	@Override
-	public boolean canFill(ForgeDirection from, Fluid fluid)
-	{
-		return canConnect(from);
-	}
-
-	@Override
-	public boolean canDrain(ForgeDirection from, Fluid fluid)
-	{
-		return canConnect(from);
-	}
-
-	@Override
-	public FluidTankInfo[] getTankInfo(ForgeDirection from)
-	{
-		return new FluidTankInfo[] { getInfo() };
+		super(parent, new LimitedTank(buckets * FluidContainerRegistry.BUCKET_VOLUME));
 	}
 
 	@Override
 	public void load(NBTTagCompound nbt)
 	{
-		tank.readFromNBT(nbt.getCompoundTag("tank"));
+		getPrimaryTank().readFromNBT(nbt.getCompoundTag("tank"));
 	}
 
 	@Override
 	public void save(NBTTagCompound nbt)
 	{
-		nbt.setTag("tank", tank.writeToNBT(new NBTTagCompound()));
+		nbt.setTag("tank", getPrimaryTank().writeToNBT(new NBTTagCompound()));
 	}
 
 	@Override
@@ -154,7 +58,7 @@ public class NodeTank extends NodeConnector implements IFluidTank, IFluidHandler
 				this.load(ByteBufUtils.readTag(buf));
 				break;
 			case PACKET_TANK:
-				this.tank.readFromNBT(ByteBufUtils.readTag(buf));
+				getPrimaryTank().readFromNBT(ByteBufUtils.readTag(buf));
 				break;
 		}
 		return false;
@@ -162,14 +66,7 @@ public class NodeTank extends NodeConnector implements IFluidTank, IFluidHandler
 
 	public void sendTank()
 	{
-		ResonantEngine.instance.packetHandler.sendToAllAround(new PacketTile((int) x(), (int) y(), (int) z(), PACKET_TANK, tank.writeToNBT(new NBTTagCompound())), this, 64);
-	}
-
-	public void sendUpdate()
-	{
-		NBTTagCompound tag = new NBTTagCompound();
-		save(tag);
-		ResonantEngine.instance.packetHandler.sendToAllAround(new PacketTile((int) x(), (int) y(), (int) z(), PACKET_DESCRIPTION, tag), this, 64);
+		//ResonantEngine.instance.packetHandler.sendToAllAround(new PacketTile((int) x(), (int) y(), (int) z(), PACKET_TANK, getPrimaryTank().writeToNBT(new NBTTagCompound())), 64);
 	}
 
 	@Override
@@ -192,16 +89,6 @@ public class NodeTank extends NodeConnector implements IFluidTank, IFluidHandler
 			}
 		}
 		return false;
-	}
-
-	public int maxInput()
-	{
-		return tank.maxInput;
-	}
-
-	public int maxOutput()
-	{
-		return tank.maxOutput;
 	}
 
 	public int getRenderSides()
