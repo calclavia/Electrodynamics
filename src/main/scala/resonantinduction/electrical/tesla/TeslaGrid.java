@@ -14,6 +14,7 @@ import resonant.api.mffs.fortron.IServerThread;
  * @author Calclavia
  *
  */
+@Deprecated // TODO "Should be replaced with a shared frequency grid" - from Darkguardsman
 public class TeslaGrid
 {
 	private static final TeslaGrid INSTANCE_CLIENT = new TeslaGrid();
