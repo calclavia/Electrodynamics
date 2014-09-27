@@ -21,6 +21,9 @@ public class RenderMechanicalPiston extends TileEntitySpecialRenderer
     public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain(), Reference.modelPath() + "piston/mechanicalPiston.tcn"));
     public static ResourceLocation TEXTURE = new ResourceLocation(Reference.domain(), Reference.modelPath() + "piston/mechanicalPiston_iron.png");
 
+    final String[] staticParts = { "baseRing", "leg1", "leg2", "leg3", "leg4", "connector", "basePlate", "basePlateTop", "connectorBar", "centerPiston" };
+    final String[] shaftParts = { "topPlate", "outerPiston" };
+
     @Override
     public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float f)
     {
@@ -43,8 +46,6 @@ public class RenderMechanicalPiston extends TileEntitySpecialRenderer
 
         // Angle in radians of the rotor.
         double angle = tile.mechanicalNode.renderAngle;
-        final String[] staticParts = { "baseRing", "leg1", "leg2", "leg3", "leg4", "connector", "basePlate", "basePlateTop", "connectorBar", "centerPiston" };
-        final String[] shaftParts = { "topPlate", "outerPiston" };
 
         /** Render Piston Rotor */
         GL11.glPushMatrix();
