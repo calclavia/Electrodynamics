@@ -29,7 +29,7 @@ import scala.collection.JavaConversions._
 object TileMixer
 {
     final val PROCESS_TIME: Int = 12 * 20
-    final val timer: Timer[EntityItem] = new Timer[EntityItem]
+    final val MIXER_ITEM_TIMER: Timer[EntityItem] = new Timer[EntityItem]
 }
 
 class TileMixer extends TileMechanical(Material.iron)
@@ -49,11 +49,9 @@ class TileMixer extends TileMechanical(Material.iron)
     override def update
     {
         super.update
-        if (!world.isRemote && ticks % 20 == 0)
+        if (!world.isRemote && ticks % 3 == 0)
         {
             this.areaBlockedFromMoving = checkIsBlocked
-
-
         }
         if (canWork)
         {
@@ -120,13 +118,13 @@ class TileMixer extends TileMechanical(Material.iron)
 
         for (processingItem <- processItems)
         {
-            if (!TileMixer.timer.containsKey(processingItem))
+            if (!TileMixer.MIXER_ITEM_TIMER.containsKey(processingItem))
             {
-                TileMixer.timer.put(processingItem, TileMixer.PROCESS_TIME)
+                TileMixer.MIXER_ITEM_TIMER.put(processingItem, TileMixer.PROCESS_TIME)
             }
             if (!processingItem.isDead && new Vector3(this).add(0.5).distance(new Vector3(processingItem)) < 2)
             {
-                val timeLeft: Int = TileMixer.timer.decrease(processingItem)
+                val timeLeft: Int = TileMixer.MIXER_ITEM_TIMER.decrease(processingItem)
                 if (timeLeft <= 0)
                 {
                     if (doneWork(processingItem))
@@ -137,12 +135,12 @@ class TileMixer extends TileMechanical(Material.iron)
                         }) <= 0)
                         {
                             processingItem.setDead
-                            TileMixer.timer.remove(processingItem)
+                            TileMixer.MIXER_ITEM_TIMER.remove(processingItem)
                         }
                         else
                         {
                             processingItem.setEntityItemStack(processingItem.getEntityItem)
-                            TileMixer.timer.put(processingItem, TileMixer.PROCESS_TIME)
+                            TileMixer.MIXER_ITEM_TIMER.put(processingItem, TileMixer.PROCESS_TIME)
                         }
                     }
                 }
@@ -155,7 +153,7 @@ class TileMixer extends TileMechanical(Material.iron)
             }
             else
             {
-                TileMixer.timer.remove(processingItem)
+                TileMixer.MIXER_ITEM_TIMER.remove(processingItem)
             }
         }
         if (didWork)

@@ -8,7 +8,7 @@ import universalelectricity.api.core.grid.INodeProvider
  * Node designed just for the Mixer to use
  * @param parent - instance of TileMixer that will host this node, should never be null
  */
-class MixerNode(parent: TileMixer) extends MechanicalNode(parent: INodeProvider)
+class MixerNode(parent: INodeProvider) extends MechanicalNode(parent)
 {
     //Constructor
     maxDeltaAngle = Math.toRadians(45)
