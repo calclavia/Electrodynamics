@@ -9,6 +9,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
 import resonant.content.wrapper.ItemRenderHandler
+import resonant.lib.render.fx.FXElectricBolt2
 import resonantinduction.atomic.gate.RenderQuantumGlyph
 import resonantinduction.electrical.battery.{RenderBattery, TileBattery}
 import resonantinduction.electrical.generator.{RenderMotor, TileMotor}
@@ -18,7 +19,6 @@ import resonantinduction.electrical.laser.focus.mirror.{RenderMirror, TileMirror
 import resonantinduction.electrical.laser.fx.{EntityBlockParticleFX, EntityLaserFX, EntityScorchFX}
 import resonantinduction.electrical.laser.receiver.{RenderLaserReceiver, TileLaserReceiver}
 import resonantinduction.electrical.multimeter.{RenderMultimeter, GuiMultimeter, PartMultimeter}
-import resonantinduction.electrical.render.FXElectricBolt
 import resonantinduction.electrical.tesla.{RenderTesla, TileTesla}
 import resonantinduction.electrical.transformer.RenderTransformer
 import universalelectricity.core.transform.vector.Vector3
@@ -70,7 +70,7 @@ class ClientProxy extends CommonProxy
   {
     if (world.isRemote)
     {
-      FMLClientHandler.instance.getClient.effectRenderer.addEffect(new FXElectricBolt(world, start, target, split).setColor(r, g, b))
+      FMLClientHandler.instance.getClient.effectRenderer.addEffect(new FXElectricBolt2(world, start, target, split).setColor(r, g, b))
     }
   }
 
