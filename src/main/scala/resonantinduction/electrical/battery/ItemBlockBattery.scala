@@ -142,20 +142,14 @@ class ItemBlockBattery(block: Block) extends ItemBlock(block) with IEnergyItem
         return this.getEnergyCapacity(itemStack) / 100
     }
 
-    @SuppressWarnings(Array("unchecked")) override def getSubItems(par1: Item, par2CreativeTabs: CreativeTabs, par3List: List[_])
+    @SuppressWarnings(Array("unchecked"))
+    override def getSubItems(par1: Item, par2CreativeTabs: CreativeTabs, par3List: List[_])
     {
+        for (tier <- 0 to TileBattery.MAX_TIER)
         {
-            var tier: Byte = 0
-            while (tier <= TileBattery.MAX_TIER)
-            {
-                {
-                    par3List.add(Compatibility.getItemWithCharge(ItemBlockBattery.setTier(new ItemStack(this), tier), 0))
-                    par3List.add(Compatibility.getItemWithCharge(ItemBlockBattery.setTier(new ItemStack(this), tier), TileBattery.getEnergyForTier(tier)))
-                }
-                ({
-                    tier += 1; tier - 1
-                })
-            }
+            par3List.add(Compatibility.getItemWithCharge(ItemBlockBattery.setTier(new ItemStack(this), tier.asInstanceOf[Byte]), 0))
+            par3List.add(Compatibility.getItemWithCharge(ItemBlockBattery.setTier(new ItemStack(this), tier.asInstanceOf[Byte]), TileBattery.getEnergyForTier(tier)))
+
         }
     }
 }

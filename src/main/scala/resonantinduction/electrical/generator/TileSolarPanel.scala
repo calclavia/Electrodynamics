@@ -1,18 +1,15 @@
 package resonantinduction.electrical.generator
 
-import net.minecraft.block.material.Material
+import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.util.IIcon
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.content.spatial.block.SpatialBlock
-import resonantinduction.core.Reference
-import resonantinduction.core.Settings
-import resonantinduction.electrical.battery.TileEnergyDistribution
-import cpw.mods.fml.relauncher.Side
-import cpw.mods.fml.relauncher.SideOnly
+import resonantinduction.core.{Reference, Settings}
+import resonantinduction.electrical.battery.TileBattery
 import universalelectricity.core.transform.region.Cuboid
 
-class TileSolarPanel extends TileEnergyDistribution(Material.iron) {
+class TileSolarPanel extends TileBattery {
 
     energy.setCapacity(Settings.SOLAR_ENERGY * 20)
     ioMap_$eq(728.asInstanceOf[Short])

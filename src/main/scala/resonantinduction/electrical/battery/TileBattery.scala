@@ -63,7 +63,7 @@ class TileBattery extends TileElectric(Material.iron) with IPacketReceiver {
 
   override def getDescPacket: AbstractPacket =
   {
-    return new PacketTile(this, renderEnergyAmount, ioMap)
+    return new PacketTile(this, Array[Any](renderEnergyAmount, ioMap))
   }
 
   def read(data: ByteBuf, player: EntityPlayer, `type`: PacketType) {

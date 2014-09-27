@@ -22,7 +22,6 @@ import resonantinduction.electrical.laser.focus.ItemFocusingMatrix
 import resonantinduction.electrical.laser.focus.crystal.{BlockFocusCrystal, TileFocusCrystal}
 import resonantinduction.electrical.laser.focus.mirror.{BlockMirror, TileMirror}
 import resonantinduction.electrical.laser.receiver.{BlockLaserReceiver, TileLaserReceiver}
-import resonantinduction.electrical.levitator.{ItemLevitator, PartLevitator}
 import resonantinduction.electrical.multimeter.{ItemMultimeter, PartMultimeter}
 import resonantinduction.electrical.tesla.TileTesla
 import resonantinduction.electrical.transformer.{ItemElectricTransformer, PartElectricTransformer}
@@ -86,7 +85,6 @@ object Electrical
     ElectricalContent.itemTransformer = Electrical.contentRegistry.newItem(classOf[ItemElectricTransformer])
     ElectricalContent.blockTesla = Electrical.contentRegistry.newBlock(classOf[TileTesla])
     ElectricalContent.blockBattery = Electrical.contentRegistry.newBlock(classOf[TileBattery])
-    ElectricalContent.itemLevitator = Electrical.contentRegistry.newItem(classOf[ItemLevitator])
     ElectricalContent.itemInsulation = Electrical.contentRegistry.newItem("insulation", classOf[Item])
     ElectricalContent.blockSolarPanel = Electrical.contentRegistry.newBlock(classOf[TileSolarPanel])
     ElectricalContent.blockMotor = Electrical.contentRegistry.newBlock(classOf[TileMotor])
@@ -106,7 +104,6 @@ object Electrical
     ResonantPartFactory.register(classOf[PartFlatWire])
     ResonantPartFactory.register(classOf[PartMultimeter])
     ResonantPartFactory.register(classOf[PartElectricTransformer])
-    ResonantPartFactory.register(classOf[PartLevitator])
     ResonantPartFactory.register(classOf[PartQuantumGlyph])
 
     Electrical.proxy.preInit

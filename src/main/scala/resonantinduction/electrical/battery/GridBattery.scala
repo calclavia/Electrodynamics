@@ -12,8 +12,8 @@ import scala.collection.JavaConversions._
   */
 class GridBattery extends Grid[TileBattery](classOf[NodeEnergy])
 {
-    var totalEnergy: Long = 0
-    var totalCapacity: Long = 0
+    var totalEnergy: Double = 0
+    var totalCapacity: Double = 0
 
     /**
      * Causes the energy shared by all batteries to be distributed out to all linked batteries
@@ -31,10 +31,10 @@ class GridBattery extends Grid[TileBattery](classOf[NodeEnergy])
             totalCapacity += connector.energy.getEnergyCapacity
             lowestY = Math.min(connector.yCoord, lowestY)
             highestY = Math.max(connector.yCoord, highestY)
-            connector.renderEnergyAmount_$eq(0)
+            connector.renderEnergyAmount = 0
         }
 
-        var remainingRenderEnergy: Long = totalEnergy
+        var remainingRenderEnergy: Double = totalEnergy
         var y: Int = 0
         while (y >= 0 && y <= highestY && remainingRenderEnergy > 0)
         {
@@ -48,7 +48,7 @@ class GridBattery extends Grid[TileBattery](classOf[NodeEnergy])
                 }
             }
             val levelSize: Int = connectorsInlevel.size
-            var used: Long = 0
+            var used: Double = 0
             import scala.collection.JavaConversions._
             for (connector <- connectorsInlevel)
             {
@@ -61,20 +61,20 @@ class GridBattery extends Grid[TileBattery](classOf[NodeEnergy])
         }
 
         val percentageLoss: Double = 0
-        val energyLoss: Long = (percentageLoss * 100).asInstanceOf[Long]
+        val energyLoss: Double = percentageLoss * 100
         totalEnergy -= energyLoss
         val amountOfNodes: Int = this.getNodes.size - exclusion.length
         if (totalEnergy > 0 && amountOfNodes > 0)
         {
-            var remainingEnergy: Long = totalEnergy
+            var remainingEnergy: Double = totalEnergy
             val firstNode: TileBattery = this.getFirstNode
 
             for (node <- this.getNodes)
             {
                 if (node != firstNode && !Arrays.asList(exclusion).contains(node))
                 {
-                    val percentage: Double = (node.energy.getEnergyCapacity.asInstanceOf[Double] / totalCapacity.asInstanceOf[Double])
-                    val energyForBattery: Long = Math.max(Math.round(totalEnergy * percentage), 0)
+                    val percentage: Double = (node.energy.getEnergyCapacity / totalCapacity)
+                    val energyForBattery: Double = Math.max(totalEnergy * percentage, 0)
                     node.energy.setEnergy(energyForBattery)
                     remainingEnergy -= energyForBattery
                 }

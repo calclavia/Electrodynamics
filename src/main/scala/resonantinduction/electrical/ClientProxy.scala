@@ -17,7 +17,6 @@ import resonantinduction.electrical.laser.focus.crystal.{RenderFocusCrystal, Til
 import resonantinduction.electrical.laser.focus.mirror.{RenderMirror, TileMirror}
 import resonantinduction.electrical.laser.fx.{EntityBlockParticleFX, EntityLaserFX, EntityScorchFX}
 import resonantinduction.electrical.laser.receiver.{RenderLaserReceiver, TileLaserReceiver}
-import resonantinduction.electrical.levitator.RenderLevitator
 import resonantinduction.electrical.multimeter.{RenderMultimeter, GuiMultimeter, PartMultimeter}
 import resonantinduction.electrical.render.FXElectricBolt
 import resonantinduction.electrical.tesla.{RenderTesla, TileTesla}
@@ -36,7 +35,6 @@ class ClientProxy extends CommonProxy
   override def init
   {
     ItemRenderHandler.register(ElectricalContent.itemTransformer, RenderTransformer.INSTANCE)
-    ItemRenderHandler.register(ElectricalContent.itemLevitator, RenderLevitator.INSTANCE)
     ItemRenderHandler.register(ElectricalContent.itemMultimeter, RenderMultimeter.INSTANCE)
     ItemRenderHandler.register(ElectricalContent.itemQuantumGlyph, RenderQuantumGlyph)
 
