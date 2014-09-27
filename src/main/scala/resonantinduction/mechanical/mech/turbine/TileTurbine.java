@@ -129,7 +129,7 @@ public class TileTurbine extends TileMechanical implements IMultiBlockStructure<
     }
 
     @Override
-    public Vector3[] getMultiBlockVectors()
+    public Iterable<Vector3> getMultiBlockVectors()
     {
         //TODO replace with helper class that takes a direction and size input
         Set<Vector3> vectors = new HashSet<Vector3>();
@@ -150,7 +150,7 @@ public class TileTurbine extends TileMechanical implements IMultiBlockStructure<
             }
         }
 
-        return vectors.toArray(new Vector3[0]);
+        return vectors;
     }
 
     @Override

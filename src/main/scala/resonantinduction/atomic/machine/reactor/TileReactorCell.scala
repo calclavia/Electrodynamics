@@ -317,7 +317,7 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
   {
   }
 
-  def getMultiBlockVectors: Array[Vector3] =
+  override def getMultiBlockVectors: java.lang.Iterable[Vector3] =
   {
     val vectors: List[Vector3] = new ArrayList[Vector3]
     val checkPosition: Vector3 = new Vector3(this)
@@ -330,11 +330,11 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
       }
       else
       {
-        return vectors.toArray(new Array[Vector3](0))
+        return vectors
       }
       checkPosition.y += 1
     }
-    return vectors.toArray(new Array[Vector3](0))
+    return vectors
   }
 
   def getPosition: Vector3 =

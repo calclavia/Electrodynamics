@@ -599,7 +599,7 @@ public class TileTesla extends TileElectric implements IMultiBlockStructure<Tile
 	}
 
 	@Override
-	public Vector3[] getMultiBlockVectors()
+	public Iterable<Vector3> getMultiBlockVectors()
 	{
 		List<Vector3> vectors = new ArrayList<Vector3>();
 
@@ -621,7 +621,7 @@ public class TileTesla extends TileElectric implements IMultiBlockStructure<Tile
 			checkPosition.add(0, 1, 0);
 		}
 
-		return vectors.toArray(new Vector3[0]);
+		return vectors;
 	}
 
 	public TileTesla getLowestTesla()

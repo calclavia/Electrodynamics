@@ -25,6 +25,9 @@ import resonantinduction.mechanical.Mechanical
 
 class TileDetector extends TileFilterable with IPacketIDReceiver
 {
+    private var powering: Boolean = false
+
+    //constructor
     setTextureName(Reference.prefix + "material_metal_side")
     this.canProvidePower(true)
 
@@ -74,14 +77,14 @@ class TileDetector extends TileFilterable with IPacketIDReceiver
                 this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, Mechanical.blockDetector)
                 this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord + 1, this.zCoord, Mechanical.blockDetector)
 
-                for(x <- (this.xCoord - 1) - (this.xCoord + 1))
+                for (x <- (this.xCoord - 1) to (this.xCoord + 1))
                 {
-                    for(z <- (this.zCoord - 1) to (this.zCoord + 1))
+                    for (z <- (this.zCoord - 1) to (this.zCoord + 1))
                     {
                         this.worldObj.notifyBlocksOfNeighborChange(x, this.yCoord + 1, z, Mechanical.blockDetector)
                     }
                 }
-                ResonantEngine.instance.packetHandler.sendToAllAround(new PacketTile(this, 0, this.isInverted), this)
+                ResonantEngine.instance.packetHandler.sendToAllAround(new PacketTile(x, y, z, Array[Any](0, this.isInverted)), this)
             }
         }
     }
@@ -107,7 +110,7 @@ class TileDetector extends TileFilterable with IPacketIDReceiver
 
     override def getDescriptionPacket: Packet =
     {
-        return ResonantEngine.instance.packetHandler.toMCPacket(new PacketTile(this, 0, this.isInverted))
+        return ResonantEngine.instance.packetHandler.toMCPacket(new PacketTile(x, y, z, Array[Any](0, this.isInverted)))
     }
 
     override def read(data: ByteBuf, id: Int, player: EntityPlayer, `type`: PacketType): Boolean =
@@ -154,6 +157,4 @@ class TileDetector extends TileFilterable with IPacketIDReceiver
         }
         return 0
     }
-
-    private var powering: Boolean = false
 }
