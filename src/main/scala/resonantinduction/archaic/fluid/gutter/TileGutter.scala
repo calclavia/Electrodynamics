@@ -1,7 +1,8 @@
 package resonantinduction.archaic.fluid.gutter
 
-import cpw.mods.fml.relauncher.Side
-import cpw.mods.fml.relauncher.SideOnly
+import java.util.{ArrayList, List}
+
+import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.block.material.Material
 import net.minecraft.entity.Entity
 import net.minecraft.entity.item.EntityItem
@@ -9,32 +10,26 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.ResourceLocation
-import net.minecraftforge.client.model.AdvancedModelLoader
-import net.minecraftforge.client.model.IModelCustom
+import net.minecraftforge.client.model.{AdvancedModelLoader, IModelCustom}
 import net.minecraftforge.common.util.ForgeDirection
-import net.minecraftforge.fluids.FluidRegistry
-import net.minecraftforge.fluids.FluidStack
-import net.minecraftforge.fluids.IFluidTank
+import net.minecraftforge.fluids.{FluidRegistry, FluidStack, IFluidTank}
 import org.lwjgl.opengl.GL11
-import resonant.api.recipe.MachineRecipes
-import resonant.api.recipe.RecipeResource
+import resonant.api.recipe.{MachineRecipes, RecipeResource}
 import resonant.content.factory.resources.RecipeType
-import resonant.lib.render.FluidRenderUtility
-import resonant.lib.render.RenderUtility
-import resonant.lib.utility.FluidUtility
-import resonant.lib.utility.WorldUtility
+import resonant.lib.render.{FluidRenderUtility, RenderUtility}
+import resonant.lib.utility.{FluidUtility, WorldUtility}
 import resonant.lib.utility.inventory.InventoryUtility
 import resonantinduction.core.Reference
 import resonantinduction.core.prefab.node.TilePressureNode
 import universalelectricity.core.transform.region.Cuboid
 import universalelectricity.core.transform.vector.Vector3
-import java.util.ArrayList
-import java.util.List
+
 object TileGutter
 {
     @SideOnly(Side.CLIENT) private[gutter] var MODEL: IModelCustom = _;
     @SideOnly(Side.CLIENT) private[gutter] var TEXTURE: ResourceLocation = _;
 }
+
 /**
  * The gutter, used for fluid transfer.
  *
@@ -42,7 +37,6 @@ object TileGutter
  */
 class TileGutter extends TilePressureNode(Material.rock)
 {
-
 
 
     //Constructor
@@ -83,26 +77,18 @@ class TileGutter extends TilePressureNode(Material.rock)
     {
         if (getTank.getFluidAmount > 0)
         {
+            for (i <- 2 to 6)
             {
-                var i: Int = 2
-                while (i < 6)
+                val dir: ForgeDirection = ForgeDirection.getOrientation(i)
+                val pressure: Int = getPressure(dir)
+                val _position: Vector3 = position.add(dir)
+                val checkTile: TileEntity = _position.getTileEntity(world)
+                if (checkTile.isInstanceOf[TileGutter])
                 {
-                    {
-                        val dir: ForgeDirection = ForgeDirection.getOrientation(i)
-                        val pressure: Int = getPressure(dir)
-                        val position: Vector3 = position.add(dir)
-                        val checkTile: TileEntity = position.getTileEntity(world)
-                        if (checkTile.isInstanceOf[TileGutter])
-                        {
-                            val deltaPressure: Int = pressure - (checkTile.asInstanceOf[TileGutter]).getPressure(dir.getOpposite)
-                            entity.motionX += 0.01 * dir.offsetX * deltaPressure
-                            entity.motionY += 0.01 * dir.offsetY * deltaPressure
-                            entity.motionZ += 0.01 * dir.offsetZ * deltaPressure
-                        }
-                    }
-                    ({
-                        i += 1; i - 1
-                    })
+                    val deltaPressure: Int = pressure - (checkTile.asInstanceOf[TileGutter]).getPressure(dir.getOpposite)
+                    entity.motionX += 0.01 * dir.offsetX * deltaPressure
+                    entity.motionY += 0.01 * dir.offsetY * deltaPressure
+                    entity.motionZ += 0.01 * dir.offsetZ * deltaPressure
                 }
             }
             if (getTank.getFluid.getFluid.getTemperature >= 373)
