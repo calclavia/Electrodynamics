@@ -18,7 +18,7 @@ public class NodePressure extends NodeTank implements IUpdate
 
 	public NodePressure(INodeProvider parent)
 	{
-		super(parent);
+		super(parent, 1);
 	}
 
 	public NodePressure(INodeProvider parent, int buckets)

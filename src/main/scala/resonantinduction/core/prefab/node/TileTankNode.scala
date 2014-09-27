@@ -22,7 +22,7 @@ class TileTankNode(material: Material) extends TileAdvanced(material) with INode
   val PACKET_DESCRIPTION = 0
   val PACKET_RENDER = 1
   var renderSides: Byte = 0
-  var tankNode: NodeTank = new NodeTank(this)
+  var tankNode: NodeTank = new NodeTank(this, 16)
   protected var colorID: Int = 0
 
   def getFluid(): FluidStack = getTank().getFluid
@@ -72,6 +72,7 @@ class TileTankNode(material: Material) extends TileAdvanced(material) with INode
 
   override def read(buf: ByteBuf, id: Int, player: EntityPlayer, t: PacketType): Boolean =
   {
+    //TODO handle fluid node's packet code
     if (id == PACKET_DESCRIPTION)
     {
       colorID = buf.readInt()
@@ -83,7 +84,7 @@ class TileTankNode(material: Material) extends TileAdvanced(material) with INode
       colorID = buf.readInt()
       renderSides = buf.readByte()
     }
-    return tankNode.read(buf, id, player, t);
+    return false;
   }
 
   override def getNode(nodeType: Class[_ <: INode], from: ForgeDirection): INode = if (nodeType.isInstanceOf[NodeTank]) return tankNode else null
