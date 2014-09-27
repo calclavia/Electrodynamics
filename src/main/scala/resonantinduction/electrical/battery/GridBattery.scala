@@ -1,0 +1,85 @@
+package resonantinduction.electrical.battery
+
+import java.util.Arrays
+import java.util.LinkedHashSet
+import java.util.Set
+import universalelectricity.core.grid.Grid
+import universalelectricity.core.grid.node.NodeEnergy
+import scala.collection.JavaConversions._
+
+/** Basic grid designed to be used for creating a level look for batteries connected together
+  * @author robert(Darkguardsman)
+  */
+class GridBattery extends Grid[TileBattery](classOf[NodeEnergy])
+{
+    var totalEnergy: Long = 0
+    var totalCapacity: Long = 0
+
+    /**
+     * Causes the energy shared by all batteries to be distributed out to all linked batteries
+     * @param exclusion - battery not to share with, used when batteries are removed from the network
+     */
+    def redistribute(exclusion: TileBattery*)
+    {
+        var lowestY: Int = 255
+        var highestY: Int = 0
+        totalEnergy = 0
+        totalCapacity = 0
+        for (connector <- this.getNodes)
+        {
+            totalEnergy += connector.energy.getEnergy
+            totalCapacity += connector.energy.getEnergyCapacity
+            lowestY = Math.min(connector.yCoord, lowestY)
+            highestY = Math.max(connector.yCoord, highestY)
+            connector.renderEnergyAmount_$eq(0)
+        }
+
+        var remainingRenderEnergy: Long = totalEnergy
+        var y: Int = 0
+        while (y >= 0 && y <= highestY && remainingRenderEnergy > 0)
+        {
+            val connectorsInlevel: Set[TileBattery] = new LinkedHashSet[TileBattery]
+            import scala.collection.JavaConversions._
+            for (connector <- this.getNodes)
+            {
+                if (connector.yCoord == y)
+                {
+                    connectorsInlevel.add(connector)
+                }
+            }
+            val levelSize: Int = connectorsInlevel.size
+            var used: Long = 0
+            import scala.collection.JavaConversions._
+            for (connector <- connectorsInlevel)
+            {
+                val tryInject: Double = Math.min(remainingRenderEnergy / levelSize, connector.energy.getEnergyCapacity)
+                connector.renderEnergyAmount_$eq(tryInject)
+                used += tryInject
+            }
+            remainingRenderEnergy -= used
+            y += 1
+        }
+
+        val percentageLoss: Double = 0
+        val energyLoss: Long = (percentageLoss * 100).asInstanceOf[Long]
+        totalEnergy -= energyLoss
+        val amountOfNodes: Int = this.getNodes.size - exclusion.length
+        if (totalEnergy > 0 && amountOfNodes > 0)
+        {
+            var remainingEnergy: Long = totalEnergy
+            val firstNode: TileBattery = this.getFirstNode
+
+            for (node <- this.getNodes)
+            {
+                if (node != firstNode && !Arrays.asList(exclusion).contains(node))
+                {
+                    val percentage: Double = (node.energy.getEnergyCapacity.asInstanceOf[Double] / totalCapacity.asInstanceOf[Double])
+                    val energyForBattery: Long = Math.max(Math.round(totalEnergy * percentage), 0)
+                    node.energy.setEnergy(energyForBattery)
+                    remainingEnergy -= energyForBattery
+                }
+            }
+            firstNode.energy.setEnergy(Math.max(remainingEnergy, 0))
+        }
+    }
+}
