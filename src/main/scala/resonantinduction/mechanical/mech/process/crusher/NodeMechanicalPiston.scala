@@ -19,6 +19,6 @@ class NodeMechanicalPiston(parent: TileMechanicalPiston) extends MechanicalNode(
 
     protected override def revolve
     {
-        (getParent.asInstanceOf[TileMechanicalPiston]).markRevolve = true
+        getParent.asInstanceOf[TileMechanicalPiston].markRevolve = true
     }
 }

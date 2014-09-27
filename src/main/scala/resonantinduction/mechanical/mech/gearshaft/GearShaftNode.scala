@@ -1,8 +1,5 @@
 package resonantinduction.mechanical.mech.gearshaft
 
-import java.util.ArrayList
-import java.util.Iterator
-import java.util.List
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.util.ForgeDirection
 import resonantinduction.mechanical.mech.MechanicalNode
@@ -34,13 +31,10 @@ class GearShaftNode(parent: INodeProvider) extends MechanicalNode(parent)
     override def buildConnections
     {
         connections.clear
-        val dirs: List[ForgeDirection] = new ArrayList[ForgeDirection]
-        dirs.add(shaft.placementSide)
-        dirs.add(shaft.placementSide.getOpposite)
-        val it: Iterator[ForgeDirection] = dirs.iterator
-        while (it.hasNext)
+
+        for(ch <- List(shaft.placementSide, shaft.placementSide.getOpposite))
         {
-            val checkDir: ForgeDirection = it.next
+            val checkDir: ForgeDirection = ch
             if (checkDir == shaft.placementSide || checkDir == shaft.placementSide.getOpposite)
             {
                 if (shaft.tile.isInstanceOf[INodeProvider])
@@ -49,16 +43,8 @@ class GearShaftNode(parent: INodeProvider) extends MechanicalNode(parent)
                     if (instance != null && instance != this && instance.canConnect(checkDir.getOpposite, this))
                     {
                         addConnection(instance, checkDir)
-                        it.remove
                     }
-                }
-            }
-        }
-        if (!dirs.isEmpty)
-        {
-            for (checkDir : ForgeDirection <- dirs)
-            {
-                if (!connections.containsValue(checkDir) && (checkDir == shaft.placementSide || checkDir == shaft.placementSide.getOpposite))
+                }else
                 {
                     val checkTile: TileEntity = new Vector3(shaft.tile).add(checkDir).getTileEntity(world)
                     if (checkTile.isInstanceOf[INodeProvider])

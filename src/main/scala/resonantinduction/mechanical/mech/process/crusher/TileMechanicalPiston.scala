@@ -1,25 +1,23 @@
 package resonantinduction.mechanical.mech.process.crusher
 
-import cpw.mods.fml.common.Loader
-import cpw.mods.fml.relauncher.ReflectionHelper
-import resonant.content.factory.resources.RecipeType
-import resonantinduction.mechanical.mech.TileMechanical
+import java.lang.reflect.Method
+import java.util.List
+
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
-import resonant.api.recipe.MachineRecipes
-import resonant.api.recipe.RecipeResource
+import resonant.api.recipe.{MachineRecipes, RecipeResource}
+import resonant.content.factory.resources.RecipeType
 import resonant.lib.config.Config
 import resonant.lib.utility.MovementUtility
 import resonant.lib.utility.inventory.InventoryUtility
 import resonantinduction.core.ResonantInduction
+import resonantinduction.mechanical.mech.TileMechanical
 import universalelectricity.api.core.grid.INode
 import universalelectricity.core.transform.vector.Vector3
-import java.lang.reflect.Method
-import java.util.List
 
 /**
  * Mechanical driven piston that can be used to move basic blocks and crush ores
@@ -32,6 +30,8 @@ object TileMechanicalPiston
 
 class TileMechanicalPiston extends TileMechanical(Material.piston)
 {
+    var markRevolve: Boolean = false
+
     //Constructor
     mechanicalNode = new NodeMechanicalPiston(this)
     isOpaqueCube(false)
@@ -176,14 +176,14 @@ class TileMechanicalPiston extends TileMechanical(Material.piston)
     def notifyChanges(pos: Vector3)
     {
         worldObj.notifyBlocksOfNeighborChange(pos.xi, pos.yi, pos.zi, pos.getBlock(worldObj))
-        val newTile: TileEntity = pos.getTileEntity(worldObj)
+        /* val newTile: TileEntity = pos.getTileEntity(worldObj)
         if (newTile != null)
         {
             if (Loader.isModLoaded("BuildCraft|Factory"))
             {
                 try
                 {
-                    val clazz: Class[_] = Class.forName("buildcraft.factory.TileQuarry")
+                    val clazz: Class[_ <: Any] = Class.forName("buildcraft.factory.TileQuarry")
                     if (newTile == clazz)
                     {
                         ReflectionHelper.setPrivateValue(clazz, newTile, true, "isAlive")
@@ -197,8 +197,6 @@ class TileMechanicalPiston extends TileMechanical(Material.piston)
                         }
                     }
             }
-        }
+        } */
     }
-
-    protected var markRevolve: Boolean = false
 }
