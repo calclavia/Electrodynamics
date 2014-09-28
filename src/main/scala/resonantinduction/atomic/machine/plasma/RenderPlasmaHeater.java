@@ -32,7 +32,7 @@ public class RenderPlasmaHeater extends RenderTaggedTile
 		bindTexture(TEXTURE);
 
 		GL11.glPushMatrix();
-		GL11.glRotated(Math.toDegrees(tileEntity.rotation), 0, 1, 0);
+		GL11.glRotated(Math.toDegrees(tileEntity.rotation()), 0, 1, 0);
 		MODEL.renderOnly("rrot", "srot");
 		GL11.glPopMatrix();
 

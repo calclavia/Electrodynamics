@@ -27,8 +27,8 @@ class ItemAntimatter extends ItemCell
 
     @SideOnly(Side.CLIENT) override def registerIcons(iconRegister: IIconRegister)
     {
-        this.itemIcon = iconRegister.registerIcon(this.getUnlocalizedName.replace("item.", "") + "_milligram")
-        this.iconGram = iconRegister.registerIcon(this.getUnlocalizedName.replace("item.", "") + "_gram")
+        this.itemIcon = iconRegister.registerIcon(Reference.prefix + "antimatter_milligram")
+        this.iconGram = iconRegister.registerIcon(Reference.prefix + "antimatter_gram")
     }
 
     override def getIconFromDamage(metadata: Int): IIcon =

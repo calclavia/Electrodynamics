@@ -18,14 +18,14 @@ object TileFilterable
     final val BATERY_DRAIN_SLOT: Int = 1
 }
 
-abstract class TileFilterable extends TileInventory(Material.wood) with IRotatable with IFilterable
+abstract class TileFilterable(material: Material) extends TileInventory(material: Material) with IRotatable with IFilterable
 {
     private var filterItem: ItemStack = null
     private var inverted: Boolean = false
 
-    def this(material: Material)
+    def this()
     {
-        this(material)
+        this(Material.wood)
         this.setSizeInventory(2)
     }
 

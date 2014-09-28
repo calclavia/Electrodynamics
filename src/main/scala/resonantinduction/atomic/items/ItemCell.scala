@@ -22,11 +22,11 @@ class ItemCell extends ItemTooltip
 
     override def getUnlocalizedName(itemstack: ItemStack): String =
     {
-        val localized: String = LanguageUtility.getLocal(getUnlocalizedName + "." + itemstack.getItemDamage + ".name")
+        val localized: String = LanguageUtility.getLocal(getUnlocalizedName() + "." + itemstack.getItemDamage + ".name")
         if (localized != null && !localized.isEmpty)
         {
-            return getUnlocalizedName + "." + itemstack.getItemDamage
+            return getUnlocalizedName() + "." + itemstack.getItemDamage
         }
-        return getUnlocalizedName
+        return getUnlocalizedName()
     }
 }

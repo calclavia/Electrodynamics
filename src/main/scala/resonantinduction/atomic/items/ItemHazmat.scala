@@ -24,7 +24,7 @@ class ItemHazmat(slot: Int) extends ItemArmor(ItemHazmat.hazmatArmorMaterial, At
 {
     def this(name: String, slot: Int)
     {
-        this(ItemHazmat.hazmatArmorMaterial, Atomic.proxy.getArmorIndex("hazmat"), slot)
+        this(slot)
         this.setUnlocalizedName(Reference.prefix + name)
         this.setCreativeTab(ResonantTab.tab)
         this.setMaxDamage(200000)

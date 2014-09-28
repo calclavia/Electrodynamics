@@ -186,25 +186,26 @@ class TileThermometer extends TileAdvanced(Material.piston) with SimpleComponent
     }
 
     @Callback
-    @Optional.Method(modid = "OpenComputers") def getTemperature(context: Context, args: Arguments): Array[AnyRef] =
+    @Optional.Method(modid = "OpenComputers")
+    def getTemperature(context: Context, args: Arguments): Array[Any] =
     {
-        return Array[AnyRef](this.detectedTemperature)
+        return Array[Any](this.detectedTemperature)
     }
 
     @Callback
-    @Optional.Method(modid = "OpenComputers") def getWarningTemperature(context: Context, args: Arguments): Array[AnyRef] =
+    @Optional.Method(modid = "OpenComputers") def getWarningTemperature(context: Context, args: Arguments): Array[Any] =
     {
-        return Array[AnyRef](this.getThershold)
+        return Array[Any](this.getThershold)
     }
 
     @Callback
-    @Optional.Method(modid = "OpenComputers") def isAboveWarningTemperature(context: Context, args: Arguments): Array[AnyRef] =
+    @Optional.Method(modid = "OpenComputers") def isAboveWarningTemperature(context: Context, args: Arguments): Array[Any] =
     {
-        return Array[AnyRef](this.isOverThreshold)
+        return Array[Any](this.isOverThreshold)
     }
 
     @Callback
-    @Optional.Method(modid = "OpenComputers") def setWarningTemperature(context: Context, args: Arguments): Array[AnyRef] =
+    @Optional.Method(modid = "OpenComputers") def setWarningTemperature(context: Context, args: Arguments): Array[Any] =
     {
         if (args.count <= 0)
         {
@@ -222,7 +223,7 @@ class TileThermometer extends TileAdvanced(Material.piston) with SimpleComponent
           {
               this.setThreshold(args.checkInteger(0))
           }
-        return Array[AnyRef](this.threshold == args.checkInteger(0))
+        return Array[Any](this.threshold == args.checkInteger(0))
     }
 
     def getComponentName: String =

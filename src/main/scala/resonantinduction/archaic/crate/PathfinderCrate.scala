@@ -16,6 +16,7 @@ import universalelectricity.core.transform.vector.VectorWorld
 object PathfinderCrate
 {
 
+
     abstract trait IPathCallBack
     {
         /**
@@ -39,23 +40,32 @@ object PathfinderCrate
 
 class PathfinderCrate
 {
-    def this()
-    {
-        this()
-        this.callBackCheck = new PathfinderCrate.IPathCallBack
-        {
-            def isValidNode(finder: PathfinderCrate, direction: ForgeDirection, provider: TileEntity, node: TileEntity): Boolean =
-            {
-                return node.isInstanceOf[TileCrate]
-            }
+    /**
+     * A pathfinding call back interface used to call back on paths.
+     */
+    var callBackCheck: PathfinderCrate.IPathCallBack = null
+    /**
+     * A list of nodes that the pathfinder went through.
+     */
+    var iteratedNodes: List[TileEntity] = null
+    /**
+     * The results and findings found by the pathfinder.
+     */
+    var results: List[Any] = null
 
-            def onSearch(finder: PathfinderCrate, provider: TileEntity): Boolean =
-            {
-                return false
-            }
+    this.callBackCheck = new PathfinderCrate.IPathCallBack
+    {
+        def isValidNode(finder: PathfinderCrate, direction: ForgeDirection, provider: TileEntity, node: TileEntity): Boolean =
+        {
+            return node.isInstanceOf[TileCrate]
         }
-        this.clear
+
+        def onSearch(finder: PathfinderCrate, provider: TileEntity): Boolean =
+        {
+            return false
+        }
     }
+    this.clear
 
     def findNodes(provider: TileEntity): Boolean =
     {
@@ -98,20 +108,9 @@ class PathfinderCrate
     def clear: PathfinderCrate =
     {
         this.iteratedNodes = new ArrayList[TileEntity]
-        this.results = new ArrayList[_]
+        this.results = new ArrayList[Any]
         return this
     }
 
-    /**
-     * A pathfinding call back interface used to call back on paths.
-     */
-    var callBackCheck: PathfinderCrate.IPathCallBack = null
-    /**
-     * A list of nodes that the pathfinder went through.
-     */
-    var iteratedNodes: List[TileEntity] = null
-    /**
-     * The results and findings found by the pathfinder.
-     */
-    var results: List[_] = null
+
 }

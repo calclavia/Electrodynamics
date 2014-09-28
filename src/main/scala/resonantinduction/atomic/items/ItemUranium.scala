@@ -35,9 +35,9 @@ class ItemUranium extends ItemRadioactive
         }
     }
 
-    override def getUnlocalizedName(itemStack: ItemStack): String =
+    override def getUnlocalizedName(itemStack: ItemStack): java.lang.String =
     {
-        return this.getUnlocalizedName + "." + itemStack.getItemDamage
+        return super.getUnlocalizedName() + "." + itemStack.getItemDamage
     }
 
     override def getSubItems(item: Item, par2CreativeTabs: CreativeTabs, list: List[_])
