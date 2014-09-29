@@ -145,7 +145,7 @@ class TileCentrifuge extends TileElectricInventory(Material.iron) with IPacketRe
 
     override def getDescriptionPacket: Packet =
     {
-        return ResonantEngine.instance.packetHandler.toMCPacket(new PacketTile(this, this.timer, Atomic.getFluidAmount(this.gasTank.getFluid)))
+        return ResonantEngine.instance.packetHandler.toMCPacket(new PacketTile(x, y, z, Array(this.timer, Atomic.getFluidAmount(this.gasTank.getFluid))))
     }
 
     /**

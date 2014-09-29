@@ -14,10 +14,6 @@ object GuiQuantumAssembler
 
 class GuiQuantumAssembler(par1InventoryPlayer: InventoryPlayer, tileEntity: TileQuantumAssembler) extends GuiContainerBase(new ContainerQuantumAssembler(par1InventoryPlayer, tileEntity))
 {
-
-    private var containerWidth: Int = 0
-    private var containerHeight: Int = 0
-
     //Constructor
     this.ySize = 230
 
