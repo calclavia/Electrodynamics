@@ -22,6 +22,7 @@ import universalelectricity.api.core.grid.INodeProvider;
  *
  * @author Darkguardsman */
 @SuppressWarnings("serial")
+//Don't convert to scala as this will find its way into RE later - From Darkguardsman
 public class DebugFrameMechanical extends FrameNodeDebug
 {
     JList<String> connectionList_component = null;

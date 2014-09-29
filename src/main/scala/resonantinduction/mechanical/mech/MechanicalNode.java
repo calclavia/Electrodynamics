@@ -19,6 +19,7 @@ import universalelectricity.core.transform.vector.IVectorWorld;
  *
  * @author Calclavia, Darkguardsman
  */
+//Don't convert to scala as this will find its way into RE later - From Darkguardsman
 public class MechanicalNode extends NodeConnector implements TMultipartNode, IMechanicalNode, ISaveObj, IVectorWorld, IUpdate
 {
     /** Marks that the rotation has changed and should be updated client side */
