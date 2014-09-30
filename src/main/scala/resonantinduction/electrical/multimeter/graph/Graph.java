@@ -66,7 +66,7 @@ public abstract class Graph<V extends Comparable<V>>
 		add(queue);
 	}
 
-	protected abstract V getDefault();
+	public abstract V getDefault();
 
 	public void load(NBTTagCompound nbt)
 	{
