@@ -146,11 +146,11 @@ object RenderMultimeter extends ISimpleItemRenderer
       {
         if (part.getNetwork.graphs(i).get != null && !(part.getNetwork.graphs(i).get == part.getNetwork.graphs(i).getDefault))
         {
-          information += part.getNetwork.getDisplay(i)
+          information :+= part.getNetwork.getDisplay(i)
         }
       }
 
-      if (information.size <= 0) information += LanguageUtility.getLocal("tooltip.noInformation")
+      if (information.size <= 0) information :+= LanguageUtility.getLocal("tooltip.noInformation")
 
       val displacement = 0.72f / information.size
       val maxScale = (part.getNetwork.size.x + part.getNetwork.size.z).asInstanceOf[Float] * 0.004f
