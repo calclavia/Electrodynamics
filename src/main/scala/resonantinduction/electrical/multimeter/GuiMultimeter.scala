@@ -42,7 +42,7 @@ class GuiMultimeter(inventoryPlayer: InventoryPlayer, multimeter: PartMultimeter
     try
     {
       multimeter.redstoneTriggerLimit = textFieldLimit.getText.toDouble
-      multimeter.updateServer()
+      multimeter.updateServer
     }
     catch
       {
@@ -63,11 +63,11 @@ class GuiMultimeter(inventoryPlayer: InventoryPlayer, multimeter: PartMultimeter
     button.id match
     {
       case 0 =>
-        multimeter.toggleMode()
+        multimeter.toggleMode
       case 1 =>
-        multimeter.toggleDetectionValue()
+        multimeter.toggleDetectionValue
       case 2 =>
-        multimeter.toggleGraphType()
+        multimeter.toggleGraphType
     }
   }
 

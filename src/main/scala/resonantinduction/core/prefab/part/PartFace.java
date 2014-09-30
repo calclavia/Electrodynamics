@@ -62,12 +62,15 @@ public abstract class PartFace extends JCuboidPart implements JNormalOcclusion, 
 	@Override
 	public void update()
 	{
+		//TODO: Switch to using PartAbstract (Extend from that class)
 		super.update();
 
-		if (ticks++ == 0)
+		if (ticks == 0)
 		{
 			initiate();
 		}
+
+		ticks += 1;
 	}
 
 	@Override

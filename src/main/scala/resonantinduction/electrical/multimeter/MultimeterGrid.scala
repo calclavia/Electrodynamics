@@ -133,8 +133,8 @@ class MultimeterGrid extends Grid[PartMultimeter](classOf[PartMultimeter]) with 
 
       getNodes foreach (c =>
       {
-        c.updateDesc()
-        c.updateGraph()
+        c.updateDesc
+        c.updateGraph
       })
 
       doUpdate = true

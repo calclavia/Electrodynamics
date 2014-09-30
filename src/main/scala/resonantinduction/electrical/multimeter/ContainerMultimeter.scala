@@ -28,5 +28,5 @@ class ContainerMultimeter(inventoryPlayer: InventoryPlayer, tileEntity: PartMult
     super.onContainerClosed(entityPlayer)
   }
 
-  def canInteractWith(entityplayer: EntityPlayer): Boolean =  true;
+  def canInteractWith(entityplayer: EntityPlayer): Boolean =  true
 }

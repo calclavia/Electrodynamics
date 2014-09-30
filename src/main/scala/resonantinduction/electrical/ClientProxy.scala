@@ -35,7 +35,7 @@ class ClientProxy extends CommonProxy
   override def init
   {
     ItemRenderHandler.register(ElectricalContent.itemTransformer, RenderTransformer.INSTANCE)
-    ItemRenderHandler.register(ElectricalContent.itemMultimeter, RenderMultimeter.INSTANCE)
+    ItemRenderHandler.register(ElectricalContent.itemMultimeter, RenderMultimeter)
     ItemRenderHandler.register(ElectricalContent.itemQuantumGlyph, RenderQuantumGlyph)
 
     //RenderingRegistry.registerBlockHandler(new BlockRenderingHandler.type)
