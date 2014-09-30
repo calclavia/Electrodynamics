@@ -16,11 +16,9 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonant.api.IRemovable;
-import resonant.engine.ResonantEngine;
 import resonant.lib.network.discriminator.PacketType;
 import resonant.lib.network.handle.IPacketReceiver;
 import resonant.lib.utility.WrenchUtility;
-import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.interfaces.IMechanicalNode;
 import resonantinduction.core.prefab.part.PartFace;
 import resonantinduction.electrical.Electrical;
@@ -31,8 +29,6 @@ import codechicken.lib.vec.Vector3;
 import codechicken.multipart.IRedstonePart;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
-
-import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -74,7 +70,7 @@ public class PartMultimeter extends PartFace implements IRedstonePart, IPacketRe
     private boolean doDetect = true;
 
     public boolean isPrimary;
-    private MultimeterNetwork network;
+    private MultimeterGrid network;
 
     public boolean hasMultimeter(int x, int y, int z)
     {
@@ -451,11 +447,11 @@ public class PartMultimeter extends PartFace implements IRedstonePart, IPacketRe
     }
 
 
-    public MultimeterNetwork getNetwork()
+    public MultimeterGrid getNetwork()
     {
         if (network == null)
         {
-            network = new MultimeterNetwork();
+            network = new MultimeterGrid();
             network.add(this);
         }
 
@@ -463,7 +459,7 @@ public class PartMultimeter extends PartFace implements IRedstonePart, IPacketRe
     }
 
 
-    public void setNetwork(MultimeterNetwork network)
+    public void setNetwork(MultimeterGrid network)
     {
         this.network = network;
     }

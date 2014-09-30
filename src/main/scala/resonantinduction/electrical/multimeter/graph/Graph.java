@@ -1,4 +1,4 @@
-package resonantinduction.electrical.multimeter;
+package resonantinduction.electrical.multimeter.graph;
 
 import net.minecraft.nbt.NBTTagCompound;
 import resonant.lib.type.EvictingList;

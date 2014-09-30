@@ -1,11 +1,11 @@
-package resonantinduction.electrical.multimeter;
+package resonantinduction.electrical.multimeter.graph;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
-public class GraphL extends Graph<Double>
+public class GraphD extends Graph<Double>
 {
-	public GraphL(String name, int maxPoints)
+	public GraphD(String name, int maxPoints)
 	{
 		super(name, maxPoints);
 	}
@@ -20,19 +20,20 @@ public class GraphL extends Graph<Double>
 	public void doneQueue()
 	{
 		super.doneQueue();
-		queue = 0.0;
+		queue = 0d;
 	}
 
 	@Override
 	public Double getDefault()
 	{
-		return 0.0;
+		return 0d;
 	}
 
 	@Override
 	public void load(NBTTagCompound nbt)
 	{
 		super.load(nbt);
+
 		NBTTagList nbtList = nbt.getTagList("DataPoints", 0);
 
 		for (int i = 0; i < nbtList.tagCount(); ++i)
@@ -72,7 +73,7 @@ public class GraphL extends Graph<Double>
 		{
 			double average = 0;
 
-			for (Double point : points)
+			for (double point : points)
 			{
 				average += point;
 			}
@@ -82,7 +83,6 @@ public class GraphL extends Graph<Double>
 			return average;
 		}
 
-		return 0.0;
+		return 0d;
 	}
-
 }

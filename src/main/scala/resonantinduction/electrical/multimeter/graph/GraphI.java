@@ -1,17 +1,17 @@
-package resonantinduction.electrical.multimeter;
+package resonantinduction.electrical.multimeter.graph;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
-public class GraphD extends Graph<Double>
+public class GraphI extends Graph<Integer>
 {
-	public GraphD(String name, int maxPoints)
+	public GraphI(String name, int maxPoints)
 	{
 		super(name, maxPoints);
 	}
 
 	@Override
-	public void queue(Double value)
+	public void queue(Integer value)
 	{
 		queue += value;
 	}
@@ -20,26 +20,25 @@ public class GraphD extends Graph<Double>
 	public void doneQueue()
 	{
 		super.doneQueue();
-		queue = 0d;
+		queue = 0;
 	}
 
 	@Override
-	public Double getDefault()
+	public Integer getDefault()
 	{
-		return 0d;
+		return 0;
 	}
 
 	@Override
 	public void load(NBTTagCompound nbt)
 	{
 		super.load(nbt);
-
 		NBTTagList nbtList = nbt.getTagList("DataPoints", 0);
 
 		for (int i = 0; i < nbtList.tagCount(); ++i)
 		{
 			NBTTagCompound nbtPoint = (NBTTagCompound) nbtList.getCompoundTagAt(i);
-			points.add(nbtPoint.getDouble("data"));
+			points.add(nbtPoint.getInteger("data"));
 		}
 	}
 
@@ -49,10 +48,10 @@ public class GraphD extends Graph<Double>
 		NBTTagCompound nbt = new NBTTagCompound();
 		NBTTagList data = new NBTTagList();
 
-		for (Double value : points)
+		for (Integer value : points)
 		{
 			NBTTagCompound nbtPoint = new NBTTagCompound();
-			nbtPoint.setDouble("data", value);
+			nbtPoint.setInteger("data", value);
 			data.appendTag(nbtPoint);
 		}
 
@@ -67,13 +66,13 @@ public class GraphD extends Graph<Double>
 	}
 
 	@Override
-	public Double getAverage()
+	public Integer getAverage()
 	{
 		if (points.size() > 0)
 		{
-			double average = 0;
+			int average = 0;
 
-			for (double point : points)
+			for (int point : points)
 			{
 				average += point;
 			}
@@ -83,6 +82,6 @@ public class GraphD extends Graph<Double>
 			return average;
 		}
 
-		return 0d;
+		return 0;
 	}
 }

@@ -7,13 +7,14 @@ import java.util.List;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import resonant.lib.utility.LanguageUtility;
+import resonantinduction.electrical.multimeter.graph.*;
 import universalelectricity.api.UnitDisplay;
 import universalelectricity.api.core.grid.IUpdate;
 import universalelectricity.core.grid.Grid;
 import universalelectricity.core.grid.UpdateTicker;
 import universalelectricity.core.transform.vector.Vector3;
 
-public class MultimeterNetwork extends Grid<PartMultimeter> implements IUpdate
+public class MultimeterGrid extends Grid<PartMultimeter> implements IUpdate
 {
 	public final List<String> displayInformation = new ArrayList<String>();
 
@@ -62,7 +63,7 @@ public class MultimeterNetwork extends Grid<PartMultimeter> implements IUpdate
 	public boolean isEnabled = true;
 	public PartMultimeter primaryMultimeter = null;
 
-	public MultimeterNetwork()
+	public MultimeterGrid()
 	{
 		super(PartMultimeter.class);
 		graphs.add(energyGraph);
