@@ -107,7 +107,7 @@ class ItemImprint extends Item
         return false
     }
 
-    override def addInformation(itemStack: ItemStack, par2EntityPlayer: EntityPlayer, list: List[_], par4: Boolean)
+    override def addInformation(itemStack: ItemStack, par2EntityPlayer: EntityPlayer, list: java.util.List[_], par4: Boolean)
     {
         val filterItems: Set[ItemStack] = ItemImprint.getFilters(itemStack)
         if (filterItems.size > 0)

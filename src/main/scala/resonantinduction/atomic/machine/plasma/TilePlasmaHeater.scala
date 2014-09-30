@@ -27,7 +27,7 @@ object TilePlasmaHeater
     @Config var plasmaHeatAmount: Int = 100
 }
 
-class TilePlasmaHeater(joules: Double) extends TileElectric(Material.iron) with IPacketReceiver with ITagRender with IFluidHandler
+class TilePlasmaHeater extends TileElectric(Material.iron) with IPacketReceiver with ITagRender with IFluidHandler
 {
     final val tankInputDeuterium: FluidTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 10)
     final val tankInputTritium: FluidTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 10)
@@ -35,8 +35,8 @@ class TilePlasmaHeater(joules: Double) extends TileElectric(Material.iron) with 
     var rotation: Float = 0
 
     //Constructor
-    energy.setCapacity(joules)
-    energy.setMaxTransfer(joules / 20)
+    energy.setCapacity(TilePlasmaHeater.joules)
+    energy.setMaxTransfer(TilePlasmaHeater.joules / 20)
     normalRender(false)
     isOpaqueCube(false)
 
