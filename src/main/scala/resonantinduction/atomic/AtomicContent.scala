@@ -44,7 +44,7 @@ import resonantinduction.atomic.machine.quantum.TileQuantumAssembler
 import resonantinduction.atomic.machine.reactor.{TileControlRod, TileReactorCell}
 import resonantinduction.atomic.machine.thermometer.TileThermometer
 import resonantinduction.atomic.schematic.{SchematicAccelerator, SchematicBreedingReactor, SchematicFissionReactor, SchematicFusionReactor}
-import resonantinduction.core.{Reference, ResonantTab, Settings}
+import resonantinduction.core.{ResonantInduction, Reference, ResonantTab, Settings}
 import universalelectricity.core.transform.vector.VectorWorld
 
 import scala.collection.JavaConversions._
@@ -105,14 +105,15 @@ object AtomicContent extends ContentHolder
 
     override def preInit()
     {
+        super.preInit()
+
         MinecraftForge.EVENT_BUS.register(this)
-        MinecraftForge.EVENT_BUS.register(AtomicContent.itemAntimatter)
         MinecraftForge.EVENT_BUS.register(FulminationHandler.INSTANCE)
 
         Settings.config.load
 
         // Blocks
-        blockRadioactive = new BlockRadioactive(Material.rock).setBlockName(Reference.prefix + "radioactive").setBlockTextureName(Reference.prefix + "radioactive").setCreativeTab(CreativeTabs.tabBlock)
+        blockRadioactive = manager.newBlock("radioactive", new BlockRadioactive(Material.rock)).setBlockTextureName(Reference.prefix + "radioactive").setCreativeTab(CreativeTabs.tabBlock)
         blockCentrifuge = manager.newBlock(classOf[TileCentrifuge])
         blockNuclearBoiler = manager.newBlock(classOf[TileNuclearBoiler])
         blockControlRod = manager.newBlock(classOf[TileControlRod])
@@ -127,29 +128,30 @@ object AtomicContent extends ContentHolder
         blockFulmination = manager.newBlock(classOf[TileFulmination])
         blockQuantumAssembler = manager.newBlock(classOf[TileQuantumAssembler])
         blockReactorCell = manager.newBlock(classOf[TileReactorCell])
-        blockUraniumOre = new BlockUraniumOre
-        blockToxicWaste = new BlockToxicWaste().setCreativeTab(null)
+        blockUraniumOre = manager.newBlock(classOf[BlockUraniumOre])
+        blockToxicWaste = manager.newBlock(classOf[BlockToxicWaste]).setCreativeTab(null)
 
         //Cells
-        itemCell = new ItemCell("cellEmpty")
+        itemCell = manager.newItem("cellEmpty", new ItemCell("cellEmpty"))
         itemFissileFuel = manager.newItem(classOf[ItemFissileFuel])
         itemBreedingRod = manager.newItem(classOf[ItemBreederFuel])
-        itemDarkMatter = new ItemCell("darkMatter")
+        itemDarkMatter = manager.newItem("darkMatter", new ItemCell("darkMatter"))
         itemAntimatter = manager.newItem(classOf[ItemAntimatter])
-        itemDeuteriumCell = new ItemCell("cellDeuterium")
-        itemTritiumCell = new ItemCell("cellTritium")
-        itemWaterCell = new ItemCell("cellWater")
-        itemYellowCake = new ItemRadioactive().setUnlocalizedName("yellowcake").setTextureName(Reference.prefix + "yellowcake").setCreativeTab(ResonantTab)
+        MinecraftForge.EVENT_BUS.register(AtomicContent.itemAntimatter)
+        itemDeuteriumCell = manager.newItem("cellDeuterium", new ItemCell("cellDeuterium"))
+        itemTritiumCell = manager.newItem("cellTritium", new ItemCell("cellTritium"))
+        itemWaterCell = manager.newItem("cellWater", new ItemCell("cellWater"))
+        itemYellowCake = manager.newItem("yellowcake", new ItemRadioactive()).setTextureName(Reference.prefix + "yellowcake").setCreativeTab(ResonantTab)
         itemUranium = manager.newItem(classOf[ItemUranium]).setCreativeTab(ResonantTab)
 
         //Buckets
-        itemBucketToxic = new ItemBucket(AtomicContent.blockPlasma).setCreativeTab(ResonantTab.tab).setUnlocalizedName(Reference.prefix + "bucketToxicWaste").setContainerItem(Items.bucket).setTextureName(Reference.prefix + "bucketToxicWaste")
+        itemBucketToxic = manager.newItem("bucketToxicWaste", new ItemBucket(AtomicContent.blockPlasma)).setCreativeTab(ResonantTab.tab).setContainerItem(Items.bucket).setTextureName(Reference.prefix + "bucketToxicWaste")
 
         //Hazmat suit
-        itemHazmatTop = new ItemHazmat("hazmatMask", 0).setCreativeTab(ResonantTab)
-        itemHazmatBody = new ItemHazmat("hazmatBody", 1).setCreativeTab(ResonantTab)
-        itemHazmatLeggings = new ItemHazmat("hazmatLeggings", 2).setCreativeTab(ResonantTab)
-        itemHazmatBoots = new ItemHazmat("hazmatBoots", 3).setCreativeTab(ResonantTab)
+        itemHazmatTop = manager.newItem("hazmatMask", new ItemHazmat("hazmatMask", 0))
+        itemHazmatBody = manager.newItem("hazmatBody", new ItemHazmat("hazmatBody", 1))
+        itemHazmatLeggings = manager.newItem("hazmatLeggings", new ItemHazmat("hazmatLeggings", 2))
+        itemHazmatBoots = manager.newItem("hazmatBoots", new ItemHazmat("hazmatBoots", 3))
 
         FluidRegistry.registerFluid(AtomicContent.FLUID_URANIUM_HEXAFLOURIDE)
         FluidRegistry.registerFluid(AtomicContent.FLUID_STEAM)
@@ -157,8 +159,6 @@ object AtomicContent extends ContentHolder
         FluidRegistry.registerFluid(AtomicContent.FLUID_DEUTERIUM)
         FluidRegistry.registerFluid(AtomicContent.getFluidToxicWaste)
         FluidRegistry.registerFluid(AtomicContent.FLUID_PLASMA)
-
-        super.preInit()
 
         TileCreativeBuilder.register(new SchematicAccelerator)
         TileCreativeBuilder.register(new SchematicBreedingReactor)
@@ -241,7 +241,7 @@ object AtomicContent extends ContentHolder
             GameRegistry.addRecipe(new ShapelessOreRecipe(AtomicContent.itemCell, "cellEmpty"))
         }
         EntityRegistry.registerGlobalEntityID(classOf[EntityParticle], "ASParticle", EntityRegistry.findGlobalUniqueEntityId)
-        EntityRegistry.registerModEntity(classOf[EntityParticle], "ASParticle", ENTITY_ID_PREFIX, this, 80, 3, true)
+        EntityRegistry.registerModEntity(classOf[EntityParticle], "ASParticle", ENTITY_ID_PREFIX, ResonantInduction, 80, 3, true)
         Settings.config.load
         for (oreName <- OreDictionary.getOreNames)
         {
@@ -258,8 +258,8 @@ object AtomicContent extends ContentHolder
         }
         Settings.config.save
 
-        recipes += shaped(new ItemStack(itemAntimatter, 1, 1), itemAntimatter, itemAntimatter, itemAntimatter, itemAntimatter, itemAntimatter, AtomicContent.itemAntimatter, itemAntimatter, itemAntimatter)
-        recipes += shaped(new ItemStack(itemAntimatter, 8, 0), new ItemStack(AtomicContent.itemAntimatter, 1, 1))
+        recipes += shapeless(new ItemStack(itemAntimatter, 1, 1), itemAntimatter, itemAntimatter, itemAntimatter, itemAntimatter, itemAntimatter, AtomicContent.itemAntimatter, itemAntimatter, itemAntimatter)
+        recipes += shapeless(new ItemStack(itemAntimatter, 8, 0), new ItemStack(AtomicContent.itemAntimatter, 1, 1))
 
 
         recipes += shaped(new ItemStack(blockSteamFunnel, 2), " B ", "B B", "B B", 'B', UniversalRecipe.SECONDARY_METAL.get)
