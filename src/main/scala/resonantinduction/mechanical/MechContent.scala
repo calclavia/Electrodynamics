@@ -34,24 +34,39 @@ object MechContent extends ContentHolder
     manager.setPrefix(Reference.prefix)
 
     //Content
-    var itemGear: Item = manager.newItem(classOf[ItemGear])
-    var itemGearShaft: Item = manager.newItem(classOf[ItemGearShaft])
-    var itemPipe: Item = manager.newItem(classOf[ItemPipe])
+    var itemGear: Item = null
+    var itemGearShaft: Item = null
+    var itemPipe: Item = null
 
-    var blockWindTurbine: Block = manager.newBlock(classOf[TileWindTurbine])
-    var blockWaterTurbine: Block = manager.newBlock(classOf[TileWaterTurbine])
-    var blockElectricTurbine: Block = manager.newBlock(classOf[TileElectricTurbine])
-    var blockDetector: Block = manager.newBlock(classOf[TileDetector])
-    var blockPump: Block = manager.newBlock(classOf[TilePump])
-    var blockGrinderWheel: Block = manager.newBlock(classOf[TileGrindingWheel])
-    var blockMixer: Block = manager.newBlock(classOf[TileMixer])
-    var blockMechanicalPiston: Block = manager.newBlock(classOf[TileMechanicalPiston])
-    var blockTileBreaker: Block = manager.newBlock(classOf[TileBreaker])
-    var blockTilePlacer: Block = manager.newBlock(classOf[TilePlacer])
+    var blockWindTurbine: Block = null
+    var blockWaterTurbine: Block = null
+    var blockElectricTurbine: Block = null
+    var blockDetector: Block = null
+    var blockPump: Block = null
+    var blockGrinderWheel: Block = null
+    var blockMixer: Block = null
+    var blockMechanicalPiston: Block = null
+    var blockTileBreaker: Block = null
+    var blockTilePlacer: Block = null
 
     override def preInit()
     {
         super.preInit()
+
+        itemGear = manager.newItem(classOf[ItemGear])
+        itemGearShaft = manager.newItem(classOf[ItemGearShaft])
+        itemPipe = manager.newItem(classOf[ItemPipe])
+
+        blockWindTurbine = manager.newBlock(classOf[TileWindTurbine])
+        blockWaterTurbine= manager.newBlock(classOf[TileWaterTurbine])
+        blockElectricTurbine= manager.newBlock(classOf[TileElectricTurbine])
+        blockDetector = manager.newBlock(classOf[TileDetector])
+        blockPump = manager.newBlock(classOf[TilePump])
+        blockGrinderWheel= manager.newBlock(classOf[TileGrindingWheel])
+        blockMixer = manager.newBlock(classOf[TileMixer])
+        blockMechanicalPiston = manager.newBlock(classOf[TileMechanicalPiston])
+        blockTileBreaker = manager.newBlock(classOf[TileBreaker])
+        blockTilePlacer = manager.newBlock(classOf[TilePlacer])
 
         TileCreativeBuilder.register(new SchematicPlate("schematic.waterTurbine.name", MechContent.blockWaterTurbine))
         TileCreativeBuilder.register(new SchematicPlate("schematic.windTurbine.name", MechContent.blockWindTurbine))
