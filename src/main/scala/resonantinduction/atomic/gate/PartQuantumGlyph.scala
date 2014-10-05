@@ -15,7 +15,7 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.{ChatComponentText, MovingObjectPosition}
 import resonant.api.blocks.IBlockFrequency
 import resonant.api.mffs.fortron.FrequencyGridRegistry
-import resonantinduction.atomic.AtomicContent
+import resonantinduction.electrical.ElectricalContent
 import universalelectricity.core.transform.vector.VectorWorld
 
 import scala.collection.JavaConversions._
@@ -155,7 +155,7 @@ class PartQuantumGlyph extends JCuboidPart with TSlottedPart with JNormalOcclusi
 
   protected def getItem: ItemStack =
   {
-    return new ItemStack(AtomicContent.itemQuantumGlyph, 1, number)
+    return new ItemStack(ElectricalContent.itemQuantumGlyph, 1, number)
   }
 
   /** Packet Code. */

@@ -6,11 +6,9 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.api.IFilterable
-import resonant.api.IRotatable
+import resonant.api.{IFilterable, IRotatable}
 import resonant.lib.content.prefab.java.TileInventory
 import universalelectricity.core.transform.vector.Vector3
-import java.util.Set
 
 object TileFilterable
 {
@@ -83,7 +81,7 @@ abstract class TileFilterable(material: Material) extends TileInventory(material
     {
         if (this.getFilter != null && itemStack != null)
         {
-            val checkStacks: Set[ItemStack] = ItemImprint.getFilters(getFilter)
+            val checkStacks: java.util.List[ItemStack] = ItemImprint.getFilters(getFilter)
             if (checkStacks != null)
             {
                 import scala.collection.JavaConversions._

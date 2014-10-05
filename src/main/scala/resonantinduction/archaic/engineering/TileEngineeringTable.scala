@@ -1,6 +1,6 @@
 package resonantinduction.archaic.engineering
 
-import java.util.{ArrayList, Set}
+import java.util.ArrayList
 
 import codechicken.multipart.ControlKeyModifer
 import cpw.mods.fml.common.network.ByteBufUtils
@@ -39,6 +39,7 @@ import resonantinduction.archaic.blocks.ItemImprint
 import resonantinduction.core.{Reference, ResonantInduction}
 import universalelectricity.core.transform.region.Cuboid
 import universalelectricity.core.transform.vector.{Vector2, Vector3}
+import scala.collection.JavaConversions._
 
 /**
  * Advanced crafting table that stores its crafting grid, can craft out of the player's inv, and be
@@ -480,9 +481,10 @@ class TileEngineeringTable extends TileInventory(Material.wood) with IPacketRece
                     val filterStack: ItemStack = craftingMatrix(TileEngineeringTable.CENTER_SLOT)
                     if (filterStack != null && filterStack.getItem.isInstanceOf[ItemImprint])
                     {
-                        val filters: Set[ItemStack] = ItemImprint.getFilters(filterStack)
-                        for (outputStack: ItemStack <- filters)
+                        val filters: java.util.List[ItemStack] = ItemImprint.getFilters(filterStack)
+                        for (o <- filters)
                         {
+                            val outputStack: ItemStack = o
                             if (outputStack != null)
                             {
                                 val idealRecipe: Pair[ItemStack, Array[ItemStack]] = this.getCraftingManager.getIdealRecipe(outputStack)

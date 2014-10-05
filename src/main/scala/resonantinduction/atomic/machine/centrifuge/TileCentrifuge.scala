@@ -14,7 +14,7 @@ import resonant.engine.ResonantEngine
 import resonant.lib.content.prefab.java.TileElectricInventory
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketReceiver
-import resonantinduction.atomic.{Atomic, AtomicContent}
+import resonantinduction.atomic.AtomicContent
 import resonantinduction.core.Settings
 import universalelectricity.compatibility.Compatibility
 import universalelectricity.core.transform.vector.Vector3
@@ -30,11 +30,11 @@ object TileCentrifuge
 
 class TileCentrifuge extends TileElectricInventory(Material.iron) with IPacketReceiver with IFluidHandler with IInventory
 {
-    final val gasTank: FluidTank = new FluidTank(AtomicContent.FLUIDSTACK_URANIUM_HEXAFLOURIDE.copy, FluidContainerRegistry.BUCKET_VOLUME * 5)
+    val gasTank: FluidTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 5)
     var timer: Int = 0
     var rotation: Float = 0
 
-        //Constructort
+    //Constructort
     isOpaqueCube(false)
     normalRender(false)
     energy.setCapacity(TileCentrifuge.DIAN * 2)
@@ -51,38 +51,29 @@ class TileCentrifuge extends TileElectricInventory(Material.iron) with IPacketRe
         {
             if (this.ticks % 20 == 0)
             {
+                for (i <- 0 to 6)
                 {
-                    var i: Int = 0
-                    while (i < 6)
+                    val direction: ForgeDirection = ForgeDirection.getOrientation(i)
+                    val tileEntity: TileEntity = new Vector3(this).add(direction).getTileEntity(world)
+                    if (tileEntity.isInstanceOf[IFluidHandler] && tileEntity.getClass != this.getClass)
                     {
+                        val fluidHandler: IFluidHandler = (tileEntity.asInstanceOf[IFluidHandler])
+                        if (fluidHandler != null)
                         {
-                            val direction: ForgeDirection = ForgeDirection.getOrientation(i)
-                            val tileEntity: TileEntity = new Vector3(this).add(direction).getTileEntity(world)
-                            if (tileEntity.isInstanceOf[IFluidHandler] && tileEntity.getClass != this.getClass)
+                            val requestFluid: FluidStack = AtomicContent.FLUIDSTACK_URANIUM_HEXAFLOURIDE
+                            requestFluid.amount = this.gasTank.getCapacity - AtomicContent.getFluidAmount(this.gasTank.getFluid)
+                            val receiveFluid: FluidStack = fluidHandler.drain(direction.getOpposite, requestFluid, true)
+                            if (receiveFluid != null)
                             {
-                                val fluidHandler: IFluidHandler = (tileEntity.asInstanceOf[IFluidHandler])
-                                if (fluidHandler != null)
+                                if (receiveFluid.amount > 0)
                                 {
-                                    val requestFluid: FluidStack = AtomicContent.FLUIDSTACK_URANIUM_HEXAFLOURIDE.copy
-                                    requestFluid.amount = this.gasTank.getCapacity - Atomic.getFluidAmount(this.gasTank.getFluid)
-                                    val receiveFluid: FluidStack = fluidHandler.drain(direction.getOpposite, requestFluid, true)
-                                    if (receiveFluid != null)
+                                    if (this.gasTank.fill(receiveFluid, false) > 0)
                                     {
-                                        if (receiveFluid.amount > 0)
-                                        {
-                                            if (this.gasTank.fill(receiveFluid, false) > 0)
-                                            {
-                                                this.gasTank.fill(receiveFluid, true)
-                                            }
-                                        }
+                                        this.gasTank.fill(receiveFluid, true)
                                     }
                                 }
                             }
                         }
-                        ({
-                            i += 1;
-                            i - 1
-                        })
                     }
                 }
             }
@@ -123,7 +114,7 @@ class TileCentrifuge extends TileElectricInventory(Material.iron) with IPacketRe
 
     override def use(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
     {
-        openGui(player, Atomic.INSTANCE)
+        openGui(player, AtomicContent)
         return true
     }
 
@@ -145,7 +136,7 @@ class TileCentrifuge extends TileElectricInventory(Material.iron) with IPacketRe
 
     override def getDescriptionPacket: Packet =
     {
-        return ResonantEngine.instance.packetHandler.toMCPacket(new PacketTile(x, y, z, Array(this.timer, Atomic.getFluidAmount(this.gasTank.getFluid))))
+        return ResonantEngine.instance.packetHandler.toMCPacket(new PacketTile(x, y, z, Array(this.timer, AtomicContent.getFluidAmount(this.gasTank.getFluid))))
     }
 
     /**

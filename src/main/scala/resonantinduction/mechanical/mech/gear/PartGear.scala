@@ -15,7 +15,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import resonant.lib.multiblock.reference.IMultiBlockStructure
 import resonant.lib.utility.WrenchUtility
 import resonantinduction.core.Reference
-import resonantinduction.mechanical.Mechanical
+import resonantinduction.mechanical.MechContent
 import resonantinduction.mechanical.mech.PartMechanical
 import universalelectricity.api.core.grid.INode
 import universalelectricity.core.transform.vector.VectorWorld
@@ -134,7 +134,7 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
 
     protected def getItem: ItemStack =
     {
-        return new ItemStack(Mechanical.itemGear, 1, tier)
+        return new ItemStack(MechContent.itemGear, 1, tier)
     }
 
     @SideOnly(Side.CLIENT) override def renderDynamic(pos: Vector3, frame: Float, pass: Int)

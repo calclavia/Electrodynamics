@@ -10,7 +10,7 @@ import resonant.api.recipe.QuantumAssemblerRecipes
 import resonant.lib.content.prefab.java.TileElectricInventory
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketReceiver
-import resonantinduction.atomic.{Atomic, AtomicContent}
+import resonantinduction.atomic.AtomicContent
 import resonantinduction.core.Reference
 import universalelectricity.core.transform.vector.Vector3
 
@@ -49,7 +49,7 @@ class TileQuantumAssembler extends TileElectricInventory(Material.iron) with IPa
     {
         if (!world.isRemote)
         {
-            player.openGui(Atomic.INSTANCE, 0, world, x, y, z)
+            player.openGui(AtomicContent, 0, world, x, y, z)
         }
         return true
     }

@@ -4,18 +4,24 @@ import net.minecraft.block.Block
 import net.minecraft.init.{Blocks, Items}
 import net.minecraft.item.{Item, ItemStack}
 import resonant.content.loader.ContentHolder
+import resonant.engine.content.debug.TileCreativeBuilder
+import resonant.lib.network.discriminator.PacketAnnotationManager
 import resonant.lib.recipe.UniversalRecipe
-import resonantinduction.core.{Reference, ResonantTab}
-import resonantinduction.mechanical.fluid.pipe.{ItemPipe, PipeMaterials}
+import resonant.lib.schematic.SchematicPlate
+import resonantinduction.core.interfaces.IMechanicalNode
+import resonantinduction.core.{Reference, ResonantPartFactory, ResonantTab}
+import resonantinduction.mechanical.fluid.pipe.{ItemPipe, PartPipe, PipeMaterials}
 import resonantinduction.mechanical.fluid.transport.TilePump
 import resonantinduction.mechanical.machine.TileDetector
-import resonantinduction.mechanical.machine.edit.{TilePlacer, TileBreaker}
-import resonantinduction.mechanical.mech.gear.ItemGear
-import resonantinduction.mechanical.mech.gearshaft.ItemGearShaft
+import resonantinduction.mechanical.machine.edit.{TileBreaker, TilePlacer}
+import resonantinduction.mechanical.mech.MechanicalNode
+import resonantinduction.mechanical.mech.gear.{ItemGear, PartGear}
+import resonantinduction.mechanical.mech.gearshaft.{ItemGearShaft, PartGearShaft}
 import resonantinduction.mechanical.mech.process.crusher.TileMechanicalPiston
 import resonantinduction.mechanical.mech.process.grinder.TileGrindingWheel
 import resonantinduction.mechanical.mech.process.mixer.TileMixer
 import resonantinduction.mechanical.mech.turbine.{TileElectricTurbine, TileWaterTurbine, TileWindTurbine}
+import universalelectricity.api.core.grid.NodeRegistry
 
 /**
  * The core contents of Resonant Induction
@@ -42,6 +48,31 @@ object MechContent extends ContentHolder
     var blockMechanicalPiston: Block = manager.newBlock(classOf[TileMechanicalPiston])
     var blockTileBreaker: Block = manager.newBlock(classOf[TileBreaker])
     var blockTilePlacer: Block = manager.newBlock(classOf[TilePlacer])
+
+    override def preInit()
+    {
+        super.preInit()
+
+        TileCreativeBuilder.register(new SchematicPlate("schematic.waterTurbine.name", MechContent.blockWaterTurbine))
+        TileCreativeBuilder.register(new SchematicPlate("schematic.windTurbine.name", MechContent.blockWindTurbine))
+        TileCreativeBuilder.register(new SchematicPlate("schematic.electricTurbine.name", MechContent.blockElectricTurbine))
+
+        NodeRegistry.register(classOf[IMechanicalNode], classOf[MechanicalNode])
+
+        ResonantTab.itemStack(new ItemStack(MechContent.blockGrinderWheel))
+
+        PacketAnnotationManager.INSTANCE.register(classOf[TileWindTurbine])
+        PacketAnnotationManager.INSTANCE.register(classOf[TileWaterTurbine])
+
+        ResonantPartFactory.register(classOf[PartGear])
+        ResonantPartFactory.register(classOf[PartGearShaft])
+        ResonantPartFactory.register(classOf[PartPipe])
+    }
+
+    override def init()
+    {
+        super.init()
+    }
 
     /**
      * Recipe registration

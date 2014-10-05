@@ -8,9 +8,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.DamageSource
 import net.minecraftforge.common.util.EnumHelper
 import resonant.api.armor.IAntiPoisonArmor
-import resonantinduction.atomic.Atomic
-import resonantinduction.core.Reference
-import resonantinduction.core.ResonantTab
+import resonantinduction.core.{ResonantInduction, Reference, ResonantTab}
 
 /**
  * Hazmat
@@ -20,7 +18,7 @@ object ItemHazmat
     final val hazmatArmorMaterial: ItemArmor.ArmorMaterial = EnumHelper.addArmorMaterial("HAZMAT", 0, Array[Int](0, 0, 0, 0), 0)
 }
 
-class ItemHazmat(slot: Int) extends ItemArmor(ItemHazmat.hazmatArmorMaterial, Atomic.proxy.getArmorIndex("hazmat"), slot) with IAntiPoisonArmor
+class ItemHazmat(slot: Int) extends ItemArmor(ItemHazmat.hazmatArmorMaterial, ResonantInduction.proxy.getArmorIndex("hazmat"), slot) with IAntiPoisonArmor
 {
     def this(name: String, slot: Int)
     {

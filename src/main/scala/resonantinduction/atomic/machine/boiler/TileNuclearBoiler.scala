@@ -14,7 +14,7 @@ import resonant.lib.content.prefab.java.TileElectricInventory
 import resonant.lib.network.Synced
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketReceiver
-import resonantinduction.atomic.{Atomic, AtomicContent}
+import resonantinduction.atomic.AtomicContent
 import resonantinduction.core.Settings
 import universalelectricity.core.transform.vector.Vector3
 
@@ -132,7 +132,7 @@ class TileNuclearBoiler extends TileElectricInventory(Material.iron) with IPacke
 
     override def getDescPacket: PacketTile =
     {
-        return new PacketTile(x, y, z, Array(this.timer, Atomic.getFluidAmount(this.waterTank.getFluid), Atomic.getFluidAmount(this.gasTank.getFluid)))
+        return new PacketTile(x, y, z, Array(this.timer, AtomicContent.getFluidAmount(this.waterTank.getFluid), AtomicContent.getFluidAmount(this.gasTank.getFluid)))
     }
 
     def sendDescPack
@@ -144,7 +144,7 @@ class TileNuclearBoiler extends TileElectricInventory(Material.iron) with IPacke
 
     override def use(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
     {
-        openGui(player, Atomic.INSTANCE)
+        openGui(player, AtomicContent)
         return true
     }
 
@@ -156,9 +156,9 @@ class TileNuclearBoiler extends TileElectricInventory(Material.iron) with IPacke
             {
                 if (getStackInSlot(3) != null)
                 {
-                    if (AtomicContent.itemYellowCake == getStackInSlot(3).getItem || Atomic.isItemStackUraniumOre(getStackInSlot(3)))
+                    if (AtomicContent.itemYellowCake == getStackInSlot(3).getItem || AtomicContent.isItemStackUraniumOre(getStackInSlot(3)))
                     {
-                        if (Atomic.getFluidAmount(this.gasTank.getFluid) < this.gasTank.getCapacity)
+                        if (AtomicContent.getFluidAmount(this.gasTank.getFluid) < this.gasTank.getCapacity)
                         {
                             return true
                         }
@@ -266,7 +266,7 @@ class TileNuclearBoiler extends TileElectricInventory(Material.iron) with IPacke
     {
         if (slotID == 1)
         {
-            return Atomic.isItemStackWaterCell(itemStack)
+            return AtomicContent.isItemStackWaterCell(itemStack)
         }
         else if (slotID == 3)
         {

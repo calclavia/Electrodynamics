@@ -11,7 +11,11 @@ import org.modstats.{ModstatInfo, Modstats}
 import resonant.engine.{References, ResonantEngine}
 import resonant.lib.config.ConfigHandler
 import resonant.lib.loadable.LoadableHandler
+import resonantinduction.archaic.ArchaicContent
+import resonantinduction.atomic.AtomicContent
 import resonantinduction.core.handler.TextureHookHandler
+import resonantinduction.electrical.ElectricalContent
+import resonantinduction.mechanical.MechContent
 
 import scala.collection.convert.wrapAll._
 
@@ -20,7 +24,7 @@ import scala.collection.convert.wrapAll._
   * @author Calclavia */
 @Mod(modid = Reference.coreID, name = Reference.name, version = Reference.version, modLanguage = "scala", dependencies = "required-after:ForgeMultipart@[1.0.0.244,);required-after:ResonantEngine;before:ThermalExpansion;before:Mekanism")
 @ModstatInfo(prefix = "resonantin")
-object ResonantInduction
+final object ResonantInduction
 {
     /** Packets */
     val packetHandler = ResonantEngine.instance.packetHandler
@@ -35,9 +39,6 @@ object ResonantInduction
     @EventHandler
     def preInit(evt: FMLPreInitializationEvent)
     {
-        /**
-         * Registrations
-         */
         NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy)
         Modstats.instance.getReporter.registerMod(this)
 
@@ -48,7 +49,11 @@ object ResonantInduction
 
         loadables.applyModule(proxy)
         loadables.applyModule(packetHandler)
+        loadables.applyModule(AtomicContent)
+        loadables.applyModule(ArchaicContent)
         loadables.applyModule(CoreContent)
+        loadables.applyModule(ElectricalContent)
+        loadables.applyModule(MechContent)
 
         loadables.preInit()
 
@@ -79,12 +84,6 @@ object ResonantInduction
     @EventHandler
     def postInit(evt: FMLPostInitializationEvent)
     {
-        /*
-        GameRegistry.addRecipe(new ShapelessOreRecipe(itemFlour, Array[AnyRef](Item.wheat, Item.wheat)))
-        FurnaceRecipes.smelting.addSmelting(itemFlour.itemID, 1, new ItemStack(Item.bread), 50f)
-        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(itemFlour, 1, 1), Array[AnyRef](itemFlour, Item.bucketWater)))
-        MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER.name, Item.wheat, itemFlour)
-        */
         loadables.postInit()
     }
 }

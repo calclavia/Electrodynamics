@@ -10,7 +10,7 @@ import net.minecraftforge.fluids._
 import resonant.engine.ResonantEngine
 import resonant.lib.network.Synced
 import resonant.lib.network.discriminator.PacketAnnotation
-import resonantinduction.atomic.{Atomic, AtomicContent}
+import resonantinduction.atomic.AtomicContent
 import resonantinduction.core.Settings
 import universalelectricity.compatibility.Compatibility
 import universalelectricity.core.transform.vector.Vector3
@@ -95,7 +95,7 @@ class TileChemicalExtractor extends TileProcess(Material.iron) with IFluidHandle
 
     override def use(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
     {
-        openGui(player, Atomic.INSTANCE)
+        openGui(player, AtomicContent)
         return true
     }
 
@@ -103,7 +103,7 @@ class TileChemicalExtractor extends TileProcess(Material.iron) with IFluidHandle
     {
         if (inputTank.getFluid != null)
         {
-            if (inputTank.getFluid.amount >= FluidContainerRegistry.BUCKET_VOLUME && Atomic.isItemStackUraniumOre(getStackInSlot(inputSlot)))
+            if (inputTank.getFluid.amount >= FluidContainerRegistry.BUCKET_VOLUME && AtomicContent.isItemStackUraniumOre(getStackInSlot(inputSlot)))
             {
                 if (isItemValidForSlot(outputSlot, new ItemStack(AtomicContent.itemYellowCake)))
                 {
@@ -114,7 +114,7 @@ class TileChemicalExtractor extends TileProcess(Material.iron) with IFluidHandle
             {
                 if (inputTank.getFluid.getFluid.getID == AtomicContent.FLUID_DEUTERIUM.getID && inputTank.getFluid.amount >= Settings.deutermiumPerTritium * TileChemicalExtractor.EXTRACT_SPEED)
                 {
-                    if (outputTank.getFluid == null || (AtomicContent.FLUIDSTACK_TRITIUM == outputTank.getFluid))
+                    if (outputTank.getFluid == null || (AtomicContent.getFluidStackTritium == outputTank.getFluid))
                     {
                         return true
                     }
@@ -138,7 +138,7 @@ class TileChemicalExtractor extends TileProcess(Material.iron) with IFluidHandle
     {
         if (canUse)
         {
-            if (Atomic.isItemStackUraniumOre(getStackInSlot(inputSlot)))
+            if (AtomicContent.isItemStackUraniumOre(getStackInSlot(inputSlot)))
             {
                 inputTank.drain(FluidContainerRegistry.BUCKET_VOLUME, true)
                 incrStackSize(outputSlot, new ItemStack(AtomicContent.itemYellowCake, 3))
@@ -174,7 +174,7 @@ class TileChemicalExtractor extends TileProcess(Material.iron) with IFluidHandle
             val drain: FluidStack = inputTank.drain(Settings.deutermiumPerTritium * TileChemicalExtractor.EXTRACT_SPEED, false)
             if (drain != null && drain.amount >= 1 && drain.getFluid.getID == AtomicContent.FLUID_DEUTERIUM.getID)
             {
-                if (outputTank.fill(new FluidStack(AtomicContent.FLUIDSTACK_TRITIUM, TileChemicalExtractor.EXTRACT_SPEED), true) >= TileChemicalExtractor.EXTRACT_SPEED)
+                if (outputTank.fill(new FluidStack(AtomicContent.getFluidStackTritium, TileChemicalExtractor.EXTRACT_SPEED), true) >= TileChemicalExtractor.EXTRACT_SPEED)
                 {
                     inputTank.drain(Settings.deutermiumPerTritium * TileChemicalExtractor.EXTRACT_SPEED, true)
                     return true
@@ -263,15 +263,15 @@ class TileChemicalExtractor extends TileProcess(Material.iron) with IFluidHandle
         }
         if (slotID == 1)
         {
-            return Atomic.isItemStackWaterCell(itemStack)
+            return AtomicContent.isItemStackWaterCell(itemStack)
         }
         if (slotID == 2)
         {
-            return Atomic.isItemStackDeuteriumCell(itemStack) || Atomic.isItemStackTritiumCell(itemStack)
+            return AtomicContent.isItemStackDeuteriumCell(itemStack) || AtomicContent.isItemStackTritiumCell(itemStack)
         }
         if (slotID == 3)
         {
-            return Atomic.isItemStackEmptyCell(itemStack) || Atomic.isItemStackUraniumOre(itemStack) || Atomic.isItemStackDeuteriumCell(itemStack)
+            return AtomicContent.isItemStackEmptyCell(itemStack) || AtomicContent.isItemStackUraniumOre(itemStack) || AtomicContent.isItemStackDeuteriumCell(itemStack)
         }
         return false
     }

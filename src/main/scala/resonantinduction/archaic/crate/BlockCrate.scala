@@ -15,7 +15,7 @@ import net.minecraft.world.World
 import net.minecraftforge.oredict.OreDictionary
 import resonant.content.spatial.block.SpatialBlock
 import resonant.lib.wrapper.WrapList._
-import resonantinduction.archaic.ArchaicBlocks
+import resonantinduction.archaic.ArchaicContent
 import resonantinduction.core.Reference
 
 import scala.collection.JavaConversions._
@@ -253,7 +253,7 @@ class BlockCrate extends SpatialBlock(Material.iron)
     val currentStack: ItemStack = player.getCurrentEquippedItem
     if (currentStack != null)
     {
-      if (currentStack.getItem() == Item.getItemFromBlock(ArchaicBlocks.blockCrate))
+      if (currentStack.getItem() == Item.getItemFromBlock(ArchaicContent.blockCrate))
       {
         val containedStack: ItemStack = ItemBlockCrate.getContainingItemStack(currentStack)
         val crateStack: ItemStack = tileEntity.getSampleStack
@@ -294,7 +294,7 @@ class BlockCrate extends SpatialBlock(Material.iron)
     {
       requestStack = player.getCurrentEquippedItem
     }
-    if (requestStack != null && requestStack.getItem != Item.getItemFromBlock(ArchaicBlocks.blockCrate))
+    if (requestStack != null && requestStack.getItem != Item.getItemFromBlock(ArchaicContent.blockCrate))
     {
       var success: Boolean = false
       for (i <- 0 until player.inventory.getSizeInventory)

@@ -6,7 +6,7 @@ import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.crafting.IRecipe
 import net.minecraftforge.oredict.ShapedOreRecipe
-import resonantinduction.archaic.ArchaicBlocks
+import resonantinduction.archaic.ArchaicContent
 
 /**
  * Crafting handler for crates
@@ -28,7 +28,7 @@ class CrateRecipe(result: ItemStack, recipe: AnyRef*) extends ShapedOreRecipe(re
     override def getCraftingResult(grid: InventoryCrafting): ItemStack =
     {
         val result: ItemStack = super.getCraftingResult(grid)
-        val crateItem: Item = Item.getItemFromBlock(ArchaicBlocks.blockCrate)
+        val crateItem: Item = Item.getItemFromBlock(ArchaicContent.blockCrate)
         if (result != null && result.getItem == crateItem)
         {
             val centerStack: ItemStack = grid.getStackInSlot(4)

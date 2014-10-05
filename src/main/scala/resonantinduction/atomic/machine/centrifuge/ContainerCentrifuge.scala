@@ -5,7 +5,7 @@ import net.minecraft.inventory.{IInventory, Slot, SlotFurnace}
 import net.minecraft.item.ItemStack
 import resonant.lib.gui.ContainerBase
 import resonant.lib.prefab.slot.SlotEnergyItem
-import resonantinduction.atomic.Atomic
+import resonantinduction.atomic.AtomicContent
 
 class ContainerCentrifuge(par1InventoryPlayer: InventoryPlayer, tileEntity: TileCentrifuge) extends ContainerBase(tileEntity)
 {
@@ -46,14 +46,14 @@ class ContainerCentrifuge(par1InventoryPlayer: InventoryPlayer, tileEntity: Tile
                         return null
                     }
                 }
-                else if (Atomic.isItemStackUraniumOre(itemStack))
+                else if (AtomicContent.isItemStackUraniumOre(itemStack))
                 {
                     if (!this.mergeItemStack(itemStack, 1, 2, false))
                     {
                         return null
                     }
                 }
-                else if (Atomic.isItemStackEmptyCell(itemStack))
+                else if (AtomicContent.isItemStackEmptyCell(itemStack))
                 {
                     if (!this.mergeItemStack(itemStack, 3, 4, false))
                     {

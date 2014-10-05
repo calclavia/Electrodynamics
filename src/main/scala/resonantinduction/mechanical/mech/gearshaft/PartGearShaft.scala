@@ -3,10 +3,10 @@ package resonantinduction.mechanical.mech.gearshaft
 import java.util.Collection
 import java.util.HashSet
 import java.util.Set
+import resonantinduction.mechanical.MechContent
 import resonantinduction.mechanical.mech.PartMechanical
 import net.minecraft.item.ItemStack
 import net.minecraftforge.common.util.ForgeDirection
-import resonantinduction.mechanical.Mechanical
 import codechicken.lib.raytracer.IndexedCuboid6
 import codechicken.lib.vec.Cuboid6
 import codechicken.lib.vec.Vector3
@@ -47,7 +47,7 @@ class PartGearShaft extends PartMechanical
 
     protected def getItem: ItemStack =
     {
-        return new ItemStack(Mechanical.itemGearShaft, 1, tier)
+        return new ItemStack(MechContent.itemGearShaft, 1, tier)
     }
 
     @SideOnly(Side.CLIENT) override def renderDynamic(pos: Vector3, frame: Float, pass: Int)

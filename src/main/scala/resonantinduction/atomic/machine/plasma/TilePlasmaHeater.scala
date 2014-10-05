@@ -152,7 +152,7 @@ class TilePlasmaHeater extends TileElectric(Material.iron) with IPacketReceiver 
         {
             return tankInputDeuterium.fill(resource, doFill)
         }
-        if (resource.isFluidEqual(AtomicContent.FLUIDSTACK_TRITIUM))
+        if (resource.isFluidEqual(AtomicContent.getFluidStackTritium))
         {
             return tankInputTritium.fill(resource, doFill)
         }
@@ -171,7 +171,7 @@ class TilePlasmaHeater extends TileElectric(Material.iron) with IPacketReceiver 
 
     def canFill(from: ForgeDirection, fluid: Fluid): Boolean =
     {
-        return fluid.getID == AtomicContent.FLUID_DEUTERIUM.getID || fluid.getID == AtomicContent.FLUID_TRITIUM.getID
+        return fluid.getID == AtomicContent.FLUID_DEUTERIUM.getID || fluid.getID == AtomicContent.getFluidTritium.getID
     }
 
     def canDrain(from: ForgeDirection, fluid: Fluid): Boolean =

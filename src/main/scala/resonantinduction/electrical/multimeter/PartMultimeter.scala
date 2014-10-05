@@ -19,10 +19,11 @@ import resonant.api.IRemovable
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.IPacketReceiver
 import resonant.lib.utility.WrenchUtility
+import resonantinduction.core.ResonantInduction
 import resonantinduction.core.interfaces.IMechanicalNode
 import resonantinduction.core.prefab.part.ChickenBonesWrapper._
 import resonantinduction.core.prefab.part.PartFace
-import resonantinduction.electrical.{Electrical, ElectricalContent}
+import resonantinduction.electrical.ElectricalContent
 import universalelectricity.api.core.grid.INodeProvider
 import universalelectricity.compatibility.Compatibility
 import universalelectricity.core.transform.vector.Vector3
@@ -109,7 +110,7 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
       }
       return true
     }
-    player.openGui(Electrical.INSTANCE, placementSide.ordinal, world, x, y, z)
+    player.openGui(ResonantInduction, placementSide.ordinal, world, x, y, z)
     return true
   }
 

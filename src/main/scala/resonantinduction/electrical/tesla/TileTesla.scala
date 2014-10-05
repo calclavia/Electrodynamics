@@ -25,8 +25,7 @@ import resonant.lib.network.handle.IPacketReceiver
 import resonant.lib.render.EnumColor
 import resonant.lib.utility.{LanguageUtility, LinkUtility}
 import resonantinduction.core.util.ResonantUtil
-import resonantinduction.core.{Reference, Settings}
-import resonantinduction.electrical.Electrical
+import resonantinduction.core.{ResonantInduction, Reference, Settings}
 import universalelectricity.core.transform.vector.{Vector3, VectorWorld}
 import scala.collection.JavaConversions._
 
@@ -114,7 +113,7 @@ class TileTesla extends TileElectric(Material.iron) with IMultiBlockStructure[Ti
                     }
                     else
                     {
-                        Electrical.proxy.renderElectricShock(this.worldObj, topTeslaVector.clone.add(0.5), topTeslaVector.clone.add(new Vector3(0.5, java.lang.Double.POSITIVE_INFINITY, 0.5)), false)
+                        ResonantInduction.proxy.renderElectricShock(this.worldObj, topTeslaVector.clone.add(0.5), topTeslaVector.clone.add(new Vector3(0.5, java.lang.Double.POSITIVE_INFINITY, 0.5)), false)
                     }
                 }
                 else
@@ -175,7 +174,7 @@ class TileTesla extends TileElectric(Material.iron) with IMultiBlockStructure[Ti
                                     heightRange = (tesla.asInstanceOf[TileTesla]).getHeight
                                 }
                                 val distance: Double = topTeslaVector.distance(targetVector)
-                                Electrical.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).add(new Vector3(0.5)), targetVector.add(new Vector3(0.5, Math.random * heightRange / 3 - heightRange / 3, 0.5)), EnumColor.DYES(this.dyeID).toColor)
+                                ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).add(new Vector3(0.5)), targetVector.add(new Vector3(0.5, Math.random * heightRange / 3 - heightRange / 3, 0.5)), EnumColor.DYES(this.dyeID).toColor)
                                 this.transfer(tesla, Math.min(transferEnergy, TRANSFER_CAP))
                                 if (!sentPacket && transferEnergy > 0)
                                 {

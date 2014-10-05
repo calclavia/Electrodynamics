@@ -162,7 +162,7 @@ class TileImprinter extends TileAdvanced(Material.circuits) with ISidedInventory
             if (fitlerStack != null && fitlerStack.getItem.isInstanceOf[ItemImprint])
             {
                 val outputStack: ItemStack = fitlerStack.copy
-                val filters: Set[ItemStack] = ItemImprint.getFilters(outputStack)
+                val filters: java.util.List[ItemStack] = ItemImprint.getFilters(outputStack)
                 val toAdd: Set[ItemStack] = new HashSet[ItemStack]
                 val toBeImprinted: Set[ItemStack] = new HashSet[ItemStack]
 

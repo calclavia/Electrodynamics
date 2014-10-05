@@ -11,7 +11,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import resonant.lib.`type`.EvictingList
 import resonantinduction.core.prefab.part.connector.{PartFramedNode, TColorable, TMaterial}
-import resonantinduction.mechanical.Mechanical
+import resonantinduction.mechanical.MechContent
 import resonantinduction.mechanical.fluid.pipe.PipeMaterials.PipeMaterial
 
 /**
@@ -137,7 +137,7 @@ class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorab
     RenderPipe.render(this, pos.x, pos.y, pos.z, frame)
   }
 
-  def getItem: ItemStack = new ItemStack(Mechanical.itemPipe, 1, getMaterialID)
+  def getItem: ItemStack = new ItemStack(MechContent.itemPipe, 1, getMaterialID)
 
   override def fill(from: ForgeDirection, resource: FluidStack, doFill: Boolean): Int =
   {

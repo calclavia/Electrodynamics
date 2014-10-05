@@ -17,7 +17,7 @@ import resonant.content.prefab.scala.render.ISimpleItemRenderer
 import resonant.lib.render.{FluidRenderUtility, RenderUtility}
 import resonant.lib.utility.FluidUtility
 import resonant.lib.utility.render.RenderBlockUtility
-import resonantinduction.archaic.ArchaicBlocks
+import resonantinduction.archaic.ArchaicContent
 import resonantinduction.core.Reference
 import resonantinduction.core.prefab.node.TileTankNode
 import universalelectricity.core.transform.vector.Vector3
@@ -36,7 +36,7 @@ object TileTank
     def renderInventoryItem(`type`: IItemRenderer.ItemRenderType, itemStack: ItemStack, data: AnyRef*)
     {
       GL11.glPushMatrix
-      RenderBlockUtility.tessellateBlockWithConnectedTextures(itemStack.getItemDamage, ArchaicBlocks.blockTank, null, RenderUtility.getIcon(Reference.prefix + "tankEdge"))
+      RenderBlockUtility.tessellateBlockWithConnectedTextures(itemStack.getItemDamage, ArchaicContent.blockTank, null, RenderUtility.getIcon(Reference.prefix + "tankEdge"))
       GL11.glPopMatrix
       GL11.glPushMatrix
       if (itemStack.getTagCompound != null && itemStack.getTagCompound.hasKey("fluid"))
@@ -155,7 +155,7 @@ class TileTank extends TileTankNode(Material.iron) with ISneakPickup
   def getRemovedItems(entity: EntityPlayer): List[ItemStack] =
   {
     val drops: List[ItemStack] = new ArrayList[ItemStack]
-    val itemStack: ItemStack = new ItemStack(ArchaicBlocks.blockTank, 1, 0)
+    val itemStack: ItemStack = new ItemStack(ArchaicContent.blockTank, 1, 0)
     if (itemStack != null)
     {
       if (getTank != null && getTank.getFluid != null)

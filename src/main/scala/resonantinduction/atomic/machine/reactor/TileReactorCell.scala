@@ -27,7 +27,7 @@ import resonant.lib.network.discriminator.PacketAnnotation
 import resonant.lib.prefab.poison.PoisonRadiation
 import resonant.lib.utility.inventory.InventoryUtility
 import resonantinduction.atomic.machine.plasma.TilePlasma
-import resonantinduction.atomic.{Atomic, AtomicContent}
+import resonantinduction.atomic.AtomicContent
 import resonantinduction.core.Reference
 import universalelectricity.core.transform.vector.{Vector3, VectorWorld}
 
@@ -205,7 +205,7 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
           {
             worldObj.playSoundEffect(this.xCoord + 0.5F, this.yCoord + 0.5F, this.zCoord + 0.5F, "Fluid.lavapop", 0.5F, 2.6F + (worldObj.rand.nextFloat - worldObj.rand.nextFloat) * 0.8F)
           }
-          if (worldObj.getWorldTime % (Atomic.SECOND_IN_TICKS * 5.0F) == 0 && this.getTemperature >= 373)
+          if (worldObj.getWorldTime % (AtomicContent.SECOND_IN_TICKS * 5.0F) == 0 && this.getTemperature >= 373)
           {
             val percentage: Float = Math.min(this.getTemperature / TileReactorCell.MELTING_POINT, 1.0F)
             worldObj.playSoundEffect(this.xCoord + 0.5F, this.yCoord + 0.5F, this.zCoord + 0.5F, Reference.prefix + "reactorcell", percentage, 1.0F)
@@ -270,7 +270,7 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
 
   def isOverToxic: Boolean =
   {
-    return tank.getFluid != null && tank.getFluid.fluidID == AtomicContent.FLUID_TOXIC_WASTE.getID && tank.getFluid.amount >= tank.getCapacity
+    return tank.getFluid != null && tank.getFluid.fluidID == AtomicContent.getFluidToxicWaste.getID && tank.getFluid.amount >= tank.getCapacity
   }
 
   def getWorld: World =
@@ -427,7 +427,7 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
 
   override def canDrain(from: ForgeDirection, fluid: Fluid): Boolean =
   {
-    return fluid == AtomicContent.FLUID_TOXIC_WASTE
+    return fluid == AtomicContent.getFluidToxicWaste
   }
 
   override def getTankInfo(from: ForgeDirection): Array[FluidTankInfo] =
@@ -477,7 +477,7 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
       }
       else
       {
-        player.openGui(Atomic.INSTANCE, 0, world, tile.xCoord, tile.yCoord, tile.zCoord)
+        player.openGui(AtomicContent, 0, world, tile.xCoord, tile.yCoord, tile.zCoord)
       }
     }
     return true

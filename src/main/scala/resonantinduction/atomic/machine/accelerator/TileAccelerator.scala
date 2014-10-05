@@ -13,7 +13,7 @@ import resonant.lib.content.prefab.java.TileElectricInventory
 import resonant.lib.network.Synced
 import resonant.lib.network.discriminator.PacketAnnotation
 import resonant.lib.utility.BlockUtility
-import resonantinduction.atomic.{Atomic, AtomicContent}
+import resonantinduction.atomic.AtomicContent
 import resonantinduction.atomic.items.ItemAntimatter
 import resonantinduction.core.{Reference, Settings}
 import universalelectricity.core.transform.vector.Vector3
@@ -67,7 +67,7 @@ class TileAccelerator extends TileElectricInventory(Material.iron) with IElectro
             {
                 velocity = entityParticle.getParticleVelocity.asInstanceOf[Float]
             }
-            if (Atomic.isItemStackEmptyCell(getStackInSlot(1)))
+            if (AtomicContent.isItemStackEmptyCell(getStackInSlot(1)))
             {
                 if (getStackInSlot(1).stackSize > 0)
                 {
@@ -175,7 +175,7 @@ class TileAccelerator extends TileElectricInventory(Material.iron) with IElectro
     {
         if (!world.isRemote)
         {
-            player.openGui(Atomic.INSTANCE, 0, world, x, y, z)
+            player.openGui(AtomicContent, 0, world, x, y, z)
         }
         return true
     }
@@ -255,7 +255,7 @@ class TileAccelerator extends TileElectricInventory(Material.iron) with IElectro
             case 0 =>
                 return true
             case 1 =>
-                return Atomic.isItemStackEmptyCell(itemStack)
+                return AtomicContent.isItemStackEmptyCell(itemStack)
             case 2 =>
                 return itemStack.getItem.isInstanceOf[ItemAntimatter]
             case 3 =>

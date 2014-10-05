@@ -80,7 +80,7 @@ class ItemFissileFuel extends ItemRadioactive with IReactorComponent
             }
             if (Settings.allowToxicWaste && worldObj.rand.nextFloat > 0.5)
             {
-                val fluid: FluidStack = AtomicContent.FLUIDSTACK_TOXIC_WASTE.copy
+                val fluid: FluidStack = AtomicContent.getStackToxicWaste.copy
                 fluid.amount = 1
                 reactor.fill(ForgeDirection.UNKNOWN, fluid, true)
             }

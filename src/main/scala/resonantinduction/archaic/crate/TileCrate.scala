@@ -16,7 +16,7 @@ import resonant.lib.content.prefab.java.TileInventory
 import resonant.lib.network.ByteBufWrapper._
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.TPacketReceiver
-import resonantinduction.archaic.ArchaicBlocks
+import resonantinduction.archaic.ArchaicContent
 
 /** Basic single stack inventory.
   * <p/>
@@ -251,7 +251,7 @@ class TileCrate extends TileInventory(Material.rock) with TPacketReceiver with I
   {
     val list = new util.ArrayList[ItemStack]()
     val sampleStack: ItemStack = getSampleStack
-    val drop: ItemStack = new ItemStack(Item.getItemFromBlock(ArchaicBlocks.blockCrate), 1, this.getBlockMetadata)
+    val drop: ItemStack = new ItemStack(Item.getItemFromBlock(ArchaicContent.blockCrate), 1, this.getBlockMetadata)
     if (sampleStack != null && sampleStack.stackSize > 0)
     {
       ItemBlockCrate.setContainingItemStack(drop, sampleStack)

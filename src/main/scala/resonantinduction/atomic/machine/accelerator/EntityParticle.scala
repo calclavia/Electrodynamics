@@ -15,8 +15,7 @@ import net.minecraftforge.common.ForgeChunkManager.Type
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.IElectromagnet
 import resonant.lib.prefab.poison.PoisonRadiation
-import resonantinduction.atomic.Atomic
-import resonantinduction.core.Reference
+import resonantinduction.core.{ResonantInduction, Reference}
 import universalelectricity.core.transform.vector.Vector3
 import scala.collection.JavaConversions._
 
@@ -91,7 +90,7 @@ class EntityParticle(par1World: World) extends Entity(par1World) with IEntityAdd
         this.dataWatcher.addObject(EntityParticle.MOVE_TICK_RATE, 3.asInstanceOf[Byte])
         if (this.updateTicket == null)
         {
-            this.updateTicket = ForgeChunkManager.requestTicket(Atomic.INSTANCE, this.worldObj, Type.ENTITY)
+            this.updateTicket = ForgeChunkManager.requestTicket(ResonantInduction, this.worldObj, Type.ENTITY)
             this.updateTicket.getModData
             this.updateTicket.bindEntity(this)
         }

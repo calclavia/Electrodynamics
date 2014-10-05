@@ -1,6 +1,7 @@
 package resonantinduction.archaic.blocks
 
-import java.util.{ArrayList, HashSet, List, Set}
+import java.util
+import java.util.{ArrayList, List}
 
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.entity.{Entity, EntityList, EntityLivingBase, IProjectile}
@@ -8,15 +9,15 @@ import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.{NBTTagCompound, NBTTagList}
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.utility.nbt.NBTUtility
-import resonantinduction.core.{Reference, ResonantTab}
 import resonant.lib.wrapper.WrapList._
+import resonantinduction.core.{Reference, ResonantTab}
 
 object ItemImprint
 {
     /**
      * Saves the list of items to filter out inside.
      */
-    def setFilters(itemStack: ItemStack, filterStacks: Set[ItemStack])
+    def setFilters(itemStack: ItemStack, filterStacks: java.util.List[ItemStack])
     {
         if (itemStack.getTagCompound == null)
         {
@@ -37,7 +38,7 @@ object ItemImprint
     {
         if (filter != null && itemStack != null)
         {
-            val checkStacks: Set[ItemStack] = getFilters(filter)
+            val checkStacks: List[ItemStack] = getFilters(filter)
             if (checkStacks != null)
             {
                 import scala.collection.JavaConversions._
@@ -53,9 +54,9 @@ object ItemImprint
         return false
     }
 
-    def getFilters(itemStack: ItemStack): HashSet[ItemStack] =
+    def getFilters(itemStack: ItemStack): List[ItemStack] =
     {
-        val filterStacks: HashSet[ItemStack] = new HashSet[ItemStack]
+        val filterStacks: List[ItemStack] = new util.LinkedList[ItemStack]
         val nbt: NBTTagCompound = NBTUtility.getNBTTagCompound(itemStack)
         val tagList: NBTTagList = nbt.getTagList("Items", 0)
 
@@ -109,7 +110,7 @@ class ItemImprint extends Item
 
     override def addInformation(itemStack: ItemStack, par2EntityPlayer: EntityPlayer, list: java.util.List[_], par4: Boolean)
     {
-        val filterItems: Set[ItemStack] = ItemImprint.getFilters(itemStack)
+        val filterItems: List[ItemStack] = ItemImprint.getFilters(itemStack)
         if (filterItems.size > 0)
         {
             import scala.collection.JavaConversions._
