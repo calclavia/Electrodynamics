@@ -20,23 +20,43 @@ import resonantinduction.mechanical.mech.gear.ItemHandCrank
 object ArchaicContent extends ContentHolder
 {
 
-    var itemImprint: Item = manager.newItem(classOf[ItemImprint])
-    var itemHammer: Item = manager.newItem(classOf[ItemHammer])
-    var itemHandCrank: Item = manager.newItem(classOf[ItemHandCrank])
+    var itemImprint: Item = null
+    var itemHammer: Item = null
+    var itemHandCrank: Item = null
 
-    var blockEngineeringTable: Block = manager.newBlock(classOf[TileEngineeringTable])
+    var blockEngineeringTable: Block = null
     var blockCrate: Block = null//manager.newBlock(classOf[BlockCrate])
-    var blockImprinter: Block = manager.newBlock(classOf[TileImprinter])
-    var blockTurntable: Block = manager.newBlock(classOf[TileTurntable])
-    var blockFirebox: Block = manager.newBlock(classOf[TileFirebox])
-    var blockHotPlate: Block = manager.newBlock(classOf[TileHotPlate])
-    var blockMillstone: Block = manager.newBlock(classOf[TileMillstone])
-    var blockCast: Block = manager.newBlock(classOf[TileCastingMold])
+    var blockImprinter: Block = null
+    var blockTurntable: Block = null
+    var blockFirebox: Block = null
+    var blockHotPlate: Block = null
+    var blockMillstone: Block = null
+    var blockCast: Block = null
     //var blockFilter: Block = contentRegistry.newBlock( classOf[ TileFilter ] )
-    var blockGrate: Block = manager.newBlock(classOf[TileGrate])
-    var blockGutter: Block = manager.newBlock(classOf[TileGutter])
-    var blockTank: Block = manager.newBlock(classOf[TileTank])
+    var blockGrate: Block = null
+    var blockGutter: Block = null
+    var blockTank: Block = null
 
+    override def preInit()
+    {
+        super.preInit()
+        itemImprint = manager.newItem(classOf[ItemImprint])
+        itemHammer = manager.newItem(classOf[ItemHammer])
+        itemHandCrank = manager.newItem(classOf[ItemHandCrank])
+
+        blockEngineeringTable = manager.newBlock(classOf[TileEngineeringTable])
+        blockCrate= null//manager.newBlock(classOf[BlockCrate])
+        blockImprinter = manager.newBlock(classOf[TileImprinter])
+        blockTurntable = manager.newBlock(classOf[TileTurntable])
+        blockFirebox = manager.newBlock(classOf[TileFirebox])
+        blockHotPlate = manager.newBlock(classOf[TileHotPlate])
+        blockMillstone = manager.newBlock(classOf[TileMillstone])
+        blockCast = manager.newBlock(classOf[TileCastingMold])
+        //var blockFilter: Block = contentRegistry.newBlock( classOf[ TileFilter ] )
+        blockGrate = manager.newBlock(classOf[TileGrate])
+        blockGutter = manager.newBlock(classOf[TileGutter])
+        blockTank = manager.newBlock(classOf[TileTank])
+    }
     override def postInit()
     {
         ResonantTab.itemStack = new ItemStack(ArchaicContent.blockEngineeringTable)
