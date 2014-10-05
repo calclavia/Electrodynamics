@@ -1,17 +1,17 @@
 package resonantinduction.atomic.blocks
 
+import java.util.Random
+
 import net.minecraft.block.material.Material
-import net.minecraft.entity.Entity
-import net.minecraft.entity.EntityLivingBase
+import net.minecraft.entity.{Entity, EntityLivingBase}
 import net.minecraft.util.DamageSource
 import net.minecraft.world.World
 import net.minecraftforge.fluids.BlockFluidClassic
-import net.minecraftforge.fluids.FluidRegistry
 import resonant.lib.prefab.poison.PoisonRadiation
+import resonantinduction.atomic.AtomicContent
 import universalelectricity.core.transform.vector.Vector3
-import java.util.Random
 
-class BlockToxicWaste extends BlockFluidClassic(FluidRegistry.getFluid("toxicwaste"), Material.water)
+class BlockToxicWaste extends BlockFluidClassic(AtomicContent.getFluidToxicWaste, Material.water)
 {
     //Constructor
     setTickRate(20)

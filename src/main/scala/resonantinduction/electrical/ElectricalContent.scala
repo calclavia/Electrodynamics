@@ -39,34 +39,60 @@ object ElectricalContent extends ContentHolder
 {
     val particleTextures = new ResourceLocation("textures/particle/particles.png")
 
-    val tierOneBattery: ItemStack = ItemBlockBattery.setTier(new ItemStack(ElectricalContent.blockBattery, 1, 0), 0.asInstanceOf[Byte])
-    val tierTwoBattery: ItemStack = ItemBlockBattery.setTier(new ItemStack(ElectricalContent.blockBattery, 1, 0), 1.asInstanceOf[Byte])
-    val tierThreeBattery: ItemStack = ItemBlockBattery.setTier(new ItemStack(ElectricalContent.blockBattery, 1, 0), 2.asInstanceOf[Byte])
 
-    var itemWire: Item = manager.newItem(classOf[ItemWire])
-    var itemMultimeter: Item = manager.newItem(classOf[ItemMultimeter])
-    var itemTransformer: Item = manager.newItem(classOf[ItemElectricTransformer])
-    var itemInsulation: Item = manager.newItem("insulation", classOf[Item])
-    var itemQuantumGlyph: Item = manager.newItem(classOf[ItemQuantumGlyph])
+    var itemWire: Item = null
+    var itemMultimeter: Item = null
+    var itemTransformer: Item = null
+    var itemInsulation: Item = null
+    var itemQuantumGlyph: Item = null
 
-    var blockTesla: Block = manager.newBlock(classOf[TileTesla])
-    var blockBattery: Block = manager.newBlock(classOf[TileBattery])
-    var blockSolarPanel: Block = manager.newBlock(classOf[TileSolarPanel])
-    var blockMotor: Block = manager.newBlock(classOf[TileMotor])
-    var blockThermopile: Block = manager.newBlock(classOf[TileThermopile])
+    var blockTesla: Block = null
+    var blockBattery: Block = null
+    var blockSolarPanel: Block = null
+    var blockMotor: Block = null
+    var blockThermopile: Block = null
 
-    var blockLaserEmitter: BlockLaserEmitter = new BlockLaserEmitter()
-    var blockLaserReceiver: BlockLaserReceiver = new BlockLaserReceiver()
-    var blockMirror: BlockMirror = new BlockMirror()
-    var blockFocusCrystal: BlockFocusCrystal = new BlockFocusCrystal()
+    var blockLaserEmitter: BlockLaserEmitter = null
+    var blockLaserReceiver: BlockLaserReceiver = null
+    var blockMirror: BlockMirror = null
+    var blockFocusCrystal: BlockFocusCrystal = null
 
-    var itemFocusingMatrix: ItemFocusingMatrix = new ItemFocusingMatrix()
+    var itemFocusingMatrix: ItemFocusingMatrix = null
+
+    var tierOneBattery: ItemStack = null
+    var tierTwoBattery: ItemStack = null
+    var tierThreeBattery: ItemStack = null
+
 
     var guideBook: ItemStack = createGuide
 
     override def preInit()
     {
         super.preInit
+        itemWire = manager.newItem(classOf[ItemWire])
+        itemMultimeter = manager.newItem(classOf[ItemMultimeter])
+        itemTransformer = manager.newItem(classOf[ItemElectricTransformer])
+        itemInsulation = manager.newItem("insulation", classOf[Item])
+        itemQuantumGlyph = manager.newItem(classOf[ItemQuantumGlyph])
+
+        blockTesla = manager.newBlock(classOf[TileTesla])
+        blockBattery = manager.newBlock(classOf[TileBattery])
+        blockSolarPanel = manager.newBlock(classOf[TileSolarPanel])
+        blockMotor = manager.newBlock(classOf[TileMotor])
+        blockThermopile = manager.newBlock(classOf[TileThermopile])
+
+        blockLaserEmitter = new BlockLaserEmitter()
+        blockLaserReceiver = new BlockLaserReceiver()
+        blockMirror = new BlockMirror()
+        blockFocusCrystal = new BlockFocusCrystal()
+
+        itemFocusingMatrix = new ItemFocusingMatrix()
+
+        tierOneBattery = ItemBlockBattery.setTier(new ItemStack(ElectricalContent.blockBattery, 1, 0), 0.asInstanceOf[Byte])
+        tierTwoBattery = ItemBlockBattery.setTier(new ItemStack(ElectricalContent.blockBattery, 1, 0), 1.asInstanceOf[Byte])
+        tierThreeBattery = ItemBlockBattery.setTier(new ItemStack(ElectricalContent.blockBattery, 1, 0), 2.asInstanceOf[Byte])
+
+
         MinecraftForge.EVENT_BUS.register(this)
     }
 

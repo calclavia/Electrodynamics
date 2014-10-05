@@ -7,7 +7,6 @@ import net.minecraftforge.oredict.OreDictionary
 import resonant.content.loader.ContentHolder
 import resonant.lib.recipe.UniversalRecipe
 import resonantinduction.archaic.blocks.{ItemImprint, TileImprinter, TileTurntable}
-import resonantinduction.archaic.crate.{BlockCrate, ItemBlockCrate, TileCrate}
 import resonantinduction.archaic.engineering.{ItemHammer, TileEngineeringTable}
 import resonantinduction.archaic.firebox.{TileFirebox, TileHotPlate}
 import resonantinduction.archaic.fluid.grate.TileGrate
@@ -26,7 +25,7 @@ object ArchaicContent extends ContentHolder
     var itemHandCrank: Item = manager.newItem(classOf[ItemHandCrank])
 
     var blockEngineeringTable: Block = manager.newBlock(classOf[TileEngineeringTable])
-    var blockCrate: Block = manager.newBlock(classOf[BlockCrate], classOf[ItemBlockCrate], classOf[TileCrate])
+    var blockCrate: Block = null//manager.newBlock(classOf[BlockCrate])
     var blockImprinter: Block = manager.newBlock(classOf[TileImprinter])
     var blockTurntable: Block = manager.newBlock(classOf[TileTurntable])
     var blockFirebox: Block = manager.newBlock(classOf[TileFirebox])

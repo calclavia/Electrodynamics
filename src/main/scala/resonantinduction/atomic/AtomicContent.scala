@@ -81,10 +81,10 @@ object AtomicContent extends ContentHolder
 
     //Cells
     var itemCell: Item = new ItemCell("cellEmpty")
-    var itemFissileFuel: Item = new ItemFissileFuel()
-    var itemBreedingRod: Item = new ItemBreederFuel()
+    var itemFissileFuel: Item = manager.newItem(classOf[ItemFissileFuel])
+    var itemBreedingRod: Item = manager.newItem(classOf[ItemBreederFuel])
     var itemDarkMatter: Item = new ItemCell("darkMatter")
-    var itemAntimatter: Item = new ItemAntimatter()
+    var itemAntimatter: Item = manager.newItem(classOf[ItemAntimatter])
     var itemDeuteriumCell: Item = new ItemCell("cellDeuterium")
     var itemTritiumCell: Item = new ItemCell("cellTritium")
     var itemWaterCell: Item = new ItemCell("cellWater")
