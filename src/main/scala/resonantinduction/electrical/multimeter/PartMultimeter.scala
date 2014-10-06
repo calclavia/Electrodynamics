@@ -229,7 +229,7 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
     read(packet, packet.readUByte)
   }
 
-  def read(packet: MCDataInput, packetID: Int)
+  override def read(packet: MCDataInput, packetID: Int)
   {
     packetID match
     {
@@ -327,11 +327,6 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
   }
 
   def getMode = detectMode
-
-  def getType: String =
-  {
-    return "resonant_induction_multimeter"
-  }
 
   override def redstoneConductionMap: Int =
   {

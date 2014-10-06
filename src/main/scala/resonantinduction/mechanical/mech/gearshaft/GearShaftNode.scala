@@ -14,12 +14,12 @@ class GearShaftNode(parent: INodeProvider) extends MechanicalNode(parent)
     {
         shaft.tier match
         {
-            case _ =>
-                return 0.03
             case 1 =>
                 return 0.02
             case 2 =>
                 return 0.01
+            case _ =>
+              return 0.03
         }
     }
 
