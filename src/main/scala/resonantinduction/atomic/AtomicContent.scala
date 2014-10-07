@@ -28,6 +28,7 @@ import resonant.api.recipe.QuantumAssemblerRecipes
 import resonant.content.loader.ContentHolder
 import resonant.engine.content.debug.TileCreativeBuilder
 import resonant.engine.grid.thermal.EventThermal
+import resonant.lib.network.discriminator.PacketAnnotationManager
 import resonant.lib.ore.{OreGenReplaceStone, OreGenerator}
 import resonant.lib.recipe.UniversalRecipe
 import resonant.lib.render.RenderUtility
@@ -44,7 +45,7 @@ import resonantinduction.atomic.machine.quantum.TileQuantumAssembler
 import resonantinduction.atomic.machine.reactor.{TileControlRod, TileReactorCell}
 import resonantinduction.atomic.machine.thermometer.TileThermometer
 import resonantinduction.atomic.schematic.{SchematicAccelerator, SchematicBreedingReactor, SchematicFissionReactor, SchematicFusionReactor}
-import resonantinduction.core.{ResonantInduction, Reference, ResonantTab, Settings}
+import resonantinduction.core.{Reference, ResonantInduction, ResonantTab, Settings}
 import universalelectricity.core.transform.vector.VectorWorld
 
 import scala.collection.JavaConversions._
@@ -109,6 +110,11 @@ object AtomicContent extends ContentHolder
 
         MinecraftForge.EVENT_BUS.register(this)
         MinecraftForge.EVENT_BUS.register(FulminationHandler.INSTANCE)
+        PacketAnnotationManager.INSTANCE.register(classOf[TileThermometer])
+        PacketAnnotationManager.INSTANCE.register(classOf[TileReactorCell])
+        PacketAnnotationManager.INSTANCE.register(classOf[TileChemicalExtractor])
+        PacketAnnotationManager.INSTANCE.register(classOf[TileNuclearBoiler])
+        PacketAnnotationManager.INSTANCE.register(classOf[TileAccelerator])
 
         Settings.config.load
 
