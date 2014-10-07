@@ -18,7 +18,7 @@ class TileElectricTurbine extends TileTurbine with IBoilHandler with TElectric {
     else {
       mechanicalNode.torque = defaultTorque * 500
     }
-    super.updateEntity
+    super.update
   }
 
   def onProduce {
