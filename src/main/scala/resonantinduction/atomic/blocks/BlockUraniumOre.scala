@@ -4,9 +4,8 @@ import java.util.Random
 
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.block.material.Material
-import net.minecraft.util.IIcon
 import net.minecraft.world.World
-import resonantinduction.core.{Reference, ResonantTab, Settings}
+import resonantinduction.core.{Reference, Settings}
 
 /**
  * Uranium ore block
@@ -16,7 +15,6 @@ class BlockUraniumOre extends BlockRadioactive(Material.rock)
     //Constructor
     this.setBlockName(Reference.prefix + "oreUranium")
     this.setStepSound(net.minecraft.block.Block.soundTypeStone)
-    this.setCreativeTab(ResonantTab.tab)
     this.setHardness(2f)
     this.setBlockTextureName(Reference.prefix + "oreUranium")
     this.isRandomlyRadioactive = Settings.allowRadioactiveOres
@@ -32,11 +30,6 @@ class BlockUraniumOre extends BlockRadioactive(Material.rock)
         {
             super.randomDisplayTick(world, x, y, z, par5Random)
         }
-    }
-
-    override def getIcon(side: Int, metadata: Int): IIcon =
-    {
-        return this.blockIcon
     }
 
     override def quantityDropped(par1Random: Random): Int =
