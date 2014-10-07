@@ -120,18 +120,9 @@ class TileCentrifuge extends TileElectricInventory(Material.iron) with IPacketRe
 
     def read(data: ByteBuf, player: EntityPlayer, `type`: PacketType)
     {
-        try
-        {
-            this.timer = data.readInt
-            this.gasTank.setFluid(new FluidStack(AtomicContent.FLUIDSTACK_URANIUM_HEXAFLOURIDE.fluidID, data.readInt))
-        }
-        catch
-            {
-                case e: Exception =>
-                {
-                    e.printStackTrace
-                }
-            }
+        this.timer = data.readInt
+        this.gasTank.setFluid(new FluidStack(AtomicContent.FLUIDSTACK_URANIUM_HEXAFLOURIDE.fluidID, data.readInt))
+
     }
 
     override def getDescriptionPacket: Packet =

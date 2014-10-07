@@ -4,13 +4,14 @@ import java.util.List
 
 import codechicken.lib.vec.{BlockCoord, Vector3}
 import codechicken.microblock.FacePlacementGrid
-import codechicken.multipart.{JItemMultiPart, MultiPartRegistry, PartMap, TMultiPart, TileMultipart}
+import codechicken.multipart.{JItemMultiPart, PartMap, TMultiPart, TileMultipart}
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
 import resonant.lib.wrapper.WrapList._
+import resonantinduction.core.ResonantPartFactory
 import resonantinduction.core.prefab.part.IHighlight
 import resonantinduction.mechanical.mech.gearshaft.PartGearShaft
 
@@ -26,7 +27,8 @@ class ItemGear extends JItemMultiPart with IHighlight
 
     override def newPart(itemStack: ItemStack, player: EntityPlayer, world: World, pos: BlockCoord, s: Int, hit: Vector3): TMultiPart =
     {
-        val part: PartGear = MultiPartRegistry.createPart("resonant_induction_gear", false).asInstanceOf[PartGear]
+
+        val part: PartGear = ResonantPartFactory.create(classOf[PartGear])
         var side: Int = FacePlacementGrid.getHitSlot(hit, s)
         val tile: TileEntity = world.getTileEntity(pos.x, pos.y, pos.z)
         if (tile.isInstanceOf[TileMultipart])
