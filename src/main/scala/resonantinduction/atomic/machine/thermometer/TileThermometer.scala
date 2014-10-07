@@ -101,7 +101,7 @@ class TileThermometer extends TileAdvanced(Material.piston) with SimpleComponent
 
     override def update
     {
-        super.updateEntity
+        super.update
         if (!worldObj.isRemote)
         {
             if (ticks % 10 == 0)
