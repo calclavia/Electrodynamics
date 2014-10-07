@@ -139,7 +139,7 @@ class TileWaterTurbine extends TileTurbine
 
     override def getSubBlocks(par1: Item, par2CreativeTabs: CreativeTabs, par3List: List[_])
     {
-        for (i <- 0 to 3)
+        for (i <- 0 to 2)
         {
             par3List.add(new ItemStack(par1, 1, i))
         }
