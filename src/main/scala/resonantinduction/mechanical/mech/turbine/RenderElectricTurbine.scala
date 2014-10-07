@@ -49,28 +49,28 @@ import resonantinduction.core.Reference
                 bindTexture(RenderElectricTurbine.SMALL_TEXTURE)
                 val bladesA: Array[String] = new Array[String](3)
 
-                for (i <- 0 to bladesA.length)
+                for (i <- 0 until bladesA.length)
                 {
                     bladesA(i) = "BLADE A" + (i + 1) + " SPINS"
 
                 }
                 val sheildsA: Array[String] = new Array[String](6)
 
-                for (i <- 0 to sheildsA.length)
+                for (i <- 0 until sheildsA.length)
                 {
                     sheildsA(i) = "SHIELD A" + (i + 1) + " SPINS"
 
                 }
                 val bladesB: Array[String] = new Array[String](3)
 
-                for (i <- 0 to bladesB.length)
+                for (i <- 0 until bladesB.length)
                 {
                     bladesB(i) = "BLADE B" + (i + 1) + " SPINS"
 
                 }
                 val sheildsB: Array[String] = new Array[String](6)
 
-                for (i <- 0 to sheildsB.length)
+                for (i <- 0 until sheildsB.length)
                 {
                     sheildsB(i) = "SHIELD B" + (i + 1) + " SPINS"
 
