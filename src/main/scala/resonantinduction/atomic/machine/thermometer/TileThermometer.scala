@@ -41,10 +41,11 @@ class TileThermometer extends TileAdvanced(Material.piston) with SimpleComponent
     @Synced private var isProvidingPower: Boolean = false
 
     //Constructor
-    canProvidePower(true)
-    normalRender(false)
-    forceStandardRender(true)
-    itemBlock(classOf[ItemBlockThermometer])
+    canProvidePower = true
+    normalRender = false
+    renderStaticBlock = true
+    itemBlock = classOf[ItemBlockThermometer]
+    isOpaqueCube = true
 
     override def getIcon(side: Int, meta: Int): IIcon =
     {
