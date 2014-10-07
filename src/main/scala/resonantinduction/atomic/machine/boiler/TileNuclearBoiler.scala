@@ -289,13 +289,4 @@ class TileNuclearBoiler extends TileElectricInventory(Material.iron) with IPacke
     {
         return slotID == 2
     }
-
-    override def getDirection: ForgeDirection =
-    {
-        return null
-    }
-
-    override def setDirection(direction: ForgeDirection)
-    {
-    }
 }
