@@ -110,19 +110,9 @@ class TileNuclearBoiler extends TileElectricInventory(Material.iron) with IPacke
 
     def read(data: ByteBuf, player: EntityPlayer, `type`: PacketType)
     {
-        try
-        {
-            this.timer = data.readInt
-            this.waterTank.setFluid(new FluidStack(AtomicContent.FLUIDSTACK_WATER.fluidID, data.readInt))
-            this.gasTank.setFluid(new FluidStack(AtomicContent.FLUIDSTACK_URANIUM_HEXAFLOURIDE.fluidID, data.readInt))
-        }
-        catch
-            {
-                case e: Exception =>
-                {
-                    e.printStackTrace
-                }
-            }
+        this.timer = data.readInt
+        this.waterTank.setFluid(new FluidStack(AtomicContent.FLUIDSTACK_WATER.fluidID, data.readInt))
+        this.gasTank.setFluid(new FluidStack(AtomicContent.FLUIDSTACK_URANIUM_HEXAFLOURIDE.fluidID, data.readInt))
     }
 
     override def getDescriptionPacket: Packet =
