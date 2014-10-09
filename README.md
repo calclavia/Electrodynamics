@@ -2,6 +2,9 @@ Resonant Induction
 ======
 Resonant Induction is a Minecraft mod that brings in realistic, world-based technology advancement experience into Minecraft.
 
+By committing to the project, you fully agree to the Contribution Agreement:
+http://calclavia.com/contribution-agreement/
+
 ### Developer
 * <a href="http://www.patreon.com/calclavia"> Calclavia </a>
 * <a href="http://www.patreon.com/darkcow"> Darkguardsman </a>
