@@ -123,24 +123,14 @@ class TileQuantumAssembler extends TileElectricInventory(Material.iron) with IPa
 
     def read(data: ByteBuf, player: EntityPlayer, `type`: PacketType)
     {
-        try
+        this.time = data.readInt
+        val itemID: Int = data.readInt
+        val itemAmount: Int = data.readInt
+        val itemMeta: Int = data.readInt
+        if (itemID != -1 && itemAmount != -1 && itemMeta != -1)
         {
-            this.time = data.readInt
-            val itemID: Int = data.readInt
-            val itemAmount: Int = data.readInt
-            val itemMeta: Int = data.readInt
-            if (itemID != -1 && itemAmount != -1 && itemMeta != -1)
-            {
-                this.setInventorySlotContents(6, new ItemStack(Item.getItemById(itemID), itemAmount, itemMeta))
-            }
+            this.setInventorySlotContents(6, new ItemStack(Item.getItemById(itemID), itemAmount, itemMeta))
         }
-        catch
-            {
-                case e: Exception =>
-                {
-                    e.printStackTrace
-                }
-            }
     }
 
     override def getDescPacket: PacketTile =
