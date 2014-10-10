@@ -29,9 +29,16 @@ object TileNuclearBoiler
 class TileNuclearBoiler extends TileElectricInventory(Material.iron) with IPacketReceiver with IFluidHandler with IRotatable
 {
     final val SHI_JIAN: Int = 20 * 15
-    @Synced final val waterTank: FluidTank = new FluidTank(AtomicContent.FLUIDSTACK_WATER.copy, FluidContainerRegistry.BUCKET_VOLUME * 5)
-    @Synced final val gasTank: FluidTank = new FluidTank(AtomicContent.FLUIDSTACK_URANIUM_HEXAFLOURIDE.copy, FluidContainerRegistry.BUCKET_VOLUME * 5)
-    @Synced var timer: Int = 0
+
+    @Synced
+    final val waterTank: FluidTank = new FluidTank(AtomicContent.FLUIDSTACK_WATER.copy, FluidContainerRegistry.BUCKET_VOLUME * 5)
+
+    @Synced
+    final val gasTank: FluidTank = new FluidTank(AtomicContent.FLUIDSTACK_URANIUM_HEXAFLOURIDE.copy, FluidContainerRegistry.BUCKET_VOLUME * 5)
+
+    @Synced
+    var timer: Int = 0
+
     var rotation: Float = 0
 
     //Constructor
@@ -110,9 +117,9 @@ class TileNuclearBoiler extends TileElectricInventory(Material.iron) with IPacke
 
     def read(data: ByteBuf, player: EntityPlayer, `type`: PacketType)
     {
-        this.timer = data.readInt
         this.waterTank.setFluid(new FluidStack(AtomicContent.FLUIDSTACK_WATER.fluidID, data.readInt))
         this.gasTank.setFluid(new FluidStack(AtomicContent.FLUIDSTACK_URANIUM_HEXAFLOURIDE.fluidID, data.readInt))
+        this.timer = data.readInt
     }
 
     override def getDescriptionPacket: Packet =
