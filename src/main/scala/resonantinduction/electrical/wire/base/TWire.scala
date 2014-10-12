@@ -7,7 +7,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import resonantinduction.core.prefab.part.connector._
 import resonantinduction.electrical.ElectricalContent
 import universalelectricity.api.core.grid.INodeProvider
-import universalelectricity.simulator.dc.DCNode
+import universalelectricity.simulator.dc.micro.DCNode
 
 /**
  * Abstract class extended by both flat and framed wires to handle material, insulation, color and multipart node logic.

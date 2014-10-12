@@ -12,6 +12,7 @@ import resonant.lib.utility.nbt.NBTUtility
 import resonant.lib.wrapper.WrapList._
 import resonantinduction.core.{Reference, ResonantTab}
 
+import scala.collection.JavaConversions._
 object ItemImprint
 {
     /**
@@ -62,7 +63,7 @@ object ItemImprint
 
         for (i <- 0 to tagList.tagCount)
         {
-            val var4: NBTTagCompound = tagList.getCompoundTagAt(i).asInstanceOf[NBTTagCompound]
+            val var4: NBTTagCompound = tagList.getCompoundTagAt(i)
             filterStacks.add(ItemStack.loadItemStackFromNBT(var4))
         }
         return filterStacks
@@ -76,7 +77,7 @@ object ItemImprint
 
         for (i <- 0 to tagList.tagCount)
         {
-            val var4: NBTTagCompound = tagList.getCompoundTagAt(i).asInstanceOf[NBTTagCompound]
+            val var4: NBTTagCompound = tagList.getCompoundTagAt(i)
             filterStacks.add(ItemStack.loadItemStackFromNBT(var4))
 
         }
@@ -111,9 +112,9 @@ class ItemImprint extends Item
     override def addInformation(itemStack: ItemStack, par2EntityPlayer: EntityPlayer, list: java.util.List[_], par4: Boolean)
     {
         val filterItems: List[ItemStack] = ItemImprint.getFilters(itemStack)
+
         if (filterItems.size > 0)
         {
-            import scala.collection.JavaConversions._
             for (filterItem <- filterItems)
             {
                 list.add(filterItem.getDisplayName)

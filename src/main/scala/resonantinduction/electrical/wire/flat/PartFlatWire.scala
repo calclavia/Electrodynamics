@@ -10,6 +10,7 @@ import codechicken.multipart._
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.client.renderer.RenderBlocks
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.{IIcon, MovingObjectPosition}
@@ -21,7 +22,7 @@ import resonantinduction.core.prefab.part.connector.PartAbstract
 import resonantinduction.core.util.MultipartUtil
 import resonantinduction.electrical.wire.base.TWire
 import universalelectricity.api.core.grid.INodeProvider
-import universalelectricity.simulator.dc.DCNode
+import universalelectricity.simulator.dc.micro.DCNode
 
 import scala.collection.convert.wrapAll._
 
@@ -81,7 +82,13 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
   {
     this.side = (side ^ 1).toByte
     setMaterial(meta)
-    node.setResistance(material.resistance)
+    node.resistance = material.resistance
+  }
+
+  override def activate(player:EntityPlayer, hit:MovingObjectPosition, item:ItemStack): Boolean =
+  {
+    println(node)
+    return true
   }
 
   def canStay: Boolean =
