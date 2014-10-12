@@ -13,6 +13,7 @@ import resonant.lib.wrapper.WrapList._
 import resonantinduction.core.{Reference, ResonantTab}
 
 import scala.collection.JavaConversions._
+
 object ItemImprint
 {
     /**
@@ -66,6 +67,7 @@ object ItemImprint
             val var4: NBTTagCompound = tagList.getCompoundTagAt(i)
             filterStacks.add(ItemStack.loadItemStackFromNBT(var4))
         }
+
         return filterStacks
     }
 
@@ -88,11 +90,11 @@ object ItemImprint
 class ItemImprint extends Item
 {
     //Constructor
-    this.setUnlocalizedName(Reference.prefix + "imprint")
-    this.setTextureName(Reference.prefix + "imprint")
-    this.setCreativeTab(ResonantTab.tab)
-    this.setHasSubtypes(true)
-    this.setMaxStackSize(1)
+    setUnlocalizedName(Reference.prefix + "imprint")
+    setTextureName(Reference.prefix + "imprint")
+    setCreativeTab(ResonantTab.tab)
+    setHasSubtypes(true)
+    setMaxStackSize(1)
 
     override def onLeftClickEntity(stack: ItemStack, player: EntityPlayer, entity: Entity): Boolean =
     {
@@ -117,6 +119,7 @@ class ItemImprint extends Item
         {
             for (filterItem <- filterItems)
             {
+              if(filterItem != null)
                 list.add(filterItem.getDisplayName)
             }
         }
