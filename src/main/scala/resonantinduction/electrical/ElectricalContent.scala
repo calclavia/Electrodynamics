@@ -32,9 +32,6 @@ import resonantinduction.electrical.wire.base.WireMaterial
 import resonantinduction.electrical.wire.flat.{PartFlatWire, RenderFlatWire}
 import resonantinduction.electrical.wire.framed.{PartFramedWire, RenderFramedWire}
 
-/**
- * Created by robert on 8/11/2014.
- */
 object ElectricalContent extends ContentHolder
 {
   val particleTextures = new ResourceLocation("textures/particle/particles.png")
@@ -61,8 +58,6 @@ object ElectricalContent extends ContentHolder
   var tierOneBattery: ItemStack = null
   var tierTwoBattery: ItemStack = null
   var tierThreeBattery: ItemStack = null
-
-  var guideBook: ItemStack = createGuide
 
   override def preInit()
   {
@@ -168,30 +163,6 @@ object ElectricalContent extends ContentHolder
   def getWire(t: WireMaterial, count: Int): ItemStack =
   {
     return new ItemStack(itemWire, count, t.ordinal())
-  }
-
-  def createGuide: ItemStack =
-  {
-
-    val guideBook = new ItemStack(Items.written_book)
-    val bookNBT = new NBTTagCompound()
-    bookNBT.setString("title", "Electromagnetic Coherence Guide")
-    bookNBT.setString("author", "Calclavia")
-
-    val pages = new NBTTagList()
-    pages.appendTag(new NBTTagString(EnumChatFormatting.RED + "Guidebook:\n\n" + EnumChatFormatting.BLACK + "Electromagnetic Coherence is a mod all about lasers.\n\nYou can find all the blocks in the mod's creative tab."))
-    pages.appendTag(new NBTTagString("A laser can be focused through a  " + EnumChatFormatting.RED + "laser emitter" + EnumChatFormatting.BLACK + ". By default, the color of the laser is white. The color can be changed by placing stained glass in front of it. Different combinations of glass would result in mixed colors."))
-    pages.appendTag(new NBTTagString("To create a laser beam, provide a redstone pulse to the laser emitter. The intensity of the redstone would determine the intensity of the laser. Lasers with high intensities can burn and melt through blocks, hurting entities."))
-    pages.appendTag(new NBTTagString("A laser beam can also be reflected using a  " + EnumChatFormatting.RED + "mirror" + EnumChatFormatting.BLACK + " with reduced intensity. Mirrors can be rotated by right clicking on it. Shift-right clicking a mirror focuses it to a side. Mirrors can also be auto-rotated with a redstone signal based on the direction of the signal propagation."))
-    pages.appendTag(new NBTTagString("A " + EnumChatFormatting.RED + "laser receiver" + EnumChatFormatting.BLACK + " outputs a redstone signal with a strength based on the laser incident on its front. Using this, laser trip-wires can be made as entities walking through a laser will block its path."))
-    pages.appendTag(new NBTTagString("The " + EnumChatFormatting.RED + "focusing matrix" + EnumChatFormatting.BLACK + " allows the player to focus mirrors and focus crystals. First, right click on a mirror/crystal to select it. Then, right click on a point to focus. Clicking the point twice will aim the laser at that point instead of making the device look at the point."))
-    pages.appendTag(new NBTTagString("The " + EnumChatFormatting.RED + "Focus Crystal" + EnumChatFormatting.BLACK + " allows you to focus multiple laser beams into a single one, adding their strength together. All beams aiming at the crystal will be sent in the direction the crystal is facing. Focus Crystals can be rotated the same way as mirrors can."))
-    pages.appendTag(new NBTTagString(EnumChatFormatting.RED + "Usages\n\n" + EnumChatFormatting.BLACK + "- Light Shows\n- Mining\n- Killing\n- Burning\n- Redstone Detection\n- Smelting (Aim strong laser at furnace)\n\nComing Soon:\n- Energy Transfer\n- Crafting"))
-
-    bookNBT.setTag("pages", pages)
-    guideBook.setTagCompound(bookNBT)
-
-    return guideBook
   }
 
   /**

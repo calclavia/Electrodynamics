@@ -27,7 +27,7 @@ import universalelectricity.api.core.grid.NodeRegistry
  * The core contents of Resonant Induction
  * @author Calclavia
  */
-object MechContent extends ContentHolder
+object MechanicalContent extends ContentHolder
 {
     //Constructor
     manager.setTab(ResonantTab)
@@ -68,13 +68,13 @@ object MechContent extends ContentHolder
         blockTileBreaker = manager.newBlock(classOf[TileBreaker])
         blockTilePlacer = manager.newBlock(classOf[TilePlacer])
 
-        TileCreativeBuilder.register(new SchematicPlate("schematic.waterTurbine.name", MechContent.blockWaterTurbine))
-        TileCreativeBuilder.register(new SchematicPlate("schematic.windTurbine.name", MechContent.blockWindTurbine))
-        TileCreativeBuilder.register(new SchematicPlate("schematic.electricTurbine.name", MechContent.blockElectricTurbine))
+        TileCreativeBuilder.register(new SchematicPlate("schematic.waterTurbine.name", MechanicalContent.blockWaterTurbine))
+        TileCreativeBuilder.register(new SchematicPlate("schematic.windTurbine.name", MechanicalContent.blockWindTurbine))
+        TileCreativeBuilder.register(new SchematicPlate("schematic.electricTurbine.name", MechanicalContent.blockElectricTurbine))
 
         NodeRegistry.register(classOf[IMechanicalNode], classOf[MechanicalNode])
 
-        ResonantTab.itemStack(new ItemStack(MechContent.blockGrinderWheel))
+        ResonantTab.itemStack(new ItemStack(MechanicalContent.blockGrinderWheel))
 
         PacketAnnotationManager.INSTANCE.register(classOf[TileWindTurbine])
         PacketAnnotationManager.INSTANCE.register(classOf[TileWaterTurbine])

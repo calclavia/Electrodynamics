@@ -21,7 +21,7 @@ import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketIDReceiver
 import resonantinduction.archaic.blocks.TileFilterable
 import resonantinduction.core.Reference
-import resonantinduction.mechanical.MechContent
+import resonantinduction.mechanical.MechanicalContent
 
 class TileDetector extends TileFilterable with IPacketIDReceiver
 {
@@ -74,14 +74,14 @@ class TileDetector extends TileFilterable with IPacketIDReceiver
             if (powerCheck != this.powering)
             {
                 this.powering = powerCheck
-                this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, MechContent.blockDetector)
-                this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord + 1, this.zCoord, MechContent.blockDetector)
+                this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, MechanicalContent.blockDetector)
+                this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord + 1, this.zCoord, MechanicalContent.blockDetector)
 
                 for (x <- (this.xCoord - 1) to (this.xCoord + 1))
                 {
                     for (z <- (this.zCoord - 1) to (this.zCoord + 1))
                     {
-                        this.worldObj.notifyBlocksOfNeighborChange(x, this.yCoord + 1, z, MechContent.blockDetector)
+                        this.worldObj.notifyBlocksOfNeighborChange(x, this.yCoord + 1, z, MechanicalContent.blockDetector)
                     }
                 }
                 ResonantEngine.instance.packetHandler.sendToAllAround(new PacketTile(x, y, z, Array[Any](0, this.isInverted)), this)
@@ -91,8 +91,8 @@ class TileDetector extends TileFilterable with IPacketIDReceiver
 
     override def invalidate
     {
-        this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, MechContent.blockDetector)
-        this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord + 1, this.zCoord, MechContent.blockDetector)
+        this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, MechanicalContent.blockDetector)
+        this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord + 1, this.zCoord, MechanicalContent.blockDetector)
         super.invalidate
     }
 

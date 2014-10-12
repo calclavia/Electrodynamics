@@ -15,7 +15,7 @@ import resonantinduction.archaic.ArchaicContent
 import resonantinduction.atomic.AtomicContent
 import resonantinduction.core.handler.TextureHookHandler
 import resonantinduction.electrical.ElectricalContent
-import resonantinduction.mechanical.MechContent
+import resonantinduction.mechanical.MechanicalContent
 
 import scala.collection.convert.wrapAll._
 
@@ -49,11 +49,11 @@ final object ResonantInduction
 
     loadables.applyModule(proxy)
     loadables.applyModule(packetHandler)
-    loadables.applyModule(AtomicContent)
-    loadables.applyModule(ArchaicContent)
     loadables.applyModule(CoreContent)
+    loadables.applyModule(ArchaicContent)
     loadables.applyModule(ElectricalContent)
-    loadables.applyModule(MechContent)
+    loadables.applyModule(MechanicalContent)
+    loadables.applyModule(AtomicContent)
 
     loadables.preInit()
 

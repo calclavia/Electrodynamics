@@ -37,7 +37,7 @@ import resonantinduction.electrical.laser.receiver.{RenderLaserReceiver, TileLas
 import resonantinduction.electrical.multimeter.{GuiMultimeter, PartMultimeter, RenderMultimeter}
 import resonantinduction.electrical.tesla.{RenderTesla, TileTesla}
 import resonantinduction.electrical.transformer.RenderTransformer
-import resonantinduction.mechanical.MechContent
+import resonantinduction.mechanical.MechanicalContent
 import resonantinduction.mechanical.fluid.pipe.RenderPipe
 import resonantinduction.mechanical.fluid.transport.{RenderPump, TilePump}
 import resonantinduction.mechanical.mech.gear.RenderGear
@@ -59,11 +59,11 @@ import universalelectricity.core.transform.vector.Vector3
     override def init()
     {
         //Mech content TODO no-load if mech content is not loaded
-        ItemRenderHandler.register(MechContent.itemGear, RenderGear.INSTANCE)
-        ItemRenderHandler.register(MechContent.itemGearShaft, RenderGearShaft.INSTANCE)
-        ItemRenderHandler.register(MechContent.itemPipe, RenderPipe)
-        ItemRenderHandler.register(Item.getItemFromBlock(MechContent.blockWaterTurbine), new RenderWaterTurbine)
-        ItemRenderHandler.register(Item.getItemFromBlock(MechContent.blockWindTurbine), new RenderWindTurbine)
+        ItemRenderHandler.register(MechanicalContent.itemGear, RenderGear.INSTANCE)
+        ItemRenderHandler.register(MechanicalContent.itemGearShaft, RenderGearShaft.INSTANCE)
+        ItemRenderHandler.register(MechanicalContent.itemPipe, RenderPipe)
+        ItemRenderHandler.register(Item.getItemFromBlock(MechanicalContent.blockWaterTurbine), new RenderWaterTurbine)
+        ItemRenderHandler.register(Item.getItemFromBlock(MechanicalContent.blockWindTurbine), new RenderWindTurbine)
         ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileMechanicalPiston], new RenderMechanicalPiston)
         ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileGrindingWheel], new RenderGrindingWheel)
         ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileMixer], new RenderMixer)

@@ -15,11 +15,16 @@ import resonant.lib.network.netty.AbstractPacket
 
 /** A modular battery box that allows shared connections with boxes next to it.
   *
-  * @author Calclavia */
-object TileBattery {
-  /** @param tier - 0, 1, 2
-    * @return*/
-  def getEnergyForTier(tier: Int): Long = {
+  * @author Calclavia
+  */
+object TileBattery
+{
+  /**
+   * @param tier - 0, 1, 2
+   * @return
+   */
+  def getEnergyForTier(tier: Int): Long =
+  {
     return Math.round(Math.pow(500000000, (tier / (MAX_TIER + 0.7f)) + 1) / (500000000)) * (500000000)
   }
 
@@ -29,8 +34,8 @@ object TileBattery {
   final val DEFAULT_WATTAGE: Long = getEnergyForTier(0)
 }
 
-class TileBattery extends TileElectric(Material.iron) with IPacketReceiver {
-
+class TileBattery extends TileElectric(Material.iron) with IPacketReceiver
+{
   private var markClientUpdate: Boolean = false
   private var markDistributionUpdate: Boolean = false
   var renderEnergyAmount: Double = 0
@@ -38,11 +43,11 @@ class TileBattery extends TileElectric(Material.iron) with IPacketReceiver {
 
   //Constructor
   setTextureName("material_metal_side")
-  this.ioMap_$eq(0.asInstanceOf[Short])
-  this.saveIOMap_$eq(true)
-  this.normalRender(false)
-  this.isOpaqueCube(false)
-  this.itemBlock(classOf[ItemBlockBattery])
+  ioMap = 0.toShort
+  saveIOMap = true
+  normalRender(false)
+  isOpaqueCube(false)
+  itemBlock(classOf[ItemBlockBattery])
 
   override def update
   {
@@ -66,18 +71,22 @@ class TileBattery extends TileElectric(Material.iron) with IPacketReceiver {
     return new PacketTile(this, Array[Any](renderEnergyAmount, ioMap))
   }
 
-  def read(data: ByteBuf, player: EntityPlayer, `type`: PacketType) {
+  def read(data: ByteBuf, player: EntityPlayer, `type`: PacketType)
+  {
     this.energy.setEnergy(data.readLong)
     this.ioMap_$eq(data.readShort)
   }
 
-  override def setIO(dir: ForgeDirection, `type`: Int) {
+  override def setIO(dir: ForgeDirection, `type`: Int)
+  {
     super.setIO(dir, `type`)
     worldObj.markBlockForUpdate(xCoord, yCoord, zCoord)
   }
 
-  override def onPlaced(entityliving: EntityLivingBase, itemStack: ItemStack) {
-    if (!world.isRemote && itemStack.getItem.isInstanceOf[ItemBlockBattery]) {
+  override def onPlaced(entityliving: EntityLivingBase, itemStack: ItemStack)
+  {
+    if (!world.isRemote && itemStack.getItem.isInstanceOf[ItemBlockBattery])
+    {
       energy.setCapacity(TileBattery.getEnergyForTier(ItemBlockBattery.getTier(itemStack)))
       energy.setEnergy((itemStack.getItem.asInstanceOf[ItemBlockBattery]).getEnergy(itemStack))
       world.setBlockMetadataWithNotify(x, y, z, ItemBlockBattery.getTier(itemStack), 3)
@@ -95,7 +104,8 @@ class TileBattery extends TileElectric(Material.iron) with IPacketReceiver {
     return ret
   }
 
-  override def toString: String = {
+  override def toString: String =
+  {
     return "[TileBattery]" + x + "x " + y + "y " + z + "z "
   }
 }
