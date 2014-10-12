@@ -8,8 +8,7 @@ import ic2.api.item.IC2Items
 import net.minecraft.block.Block
 import net.minecraft.init.{Blocks, Items}
 import net.minecraft.item.{Item, ItemStack}
-import net.minecraft.nbt.{NBTTagCompound, NBTTagList, NBTTagString}
-import net.minecraft.util.{EnumChatFormatting, ResourceLocation}
+import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.event.TextureStitchEvent
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.oredict.{OreDictionary, ShapelessOreRecipe}
@@ -81,9 +80,9 @@ object ElectricalContent extends ContentHolder
 
     itemFocusingMatrix = new ItemFocusingMatrix()
 
-    tierOneBattery = ItemBlockBattery.setTier(new ItemStack(ElectricalContent.blockBattery, 1, 0), 0.asInstanceOf[Byte])
-    tierTwoBattery = ItemBlockBattery.setTier(new ItemStack(ElectricalContent.blockBattery, 1, 0), 1.asInstanceOf[Byte])
-    tierThreeBattery = ItemBlockBattery.setTier(new ItemStack(ElectricalContent.blockBattery, 1, 0), 2.asInstanceOf[Byte])
+    tierOneBattery = ItemBlockBattery.setTier(new ItemStack(ElectricalContent.blockBattery, 1, 0), 0)
+    tierTwoBattery = ItemBlockBattery.setTier(new ItemStack(ElectricalContent.blockBattery, 1, 0), 1)
+    tierThreeBattery = ItemBlockBattery.setTier(new ItemStack(ElectricalContent.blockBattery, 1, 0), 2)
 
     /** Register all parts */
     ResonantPartFactory.register(classOf[PartFramedWire])
@@ -179,5 +178,4 @@ object ElectricalContent extends ContentHolder
       RenderFramedWire.insulationIcon = event.map.registerIcon(Reference.prefix + "models/insulation")
     }
   }
-
 }

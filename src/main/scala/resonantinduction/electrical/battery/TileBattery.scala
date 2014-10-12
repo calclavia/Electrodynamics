@@ -12,6 +12,7 @@ import resonant.lib.content.prefab.java.TileElectric
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketReceiver
 import resonant.lib.network.netty.AbstractPacket
+import universalelectricity.simulator.dc.micro.DCNode
 
 /** A modular battery box that allows shared connections with boxes next to it.
   *
@@ -49,11 +50,32 @@ class TileBattery extends TileElectric(Material.iron) with IPacketReceiver
   isOpaqueCube(false)
   itemBlock(classOf[ItemBlockBattery])
 
-  override def update
+  //TODO: Test, remove this
+  private val node = new DCNode(this)
   {
-    super.update
-    if (!this.worldObj.isRemote)
+    override def charge(terminal: ForgeDirection): Double = 0
+
+    /*
     {
+      if (getInputDirections().contains(terminal))
+        return 0
+      else if (getOutputDirections().contains(terminal))
+        return 0
+
+      return super.charge
+    }
+     */
+  }
+
+  override def update()
+  {
+    super.update()
+
+    if (!world.isRemote)
+    {
+      //TODO: Test, remove this
+      node.buffer(100)
+
       if (markDistributionUpdate && ticks % 5 == 0)
       {
         markDistributionUpdate = false

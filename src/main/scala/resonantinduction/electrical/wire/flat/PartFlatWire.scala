@@ -101,7 +101,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
 
       if (player.isSneaking)
       {
-        node.charge(100)
+        node.buffer(100)
       }
     }
 

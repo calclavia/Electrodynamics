@@ -17,19 +17,20 @@ import universalelectricity.api.item.IEnergyItem
 import universalelectricity.compatibility.Compatibility
 import resonant.lib.wrapper.WrapList._
 
-@UniversalClass object ItemBlockBattery
+@UniversalClass
+object ItemBlockBattery
 {
-    def setTier(itemStack: ItemStack, tier: Byte): ItemStack =
+    def setTier(itemStack: ItemStack, tier: Int): ItemStack =
     {
         if (itemStack.getTagCompound == null)
         {
             itemStack.setTagCompound(new NBTTagCompound)
         }
-        itemStack.getTagCompound.setByte("tier", tier)
+        itemStack.getTagCompound.setByte("tier", tier.toByte)
         return itemStack
     }
 
-    def getTier(itemStack: ItemStack): Byte =
+    def getTier(itemStack: ItemStack): Int =
     {
         if (itemStack.getTagCompound == null)
         {
