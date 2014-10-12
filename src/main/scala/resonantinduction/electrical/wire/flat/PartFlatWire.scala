@@ -85,9 +85,26 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
     node.resistance = material.resistance
   }
 
-  override def activate(player:EntityPlayer, hit:MovingObjectPosition, item:ItemStack): Boolean =
+  override def update()
   {
-    println(node)
+    super.update()
+    //TODO: Temporary test. Remove
+    node.update(1 / 20f)
+  }
+
+  override def activate(player: EntityPlayer, hit: MovingObjectPosition, item: ItemStack): Boolean =
+  {
+    if (!world.isRemote)
+    {
+      println(node)
+      println(node.getConnections.size())
+
+      if (player.isSneaking)
+      {
+        node.charge(100)
+      }
+    }
+
     return true
   }
 
@@ -358,7 +375,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
             if (setExternalConnection(r, absDir) || setCornerConnection(r, absDir))
               calculatedMask = calculatedMask | (1 << absDir)
 
-            if ((calculatedMask & (1 << absDir)) != 0)
+            if ((calculatedMask & (1 << absDir)) == 0)
               disconnect(absDir)
           }
         }
@@ -383,12 +400,13 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
             }
           }
 
-          if ((calculatedMask & (1 << absDir)) != 0 && !skip)
+          if ((calculatedMask & (1 << absDir)) == 0 && !skip)
           {
             disconnect(absDir)
           }
         }
 
+        //External connection
         setExternalConnection(-1, side)
 
         updateExternalConnections()
@@ -416,7 +434,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
           {
             val wire = part.asInstanceOf[PartFlatWire]
 
-            if (wire.canConnectTo(this, ForgeDirection.getOrientation(absDir).getOpposite) && wire.maskOpen(otherR))
+            if (wire.canConnectTo(PartFlatWire.this, ForgeDirection.getOrientation(absDir).getOpposite) && wire.maskOpen(otherR))
             {
               connections.put(wireNode, forgeDir)
               return true
