@@ -33,7 +33,7 @@ class ItemGearShaft extends JItemMultiPart with IHighlight
 
     override def getSubItems(itemID: Item, tab: CreativeTabs, listToAddTo: List[_])
     {
-        for (i <- 0 to 3)
+        for (i <- 0 until 3)
         {
             listToAddTo.add(new ItemStack(itemID, 1, i))
         }
