@@ -315,15 +315,15 @@ item.resonantinduction:antimatter.1.name=Antimatter
 item.resonantinduction:antimatter.1.tooltip=1 Gram
 
 ## Uranium Related Items
-item.yellowcake.name=Yellowcake
+item.resonantinduction:yellowcake.name=Yellowcake
 item.resonantinduction:uranium.0.name=Uranium-235
 item.resonantinduction:uranium.0.tooltip=Enriched Uranium
 item.resonantinduction:uranium.1.name=Uranium-238
 item.resonantinduction:uranium.1.tooltip=Breeding Uranium
-item.resonantinduction:rodFissileFuel.name=Fissile Fuel Rod
-item.resonantinduction:rodFissileFuel.tooltip=The primary fuel source for fission reactors.
-item.resonantinduction:rodBreederFuel.name=Breeder Fuel Rod
-item.resonantinduction:rodBreederFuel.tooltip=The fuel source for re-breeding decayed fissile fuels.
+item.resonantinduction:fissileFuel.name=Fissile Fuel Rod
+item.resonantinduction:fissileFuel.tooltip=The primary fuel source for fission reactors.
+item.resonantinduction:breederFuel.name=Breeder Fuel Rod
+item.resonantinduction:breederFuel.tooltip=The fuel source for re-breeding decayed fissile fuels.
 item.resonantinduction:uraniumHexafluoride.name=Uranium Hexafluoride
 item.resonantinduction:steam.name=Steam
 

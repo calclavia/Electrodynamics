@@ -27,6 +27,7 @@ object BlockDecoration
 
 class BlockDecoration extends SpatialBlock(Material.rock)
 {
+    name = "industrialStone"
     blockHardness = 1
     stepSound = Block.soundTypeStone
     this.itemBlock = classOf[ItemBlockMetadata]
