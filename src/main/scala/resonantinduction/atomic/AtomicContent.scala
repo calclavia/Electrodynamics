@@ -28,7 +28,7 @@ import resonant.content.loader.{ContentHolder, ExplicitContentName}
 import resonant.engine.content.debug.TileCreativeBuilder
 import resonant.engine.grid.thermal.EventThermal
 import resonant.lib.network.discriminator.PacketAnnotationManager
-import resonant.lib.ore.{OreGenReplaceStone, OreGenerator}
+import resonant.lib.ore.OreGenerator
 import resonant.lib.recipe.UniversalRecipe
 import resonant.lib.render.RenderUtility
 import resonantinduction.atomic.blocks._
@@ -154,24 +154,24 @@ object AtomicContent extends ContentHolder
         FluidContainerRegistry.registerFluidContainer(new FluidStack(FluidRegistry.getFluid("deuterium"), 200), new ItemStack(AtomicContent.itemDeuteriumCell), new ItemStack(AtomicContent.itemCell))
         FluidContainerRegistry.registerFluidContainer(new FluidStack(FluidRegistry.getFluid("tritium"), 200), new ItemStack(AtomicContent.itemTritiumCell), new ItemStack(AtomicContent.itemCell))
 
-        //Uranium ore Gen settings
-        AtomicContent.uraniumOreGeneration = new OreGenReplaceStone("Uranium Ore", new ItemStack(AtomicContent.blockUraniumOre), 25, 9, 3)
-        AtomicContent.uraniumOreGeneration.enable(Settings.config)
+        //Uranium ore Gen settings TODO re-enable
+        //AtomicContent.uraniumOreGeneration = new OreGenReplaceStone("Uranium Ore", new ItemStack(AtomicContent.blockUraniumOre), 25, 9, 3)
+        //AtomicContent.uraniumOreGeneration.enable(Settings.config)
         //OreGenerator.addOre(AtomicContent.uraniumOreGeneration)
 
         //Ore dictionary support
-        OreDictionary.registerOre("ingotUranium", AtomicContent.itemUranium)
-        OreDictionary.registerOre("dustUranium", AtomicContent.itemYellowCake)
-        OreDictionary.registerOre("breederUranium", new ItemStack(AtomicContent.itemUranium, 1, 1))
-        OreDictionary.registerOre("blockRadioactive", AtomicContent.blockRadioactive)
-        OreDictionary.registerOre("cellEmpty", AtomicContent.itemCell)
-        OreDictionary.registerOre("cellUranium", AtomicContent.itemFissileFuel)
-        OreDictionary.registerOre("cellTritium", AtomicContent.itemTritiumCell)
-        OreDictionary.registerOre("cellDeuterium", AtomicContent.itemDeuteriumCell)
-        OreDictionary.registerOre("cellWater", AtomicContent.itemWaterCell)
-        OreDictionary.registerOre("strangeMatter", AtomicContent.itemDarkMatter)
-        OreDictionary.registerOre("antimatterMilligram", new ItemStack(AtomicContent.itemAntimatter, 1, 0))
-        OreDictionary.registerOre("antimatterGram", new ItemStack(AtomicContent.itemAntimatter, 1, 1))
+        OreDictionary.registerOre("ingotUranium", itemUranium)
+        OreDictionary.registerOre("dustUranium", itemYellowCake)
+        OreDictionary.registerOre("breederUranium", new ItemStack(itemUranium, 1, 1))
+        OreDictionary.registerOre("blockRadioactive", blockRadioactive)
+        OreDictionary.registerOre("cellEmpty", itemCell)
+        OreDictionary.registerOre("cellUranium", itemFissileFuel)
+        OreDictionary.registerOre("cellTritium", itemTritiumCell)
+        OreDictionary.registerOre("cellDeuterium", itemDeuteriumCell)
+        OreDictionary.registerOre("cellWater", itemWaterCell)
+        OreDictionary.registerOre("strangeMatter", itemDarkMatter)
+        OreDictionary.registerOre("antimatterMilligram", new ItemStack(itemAntimatter, 1, 0))
+        OreDictionary.registerOre("antimatterGram", new ItemStack(itemAntimatter, 1, 1))
 
 
         //Chunk loader for Accelerator
