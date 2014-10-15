@@ -1,10 +1,7 @@
 package resonantinduction.atomic.items
 
 import net.minecraft.item.ItemStack
-import net.minecraft.tileentity.TileEntity
-import net.minecraft.world.World
-import resonant.api.IReactor
-import resonant.api.IReactorComponent
+import resonant.api.{IReactor, IReactorComponent}
 
 /**
  * Breeder rods
@@ -18,8 +15,6 @@ class ItemBreederFuel extends ItemRadioactive with IReactorComponent
 
     override def onReact(itemStack: ItemStack, reactor: IReactor)
     {
-        val tileEntity: TileEntity = reactor.asInstanceOf[TileEntity]
-        val worldObj: World = tileEntity.getWorldObj
         reactor.heat(ItemFissileFuel.ENERGY_PER_TICK / 2)
         if (reactor.world.getWorldTime % 20 == 0)
         {

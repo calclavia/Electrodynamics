@@ -17,7 +17,6 @@ import net.minecraft.util.MovingObjectPosition
 import net.minecraft.world.World
 import net.minecraftforge.client.event.TextureStitchEvent
 import net.minecraftforge.common.ForgeChunkManager.Type
-import net.minecraftforge.common.config.Configuration
 import net.minecraftforge.common.{ForgeChunkManager, MinecraftForge}
 import net.minecraftforge.event.entity.player.FillBucketEvent
 import net.minecraftforge.fluids.{Fluid, FluidContainerRegistry, FluidRegistry, FluidStack}
@@ -25,7 +24,7 @@ import net.minecraftforge.oredict.{OreDictionary, ShapelessOreRecipe}
 import resonant.api.IElectromagnet
 import resonant.api.event.PlasmaEvent
 import resonant.api.recipe.QuantumAssemblerRecipes
-import resonant.content.loader.ContentHolder
+import resonant.content.loader.{ContentHolder, ExplicitContentName}
 import resonant.engine.content.debug.TileCreativeBuilder
 import resonant.engine.grid.thermal.EventThermal
 import resonant.lib.network.discriminator.PacketAnnotationManager
@@ -62,103 +61,65 @@ object AtomicContent extends ContentHolder
     val SECOND_IN_TICKS: Int = 20
 
     // Blocks
-    var blockRadioactive: Block = null
-    var blockCentrifuge: Block = null
-    var blockNuclearBoiler: Block = null
-    var blockControlRod: Block = null
-    var blockThermometer: Block = null
-    var blockFusionCore: Block = null
-    var blockPlasma: Block = null
-    var blockElectromagnet: Block = null
-    var blockChemicalExtractor: Block = null
-    var blockSiren: Block = null
-    var blockSteamFunnel: Block = null
-    var blockAccelerator: Block = null
-    var blockFulmination: Block = null
-    var blockQuantumAssembler: Block = null
-    var blockReactorCell: Block = null
-    var blockUraniumOre: Block = null
-    var blockToxicWaste: Block = null
+    var blockRadioactive: Block = new BlockRadioactive(Material.rock).setBlockTextureName(Reference.prefix + "radioactive").setCreativeTab(CreativeTabs.tabBlock)
+    var blockCentrifuge: Block = new TileCentrifuge
+    var blockNuclearBoiler: Block = new TileNuclearBoiler
+    var blockControlRod: Block = new TileControlRod
+    var blockThermometer: Block = new TileThermometer
+    var blockFusionCore: Block = new TilePlasmaHeater
+    var blockPlasma: Block = new TilePlasma
+    var blockElectromagnet: Block = new TileElectromagnet
+    var blockChemicalExtractor: Block = new TileChemicalExtractor
+    var blockSiren: Block = new TileSiren
+    var blockSteamFunnel: Block = new TileFunnel
+    var blockAccelerator: Block = new TileAccelerator
+    var blockFulmination: Block = new TileFulmination
+    var blockQuantumAssembler: Block = new TileQuantumAssembler
+    var blockReactorCell: Block = new TileReactorCell
+    var blockUraniumOre: Block = new BlockUraniumOre
+    var blockToxicWaste: Block = new BlockToxicWaste().setCreativeTab(null)
 
     //Cells
-    var itemCell: Item = null
-    var itemFissileFuel: Item = null
-    var itemBreedingRod: Item = null
-    var itemDarkMatter: Item = null
-    var itemAntimatter: Item = null
-    var itemDeuteriumCell: Item = null
-    var itemTritiumCell: Item = null
-    var itemWaterCell: Item = null
-    var itemYellowCake: Item = null
-    var itemUranium: Item = null
+    @ExplicitContentName(value = "cellEmpty")
+    var itemCell: Item = new ItemCell("cellEmpty")
+    var itemFissileFuel: Item = new ItemFissileFuel
+    var itemBreedingRod: Item = new ItemBreederFuel
+    @ExplicitContentName
+    var itemDarkMatter: Item = new ItemCell("darkMatter")
+    var itemAntimatter: Item = new ItemAntimatter
+    @ExplicitContentName(value = "cellDeuterium")
+    var itemDeuteriumCell: Item = new ItemCell("cellDeuterium")
+    @ExplicitContentName(value = "cellTritium")
+    var itemTritiumCell: Item = new ItemCell("cellTritium")
+    @ExplicitContentName(value = "cellWater")
+    var itemWaterCell: Item = new ItemCell("cellWater")
+    @ExplicitContentName
+    var itemYellowCake: Item = new ItemRadioactive().setTextureName(Reference.prefix + "yellowcake").setCreativeTab(ResonantTab)
+    var itemUranium: Item = new ItemUranium().setCreativeTab(ResonantTab)
 
     //Buckets
     var itemBucketToxic: Item = null
 
     //Hazmat suit
-    var itemHazmatTop: Item = null
-    var itemHazmatBody: Item = null
-    var itemHazmatLeggings: Item = null
-    var itemHazmatBoots: Item = null
+    @ExplicitContentName
+    var itemHazmatMask: Item = new ItemHazmat("hazmatMask", 0)
+    @ExplicitContentName
+    var itemHazmatBody: Item = new ItemHazmat("hazmatBody", 1)
+    @ExplicitContentName
+    var itemHazmatLeggings: Item = new ItemHazmat("hazmatLeggings", 2)
+    @ExplicitContentName
+    var itemHazmatBoots: Item = new ItemHazmat("hazmatBoots", 3)
 
 
     var uraniumOreGeneration: OreGenerator = null
 
     override def preInit()
     {
-        super.preInit()
 
         MinecraftForge.EVENT_BUS.register(this)
         MinecraftForge.EVENT_BUS.register(FulminationHandler.INSTANCE)
-        PacketAnnotationManager.INSTANCE.register(classOf[TileThermometer])
-        PacketAnnotationManager.INSTANCE.register(classOf[TileReactorCell])
-        PacketAnnotationManager.INSTANCE.register(classOf[TileChemicalExtractor])
-        PacketAnnotationManager.INSTANCE.register(classOf[TileNuclearBoiler])
-        PacketAnnotationManager.INSTANCE.register(classOf[TileAccelerator])
 
-        Settings.config.load
-
-        // Blocks
-        blockRadioactive = manager.newBlock("radioactive", new BlockRadioactive(Material.rock)).setBlockTextureName(Reference.prefix + "radioactive").setCreativeTab(CreativeTabs.tabBlock)
-        blockCentrifuge = manager.newBlock(classOf[TileCentrifuge])
-        blockNuclearBoiler = manager.newBlock(classOf[TileNuclearBoiler])
-        blockControlRod = manager.newBlock(classOf[TileControlRod])
-        blockThermometer = manager.newBlock(classOf[TileThermometer])
-        blockFusionCore = manager.newBlock(classOf[TilePlasmaHeater])
-        blockPlasma = manager.newBlock(classOf[TilePlasma])
-        blockElectromagnet = manager.newBlock(classOf[TileElectromagnet])
-        blockChemicalExtractor = manager.newBlock(classOf[TileChemicalExtractor])
-        blockSiren = manager.newBlock(classOf[TileSiren])
-        blockSteamFunnel = manager.newBlock(classOf[TileFunnel])
-        blockAccelerator = manager.newBlock(classOf[TileAccelerator])
-        blockFulmination = manager.newBlock(classOf[TileFulmination])
-        blockQuantumAssembler = manager.newBlock(classOf[TileQuantumAssembler])
-        blockReactorCell = manager.newBlock(classOf[TileReactorCell])
-        blockUraniumOre = manager.newBlock(classOf[BlockUraniumOre])
-        blockToxicWaste = manager.newBlock(classOf[BlockToxicWaste]).setCreativeTab(null)
-
-        //Cells
-        itemCell = manager.newItem("cellEmpty", new ItemCell("cellEmpty"))
-        itemFissileFuel = manager.newItem(classOf[ItemFissileFuel])
-        itemBreedingRod = manager.newItem(classOf[ItemBreederFuel])
-        itemDarkMatter = manager.newItem("darkMatter", new ItemCell("darkMatter"))
-        itemAntimatter = manager.newItem(classOf[ItemAntimatter])
-        MinecraftForge.EVENT_BUS.register(AtomicContent.itemAntimatter)
-        itemDeuteriumCell = manager.newItem("cellDeuterium", new ItemCell("cellDeuterium"))
-        itemTritiumCell = manager.newItem("cellTritium", new ItemCell("cellTritium"))
-        itemWaterCell = manager.newItem("cellWater", new ItemCell("cellWater"))
-        itemYellowCake = manager.newItem("yellowcake", new ItemRadioactive()).setTextureName(Reference.prefix + "yellowcake").setCreativeTab(ResonantTab)
-        itemUranium = manager.newItem(classOf[ItemUranium]).setCreativeTab(ResonantTab)
-
-        //Buckets
-        itemBucketToxic = manager.newItem("bucketToxicWaste", new ItemBucket(AtomicContent.blockPlasma)).setCreativeTab(ResonantTab.tab).setContainerItem(Items.bucket).setTextureName(Reference.prefix + "bucketToxicWaste")
-
-        //Hazmat suit
-        itemHazmatTop = manager.newItem("hazmatMask", new ItemHazmat("hazmatMask", 0))
-        itemHazmatBody = manager.newItem("hazmatBody", new ItemHazmat("hazmatBody", 1))
-        itemHazmatLeggings = manager.newItem("hazmatLeggings", new ItemHazmat("hazmatLeggings", 2))
-        itemHazmatBoots = manager.newItem("hazmatBoots", new ItemHazmat("hazmatBoots", 3))
-
+        //Register Fluids
         FluidRegistry.registerFluid(AtomicContent.FLUID_URANIUM_HEXAFLOURIDE)
         FluidRegistry.registerFluid(AtomicContent.FLUID_STEAM)
         FluidRegistry.registerFluid(AtomicContent.getFluidTritium)
@@ -166,34 +127,41 @@ object AtomicContent extends ContentHolder
         FluidRegistry.registerFluid(AtomicContent.getFluidToxicWaste)
         FluidRegistry.registerFluid(AtomicContent.FLUID_PLASMA)
 
+        Settings.config.load
+
+        super.preInit()
+
+        //Annotation Packet Users
+        PacketAnnotationManager.INSTANCE.register(classOf[TileThermometer])
+        PacketAnnotationManager.INSTANCE.register(classOf[TileReactorCell])
+        PacketAnnotationManager.INSTANCE.register(classOf[TileChemicalExtractor])
+        PacketAnnotationManager.INSTANCE.register(classOf[TileNuclearBoiler])
+        PacketAnnotationManager.INSTANCE.register(classOf[TileAccelerator])
+
+        //Buckets
+        itemBucketToxic = manager.newItem("bucketToxicWaste", new ItemBucket(AtomicContent.blockPlasma)).setCreativeTab(ResonantTab.tab).setContainerItem(Items.bucket).setTextureName(Reference.prefix + "bucketToxicWaste")
+
+        //Schematics
         TileCreativeBuilder.register(new SchematicAccelerator)
         TileCreativeBuilder.register(new SchematicBreedingReactor)
         TileCreativeBuilder.register(new SchematicFissionReactor)
         TileCreativeBuilder.register(new SchematicFusionReactor)
 
+        //Fluid Containers
         AtomicContent.FLUID_PLASMA.setBlock(AtomicContent.blockPlasma)
         FluidContainerRegistry.registerFluidContainer(FluidRegistry.getFluid("toxicwaste"), new ItemStack(AtomicContent.itemBucketToxic), new ItemStack(Items.bucket))
         FluidContainerRegistry.registerFluidContainer(FluidRegistry.WATER, new ItemStack(AtomicContent.itemWaterCell), new ItemStack(AtomicContent.itemCell))
         FluidContainerRegistry.registerFluidContainer(new FluidStack(FluidRegistry.getFluid("deuterium"), 200), new ItemStack(AtomicContent.itemDeuteriumCell), new ItemStack(AtomicContent.itemCell))
         FluidContainerRegistry.registerFluidContainer(new FluidStack(FluidRegistry.getFluid("tritium"), 200), new ItemStack(AtomicContent.itemTritiumCell), new ItemStack(AtomicContent.itemCell))
 
-        if (OreDictionary.getOres("oreUranium").size > 1 && Settings.config.get(Configuration.CATEGORY_GENERAL, "Auto Disable Uranium If Exist", false).getBoolean(false))
-        {
+        //Uranium ore Gen settings
+        AtomicContent.uraniumOreGeneration = new OreGenReplaceStone("Uranium Ore", new ItemStack(AtomicContent.blockUraniumOre), 25, 9, 3)
+        AtomicContent.uraniumOreGeneration.enable(Settings.config)
+        //OreGenerator.addOre(AtomicContent.uraniumOreGeneration)
 
-        }
-        else
-        {
-            AtomicContent.uraniumOreGeneration = new OreGenReplaceStone("Uranium Ore", new ItemStack(AtomicContent.blockUraniumOre), 25, 9, 3)
-            AtomicContent.uraniumOreGeneration.enable(Settings.config)
-            //OreGenerator.addOre(AtomicContent.uraniumOreGeneration)
-        }
-        Settings.config.save
-
-        if (Settings.allowOreDictionaryCompatibility)
-        {
-            OreDictionary.registerOre("ingotUranium", AtomicContent.itemUranium)
-            OreDictionary.registerOre("dustUranium", AtomicContent.itemYellowCake)
-        }
+        //Ore dictionary support
+        OreDictionary.registerOre("ingotUranium", AtomicContent.itemUranium)
+        OreDictionary.registerOre("dustUranium", AtomicContent.itemYellowCake)
         OreDictionary.registerOre("breederUranium", new ItemStack(AtomicContent.itemUranium, 1, 1))
         OreDictionary.registerOre("blockRadioactive", AtomicContent.blockRadioactive)
         OreDictionary.registerOre("cellEmpty", AtomicContent.itemCell)
@@ -204,6 +172,9 @@ object AtomicContent extends ContentHolder
         OreDictionary.registerOre("strangeMatter", AtomicContent.itemDarkMatter)
         OreDictionary.registerOre("antimatterMilligram", new ItemStack(AtomicContent.itemAntimatter, 1, 0))
         OreDictionary.registerOre("antimatterGram", new ItemStack(AtomicContent.itemAntimatter, 1, 1))
+
+
+        //Chunk loader for Accelerator
         ForgeChunkManager.setForcedChunkLoadingCallback(this, new ForgeChunkManager.LoadingCallback
         {
             def ticketsLoaded(tickets: List[ForgeChunkManager.Ticket], world: World)
@@ -225,11 +196,7 @@ object AtomicContent extends ContentHolder
         })
         Settings.config.save
         ResonantTab.itemStack(new ItemStack(AtomicContent.blockReactorCell))
-    }
 
-    override def init()
-    {
-        super.init()
     }
 
     override def postInit()
@@ -288,7 +255,7 @@ object AtomicContent extends ContentHolder
         recipes += shaped(itemBreedingRod, "CUC", "CUC", "CUC", 'U', "breederUranium", 'C', "cellEmpty")
 
         //Hazmat recipes
-        recipes += shaped(itemHazmatTop, "SSS", "BAB", "SCS", 'A', Items.leather_helmet, 'C', UniversalRecipe.CIRCUIT_T1.get, 'S', Blocks.wool)
+        recipes += shaped(itemHazmatMask, "SSS", "BAB", "SCS", 'A', Items.leather_helmet, 'C', UniversalRecipe.CIRCUIT_T1.get, 'S', Blocks.wool)
         recipes += shaped(itemHazmatBody, "SSS", "BAB", "SCS", 'A', Items.leather_chestplate, 'C', UniversalRecipe.CIRCUIT_T1.get, 'S', Blocks.wool)
         recipes += shaped(itemHazmatLeggings, "SSS", "BAB", "SCS", 'A', Items.leather_leggings, 'C', UniversalRecipe.CIRCUIT_T1.get, 'S', Blocks.wool)
         recipes += shaped(itemHazmatBoots, "SSS", "BAB", "SCS", 'A', Items.leather_boots, 'C', UniversalRecipe.CIRCUIT_T1.get, 'S', Blocks.wool)
