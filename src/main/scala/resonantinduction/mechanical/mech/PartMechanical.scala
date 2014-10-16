@@ -18,7 +18,7 @@ import universalelectricity.core.transform.vector.VectorWorld
 /** We assume all the force acting on the gear is 90 degrees.
   *
   * @author Calclavia */
-abstract class PartMechanical extends PartAbstract with JNormalOcclusion with TFacePart with INodeProvider
+abstract class PartMechanical extends PartAbstract with JNormalOcclusion with TFacePart with INodeProvider with TCuboidPart
 {
     /** Node that handles resonantinduction.mechanical action of the machine */
     var node: MechanicalNode = null
