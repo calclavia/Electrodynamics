@@ -71,5 +71,5 @@ abstract class PartAbstract extends TMultiPart with TraitTicker
 
   override def toString: String = "[" + getClass.getSimpleName + "]" + x + "x " + y + "y " + z + "z"
 
-  override def getType: String = ResonantPartFactory.prefix + getClass.getSimpleName
+  final override def getType: String = ResonantPartFactory.prefix + getClass.getSimpleName
 }

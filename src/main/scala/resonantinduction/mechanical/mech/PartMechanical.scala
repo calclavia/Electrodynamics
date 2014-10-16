@@ -11,18 +11,18 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.MovingObjectPosition
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.engine.ResonantEngine
+import resonantinduction.core.prefab.part.connector.PartAbstract
 import universalelectricity.api.core.grid.{INode, INodeProvider}
 import universalelectricity.core.transform.vector.VectorWorld
 
 /** We assume all the force acting on the gear is 90 degrees.
   *
   * @author Calclavia */
-abstract class PartMechanical extends JCuboidPart with JNormalOcclusion with TFacePart with INodeProvider
+abstract class PartMechanical extends PartAbstract with JNormalOcclusion with TFacePart with INodeProvider
 {
     /** Node that handles resonantinduction.mechanical action of the machine */
     var node: MechanicalNode = null
     protected var prevAngularVelocity: Double = .0
-    private[mech] var ticks: Int = 0
     /** Packets */
     private[mech] var markPacketUpdate: Boolean = false
     /** Simple debug external GUI */
@@ -54,11 +54,6 @@ abstract class PartMechanical extends JCuboidPart with JNormalOcclusion with TFa
 
     override def update
     {
-        ticks += 1
-        if (ticks >= java.lang.Long.MAX_VALUE)
-        {
-            ticks = 0
-        }
         this.node.update
         if (!world.isRemote)
         {
@@ -145,7 +140,7 @@ abstract class PartMechanical extends JCuboidPart with JNormalOcclusion with TFa
         read(packet, packet.readUByte)
     }
 
-    def read(packet: MCDataInput, packetID: Int)
+    override def read(packet: MCDataInput, packetID: Int)
     {
         if (packetID == 0)
         {

@@ -29,19 +29,13 @@ object PartGear
 
     oBoxes(0)(0) = new Cuboid6(1 / 8D, 0, 0, 7 / 8D, 1 / 8D, 1)
     oBoxes(0)(1) = new Cuboid6(0, 0, 1 / 8D, 1, 1 / 8D, 7 / 8D)
+
+    for(s <- 1 until 6)
     {
-        var s: Int = 1
-        while (s < 6)
-        {
-            {
-                val t: Transformation = Rotation.sideRotations(s).at(Vector3.center)
-                oBoxes(s)(0) = oBoxes(0)(0).copy.apply(t)
-                oBoxes(s)(1) = oBoxes(0)(1).copy.apply(t)
-            }
-            ({
-                s += 1; s - 1
-            })
-        }
+        val t: Transformation = Rotation.sideRotations(s).at(Vector3.center)
+        oBoxes(s)(0) = oBoxes(0)(0).copy.apply(t)
+        oBoxes(s)(1) = oBoxes(0)(1).copy.apply(t)
+
     }
 }
 
@@ -109,7 +103,7 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
     /** Is this gear block the one in the center-edge of the multiblock that can interact with other
       * gears?
       *
-      * @return*/
+      * @return */
     def isCenterMultiBlock: Boolean =
     {
         if (!getMultiBlock.isConstructed)
@@ -145,11 +139,6 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
         }
     }
 
-    def getType: String =
-    {
-        return "resonant_induction_gear"
-    }
-
     override def load(nbt: NBTTagCompound)
     {
         super.load(nbt)
@@ -165,7 +154,7 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
     override def getMultiBlockVectors: java.util.List[universalelectricity.core.transform.vector.Vector3] =
     {
         val vec = new universalelectricity.core.transform.vector.Vector3(this.x, this.y, this.z)
-        var array : java.util.List[universalelectricity.core.transform.vector.Vector3] = vec.getAround(this.world, placementSide, 1)
+        var array: java.util.List[universalelectricity.core.transform.vector.Vector3] = vec.getAround(this.world, placementSide, 1)
         return array
     }
 
@@ -202,7 +191,7 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
     def getOcclusionBoxes: java.lang.Iterable[Cuboid6] =
     {
         val list: java.util.List[Cuboid6] = new util.ArrayList[Cuboid6];
-        for(v <- PartGear.oBoxes(this.placementSide.ordinal))
+        for (v <- PartGear.oBoxes(this.placementSide.ordinal))
         {
             list.add(v)
         }

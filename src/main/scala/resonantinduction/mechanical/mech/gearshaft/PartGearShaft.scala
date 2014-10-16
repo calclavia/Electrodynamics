@@ -58,11 +58,6 @@ class PartGearShaft extends PartMechanical
         }
     }
 
-    def getType: String =
-    {
-        return "resonant_induction_gear_shaft"
-    }
-
     /**
      * Multipart Bounds
      */
