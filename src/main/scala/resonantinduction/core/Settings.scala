@@ -14,53 +14,53 @@ import scala.collection.convert.wrapAll._
 /** @author Calclavia */
 object Settings
 {
-  var config: Configuration = _
+    var config: Configuration = _
 
-  @Config(key = "Engineering Table Autocraft")
-  var ALLOW_ENGINEERING_AUTOCRAFT = true
-  @Config(key = "Tesla Sound FXs")
-  var SOUND_FXS = true
-  @Config(key = "Shiny silver Wires")
-  var SHINY_SILVER = true
-  @Config(key = "Max EM Contractor Path")
-  var MAX_LEVITATOR_DISTANCE: Int = 200
-  @Config(category = Configuration.CATEGORY_GENERAL, key = "Levitator Max Reach")
-  var LEVITATOR_MAX_REACH: Int = 40
-  @Config(category = Configuration.CATEGORY_GENERAL, key = "Levitator Push Delay")
-  var LEVITATOR_PUSH_DELAY: Int = 5
-  @Config(category = Configuration.CATEGORY_GENERAL, key = "Levitator Max Speed")
-  var LEVITATOR_MAX_SPEED: Double = .2
-  @Config(category = Configuration.CATEGORY_GENERAL, key = "Levitator Acceleration")
-  var LEVITATOR_ACCELERATION: Double = .02
-  @Config(category = "Power", key = "Wind_tubine_Ratio")
-  var WIND_POWER_RATIO: Int = 1
-  @Config(category = "Power", key = "Water_tubine_Ratio")
-  var WATER_POWER_RATIO: Int = 1
-  @Config(category = "Power", key = "Solor_Panel")
-  var SOLAR_ENERGY: Int = 50
-  @Config var fulminationOutputMultiplier: Double = 1
-  @Config var turbineOutputMultiplier: Double = 1
-  @Config var fissionBoilVolumeMultiplier: Double = 1
-  @Config var allowTurbineStacking: Boolean = true
-  @Config var allowToxicWaste: Boolean = true
-  @Config var allowRadioactiveOres: Boolean = true
-  @Config var allowOreDictionaryCompatibility: Boolean = true
-  @Config var allowAlternateRecipes: Boolean = true
-  @Config var allowIC2UraniumCompression: Boolean = true
-  @Config(comment = "0 = Do not generate, 1 = Generate items only, 2 = Generate all")
-  var quantumAssemblerGenerateMode: Int = 1
-  @Config var uraniumHexaflourideRatio: Int = 200
-  @Config var waterPerDeutermium: Int = 4
-  @Config var deutermiumPerTritium: Int = 4
-  @Config(comment = "Put a list of block/item IDs to be used by the Quantum Assembler. Separate by commas, no space.")
-  var quantumAssemblerRecipes: Array[String] = _
-  @Config var darkMatterSpawnChance: Double = 0.2
-  @Config var steamMultiplier: Double = 1
+    @Config(key = "Tesla Sound FXs")
+    var SOUND_FXS = true
+    @Config(key = "Shiny silver Wires")
+    var SHINY_SILVER = true
 
-  @SubscribeEvent
-  def configEvent(evt: PostConfigEvent)
-  {
-    QuantumAssemblerRecipes.RECIPES.addAll(quantumAssemblerRecipes.map(x => new ItemStack(Block.blockRegistry.getObject(x).asInstanceOf[Block])).toList)
-    PotionRadiation.INSTANCE.getId
-  }
+    //Turbine Settings
+    @Config(category = "Power", key = "WindTubineRatio")
+    var WIND_POWER_RATIO: Int = 1
+    @Config(category = "Power", key = "WaterTubineRatio")
+    var WATER_POWER_RATIO: Int = 1
+    @Config var turbineOutputMultiplier: Double = 1
+    @Config var allowTurbineStacking: Boolean = true
+
+    // Power Settings
+    @Config(category = "Power", key = "SolorPanel")
+    var SOLAR_ENERGY: Int = 50
+    @Config var fulminationOutputMultiplier: Double = 1
+
+    //Disable/Enable Settings
+    @Config var allowToxicWaste: Boolean = true
+    @Config var allowRadioactiveOres: Boolean = true
+    @Config(key = "EngineeringTableAutocraft")
+    var ALLOW_ENGINEERING_AUTOCRAFT = true
+
+    //Fluid Settings
+    @Config var fissionBoilVolumeMultiplier: Double = 1
+    @Config var uraniumHexaflourideRatio: Int = 200
+    @Config var waterPerDeutermium: Int = 4
+    @Config var deutermiumPerTritium: Int = 4
+    @Config var darkMatterSpawnChance: Double = 0.2
+    @Config var steamMultiplier: Double = 1
+
+    //Recipe Settings
+    @Config var allowOreDictionaryCompatibility: Boolean = true
+    @Config var allowAlternateRecipes: Boolean = true
+    @Config(comment = "Put a list of block/item IDs to be used by the Quantum Assembler. Separate by commas, no space.")
+    var quantumAssemblerRecipes: Array[String] = _
+    @Config(comment = "0 = Do not generate, 1 = Generate items only, 2 = Generate all")
+    var quantumAssemblerGenerateMode: Int = 1
+    @Config var allowIC2UraniumCompression: Boolean = true
+
+    @SubscribeEvent
+    def configEvent(evt: PostConfigEvent)
+    {
+        QuantumAssemblerRecipes.RECIPES.addAll(quantumAssemblerRecipes.map(x => new ItemStack(Block.blockRegistry.getObject(x).asInstanceOf[Block])).toList)
+        PotionRadiation.INSTANCE.getId
+    }
 }
