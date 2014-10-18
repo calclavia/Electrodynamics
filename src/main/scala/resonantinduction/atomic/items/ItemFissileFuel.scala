@@ -44,7 +44,7 @@ class ItemFissileFuel extends ItemRadioactive with IReactorComponent
     this.setMaxDamage(ItemFissileFuel.DECAY)
     this.setNoRepair
     this.setUnlocalizedName(Reference.prefix + "rodBreederFuel")
-    this.setTextureName(Reference.prefix + "rodBreederFuel")
+    this.setTextureName(Reference.prefix + "breederFuel")
     setCreativeTab(ResonantTab.tab)
 
     def onReact(itemStack: ItemStack, reactor: IReactor)
