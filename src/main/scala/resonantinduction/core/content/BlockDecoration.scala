@@ -23,7 +23,7 @@ class BlockDecoration extends SpatialBlock(Material.rock)
 {
     var iconNames = Array("material_stone_brick", "material_stone_brick2", "material_stone_chiseled", "material_stone_cobble", "material_stone_cracked", "material_stone", "material_stone_slab", "material_stone_mossy", "material_steel_dark", "material_steel_tint", "material_steel")
     var icons = new Array[IIcon](iconNames.length)
-    
+
     // Constructor
     name = "industrialStone"
     blockHardness = 1

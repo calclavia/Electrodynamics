@@ -20,20 +20,18 @@ import universalelectricity.core.transform.vector.Vector3
 /** Prefab for resonantinduction.mechanical tiles
   *
   * @author Calclavia */
-object TileMechanical
-{
-    protected final val PACKET_NBT: Int = 0
-    protected final val PACKET_VELOCITY: Int = 1
-}
-
 abstract class TileMechanical(material: Material) extends TileNode(material) with INodeProvider with IPacketIDReceiver
 {
-    /** Node that handles most mechanical actions */
-    var mechanicalNode: MechanicalNode = null
-    /** External debug GUI */
-    private[mech] var frame: DebugFrameMechanical = null
+    /** Internal packet ID for NBTTagCompound parsing from packets */
+    protected var nbt_packet_id: Int = 0
+    /** Internal packet ID for rotation and velocity */
+    protected var vel_packet_id: Int = 1
 
-    this.mechanicalNode = new MechanicalNode(this)
+    /** Node that handles most mechanical actions */
+    var mechanicalNode: MechanicalNode = new MechanicalNode(this)
+    /** External debug GUI */
+    var frame: DebugFrameMechanical = null
+
 
     override def update
     {
@@ -95,25 +93,25 @@ abstract class TileMechanical(material: Material) extends TileNode(material) wit
     {
         val tag: NBTTagCompound = new NBTTagCompound
         writeToNBT(tag)
-        return ResonantEngine.instance.packetHandler.toMCPacket(new PacketTile(x, y, z, Array(TileMechanical.PACKET_NBT, tag)))
+        return ResonantEngine.instance.packetHandler.toMCPacket(new PacketTile(x, y, z, Array(nbt_packet_id, tag)))
     }
 
     /** Sends the torque and angular velocity to the client */
     private def sendRotationPacket
     {
-        ResonantEngine.instance.packetHandler.sendToAllAround(new PacketTile(x, y , z, Array(TileMechanical.PACKET_VELOCITY, mechanicalNode.angularVelocity, mechanicalNode.torque)), this)
+        ResonantEngine.instance.packetHandler.sendToAllAround(new PacketTile(x, y , z, Array(vel_packet_id, mechanicalNode.angularVelocity, mechanicalNode.torque)), this)
     }
 
     override def read(data: ByteBuf, id: Int, player: EntityPlayer, `type`: PacketType): Boolean =
     {
         if (world.isRemote)
         {
-            if (id == TileMechanical.PACKET_NBT)
+            if (id == nbt_packet_id)
             {
                 readFromNBT(ByteBufUtils.readTag(data))
                 return true
             }
-            else if (id == TileMechanical.PACKET_VELOCITY)
+            else if (id == vel_packet_id)
             {
                 mechanicalNode.angularVelocity = data.readDouble
                 mechanicalNode.torque = data.readDouble
