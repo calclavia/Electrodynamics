@@ -13,7 +13,7 @@ import resonantinduction.archaic.fluid.grate.TileGrate
 import resonantinduction.archaic.fluid.gutter.TileGutter
 import resonantinduction.archaic.fluid.tank.TileTank
 import resonantinduction.archaic.process.{TileCastingMold, TileMillstone}
-import resonantinduction.core.ResonantTab
+import resonantinduction.core.{Reference, ResonantTab}
 import resonantinduction.mechanical.mech.gear.ItemHandCrank
 ;
 
@@ -36,6 +36,10 @@ object ArchaicContent extends ContentHolder
     var blockGrate: Block = null
     var blockGutter: Block = null
     var blockTank: Block = null
+
+    //Constructor
+    manager.setTab(ResonantTab)
+    manager.setPrefix(Reference.prefix)
 
     override def preInit()
     {
