@@ -2,7 +2,7 @@ package resonantinduction.mechanical.mech.gear
 
 import java.util
 
-import codechicken.lib.vec.{Cuboid6, Rotation, Transformation, Vector3}
+import codechicken.lib.vec.{Cuboid6, Vector3}
 import codechicken.microblock.FaceMicroClass
 import codechicken.multipart.ControlKeyModifer
 import cpw.mods.fml.relauncher.{Side, SideOnly}
@@ -15,6 +15,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import resonant.lib.multiblock.reference.IMultiBlockStructure
 import resonant.lib.utility.WrenchUtility
 import resonantinduction.core.Reference
+import resonantinduction.core.prefab.part.CuboidShapes
 import resonantinduction.mechanical.MechanicalContent
 import resonantinduction.mechanical.mech.PartMechanical
 import universalelectricity.api.core.grid.INode
@@ -23,22 +24,6 @@ import universalelectricity.core.transform.vector.VectorWorld
 /** We assume all the force acting on the gear is 90 degrees.
   *
   * @author Calclavia */
-object PartGear
-{
-    var oBoxes: Array[Array[Cuboid6]] = new Array[Array[Cuboid6]](6)
-
-    oBoxes(0)(0) = new Cuboid6(1 / 8D, 0, 0, 7 / 8D, 1 / 8D, 1)
-    oBoxes(0)(1) = new Cuboid6(0, 0, 1 / 8D, 1, 1 / 8D, 7 / 8D)
-
-    for(s <- 1 until 6)
-    {
-        val t: Transformation = Rotation.sideRotations(s).at(Vector3.center)
-        oBoxes(s)(0) = oBoxes(0)(0).copy.apply(t)
-        oBoxes(s)(1) = oBoxes(0)(1).copy.apply(t)
-
-    }
-}
-
 class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
 {
     var isClockwiseCrank: Boolean = true
@@ -191,7 +176,7 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
     def getOcclusionBoxes: java.lang.Iterable[Cuboid6] =
     {
         val list: java.util.List[Cuboid6] = new util.ArrayList[Cuboid6];
-        for (v <- PartGear.oBoxes(this.placementSide.ordinal))
+        for (v <- CuboidShapes.PANEL(this.placementSide.ordinal))
         {
             list.add(v)
         }

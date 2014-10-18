@@ -4,7 +4,7 @@ import java.lang.{Iterable => JIterable}
 import java.util.{ArrayList, List}
 
 import codechicken.lib.data.{MCDataInput, MCDataOutput}
-import codechicken.lib.vec.{Cuboid6, Rotation, Vector3}
+import codechicken.lib.vec.{Cuboid6, Rotation}
 import codechicken.microblock.FaceMicroClass
 import codechicken.multipart._
 import net.minecraft.item.ItemStack
@@ -19,21 +19,6 @@ import scala.collection.convert.wrapAll._
  * A part that acts as a face
  * @author Calclavia
  */
-object PartFace
-{
-  val bounds = Array.ofDim[Cuboid6](6, 2)
-
-  bounds(0)(0) = new Cuboid6(1 / 8D, 0, 0, 7 / 8D, 1 / 8D, 1)
-  bounds(0)(1) = new Cuboid6(0, 0, 1 / 8D, 1, 1 / 8D, 7 / 8D)
-
-  for (s <- 1 until 6)
-  {
-    val t = Rotation.sideRotations(s).at(Vector3.center)
-    bounds(s)(0) = bounds(0)(0).copy().apply(t)
-    bounds(s)(1) = bounds(0)(1).copy().apply(t)
-  }
-}
-
 abstract class PartFace extends PartAbstract with TCuboidPart with JNormalOcclusion with TFacePart
 {
   /**
@@ -71,7 +56,7 @@ abstract class PartFace extends PartAbstract with TCuboidPart with JNormalOcclus
 
   override def solid(arg0: Int): Boolean = true
 
-  override def getOcclusionBoxes: JIterable[Cuboid6] = PartFace.bounds(placementSide.ordinal).toList
+  override def getOcclusionBoxes: JIterable[Cuboid6] = CuboidShapes.PANEL(placementSide.ordinal).toList
 
   override def occlusionTest(npart: TMultiPart): Boolean = NormalOcclusionTest.apply(this, npart)
 
