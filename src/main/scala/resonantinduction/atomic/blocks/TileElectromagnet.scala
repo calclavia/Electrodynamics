@@ -26,10 +26,11 @@ object TileElectromagnet
 class TileElectromagnet extends SpatialBlock(Material.iron) with IElectromagnet
 {
     //Constructor
-    blockResistance(20)
-    forceStandardRender(true)
-    normalRender(false)
-    isOpaqueCube(false)
+    blockResistance = 20
+    forceStandardRender = true
+    normalRender = false
+    isOpaqueCube = false
+    renderStaticBlock = true
     this.itemBlock(classOf[ItemBlockMetadata])
 
     override def getIcon(side: Int, metadata: Int): IIcon =
