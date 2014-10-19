@@ -44,7 +44,7 @@ class TilePlacer extends TileInventory(Material.rock) with IRotatable with IPack
     //Constructor
     setSizeInventory(1)
     normalRender = false
-    forceStandardRender = true
+    forceItemToRenderAsBlock = true
     renderStaticBlock = true
     this.rotationMask = 63
 

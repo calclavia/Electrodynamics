@@ -9,25 +9,29 @@ import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.util.IIcon
 import net.minecraft.world.IBlockAccess
+import net.minecraftforge.common.util.ForgeDirection
+import org.lwjgl.opengl.GL11._
 import resonant.api.IElectromagnet
 import resonant.content.prefab.itemblock.ItemBlockMetadata
 import resonant.content.spatial.block.SpatialBlock
+import resonant.lib.render.RenderUtility
+import resonant.lib.utility.WorldUtility
+import resonant.lib.utility.render.RenderBlockUtility
 import resonant.lib.wrapper.WrapList._
+import universalelectricity.core.transform.vector.Vector3
 
 /**
  * Electromagnet block
  */
-object TileElectromagnet
+class TileElectromagnet extends SpatialBlock(Material.iron) with IElectromagnet
 {
     private var iconTop: IIcon = null
     private var iconGlass: IIcon = null
-}
+    private val edgeTexture: String = "stone"
 
-class TileElectromagnet extends SpatialBlock(Material.iron) with IElectromagnet
-{
     //Constructor
     blockResistance = 20
-    forceStandardRender = true
+    forceItemToRenderAsBlock = true
     normalRender = false
     isOpaqueCube = false
     renderStaticBlock = true
@@ -37,11 +41,11 @@ class TileElectromagnet extends SpatialBlock(Material.iron) with IElectromagnet
     {
         if (metadata == 1)
         {
-            return TileElectromagnet.iconGlass
+            return iconGlass
         }
         if (side == 0 || side == 1)
         {
-            return TileElectromagnet.iconTop
+            return iconTop
         }
         return super.getIcon(side, metadata)
     }
@@ -49,8 +53,8 @@ class TileElectromagnet extends SpatialBlock(Material.iron) with IElectromagnet
     @SideOnly(Side.CLIENT) override def registerIcons(iconRegister: IIconRegister)
     {
         super.registerIcons(iconRegister)
-        TileElectromagnet.iconTop = iconRegister.registerIcon(domain + textureName + "_top")
-        TileElectromagnet.iconGlass = iconRegister.registerIcon(domain + "electromagnetGlass")
+        iconTop = iconRegister.registerIcon(domain + textureName + "_top")
+        iconGlass = iconRegister.registerIcon(domain + "electromagnetGlass")
     }
 
     override def metadataDropped(meta: Int, fortune: Int): Int =
@@ -65,6 +69,10 @@ class TileElectromagnet extends SpatialBlock(Material.iron) with IElectromagnet
 
     override def shouldSideBeRendered(access: IBlockAccess, x: Int, y: Int, z: Int, side: Int): Boolean =
     {
+        if(access.getBlockMetadata(x, y, z) != 1)
+        {
+            return super.shouldSideBeRendered(access, x, y, z, side)
+        }
         return true
     }
 
@@ -83,4 +91,39 @@ class TileElectromagnet extends SpatialBlock(Material.iron) with IElectromagnet
     {
         return true
     }
+
+    @SideOnly(Side.CLIENT)
+    override def renderInventory(itemStack: ItemStack)
+    {
+        if(itemStack != null)
+        {
+            glPushMatrix()
+            glTranslated(0.5, 0.5, 0.5)
+            RenderBlockUtility.tessellateBlockWithConnectedTextures(itemStack.getItemDamage(), block, null, RenderUtility.getIcon(edgeTexture))
+            glPopMatrix()
+        }else
+        {
+            super.renderInventory(itemStack)
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
+    {
+        var sideMap = 0
+
+        for (dir <- ForgeDirection.VALID_DIRECTIONS)
+        {
+            val check = new Vector3(tile) + dir
+            val checkTile = check.getTileEntity(world)
+
+            if (checkTile != null && checkTile.getClass == tile.getClass && check.getBlockMetadata(world) == tile.getBlockMetadata)
+            {
+                sideMap = WorldUtility.setEnableSide(sideMap, dir, true)
+            }
+        }
+
+        RenderBlockUtility.tessellateBlockWithConnectedTextures(sideMap, world, x, y, z, tile.getBlockType, null, RenderUtility.getIcon(edgeTexture))
+    }
+
 }
