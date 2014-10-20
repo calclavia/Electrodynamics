@@ -4,10 +4,9 @@ import net.minecraft.block.Block
 import net.minecraft.init.{Blocks, Items}
 import net.minecraft.item.{Item, ItemStack}
 import resonant.content.loader.ContentHolder
-import resonant.engine.content.debug.TileCreativeBuilder
 import resonant.lib.network.discriminator.PacketAnnotationManager
 import resonant.lib.recipe.UniversalRecipe
-import resonant.lib.schematic.SchematicPlate
+import resonant.lib.schematic.{SchematicPlate, SchematicRegistry}
 import resonantinduction.core.interfaces.IMechanicalNode
 import resonantinduction.core.{Reference, ResonantPartFactory, ResonantTab}
 import resonantinduction.mechanical.fluid.pipe.{ItemPipe, PartPipe, PipeMaterials}
@@ -68,9 +67,9 @@ object MechanicalContent extends ContentHolder
         blockTileBreaker = manager.newBlock(classOf[TileBreaker])
         blockTilePlacer = manager.newBlock(classOf[TilePlacer])
 
-        TileCreativeBuilder.register(new SchematicPlate("schematic.waterTurbine.name", MechanicalContent.blockWaterTurbine))
-        TileCreativeBuilder.register(new SchematicPlate("schematic.windTurbine.name", MechanicalContent.blockWindTurbine))
-        TileCreativeBuilder.register(new SchematicPlate("schematic.electricTurbine.name", MechanicalContent.blockElectricTurbine))
+        SchematicRegistry.register("resonantinduction.mechanical.waterTurbine",new SchematicPlate("schematic.waterTurbine.name", MechanicalContent.blockWaterTurbine))
+        SchematicRegistry.register("resonantinduction.mechanical.windTurbine",new SchematicPlate("schematic.windTurbine.name", MechanicalContent.blockWindTurbine))
+        SchematicRegistry.register("resonantinduction.mechanical.electricalTurbine",new SchematicPlate("schematic.electricTurbine.name", MechanicalContent.blockElectricTurbine))
 
         NodeRegistry.register(classOf[IMechanicalNode], classOf[MechanicalNode])
 

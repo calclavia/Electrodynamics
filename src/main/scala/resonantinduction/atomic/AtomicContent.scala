@@ -25,12 +25,12 @@ import resonant.api.IElectromagnet
 import resonant.api.event.PlasmaEvent
 import resonant.api.recipe.QuantumAssemblerRecipes
 import resonant.content.loader.{ContentHolder, ExplicitContentName}
-import resonant.engine.content.debug.TileCreativeBuilder
 import resonant.engine.grid.thermal.EventThermal
 import resonant.lib.network.discriminator.PacketAnnotationManager
 import resonant.lib.ore.OreGenerator
 import resonant.lib.recipe.UniversalRecipe
 import resonant.lib.render.RenderUtility
+import resonant.lib.schematic.SchematicRegistry
 import resonantinduction.atomic.blocks._
 import resonantinduction.atomic.items._
 import resonantinduction.atomic.machine.TileFunnel
@@ -142,10 +142,10 @@ object AtomicContent extends ContentHolder
         itemBucketToxic = manager.newItem("bucketToxicWaste", new ItemBucket(AtomicContent.blockPlasma)).setCreativeTab(ResonantTab.tab).setContainerItem(Items.bucket).setTextureName(Reference.prefix + "bucketToxicWaste")
 
         //Schematics
-        TileCreativeBuilder.register(new SchematicAccelerator)
-        TileCreativeBuilder.register(new SchematicBreedingReactor)
-        TileCreativeBuilder.register(new SchematicFissionReactor)
-        TileCreativeBuilder.register(new SchematicFusionReactor)
+        SchematicRegistry.register("resonantInduction.atomic.accelerator", new SchematicAccelerator)
+        SchematicRegistry.register("resonantInduction.atomic.breedingReactor",new SchematicBreedingReactor)
+        SchematicRegistry.register("resonantInduction.atomic.fissionReactor",new SchematicFissionReactor)
+        SchematicRegistry.register("resonantInduction.atomic.fusionReactor",new SchematicFusionReactor)
 
         //Fluid Containers
         AtomicContent.FLUID_PLASMA.setBlock(AtomicContent.blockPlasma)
