@@ -107,7 +107,7 @@ class TileTank extends TileTankNode(Material.iron) with ISneakPickup
   {
     if (!world.isRemote)
     {
-      return FluidUtility.playerActivatedFluidItem(world, x, y, z, player, side)
+      return FluidUtility.playerActivatedFluidItem(world, xi, yi, zi, player, side)
     }
     return true
   }
@@ -140,10 +140,10 @@ class TileTank extends TileTankNode(Material.iron) with ISneakPickup
           GL11.glScaled(0.99, 0.99, 0.99)
           val tank: IFluidTank = getTank
           val percentageFilled: Double = tank.getFluidAmount.asInstanceOf[Double] / tank.getCapacity.asInstanceOf[Double]
-          val ySouthEast: Double = FluidUtility.getAveragePercentageFilledForSides(classOf[TileTank], percentageFilled, world, new Vector3(this), ForgeDirection.SOUTH, ForgeDirection.EAST)
-          val yNorthEast: Double = FluidUtility.getAveragePercentageFilledForSides(classOf[TileTank], percentageFilled, world, new Vector3(this), ForgeDirection.NORTH, ForgeDirection.EAST)
-          val ySouthWest: Double = FluidUtility.getAveragePercentageFilledForSides(classOf[TileTank], percentageFilled, world, new Vector3(this), ForgeDirection.SOUTH, ForgeDirection.WEST)
-          val yNorthWest: Double = FluidUtility.getAveragePercentageFilledForSides(classOf[TileTank], percentageFilled, world, new Vector3(this), ForgeDirection.NORTH, ForgeDirection.WEST)
+          val ySouthEast: Double = FluidUtility.getAveragePercentageFilledForSides(classOf[TileTank], percentageFilled, world, asVector3, ForgeDirection.SOUTH, ForgeDirection.EAST)
+          val yNorthEast: Double = FluidUtility.getAveragePercentageFilledForSides(classOf[TileTank], percentageFilled, world, asVector3, ForgeDirection.NORTH, ForgeDirection.EAST)
+          val ySouthWest: Double = FluidUtility.getAveragePercentageFilledForSides(classOf[TileTank], percentageFilled, world, asVector3, ForgeDirection.SOUTH, ForgeDirection.WEST)
+          val yNorthWest: Double = FluidUtility.getAveragePercentageFilledForSides(classOf[TileTank], percentageFilled, world, asVector3, ForgeDirection.NORTH, ForgeDirection.WEST)
           FluidRenderUtility.renderFluidTesselation(tank, ySouthEast, yNorthEast, ySouthWest, yNorthWest)
         }
         GL11.glPopMatrix

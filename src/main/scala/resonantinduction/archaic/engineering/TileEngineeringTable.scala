@@ -246,7 +246,7 @@ class TileEngineeringTable extends TileInventory(Material.wood) with IPacketRece
 
     override def onRemove(block: Block, par6: Int)
     {
-        val stack: ItemStack = ItemBlockSaved.getItemStackWithNBT(block, world, x, y, z)
+        val stack: ItemStack = ItemBlockSaved.getItemStackWithNBT(block, world, xi, yi, zi)
         InventoryUtility.dropItemStack(world, center, stack)
     }
 
@@ -341,7 +341,7 @@ class TileEngineeringTable extends TileInventory(Material.wood) with IPacketRece
             var idDisplacement: Int = TileEngineeringTable.PLAYER_OUTPUT_END
             for (dir <- ForgeDirection.VALID_DIRECTIONS)
             {
-                val tile: TileEntity = new Vector3(this).add(dir).getTileEntity(worldObj)
+                val tile: TileEntity = asVectorWorld.add(dir).getTileEntity
                 if (tile.isInstanceOf[IInventory])
                 {
                     val inventory: IInventory = tile.asInstanceOf[IInventory]
@@ -408,7 +408,7 @@ class TileEngineeringTable extends TileInventory(Material.wood) with IPacketRece
             var idDisplacement: Int = TileEngineeringTable.PLAYER_OUTPUT_END
             for (dir <- ForgeDirection.VALID_DIRECTIONS)
             {
-                val tile: TileEntity = new Vector3(this).add(dir).getTileEntity(worldObj)
+                val tile: TileEntity = asVectorWorld.add(dir).getTileEntity
                 if (tile.isInstanceOf[IInventory])
                 {
                     val inventory: IInventory = tile.asInstanceOf[IInventory]
@@ -646,7 +646,7 @@ class TileEngineeringTable extends TileInventory(Material.wood) with IPacketRece
             var temporaryInvID: Int = TileEngineeringTable.PLAYER_OUTPUT_END
             for (dir <- ForgeDirection.VALID_DIRECTIONS)
             {
-                val tile: TileEntity = new Vector3(this).add(dir).getTileEntity(worldObj)
+                val tile: TileEntity = asVectorWorld.add(dir).getTileEntity(worldObj)
                 if (tile.isInstanceOf[IInventory])
                 {
                     val inventory: IInventory = tile.asInstanceOf[IInventory]

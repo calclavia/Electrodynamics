@@ -106,7 +106,7 @@ class TileFirebox extends TileElectricInventory(Material.rock) with IPacketRecei
                     {
                         if (FluidRegistry.getFluid("steam") != null)
                         {
-                            MinecraftForge.EVENT_BUS.post(new BoilEvent(worldObj, new Vector3(this).add(0, 1, 0), new FluidStack(FluidRegistry.WATER, volume), new FluidStack(FluidRegistry.getFluid("steam"), volume), 2, false))
+                            MinecraftForge.EVENT_BUS.post(new BoilEvent(worldObj, asVectorWorld.add(0, 1, 0), new FluidStack(FluidRegistry.WATER, volume), new FluidStack(FluidRegistry.getFluid("steam"), volume), 2, false))
                             boiledVolume += volume
                         }
                         if (boiledVolume >= FluidContainerRegistry.BUCKET_VOLUME)
@@ -269,7 +269,7 @@ class TileFirebox extends TileElectricInventory(Material.rock) with IPacketRecei
 
     override def use(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
     {
-        if (FluidUtility.playerActivatedFluidItem(world, x, y, z, player, side))
+        if (FluidUtility.playerActivatedFluidItem(world, xi, yi, zi, player, side))
         {
             return true
         }

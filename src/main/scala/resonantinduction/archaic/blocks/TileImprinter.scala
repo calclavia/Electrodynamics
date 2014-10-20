@@ -26,7 +26,7 @@ import resonant.lib.network.handle.IPacketReceiver
 import resonant.lib.render.RenderItemOverlayUtility
 import resonant.lib.utility.inventory.InventoryUtility
 import resonantinduction.core.Reference
-import universalelectricity.core.transform.vector.{Vector2, Vector3, VectorWorld}
+import universalelectricity.core.transform.vector.{Vector2, Vector3}
 
 import scala.collection.JavaConversions._
 
@@ -371,12 +371,12 @@ class TileImprinter extends TileAdvanced(Material.circuits) with ISidedInventory
                                 InventoryUtility.dropItemStack(world, new Vector3(player), checkStack, 0)
                                 inventory(slotID) = null
                             }
-                            world.markBlockForUpdate(x, y, z)
+                            world.markBlockForUpdate(xi, yi, zi)
                             return true
                         }
                     }
                 }
-                world.markBlockForUpdate(x, y, z)
+                world.markBlockForUpdate(xi, yi, zi)
             }
             return true
         }
@@ -399,8 +399,7 @@ class TileImprinter extends TileAdvanced(Material.circuits) with ISidedInventory
 
     override def onNeighborChanged(block: Block)
     {
-        val vec: VectorWorld = new VectorWorld(this)
-        val b: Block = vec.add(ForgeDirection.getOrientation(1)).getBlock
+        val b: Block = asVectorWorld.add(ForgeDirection.getOrientation(1)).getBlock
         if (Blocks.piston_head eq b)
         {
             onInventoryChanged

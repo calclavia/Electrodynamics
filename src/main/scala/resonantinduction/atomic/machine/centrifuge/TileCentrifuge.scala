@@ -54,7 +54,7 @@ class TileCentrifuge extends TileElectricInventory(Material.iron) with IPacketRe
                 for (i <- 0 to 6)
                 {
                     val direction: ForgeDirection = ForgeDirection.getOrientation(i)
-                    val tileEntity: TileEntity = new Vector3(this).add(direction).getTileEntity(world)
+                    val tileEntity: TileEntity = asVector3.add(direction).getTileEntity(world)
                     if (tileEntity.isInstanceOf[IFluidHandler] && tileEntity.getClass != this.getClass)
                     {
                         val fluidHandler: IFluidHandler = (tileEntity.asInstanceOf[IFluidHandler])
@@ -127,7 +127,7 @@ class TileCentrifuge extends TileElectricInventory(Material.iron) with IPacketRe
 
     override def getDescriptionPacket: Packet =
     {
-        return ResonantEngine.instance.packetHandler.toMCPacket(new PacketTile(x, y, z, Array(this.timer, AtomicContent.getFluidAmount(this.gasTank.getFluid))))
+        return ResonantEngine.instance.packetHandler.toMCPacket(new PacketTile(xi, yi, zi, Array(this.timer, AtomicContent.getFluidAmount(this.gasTank.getFluid))))
     }
 
     /**

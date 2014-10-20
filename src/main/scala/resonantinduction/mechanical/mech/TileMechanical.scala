@@ -93,13 +93,13 @@ abstract class TileMechanical(material: Material) extends TileNode(material) wit
     {
         val tag: NBTTagCompound = new NBTTagCompound
         writeToNBT(tag)
-        return ResonantEngine.instance.packetHandler.toMCPacket(new PacketTile(x, y, z, Array(nbt_packet_id, tag)))
+        return ResonantEngine.instance.packetHandler.toMCPacket(new PacketTile(xi, yi, zi, Array(nbt_packet_id, tag)))
     }
 
     /** Sends the torque and angular velocity to the client */
     private def sendRotationPacket
     {
-        ResonantEngine.instance.packetHandler.sendToAllAround(new PacketTile(x, y , z, Array(vel_packet_id, mechanicalNode.angularVelocity, mechanicalNode.torque)), this)
+        ResonantEngine.instance.packetHandler.sendToAllAround(new PacketTile(xi, yi , zi, Array(vel_packet_id, mechanicalNode.angularVelocity, mechanicalNode.torque)), this)
     }
 
     override def read(data: ByteBuf, id: Int, player: EntityPlayer, `type`: PacketType): Boolean =

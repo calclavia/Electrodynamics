@@ -30,7 +30,7 @@ class TileFocusCrystal extends TileBase with ILaserHandler with IFocus
             {
                 val dir = ForgeDirection.getOrientation(a)
                 val axis = new Vector3(dir)
-                val rotateAngle = world.getIndirectPowerLevelTo(x + axis.x.toInt, y + axis.y.toInt, z + axis.z.toInt, a) * 15
+                val rotateAngle = world.getIndirectPowerLevelTo(xi + axis.x.toInt, yi + axis.y.toInt, zi + axis.z.toInt, a) * 15
 
                 if (rotateAngle > 0)
                 {
@@ -38,12 +38,12 @@ class TileFocusCrystal extends TileBase with ILaserHandler with IFocus
                 }
             }
 
-            world.markBlockForUpdate(x, y, z)
+            world.markBlockForUpdate(xi, yi, zi)
         }
 
         if (energy > 0)
         {
-            Laser.spawn(worldObj, position + 0.5 + normal * 0.9, position + 0.5, normal, color, energy)
+            Laser.spawn(worldObj, asVector3 + 0.5 + normal * 0.9, asVector3 + 0.5, normal, color, energy)
             color = new Vector3(1, 1, 1)
             energy = 0;
         }
@@ -51,8 +51,8 @@ class TileFocusCrystal extends TileBase with ILaserHandler with IFocus
 
     override def focus(newPosition: Vector3)
     {
-        normal = ((newPosition - position) - 0.5).normalize
-        world.markBlockForUpdate(x, y, z)
+        normal = ((newPosition - asVector3) - 0.5).normalize
+        world.markBlockForUpdate(xi, yi, zi)
     }
 
     def setFocus(focus: Vector3)
@@ -66,7 +66,7 @@ class TileFocusCrystal extends TileBase with ILaserHandler with IFocus
 
     override def onLaserHit(renderStart: Vector3, incidentDirection: Vector3, hit: MovingObjectPosition, color: Vector3, energy: Double): Boolean =
     {
-        ResonantInduction.proxy.renderLaser(worldObj, renderStart, position + 0.5, color, energy)
+        ResonantInduction.proxy.renderLaser(worldObj, renderStart, asVector3 + 0.5, color, energy)
         this.energy += energy
         this.color = (this.color + color) / 2
         return true
@@ -76,7 +76,7 @@ class TileFocusCrystal extends TileBase with ILaserHandler with IFocus
     {
         val nbt = new NBTTagCompound()
         writeToNBT(nbt)
-        return new S35PacketUpdateTileEntity(x, y, z, 0, nbt)
+        return new S35PacketUpdateTileEntity(xi, yi, zi, 0, nbt)
     }
 
     override def onDataPacket(net: NetworkManager, pkt: S35PacketUpdateTileEntity)

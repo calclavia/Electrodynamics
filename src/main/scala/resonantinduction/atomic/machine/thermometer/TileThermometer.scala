@@ -96,7 +96,7 @@ class TileThermometer extends TileAdvanced(Material.piston) with SimpleComponent
 
     override def onRemove(block: Block, par6: Int)
     {
-        val stack: ItemStack = ItemBlockSaved.getItemStackWithNBT(getBlockType, world, x, y, z)
+        val stack: ItemStack = ItemBlockSaved.getItemStackWithNBT(getBlockType, world, xi, yi, zi)
         InventoryUtility.dropItemStack(world, center, stack)
     }
 
@@ -113,14 +113,14 @@ class TileThermometer extends TileAdvanced(Material.piston) with SimpleComponent
                 }
                 else
                 {
-                    detectedTemperature = ThermalGrid.getTemperature(new VectorWorld(this))
+                    detectedTemperature = ThermalGrid.getTemperature(asVectorWorld)
                 }
                 if (detectedTemperature != previousDetectedTemperature || isProvidingPower != this.isOverThreshold)
                 {
                     previousDetectedTemperature = detectedTemperature
                     isProvidingPower = isOverThreshold
                     notifyChange
-                    sendPacket(getDescPacket)
+                    //sendPacket(getDescPacket)
                 }
             }
         }

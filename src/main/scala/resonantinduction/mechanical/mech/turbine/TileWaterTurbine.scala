@@ -91,7 +91,7 @@ class TileWaterTurbine extends TileTurbine
             {
                 if (dir != currentDir && dir != currentDir.getOpposite)
                 {
-                    val check: Vector3 = new Vector3(this).add(dir)
+                    val check: Vector3 = asVector3.add(dir)
                     val blockID: Block = worldObj.getBlock(check.xi, check.yi, check.zi)
                     val metadata: Int = worldObj.getBlockMetadata(check.xi, check.yi, check.zi)
                     if (blockID == Blocks.water || blockID == Blocks.flowing_water)

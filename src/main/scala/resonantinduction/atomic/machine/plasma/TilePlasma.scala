@@ -15,7 +15,7 @@ import resonant.api.event.PlasmaEvent
 import resonant.content.prefab.java.TileAdvanced
 import resonant.engine.grid.thermal.ThermalGrid
 import resonant.lib.config.Config
-import universalelectricity.core.transform.vector.{Vector3, VectorWorld}
+import universalelectricity.core.transform.vector.Vector3
 
 object TilePlasma
 {
@@ -58,7 +58,7 @@ class TilePlasma extends TileAdvanced(Material.lava)
     override def update
     {
         super.update
-        ThermalGrid.addTemperature(new VectorWorld(this), ((temperature - ThermalGrid.getTemperature(new VectorWorld(this))) * 0.1f).asInstanceOf[Float])
+        ThermalGrid.addTemperature(asVectorWorld, ((temperature - ThermalGrid.getTemperature(asVectorWorld)) * 0.1f).asInstanceOf[Float])
         if (ticks % 20 == 0)
         {
             temperature /= 1.5
@@ -71,7 +71,7 @@ class TilePlasma extends TileAdvanced(Material.lava)
             {
                 if (worldObj.rand.nextFloat < 0.4)
                 {
-                    val diDian: Vector3 = new Vector3(this)
+                    val diDian: Vector3 = asVector3
                     diDian.add(ForgeDirection.getOrientation(i))
                     val tileEntity: TileEntity = diDian.getTileEntity(worldObj)
                     if (!(tileEntity.isInstanceOf[TilePlasma]))

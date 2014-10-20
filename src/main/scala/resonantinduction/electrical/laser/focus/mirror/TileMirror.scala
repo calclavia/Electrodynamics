@@ -30,7 +30,7 @@ class TileMirror extends TileBase with ILaserHandler with IFocus
             {
                 val dir = ForgeDirection.getOrientation(a)
                 val axis = new Vector3(dir)
-                val rotateAngle = world.getIndirectPowerLevelTo(x + axis.x.toInt, y + axis.y.toInt, z + axis.z.toInt, a) * 15
+                val rotateAngle = world.getIndirectPowerLevelTo(xi + axis.x.toInt, yi + axis.y.toInt, zi + axis.z.toInt, a) * 15
 
                 if (rotateAngle > 0)
                 {
@@ -38,7 +38,7 @@ class TileMirror extends TileBase with ILaserHandler with IFocus
                 }
             }
 
-            world.markBlockForUpdate(x, y, z)
+            world.markBlockForUpdate(xi, yi, zi)
         }
 
         if (world.getTotalWorldTime % 20 == 0)
@@ -47,8 +47,8 @@ class TileMirror extends TileBase with ILaserHandler with IFocus
 
     override def focus(newPosition: Vector3)
     {
-        normal = ((newPosition - position) - 0.5).normalize
-        world.markBlockForUpdate(x, y, z)
+        normal = ((newPosition - asVector3) - 0.5).normalize
+        world.markBlockForUpdate(xi, yi, zi)
     }
 
     def setFocus(focus: Vector3)
@@ -70,7 +70,7 @@ class TileMirror extends TileBase with ILaserHandler with IFocus
         /**
          * Render incoming laser
          */
-        ResonantInduction.proxy.renderLaser(worldObj, renderStart, position + 0.5, color, energy)
+        ResonantInduction.proxy.renderLaser(worldObj, renderStart, asVector3 + 0.5, color, energy)
 
         /**
          * Calculate Reflection
@@ -82,7 +82,7 @@ class TileMirror extends TileBase with ILaserHandler with IFocus
         if (Math.toDegrees(rotateAngle) < 180)
         {
             val newDirection = (incidentDirection.clone.transform(new Quaternion(rotateAngle, axisOfReflection))).normalize
-            Laser.spawn(worldObj, position + 0.5 + newDirection * 0.9, position + 0.5, newDirection, color, energy / 1.2)
+            Laser.spawn(worldObj, asVector3 + 0.5 + newDirection * 0.9, asVector3 + 0.5, newDirection, color, energy / 1.2)
         }
 
         return true
@@ -92,7 +92,7 @@ class TileMirror extends TileBase with ILaserHandler with IFocus
     {
         val nbt = new NBTTagCompound()
         writeToNBT(nbt)
-        return new S35PacketUpdateTileEntity(x, y, z, 0, nbt)
+        return new S35PacketUpdateTileEntity(xi, yi, zi, 0, nbt)
     }
 
     override def onDataPacket(net: NetworkManager, pkt: S35PacketUpdateTileEntity)

@@ -2,9 +2,7 @@ package resonantinduction.mechanical.machine.edit
 
 import java.util.EnumSet
 
-import cpw.mods.fml.common.network.ByteBufUtils
 import cpw.mods.fml.relauncher.{Side, SideOnly}
-import io.netty.buffer.ByteBuf
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.client.renderer.texture.IIconRegister
@@ -17,8 +15,8 @@ import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
 import resonant.api.IRotatable
 import resonant.lib.content.prefab.java.TileInventory
-import resonant.lib.network.discriminator.{PacketTile, PacketType}
-import resonant.lib.network.handle.IPacketReceiver
+import resonant.lib.network.discriminator.PacketTile
+import resonant.lib.network.handle.TPacketReceiver
 import resonant.lib.render.RenderItemOverlayUtility
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.utility.inventory.{InternalInventoryHandler, InventoryUtility}
@@ -34,7 +32,7 @@ object TilePlacer
     @SideOnly(Side.CLIENT) private var iconBack: IIcon = null
 }
 
-class TilePlacer extends TileInventory(Material.rock) with IRotatable with IPacketReceiver
+class TilePlacer extends TileInventory(Material.rock) with IRotatable with TPacketReceiver
 {
     private var _doWork: Boolean = false
     private var autoPullItems: Boolean = false
@@ -109,7 +107,7 @@ class TilePlacer extends TileInventory(Material.rock) with IRotatable with IPack
     def doWork
     {
         val side: Int = 0
-        val placePos: Vector3 = position.add(getDirection)
+        val placePos: Vector3 = asVector3.add(getDirection)
         val placeStack: ItemStack = getStackInSlot(0)
         if (InventoryUtility.placeItemBlock(world, placePos.xi, placePos.yi, placePos.zi, placeStack, side))
         {
@@ -151,21 +149,6 @@ class TilePlacer extends TileInventory(Material.rock) with IRotatable with IPack
         sendPacket(getDescPacket)
     }
 
-    def read(data: ByteBuf, player: EntityPlayer, `type`: PacketType)
-    {
-        try
-        {
-            readFromNBT(ByteBufUtils.readTag(data))
-        }
-        catch
-            {
-                case e: Exception =>
-                {
-                    e.printStackTrace
-                }
-            }
-    }
-
     override def readFromNBT(nbt: NBTTagCompound)
     {
         super.readFromNBT(nbt)
@@ -188,7 +171,7 @@ class TilePlacer extends TileInventory(Material.rock) with IRotatable with IPack
 
     @SideOnly(Side.CLIENT) override def getIcon(access: IBlockAccess, side: Int): IIcon =
     {
-        val meta: Int = access.getBlockMetadata(x, y, z)
+        val meta: Int = access.getBlockMetadata(xi, yi, zi)
         if (side == meta)
         {
             return TilePlacer.iconFront

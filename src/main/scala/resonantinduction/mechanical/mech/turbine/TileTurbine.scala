@@ -131,7 +131,7 @@ class TileTurbine extends TileMechanical(Material.wood) with IMultiBlockStructur
 
     def getPosition: Vector3 =
     {
-        return new Vector3(this)
+        return asVector3
     }
 
     def getMultiBlock: TurbineMBlockHandler =

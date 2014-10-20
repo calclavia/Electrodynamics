@@ -79,8 +79,8 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
     val mainTile: TileReactorCell = getLowest
     mainTile.getMultiBlock.deconstruct
     mainTile.getMultiBlock.construct
-    val top: Boolean = new Vector3(this).add(new Vector3(0, 1, 0)).getTileEntity(worldObj).isInstanceOf[TileReactorCell]
-    val bottom: Boolean = new Vector3(this).add(new Vector3(0, -1, 0)).getTileEntity(worldObj).isInstanceOf[TileReactorCell]
+    val top: Boolean = asVector3.add(new Vector3(0, 1, 0)).getTileEntity(worldObj).isInstanceOf[TileReactorCell]
+    val bottom: Boolean = asVector3.add(new Vector3(0, -1, 0)).getTileEntity(worldObj).isInstanceOf[TileReactorCell]
     if (top && bottom)
     {
       worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 1, 3)
@@ -98,7 +98,7 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
   def getLowest: TileReactorCell =
   {
     var lowest: TileReactorCell = this
-    val checkPosition: Vector3 = new Vector3(this)
+    val checkPosition: Vector3 = asVector3
     while (true)
     {
       val t: TileEntity = checkPosition.getTileEntity(this.worldObj)
@@ -141,7 +141,7 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
         if (drain != null && drain.amount >= FluidContainerRegistry.BUCKET_VOLUME)
         {
           val spawnDir: ForgeDirection = ForgeDirection.getOrientation(worldObj.rand.nextInt(3) + 2)
-          val spawnPos: Vector3 = new Vector3(this) + spawnDir + spawnDir
+          val spawnPos: Vector3 = asVector3 + spawnDir + spawnDir
           spawnPos.add(0, Math.max(worldObj.rand.nextInt(getHeight) - 1, 0), 0)
           if (worldObj.isAirBlock(spawnPos.xi, spawnPos.yi, spawnPos.zi))
           {
@@ -173,13 +173,13 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
                 val entities: List[EntityLiving] = worldObj.getEntitiesWithinAABB(classOf[EntityLiving], AxisAlignedBB.getBoundingBox(xCoord - TileReactorCell.RADIUS * 2, yCoord - TileReactorCell.RADIUS * 2, zCoord - TileReactorCell.RADIUS * 2, xCoord + TileReactorCell.RADIUS * 2, yCoord + TileReactorCell.RADIUS * 2, zCoord + TileReactorCell.RADIUS * 2)).asInstanceOf[List[EntityLiving]]
                 for (entity <- entities)
                 {
-                  PoisonRadiation.INSTANCE.poisonEntity(new Vector3(this), entity)
+                  PoisonRadiation.INSTANCE.poisonEntity(asVector3, entity)
                 }
               }
             }
           }
         }
-        temperature = ThermalGrid.getTemperature(new VectorWorld(this))
+        temperature = ThermalGrid.getTemperature(asVectorWorld)
         if (internalEnergy - prevInternalEnergy > 0)
         {
           var deltaT: Float = ThermalPhysics.getTemperatureForEnergy(mass, specificHeatCapacity, ((internalEnergy - prevInternalEnergy) * 0.15).asInstanceOf[Long])
@@ -188,7 +188,7 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
           for (i <- 0 to 5)
           {
             {
-              val checkAdjacent: Vector3 = new Vector3(this).add(ForgeDirection.getOrientation(i))
+              val checkAdjacent: Vector3 = asVector3.add(ForgeDirection.getOrientation(i))
               if (checkAdjacent.getBlock(worldObj) == AtomicContent.blockControlRod)
               {
                 deltaT /= 1.1f
@@ -196,7 +196,7 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
               }
             }
           }
-          ThermalGrid.addTemperature(new VectorWorld(this), deltaT)
+          ThermalGrid.addTemperature(asVectorWorld, deltaT)
           if (worldObj.rand.nextInt(80) == 0 && this.getTemperature >= 373)
           {
             worldObj.playSoundEffect(this.xCoord + 0.5F, this.yCoord + 0.5F, this.zCoord + 0.5F, "Fluid.lava", 0.5F, 2.1F + (worldObj.rand.nextFloat - worldObj.rand.nextFloat) * 0.85F)
@@ -234,7 +234,7 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
         internalEnergy = 0
         if (isOverToxic)
         {
-          val leakPos: VectorWorld = new VectorWorld(this).add(worldObj.rand.nextInt(20) - 10, worldObj.rand.nextInt(20) - 10, worldObj.rand.nextInt(20) - 10)
+          val leakPos: VectorWorld = asVectorWorld.add(worldObj.rand.nextInt(20) - 10, worldObj.rand.nextInt(20) - 10, worldObj.rand.nextInt(20) - 10)
           val block: Block = leakPos.getBlock
           if (block == Blocks.grass)
           {
@@ -255,7 +255,7 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
       {
         shouldUpdate = false
         notifyChange
-        sendPacket(getDescPacket)
+        //sendPacket(getDescPacket)
       }
     }
     else
@@ -281,7 +281,7 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
   def getHeight: Int =
   {
     var height: Int = 0
-    val checkPosition: Vector3 = new Vector3(this)
+    val checkPosition: Vector3 = asVector3
     var tile: TileEntity = this
     while (tile.isInstanceOf[TileReactorCell])
     {
@@ -320,7 +320,7 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
   override def getMultiBlockVectors: java.lang.Iterable[Vector3] =
   {
     val vectors: List[Vector3] = new ArrayList[Vector3]
-    val checkPosition: Vector3 = new Vector3(this)
+    val checkPosition: Vector3 = asVector3
     while (true)
     {
       val t: TileEntity = checkPosition.getTileEntity(this.worldObj)
@@ -339,7 +339,7 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
 
   def getPosition: Vector3 =
   {
-    return new Vector3(this)
+    return asVector3
   }
 
   /** Reads a tile entity from NBT. */

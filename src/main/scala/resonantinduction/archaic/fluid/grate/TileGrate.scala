@@ -106,7 +106,7 @@ class TileGrate extends TilePressureNode(Material.rock) with IRotatable
             if (gratePath == null)
             {
               gratePath = new GratePathfinder(true)
-              gratePath.startFill(new Vector3(this), getTank().getFluid.getFluid.getID)
+              gratePath.startFill(asVectorWorld, getTank().getFluid.getFluid.getID)
             }
             val filledInWorld = gratePath.tryFill(getFluidAmount, blockEffect)
             getTank().drain(filledInWorld, true)
@@ -120,7 +120,7 @@ class TileGrate extends TilePressureNode(Material.rock) with IRotatable
             if (gratePath == null)
             {
               gratePath = new GratePathfinder(false)
-              if (!gratePath.startDrain(new Vector3(this)))
+              if (!gratePath.startDrain(asVector3))
               {
                 resetPath()
               }

@@ -59,7 +59,7 @@ class TilePlasmaHeater extends TileElectric(Material.iron) with IPacketReceiver 
         }
         if (ticks % 80 == 0)
         {
-            world.markBlockForUpdate(x, y, z)
+            world.markBlockForUpdate(xi, yi, zi)
         }
     }
 
@@ -186,7 +186,7 @@ class TilePlasmaHeater extends TileElectric(Material.iron) with IPacketReceiver 
 
     override def use(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
     {
-        return FluidUtility.playerActivatedFluidItem(world, x, y, z, player, side)
+        return FluidUtility.playerActivatedFluidItem(world, xi, yi, zi, player, side)
     }
 
 }

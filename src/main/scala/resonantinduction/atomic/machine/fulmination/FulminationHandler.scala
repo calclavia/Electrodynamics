@@ -46,7 +46,7 @@ class FulminationHandler
                     {
                         if (!tileEntity.isInvalid)
                         {
-                            val tileDiDian: Vector3 = new Vector3(tileEntity)
+                            val tileDiDian: Vector3 = tileEntity.asVector3
                             tileDiDian.add(0.5f)
                             val juLi: Double = tileDiDian.distance(new Vector3(evt.x, evt.y, evt.z))
                             if (juLi <= evt.iExplosion.getRadius && juLi > 0)
@@ -66,7 +66,7 @@ class FulminationHandler
                 for (tileEntity <- avaliableGenerators)
                 {
                     val density: Float = evt.world.getBlockDensity(Vec3.createVectorHelper(evt.x, evt.y, evt.z), AtomicContent.blockFulmination.getCollisionBoundingBoxFromPool(evt.world, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord))
-                    val juLi: Double = new Vector3(tileEntity).distance(new Vector3(evt.x, evt.y, evt.z))
+                    val juLi: Double = tileEntity.asVector3.distance(new Vector3(evt.x, evt.y, evt.z))
                     var energy: Long = Math.min(maxEnergyPerGenerator, maxEnergyPerGenerator / (juLi / evt.iExplosion.getRadius)).asInstanceOf[Long]
                     energy = Math.max((1 - density) * energy, 0).asInstanceOf[Long]
                     tileEntity.energy.receiveEnergy(energy, true)

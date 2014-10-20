@@ -36,7 +36,7 @@ class TileTurntable extends SpatialBlock(Material.piston) with TRotatable
 
   override def update()
   {
-    updateTurntableState(world, x, y, z)
+    updateTurntableState(world, xi, yi, zi)
   }
 
   private def updateTurntableState(world: World, x: Int, y: Int, z: Int)

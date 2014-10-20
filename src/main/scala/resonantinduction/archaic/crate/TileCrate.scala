@@ -156,12 +156,10 @@ class TileCrate extends TileInventory(Material.rock) with TPacketReceiver with I
     return TileCrate.getSlotCount(this.getBlockMetadata)
   }
 
-  def read(data: ByteBuf, player: EntityPlayer, packet: PacketType)
+  override def read(data: ByteBuf, player: EntityPlayer, packet: PacketType)
   {
     if (this.worldObj.isRemote)
     {
-      try
-      {
         if (data.readBoolean)
         {
           this.sampleStack = ItemStack.loadItemStackFromNBT(data.readTag())
@@ -170,14 +168,6 @@ class TileCrate extends TileInventory(Material.rock) with TPacketReceiver with I
         else
         {
           this.sampleStack = null
-        }
-      }
-      catch
-        {
-          case e: Exception =>
-          {
-            e.printStackTrace
-          }
         }
     }
   }

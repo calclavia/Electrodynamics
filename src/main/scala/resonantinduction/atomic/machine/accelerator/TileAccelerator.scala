@@ -104,13 +104,13 @@ class TileAccelerator extends TileElectricInventory(Material.iron) with IElectro
                     {
                         if (getStackInSlot(0) != null && lastSpawnTick >= 40)
                         {
-                            val spawn_vec: Vector3 = new Vector3(this)
+                            val spawn_vec: Vector3 = asVector3
                             spawn_vec.add(getDirection.getOpposite)
                             spawn_vec.add(0.5f)
                             if (EntityParticle.canSpawnParticle(worldObj, spawn_vec))
                             {
                                 totalEnergyConsumed = 0
-                                entityParticle = new EntityParticle(worldObj, spawn_vec, new Vector3(this), getDirection.getOpposite)
+                                entityParticle = new EntityParticle(worldObj, spawn_vec, asVector3, getDirection.getOpposite)
                                 worldObj.spawnEntityInWorld(entityParticle)
                                 CalculateParticleDensity
                                 decrStackSize(0, 1)
@@ -175,7 +175,7 @@ class TileAccelerator extends TileElectricInventory(Material.iron) with IElectro
     {
         if (!world.isRemote)
         {
-            player.openGui(AtomicContent, 0, world, x, y, z)
+            player.openGui(AtomicContent, 0, world, xi, yi, zi)
         }
         return true
     }

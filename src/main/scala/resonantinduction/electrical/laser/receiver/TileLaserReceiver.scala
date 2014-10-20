@@ -23,8 +23,8 @@ class TileLaserReceiver extends TileBase with ILaserHandler
 
       if (redstoneValue != prevRedstoneValue)
       {
-        world.notifyBlocksOfNeighborChange(x, y, z, getBlockType)
-        ForgeDirection.VALID_DIRECTIONS.foreach(dir => world.notifyBlocksOfNeighborChange(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ, getBlockType))
+        world.notifyBlocksOfNeighborChange(xi, yi, zi, getBlockType)
+        ForgeDirection.VALID_DIRECTIONS.foreach(dir => world.notifyBlocksOfNeighborChange(xi + dir.offsetX, yi + dir.offsetY, zi + dir.offsetZ, getBlockType))
         prevRedstoneValue = redstoneValue
       }
 
@@ -36,8 +36,8 @@ class TileLaserReceiver extends TileBase with ILaserHandler
 
       if (redstoneValue != prevRedstoneValue)
       {
-        world.notifyBlocksOfNeighborChange(x, y, z, getBlockType)
-        ForgeDirection.VALID_DIRECTIONS.foreach(dir => world.notifyBlocksOfNeighborChange(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ, getBlockType))
+        world.notifyBlocksOfNeighborChange(xi, yi, zi, getBlockType)
+        ForgeDirection.VALID_DIRECTIONS.foreach(dir => world.notifyBlocksOfNeighborChange(xi + dir.offsetX, yi + dir.offsetY, zi + dir.offsetZ, getBlockType))
         prevRedstoneValue = redstoneValue
       }
     }

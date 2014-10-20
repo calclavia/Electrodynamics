@@ -15,7 +15,7 @@ class GuiAccelerator(player: EntityPlayer, tileEntity: TileAccelerator) extends 
     {
         this.fontRendererObj.drawString("Accelerator", 40, 10, 4210752)
         var status: String = ""
-        val position: Vector3 = new Vector3(this.tileEntity)
+        val position: Vector3 = tileEntity.asVector3
         position.add(this.tileEntity.getDirection.getOpposite)
         if (!EntityParticle.canSpawnParticle(this.tileEntity.world, position))
         {

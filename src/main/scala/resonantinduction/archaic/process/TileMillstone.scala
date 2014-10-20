@@ -145,7 +145,7 @@ class TileMillstone extends TileInventory(Material.rock) with IPacketReceiver
             setInventorySlotContents(0, current)
             player.inventory.setInventorySlotContents(player.inventory.currentItem, null)
         }
-        world.markBlockForUpdate(x, y, z)
+        world.markBlockForUpdate(xi, yi, zi)
         return false
     }
 }

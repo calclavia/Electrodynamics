@@ -32,7 +32,7 @@ class TileReactorDrain extends TileAdvanced(Material.iron) with IFluidHandler
     {
         this.tanks.clear
         val world: World = this.worldObj
-        val position: Vector3 = new Vector3(this)
+        val position: Vector3 = asVector3
         val finder: Pathfinder = new Pathfinder(new IPathCallBack
         {
             def getConnectedNodes(finder: Pathfinder, currentNode: Vector3): Set[Vector3] =
@@ -64,7 +64,7 @@ class TileReactorDrain extends TileAdvanced(Material.iron) with IFluidHandler
                 }
                 return false
             }
-        }).init(new Vector3(this).add(ForgeDirection.getOrientation(this.getBlockMetadata).getOpposite))
+        }).init(asVector3.add(ForgeDirection.getOrientation(this.getBlockMetadata).getOpposite))
         import scala.collection.JavaConversions._
         for (node <- finder.results)
         {
@@ -174,17 +174,17 @@ class TileReactorDrain extends TileAdvanced(Material.iron) with IFluidHandler
 
     override def onPlaced(entityLiving: EntityLivingBase, itemStack: ItemStack)
     {
-        if (MathHelper.abs(entityLiving.posX.asInstanceOf[Float] - x) < 2.0F && MathHelper.abs(entityLiving.posZ.asInstanceOf[Float] - z) < 2.0F)
+        if (MathHelper.abs(entityLiving.posX.asInstanceOf[Float] - xi) < 2.0F && MathHelper.abs(entityLiving.posZ.asInstanceOf[Float] - zi) < 2.0F)
         {
             val d0: Double = entityLiving.posY + 1.82D - entityLiving.yOffset
             if (d0 - y > 2.0D)
             {
-                world.setBlockMetadataWithNotify(x, y, z, 1, 3)
+                world.setBlockMetadataWithNotify(xi, yi, zi, 1, 3)
                 return
             }
             if (y - d0 > 0.0D)
             {
-                world.setBlockMetadataWithNotify(x, y, z, 0, 3)
+                world.setBlockMetadataWithNotify(xi, yi, zi, 0, 3)
                 return
             }
         }

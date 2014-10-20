@@ -49,7 +49,7 @@ class TileQuantumAssembler extends TileElectricInventory(Material.iron) with IPa
     {
         if (!world.isRemote)
         {
-            player.openGui(AtomicContent, 0, world, x, y, z)
+            player.openGui(AtomicContent, 0, world, xi, yi, zi)
         }
         return true
     }
@@ -137,9 +137,9 @@ class TileQuantumAssembler extends TileElectricInventory(Material.iron) with IPa
     {
         if (this.getStackInSlot(6) != null)
         {
-            return new PacketTile(x, y, z, Array(time, getStackInSlot(6)))
+            return new PacketTile(xi, yi, zi, Array(time, getStackInSlot(6)))
         }
-        return new PacketTile(x, y, z, Array(time, -1, -1, -1))
+        return new PacketTile(xi, yi, zi, Array(time, -1, -1, -1))
     }
 
     /**

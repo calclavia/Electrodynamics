@@ -129,7 +129,7 @@ class TileNuclearBoiler extends TileElectricInventory(Material.iron) with IPacke
 
     override def getDescPacket: PacketTile =
     {
-        return new PacketTile(x, y, z, Array(this.timer, AtomicContent.getFluidAmount(this.waterTank.getFluid), AtomicContent.getFluidAmount(this.gasTank.getFluid)))
+        return new PacketTile(xi, yi, zi, Array(this.timer, AtomicContent.getFluidAmount(this.waterTank.getFluid), AtomicContent.getFluidAmount(this.gasTank.getFluid)))
     }
 
     def sendDescPack

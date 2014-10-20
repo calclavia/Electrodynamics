@@ -111,7 +111,7 @@ class TileBattery extends TileElectric(Material.iron) with IPacketReceiver
     {
       energy.setCapacity(TileBattery.getEnergyForTier(ItemBlockBattery.getTier(itemStack)))
       energy.setEnergy((itemStack.getItem.asInstanceOf[ItemBlockBattery]).getEnergy(itemStack))
-      world.setBlockMetadataWithNotify(x, y, z, ItemBlockBattery.getTier(itemStack), 3)
+      world.setBlockMetadataWithNotify(xi, yi, zi, ItemBlockBattery.getTier(itemStack), 3)
     }
   }
 
@@ -120,7 +120,7 @@ class TileBattery extends TileElectric(Material.iron) with IPacketReceiver
     val ret: ArrayList[ItemStack] = new ArrayList[ItemStack]
     val itemStack: ItemStack = new ItemStack(getBlockType, 1)
     val itemBlock: ItemBlockBattery = itemStack.getItem.asInstanceOf[ItemBlockBattery]
-    ItemBlockBattery.setTier(itemStack, world.getBlockMetadata(x, y, z).asInstanceOf[Byte])
+    ItemBlockBattery.setTier(itemStack, world.getBlockMetadata(xi, yi, zi).asInstanceOf[Byte])
     itemBlock.setEnergy(itemStack, energy.getEnergy)
     ret.add(itemStack)
     return ret
