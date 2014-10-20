@@ -57,7 +57,7 @@ class TileForceField extends SpatialTile(Material.glass) with TPacketReceiver wi
   {
     var renderType = 0
     var camoBlock: Block = null
-    val tileEntity = access.getTileEntity(x, y, z)
+    val tileEntity = access.getTileEntity(xi, yi, zi)
 
     if (camoStack != null && camoStack.getItem().isInstanceOf[ItemBlock])
     {
@@ -81,39 +81,39 @@ class TileForceField extends SpatialTile(Material.glass) with TPacketReceiver wi
         renderType match
         {
           case 4 =>
-            renderer.renderBlockLiquid(block, x, y, z)
+            renderer.renderBlockLiquid(block, xi, yi, zi)
           case 31 =>
-            renderer.renderBlockLog(block, x, y, z)
+            renderer.renderBlockLog(block, xi, yi, zi)
           case 1 =>
-            renderer.renderCrossedSquares(block, x, y, z)
+            renderer.renderCrossedSquares(block, xi, yi, zi)
           case 20 =>
-            renderer.renderBlockVine(block, x, y, z)
+            renderer.renderBlockVine(block, xi, yi, zi)
           case 39 =>
-            renderer.renderBlockQuartz(block, x, y, z)
+            renderer.renderBlockQuartz(block, xi, yi, zi)
           case 5 =>
-            renderer.renderBlockRedstoneWire(block, x, y, z)
+            renderer.renderBlockRedstoneWire(block, xi, yi, zi)
           case 13 =>
-            renderer.renderBlockCactus(block, x, y, z)
+            renderer.renderBlockCactus(block, xi, yi, zi)
           case 23 =>
-            renderer.renderBlockLilyPad(block, x, y, z)
+            renderer.renderBlockLilyPad(block, xi, yi, zi)
           case 6 =>
-            renderer.renderBlockCrops(block, x, y, z)
+            renderer.renderBlockCrops(block, xi, yi, zi)
           case 8 =>
-            renderer.renderBlockLadder(block, x, y, z)
+            renderer.renderBlockLadder(block, xi, yi, zi)
           case 7 =>
-            renderer.renderBlockDoor(block, x, y, z)
+            renderer.renderBlockDoor(block, xi, yi, zi)
           case 12 =>
-            renderer.renderBlockLever(block, x, y, z)
+            renderer.renderBlockLever(block, xi, yi, zi)
           case 29 =>
-            renderer.renderBlockTripWireSource(block, x, y, z)
+            renderer.renderBlockTripWireSource(block, xi, yi, zi)
           case 30 =>
-            renderer.renderBlockTripWire(block, x, y, z)
+            renderer.renderBlockTripWire(block, xi, yi, zi)
           case 14 =>
-            renderer.renderBlockBed(block, x, y, z)
+            renderer.renderBlockBed(block, xi, yi, zi)
           case 16 =>
-            renderer.renderPistonBase(block, x, y, z, false)
+            renderer.renderPistonBase(block, xi, yi, zi, false)
           case 17 =>
-            renderer.renderPistonExtension(block, x, y, z, true)
+            renderer.renderPistonExtension(block, xi, yi, zi, true)
           case _ =>
             super.renderStatic(renderer, pos, pass)
         }
@@ -165,7 +165,7 @@ class TileForceField extends SpatialTile(Material.glass) with TPacketReceiver wi
     val projector = getProjector
 
     if (projector != null)
-      projector.getModuleStacks(projector.getModuleSlots(): _*) forall (stack => stack.getItem.asInstanceOf[IModule].onCollideWithForceField(world, x, y, z, player, stack))
+      projector.getModuleStacks(projector.getModuleSlots(): _*) forall (stack => stack.getItem.asInstanceOf[IModule].onCollideWithForceField(world, xi, yi, zi, player, stack))
   }
 
   override def getCollisionBoxes(intersect: Cuboid, entity: Entity): Iterable[Cuboid] =
@@ -204,7 +204,7 @@ class TileForceField extends SpatialTile(Material.glass) with TPacketReceiver wi
 
     if (projector != null)
     {
-      if (!projector.getModuleStacks(projector.getModuleSlots(): _*).forall(stack => stack.getItem().asInstanceOf[IModule].onCollideWithForceField(world, x, y, z, entity, stack)))
+      if (!projector.getModuleStacks(projector.getModuleSlots(): _*).forall(stack => stack.getItem().asInstanceOf[IModule].onCollideWithForceField(world, xi, yi, zi, entity, stack)))
         return
 
       val biometricIdentifier = projector.getBiometricIdentifier
@@ -282,7 +282,7 @@ class TileForceField extends SpatialTile(Material.glass) with TPacketReceiver wi
     {
       try
       {
-        return camoStack.getItem().asInstanceOf[ItemBlock].field_150939_a.colorMultiplier(access, x, y, x)
+        return camoStack.getItem().asInstanceOf[ItemBlock].field_150939_a.colorMultiplier(access, xi, yi, zi)
       }
       catch
         {
@@ -329,7 +329,7 @@ class TileForceField extends SpatialTile(Material.glass) with TPacketReceiver wi
 
     if (!world.isRemote)
     {
-      world.setBlockToAir(x, y, z)
+      world.setBlockToAir(xi, yi, zi)
     }
   }
 
@@ -397,7 +397,7 @@ class TileForceField extends SpatialTile(Material.glass) with TPacketReceiver wi
       if (projTile.isInstanceOf[TileElectromagneticProjector])
       {
         val projector = projTile.asInstanceOf[IProjector]
-        if (world.isRemote || (projector.getCalculatedField != null && projector.getCalculatedField.contains(new Vector3(this))))
+        if (world.isRemote || (projector.getCalculatedField != null && projector.getCalculatedField.contains(asVector3)))
         {
           return projTile.asInstanceOf[TileElectromagneticProjector]
         }
@@ -423,7 +423,7 @@ class TileForceField extends SpatialTile(Material.glass) with TPacketReceiver wi
   {
     if (getProjectorSafe != null)
     {
-      camoStack = MFFSUtility.getCamoBlock(getProjector, new Vector3(this))
+      camoStack = MFFSUtility.getCamoBlock(getProjector, asVector3)
     }
   }
 

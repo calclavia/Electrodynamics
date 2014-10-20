@@ -98,7 +98,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
       {
         val packetType = buf.readInt
         val vector = new Vector3(buf.readInt, buf.readInt, buf.readInt) + 0.5
-        val root = new Vector3(this) + 0.5
+        val root = asVector3 + 0.5
 
         if (packetType == 1)
         {
@@ -256,7 +256,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
           //Creates a collection of positions that will be evaluated
           val evaluateField = potentialField
             .view.par
-            .filter(!_.equals(position))
+            .filter(!_.equals(asVector3))
             .filter(v => canReplaceBlock(v, v.getBlock(world)))
             .filter(_.getBlock(world) != Content.forceField)
             .filter(v => world.getChunkFromBlockCoords(v.xi, v.zi).isChunkLoaded)
@@ -300,7 +300,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
                 val tileEntity = vector.getTileEntity(world)
 
                 if (tileEntity.isInstanceOf[TileForceField])
-                  tileEntity.asInstanceOf[TileForceField].setProjector(new Vector3(this))
+                  tileEntity.asInstanceOf[TileForceField].setProjector(asVector3)
               })
           }
 

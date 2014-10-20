@@ -48,7 +48,7 @@ final object RenderBiometricIdentifier
 
       val look = Minecraft.getMinecraft.thePlayer.rayTrace(8, 1)
 
-      if (look != null && tile.position.toVector3.equals(new Vector3(look).floor))
+      if (look != null && tile.asVector3.equals(new Vector3(look).floor))
       {
         if (Math.random() > 0.05 || (tile.lastFlicker - t) > 200)
         {

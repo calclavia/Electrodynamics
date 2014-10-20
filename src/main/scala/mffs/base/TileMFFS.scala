@@ -65,7 +65,7 @@ abstract class TileMFFS extends SpatialTile(Material.iron) with ICamouflageMater
 				}
 			}
 
-			player.openGui(ModularForceFieldSystem, 0, world, x, y, z)
+			player.openGui(ModularForceFieldSystem, 0, world, xi, yi, zi)
 		}
 		return true
 	}
@@ -76,8 +76,8 @@ abstract class TileMFFS extends SpatialTile(Material.iron) with ICamouflageMater
 		{
 			if (!world.isRemote)
 			{
-				InventoryUtility.dropBlockAsItem(world, position)
-				world.setBlock(x, y, z, Blocks.air)
+				InventoryUtility.dropBlockAsItem(world, asVector3)
+				world.setBlock(xi, yi, zi, Blocks.air)
 				return true
 			}
 			return false
@@ -93,7 +93,7 @@ abstract class TileMFFS extends SpatialTile(Material.iron) with ICamouflageMater
 	{
 		if (!world.isRemote)
 		{
-			if (world.isBlockIndirectlyGettingPowered(x, y, z))
+			if (world.isBlockIndirectlyGettingPowered(xi, yi, zi))
 			{
 				powerOn()
 			}
@@ -165,7 +165,7 @@ abstract class TileMFFS extends SpatialTile(Material.iron) with ICamouflageMater
 		}
 	}
 
-	def isPoweredByRedstone: Boolean = world.isBlockIndirectlyGettingPowered(x, y, z)
+	def isPoweredByRedstone: Boolean = world.isBlockIndirectlyGettingPowered(xi, yi, zi)
 
 	override def readFromNBT(nbt: NBTTagCompound)
 	{

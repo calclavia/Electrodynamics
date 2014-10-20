@@ -11,7 +11,6 @@ import resonant.api.mffs.fortron.{FrequencyGridRegistry, IFortronFrequency}
 import resonant.lib.network.ByteBufWrapper.ByteBufWrapper
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.netty.PacketManager
-import universalelectricity.core.transform.vector.Vector3
 
 import scala.collection.convert.wrapAll._
 
@@ -39,7 +38,7 @@ abstract class TileFortron extends TileFrequency with IFluidHandler with IFortro
 	{
 		if (this.markSendFortron)
 		{
-			FortronUtility.transferFortron(this, FrequencyGridRegistry.instance.getNodes(classOf[IFortronFrequency], worldObj, new Vector3(this), 100, this.getFrequency), TransferMode.drain, Integer.MAX_VALUE)
+			FortronUtility.transferFortron(this, FrequencyGridRegistry.instance.getNodes(classOf[IFortronFrequency], worldObj, asVector3, 100, this.getFrequency), TransferMode.drain, Integer.MAX_VALUE)
 		}
 
 		super.invalidate()
@@ -73,7 +72,7 @@ abstract class TileFortron extends TileFrequency with IFluidHandler with IFortro
 
 	def sendFortronToClients
 	{
-		ModularForceFieldSystem.packetHandler.sendToAllAround(PacketManager.request(this, TilePacketType.fortron.id), this.worldObj, new Vector3(this), 25)
+		ModularForceFieldSystem.packetHandler.sendToAllAround(PacketManager.request(this, TilePacketType.fortron.id), this.worldObj, asVector3, 25)
 	}
 
 	/**
