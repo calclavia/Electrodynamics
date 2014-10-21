@@ -22,22 +22,32 @@ object Settings
     var SHINY_SILVER = true
 
     //Turbine Settings
-    @Config(category = "Power", key = "WindTubineRatio")
-    var WIND_POWER_RATIO: Int = 1
-    @Config(category = "Power", key = "WaterTubineRatio")
-    var WATER_POWER_RATIO: Int = 1
-    @Config var turbineOutputMultiplier: Double = 1
+
     @Config var allowTurbineStacking: Boolean = true
 
     // Power Settings
     @Config(category = "Power", key = "SolorPanel")
     var SOLAR_ENERGY: Int = 50
-    @Config var fulminationOutputMultiplier: Double = 1
+    @Config(category = "Power")
+    var fulminationOutputMultiplier: Double = 1
+    @Config(category = "Power", key = "AcceleratorCostPerTick")
+    final val ACCELERATOR_ENERGY_COST_PER_TICK : Int = 4800000
+    @Config(category = "Power", key = "WindTubineRatio")
+    var WIND_POWER_RATIO: Int = 1
+    @Config(category = "Power", key = "WaterTubineRatio")
+    var WATER_POWER_RATIO: Int = 1
+    @Config(category = "Power", key = "TubineRatio", comment = "Restricts the output of all turbines")
+    var turbineOutputMultiplier: Double = 1
+
+
+
 
     //Disable/Enable Settings
-    @Config var allowToxicWaste: Boolean = true
-    @Config var allowRadioactiveOres: Boolean = true
-    @Config(key = "EngineeringTableAutocraft")
+    @Config(category = "Enable")
+    var allowToxicWaste: Boolean = true
+    @Config(category = "Enable")
+    var allowRadioactiveOres: Boolean = true
+    @Config(category = "Enable", key = "EngineeringTableAutocraft")
     var ALLOW_ENGINEERING_AUTOCRAFT = true
 
     //Fluid Settings
@@ -56,6 +66,8 @@ object Settings
     @Config(comment = "0 = Do not generate, 1 = Generate items only, 2 = Generate all")
     var quantumAssemblerGenerateMode: Int = 1
     @Config var allowIC2UraniumCompression: Boolean = true
+    @Config
+    var ACCELERATOR_ANITMATTER_DENSITY_MULTIPLIER: Int = 1
 
     @SubscribeEvent
     def configEvent(evt: PostConfigEvent)

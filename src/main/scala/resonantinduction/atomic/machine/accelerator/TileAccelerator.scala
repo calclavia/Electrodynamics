@@ -17,29 +17,16 @@ import resonantinduction.atomic.AtomicContent
 import resonantinduction.atomic.items.ItemAntimatter
 import resonantinduction.core.{Reference, Settings}
 import universalelectricity.core.transform.vector.Vector3
-
-/**
- * Accelerator TileEntity
- */
-object TileAccelerator
-{
-    /**
-     * Joules required per ticks.
-     */
-    final val energyPerTick: Int = 4800000
-    /**
-     * User client side to determine the velocity of the particle.
-     */
-    final val clientParticleVelocity: Float = 0.9f
-    private final val DENSITY_MULTIPLYER_DEFAULT: Int = 1
-}
-
 class TileAccelerator extends TileElectricInventory(Material.iron) with IElectromagnet with IRotatable
 {
     /**
+     * User client side to determine the velocity of the particle.
+     */
+    val clientParticleVelocity: Float = 0.9f
+    /**
      * Multiplier that is used to give extra anti-matter based on density (hardness) of a given ore.
      */
-    private var antiMatterDensityMultiplyer: Int = TileAccelerator.DENSITY_MULTIPLYER_DEFAULT
+    private var antiMatterDensityMultiplyer: Int = Settings.ACCELERATOR_ANITMATTER_DENSITY_MULTIPLIER
     /**
      * The total amount of energy consumed by this particle. In Joules.
      */
@@ -131,7 +118,7 @@ class TileAccelerator extends TileElectricInventory(Material.iron) with IElectro
                             }
                             entityParticle = null
                         }
-                        else if (velocity > TileAccelerator.clientParticleVelocity)
+                        else if (velocity > clientParticleVelocity)
                         {
                             worldObj.playSoundEffect(xCoord, yCoord, zCoord, Reference.prefix + "antimatter", 2f, 1f - worldObj.rand.nextFloat * 0.3f)
                             val generatedAntimatter: Int = 5 + worldObj.rand.nextInt(antiMatterDensityMultiplyer)
@@ -142,7 +129,7 @@ class TileAccelerator extends TileElectricInventory(Material.iron) with IElectro
                         }
                         if (entityParticle != null)
                         {
-                            worldObj.playSoundEffect(xCoord, yCoord, zCoord, Reference.prefix + "accelerator", 1.5f, (0.6f + (0.4 * (entityParticle.getParticleVelocity) / TileAccelerator.clientParticleVelocity)).asInstanceOf[Float])
+                            worldObj.playSoundEffect(xCoord, yCoord, zCoord, Reference.prefix + "accelerator", 1.5f, (0.6f + (0.4 * (entityParticle.getParticleVelocity) / clientParticleVelocity)).asInstanceOf[Float])
                         }
                     }
                     energy.extractEnergy
@@ -185,7 +172,7 @@ class TileAccelerator extends TileElectricInventory(Material.iron) with IElectro
         val itemToAccelerate: ItemStack = this.getStackInSlot(0)
         if (itemToAccelerate != null)
         {
-            antiMatterDensityMultiplyer = TileAccelerator.DENSITY_MULTIPLYER_DEFAULT
+            antiMatterDensityMultiplyer = Settings.ACCELERATOR_ANITMATTER_DENSITY_MULTIPLIER
             try
             {
                 val potentialBlock: Block = Block.getBlockFromItem(itemToAccelerate.getItem)
@@ -202,7 +189,7 @@ class TileAccelerator extends TileElectricInventory(Material.iron) with IElectro
                 {
                     case err: Exception =>
                     {
-                        antiMatterDensityMultiplyer = TileAccelerator.DENSITY_MULTIPLYER_DEFAULT
+                        antiMatterDensityMultiplyer = Settings.ACCELERATOR_ANITMATTER_DENSITY_MULTIPLIER
                     }
                 }
         }
