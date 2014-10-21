@@ -24,6 +24,11 @@ import scala.collection.JavaConversions._
  */
 object EntityParticle
 {
+    /**
+     * User client side to determine the velocity of the particle.
+     */
+    val clientParticleVelocity: Float = 0.9f
+
     def canSpawnParticle(world: World, pos: Vector3): Boolean =
     {
         val block: Block = pos.getBlock(world)
@@ -100,7 +105,7 @@ class EntityParticle(par1World: World) extends Entity(par1World) with IEntityAdd
     {
         if (this.ticksExisted % 10 == 0)
         {
-            this.worldObj.playSoundAtEntity(this, Reference.prefix + "accelerator", 1f, (0.6f + (0.4 * (this.getParticleVelocity / TileAccelerator.clientParticleVelocity))).asInstanceOf[Float])
+            this.worldObj.playSoundAtEntity(this, Reference.prefix + "accelerator", 1f, (0.6f + (0.4 * (this.getParticleVelocity / EntityParticle.clientParticleVelocity))).asInstanceOf[Float])
         }
         val t: TileEntity = this.worldObj.getTileEntity(this.movementVector.xi, this.movementVector.yi, this.movementVector.zi)
         if (!(t.isInstanceOf[TileAccelerator]))
@@ -157,9 +162,9 @@ class EntityParticle(par1World: World) extends Entity(par1World) with IEntityAdd
         val dongLi: Vector3 = new Vector3
         dongLi.add(this.movementDirection)
         dongLi.multiply(acceleration)
-        this.motionX = Math.min(dongLi.x + this.motionX, TileAccelerator.clientParticleVelocity)
-        this.motionY = Math.min(dongLi.y + this.motionY, TileAccelerator.clientParticleVelocity)
-        this.motionZ = Math.min(dongLi.z + this.motionZ, TileAccelerator.clientParticleVelocity)
+        this.motionX = Math.min(dongLi.x + this.motionX, EntityParticle.clientParticleVelocity)
+        this.motionY = Math.min(dongLi.y + this.motionY, EntityParticle.clientParticleVelocity)
+        this.motionZ = Math.min(dongLi.z + this.motionZ, EntityParticle.clientParticleVelocity)
         this.isAirBorne = true
         this.lastTickPosX = this.posX
         this.lastTickPosY = this.posY
@@ -218,7 +223,7 @@ class EntityParticle(par1World: World) extends Entity(par1World) with IEntityAdd
         this.worldObj.playSoundAtEntity(this, Reference.prefix + "antimatter", 1.5f, 1f - this.worldObj.rand.nextFloat * 0.3f)
         if (!this.worldObj.isRemote)
         {
-            if (this.getParticleVelocity > TileAccelerator.clientParticleVelocity / 2)
+            if (this.getParticleVelocity > EntityParticle.clientParticleVelocity / 2)
             {
                 val radius: Float = 1f
                 val bounds: AxisAlignedBB = AxisAlignedBB.getBoundingBox(this.posX - radius, this.posY - radius, this.posZ - radius, this.posX + radius, this.posY + radius, this.posZ + radius)

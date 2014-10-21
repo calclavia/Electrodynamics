@@ -20,10 +20,6 @@ import universalelectricity.core.transform.vector.Vector3
 class TileAccelerator extends TileElectricInventory(Material.iron) with IElectromagnet with IRotatable
 {
     /**
-     * User client side to determine the velocity of the particle.
-     */
-    val clientParticleVelocity: Float = 0.9f
-    /**
      * Multiplier that is used to give extra anti-matter based on density (hardness) of a given ore.
      */
     private var antiMatterDensityMultiplyer: Int = Settings.ACCELERATOR_ANITMATTER_DENSITY_MULTIPLIER
@@ -118,7 +114,7 @@ class TileAccelerator extends TileElectricInventory(Material.iron) with IElectro
                             }
                             entityParticle = null
                         }
-                        else if (velocity > clientParticleVelocity)
+                        else if (velocity > EntityParticle.clientParticleVelocity)
                         {
                             worldObj.playSoundEffect(xCoord, yCoord, zCoord, Reference.prefix + "antimatter", 2f, 1f - worldObj.rand.nextFloat * 0.3f)
                             val generatedAntimatter: Int = 5 + worldObj.rand.nextInt(antiMatterDensityMultiplyer)
@@ -129,7 +125,7 @@ class TileAccelerator extends TileElectricInventory(Material.iron) with IElectro
                         }
                         if (entityParticle != null)
                         {
-                            worldObj.playSoundEffect(xCoord, yCoord, zCoord, Reference.prefix + "accelerator", 1.5f, (0.6f + (0.4 * (entityParticle.getParticleVelocity) / clientParticleVelocity)).asInstanceOf[Float])
+                            worldObj.playSoundEffect(xCoord, yCoord, zCoord, Reference.prefix + "accelerator", 1.5f, (0.6f + (0.4 * (entityParticle.getParticleVelocity) / EntityParticle.clientParticleVelocity)).asInstanceOf[Float])
                         }
                     }
                     energy.extractEnergy
@@ -158,7 +154,7 @@ class TileAccelerator extends TileElectricInventory(Material.iron) with IElectro
         }
     }
 
-    override def use(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
+    override def activate(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
     {
         if (!world.isRemote)
         {

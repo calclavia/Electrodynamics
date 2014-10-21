@@ -2,6 +2,7 @@ package resonantinduction.atomic.machine.accelerator
 
 import net.minecraft.entity.player.EntityPlayer
 import resonant.lib.gui.GuiContainerBase
+import resonantinduction.core.Settings
 import universalelectricity.api.UnitDisplay
 import universalelectricity.core.transform.vector.Vector3
 
@@ -29,10 +30,10 @@ class GuiAccelerator(player: EntityPlayer, tileEntity: TileAccelerator) extends 
         {
             status = "\u00a72Idle"
         }
-        this.fontRendererObj.drawString("Velocity: " + Math.round((this.tileEntity.velocity / TileAccelerator.clientParticleVelocity) * 100) + "%", 8, 27, 4210752)
+        this.fontRendererObj.drawString("Velocity: " + Math.round((this.tileEntity.velocity / EntityParticle.clientParticleVelocity) * 100) + "%", 8, 27, 4210752)
         this.fontRendererObj.drawString("Energy Used:", 8, 38, 4210752)
         this.fontRendererObj.drawString(new UnitDisplay(UnitDisplay.Unit.JOULES, this.tileEntity.totalEnergyConsumed).toString, 8, 49, 4210752)
-        this.fontRendererObj.drawString(new UnitDisplay(UnitDisplay.Unit.WATT, TileAccelerator.energyPerTick * 20).toString, 8, 60, 4210752)
+        this.fontRendererObj.drawString(new UnitDisplay(UnitDisplay.Unit.WATT, Settings.ACCELERATOR_ENERGY_COST_PER_TICK * 20).toString, 8, 60, 4210752)
         this.fontRendererObj.drawString("N?A", 8, 70, 4210752)
         this.fontRendererObj.drawString("Antimatter: " + this.tileEntity.antimatter + " mg", 8, 80, 4210752)
         this.fontRendererObj.drawString("Status:", 8, 90, 4210752)
