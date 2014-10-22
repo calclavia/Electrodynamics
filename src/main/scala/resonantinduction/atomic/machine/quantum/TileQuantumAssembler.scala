@@ -137,9 +137,9 @@ class TileQuantumAssembler extends TileElectricInventory(Material.iron) with IPa
     {
         if (this.getStackInSlot(6) != null)
         {
-            return new PacketTile(xi, yi, zi, Array(time, getStackInSlot(6)))
+            return new PacketTile(xi, yi, zi, Array[Any](time, getStackInSlot(6)))
         }
-        return new PacketTile(xi, yi, zi, Array(time, -1, -1, -1))
+        return new PacketTile(xi, yi, zi, Array[Any](time, -1, -1, -1))
     }
 
     /**
