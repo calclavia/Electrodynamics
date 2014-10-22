@@ -6,11 +6,9 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.IInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.network.Packet
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
-import resonant.engine.ResonantEngine
 import resonant.lib.content.prefab.java.TileElectricInventory
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketReceiver
@@ -125,9 +123,9 @@ class TileCentrifuge extends TileElectricInventory(Material.iron) with IPacketRe
 
     }
 
-    override def getDescriptionPacket: Packet =
+    override def getDescPacket: PacketTile =
     {
-        return ResonantEngine.instance.packetHandler.toMCPacket(new PacketTile(xi, yi, zi, Array(this.timer, AtomicContent.getFluidAmount(this.gasTank.getFluid))))
+        return new PacketTile(xi, yi, zi, Array[Any](this.timer, AtomicContent.getFluidAmount(this.gasTank.getFluid)))
     }
 
     /**

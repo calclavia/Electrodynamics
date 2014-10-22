@@ -37,7 +37,7 @@ object EntityParticle
     def canSpawnParticle(world: World, pos: Vector3): Boolean =
     {
         val block: Block = pos.getBlock(world)
-        if (block != null && !block.isAir(world, pos.xi, pos.yi, pos.zi))
+        if (block == null || !block.isAir(world, pos.xi, pos.yi, pos.zi))
         {
             var electromagnetCount = 0
             for (i <- 0 until 6)

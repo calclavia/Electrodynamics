@@ -1,11 +1,13 @@
 package resonantinduction.atomic.machine.accelerator
 
+import cpw.mods.fml.relauncher.{Side, SideOnly}
 import io.netty.buffer.ByteBuf
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
+import net.minecraft.util.IIcon
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.{IElectromagnet, IRotatable}
 import resonant.lib.content.prefab.java.TileElectricInventory
@@ -16,6 +18,7 @@ import resonantinduction.atomic.AtomicContent
 import resonantinduction.atomic.items.ItemAntimatter
 import resonantinduction.core.{Reference, ResonantInduction, Settings}
 import universalelectricity.core.transform.vector.Vector3
+
 import scala.collection.JavaConversions._
 
 class TileAccelerator extends TileElectricInventory(Material.iron) with IElectromagnet with IRotatable with TPacketIDReceiver
@@ -225,7 +228,7 @@ class TileAccelerator extends TileElectricInventory(Material.iron) with IElectro
 
     override def getDescPacket: PacketTile =
     {
-        return new PacketTile(xi, yi, zi, Array(DESC_PACKET_ID, velocity, totalEnergyConsumed, antimatter, energy.getEnergy))
+        return new PacketTile(xi, yi, zi, Array[Any](DESC_PACKET_ID, velocity, totalEnergyConsumed, antimatter, energy.getEnergy))
     }
 
     /////////////////////////////////////////
@@ -302,5 +305,15 @@ class TileAccelerator extends TileElectricInventory(Material.iron) with IElectro
             return entityParticle.getParticleVelocity.asInstanceOf[Float]
         else
             return 0
+    }
+
+    @SideOnly(Side.CLIENT)
+    override def getIcon(side: Int, meta: Int): IIcon =
+    {
+        if(side == getDirection.getOpposite.ordinal())
+        {
+            return AtomicContent.blockElectromagnet.getIcon(side, meta)
+        }
+        return getIcon
     }
 }

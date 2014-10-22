@@ -16,8 +16,7 @@ class GuiAccelerator(player: EntityPlayer, tileEntity: TileAccelerator) extends 
     {
         this.fontRendererObj.drawString("Accelerator", 40, 10, 4210752)
         var status: String = ""
-        val position: Vector3 = tileEntity.asVector3
-        position.add(this.tileEntity.getDirection.getOpposite)
+        val position: Vector3 = tileEntity.asVector3 + tileEntity.getDirection.getOpposite
         if (!EntityParticle.canSpawnParticle(this.tileEntity.world, position))
         {
             status = "\u00a74Fail to emit; try rotating."
