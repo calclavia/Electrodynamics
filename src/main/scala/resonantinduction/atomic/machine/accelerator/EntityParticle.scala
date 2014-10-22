@@ -24,29 +24,42 @@ import scala.collection.JavaConversions._
  */
 object EntityParticle
 {
-    /**
-     * User client side to determine the velocity of the particle.
-     */
+    /** Speed by which a particle will turn into anitmatter */
     val ANITMATTER_CREATION_SPEED: Float = 0.9f
+    val MOVEMENT_DIRECTION_DATAWATCHER_ID: Int = 20
 
+    /**
+     * Checks to see if a new particle can be spawned at the location.
+     * @param world - world to check in
+     * @param pos - location to check
+     * @return true if the spawn location is clear and 2 electromagnets are next to the location
+     */
     def canSpawnParticle(world: World, pos: Vector3): Boolean =
     {
         val block: Block = pos.getBlock(world)
         if (block != null && !block.isAir(world, pos.xi, pos.yi, pos.zi))
         {
-            return false
-        }
-        for (i <- 0 to 1)
-        {
-            val dir: ForgeDirection = ForgeDirection.getOrientation(i)
-            if (!isElectromagnet(world, pos, dir))
+            var electromagnetCount = 0
+            for (i <- 0 until 6)
             {
-                return false
+                val dir: ForgeDirection = ForgeDirection.getOrientation(i)
+                if (isElectromagnet(world, pos, dir))
+                {
+                    electromagnetCount += 1
+                }
             }
+            return electromagnetCount >= 2
         }
-        return true
+        return false        
     }
 
+    /**
+     * Checks to see if the block is an instance of IElectromagnet and is turned on
+     * @param world - world to check in
+     * @param position - position to look for the block/tile
+     * @param dir - direction to check in
+     * @return true if the location contains an active electromagnet block
+     */
     def isElectromagnet(world: World, position: Vector3, dir: ForgeDirection): Boolean =
     {
         val checkPos: Vector3 = position.clone.add(dir)
@@ -57,13 +70,17 @@ object EntityParticle
         }
         return false
     }
-
-    private final val MOVE_TICK_RATE: Int = 20
 }
 
 class EntityParticle(par1World: World) extends Entity(par1World) with IEntityAdditionalSpawnData
 {
-    //Default Constructor
+    var updateTicket: ForgeChunkManager.Ticket = null
+    var didParticleCollide: Boolean = false
+    private var lastTurn: Int = 60
+    private var movementVector: Vector3 = new Vector3
+    private var movementDirection: ForgeDirection = ForgeDirection.NORTH
+    
+    //Constructor
     this.setSize(0.3f, 0.3f)
     this.renderDistanceWeight = 4f
     this.ignoreFrustumCheck = true
@@ -76,7 +93,7 @@ class EntityParticle(par1World: World) extends Entity(par1World) with IEntityAdd
         this.movementDirection = dir
     }
 
-    def writeSpawnData(data: ByteBuf)
+    override def writeSpawnData(data: ByteBuf)
     {
         data.writeInt(this.movementVector.xi)
         data.writeInt(this.movementVector.yi)
@@ -84,15 +101,15 @@ class EntityParticle(par1World: World) extends Entity(par1World) with IEntityAdd
         data.writeInt(this.movementDirection.ordinal)
     }
 
-    def readSpawnData(data: ByteBuf)
+    override def readSpawnData(data: ByteBuf)
     {
         this.movementVector = new Vector3(data)
         this.movementDirection = ForgeDirection.getOrientation(data.readInt)
     }
 
-    protected def entityInit
+    protected override def entityInit
     {
-        this.dataWatcher.addObject(EntityParticle.MOVE_TICK_RATE, 3.asInstanceOf[Byte])
+        this.dataWatcher.addObject(EntityParticle.MOVEMENT_DIRECTION_DATAWATCHER_ID, 3.asInstanceOf[Byte])
         if (this.updateTicket == null)
         {
             this.updateTicket = ForgeChunkManager.requestTicket(ResonantInduction, this.worldObj, Type.ENTITY)
@@ -103,21 +120,29 @@ class EntityParticle(par1World: World) extends Entity(par1World) with IEntityAdd
 
     override def onUpdate
     {
+        val t: TileEntity = this.worldObj.getTileEntity(this.movementVector.xi, this.movementVector.yi, this.movementVector.zi)
+        val tileEntity: TileAccelerator = if(t != null && t.isInstanceOf[TileAccelerator]) t.asInstanceOf[TileAccelerator] else null
+        var acceleration: Double = 0.0006f
+
         if (this.ticksExisted % 10 == 0)
         {
             this.worldObj.playSoundAtEntity(this, Reference.prefix + "accelerator", 1f, (0.6f + (0.4 * (this.getParticleVelocity / EntityParticle.ANITMATTER_CREATION_SPEED))).asInstanceOf[Float])
         }
-        val t: TileEntity = this.worldObj.getTileEntity(this.movementVector.xi, this.movementVector.yi, this.movementVector.zi)
-        if (!(t.isInstanceOf[TileAccelerator]))
+
+
+
+        //Sanity check
+        if (tileEntity == null)
         {
             setDead
             return
         }
-        val tileEntity: TileAccelerator = t.asInstanceOf[TileAccelerator]
-        if (tileEntity.entityParticle == null)
+        else if (tileEntity.entityParticle == null)
         {
             tileEntity.entityParticle = this
         }
+
+        //Force load chunks TODO calculate direction so to only load two chunks instead of 5
         for (x <- -1 to 1)
         {
             for (z <- -1 to 1)
@@ -126,25 +151,18 @@ class EntityParticle(par1World: World) extends Entity(par1World) with IEntityAdd
 
             }
         }
-        try
+
+        //Update data watcher
+        if (!this.worldObj.isRemote)
         {
-            if (!this.worldObj.isRemote)
-            {
-                this.dataWatcher.updateObject(EntityParticle.MOVE_TICK_RATE, this.movementDirection.ordinal.asInstanceOf[Byte])
-            }
-            else
-            {
-                this.movementDirection = ForgeDirection.getOrientation(this.dataWatcher.getWatchableObjectByte(EntityParticle.MOVE_TICK_RATE))
-            }
+            this.dataWatcher.updateObject(EntityParticle.MOVEMENT_DIRECTION_DATAWATCHER_ID, this.movementDirection.ordinal.asInstanceOf[Byte])
         }
-        catch
-            {
-                case e: Exception =>
-                {
-                    e.printStackTrace
-                }
-            }
-        var acceleration: Double = 0.0006f
+        else
+        {
+            this.movementDirection = ForgeDirection.getOrientation(this.dataWatcher.getWatchableObjectByte(EntityParticle.MOVEMENT_DIRECTION_DATAWATCHER_ID))
+        }
+
+
         if ((!EntityParticle.isElectromagnet(worldObj, new Vector3(this), movementDirection.getRotation(ForgeDirection.UP)) || !EntityParticle.isElectromagnet(worldObj, new Vector3(this), movementDirection.getRotation(ForgeDirection.DOWN))) && this.lastTurn <= 0)
         {
             acceleration = turn
@@ -156,7 +174,7 @@ class EntityParticle(par1World: World) extends Entity(par1World) with IEntityAdd
         this.lastTurn -= 1
         if (!EntityParticle.canSpawnParticle(this.worldObj, new Vector3(this)) || this.isCollided)
         {
-            explode
+            handleCollisionWithEntity
             return
         }
         val dongLi: Vector3 = new Vector3
@@ -178,11 +196,13 @@ class EntityParticle(par1World: World) extends Entity(par1World) with IEntityAdd
         this.worldObj.spawnParticle("portal", this.posX, this.posY, this.posZ, 0, 0, 0)
         this.worldObj.spawnParticle("largesmoke", this.posX, this.posY, this.posZ, 0, 0, 0)
         val radius: Float = 0.5f
+
+        // Handle collision with entities
         val bounds: AxisAlignedBB = AxisAlignedBB.getBoundingBox(this.posX - radius, this.posY - radius, this.posZ - radius, this.posX + radius, this.posY + radius, this.posZ + radius)
         val entitiesNearby: List[_] = this.worldObj.getEntitiesWithinAABB(classOf[Entity], bounds)
         if (entitiesNearby.size > 1)
         {
-            this.explode
+            this.handleCollisionWithEntity
             return
         }
     }
@@ -218,7 +238,7 @@ class EntityParticle(par1World: World) extends Entity(par1World) with IEntityAdd
         return this.getParticleVelocity - (this.getParticleVelocity / Math.min(Math.max(70 * this.getParticleVelocity, 4), 30))
     }
 
-    def explode
+    def handleCollisionWithEntity
     {
         this.worldObj.playSoundAtEntity(this, Reference.prefix + "antimatter", 1.5f, 1f - this.worldObj.rand.nextFloat * 0.3f)
         if (!this.worldObj.isRemote)
@@ -255,7 +275,7 @@ class EntityParticle(par1World: World) extends Entity(par1World) with IEntityAdd
 
     override def applyEntityCollision(par1Entity: Entity)
     {
-        this.explode
+        this.handleCollisionWithEntity
     }
 
     override def setDead
@@ -275,10 +295,4 @@ class EntityParticle(par1World: World) extends Entity(par1World) with IEntityAdd
         nbt.setTag("jiqi", this.movementVector.writeNBT(new NBTTagCompound))
         nbt.setByte("fangXiang", this.movementDirection.ordinal.asInstanceOf[Byte])
     }
-
-    var updateTicket: ForgeChunkManager.Ticket = null
-    var didParticleCollide: Boolean = false
-    private var lastTurn: Int = 60
-    private var movementVector: Vector3 = new Vector3
-    private var movementDirection: ForgeDirection = ForgeDirection.NORTH
 }

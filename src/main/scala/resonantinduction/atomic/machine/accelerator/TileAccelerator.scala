@@ -16,6 +16,7 @@ import resonantinduction.atomic.AtomicContent
 import resonantinduction.atomic.items.ItemAntimatter
 import resonantinduction.core.{Reference, ResonantInduction, Settings}
 import universalelectricity.core.transform.vector.Vector3
+import scala.collection.JavaConversions._
 
 class TileAccelerator extends TileElectricInventory(Material.iron) with IElectromagnet with IRotatable with TPacketIDReceiver
 {
@@ -149,7 +150,7 @@ class TileAccelerator extends TileElectricInventory(Material.iron) with IElectro
                 if (getStackInSlot(2) != null)
                 {
                     // If the output slot is not empty we must increase stack size
-                    if (getStackInSlot(2).getItem eq AtomicContent.itemAntimatter)
+                    if (getStackInSlot(2).getItem == AtomicContent.itemAntimatter)
                     {
                         val newStack: ItemStack = getStackInSlot(2).copy
                         if (newStack.stackSize < newStack.getMaxStackSize)
