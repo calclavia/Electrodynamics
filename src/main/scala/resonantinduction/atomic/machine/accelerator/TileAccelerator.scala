@@ -1,24 +1,25 @@
 package resonantinduction.atomic.machine.accelerator
 
+import io.netty.buffer.ByteBuf
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.network.Packet
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.{IElectromagnet, IRotatable}
-import resonant.engine.ResonantEngine
 import resonant.lib.content.prefab.java.TileElectricInventory
-import resonant.lib.network.Synced
-import resonant.lib.network.discriminator.PacketAnnotation
+import resonant.lib.network.discriminator.{PacketTile, PacketType}
+import resonant.lib.network.handle.TPacketIDReceiver
 import resonant.lib.utility.BlockUtility
 import resonantinduction.atomic.AtomicContent
 import resonantinduction.atomic.items.ItemAntimatter
-import resonantinduction.core.{Reference, Settings}
+import resonantinduction.core.{Reference, ResonantInduction, Settings}
 import universalelectricity.core.transform.vector.Vector3
-class TileAccelerator extends TileElectricInventory(Material.iron) with IElectromagnet with IRotatable
+
+class TileAccelerator extends TileElectricInventory(Material.iron) with IElectromagnet with IRotatable with TPacketIDReceiver
 {
+    final val DESC_PACKET_ID = 2;
     /**
      * Multiplier that is used to give extra anti-matter based on density (hardness) of a given ore.
      */
@@ -26,18 +27,20 @@ class TileAccelerator extends TileElectricInventory(Material.iron) with IElectro
     /**
      * The total amount of energy consumed by this particle. In Joules.
      */
-    @Synced var totalEnergyConsumed: Float = 0
+    var totalEnergyConsumed: Double = 0
     /**
      * The amount of anti-matter stored within the accelerator. Measured in milligrams.
      */
-    @Synced var antimatter: Int = 0
+    var antimatter: Int = 0
     var entityParticle: EntityParticle = null
-    @Synced var velocity: Float = 0
-    @Synced private var clientEnergy: Double = 0
-    private var lastSpawnTick: Int = 0
+    var velocity: Float = 0
+    var clientEnergy: Double = 0
+    var lastSpawnTick: Int = 0
 
     //Constructor
     this.setSizeInventory(4)
+    this.setCapacity(Settings.ACCELERATOR_ENERGY_COST_PER_TICK * 20)
+    this.setMaxTransfer(Settings.ACCELERATOR_ENERGY_COST_PER_TICK)
 
     override def update
     {
@@ -45,46 +48,16 @@ class TileAccelerator extends TileElectricInventory(Material.iron) with IElectro
         if (!worldObj.isRemote)
         {
             clientEnergy = energy.getEnergy
-            velocity = 0
-            if (entityParticle != null)
-            {
-                velocity = entityParticle.getParticleVelocity.asInstanceOf[Float]
-            }
-            if (AtomicContent.isItemStackEmptyCell(getStackInSlot(1)))
-            {
-                if (getStackInSlot(1).stackSize > 0)
-                {
-                    if (antimatter >= 125)
-                    {
-                        if (getStackInSlot(2) != null)
-                        {
-                            if (getStackInSlot(2).getItem eq AtomicContent.itemAntimatter)
-                            {
-                                val newStack: ItemStack = getStackInSlot(2).copy
-                                if (newStack.stackSize < newStack.getMaxStackSize)
-                                {
-                                    decrStackSize(1, 1)
-                                    antimatter -= 125
-                                    newStack.stackSize += 1
-                                    setInventorySlotContents(2, newStack)
-                                }
-                            }
-                        }
-                        else
-                        {
-                            antimatter -= 125
-                            decrStackSize(1, 1)
-                            setInventorySlotContents(2, new ItemStack(AtomicContent.itemAntimatter))
-                        }
-                    }
-                }
-            }
+            velocity = getParticleVel()
+            outputAntimatter()
+
             if (worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord))
             {
                 if (energy.checkExtract)
                 {
                     if (entityParticle == null)
                     {
+                        //Create new particle if we have materials to spawn it with
                         if (getStackInSlot(0) != null && lastSpawnTick >= 40)
                         {
                             val spawn_vec: Vector3 = asVector3
@@ -105,6 +78,7 @@ class TileAccelerator extends TileElectricInventory(Material.iron) with IElectro
                     {
                         if (entityParticle.isDead)
                         {
+                            //Handle strange matter creation
                             if (entityParticle.didParticleCollide)
                             {
                                 if (worldObj.rand.nextFloat <= Settings.darkMatterSpawnChance)
@@ -114,18 +88,21 @@ class TileAccelerator extends TileElectricInventory(Material.iron) with IElectro
                             }
                             entityParticle = null
                         }
-                        else if (velocity > EntityParticle.clientParticleVelocity)
+                        else if (velocity > EntityParticle.ANITMATTER_CREATION_SPEED)
                         {
+                            //Create antimatter if we have hit max speed
                             worldObj.playSoundEffect(xCoord, yCoord, zCoord, Reference.prefix + "antimatter", 2f, 1f - worldObj.rand.nextFloat * 0.3f)
                             val generatedAntimatter: Int = 5 + worldObj.rand.nextInt(antiMatterDensityMultiplyer)
                             antimatter += generatedAntimatter
+
+                            //Cleanup
                             totalEnergyConsumed = 0
                             entityParticle.setDead
                             entityParticle = null
                         }
                         if (entityParticle != null)
                         {
-                            worldObj.playSoundEffect(xCoord, yCoord, zCoord, Reference.prefix + "accelerator", 1.5f, (0.6f + (0.4 * (entityParticle.getParticleVelocity) / EntityParticle.clientParticleVelocity)).asInstanceOf[Float])
+                            worldObj.playSoundEffect(xCoord, yCoord, zCoord, Reference.prefix + "accelerator", 1.5f, (0.6f + (0.4 * (entityParticle.getParticleVelocity) / EntityParticle.ANITMATTER_CREATION_SPEED)).asInstanceOf[Float])
                         }
                     }
                     energy.extractEnergy
@@ -149,17 +126,55 @@ class TileAccelerator extends TileElectricInventory(Material.iron) with IElectro
             }
             if (ticks % 5 == 0)
             {
+                for (player <- getPlayersUsing)
+                {
+                    sendPacketToPlayer(player, getDescPacket)
+                }
             }
             lastSpawnTick += 1
         }
     }
 
+    /**
+     * Converts antimatter storage into item if the condition are meet
+     */
+    def outputAntimatter()
+    {
+        //Do we have an empty cell in slot one
+        if (AtomicContent.isItemStackEmptyCell(getStackInSlot(1)) && getStackInSlot(1).stackSize > 0)
+        {
+            // Each cell can only hold 125mg of antimatter TODO maybe a config for this?
+            if (antimatter >= 125)
+            {
+                if (getStackInSlot(2) != null)
+                {
+                    // If the output slot is not empty we must increase stack size
+                    if (getStackInSlot(2).getItem eq AtomicContent.itemAntimatter)
+                    {
+                        val newStack: ItemStack = getStackInSlot(2).copy
+                        if (newStack.stackSize < newStack.getMaxStackSize)
+                        {
+                            decrStackSize(1, 1)
+                            antimatter -= 125
+                            newStack.stackSize += 1
+                            setInventorySlotContents(2, newStack)
+                        }
+                    }
+                }
+                else
+                {
+                    //Output to slot 2 and decrease volume of antimatter
+                    antimatter -= 125
+                    decrStackSize(1, 1)
+                    setInventorySlotContents(2, new ItemStack(AtomicContent.itemAntimatter))
+                }
+            }
+        }
+    }
+
     override def activate(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
     {
-        if (!world.isRemote)
-        {
-            player.openGui(AtomicContent, 0, world, xi, yi, zi)
-        }
+        player.openGui(ResonantInduction, 0, world, xi, yi, zi)
         return true
     }
 
@@ -169,57 +184,70 @@ class TileAccelerator extends TileElectricInventory(Material.iron) with IElectro
         if (itemToAccelerate != null)
         {
             antiMatterDensityMultiplyer = Settings.ACCELERATOR_ANITMATTER_DENSITY_MULTIPLIER
-            try
+
+            val potentialBlock: Block = Block.getBlockFromItem(itemToAccelerate.getItem)
+            if (potentialBlock != null)
             {
-                val potentialBlock: Block = Block.getBlockFromItem(itemToAccelerate.getItem)
-                if (potentialBlock != null)
+                antiMatterDensityMultiplyer = BlockUtility.getBlockHardness(potentialBlock).asInstanceOf[Int] * Settings.ACCELERATOR_ANITMATTER_DENSITY_MULTIPLIER
+                if (antiMatterDensityMultiplyer <= 0)
                 {
-                    antiMatterDensityMultiplyer = Math.abs(BlockUtility.getBlockHardness(potentialBlock)).asInstanceOf[Int]
-                    if (antiMatterDensityMultiplyer <= 0)
-                    {
-                        antiMatterDensityMultiplyer = 1
-                    }
+                    antiMatterDensityMultiplyer = Settings.ACCELERATOR_ANITMATTER_DENSITY_MULTIPLIER
+                }
+                if (antiMatterDensityMultiplyer > 1000)
+                {
+                    antiMatterDensityMultiplyer = 1000 * Settings.ACCELERATOR_ANITMATTER_DENSITY_MULTIPLIER
                 }
             }
-            catch
-                {
-                    case err: Exception =>
-                    {
-                        antiMatterDensityMultiplyer = Settings.ACCELERATOR_ANITMATTER_DENSITY_MULTIPLIER
-                    }
-                }
         }
     }
 
-    override def getDescriptionPacket: Packet =
+    /////////////////////////////////////////
+    ///         Packet Handling           ///
+    ////////////////////////////////////////
+
+    override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType): Boolean =
     {
-        return ResonantEngine.instance.packetHandler.toMCPacket(new PacketAnnotation(this))
+        //Client only packets
+        if (world.isRemote)
+        {
+            if (id == DESC_PACKET_ID)
+            {
+                this.velocity = buf.readFloat()
+                this.totalEnergyConsumed = buf.readDouble();
+                this.antimatter = buf.readInt();
+                this.energy.setEnergy(buf.readDouble())
+                return true;
+            }
+        }
+        return super.read(buf, id, player, packet);
     }
 
-    /**
-     * Reads a tile entity from NBT.
-     */
+    override def getDescPacket: PacketTile =
+    {
+        return new PacketTile(xi, yi, zi, Array(DESC_PACKET_ID, velocity, totalEnergyConsumed, antimatter, energy.getEnergy))
+    }
+
+    /////////////////////////////////////////
+    ///         Save handling             ///
+    ////////////////////////////////////////
+
     override def readFromNBT(par1NBTTagCompound: NBTTagCompound)
     {
         super.readFromNBT(par1NBTTagCompound)
-        totalEnergyConsumed = par1NBTTagCompound.getFloat("totalEnergyConsumed")
+        totalEnergyConsumed = par1NBTTagCompound.getDouble("energyUsed")
         antimatter = par1NBTTagCompound.getInteger("antimatter")
     }
 
-    /**
-     * Writes a tile entity to NBT.
-     */
     override def writeToNBT(par1NBTTagCompound: NBTTagCompound)
     {
         super.writeToNBT(par1NBTTagCompound)
-        par1NBTTagCompound.setFloat("totalEnergyConsumed", totalEnergyConsumed)
+        par1NBTTagCompound.setDouble("energyUsed", totalEnergyConsumed)
         par1NBTTagCompound.setInteger("antimatter", antimatter)
     }
 
-    override def getAccessibleSlotsFromSide(side: Int): Array[Int] =
-    {
-        return Array[Int](0, 1, 2, 3)
-    }
+    /////////////////////////////////////////
+    ///         Inventory Overrides      ///
+    ////////////////////////////////////////
 
     override def canInsertItem(slotID: Int, itemStack: ItemStack, j: Int): Boolean =
     {
@@ -247,7 +275,11 @@ class TileAccelerator extends TileElectricInventory(Material.iron) with IElectro
         return false
     }
 
-    def isRunning: Boolean =
+    /////////////////////////////////////////
+    ///      Field Getters & Setters      ///
+    ////////////////////////////////////////
+
+    override def isRunning: Boolean =
     {
         return true
     }
@@ -260,5 +292,14 @@ class TileAccelerator extends TileElectricInventory(Material.iron) with IElectro
     override def setDirection(direction: ForgeDirection)
     {
         world.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, direction.ordinal, 3)
+    }
+
+    /** get velocity for the particle and @return it as a float */
+    def getParticleVel(): Float =
+    {
+        if (entityParticle != null)
+            return entityParticle.getParticleVelocity.asInstanceOf[Float]
+        else
+            return 0
     }
 }
