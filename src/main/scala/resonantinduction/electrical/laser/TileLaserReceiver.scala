@@ -80,12 +80,7 @@ class TileLaserReceiver extends TileAdvanced(Material.rock) with ILaserHandler
     val l = BlockPistonBase.determineOrientation(world, xi, yi, zi, entityLiving)
     world.setBlockMetadataWithNotify(xi, yi, zi, l, 2)
   }
-
-  /*
-  override def getMixedBrightnessForBlock(access: IBlockAccess, x: Int, y: Int, z: Int): Int =
-  {
-    return access.getTileEntity(x, y, z).asInstanceOf[TileLaserReceiver].redstoneValue
-  }*/
+  override def getLightValue(access: IBlockAccess): Int =redstoneValue
 
   override def getWeakRedstonePower(access: IBlockAccess, side: Int): Int = getStrongRedstonePower(access, side)
 

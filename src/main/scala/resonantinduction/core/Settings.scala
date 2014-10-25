@@ -39,9 +39,6 @@ object Settings
     @Config(category = "Power", key = "TubineRatio", comment = "Restricts the output of all turbines")
     var turbineOutputMultiplier: Double = 1
 
-
-
-
     //Disable/Enable Settings
     @Config(category = "Enable")
     var allowToxicWaste: Boolean = true

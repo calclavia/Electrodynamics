@@ -7,6 +7,7 @@ import net.minecraft.block.material.Material
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.item.ItemStack
 import net.minecraft.util.{MovingObjectPosition, ResourceLocation}
+import net.minecraft.world.IBlockAccess
 import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
@@ -49,11 +50,7 @@ class TileLaserEmitter extends TileAdvanced(Material.iron) with ILaserHandler
     world.setBlockMetadataWithNotify(xi, yi, zi, l, 2)
   }
 
-  /*
-  override def getMixedBrightnessForBlock(access: IBlockAccess, x: Int, y: Int, z: Int): Int =
-  {
-    return ((access.getTileEntity(x, y, z).asInstanceOf[TileLaserEmitter].energy / Laser.maxEnergy) * 15).toInt
-  }*/
+  override def getLightValue(access: IBlockAccess): Int = ((energy / Laser.maxEnergy) * 15).toInt
 
   override def onLaserHit(renderStart: Vector3, incidentDirection: Vector3, hit: MovingObjectPosition, color: Vector3, energy: Double) = false
 

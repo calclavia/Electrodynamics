@@ -91,7 +91,6 @@ object TileTank
 
 class TileTank extends TileTankNode(Material.iron) with ISneakPickup
 {
-
   isOpaqueCube(false)
   normalRender(false)
   forceStandardRender(true)
@@ -114,7 +113,7 @@ class TileTank extends TileTankNode(Material.iron) with ISneakPickup
 
   override def getLightValue(access: IBlockAccess): Int =
   {
-    if (getFluid.getFluid != null)
+    if (getFluid != null && getFluid.getFluid != null)
     {
       return getFluid.getFluid.getLuminosity
     }
