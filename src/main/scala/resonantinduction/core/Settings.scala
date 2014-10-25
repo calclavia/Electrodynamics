@@ -27,7 +27,7 @@ object Settings
 
     // Power Settings
     @Config(category = "Power", key = "SolorPanel")
-    var SOLAR_ENERGY: Int = 50
+    var solarPower: Int = 50
     @Config(category = "Power")
     var fulminationOutputMultiplier: Double = 1
     @Config(category = "Power", key = "AcceleratorCostPerTick")
