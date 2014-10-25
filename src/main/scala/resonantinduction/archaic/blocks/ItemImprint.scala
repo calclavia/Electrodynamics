@@ -10,7 +10,7 @@ import net.minecraft.nbt.{NBTTagCompound, NBTTagList}
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.utility.nbt.NBTUtility
 import resonant.lib.wrapper.WrapList._
-import resonantinduction.core.{Reference, ResonantTab}
+import resonantinduction.core.{Reference, RICreativeTab}
 
 import scala.collection.JavaConversions._
 
@@ -92,7 +92,7 @@ class ItemImprint extends Item
     //Constructor
     setUnlocalizedName(Reference.prefix + "imprint")
     setTextureName(Reference.prefix + "imprint")
-    setCreativeTab(ResonantTab.tab)
+    setCreativeTab(RICreativeTab.tab)
     setHasSubtypes(true)
     setMaxStackSize(1)
 

@@ -17,7 +17,7 @@ import resonant.lib.render.EnumColor
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.wrapper.WrapList._
 import resonantinduction.core.util.MultipartUtil
-import resonantinduction.core.{Reference, ResonantPartFactory, ResonantTab}
+import resonantinduction.core.{Reference, ResonantPartFactory, RICreativeTab}
 import resonantinduction.electrical.wire.base.WireMaterial
 import resonantinduction.electrical.wire.flat.{PartFlatWire, RenderFlatWire}
 import resonantinduction.electrical.wire.framed.PartFramedWire
@@ -27,7 +27,6 @@ class ItemWire extends TItemMultiPart
 {
   setUnlocalizedName(Reference.prefix + "wire")
   setTextureName(Reference.prefix + "wire")
-  setCreativeTab(ResonantTab.tab)
   setHasSubtypes(true)
   setMaxDamage(0)
 

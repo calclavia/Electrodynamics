@@ -6,7 +6,7 @@ import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.{ChatComponentText, EnumChatFormatting}
 import net.minecraft.world.World
-import resonantinduction.core.{Reference, ResonantTab}
+import resonantinduction.core.{RICreativeTab, Reference}
 import universalelectricity.core.transform.rotation.Quaternion
 import universalelectricity.core.transform.vector.Vector3
 
@@ -20,7 +20,7 @@ class ItemFocusingMatrix extends Item
 {
   setUnlocalizedName(Reference.prefix + "focusingMatrix")
   setTextureName(Reference.prefix + "focusingMatrix")
-  setCreativeTab(ResonantTab)
+  setCreativeTab(RICreativeTab)
 
   /**
    * allows items to add custom lines of information to the mouseover description
@@ -34,7 +34,7 @@ class ItemFocusingMatrix extends Item
 
     add(list, "Focusing:")
 
-    val vec : Vector3 = getControlCoordinate(itemStack)
+    val vec: Vector3 = getControlCoordinate(itemStack)
 
     if (vec != null)
       add(list, "[" + vec.xi + ", " + vec.yi + ", " + vec.z.toInt + "]")
@@ -83,12 +83,12 @@ class ItemFocusingMatrix extends Item
                 val random_index = rand.nextInt(cachedHits.size)
                 val incident = cachedHits(random_index).normalize
 
-                val targetDirection : Vector3 = (new Vector3(x, y, z) - controlVec).normalize
+                val targetDirection: Vector3 = (new Vector3(x, y, z) - controlVec).normalize
 
                 if (targetDirection.magnitude > 0)
                 {
                   val angle = Math.acos(incident $ targetDirection)
-                  val axis : Vector3 = incident.cross(targetDirection)
+                  val axis: Vector3 = incident.cross(targetDirection)
                   var focusDirection = incident.clone.transform(new Quaternion(-90 - Math.toDegrees(angle / 2), axis)).normalize
 
                   if (focusDirection.magnitude == 0 || focusDirection.magnitude.equals(Double.NaN))

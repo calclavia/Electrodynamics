@@ -13,7 +13,7 @@ import resonant.api.{IReactor, IReactorComponent}
 import resonant.lib.wrapper.WrapList._
 import resonantinduction.atomic.AtomicContent
 import resonantinduction.atomic.machine.reactor.TileReactorCell
-import resonantinduction.core.{Reference, ResonantTab, Settings}
+import resonantinduction.core.{Reference, RICreativeTab, Settings}
 import universalelectricity.core.transform.vector.Vector3
 
 /**
@@ -45,7 +45,7 @@ class ItemFissileFuel extends ItemRadioactive with IReactorComponent
     this.setNoRepair
     this.setUnlocalizedName(Reference.prefix + "rodBreederFuel")
     this.setTextureName(Reference.prefix + "breederFuel")
-    setCreativeTab(ResonantTab.tab)
+    setCreativeTab(RICreativeTab.tab)
 
     def onReact(itemStack: ItemStack, reactor: IReactor)
     {

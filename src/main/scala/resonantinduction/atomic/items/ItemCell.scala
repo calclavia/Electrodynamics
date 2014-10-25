@@ -4,7 +4,7 @@ import net.minecraft.item.ItemStack
 import resonant.content.prefab.itemblock.ItemTooltip
 import resonant.lib.utility.LanguageUtility
 import resonantinduction.atomic.AtomicContent
-import resonantinduction.core.{Reference, ResonantTab}
+import resonantinduction.core.{Reference, RICreativeTab}
 
 class ItemCell extends ItemTooltip
 {
@@ -17,7 +17,7 @@ class ItemCell extends ItemTooltip
         if (!name.equalsIgnoreCase("cellEmpty")) this.setContainerItem(AtomicContent.itemCell)
         this.setUnlocalizedName(Reference.prefix + name)
         this.setTextureName(Reference.prefix + name)
-        setCreativeTab(ResonantTab.tab)
+        setCreativeTab(RICreativeTab.tab)
     }
 
     override def getUnlocalizedName(itemstack: ItemStack): String =

@@ -13,7 +13,7 @@ import resonantinduction.archaic.fluid.grate.TileGrate
 import resonantinduction.archaic.fluid.gutter.TileGutter
 import resonantinduction.archaic.fluid.tank.TileTank
 import resonantinduction.archaic.process.{TileCastingMold, TileMillstone}
-import resonantinduction.core.{Reference, ResonantTab}
+import resonantinduction.core.{Reference, RICreativeTab}
 import resonantinduction.mechanical.mech.gear.ItemHandCrank
 ;
 
@@ -38,7 +38,7 @@ object ArchaicContent extends ContentHolder
     var blockTank: Block = null
 
     //Constructor
-    manager.setTab(ResonantTab)
+    manager.setTab(RICreativeTab)
     manager.setPrefix(Reference.prefix)
 
     override def preInit()
@@ -63,7 +63,7 @@ object ArchaicContent extends ContentHolder
     }
     override def postInit()
     {
-        ResonantTab.itemStack = new ItemStack(ArchaicContent.blockEngineeringTable)
+        RICreativeTab.itemStack = new ItemStack(ArchaicContent.blockEngineeringTable)
         if (OreDictionary.getOres("cobblestone") == null)
         {
             OreDictionary.registerOre("cobblestone", Blocks.cobblestone)

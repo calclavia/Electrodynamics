@@ -73,10 +73,6 @@ tile.resonantinduction:industrialStone.10.name=Steel
 item.resonantinduction:imprint.name=Imprint
 item.resonantinduction:hammer.name=Hammer
 item.resonantinduction:handCrank.name=Hand Crank
-item.resonantinduction:devStaff.name=Staff of Devs
-item.resonantinduction:flour.name=Flour
-item.dough.name=Dough
-item.resonantinduction:laserDrill.name=Laser Drill
 item.resonantinduction:biomass.name=Biomass
 item.resonantinduction:focusingMatrix.name=Focusing Matrix
 
@@ -192,6 +188,9 @@ tile.resonantinduction:encoder.name=Encoder
 item.resonantinduction:charger.name=Charging Plate
 item.resonantinduction:insulation.name=Insulation
 tile.resonantinduction:laserEmitter.name=Laser Emitter
+tile.resonantinduction:laserReceiver.name=Laser Receiver
+tile.resonantinduction:focusCrystal.name=Focus Crystal
+tile.resonantinduction:mirror.name=Mirror
 
 tool.mode.set=Mode set to:
 laser.toolmode.remove=Remove

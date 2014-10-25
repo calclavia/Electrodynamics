@@ -1,6 +1,5 @@
 package resonantinduction.electrical.laser.focus;
 
-
 import universalelectricity.core.transform.vector.Vector3;
 
 import java.util.List;
@@ -14,6 +13,7 @@ public interface IFocus
 {
 	/**
 	 * Tells the block to look at a specific position
+	 *
 	 * @param position
 	 */
 	public void focus(Vector3 position);

@@ -8,7 +8,7 @@ import resonant.lib.network.discriminator.PacketAnnotationManager
 import resonant.lib.recipe.UniversalRecipe
 import resonant.lib.schematic.{SchematicPlate, SchematicRegistry}
 import resonantinduction.core.interfaces.IMechanicalNode
-import resonantinduction.core.{Reference, ResonantPartFactory, ResonantTab}
+import resonantinduction.core.{Reference, ResonantPartFactory, RICreativeTab}
 import resonantinduction.mechanical.fluid.pipe.{ItemPipe, PartPipe, PipeMaterials}
 import resonantinduction.mechanical.fluid.transport.TilePump
 import resonantinduction.mechanical.machine.TileDetector
@@ -29,7 +29,7 @@ import universalelectricity.api.core.grid.NodeRegistry
 object MechanicalContent extends ContentHolder
 {
     //Constructor
-    manager.setTab(ResonantTab)
+    manager.setTab(RICreativeTab)
     manager.setPrefix(Reference.prefix)
 
     //Content
@@ -73,7 +73,7 @@ object MechanicalContent extends ContentHolder
 
         NodeRegistry.register(classOf[IMechanicalNode], classOf[MechanicalNode])
 
-        ResonantTab.itemStack(new ItemStack(MechanicalContent.blockGrinderWheel))
+        RICreativeTab.itemStack(new ItemStack(MechanicalContent.blockGrinderWheel))
 
         PacketAnnotationManager.INSTANCE.register(classOf[TileWindTurbine])
         PacketAnnotationManager.INSTANCE.register(classOf[TileWaterTurbine])

@@ -14,7 +14,7 @@ object CoreContent extends ContentHolder
 {
   val decoration: Block = new BlockDecoration()
 
-  manager.setTab(ResonantTab).setPrefix(Reference.prefix)
+  manager.setTab(RICreativeTab).setPrefix(Reference.prefix)
 
   /**
    * Recipe registration

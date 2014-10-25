@@ -15,14 +15,11 @@ import net.minecraftforge.oredict.{OreDictionary, ShapelessOreRecipe}
 import resonant.content.loader.{ContentHolder, ExplicitContentName}
 import resonant.lib.recipe.UniversalRecipe
 import resonantinduction.atomic.gate.{ItemQuantumGlyph, PartQuantumGlyph}
-import resonantinduction.core.{Reference, ResonantPartFactory, ResonantTab}
+import resonantinduction.core.{RICreativeTab, Reference, ResonantPartFactory}
 import resonantinduction.electrical.battery.{ItemBlockBattery, TileBattery}
 import resonantinduction.electrical.generator.{TileMotor, TileSolarPanel, TileThermopile}
-import resonantinduction.electrical.laser.emitter.{BlockLaserEmitter, TileLaserEmitter}
-import resonantinduction.electrical.laser.focus.ItemFocusingMatrix
-import resonantinduction.electrical.laser.focus.crystal.{BlockFocusCrystal, TileFocusCrystal}
-import resonantinduction.electrical.laser.focus.mirror.{BlockMirror, TileMirror}
-import resonantinduction.electrical.laser.receiver.{BlockLaserReceiver, TileLaserReceiver}
+import resonantinduction.electrical.laser.focus.{ItemFocusingMatrix, TileFocusCrystal, TileMirror}
+import resonantinduction.electrical.laser.{TileLaserEmitter, TileLaserReceiver}
 import resonantinduction.electrical.multimeter.{ItemMultimeter, PartMultimeter}
 import resonantinduction.electrical.tesla.TileTesla
 import resonantinduction.electrical.transformer.{ItemElectricTransformer, PartElectricTransformer}
@@ -49,14 +46,16 @@ object ElectricalContent extends ContentHolder
   var blockMotor: Block = new TileMotor
   var blockThermopile: Block = new TileThermopile
 
-  var blockLaserEmitter: Block = new BlockLaserEmitter
-  var blockLaserReceiver: Block = new BlockLaserReceiver
-  var   blockMirror = new BlockMirror
-  var blockFocusCrystal: Block = new BlockFocusCrystal
+  var blockLaserEmitter: Block = new TileLaserEmitter
+  var blockLaserReceiver: Block = new TileLaserReceiver
+  var blockMirror: Block = new TileMirror
+  var blockFocusCrystal: Block = new TileFocusCrystal
 
   var tierOneBattery: ItemStack = null
   var tierTwoBattery: ItemStack = null
   var tierThreeBattery: ItemStack = null
+
+  manager.setTab(RICreativeTab).setPrefix(Reference.prefix)
 
   override def preInit()
   {
@@ -80,7 +79,7 @@ object ElectricalContent extends ContentHolder
   {
     super.init()
 
-    ResonantTab.itemStack(new ItemStack(ElectricalContent.itemTransformer))
+    RICreativeTab.itemStack(new ItemStack(ElectricalContent.itemTransformer))
 
     OreDictionary.registerOre("wire", ElectricalContent.itemWire)
     OreDictionary.registerOre("motor", ElectricalContent.blockMotor)
@@ -133,7 +132,7 @@ object ElectricalContent extends ContentHolder
     }
   }
 
-  def getWire(t: WireMaterial, count: Int): ItemStack =new ItemStack(itemWire, count, t.ordinal())
+  def getWire(t: WireMaterial, count: Int): ItemStack = new ItemStack(itemWire, count, t.ordinal())
 
   /**
    * Handle wire texture

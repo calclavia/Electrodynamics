@@ -25,7 +25,8 @@ class EntityLaserFX(par1World: World, start: Vector3, end: Vector3, color: Vecto
 
   val energyPercentage = Math.min(energy / Laser.maxEnergy, 1).toFloat
 
-  val endSize = 0.01// + (0.2 - 0.01) * energyPercentage
+  val endSize = 0.01
+  // + (0.2 - 0.01) * energyPercentage
   val detail = 20
   val rotationSpeed = 18
 
@@ -157,10 +158,10 @@ class EntityLaserFX(par1World: World, start: Vector3, end: Vector3, color: Vecto
       tessellator.startDrawingQuads()
       tessellator.setBrightness(200)
       tessellator.setColorRGBA_F(particleRed, particleGreen, particleBlue, particleAlpha)
-      tessellator.addVertexWithUV(-particleScale, -particleScale , 0, 0, 0)
+      tessellator.addVertexWithUV(-particleScale, -particleScale, 0, 0, 0)
       tessellator.addVertexWithUV(-particleScale, particleScale, 0, 0, 1)
       tessellator.addVertexWithUV(particleScale, particleScale, 0, 1, 1)
-      tessellator.addVertexWithUV(particleScale, -particleScale , 0, 1, 0)
+      tessellator.addVertexWithUV(particleScale, -particleScale, 0, 1, 0)
       tessellator.draw()
 
       glPopMatrix()

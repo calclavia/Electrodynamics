@@ -44,7 +44,7 @@ import resonantinduction.atomic.machine.quantum.TileQuantumAssembler
 import resonantinduction.atomic.machine.reactor.{TileControlRod, TileReactorCell}
 import resonantinduction.atomic.machine.thermometer.TileThermometer
 import resonantinduction.atomic.schematic.{SchematicAccelerator, SchematicBreedingReactor, SchematicFissionReactor, SchematicFusionReactor}
-import resonantinduction.core.{Reference, ResonantInduction, ResonantTab, Settings}
+import resonantinduction.core.{Reference, ResonantInduction, RICreativeTab, Settings}
 import universalelectricity.core.transform.vector.VectorWorld
 
 import scala.collection.JavaConversions._
@@ -55,7 +55,7 @@ import scala.collection.JavaConversions._
 object AtomicContent extends ContentHolder
 {
     //Constructor
-    manager.setTab(ResonantTab).setPrefix(Reference.prefix)
+    manager.setTab(RICreativeTab).setPrefix(Reference.prefix)
 
     val ENTITY_ID_PREFIX: Int = 49
     val SECOND_IN_TICKS: Int = 20
@@ -94,8 +94,8 @@ object AtomicContent extends ContentHolder
     @ExplicitContentName(value = "cellWater")
     var itemWaterCell: Item = new ItemCell("cellWater")
     @ExplicitContentName
-    var itemYellowCake: Item = new ItemRadioactive().setTextureName(Reference.prefix + "yellowcake").setCreativeTab(ResonantTab)
-    var itemUranium: Item = new ItemUranium().setCreativeTab(ResonantTab)
+    var itemYellowCake: Item = new ItemRadioactive().setTextureName(Reference.prefix + "yellowcake").setCreativeTab(RICreativeTab)
+    var itemUranium: Item = new ItemUranium().setCreativeTab(RICreativeTab)
 
     //Buckets
     var itemBucketToxic: Item = null
@@ -139,7 +139,7 @@ object AtomicContent extends ContentHolder
         PacketAnnotationManager.INSTANCE.register(classOf[TileAccelerator])
 
         //Buckets
-        itemBucketToxic = manager.newItem("bucketToxicWaste", new ItemBucket(AtomicContent.blockPlasma)).setCreativeTab(ResonantTab.tab).setContainerItem(Items.bucket).setTextureName(Reference.prefix + "bucketToxicWaste")
+        itemBucketToxic = manager.newItem("bucketToxicWaste", new ItemBucket(AtomicContent.blockPlasma)).setCreativeTab(RICreativeTab.tab).setContainerItem(Items.bucket).setTextureName(Reference.prefix + "bucketToxicWaste")
 
         //Schematics
         SchematicRegistry.register("resonantInduction.atomic.accelerator", new SchematicAccelerator)
@@ -195,7 +195,7 @@ object AtomicContent extends ContentHolder
             }
         })
         Settings.config.save
-        ResonantTab.itemStack(new ItemStack(AtomicContent.blockReactorCell))
+        RICreativeTab.itemStack(new ItemStack(AtomicContent.blockReactorCell))
 
     }
 

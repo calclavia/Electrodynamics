@@ -9,7 +9,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.IIcon
 import net.minecraft.world.World
 import resonantinduction.core.Reference
-import resonantinduction.core.ResonantTab
+import resonantinduction.core.RICreativeTab
 import java.util.List
 import resonant.lib.wrapper.WrapList._
 
@@ -23,7 +23,7 @@ class ItemAntimatter extends ItemCell
     this.setHasSubtypes(true)
     this.setUnlocalizedName(Reference.prefix + "antimatter")
     this.setTextureName(Reference.prefix + "antimatter")
-    setCreativeTab(ResonantTab.tab)
+    setCreativeTab(RICreativeTab.tab)
 
     @SideOnly(Side.CLIENT) override def registerIcons(iconRegister: IIconRegister)
     {

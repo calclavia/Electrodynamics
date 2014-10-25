@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.DamageSource
 import net.minecraftforge.common.util.EnumHelper
 import resonant.api.armor.IAntiPoisonArmor
-import resonantinduction.core.{ResonantInduction, Reference, ResonantTab}
+import resonantinduction.core.{ResonantInduction, Reference, RICreativeTab}
 
 /**
  * Hazmat
@@ -24,7 +24,7 @@ class ItemHazmat(slot: Int) extends ItemArmor(ItemHazmat.hazmatArmorMaterial, Re
     {
         this(slot)
         this.setUnlocalizedName(Reference.prefix + name)
-        this.setCreativeTab(ResonantTab.tab)
+        this.setCreativeTab(RICreativeTab.tab)
         this.setMaxDamage(200000)
     }
 
