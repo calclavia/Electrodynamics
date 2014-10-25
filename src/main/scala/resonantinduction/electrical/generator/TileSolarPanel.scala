@@ -47,6 +47,7 @@ class TileSolarPanel extends TileElectric(Material.iron)
         {
           if (!(world.isThundering || world.isRaining))
           {
+            println(dcNode)
             dcNode.buffer(Settings.solarPower / 20)
           }
         }

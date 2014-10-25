@@ -8,11 +8,12 @@ import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.lib.content.prefab.java.TileElectric
+import resonant.content.prefab.java.TileAdvanced
+import resonant.lib.content.prefab.TElectric
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketReceiver
 import resonant.lib.network.netty.AbstractPacket
-import universalelectricity.simulator.dc.micro.DCNode
+import universalelectricity.core.transform.vector.Vector3
 
 /** A modular battery box that allows shared connections with boxes next to it.
   *
@@ -35,7 +36,7 @@ object TileBattery
   final val DEFAULT_WATTAGE: Long = getEnergyForTier(0)
 }
 
-class TileBattery extends TileElectric(Material.iron) with IPacketReceiver
+class TileBattery extends TileAdvanced(Material.iron) with TElectric with IPacketReceiver
 {
   private var markClientUpdate: Boolean = false
   private var markDistributionUpdate: Boolean = false
@@ -43,29 +44,12 @@ class TileBattery extends TileElectric(Material.iron) with IPacketReceiver
   private var network: GridBattery = null
 
   //Constructor
-  setTextureName("material_metal_side")
+  textureName = "material_metal_side"
   ioMap = 0.toShort
   saveIOMap = true
-  normalRender(false)
-  isOpaqueCube(false)
-  itemBlock(classOf[ItemBlockBattery])
-
-  //TODO: Test, remove this
-  private val node = new DCNode(this)
-  {
-    override def charge(terminal: ForgeDirection): Double = 0
-
-    /*
-    {
-      if (getInputDirections().contains(terminal))
-        return 0
-      else if (getOutputDirections().contains(terminal))
-        return 0
-
-      return super.charge
-    }
-     */
-  }
+  normalRender = false
+  isOpaqueCube = false
+  itemBlock = classOf[ItemBlockBattery]
 
   override def update()
   {
@@ -73,8 +57,14 @@ class TileBattery extends TileElectric(Material.iron) with IPacketReceiver
 
     if (!world.isRemote)
     {
-      //TODO: Test, remove this
-      node.buffer(100)
+      if (doCharge)
+      {
+        dcNode.negativeTerminals.addAll(getInputDirections())
+        //TODO: Test, remove this
+        dcNode.buffer(100)
+        dcNode.update(1/20f)
+        doCharge = false
+      }
 
       if (markDistributionUpdate && ticks % 5 == 0)
       {
@@ -86,6 +76,21 @@ class TileBattery extends TileElectric(Material.iron) with IPacketReceiver
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord)
       }
     }
+  }
+
+  var doCharge = false
+
+  override def activate(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
+  {
+    super.activate(player, side, hit)
+
+    if (!world.isRemote)
+    {
+      if (player.isSneaking)
+        doCharge = !doCharge
+      println(dcNode)
+    }
+    return true
   }
 
   override def getDescPacket: AbstractPacket =

@@ -34,7 +34,7 @@ trait TWire extends PartAbstract with TNodePartConnector with TMaterial[WireMate
 
   override def getMaterialID = material.ordinal()
 
-  override protected def getItem = new ItemStack(ElectricalContent.itemInsulation, getMaterialID)
+  override protected def getItem = new ItemStack(ElectricalContent.itemWire, getMaterialID)
 
   /**
    * Packet Methods
