@@ -66,7 +66,6 @@ import universalelectricity.core.transform.vector.Vector3
         ItemRenderHandler.register(Item.getItemFromBlock(MechanicalContent.blockWindTurbine), new RenderWindTurbine)
         ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileMechanicalPiston], new RenderMechanicalPiston)
         ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileGrindingWheel], new RenderGrindingWheel)
-        ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileMixer], new RenderMixer)
         ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileWaterTurbine], new RenderWaterTurbine)
         ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileWindTurbine], new RenderWindTurbine)
         ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileElectricTurbine], new RenderElectricTurbine)

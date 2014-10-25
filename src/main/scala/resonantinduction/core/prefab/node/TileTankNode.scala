@@ -25,11 +25,11 @@ class TileTankNode(material: Material) extends TileAdvanced(material) with INode
   var tankNode: NodeTank = new NodeTank(this, 16)
   protected var colorID: Int = 0
 
-  def getFluid(): FluidStack = getTank().getFluid
+  def getFluid: FluidStack = getTank.getFluid
 
-  def getFluidCapacity(): Int = getTank().getCapacity
+  def getFluidCapacity: Int = getTank.getCapacity
 
-  def getTank(): IFluidTank = tankNode
+  def getTank: IFluidTank = tankNode
 
   override def readFromNBT(nbt: NBTTagCompound)
   {
