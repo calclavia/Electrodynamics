@@ -12,7 +12,7 @@ import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.event.TextureStitchEvent
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.oredict.{OreDictionary, ShapelessOreRecipe}
-import resonant.content.loader.ContentHolder
+import resonant.content.loader.{ContentHolder, ExplicitContentName}
 import resonant.lib.recipe.UniversalRecipe
 import resonantinduction.atomic.gate.{ItemQuantumGlyph, PartQuantumGlyph}
 import resonantinduction.core.{Reference, ResonantPartFactory, ResonantTab}
@@ -35,24 +35,24 @@ object ElectricalContent extends ContentHolder
 {
   val particleTextures = new ResourceLocation("textures/particle/particles.png")
 
-  var itemWire: Item = null
-  var itemMultimeter: Item = null
-  var itemTransformer: Item = null
-  var itemInsulation: Item = null
-  var itemQuantumGlyph: Item = null
+  var itemWire = new ItemWire
+  var itemMultimeter = new ItemMultimeter
+  var itemTransformer = new ItemElectricTransformer
+  @ExplicitContentName("insulation") var itemInsulation = new Item
+  var itemQuantumGlyph = new ItemQuantumGlyph
 
-  var blockTesla: Block = null
-  var blockBattery: Block = null
-  var blockSolarPanel: Block = null
-  var blockMotor: Block = null
-  var blockThermopile: Block = null
+  var itemFocusingMatrix: ItemFocusingMatrix = new ItemFocusingMatrix
 
-  var blockLaserEmitter: BlockLaserEmitter = null
-  var blockLaserReceiver: BlockLaserReceiver = null
-  var blockMirror: BlockMirror = null
-  var blockFocusCrystal: BlockFocusCrystal = null
+  var blockTesla: Block = new TileTesla
+  var blockBattery: Block = new TileBattery
+  var blockSolarPanel: Block = new TileSolarPanel
+  var blockMotor: Block = new TileMotor
+  var blockThermopile: Block = new TileThermopile
 
-  var itemFocusingMatrix: ItemFocusingMatrix = null
+  var blockLaserEmitter: Block = new BlockLaserEmitter
+  var blockLaserReceiver: Block = new BlockLaserReceiver
+  var   blockMirror = new BlockMirror
+  var blockFocusCrystal: Block = new BlockFocusCrystal
 
   var tierOneBattery: ItemStack = null
   var tierTwoBattery: ItemStack = null
@@ -60,25 +60,7 @@ object ElectricalContent extends ContentHolder
 
   override def preInit()
   {
-    super.preInit
-    itemWire = manager.newItem(classOf[ItemWire])
-    itemMultimeter = manager.newItem(classOf[ItemMultimeter])
-    itemTransformer = manager.newItem(classOf[ItemElectricTransformer])
-    itemInsulation = manager.newItem("insulation", classOf[Item])
-    itemQuantumGlyph = manager.newItem(classOf[ItemQuantumGlyph])
-
-    blockTesla = manager.newBlock(classOf[TileTesla])
-    blockBattery = manager.newBlock(classOf[TileBattery])
-    blockSolarPanel = manager.newBlock(classOf[TileSolarPanel])
-    blockMotor = manager.newBlock(classOf[TileMotor])
-    blockThermopile = manager.newBlock(classOf[TileThermopile])
-
-    blockLaserEmitter = new BlockLaserEmitter()
-    blockLaserReceiver = new BlockLaserReceiver()
-    blockMirror = new BlockMirror()
-    blockFocusCrystal = new BlockFocusCrystal()
-
-    itemFocusingMatrix = new ItemFocusingMatrix()
+    super.preInit()
 
     tierOneBattery = ItemBlockBattery.setTier(new ItemStack(ElectricalContent.blockBattery, 1, 0), 0)
     tierTwoBattery = ItemBlockBattery.setTier(new ItemStack(ElectricalContent.blockBattery, 1, 0), 1)
@@ -96,14 +78,9 @@ object ElectricalContent extends ContentHolder
 
   override def init()
   {
-    super.init
+    super.init()
 
     ResonantTab.itemStack(new ItemStack(ElectricalContent.itemTransformer))
-
-    GameRegistry.registerTileEntity(classOf[TileLaserEmitter], "EMLaserEmitter");
-    GameRegistry.registerTileEntity(classOf[TileLaserReceiver], "EMLaserReceiver");
-    GameRegistry.registerTileEntity(classOf[TileMirror], "EMLaserMirror");
-    GameRegistry.registerTileEntity(classOf[TileFocusCrystal], "EMFocusCrystal");
 
     OreDictionary.registerOre("wire", ElectricalContent.itemWire)
     OreDictionary.registerOre("motor", ElectricalContent.blockMotor)
@@ -113,7 +90,6 @@ object ElectricalContent extends ContentHolder
 
   override def postInit
   {
-    super.postInit
     recipes += shaped(blockTesla, "WEW", " C ", "DID", 'W', "wire", 'E', Items.ender_eye, 'C', UniversalRecipe.BATTERY.get, 'D', Items.diamond, 'I', UniversalRecipe.PRIMARY_PLATE.get)
     recipes += shaped(itemMultimeter, "WWW", "ICI", 'W', "wire", 'C', UniversalRecipe.BATTERY.get, 'I', UniversalRecipe.PRIMARY_METAL.get)
     recipes += shaped(tierOneBattery, "III", "IRI", "III", 'R', Blocks.redstone_block, 'I', UniversalRecipe.PRIMARY_METAL.get)
@@ -142,7 +118,6 @@ object ElectricalContent extends ContentHolder
     recipes += shaped(blockFocusCrystal, "GGG", "GDG", "GGG", 'G', Blocks.glass, 'D', Items.diamond)
     recipes += shaped(itemFocusingMatrix, "GGG", "GNG", "GGG", 'G', Items.redstone, 'N', Items.quartz)
 
-
     if (Loader.isModLoaded("IC2"))
     {
       recipes += shapeless(getWire(WireMaterial.COPPER, 1), IC2Items.getItem("copperCableItem"))
@@ -156,13 +131,9 @@ object ElectricalContent extends ContentHolder
     {
       GameRegistry.addRecipe(new ShapelessOreRecipe(getWire(WireMaterial.COPPER, 1), "universalCable"))
     }
-
   }
 
-  def getWire(t: WireMaterial, count: Int): ItemStack =
-  {
-    return new ItemStack(itemWire, count, t.ordinal())
-  }
+  def getWire(t: WireMaterial, count: Int): ItemStack =new ItemStack(itemWire, count, t.ordinal())
 
   /**
    * Handle wire texture
