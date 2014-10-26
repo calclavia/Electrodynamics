@@ -3,6 +3,7 @@ package mffs.production
 import cofh.api.energy.IEnergyHandler
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.lib.content.prefab.TElectric
+import universalelectricity.api.EnergyStorage
 import universalelectricity.compatibility.module.ModuleThermalExpansion
 
 /**
@@ -11,28 +12,30 @@ import universalelectricity.compatibility.module.ModuleThermalExpansion
  */
 trait TTEBridge extends TElectric with IEnergyHandler
 {
+  val energyStorage = new EnergyStorage(10000)
+
   override def receiveEnergy(from: ForgeDirection, maxReceive: Int, simulate: Boolean): Int =
   {
-    return (electricNode.addEnergy(from, maxReceive * ModuleThermalExpansion.reciprocal_ratio, !simulate) * ModuleThermalExpansion.ratio).asInstanceOf[Int]
+    return (energyStorage.receiveEnergy(maxReceive * ModuleThermalExpansion.reciprocal_ratio, !simulate) * ModuleThermalExpansion.ratio).asInstanceOf[Int]
   }
 
   override def extractEnergy(from: ForgeDirection, maxExtract: Int, simulate: Boolean): Int =
   {
-    return (electricNode.removeEnergy(from, maxExtract * ModuleThermalExpansion.reciprocal_ratio, !simulate) * ModuleThermalExpansion.ratio).asInstanceOf[Int]
+    return (energyStorage.receiveEnergy(maxExtract * ModuleThermalExpansion.reciprocal_ratio, !simulate) * ModuleThermalExpansion.ratio).asInstanceOf[Int]
   }
 
   override def getEnergyStored(from: ForgeDirection): Int =
   {
-    return (electricNode.buffer.getEnergy * ModuleThermalExpansion.ratio).asInstanceOf[Int]
+    return (energyStorage.getEnergy * ModuleThermalExpansion.ratio).asInstanceOf[Int]
   }
 
   override def getMaxEnergyStored(from: ForgeDirection): Int =
   {
-    return (electricNode.buffer.getEnergyCapacity * ModuleThermalExpansion.ratio).asInstanceOf[Int]
+    return (energyStorage.getEnergyCapacity * ModuleThermalExpansion.ratio).asInstanceOf[Int]
   }
 
   override def canConnectEnergy(from: ForgeDirection): Boolean =
   {
-    return electricNode.canConnect(from)
+    return dcNode.canConnect(from)
   }
 }

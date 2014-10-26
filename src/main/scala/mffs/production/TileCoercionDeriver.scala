@@ -11,7 +11,6 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.mffs.modules.IModule
 import resonant.lib.network.ByteBufWrapper.ByteBufWrapper
 import resonant.lib.network.discriminator.PacketType
@@ -70,7 +69,7 @@ class TileCoercionDeriver extends TileModuleAcceptor with TTEBridge
         if (isInversed && Settings.enableElectricity)
         {
           val withdrawnElectricity = requestFortron(productionRate / 20, true) / TileCoercionDeriver.ueToFortronRatio
-          electricNode.addEnergy(ForgeDirection.UNKNOWN, withdrawnElectricity * TileCoercionDeriver.energyConversionPercentage, true)
+          energyStorage.receiveEnergy(withdrawnElectricity * TileCoercionDeriver.energyConversionPercentage, true)
 
           recharge(getStackInSlot(TileCoercionDeriver.slotBattery))
         }
@@ -79,14 +78,14 @@ class TileCoercionDeriver extends TileModuleAcceptor with TTEBridge
           if (getFortronEnergy < getFortronCapacity)
           {
             discharge(getStackInSlot(TileCoercionDeriver.slotBattery))
-            val energy = electricNode.buffer.getEnergy
-            electricNode.buffer.setMaxTransfer(getPower)
-            electricNode.buffer.setCapacity(getPower)
+            val energy = energyStorage.getEnergy
+            energyStorage.setMaxTransfer(getPower)
+            energyStorage.setCapacity(getPower)
 
             if (energy >= getPower || (!Settings.enableElectricity && isItemValidForSlot(TileCoercionDeriver.slotFuel, getStackInSlot(TileCoercionDeriver.slotFuel))))
             {
               fortronTank.fill(FortronUtility.getFortron(productionRate), true)
-              electricNode.buffer.extractEnergy(getPower, true)
+              energyStorage.extractEnergy(getPower, true)
 
               if (processTime == 0 && isItemValidForSlot(TileCoercionDeriver.slotFuel, getStackInSlot(TileCoercionDeriver.slotFuel)))
               {
@@ -131,8 +130,6 @@ class TileCoercionDeriver extends TileModuleAcceptor with TTEBridge
   }
 
   def getPower: Double = TileCoercionDeriver.power + (TileCoercionDeriver.power * (getModuleCount(Content.moduleSpeed) / 8d))
-
-  override def getVoltage = 1000D
 
   /**
    * @return The Fortron production rate per tick!
