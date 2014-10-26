@@ -106,15 +106,15 @@ class TileGrate extends TilePressureNode(Material.rock) with IRotatable
             if (gratePath == null)
             {
               gratePath = new GratePathfinder(true)
-              gratePath.startFill(asVectorWorld, getTank().getFluid.getFluid.getID)
+              gratePath.startFill(asVectorWorld, getTank.getFluid.getFluid.getID)
             }
             val filledInWorld = gratePath.tryFill(getFluidAmount, blockEffect)
-            getTank().drain(filledInWorld, true)
+            getTank.drain(filledInWorld, true)
           }
         }
         else if (pressure < 0)
         {
-          val maxDrain = getTank().getCapacity - getFluidAmount
+          val maxDrain = getTank.getCapacity - getFluidAmount
           if (maxDrain > 0)
           {
             if (gratePath == null)
@@ -127,7 +127,7 @@ class TileGrate extends TilePressureNode(Material.rock) with IRotatable
             }
             if (gratePath != null && gratePath.tryPopulateDrainMap(blockEffect))
             {
-              getTank().fill(gratePath.tryDrain(maxDrain, true), true)
+              getTank.fill(gratePath.tryDrain(maxDrain, true), true)
             }
           }
         }
@@ -140,7 +140,7 @@ class TileGrate extends TilePressureNode(Material.rock) with IRotatable
     this.gratePath = null
   }
 
-  override def fill(from: ForgeDirection, resource: FluidStack, doFill: Boolean): Int = getTank().fill(resource, doFill)
+  override def fill(from: ForgeDirection, resource: FluidStack, doFill: Boolean): Int = getTank.fill(resource, doFill)
 
   override def drain(from: ForgeDirection, resource: FluidStack, doDrain: Boolean): FluidStack =
   {
@@ -153,7 +153,7 @@ class TileGrate extends TilePressureNode(Material.rock) with IRotatable
 
   override def drain(from: ForgeDirection, maxDrain: Int, doDrain: Boolean): FluidStack =
   {
-    getTank().drain(maxDrain, doDrain)
+    getTank.drain(maxDrain, doDrain)
   }
 
   protected override def configure(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
