@@ -54,7 +54,7 @@ class GearNode(parent: PartGear) extends MechanicalNode(parent: PartGear)
         return 0.3
     }
 
-    override def buildConnections
+    override def reconstruct()
     {
         connections.clear
         if (!gear.getMultiBlock.isPrimary || world == null)
@@ -65,7 +65,7 @@ class GearNode(parent: PartGear) extends MechanicalNode(parent: PartGear)
         if (tileBehind.isInstanceOf[INodeProvider])
         {
             val instance: MechanicalNode = (tileBehind.asInstanceOf[INodeProvider]).getNode(classOf[MechanicalNode], gear.placementSide.getOpposite).asInstanceOf[MechanicalNode]
-            if (instance != null && instance != this && !(instance.getParent.isInstanceOf[PartGearShaft]) && instance.canConnect(gear.placementSide.getOpposite, this))
+            if (instance != null && instance != this && !(instance.getParent.isInstanceOf[PartGearShaft]) && instance.canConnect(this,gear.placementSide.getOpposite))
             {
                 addConnection(instance, gear.placementSide)
             }
@@ -81,7 +81,7 @@ class GearNode(parent: PartGear) extends MechanicalNode(parent: PartGear)
             if (tile.isInstanceOf[INodeProvider])
             {
                 val instance: MechanicalNode = (tile.asInstanceOf[INodeProvider]).getNode(classOf[MechanicalNode], if (checkDir eq gear.placementSide.getOpposite) ForgeDirection.UNKNOWN else checkDir).asInstanceOf[MechanicalNode]
-                if (!connections.containsValue(checkDir) && instance != this && checkDir != gear.placementSide && instance != null && instance.canConnect(checkDir.getOpposite, this))
+                if (!connections.containsValue(checkDir) && instance != this && checkDir != gear.placementSide && instance != null && instance.canConnect(this,checkDir.getOpposite))
                 {
                     addConnection(instance, checkDir)
                 }
@@ -99,7 +99,7 @@ class GearNode(parent: PartGear) extends MechanicalNode(parent: PartGear)
             if (!connections.containsValue(checkDir) && checkTile.isInstanceOf[INodeProvider])
             {
                 val instance: MechanicalNode = (checkTile.asInstanceOf[INodeProvider]).getNode(classOf[MechanicalNode], gear.placementSide).asInstanceOf[MechanicalNode]
-                if (instance != null && instance != this && instance.canConnect(checkDir.getOpposite, this) && !(instance.getParent.isInstanceOf[PartGearShaft]))
+                if (instance != null && instance != this && instance.canConnect(this,checkDir.getOpposite) && !(instance.getParent.isInstanceOf[PartGearShaft]))
                 {
                     addConnection(instance, checkDir)
                 }
@@ -114,7 +114,7 @@ class GearNode(parent: PartGear) extends MechanicalNode(parent: PartGear)
      * @param with - The source of the connection.
      * @return True is so.
      */
-    override def canConnect(from: ForgeDirection, `with`: AnyRef): Boolean =
+    override def canConnect(`with`: AnyRef,from: ForgeDirection): Boolean =
     {
         if (!gear.getMultiBlock.isPrimary)
         {

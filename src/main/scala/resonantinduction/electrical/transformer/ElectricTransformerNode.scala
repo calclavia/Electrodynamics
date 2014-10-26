@@ -4,20 +4,20 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.util.ForgeDirection
 import universalelectricity.api.core.grid.INodeProvider
 import universalelectricity.compatibility.Compatibility
-import universalelectricity.core.grid.node.NodeElectric
+import universalelectricity.core.grid.node.DCNode
 import universalelectricity.core.transform.vector.VectorWorld
 
 /**
  * Created by robert on 8/11/2014.
  */
-class ElectricTransformerNode(parent: INodeProvider) extends NodeElectric(parent: INodeProvider)
+class ElectricTransformerNode(parent: INodeProvider) extends DCNode(parent: INodeProvider)
 {
-  var connectionDirection : ForgeDirection = ForgeDirection.NORTH
-  var input : Boolean = true;
-  var otherNode : ElectricTransformerNode = null
-  var step : Int = 2
+  var connectionDirection: ForgeDirection = ForgeDirection.NORTH
+  var input: Boolean = true;
+  var otherNode: ElectricTransformerNode = null
+  var step: Int = 2
 
-  def this(parent: INodeProvider, side: ForgeDirection, in : Boolean) =
+  def this(parent: INodeProvider, side: ForgeDirection, in: Boolean) =
   {
     this(parent)
     connectionDirection = side
@@ -26,21 +26,22 @@ class ElectricTransformerNode(parent: INodeProvider) extends NodeElectric(parent
 
   def getVoltage: Double =
   {
-    if(!input)
+    if (!input)
     {
       return otherNode.getVoltage * step
     }
     return 120
   }
 
-  override def canConnect(from: ForgeDirection, source: AnyRef): Boolean =
+  override def canConnect(source: AnyRef, from: ForgeDirection): Boolean =
   {
     return source.isInstanceOf[INodeProvider] && from == connectionDirection
   }
+  /*
 
   override def addEnergy(dir: ForgeDirection, wattage: Double, doAdd: Boolean): Double =
   {
-    if(input)
+    if (input)
     {
       return otherNode.sendEnergy(wattage, doAdd)
     }
@@ -49,17 +50,16 @@ class ElectricTransformerNode(parent: INodeProvider) extends NodeElectric(parent
 
   def sendEnergy(wattage: Double, doAdd: Boolean): Double =
   {
-    val tile : TileEntity = new VectorWorld(parent.asInstanceOf[TileEntity]).add(connectionDirection).getTileEntity
-    if(Compatibility.isHandler(tile,connectionDirection.getOpposite))
+    val tile: TileEntity = new VectorWorld(parent.asInstanceOf[TileEntity]).add(connectionDirection).getTileEntity
+    if (Compatibility.isHandler(tile, connectionDirection.getOpposite))
     {
       return Compatibility.fill(tile, connectionDirection.getOpposite, wattage, doAdd)
     }
     return 0
   }
 
-
-  override def removeEnergy(dir: ForgeDirection, wattage: Double, doRemove: Boolean) : Double =
+  override def removeEnergy(dir: ForgeDirection, wattage: Double, doRemove: Boolean): Double =
   {
     return 0
-  }
+  }*/
 }

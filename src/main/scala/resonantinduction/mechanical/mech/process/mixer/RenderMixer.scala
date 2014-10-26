@@ -9,7 +9,7 @@ import net.minecraftforge.client.IItemRenderer
 import net.minecraftforge.client.model.{AdvancedModelLoader, IModelCustom}
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL11.{glPopMatrix, glPushMatrix, glRotatef, glTranslatef}
-import resonant.content.prefab.scala.render.ISimpleItemRenderer
+import resonant.content.prefab.scal.render.ISimpleItemRenderer
 import resonant.lib.render.RenderUtility
 import resonantinduction.core.Reference
 

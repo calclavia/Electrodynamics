@@ -6,6 +6,8 @@ import net.minecraft.block.material.Material
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.IRotatable
+import resonant.content.prefab.java.TileNode
+import resonant.lib.content.prefab.TElectric
 import resonant.lib.content.prefab.java.TileElectric
 import resonantinduction.core.interfaces.IMechanicalNode
 import universalelectricity.api.core.grid.{IUpdate, INode, NodeRegistry}
@@ -15,9 +17,9 @@ import universalelectricity.api.core.grid.{IUpdate, INode, NodeRegistry}
  *
  * @author Calclavia
  */
-class TileMotor extends TileElectric(Material.iron) with IRotatable {
+class TileMotor extends TileNode(Material.iron) with TElectric with IRotatable {
 
-  var mech_node : IMechanicalNode = NodeRegistry.get(this, classOf[IMechanicalNode])
+  var mechNode : IMechanicalNode = NodeRegistry.get(this, classOf[IMechanicalNode])
   /** Generator turns KE -> EE. Inverted one will turn EE -> KE. */
   var isInversed: Boolean = true
   private var gearRatio: Byte = 0
@@ -32,18 +34,18 @@ class TileMotor extends TileElectric(Material.iron) with IRotatable {
 
   override def start {
     super.start
-    if (mech_node != null) mech_node.reconstruct
+    if (mechNode != null) mechNode.reconstruct
   }
 
   override def invalidate {
-    mech_node.deconstruct
+    mechNode.deconstruct
     super.invalidate
   }
 
   override def update {
     super.update
-    if (mech_node != null && mech_node.isInstanceOf[IUpdate]) {
-      mech_node.asInstanceOf[IUpdate].update(0.05f)
+    if (mechNode != null && mechNode.isInstanceOf[IUpdate]) {
+      mechNode.asInstanceOf[IUpdate].update(0.05f)
       if (!isInversed) {
         receiveMechanical
       }
@@ -54,16 +56,16 @@ class TileMotor extends TileElectric(Material.iron) with IRotatable {
   }
 
   def receiveMechanical {
-    val power: Double = mech_node.getForce(ForgeDirection.UNKNOWN) * mech_node.getAngularSpeed(ForgeDirection.UNKNOWN)
-    val receive: Double = electricNode.addEnergy(ForgeDirection.UNKNOWN, power, true)
+    val power: Double = mechNode.getForce(ForgeDirection.UNKNOWN) * mechNode.getAngularSpeed(ForgeDirection.UNKNOWN)
+    val receive: Double =0// dcNode.addEnergy(ForgeDirection.UNKNOWN, power, true)
     if (receive > 0) {
       val percentageUsed: Double = receive / power
-      mech_node.apply(this, -mech_node.getForce(ForgeDirection.UNKNOWN) * percentageUsed, -mech_node.getAngularSpeed(ForgeDirection.UNKNOWN) * percentageUsed)
+      mechNode.apply(this, -mechNode.getForce(ForgeDirection.UNKNOWN) * percentageUsed, -mechNode.getAngularSpeed(ForgeDirection.UNKNOWN) * percentageUsed)
     }
   }
 
   def produceMechanical {
-    val extract: Double = electricNode.removeEnergy(ForgeDirection.UNKNOWN, electricNode.getEnergy(ForgeDirection.UNKNOWN), false)
+    val extract: Double = 0//dcNode.removeEnergy(ForgeDirection.UNKNOWN, dcNode.getEnergy(ForgeDirection.UNKNOWN), false)
     if (extract > 0) {
       val torqueRatio: Long = ((gearRatio + 1) / 2.2d * (extract)).asInstanceOf[Long]
       if (torqueRatio > 0) {
@@ -71,12 +73,12 @@ class TileMotor extends TileElectric(Material.iron) with IRotatable {
         val maxTorque: Double = (extract) / maxAngularVelocity
         var setAngularVelocity: Double = maxAngularVelocity
         var setTorque: Double = maxTorque
-        val currentTorque: Double = Math.abs(mech_node.getForce(ForgeDirection.UNKNOWN))
-        if (currentTorque != 0) { setTorque = Math.min(setTorque, maxTorque) * (mech_node.getForce(ForgeDirection.UNKNOWN) / currentTorque) }
-        val currentVelo: Double = Math.abs(mech_node.getAngularSpeed(ForgeDirection.UNKNOWN))
-        if (currentVelo != 0) setAngularVelocity = Math.min(+setAngularVelocity, maxAngularVelocity) * (mech_node.getAngularSpeed(ForgeDirection.UNKNOWN) / currentVelo)
-        mech_node.apply(this, setTorque - mech_node.getForce(ForgeDirection.UNKNOWN), setAngularVelocity - mech_node.getAngularSpeed(ForgeDirection.UNKNOWN))
-        electricNode.removeEnergy(ForgeDirection.UNKNOWN, Math.abs(setTorque * setAngularVelocity).asInstanceOf[Long], true)
+        val currentTorque: Double = Math.abs(mechNode.getForce(ForgeDirection.UNKNOWN))
+        if (currentTorque != 0) { setTorque = Math.min(setTorque, maxTorque) * (mechNode.getForce(ForgeDirection.UNKNOWN) / currentTorque) }
+        val currentVelo: Double = Math.abs(mechNode.getAngularSpeed(ForgeDirection.UNKNOWN))
+        if (currentVelo != 0) setAngularVelocity = Math.min(+setAngularVelocity, maxAngularVelocity) * (mechNode.getAngularSpeed(ForgeDirection.UNKNOWN) / currentVelo)
+        mechNode.apply(this, setTorque - mechNode.getForce(ForgeDirection.UNKNOWN), setAngularVelocity - mechNode.getAngularSpeed(ForgeDirection.UNKNOWN))
+       // dcNode.removeEnergy(ForgeDirection.UNKNOWN, Math.abs(setTorque * setAngularVelocity).asInstanceOf[Long], true)
       }
     }
   }
@@ -107,15 +109,15 @@ class TileMotor extends TileElectric(Material.iron) with IRotatable {
 
   override def getNode(nodeType: Class[_ <: INode], from: ForgeDirection): INode = {
     if (from == getDirection || from == getDirection.getOpposite) {
-      if (nodeType.isAssignableFrom(mech_node.getClass)) return mech_node
+      if (nodeType.isAssignableFrom(mechNode.getClass)) return mechNode
     }
     return super.getNode(nodeType, from)
   }
 
   override def getNodes(nodes: java.util.List[INode])
   {
-    nodes.add(this.mech_node)
-    nodes.add(this.electricNode)
+    nodes.add(this.mechNode)
+    nodes.add(this.dcNode)
   }
 
   override def toString: String = {

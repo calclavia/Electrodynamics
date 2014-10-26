@@ -16,7 +16,7 @@ class GuiNuclearBoiler(player: EntityPlayer, tileEntity: TileNuclearBoiler) exte
     {
         this.fontRendererObj.drawString("Boiler", 52, 6, 4210752)
         this.renderUniversalDisplay(8, 112, TileNuclearBoiler.DIAN * 20, mouseX, mouseY, UnitDisplay.Unit.WATT)
-        this.renderUniversalDisplay(110, 112, tileEntity.getVoltage, mouseX, mouseY, UnitDisplay.Unit.VOLTAGE)
+        //this.renderUniversalDisplay(110, 112, tileEntity.getVoltage, mouseX, mouseY, UnitDisplay.Unit.VOLTAGE)
         this.fontRendererObj.drawString("The nuclear boiler can boil", 8, 75, 4210752)
         this.fontRendererObj.drawString("yellow cake into uranium", 8, 85, 4210752)
         this.fontRendererObj.drawString("hexafluoride gas to be refined.", 8, 95, 4210752)

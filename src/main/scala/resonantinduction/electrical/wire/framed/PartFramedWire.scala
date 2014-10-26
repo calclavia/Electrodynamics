@@ -11,7 +11,7 @@ import resonant.lib.wrapper.BitmaskWrapper._
 import resonantinduction.core.prefab.node.TMultipartNode
 import resonantinduction.core.prefab.part.connector.PartFramedNode
 import resonantinduction.electrical.wire.base.TWire
-import universalelectricity.simulator.dc.micro.DCNode
+import universalelectricity.core.grid.node.DCNode
 
 /**
  * Fluid transport pipe
@@ -22,12 +22,12 @@ class PartFramedWire extends PartFramedNode with TWire
 {
   override lazy val node = new DCNode(this) with TMultipartNode
   {
-    override def buildConnections()
+    override def reconstruct()
     {
       val prevCon = connectionMask
       connectionMask = 0x00
 
-      super.buildConnections()
+     super.reconstruct()
 
       if (connectionMask != prevCon)
         sendConnectionUpdate()

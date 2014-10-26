@@ -13,7 +13,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.{FluidContainerRegistry, FluidStack, FluidTank, IFluidTank}
 import org.lwjgl.opengl.GL11
 import resonant.api.IRemovable.ISneakPickup
-import resonant.content.prefab.scala.render.ISimpleItemRenderer
+import resonant.content.prefab.scal.render.ISimpleItemRenderer
 import resonant.lib.render.{FluidRenderUtility, RenderUtility}
 import resonant.lib.utility.FluidUtility
 import resonant.lib.utility.render.RenderBlockUtility

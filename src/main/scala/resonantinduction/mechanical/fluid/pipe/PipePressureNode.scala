@@ -16,7 +16,7 @@ class PipePressureNode(parent: PartPipe) extends NodePressure(parent) with TMult
 {
   def pipe: PartPipe = getParent.asInstanceOf[PartPipe]
 
-  override def buildConnections()
+  override def reconstruct()
   {
     connections.clear()
 
@@ -35,13 +35,13 @@ class PipePressureNode(parent: PartPipe) extends NodePressure(parent) with TMult
           {
             val check = tile.asInstanceOf[INodeProvider].getNode(classOf[NodePressure], dir.getOpposite)
 
-            if (check.isInstanceOf[NodePressure] && canConnect(dir, check) && check.asInstanceOf[NodePressure].canConnect(dir.getOpposite, this))
+            if (check.isInstanceOf[NodePressure] && canConnect(check,dir) && check.asInstanceOf[NodePressure].canConnect(this, dir.getOpposite))
             {
               pipe.connectionMask = pipe.connectionMask.openMask(dir)
               connections.put(check, dir)
             }
           }
-          else if (canConnect(dir, tile))
+          else if (canConnect(tile,dir))
           {
             pipe.connectionMask = pipe.connectionMask.openMask(dir)
             connections.put(tile, dir)
@@ -56,7 +56,7 @@ class PipePressureNode(parent: PartPipe) extends NodePressure(parent) with TMult
     }
   }
 
-  override def canConnect(from: ForgeDirection, source: AnyRef): Boolean =
+  override def canConnect(source: AnyRef, from: ForgeDirection): Boolean =
   {
     if (!pipe.isBlockedOnSide(from))
     {
@@ -74,7 +74,7 @@ class PipePressureNode(parent: PartPipe) extends NodePressure(parent) with TMult
         return false
       }
 
-      return super.canConnect(from, source) || source.isInstanceOf[IFluidHandler]
+      return super.canConnect(source, from) || source.isInstanceOf[IFluidHandler]
     }
 
     return false

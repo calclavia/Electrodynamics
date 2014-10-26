@@ -41,11 +41,10 @@ class TileBattery extends TileAdvanced(Material.iron) with TElectric with IPacke
   private var markClientUpdate: Boolean = false
   private var markDistributionUpdate: Boolean = false
   var renderEnergyAmount: Double = 0
-  private var network: GridBattery = null
 
   //Constructor
   textureName = "material_metal_side"
-  ioMap = 0.toShort
+  ioMap = 0
   saveIOMap = true
   normalRender = false
   isOpaqueCube = false
@@ -57,12 +56,11 @@ class TileBattery extends TileAdvanced(Material.iron) with TElectric with IPacke
 
     if (!world.isRemote)
     {
+      //TODO: Test, remove this
       if (doCharge)
       {
-        dcNode.negativeTerminals.addAll(getInputDirections())
-        //TODO: Test, remove this
+        dcNode.positiveTerminals.addAll(getOutputDirections())
         dcNode.buffer(100)
-        dcNode.update(1/20f)
         doCharge = false
       }
 
@@ -87,9 +85,13 @@ class TileBattery extends TileAdvanced(Material.iron) with TElectric with IPacke
     if (!world.isRemote)
     {
       if (player.isSneaking)
+      {
         doCharge = !doCharge
+      }
+
       println(dcNode)
     }
+
     return true
   }
 

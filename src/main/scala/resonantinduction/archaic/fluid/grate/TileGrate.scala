@@ -98,7 +98,7 @@ class TileGrate extends TilePressureNode(Material.rock) with IRotatable
         val pressure = getPressure(getDirection)
         val blockEffect = Math.abs(pressure * grateEffectMultiplier).toInt
         setCapacity(Math.max(blockEffect * FluidContainerRegistry.BUCKET_VOLUME * grateDrainSpeedMultiplier,
-                             FluidContainerRegistry.BUCKET_VOLUME).toInt)
+          FluidContainerRegistry.BUCKET_VOLUME).toInt)
         if (pressure > 0)
         {
           if (getFluidAmount >= FluidContainerRegistry.BUCKET_VOLUME)
@@ -163,8 +163,7 @@ class TileGrate extends TilePressureNode(Material.rock) with IRotatable
       if (!world.isRemote)
       {
         fillOver = !fillOver
-        player.addChatMessage(new ChatComponentText("Grate now set to " + (if (fillOver) "" else "not ") +
-                                                    "fill higher than itself."))
+        player.addChatMessage(new ChatComponentText("Grate now set to " + (if (fillOver) "" else "not ") + "fill higher than itself."))
         gratePath = null
       }
       return true
@@ -181,18 +180,18 @@ class TileGrate extends TilePressureNode(Material.rock) with IRotatable
 
     var navigationMap: HashMap[Vector3, Vector3] = new HashMap[Vector3, Vector3]()
 
-    var workingNodes: PriorityQueue[ComparableVector] = if (checkVertical) new PriorityQueue[ComparableVector]()
-    else new PriorityQueue[ComparableVector](1024,
-                                             new Comparator[ComparableVector]()
-                                             {
+    var workingNodes: PriorityQueue[ComparableVector] =
+      if (checkVertical) new PriorityQueue[ComparableVector]()
+      else new PriorityQueue[ComparableVector](1024, new Comparator[ComparableVector]()
+      {
 
-                                               override def compare(a: ComparableVector, b: ComparableVector): Int =
-                                               {
-                                                 val wa = a.asInstanceOf[TileGrate.ComparableVector]
-                                                 val wb = b.asInstanceOf[TileGrate.ComparableVector]
-                                                 wa.iterations - wb.iterations
-                                               }
-                                             })
+        override def compare(a: ComparableVector, b: ComparableVector): Int =
+        {
+          val wa = a.asInstanceOf[TileGrate.ComparableVector]
+          val wb = b.asInstanceOf[TileGrate.ComparableVector]
+          wa.iterations - wb.iterations
+        }
+      })
 
     var drainNodes: PriorityQueue[ComparableVector] = new PriorityQueue[ComparableVector](1024, Collections.reverseOrder())
 
@@ -231,7 +230,7 @@ class TileGrate extends TilePressureNode(Material.rock) with IRotatable
             return 0
           }
           val didFill = FluidUtility.fillBlock(TileGrate.this.worldObj, next.position, new FluidStack(fluidType,
-                                                                                                      amount), true)
+            amount), true)
           filled += didFill
           if (FluidUtility.getFluidAmountFromBlock(TileGrate.this.worldObj, next.position) >
               0 ||
