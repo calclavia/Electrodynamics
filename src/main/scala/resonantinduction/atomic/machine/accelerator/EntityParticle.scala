@@ -197,7 +197,7 @@ class EntityParticle(par1World: World) extends Entity(par1World) with IEntityAdd
         this.worldObj.spawnParticle("largesmoke", this.posX, this.posY, this.posZ, 0, 0, 0)
         val radius: Float = 0.5f
 
-        // Handle collision with entities
+        // Handle collision with entities TODO turn into a ray trace call so we know what we hit
         val bounds: AxisAlignedBB = AxisAlignedBB.getBoundingBox(this.posX - radius, this.posY - radius, this.posZ - radius, this.posX + radius, this.posY + radius, this.posZ + radius)
         val entitiesNearby: List[_] = this.worldObj.getEntitiesWithinAABB(classOf[Entity], bounds)
         if (entitiesNearby.size > 1)
@@ -214,6 +214,7 @@ class EntityParticle(par1World: World) extends Entity(par1World) with IEntityAdd
      */
     private def turn: Double =
     {
+        //TODO rewrite to allow for up and down turning
         val RELATIVE_MATRIX: Array[Array[Int]] = Array(Array(3, 2, 1, 0, 5, 4), Array(4, 5, 0, 1, 2, 3), Array(0, 1, 3, 2, 4, 5), Array(0, 1, 2, 3, 5, 4), Array(0, 1, 5, 4, 3, 2), Array(0, 1, 4, 5, 2, 3))
         val zuoFangXiang: ForgeDirection = ForgeDirection.getOrientation(RELATIVE_MATRIX(this.movementDirection.ordinal)(ForgeDirection.EAST.ordinal))
         val zuoBian: Vector3 = new Vector3(this).floor
