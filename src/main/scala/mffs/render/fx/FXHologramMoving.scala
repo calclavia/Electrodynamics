@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.{OpenGlHelper, RenderBlocks, Tessellator}
 import net.minecraft.world.World
 import org.lwjgl.opengl.GL11
 import resonant.lib.render.RenderUtility
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 @SideOnly(Side.CLIENT)
 class FXHologramMoving(par1World: World, position: Vector3, red: Float, green: Float, blue: Float, age: Int) extends EntityFX(par1World, position.x, position.y, position.z)

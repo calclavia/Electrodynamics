@@ -20,7 +20,7 @@ import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{IPacketIDReceiver, TPacketIDSender}
 import resonant.lib.network.netty.PacketManager
 import resonant.lib.utility.inventory.InventoryUtility
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 import scala.collection.convert.wrapAll._
 

@@ -22,7 +22,7 @@ import resonant.api.mffs.machine.{IFieldMatrix, IProjector}
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.utility.nbt.NBTUtility
 import resonant.lib.wrapper.WrapList._
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 import scala.collection.JavaConversions._
 import scala.collection.mutable

@@ -7,7 +7,7 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiButton
 import org.lwjgl.opengl.GL11
 import resonant.lib.utility.LanguageUtility
-import universalelectricity.core.transform.vector.Vector2
+import resonant.lib.transform.vector.Vector2
 
 class GuiIndexedButton(id: Int, x: Int, y: Int, val offset: Vector2 = new Vector2, mainGui: GuiMFFS = null, name: String = "") extends GuiButton(id, x, y, 18, 18, name)
 {

@@ -14,7 +14,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.server.MinecraftServer
 import net.minecraft.world.World
 import resonant.lib.prefab.AbstractProxy
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 class CommonProxy extends AbstractProxy with IGuiHandler
 {

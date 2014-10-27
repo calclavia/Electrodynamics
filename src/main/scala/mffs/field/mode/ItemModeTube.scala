@@ -7,7 +7,7 @@ import mffs.render.model.ModelPlane
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
 import resonant.api.mffs.machine.{IFieldMatrix, IProjector}
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 class ItemModeTube extends ItemModeCube
 {

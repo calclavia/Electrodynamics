@@ -4,7 +4,7 @@ import mffs.base.TileMFFSInventory
 import net.minecraft.block.Block
 import net.minecraft.init.Blocks
 import net.minecraft.world.World
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 import scala.collection.JavaConversions._
 

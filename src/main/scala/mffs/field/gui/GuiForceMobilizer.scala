@@ -10,10 +10,10 @@ import net.minecraft.init.{Blocks, Items}
 import net.minecraft.item.ItemStack
 import resonant.lib.network.discriminator.PacketTile
 import resonant.lib.render.EnumColor
+import resonant.lib.science.UnitDisplay
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.wrapper.WrapList._
-import universalelectricity.api.UnitDisplay
-import universalelectricity.core.transform.vector.Vector2
+import resonant.lib.transform.vector.Vector2
 
 class GuiForceMobilizer(player: EntityPlayer, tile: TileForceMobilizer) extends GuiMatrix(new ContainerMatrix(player, tile), tile)
 {

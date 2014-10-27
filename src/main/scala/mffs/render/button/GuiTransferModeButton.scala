@@ -3,7 +3,7 @@ package mffs.render.button
 import mffs.base.GuiMFFS
 import mffs.production.TileFortronCapacitor
 import net.minecraft.client.Minecraft
-import universalelectricity.core.transform.vector.Vector2
+import resonant.lib.transform.vector.Vector2
 
 class GuiTransferModeButton(id: Int, x: Int, y: Int, mainGui: GuiMFFS, tile: TileFortronCapacitor) extends GuiIndexedButton(id, x, y, new Vector2, mainGui)
 {

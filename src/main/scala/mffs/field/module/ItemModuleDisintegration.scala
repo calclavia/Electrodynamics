@@ -14,7 +14,7 @@ import net.minecraftforge.fluids.IFluidBlock
 import resonant.api.mffs.Blacklist
 import resonant.api.mffs.machine.IProjector
 import resonant.lib.network.discriminator.PacketTile
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 class ItemModuleDisintegration extends ItemModule
 {

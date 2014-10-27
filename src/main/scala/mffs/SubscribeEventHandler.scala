@@ -25,7 +25,7 @@ import resonant.api.mffs.event.{EventForceMobilize, EventStabilize}
 import resonant.api.mffs.fortron.FrequencyGridRegistry
 import resonant.lib.config.ConfigHandler
 import resonant.lib.event.ChunkModifiedEvent
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 import scala.collection.JavaConversions._
 

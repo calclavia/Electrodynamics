@@ -9,8 +9,8 @@ import net.minecraft.item.ItemStack
 import resonant.lib.gui.GuiContainerBase
 import resonant.lib.network.discriminator.PacketTile
 import resonant.lib.render.EnumColor
+import resonant.lib.science.UnitDisplay
 import resonant.lib.wrapper.WrapList._
-import universalelectricity.api.UnitDisplay
 
 class GuiMFFS(container: Container, tile: TileMFFS) extends GuiContainerBase(container)
 {

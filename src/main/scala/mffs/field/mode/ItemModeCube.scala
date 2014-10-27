@@ -7,9 +7,9 @@ import net.minecraft.tileentity.TileEntity
 import org.lwjgl.opengl.GL11
 import resonant.api.mffs.machine.{IFieldMatrix, IProjector}
 import resonant.lib.render.block.ModelCube
-import universalelectricity.core.transform.region.Cuboid
-import universalelectricity.core.transform.rotation.EulerAngle
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.region.Cuboid
+import resonant.lib.transform.rotation.EulerAngle
+import resonant.lib.transform.vector.Vector3
 
 class ItemModeCube extends ItemMode
 {

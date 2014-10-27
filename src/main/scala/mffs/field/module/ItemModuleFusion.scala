@@ -7,7 +7,7 @@ import mffs.field.TileElectromagneticProjector
 import net.minecraft.tileentity.TileEntity
 import resonant.api.mffs.fortron.FrequencyGridRegistry
 import resonant.api.mffs.machine.IProjector
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 import scala.collection.convert.wrapAll._
 

@@ -23,10 +23,10 @@ import net.minecraftforge.fluids.FluidContainerRegistry
 import resonant.api.mffs.card.ICoordLink
 import resonant.api.mffs.event.EventForceMobilize
 import resonant.api.mffs.fortron.{FrequencyGridRegistry, IFortronFrequency}
+import resonant.lib.science.UnitDisplay
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.wrapper.WrapList._
-import universalelectricity.api.UnitDisplay
-import universalelectricity.core.transform.vector.{Vector3, VectorWorld}
+import resonant.lib.transform.vector.{Vector3, VectorWorld}
 
 import scala.collection.JavaConversions._
 

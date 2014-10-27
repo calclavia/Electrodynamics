@@ -5,7 +5,7 @@ import java.util.Set
 import mffs.base.ItemModule
 import net.minecraft.tileentity.TileEntity
 import resonant.api.mffs.machine.IFieldMatrix
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 import scala.collection.convert.wrapAll._
 

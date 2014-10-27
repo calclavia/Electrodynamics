@@ -14,7 +14,7 @@ import mffs.security.{GuiBiometricIdentifier, TileBiometricIdentifier}
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.world.World
 import net.minecraftforge.client.MinecraftForgeClient
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 class ClientProxy extends CommonProxy
 {

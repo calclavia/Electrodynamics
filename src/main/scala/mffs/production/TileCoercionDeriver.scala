@@ -12,11 +12,10 @@ import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import resonant.api.mffs.modules.IModule
+import resonant.lib.grid.Compatibility
 import resonant.lib.network.ByteBufWrapper.ByteBufWrapper
 import resonant.lib.network.discriminator.PacketType
-import universalelectricity.api.UniversalClass
-import universalelectricity.compatibility.Compatibility
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 /**
  * A TileEntity that extract energy into Fortron.
@@ -44,7 +43,6 @@ object TileCoercionDeriver
   val power = 5000000
 }
 
-@UniversalClass
 class TileCoercionDeriver extends TileModuleAcceptor with TTEBridge
 {
   var processTime: Int = 0

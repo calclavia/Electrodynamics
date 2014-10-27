@@ -10,8 +10,8 @@ import net.minecraft.entity.player.{EntityPlayer, EntityPlayerMP}
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
 import resonant.api.mffs.machine.IProjector
-import universalelectricity.core.transform.region.Cuboid
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.region.Cuboid
+import resonant.lib.transform.vector.Vector3
 
 import scala.collection.JavaConversions._
 

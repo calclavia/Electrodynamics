@@ -11,7 +11,7 @@ import net.minecraft.world.World
 import resonant.api.mffs.card.ICoordLink
 import resonant.lib.wrapper.StringWrapper._
 import resonant.lib.wrapper.WrapList._
-import universalelectricity.core.transform.vector.VectorWorld
+import resonant.lib.transform.vector.VectorWorld
 
 /**
  * A linking card used to link machines in specific positions.

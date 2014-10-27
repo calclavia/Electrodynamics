@@ -8,7 +8,7 @@ import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.model.AdvancedModelLoader
 import org.lwjgl.opengl.GL11._
 import resonant.lib.render.RenderUtility
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 @SideOnly(Side.CLIENT)
 final object RenderBiometricIdentifier

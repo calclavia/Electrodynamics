@@ -4,7 +4,7 @@ import cpw.mods.fml.relauncher.{Side, SideOnly}
 import mffs.base.ItemMFFS
 import resonant.api.mffs.machine.{IFieldMatrix, IProjector}
 import resonant.api.mffs.modules.IProjectorMode
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 abstract class ItemMode extends ItemMFFS with IProjectorMode
 {

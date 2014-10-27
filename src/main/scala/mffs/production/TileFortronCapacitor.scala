@@ -19,7 +19,7 @@ import resonant.api.mffs.fortron.{FrequencyGridRegistry, IFortronCapacitor, IFor
 import resonant.api.mffs.modules.IModule
 import resonant.lib.network.ByteBufWrapper.ByteBufWrapper
 import resonant.lib.network.discriminator.PacketType
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 import scala.collection.JavaConversions._
 

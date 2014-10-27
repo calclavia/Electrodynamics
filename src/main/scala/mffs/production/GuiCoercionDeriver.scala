@@ -8,9 +8,9 @@ import org.lwjgl.opengl.GL11
 import resonant.lib.gui.GuiContainerBase.SlotType
 import resonant.lib.network.discriminator.PacketTile
 import resonant.lib.render.EnumColor
+import resonant.lib.science.UnitDisplay
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.wrapper.WrapList._
-import universalelectricity.api.UnitDisplay
 
 class GuiCoercionDeriver(player: EntityPlayer, tile: TileCoercionDeriver) extends GuiMFFS(new ContainerCoercionDeriver(player, tile), tile)
 {

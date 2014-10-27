@@ -3,8 +3,8 @@ package mffs.production
 import cofh.api.energy.IEnergyHandler
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.lib.content.prefab.TElectric
-import universalelectricity.api.EnergyStorage
-import universalelectricity.compatibility.module.ModuleThermalExpansion
+import resonant.api.electric.EnergyStorage
+import resonant.lib.grid.module.ModuleThermalExpansion
 
 /**
  * A temporary energy bridge between TE and UE

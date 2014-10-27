@@ -6,7 +6,7 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.MinecraftForge
 import resonant.api.mffs.event.EventForceMobilize
 import resonant.lib.utility.MovementUtility
-import universalelectricity.core.transform.vector.VectorWorld
+import resonant.lib.transform.vector.VectorWorld
 
 /**
  * Removes the TileEntity

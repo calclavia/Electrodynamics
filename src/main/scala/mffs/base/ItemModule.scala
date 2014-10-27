@@ -9,10 +9,10 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
 import resonant.api.mffs.machine.{IFieldMatrix, IProjector}
 import resonant.api.mffs.modules.IModule
+import resonant.lib.science.UnitDisplay
 import resonant.lib.utility.LanguageUtility
-import universalelectricity.api.UnitDisplay
-import universalelectricity.core.transform.region.Cuboid
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.region.Cuboid
+import resonant.lib.transform.vector.Vector3
 
 import scala.collection.convert.wrapAll._
 import resonant.lib.wrapper.WrapList._

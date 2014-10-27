@@ -3,8 +3,8 @@ package mffs.field.gui
 import mffs.base.{GuiMFFS, TileFieldMatrix}
 import resonant.lib.gui.GuiContainerBase.SlotType
 import resonant.lib.utility.LanguageUtility
-import universalelectricity.core.transform.region.Rectangle
-import universalelectricity.core.transform.vector.Vector2
+import resonant.lib.transform.region.Rectangle
+import resonant.lib.transform.vector.Vector2
 
 /**
  * Anything that has a field matrix within it.

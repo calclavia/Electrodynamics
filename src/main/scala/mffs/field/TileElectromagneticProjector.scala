@@ -24,8 +24,8 @@ import resonant.api.mffs.machine.IProjector
 import resonant.api.mffs.modules.{IModule, IProjectorMode}
 import resonant.lib.network.ByteBufWrapper.ByteBufWrapper
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
-import universalelectricity.core.transform.region.Cuboid
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.region.Cuboid
+import resonant.lib.transform.vector.Vector3
 
 import scala.collection.JavaConversions._
 import scala.collection.mutable

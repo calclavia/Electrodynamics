@@ -13,7 +13,7 @@ import resonant.api.blocks.IBlockFrequency
 import resonant.api.mffs.card.ICoordLink
 import resonant.api.mffs.fortron.FrequencyGridRegistry
 import resonant.lib.access.java.Permission
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 import scala.collection.convert.wrapAll._
 
