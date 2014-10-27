@@ -19,10 +19,10 @@ import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.IPacketReceiver
 import resonant.lib.utility.inventory.InternalInventoryHandler
 import resonantinduction.core.ResonantInduction
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 import cpw.mods.fml.relauncher.Side
 import cpw.mods.fml.relauncher.SideOnly
-import universalelectricity.core.transform.vector.VectorWorld
+import resonant.lib.transform.vector.VectorWorld
 
 /**
  * @author tgame14

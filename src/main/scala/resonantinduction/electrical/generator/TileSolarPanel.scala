@@ -7,7 +7,7 @@ import net.minecraft.util.IIcon
 import resonant.content.spatial.block.SpatialBlock
 import resonant.lib.content.prefab.java.TileElectric
 import resonantinduction.core.{Reference, Settings}
-import universalelectricity.core.transform.region.Cuboid
+import resonant.lib.transform.region.Cuboid
 
 class TileSolarPanel extends TileElectric(Material.iron)
 {

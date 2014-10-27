@@ -15,7 +15,7 @@ import resonantinduction.atomic.machine.extractor.{ContainerChemicalExtractor, T
 import resonantinduction.atomic.machine.quantum.{ContainerQuantumAssembler, TileQuantumAssembler}
 import resonantinduction.atomic.machine.reactor.{ContainerReactorCell, TileReactorCell}
 import resonantinduction.electrical.multimeter.{ContainerMultimeter, PartMultimeter}
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 /**
  * @author Calclavia

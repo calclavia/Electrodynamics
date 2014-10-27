@@ -2,7 +2,7 @@ package resonantinduction.atomic.machine.reactor
 
 import net.minecraft.block.material.Material
 import resonant.content.spatial.block.SpatialBlock
-import universalelectricity.core.transform.region.Cuboid
+import resonant.lib.transform.region.Cuboid
 
 /**
  * Control rod block

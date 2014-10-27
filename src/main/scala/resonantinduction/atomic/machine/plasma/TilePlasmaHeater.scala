@@ -16,10 +16,10 @@ import resonant.lib.config.Config
 import resonant.lib.content.prefab.java.TileElectric
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketReceiver
+import resonant.lib.science.UnitDisplay
 import resonant.lib.utility.{FluidUtility, LanguageUtility}
 import resonantinduction.atomic.AtomicContent
-import universalelectricity.api.UnitDisplay
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 object TilePlasmaHeater
 {

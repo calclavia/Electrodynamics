@@ -11,7 +11,7 @@ import resonant.content.prefab.itemblock.ItemBlockMetadata
 import resonant.lib.utility.inventory.InventoryUtility
 import resonant.lib.wrapper.WrapList._
 import resonantinduction.core.Settings
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 /** The vertical wind turbine collects airflow. The horizontal wind turbine collects steam from steam
   * power plants.

@@ -2,7 +2,7 @@ package resonantinduction.mechanical.mech.process.mixer
 
 import net.minecraftforge.common.util.ForgeDirection
 import resonantinduction.mechanical.mech.MechanicalNode
-import universalelectricity.api.core.grid.INodeProvider
+import resonant.api.grid.INodeProvider
 
 /**
  * Node designed just for the Mixer to use

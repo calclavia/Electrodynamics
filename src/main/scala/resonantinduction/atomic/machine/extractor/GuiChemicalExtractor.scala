@@ -4,7 +4,7 @@ import net.minecraft.entity.player.InventoryPlayer
 import net.minecraft.util.StatCollector
 import resonant.lib.gui.GuiContainerBase
 import resonant.lib.gui.GuiContainerBase.SlotType
-import universalelectricity.api.UnitDisplay
+import resonant.lib.science.UnitDisplay
 
 class GuiChemicalExtractor(par1InventoryPlayer: InventoryPlayer, tileEntity: TileChemicalExtractor) extends GuiContainerBase(new ContainerChemicalExtractor(par1InventoryPlayer, tileEntity))
 {

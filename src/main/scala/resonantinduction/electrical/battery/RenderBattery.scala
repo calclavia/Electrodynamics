@@ -18,7 +18,7 @@ import org.lwjgl.opengl.GL11.{glPopMatrix, glPushMatrix, glRotatef}
 import resonant.content.prefab.scal.render.ISimpleItemRenderer
 import resonant.lib.render.RenderUtility
 import resonantinduction.core.Reference
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 /**
  * TODO: Make this more efficient.

@@ -14,8 +14,8 @@ import resonant.content.prefab.java.TileNode
 import resonant.engine.ResonantEngine
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketIDReceiver
-import universalelectricity.api.core.grid.{INode, INodeProvider}
-import universalelectricity.core.transform.vector.Vector3
+import resonant.api.grid.{INodeProvider, INode}
+import resonant.lib.transform.vector.Vector3
 
 /** Prefab for resonantinduction.mechanical tiles
   *

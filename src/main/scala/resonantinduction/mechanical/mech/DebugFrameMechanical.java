@@ -15,8 +15,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 import resonant.lib.debug.FrameNodeDebug;
 import resonant.lib.debug.UpdatePanel;
 import resonant.lib.debug.UpdatedLabel;
-import universalelectricity.api.core.grid.INode;
-import universalelectricity.api.core.grid.INodeProvider;
+import resonant.api.grid.INode;
+import resonant.api.grid.INodeProvider;
 
 /** Java GUI used to help debug gear information
  *

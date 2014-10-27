@@ -29,7 +29,7 @@ import resonant.lib.utility.inventory.InventoryUtility
 import resonantinduction.atomic.machine.plasma.TilePlasma
 import resonantinduction.atomic.AtomicContent
 import resonantinduction.core.Reference
-import universalelectricity.core.transform.vector.{Vector3, VectorWorld}
+import resonant.lib.transform.vector.{Vector3, VectorWorld}
 
 import scala.collection.convert.wrapAll._
 

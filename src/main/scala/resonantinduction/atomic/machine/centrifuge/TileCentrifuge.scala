@@ -10,12 +10,12 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import resonant.lib.content.prefab.java.TileElectricInventory
+import resonant.lib.grid.Compatibility
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketReceiver
 import resonantinduction.atomic.AtomicContent
 import resonantinduction.core.Settings
-import universalelectricity.compatibility.Compatibility
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 /**
  * Centrifuge TileEntity

@@ -13,7 +13,7 @@ import net.minecraft.init.Blocks
 import net.minecraft.util.{AxisAlignedBB, IIcon}
 import net.minecraft.world.World
 import resonant.lib.prefab.poison.PoisonRadiation
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 import scala.collection.JavaConversions._
 
 class BlockRadioactive(material: Material) extends Block(material)

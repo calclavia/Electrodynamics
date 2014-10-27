@@ -2,7 +2,7 @@ package resonantinduction.core.prefab.node
 
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.{FluidStack, IFluidHandler}
-import universalelectricity.api.core.grid.{INodeProvider, IUpdate}
+import resonant.api.grid.{IUpdate, INodeProvider}
 
 /**
  * Created by robert on 8/15/2014.

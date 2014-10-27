@@ -6,7 +6,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent
 import net.minecraft.util.Vec3
 import resonant.api.explosion.ExplosionEvent
 import resonantinduction.atomic.AtomicContent
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 /**
  * Atomic Science Event Handling.

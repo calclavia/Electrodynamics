@@ -13,7 +13,7 @@ import resonant.lib.content.prefab.TElectric
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketReceiver
 import resonant.lib.network.netty.AbstractPacket
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 /** A modular battery box that allows shared connections with boxes next to it.
   *

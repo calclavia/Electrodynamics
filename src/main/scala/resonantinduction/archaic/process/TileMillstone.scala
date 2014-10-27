@@ -19,7 +19,7 @@ import resonant.lib.network.handle.IPacketReceiver
 import resonant.lib.utility.inventory.InventoryUtility
 import resonantinduction.core.Reference
 import resonantinduction.mechanical.mech.gear.ItemHandCrank
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 class TileMillstone extends TileInventory(Material.rock) with IPacketReceiver
 {

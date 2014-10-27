@@ -21,8 +21,8 @@ import resonantinduction.core.prefab.part.ChickenBonesWrapper._
 import resonantinduction.core.prefab.part.connector.PartAbstract
 import resonantinduction.core.util.MultipartUtil
 import resonantinduction.electrical.wire.base.TWire
-import universalelectricity.api.core.grid.INodeProvider
-import universalelectricity.core.grid.node.DCNode
+import resonant.api.grid.INodeProvider
+import resonant.lib.grid.node.DCNode
 
 import scala.collection.convert.wrapAll._
 

@@ -4,7 +4,7 @@ import java.util.{ArrayList, List}
 
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.util.ForgeDirection
-import universalelectricity.core.transform.vector.VectorWorld
+import resonant.lib.transform.vector.VectorWorld
 
 /**
  * A class that allows flexible path finding in Minecraft Blocks. Back Ported from UE 1.3.0.

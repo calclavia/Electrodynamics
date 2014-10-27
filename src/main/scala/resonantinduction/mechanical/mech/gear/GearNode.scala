@@ -7,8 +7,8 @@ import net.minecraftforge.common.util.ForgeDirection
 import resonantinduction.core.interfaces.IMechanicalNode
 import resonantinduction.mechanical.mech.MechanicalNode
 import resonantinduction.mechanical.mech.gearshaft.PartGearShaft
-import universalelectricity.api.core.grid.INodeProvider
-import universalelectricity.core.transform.vector.{IVectorWorld, Vector3, VectorWorld}
+import resonant.api.grid.INodeProvider
+import resonant.lib.transform.vector.{IVectorWorld, Vector3, VectorWorld}
 
 /**
  * Node for the gear

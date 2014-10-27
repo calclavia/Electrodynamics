@@ -18,8 +18,8 @@ import resonant.lib.content.prefab.java.TileInventory
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketReceiver
 import resonantinduction.core.Reference
-import universalelectricity.core.transform.region.Cuboid
-import universalelectricity.core.transform.vector.{Vector2, Vector3}
+import resonant.lib.transform.region.Cuboid
+import resonant.lib.transform.vector.{Vector2, Vector3}
 
 /**
  * For smelting items.

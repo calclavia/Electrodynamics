@@ -9,7 +9,7 @@ import net.minecraft.world.World
 import net.minecraftforge.fluids.BlockFluidClassic
 import resonant.lib.prefab.poison.PoisonRadiation
 import resonantinduction.atomic.AtomicContent
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 class BlockToxicWaste extends BlockFluidClassic(AtomicContent.getFluidToxicWaste, Material.water)
 {

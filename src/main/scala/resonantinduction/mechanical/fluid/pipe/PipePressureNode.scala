@@ -5,7 +5,7 @@ import net.minecraftforge.fluids.IFluidHandler
 import resonant.lib.wrapper.BitmaskWrapper._
 import resonantinduction.core.prefab.node.{NodePressure, TMultipartNode}
 import resonantinduction.core.prefab.part.connector.TColorable
-import universalelectricity.api.core.grid.INodeProvider
+import resonant.api.grid.INodeProvider
 
 /**
  * Pressure node for the pipe

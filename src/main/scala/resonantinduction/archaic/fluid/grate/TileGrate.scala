@@ -17,7 +17,7 @@ import resonant.lib.utility.FluidUtility
 import resonantinduction.archaic.fluid.grate.TileGrate._
 import resonantinduction.core.Reference
 import resonantinduction.core.prefab.node.TilePressureNode
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 object TileGrate
 {

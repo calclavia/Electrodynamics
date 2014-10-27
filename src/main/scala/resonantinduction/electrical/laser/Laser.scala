@@ -11,7 +11,7 @@ import net.minecraft.tileentity.TileEntityFurnace
 import net.minecraft.util.{DamageSource, MovingObjectPosition}
 import net.minecraft.world.World
 import resonantinduction.core.ResonantInduction
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 import scala.collection.mutable
 

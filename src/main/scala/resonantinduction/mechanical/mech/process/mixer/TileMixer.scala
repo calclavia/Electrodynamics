@@ -24,9 +24,9 @@ import resonant.lib.render.RenderUtility
 import resonant.lib.utility.Timer
 import resonantinduction.core.Reference
 import resonantinduction.mechanical.mech.TileMechanical
-import universalelectricity.api.core.grid.INode
-import universalelectricity.core.transform.rotation.Quaternion
-import universalelectricity.core.transform.vector.Vector3
+import resonant.api.grid.INode
+import resonant.lib.transform.rotation.Quaternion
+import resonant.lib.transform.vector.Vector3
 
 import scala.collection.JavaConversions._
 

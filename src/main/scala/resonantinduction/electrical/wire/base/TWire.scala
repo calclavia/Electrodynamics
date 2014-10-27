@@ -6,8 +6,8 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import resonantinduction.core.prefab.part.connector._
 import resonantinduction.electrical.ElectricalContent
-import universalelectricity.api.core.grid.INodeProvider
-import universalelectricity.core.grid.node.DCNode
+import resonant.api.grid.INodeProvider
+import resonant.lib.grid.node.DCNode
 
 /**
  * Abstract class extended by both flat and framed wires to handle material, insulation, color and multipart node logic.

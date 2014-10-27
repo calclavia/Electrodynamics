@@ -26,7 +26,7 @@ import resonant.lib.render.EnumColor
 import resonant.lib.utility.{LanguageUtility, LinkUtility}
 import resonantinduction.core.util.ResonantUtil
 import resonantinduction.core.{Reference, ResonantInduction, Settings}
-import universalelectricity.core.transform.vector.{Vector3, VectorWorld}
+import resonant.lib.transform.vector.{Vector3, VectorWorld}
 
 import scala.collection.JavaConversions._
 

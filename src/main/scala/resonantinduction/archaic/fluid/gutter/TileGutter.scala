@@ -22,8 +22,8 @@ import resonant.lib.utility.inventory.InventoryUtility
 import resonant.lib.wrapper.BitmaskWrapper._
 import resonantinduction.core.Reference
 import resonantinduction.core.prefab.node.TilePressureNode
-import universalelectricity.core.transform.region.Cuboid
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.region.Cuboid
+import resonant.lib.transform.vector.Vector3
 
 object TileGutter
 {

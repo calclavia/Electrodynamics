@@ -10,7 +10,7 @@ import net.minecraftforge.fluids._
 import resonant.content.prefab.java.TileAdvanced
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.TPacketIDReceiver
-import universalelectricity.api.core.grid.{INode, INodeProvider}
+import resonant.api.grid.{INodeProvider, INode}
 
 /**
  * A prefab class for tiles that use the fluid network.

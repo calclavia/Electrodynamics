@@ -3,7 +3,8 @@ package resonantinduction.core.prefab.part.connector
 import codechicken.multipart.TMultiPart
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
-import universalelectricity.api.core.grid.{INode, INodeProvider, ISave}
+import resonant.api.ISave
+import resonant.api.grid.{INodeProvider, INode}
 
 /**
  * A node trait that can be mixed into any multipart nodes. Mixing this trait will cause nodes to reconstruct/deconstruct when needed.

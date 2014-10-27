@@ -45,7 +45,7 @@ import resonantinduction.atomic.machine.reactor.{TileControlRod, TileReactorCell
 import resonantinduction.atomic.machine.thermometer.TileThermometer
 import resonantinduction.atomic.schematic.{SchematicAccelerator, SchematicBreedingReactor, SchematicFissionReactor, SchematicFusionReactor}
 import resonantinduction.core.{Reference, ResonantInduction, RICreativeTab, Settings}
-import universalelectricity.core.transform.vector.VectorWorld
+import resonant.lib.transform.vector.VectorWorld
 
 import scala.collection.JavaConversions._
 

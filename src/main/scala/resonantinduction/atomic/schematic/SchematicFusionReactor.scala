@@ -8,7 +8,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import resonant.lib.`type`.Pair
 import resonant.lib.schematic.Schematic
 import resonantinduction.atomic.AtomicContent
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 class SchematicFusionReactor extends Schematic
 {

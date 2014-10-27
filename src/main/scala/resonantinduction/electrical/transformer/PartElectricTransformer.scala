@@ -11,7 +11,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import resonant.lib.utility.WrenchUtility
 import resonantinduction.core.prefab.part.PartFace
 import resonantinduction.electrical.ElectricalContent
-import universalelectricity.api.core.grid.{INode, INodeProvider}
+import resonant.api.grid.{INodeProvider, INode}
 
 /**
  * TODO: We can't use face parts, need to use thicker ones. Also, transformer is currently NO-OP

@@ -18,8 +18,8 @@ import resonantinduction.core.Reference
 import resonantinduction.core.prefab.part.CuboidShapes
 import resonantinduction.mechanical.MechanicalContent
 import resonantinduction.mechanical.mech.PartMechanical
-import universalelectricity.api.core.grid.INode
-import universalelectricity.core.transform.vector.VectorWorld
+import resonant.api.grid.INode
+import resonant.lib.transform.vector.VectorWorld
 
 /** We assume all the force acting on the gear is 90 degrees.
   *
@@ -136,10 +136,10 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
         getMultiBlock.save(nbt)
     }
 
-    override def getMultiBlockVectors: java.util.List[universalelectricity.core.transform.vector.Vector3] =
+    override def getMultiBlockVectors: java.util.List[resonant.lib.transform.vector.Vector3] =
     {
-        val vec = new universalelectricity.core.transform.vector.Vector3(this.x, this.y, this.z)
-        var array: java.util.List[universalelectricity.core.transform.vector.Vector3] = vec.getAround(this.world, placementSide, 1)
+        val vec = new resonant.lib.transform.vector.Vector3(this.x, this.y, this.z)
+        var array: java.util.List[resonant.lib.transform.vector.Vector3] = vec.getAround(this.world, placementSide, 1)
         return array
     }
 

@@ -16,6 +16,7 @@ import net.minecraft.util.{ChatComponentText, MovingObjectPosition}
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.{FluidTankInfo, IFluidHandler}
 import resonant.api.IRemovable
+import resonant.lib.grid.Compatibility
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.IPacketReceiver
 import resonant.lib.utility.WrenchUtility
@@ -24,9 +25,8 @@ import resonantinduction.core.interfaces.IMechanicalNode
 import resonantinduction.core.prefab.part.ChickenBonesWrapper._
 import resonantinduction.core.prefab.part.PartFace
 import resonantinduction.electrical.ElectricalContent
-import universalelectricity.api.core.grid.INodeProvider
-import universalelectricity.compatibility.Compatibility
-import universalelectricity.core.transform.vector.Vector3
+import resonant.api.grid.INodeProvider
+import resonant.lib.transform.vector.Vector3
 
 import scala.collection.convert.wrapAll._
 

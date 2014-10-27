@@ -2,7 +2,7 @@ package resonantinduction.mechanical.mech.turbine
 
 import net.minecraft.tileentity.TileEntity
 import resonant.lib.multiblock.reference.MultiBlockHandler
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 class TurbineMBlockHandler(wrapper: TileTurbine) extends MultiBlockHandler[TileTurbine](wrapper)
 {

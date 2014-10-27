@@ -16,7 +16,7 @@ import net.minecraft.util.{ChatComponentText, MovingObjectPosition}
 import resonant.api.blocks.IBlockFrequency
 import resonant.api.mffs.fortron.FrequencyGridRegistry
 import resonantinduction.electrical.ElectricalContent
-import universalelectricity.core.transform.vector.VectorWorld
+import resonant.lib.transform.vector.VectorWorld
 
 import scala.collection.JavaConversions._
 

@@ -10,7 +10,7 @@ import resonant.content.prefab.java.TileNode
 import resonant.lib.content.prefab.TElectric
 import resonant.lib.content.prefab.java.TileElectric
 import resonantinduction.core.interfaces.IMechanicalNode
-import universalelectricity.api.core.grid.{IUpdate, INode, NodeRegistry}
+import resonant.api.grid.{NodeRegistry, IUpdate, INode}
 
 /**
  * A kinetic energy to electrical energy converter.

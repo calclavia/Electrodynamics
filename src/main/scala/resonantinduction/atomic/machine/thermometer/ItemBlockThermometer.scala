@@ -12,7 +12,7 @@ import resonant.content.prefab.itemblock.ItemBlockSaved
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.utility.nbt.NBTUtility
 import resonant.lib.wrapper.WrapList._
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 /** Handheld thermometer */
 object ItemBlockThermometer

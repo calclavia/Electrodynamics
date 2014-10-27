@@ -20,7 +20,7 @@ import resonant.lib.utility.render.RenderBlockUtility
 import resonantinduction.archaic.ArchaicContent
 import resonantinduction.core.Reference
 import resonantinduction.core.prefab.node.TileTankNode
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 /**
  * Tile/Block class for basic Dynamic tanks

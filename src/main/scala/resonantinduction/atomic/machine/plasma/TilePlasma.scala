@@ -15,7 +15,7 @@ import resonant.api.event.PlasmaEvent
 import resonant.content.prefab.java.TileAdvanced
 import resonant.engine.grid.thermal.ThermalGrid
 import resonant.lib.config.Config
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 object TilePlasma
 {

@@ -10,7 +10,7 @@ import org.lwjgl.opengl.GL11._
 import resonantinduction.core.Reference
 import resonantinduction.electrical.ElectricalContent
 import resonantinduction.electrical.laser.Laser
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 /**
  * @author Calclavia

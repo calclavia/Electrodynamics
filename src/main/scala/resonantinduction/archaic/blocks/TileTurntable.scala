@@ -12,7 +12,7 @@ import resonant.api.IRotatable
 import resonant.content.spatial.block.SpatialBlock
 import resonant.lib.content.prefab.TRotatable
 import resonantinduction.core.Reference
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 object TileTurntable
 {

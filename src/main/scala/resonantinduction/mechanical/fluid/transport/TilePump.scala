@@ -6,7 +6,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.{Fluid, FluidStack, FluidTankInfo, IFluidHandler}
 import resonant.api.IRotatable
 import resonantinduction.mechanical.mech.TileMechanical
-import universalelectricity.api.core.grid.INode
+import resonant.api.grid.INode
 
 class TilePump extends TileMechanical(Material.iron) with IRotatable with IFluidHandler
 {

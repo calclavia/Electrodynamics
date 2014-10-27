@@ -15,7 +15,7 @@ import org.lwjgl.opengl.GL11._
 import resonant.content.prefab.java.TileAdvanced
 import resonant.lib.render.RenderUtility
 import resonantinduction.core.Reference
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 /**
  * An emitter that shoots out lasers.

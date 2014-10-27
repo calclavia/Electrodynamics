@@ -17,7 +17,7 @@ import resonant.lib.utility.BlockUtility
 import resonantinduction.atomic.AtomicContent
 import resonantinduction.atomic.items.ItemAntimatter
 import resonantinduction.core.{Reference, ResonantInduction, Settings}
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 import scala.collection.JavaConversions._
 

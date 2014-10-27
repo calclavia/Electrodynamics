@@ -20,7 +20,7 @@ import resonant.lib.network.handle.TPacketReceiver
 import resonant.lib.render.RenderItemOverlayUtility
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.utility.inventory.{InternalInventoryHandler, InventoryUtility}
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 /**
  * @author tgame14

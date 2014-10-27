@@ -6,7 +6,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.content.prefab.java.TileAdvanced
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 /**
  * @author Calclavia

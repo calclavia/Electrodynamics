@@ -12,7 +12,7 @@ import resonant.content.prefab.scal.render.ISimpleItemRenderer
 import resonant.lib.render.RenderUtility
 import resonant.lib.utility.LanguageUtility
 import resonantinduction.core.Reference
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 /**
  * Class used to render text onto the multimeter block.

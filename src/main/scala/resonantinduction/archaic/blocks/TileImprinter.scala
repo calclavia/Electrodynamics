@@ -26,7 +26,7 @@ import resonant.lib.network.handle.IPacketReceiver
 import resonant.lib.render.RenderItemOverlayUtility
 import resonant.lib.utility.inventory.InventoryUtility
 import resonantinduction.core.Reference
-import universalelectricity.core.transform.vector.{Vector2, Vector3}
+import resonant.lib.transform.vector.{Vector2, Vector3}
 
 import scala.collection.JavaConversions._
 

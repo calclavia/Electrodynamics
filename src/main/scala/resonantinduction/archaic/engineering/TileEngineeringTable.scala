@@ -37,8 +37,8 @@ import resonant.lib.utility.inventory.AutoCraftingManager.IAutoCrafter
 import resonant.lib.utility.inventory.{AutoCraftingManager, InventoryUtility}
 import resonantinduction.archaic.blocks.ItemImprint
 import resonantinduction.core.{Reference, ResonantInduction}
-import universalelectricity.core.transform.region.Cuboid
-import universalelectricity.core.transform.vector.{Vector2, Vector3}
+import resonant.lib.transform.region.Cuboid
+import resonant.lib.transform.vector.{Vector2, Vector3}
 import scala.collection.JavaConversions._
 
 /**

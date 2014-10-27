@@ -14,8 +14,8 @@ import org.lwjgl.opengl.GL11._
 import resonant.lib.render.RenderUtility
 import resonantinduction.core.{Reference, ResonantInduction}
 import resonantinduction.electrical.laser.{ILaserHandler, Laser, TileLaserReceiver}
-import universalelectricity.core.transform.rotation.Quaternion
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.rotation.Quaternion
+import resonant.lib.transform.vector.Vector3
 
 /**
  * Redirects lasers to one point

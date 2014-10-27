@@ -6,7 +6,7 @@ import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.content.spatial.block.SpatialBlock
 import resonantinduction.core.Reference
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 /**
  * Siren block

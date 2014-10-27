@@ -5,11 +5,11 @@ import net.minecraftforge.common.util.ForgeDirection;
 import resonant.lib.utility.nbt.ISaveObj;
 import resonantinduction.core.interfaces.IMechanicalNode;
 import resonantinduction.core.prefab.node.TMultipartNode;
-import universalelectricity.api.core.grid.INode;
-import universalelectricity.api.core.grid.INodeProvider;
-import universalelectricity.api.core.grid.IUpdate;
-import universalelectricity.core.grid.node.NodeConnector;
-import universalelectricity.core.transform.vector.IVectorWorld;
+import resonant.api.grid.INode;
+import resonant.api.grid.INodeProvider;
+import resonant.api.grid.IUpdate;
+import resonant.lib.grid.node.NodeConnector;
+import resonant.lib.transform.vector.IVectorWorld;
 
 import java.util.Iterator;
 import java.util.Map.Entry;

@@ -16,8 +16,8 @@ import resonant.lib.utility.MovementUtility
 import resonant.lib.utility.inventory.InventoryUtility
 import resonantinduction.core.ResonantInduction
 import resonantinduction.mechanical.mech.TileMechanical
-import universalelectricity.api.core.grid.INode
-import universalelectricity.core.transform.vector.Vector3
+import resonant.api.grid.INode
+import resonant.lib.transform.vector.Vector3
 
 /**
  * Mechanical driven piston that can be used to move basic blocks and crush ores

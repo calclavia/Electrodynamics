@@ -6,7 +6,7 @@ import io.netty.channel.ChannelHandlerContext
 import net.minecraft.entity.player.EntityPlayer
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.TPacketReceiver
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 /**
  * Packet handler for blocks and tile entities.

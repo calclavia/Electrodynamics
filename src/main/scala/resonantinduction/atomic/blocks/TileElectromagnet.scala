@@ -18,7 +18,7 @@ import resonant.lib.render.RenderUtility
 import resonant.lib.utility.WorldUtility
 import resonant.lib.utility.render.RenderBlockUtility
 import resonant.lib.wrapper.WrapList._
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 /**
  * Electromagnet block

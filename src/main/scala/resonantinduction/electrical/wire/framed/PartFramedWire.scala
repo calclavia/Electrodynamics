@@ -11,7 +11,7 @@ import resonant.lib.wrapper.BitmaskWrapper._
 import resonantinduction.core.prefab.node.TMultipartNode
 import resonantinduction.core.prefab.part.connector.PartFramedNode
 import resonantinduction.electrical.wire.base.TWire
-import universalelectricity.core.grid.node.DCNode
+import resonant.lib.grid.node.DCNode
 
 /**
  * Fluid transport pipe

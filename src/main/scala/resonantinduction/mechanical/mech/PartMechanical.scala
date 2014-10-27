@@ -12,8 +12,8 @@ import net.minecraft.util.MovingObjectPosition
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.engine.ResonantEngine
 import resonantinduction.core.prefab.part.connector.PartAbstract
-import universalelectricity.api.core.grid.{INode, INodeProvider}
-import universalelectricity.core.transform.vector.VectorWorld
+import resonant.api.grid.{INodeProvider, INode}
+import resonant.lib.transform.vector.VectorWorld
 
 /** We assume all the force acting on the gear is 90 degrees.
   *

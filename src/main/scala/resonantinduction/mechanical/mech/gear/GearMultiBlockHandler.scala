@@ -3,7 +3,7 @@ package resonantinduction.mechanical.mech.gear
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.lib.multiblock.reference.MultiBlockHandler
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 import codechicken.multipart.TMultiPart
 import codechicken.multipart.TileMultipart
 

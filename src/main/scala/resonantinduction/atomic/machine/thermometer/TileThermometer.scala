@@ -20,7 +20,7 @@ import resonant.lib.network.Synced
 import resonant.lib.network.discriminator.PacketAnnotation
 import resonant.lib.utility.inventory.InventoryUtility
 import resonantinduction.core.Reference
-import universalelectricity.core.transform.vector.{Vector3, VectorWorld}
+import resonant.lib.transform.vector.{Vector3, VectorWorld}
 
 /**
  * Thermometer TileEntity

@@ -18,7 +18,7 @@ import resonant.lib.network.handle.IPacketReceiver
 import resonant.lib.utility.FluidUtility
 import resonant.lib.utility.inventory.InventoryUtility
 import resonantinduction.core.Reference
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 /**
  * Turns molten fuilds into ingots.

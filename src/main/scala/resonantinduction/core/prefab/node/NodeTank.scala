@@ -3,9 +3,10 @@ package resonantinduction.core.prefab.node
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
+import resonant.api.ISave
 import resonant.lib.prefab.fluid.{LimitedTank, NodeFluidHandler}
 import resonant.lib.utility.WorldUtility
-import universalelectricity.api.core.grid.{INode, INodeProvider, ISave}
+import resonant.api.grid.{INodeProvider, INode}
 
 /**
  * Simple tank node designed to be implemented by any machine that can connect to other fluid based machines.

@@ -3,8 +3,8 @@ package resonantinduction.electrical.battery
 import java.util.Arrays
 import java.util.LinkedHashSet
 import java.util.Set
-import universalelectricity.core.grid.Grid
-import universalelectricity.core.grid.node.NodeEnergy
+import resonant.lib.grid.Grid
+import resonant.lib.grid.node.NodeEnergy
 import scala.collection.JavaConversions._
 
 /** Basic grid designed to be used for creating a level look for batteries connected together

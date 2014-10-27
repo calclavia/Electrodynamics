@@ -20,7 +20,7 @@ import resonantinduction.mechanical.mech.process.crusher.TileMechanicalPiston
 import resonantinduction.mechanical.mech.process.grinder.TileGrindingWheel
 import resonantinduction.mechanical.mech.process.mixer.TileMixer
 import resonantinduction.mechanical.mech.turbine.{TileElectricTurbine, TileWaterTurbine, TileWindTurbine}
-import universalelectricity.api.core.grid.NodeRegistry
+import resonant.api.grid.NodeRegistry
 
 /**
  * The core contents of Resonant Induction

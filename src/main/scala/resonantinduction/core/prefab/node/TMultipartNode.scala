@@ -3,8 +3,8 @@ package resonantinduction.core.prefab.node
 import codechicken.multipart.TMultiPart
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
-import universalelectricity.api.core.grid.INodeProvider
-import universalelectricity.core.grid.node.NodeConnector
+import resonant.api.grid.INodeProvider
+import resonant.lib.grid.node.NodeConnector
 
 /**
  * A trait that allows nodes to works with Forge Multipart. This trait MUST be mixed in.

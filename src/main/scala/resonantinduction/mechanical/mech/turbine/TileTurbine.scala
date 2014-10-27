@@ -14,8 +14,8 @@ import resonant.lib.multiblock.reference.IMultiBlockStructure
 import resonant.lib.network.handle.IPacketIDReceiver
 import resonantinduction.mechanical.mech.TileMechanical
 import resonantinduction.mechanical.mech.gear.ItemHandCrank
-import universalelectricity.api.core.grid.INodeProvider
-import universalelectricity.core.transform.vector.Vector3
+import resonant.api.grid.INodeProvider
+import resonant.lib.transform.vector.Vector3
 
 /** Reduced version of the main turbine class */
 class TileTurbine extends TileMechanical(Material.wood) with IMultiBlockStructure[TileTurbine] with INodeProvider with IPacketIDReceiver

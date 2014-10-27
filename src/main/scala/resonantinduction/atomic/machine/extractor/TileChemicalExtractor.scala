@@ -8,12 +8,12 @@ import net.minecraft.network.Packet
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import resonant.engine.ResonantEngine
+import resonant.lib.grid.Compatibility
 import resonant.lib.network.Synced
 import resonant.lib.network.discriminator.PacketAnnotation
 import resonantinduction.atomic.AtomicContent
 import resonantinduction.core.Settings
-import universalelectricity.compatibility.Compatibility
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 /**
  * Chemical extractor TileEntity

@@ -16,8 +16,8 @@ import resonant.content.prefab.itemblock.ItemBlockMetadata
 import resonant.lib.wrapper.WrapList._
 import resonantinduction.core.Settings
 import resonantinduction.mechanical.mech.MechanicalNode
-import universalelectricity.api.core.grid.INodeProvider
-import universalelectricity.core.transform.vector.Vector3
+import resonant.api.grid.INodeProvider
+import resonant.lib.transform.vector.Vector3
 
 /**
  * The vertical water turbine collects flowing water flowing on X axis.

@@ -2,7 +2,7 @@ package resonantinduction.mechanical.fluid.transport
 
 import net.minecraftforge.common.util.ForgeDirection
 import resonantinduction.core.prefab.node.NodePressure
-import universalelectricity.api.core.grid.INodeProvider
+import resonant.api.grid.INodeProvider
 
 /**
  * Created by robert on 9/27/2014.

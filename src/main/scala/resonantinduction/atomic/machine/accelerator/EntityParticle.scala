@@ -16,7 +16,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.IElectromagnet
 import resonant.lib.prefab.poison.PoisonRadiation
 import resonantinduction.core.{ResonantInduction, Reference}
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 import scala.collection.JavaConversions._
 
 /**

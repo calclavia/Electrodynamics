@@ -2,9 +2,9 @@ package resonantinduction.atomic.machine.accelerator
 
 import net.minecraft.entity.player.EntityPlayer
 import resonant.lib.gui.GuiContainerBase
+import resonant.lib.science.UnitDisplay
 import resonantinduction.core.Settings
-import universalelectricity.api.UnitDisplay
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 class GuiAccelerator(player: EntityPlayer, tileEntity: TileAccelerator) extends GuiContainerBase(new ContainerAccelerator(player, tileEntity))
 {

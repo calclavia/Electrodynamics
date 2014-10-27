@@ -4,8 +4,8 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.util.ForgeDirection
 import resonantinduction.mechanical.mech.MechanicalNode
 import resonantinduction.mechanical.mech.gear.PartGear
-import universalelectricity.api.core.grid.INodeProvider
-import universalelectricity.core.transform.vector.Vector3
+import resonant.api.grid.INodeProvider
+import resonant.lib.transform.vector.Vector3
 
 class GearShaftNode(parent: INodeProvider) extends MechanicalNode(parent)
 {

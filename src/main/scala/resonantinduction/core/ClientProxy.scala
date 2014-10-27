@@ -41,7 +41,7 @@ import resonantinduction.mechanical.mech.gearshaft.RenderGearShaft
 import resonantinduction.mechanical.mech.process.crusher.{RenderMechanicalPiston, TileMechanicalPiston}
 import resonantinduction.mechanical.mech.process.grinder.{RenderGrindingWheel, TileGrindingWheel}
 import resonantinduction.mechanical.mech.turbine._
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 /** @author Calclavia */
 @SideOnly(Side.CLIENT) class ClientProxy extends CommonProxy

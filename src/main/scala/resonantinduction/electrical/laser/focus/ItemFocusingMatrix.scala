@@ -7,8 +7,8 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.{ChatComponentText, EnumChatFormatting}
 import net.minecraft.world.World
 import resonantinduction.core.{RICreativeTab, Reference}
-import universalelectricity.core.transform.rotation.Quaternion
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.rotation.Quaternion
+import resonant.lib.transform.vector.Vector3
 
 import scala.collection.convert.wrapAsScala._
 import scala.util.Random

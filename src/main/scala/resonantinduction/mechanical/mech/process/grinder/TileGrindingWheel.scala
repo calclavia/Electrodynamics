@@ -12,8 +12,8 @@ import resonant.lib.prefab.damage.CustomDamageSource
 import resonant.lib.utility.Timer
 import resonantinduction.core.{Reference, ResonantInduction}
 import resonantinduction.mechanical.mech.TileMechanical
-import universalelectricity.core.transform.region.Cuboid
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.region.Cuboid
+import resonant.lib.transform.vector.Vector3
 
 /**
  * @author Calclavia

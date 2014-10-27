@@ -2,10 +2,10 @@ package resonantinduction.electrical.transformer
 
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.util.ForgeDirection
-import universalelectricity.api.core.grid.INodeProvider
-import universalelectricity.compatibility.Compatibility
-import universalelectricity.core.grid.node.DCNode
-import universalelectricity.core.transform.vector.VectorWorld
+import resonant.lib.grid.Compatibility
+import resonant.api.grid.INodeProvider
+import resonant.lib.grid.node.DCNode
+import resonant.lib.transform.vector.VectorWorld
 
 /**
  * Created by robert on 8/11/2014.

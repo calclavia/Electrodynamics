@@ -14,7 +14,7 @@ import resonant.lib.wrapper.WrapList._
 import resonantinduction.atomic.AtomicContent
 import resonantinduction.atomic.machine.reactor.TileReactorCell
 import resonantinduction.core.{Reference, RICreativeTab, Settings}
-import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.transform.vector.Vector3
 
 /**
  * Fissile fuel rod
