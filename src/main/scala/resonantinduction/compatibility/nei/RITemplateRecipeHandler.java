@@ -137,7 +137,7 @@ public abstract class RITemplateRecipeHandler extends TemplateRecipeHandler
 					rect = new Rectangle(offset.x + inputSlots[i][0] - 1, offset.y + inputSlots[i][1] - 1, 18, 18);
 					if (rect.contains(mouse))
 					{
-						currenttip.add(fluid.getFluid().getLocalizedName());
+						currenttip.add(fluid.getFluid().getLocalizedName(fluid));
 						currenttip.add(LanguageUtility.getLocal("tooltip.ri.amount").replace("%s", fluid.amount + ""));
 						return currenttip;
 					}
@@ -152,7 +152,7 @@ public abstract class RITemplateRecipeHandler extends TemplateRecipeHandler
 					rect = new Rectangle(offset.x + outputSlots[i][0] - 1, offset.y + outputSlots[i][1] - 1, 18, 18);
 					if (rect.contains(mouse))
 					{
-						currenttip.add(fluid.getFluid().getLocalizedName());
+						currenttip.add(fluid.getFluid().getLocalizedName(fluid));
 						currenttip.add(LanguageUtility.getLocal("tooltip.ri.amount").replace("%s", fluid.amount + ""));
 						return currenttip;
 					}
