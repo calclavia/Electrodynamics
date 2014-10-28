@@ -30,12 +30,12 @@ buildProps.withReader {
 
 version = "${config.version.mod.major}.${config.version.mod.minor}.${config.version.mod.revis}"
 
-if (System.getenv("TEAMCITY_BUILDCONF_NAME").equalsIgnoreCase("Production")) {
+if (System.getenv("TEAMCITY_BUILDCONF_NAME")?.equalsIgnoreCase("Production")) {
     group = "com.calclavia.resonantinduction"
-    archivesBaseName = System.getenv("TEAMCITY_PROJECT_NAME").replaceAll(" ", "-")
+    archivesBaseName = System.getenv("TEAMCITY_PROJECT_NAME")?.replaceAll(" ", "-")
 } else {
     group = "dev.calclavia.resonantinduction"
-    archivesBaseName = System.getenv("TEAMCITY_PROJECT_NAME").replaceAll(" ", "-") + "-" + System.getenv("TEAMCITY_BUILDCONF_NAME")
+    archivesBaseName = System.getenv("TEAMCITY_PROJECT_NAME")?.replaceAll(" ", "-") + "-" + System.getenv("TEAMCITY_BUILDCONF_NAME")
 }
 
 minecraft {
@@ -178,7 +178,7 @@ dependencies {
 	{
 		compile group: 'com.calclavia.universalelectricity', name: 'universal-electricity', version: "${rootProject.config.version.universalelectricity}", classifier: "dev"
 		compile group: 'com.calclavia.resonantengine', name: 'resonant-engine', version: "${config.version.resonantengine}", classifier: "dev"
-        compile "li.cil.oc:OpenComputers:MC1.7.10-1.4.0.7.+:dev"
+        compile "li.cil.oc:OpenComputers:MC1.7.10-1.4.0.+:dev"
 	}
 	
     testCompile 'junit:junit:4.11'
