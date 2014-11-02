@@ -9,7 +9,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.content.prefab.java.TileAdvanced
-import resonant.lib.content.prefab.TElectric
+import resonant.lib.content.prefab.{TEnergyStorage, TElectric}
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketReceiver
 import resonant.lib.network.netty.AbstractPacket
@@ -36,7 +36,7 @@ object TileBattery
   final val DEFAULT_WATTAGE: Long = getEnergyForTier(0)
 }
 
-class TileBattery extends TileAdvanced(Material.iron) with TElectric with IPacketReceiver
+class TileBattery extends TileAdvanced(Material.iron) with TElectric with IPacketReceiver with TEnergyStorage
 {
   private var markClientUpdate: Boolean = false
   private var markDistributionUpdate: Boolean = false

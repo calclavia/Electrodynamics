@@ -393,7 +393,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
             if (canConnectTo(part))
             {
               //TODO: Check dir
-              connect(part.asInstanceOf[INodeProvider].getNode(classOf[DCNode], to.getOpposite).asInstanceOf[DCNode], to)
+              connect(part.asInstanceOf[INodeProvider].getNode(classOf[DCNode], to.getOpposite), to)
               skip = true
             }
           }

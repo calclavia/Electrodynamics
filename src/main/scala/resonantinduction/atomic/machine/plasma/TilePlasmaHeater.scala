@@ -13,6 +13,7 @@ import net.minecraftforge.fluids._
 import resonant.api.ITagRender
 import resonant.engine.ResonantEngine
 import resonant.lib.config.Config
+import resonant.lib.content.prefab.TEnergyStorage
 import resonant.lib.content.prefab.java.TileElectric
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketReceiver
@@ -27,7 +28,7 @@ object TilePlasmaHeater
     @Config var plasmaHeatAmount: Int = 100
 }
 
-class TilePlasmaHeater extends TileElectric(Material.iron) with IPacketReceiver with ITagRender with IFluidHandler
+class TilePlasmaHeater extends TileElectric(Material.iron) with IPacketReceiver with ITagRender with IFluidHandler with TEnergyStorage
 {
     final val tankInputDeuterium: FluidTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 10)
     final val tankInputTritium: FluidTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 10)
@@ -40,9 +41,9 @@ class TilePlasmaHeater extends TileElectric(Material.iron) with IPacketReceiver 
     normalRender(false)
     isOpaqueCube(false)
 
-    override def update
+    override def update()
     {
-        super.update
+        super.update()
         rotation =  (rotation + energy.getEnergy / 10000f).asInstanceOf[Float]
         if (!worldObj.isRemote)
         {

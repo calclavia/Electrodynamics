@@ -10,7 +10,7 @@ import resonant.lib.grid.node.NodeConnector
  * A trait that allows nodes to works with Forge Multipart. This trait MUST be mixed in.
  * @author Calclavia
  */
-trait TMultipartNode extends NodeConnector
+trait TMultipartNode[A] extends NodeConnector[A]
 {
   override def world: World =
   {

@@ -11,7 +11,7 @@ import scala.collection.JavaConversions._
 /** Basic grid designed to be used for creating a level look for batteries connected together
   * @author robert(Darkguardsman)
   */
-class GridBattery extends Grid[TileBattery](classOf[NodeEnergy[_]]) with TEnergyStorage
+class GridBattery extends Grid[TileBattery](classOf[TileBattery])
 {
   var totalEnergy: Double = 0
   var totalCapacity: Double = 0

@@ -7,6 +7,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import resonant.api.recipe.QuantumAssemblerRecipes
+import resonant.lib.content.prefab.TEnergyStorage
 import resonant.lib.content.prefab.java.TileElectricInventory
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketReceiver
@@ -19,7 +20,7 @@ import resonant.lib.transform.vector.Vector3
  *
  * @author Calclavia, Darkguardsman
  */
-class TileQuantumAssembler extends TileElectricInventory(Material.iron) with IPacketReceiver
+class TileQuantumAssembler extends TileElectricInventory(Material.iron) with IPacketReceiver with TEnergyStorage
 {
     private[quantum] var ENERGY: Long = 1000000000L
     private[quantum] var MAX_TIME: Int = 20 * 120
