@@ -102,8 +102,8 @@ public class DebugFrameMechanical extends FrameNodeDebug
             {
                 if (getNode() != null && getNode().connections() != null)
                 {
-                    ForgeDirection dir = (ForgeDirection) getNode().connections().values().toArray()[row];
-                    MechanicalNode node = (MechanicalNode) getNode().connections().keySet().toArray()[row];
+                    ForgeDirection dir = (ForgeDirection) getNode().directionMap().values().toArray()[row];
+                    MechanicalNode node = (MechanicalNode) getNode().directionMap().keySet().toArray()[row];
                     switch(col)
                     {
                         case 0: return dir;

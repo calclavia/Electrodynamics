@@ -8,10 +8,10 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.{ChatComponentText, MovingObjectPosition}
 import net.minecraftforge.common.util.ForgeDirection
+import resonant.api.grid.{INode, INodeProvider}
 import resonant.lib.utility.WrenchUtility
 import resonantinduction.core.prefab.part.PartFace
 import resonantinduction.electrical.ElectricalContent
-import resonant.api.grid.{INodeProvider, INode}
 
 /**
  * TODO: We can't use face parts, need to use thicker ones. Also, transformer is currently NO-OP
@@ -111,7 +111,7 @@ class PartElectricTransformer extends PartFace with INodeProvider
     return true
   }
 
-  override def getNode(nodeType: Class[_ <: INode], from: ForgeDirection): INode =
+  override def getNode[N <: INode](nodeType: Class[_ <: N], from: ForgeDirection): N =
   {
     if (from == getAbsoluteFacing)
     {
@@ -122,6 +122,6 @@ class PartElectricTransformer extends PartFace with INodeProvider
 
     }
 
-    return null;
+    return null.asInstanceOf[N]
   }
 }

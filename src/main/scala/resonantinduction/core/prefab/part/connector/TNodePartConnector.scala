@@ -1,10 +1,9 @@
 package resonantinduction.core.prefab.part.connector
 
-import codechicken.multipart.TMultiPart
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.ISave
-import resonant.api.grid.{INodeProvider, INode}
+import resonant.api.grid.{INode, INodeProvider}
 
 /**
  * A node trait that can be mixed into any multipart nodes. Mixing this trait will cause nodes to reconstruct/deconstruct when needed.
@@ -51,10 +50,11 @@ trait TNodePartConnector extends PartAbstract with INodeProvider
       node.asInstanceOf[ISave].load(nbt)
   }
 
-  override def getNode(nodeType: Class[_ <: INode], from: ForgeDirection): INode =
+  override def getNode[N <: INode](nodeType: Class[_ <: N], from: ForgeDirection): N =
   {
     if (nodeType.isAssignableFrom(node.getClass) || node.getClass == nodeType)
-      return node
-    return null
+      return node.asInstanceOf[N]
+
+    return null.asInstanceOf[N]
   }
 }

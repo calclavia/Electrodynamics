@@ -7,10 +7,10 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
+import resonant.api.grid.{INode, INodeProvider}
 import resonant.content.prefab.java.TileAdvanced
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.TPacketIDReceiver
-import resonant.api.grid.{INodeProvider, INode}
 
 /**
  * A prefab class for tiles that use the fluid network.
@@ -84,10 +84,11 @@ class TileTankNode(material: Material) extends TileAdvanced(material) with INode
       colorID = buf.readInt()
       renderSides = buf.readByte()
     }
-    return false;
+
+    return false
   }
 
-  override def getNode(nodeType: Class[_ <: INode], from: ForgeDirection): INode = if (nodeType.isInstanceOf[NodeTank]) return tankNode else null
+  override def getNode[N <: INode](nodeType: Class[_ <: N], from: ForgeDirection): N = (if (nodeType.isInstanceOf[NodeTank]) tankNode else null).asInstanceOf[N]
 
   override def drain(from: ForgeDirection, resource: FluidStack, doDrain: Boolean): FluidStack = tankNode.drain(from, resource, doDrain)
 

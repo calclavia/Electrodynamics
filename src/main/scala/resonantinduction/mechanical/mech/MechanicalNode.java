@@ -2,14 +2,14 @@ package resonantinduction.mechanical.mech;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
-import resonant.lib.utility.nbt.ISaveObj;
-import resonantinduction.core.interfaces.IMechanicalNode;
-import resonantinduction.core.prefab.node.TMultipartNode;
 import resonant.api.grid.INode;
 import resonant.api.grid.INodeProvider;
 import resonant.api.grid.IUpdate;
 import resonant.lib.grid.node.NodeConnector;
 import resonant.lib.transform.vector.IVectorWorld;
+import resonant.lib.utility.nbt.ISaveObj;
+import resonantinduction.core.interfaces.IMechanicalNode;
+import resonantinduction.core.prefab.node.TMultipartNode;
 
 import java.util.Iterator;
 import java.util.Map.Entry;
@@ -20,7 +20,7 @@ import java.util.Map.Entry;
  * @author Calclavia, Darkguardsman
  */
 //Don't convert to scala as this will find its way into RE later - From Darkguardsman
-public class MechanicalNode extends NodeConnector<MechanicalNode> implements TMultipartNode, IMechanicalNode, ISaveObj, IVectorWorld, IUpdate
+public class MechanicalNode extends NodeConnector<MechanicalNode> implements TMultipartNode<MechanicalNode>, IMechanicalNode, ISaveObj, IVectorWorld, IUpdate
 {
 	/**
 	 * Marks that the rotation has changed and should be updated client side
@@ -164,14 +164,15 @@ public class MechanicalNode extends NodeConnector<MechanicalNode> implements TMu
 			if (sharePower)
 			{
 				// Power sharing calculations
-				Iterator<Entry<Object, ForgeDirection>> it = connections().entrySet().iterator();
+				Iterator<Entry<MechanicalNode, ForgeDirection>> it = directionMap().entrySet().iterator();
 
 				while (it.hasNext())
 				{
 					MechanicalNode adjacentMech = null;
-					Entry<Object, ForgeDirection> entry = it.next();
+					Entry<MechanicalNode, ForgeDirection> entry = it.next();
 					ForgeDirection dir = entry.getValue();
 
+					//TODO: Will never happen that it isn't a mech node.
 					// Get mech node
 					if (entry.getKey() instanceof MechanicalNode)
 					{
@@ -331,11 +332,5 @@ public class MechanicalNode extends NodeConnector<MechanicalNode> implements TMu
 	public boolean isValidConnection(Object object)
 	{
 		return true;
-	}
-
-	@Override
-	public Class getConnectClass()
-	{
-		return getClass();
 	}
 }

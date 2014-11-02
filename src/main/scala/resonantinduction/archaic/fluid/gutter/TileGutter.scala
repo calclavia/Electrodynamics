@@ -14,6 +14,7 @@ import net.minecraftforge.client.model.{AdvancedModelLoader, IModelCustom}
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.{FluidRegistry, FluidStack, IFluidTank}
 import org.lwjgl.opengl.GL11
+import resonant.api.grid.INode
 import resonant.api.recipe.{MachineRecipes, RecipeResource}
 import resonant.content.factory.resources.RecipeType
 import resonant.lib.render.{FluidRenderUtility, RenderUtility}

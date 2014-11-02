@@ -81,7 +81,7 @@ class GearNode(parent: PartGear) extends MechanicalNode(parent: PartGear)
             if (tile.isInstanceOf[INodeProvider])
             {
                 val instance: MechanicalNode = (tile.asInstanceOf[INodeProvider]).getNode(classOf[MechanicalNode], if (checkDir eq gear.placementSide.getOpposite) ForgeDirection.UNKNOWN else checkDir).asInstanceOf[MechanicalNode]
-                if (!connections.containsValue(checkDir) && instance != this && checkDir != gear.placementSide && instance != null && instance.canConnect(this,checkDir.getOpposite))
+                if (!directionMap.containsValue(checkDir) && instance != this && checkDir != gear.placementSide && instance != null && instance.canConnect(this,checkDir.getOpposite))
                 {
                     connect(instance, checkDir)
                 }
@@ -96,7 +96,7 @@ class GearNode(parent: PartGear) extends MechanicalNode(parent: PartGear)
         {
             val checkDir: ForgeDirection = ForgeDirection.getOrientation(Rotation.rotateSide(gear.placementSide.ordinal, i))
             val checkTile: TileEntity = new Vector3(gear.tile).add(checkDir).getTileEntity(world)
-            if (!connections.containsValue(checkDir) && checkTile.isInstanceOf[INodeProvider])
+            if (!directionMap.containsValue(checkDir) && checkTile.isInstanceOf[INodeProvider])
             {
                 val instance: MechanicalNode = (checkTile.asInstanceOf[INodeProvider]).getNode(classOf[MechanicalNode], gear.placementSide).asInstanceOf[MechanicalNode]
                 if (instance != null && instance != this && instance.canConnect(this,checkDir.getOpposite) && !(instance.getParent.isInstanceOf[PartGearShaft]))

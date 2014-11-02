@@ -12,7 +12,7 @@ import resonant.api.grid.INodeProvider
  *
  * @author Calclavia, Darkguardsman
  */
-class PipePressureNode(parent: PartPipe) extends NodePressure(parent) with TMultipartNode
+class PipePressureNode(parent: PartPipe) extends NodePressure(parent) with TMultipartNode[IFluidHandler]
 {
   def pipe: PartPipe = getParent.asInstanceOf[PartPipe]
 
@@ -38,13 +38,13 @@ class PipePressureNode(parent: PartPipe) extends NodePressure(parent) with TMult
             if (check.isInstanceOf[NodePressure] && canConnect(check,dir) && check.asInstanceOf[NodePressure].canConnect(this, dir.getOpposite))
             {
               pipe.connectionMask = pipe.connectionMask.openMask(dir)
-              connections.put(check, dir)
+              connect(check, dir)
             }
           }
           else if (canConnect(tile,dir))
           {
             pipe.connectionMask = pipe.connectionMask.openMask(dir)
-            connections.put(tile, dir)
+            connect(tile.asInstanceOf[IFluidHandler], dir)
           }
         }
       }

@@ -6,7 +6,7 @@ import net.minecraftforge.fluids._
 import resonant.api.ISave
 import resonant.api.grid.{INode, INodeProvider}
 import resonant.lib.prefab.fluid.{LimitedTank, NodeFluidHandler}
-import resonant.lib.utility.WorldUtility
+import resonant.lib.wrapper.BitmaskWrapper._
 
 /**
  * Simple tank node designed to be implemented by any machine that can connect to other fluid based machines.
@@ -25,13 +25,13 @@ class NodeTank(parent: INodeProvider, buckets: Int) extends NodeFluidHandler(par
     nbt.setTag("tank", getPrimaryTank.writeToNBT(new NBTTagCompound))
   }
 
-  protected override def connect(obj: NodeFluidHandler, dir: ForgeDirection)
+  override def connect[B <: IFluidHandler](obj: B, dir: ForgeDirection)
   {
     super.connect(obj, dir)
 
     if (showConnectionsFor(obj, dir))
     {
-      renderSides = WorldUtility.setEnableSide(getRenderSides, dir, true)
+      renderSides = getRenderSides.openMask(dir)
     }
   }
 

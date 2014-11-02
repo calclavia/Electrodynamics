@@ -14,7 +14,8 @@ import resonant.api.grid.INodeProvider;
  */
 public class TNodeProvider extends TileMultipart implements INodeProvider
 {
-	public INode getNode(Class<? extends INode> nodeType, ForgeDirection from)
+	@Override
+	public <N extends INode> N getNode(Class<? extends N> nodeType, ForgeDirection from)
 	{
 		TMultiPart nodePart = partMap(from.ordinal());
 

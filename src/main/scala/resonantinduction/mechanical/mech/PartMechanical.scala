@@ -10,207 +10,206 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.MovingObjectPosition
 import net.minecraftforge.common.util.ForgeDirection
+import resonant.api.grid.{INode, INodeProvider}
 import resonant.engine.ResonantEngine
-import resonantinduction.core.prefab.part.connector.PartAbstract
-import resonant.api.grid.{INodeProvider, INode}
 import resonant.lib.transform.vector.VectorWorld
+import resonantinduction.core.prefab.part.connector.PartAbstract
 
 /** We assume all the force acting on the gear is 90 degrees.
   *
   * @author Calclavia */
 abstract class PartMechanical extends PartAbstract with JNormalOcclusion with TFacePart with INodeProvider with TCuboidPart
 {
-    /** Node that handles resonantinduction.mechanical action of the machine */
-    var node: MechanicalNode = null
-    protected var prevAngularVelocity: Double = .0
-    /** Packets */
-    private[mech] var markPacketUpdate: Boolean = false
-    /** Simple debug external GUI */
-    private[mech] var frame: DebugFrameMechanical = null
-    /** Side of the block this is placed on */
-    var placementSide: ForgeDirection = ForgeDirection.UNKNOWN
-    var tier: Int = 0
+  /** Node that handles resonantinduction.mechanical action of the machine */
+  var mechanicalNode: MechanicalNode = null
+  protected var prevAngularVelocity: Double = .0
+  /** Packets */
+  private[mech] var markPacketUpdate: Boolean = false
+  /** Simple debug external GUI */
+  private[mech] var frame: DebugFrameMechanical = null
+  /** Side of the block this is placed on */
+  var placementSide: ForgeDirection = ForgeDirection.UNKNOWN
+  var tier: Int = 0
 
-    def preparePlacement(side: Int, itemDamage: Int)
+  def preparePlacement(side: Int, itemDamage: Int)
+  {
+    this.placementSide = ForgeDirection.getOrientation((side).asInstanceOf[Byte])
+    this.tier = itemDamage
+  }
+
+  override def onNeighborChanged
+  {
+    super.onNeighborChanged
+    mechanicalNode.reconstruct
+  }
+
+  override def onPartChanged(part: TMultiPart)
+  {
+    super.onPartChanged(part)
+    if (part.isInstanceOf[INodeProvider])
     {
-        this.placementSide = ForgeDirection.getOrientation((side).asInstanceOf[Byte])
-        this.tier = itemDamage
+      mechanicalNode.reconstruct
     }
+  }
 
-    override def onNeighborChanged
+  override def update
+  {
+    this.mechanicalNode.update
+    if (!world.isRemote)
     {
-        super.onNeighborChanged
-        node.reconstruct
+      checkClientUpdate
     }
-
-    override def onPartChanged(part: TMultiPart)
+    if (frame != null)
     {
-        super.onPartChanged(part)
-        if (part.isInstanceOf[INodeProvider])
-        {
-            node.reconstruct
-        }
+      frame.update
     }
+    super.update
+  }
 
-    override def update
+  override def activate(player: EntityPlayer, hit: MovingObjectPosition, itemStack: ItemStack): Boolean =
+  {
+    if (ResonantEngine.runningAsDev)
     {
-        this.node.update
-        if (!world.isRemote)
+      if (itemStack != null && !world.isRemote)
+      {
+        if (itemStack.getItem eq Items.stick)
         {
-            checkClientUpdate
-        }
-        if (frame != null)
-        {
-            frame.update
-        }
-        super.update
-    }
-
-    override def activate(player: EntityPlayer, hit: MovingObjectPosition, itemStack: ItemStack): Boolean =
-    {
-        if (ResonantEngine.runningAsDev)
-        {
-            if (itemStack != null && !world.isRemote)
+          if (ControlKeyModifer.isControlDown(player))
+          {
+            if (frame == null)
             {
-                if (itemStack.getItem eq Items.stick)
-                {
-                    if (ControlKeyModifer.isControlDown(player))
-                    {
-                        if (frame == null)
-                        {
-                            frame = new DebugFrameMechanical(this)
-                            frame.showDebugFrame
-                        }
-                        else
-                        {
-                            frame.closeDebugFrame
-                            frame = null
-                        }
-                    }
-                }
+              frame = new DebugFrameMechanical(this)
+              frame.showDebugFrame
             }
+            else
+            {
+              frame.closeDebugFrame
+              frame = null
+            }
+          }
         }
-        return super.activate(player, hit, itemStack)
+      }
     }
+    return super.activate(player, hit, itemStack)
+  }
 
-    def checkClientUpdate
+  def checkClientUpdate
+  {
+    if (Math.abs(prevAngularVelocity - mechanicalNode.angularVelocity) >= 0.1)
     {
-        if (Math.abs(prevAngularVelocity - node.angularVelocity) >= 0.1)
-        {
-            prevAngularVelocity = node.angularVelocity
-            sendRotationPacket
-        }
+      prevAngularVelocity = mechanicalNode.angularVelocity
+      sendRotationPacket
     }
+  }
 
-    def getNode(nodeType: Class[_ <: INode], from: ForgeDirection): INode =
+  override def getNode[N <: INode](nodeType: Class[_ <: N], from: ForgeDirection): N =
+  {
+    if (classOf[MechanicalNode].isAssignableFrom(nodeType))
+      return mechanicalNode.asInstanceOf[N]
+
+    return null.asInstanceOf[N]
+  }
+
+  override def onWorldJoin
+  {
+    mechanicalNode.reconstruct
+  }
+
+  override def onWorldSeparate
+  {
+    mechanicalNode.deconstruct
+    if (frame != null)
     {
-        if (nodeType.isAssignableFrom(node.getClass))
-        {
-            return node
-        }
-        return null
+      frame.closeDebugFrame
     }
+  }
 
-    override def onWorldJoin
+  /** Packet Code. */
+  def sendRotationPacket
+  {
+    if (world != null && !world.isRemote)
     {
-        node.reconstruct
+      getWriteStream.writeByte(1).writeDouble(mechanicalNode.angularVelocity)
     }
+  }
 
-    override def onWorldSeparate
+  /** Packet Code. */
+  override def read(packet: MCDataInput)
+  {
+    read(packet, packet.readUByte)
+  }
+
+  override def read(packet: MCDataInput, packetID: Int)
+  {
+    if (packetID == 0)
     {
-        node.deconstruct
-        if (frame != null)
-        {
-            frame.closeDebugFrame
-        }
+      load(packet.readNBTTagCompound)
     }
-
-    /** Packet Code. */
-    def sendRotationPacket
+    else if (packetID == 1)
     {
-        if (world != null && !world.isRemote)
-        {
-            getWriteStream.writeByte(1).writeDouble(node.angularVelocity)
-        }
+      mechanicalNode.angularVelocity = packet.readDouble
     }
+  }
 
-    /** Packet Code. */
-    override def read(packet: MCDataInput)
-    {
-        read(packet, packet.readUByte)
-    }
+  override def readDesc(packet: MCDataInput)
+  {
+    packet.readByte
+    load(packet.readNBTTagCompound)
+  }
 
-    override def read(packet: MCDataInput, packetID: Int)
-    {
-        if (packetID == 0)
-        {
-            load(packet.readNBTTagCompound)
-        }
-        else if (packetID == 1)
-        {
-            node.angularVelocity = packet.readDouble
-        }
-    }
+  override def writeDesc(packet: MCDataOutput)
+  {
+    packet.writeByte(0)
+    val nbt: NBTTagCompound = new NBTTagCompound
+    save(nbt)
+    packet.writeNBTTagCompound(nbt)
+  }
 
-    override def readDesc(packet: MCDataInput)
-    {
-        packet.readByte
-        load(packet.readNBTTagCompound)
-    }
+  override def redstoneConductionMap: Int =
+  {
+    return 0
+  }
 
-    override def writeDesc(packet: MCDataOutput)
-    {
-        packet.writeByte(0)
-        val nbt: NBTTagCompound = new NBTTagCompound
-        save(nbt)
-        packet.writeNBTTagCompound(nbt)
-    }
+  override def solid(arg0: Int): Boolean =
+  {
+    return true
+  }
 
-    override def redstoneConductionMap: Int =
-    {
-        return 0
-    }
+  override def load(nbt: NBTTagCompound)
+  {
+    placementSide = ForgeDirection.getOrientation(nbt.getByte("side"))
+    tier = nbt.getByte("tier")
+    mechanicalNode.load(nbt)
+  }
 
-    override def solid(arg0: Int): Boolean =
-    {
-        return true
-    }
+  override def save(nbt: NBTTagCompound)
+  {
+    nbt.setByte("side", placementSide.ordinal.asInstanceOf[Byte])
+    nbt.setByte("tier", tier.asInstanceOf[Byte])
+    mechanicalNode.save(nbt)
+  }
 
-    override def load(nbt: NBTTagCompound)
-    {
-        placementSide = ForgeDirection.getOrientation(nbt.getByte("side"))
-        tier = nbt.getByte("tier")
-        node.load(nbt)
-    }
+  protected def getItem: ItemStack
 
-    override def save(nbt: NBTTagCompound)
-    {
-        nbt.setByte("side", placementSide.ordinal.asInstanceOf[Byte])
-        nbt.setByte("tier", tier.asInstanceOf[Byte])
-        node.save(nbt)
-    }
+  override def getDrops: java.lang.Iterable[ItemStack] =
+  {
+    val drops: List[ItemStack] = new ArrayList[ItemStack]
+    drops.add(getItem)
+    return drops
+  }
 
-    protected def getItem: ItemStack
+  override def pickItem(hit: MovingObjectPosition): ItemStack =
+  {
+    return getItem
+  }
 
-    override def getDrops: java.lang.Iterable[ItemStack] =
-    {
-        val drops: List[ItemStack] = new ArrayList[ItemStack]
-        drops.add(getItem)
-        return drops
-    }
+  def getPosition: VectorWorld =
+  {
+    return new VectorWorld(world, x, y, z)
+  }
 
-    override def pickItem(hit: MovingObjectPosition): ItemStack =
-    {
-        return getItem
-    }
-
-    def getPosition: VectorWorld =
-    {
-        return new VectorWorld(world, x, y, z)
-    }
-
-    override def toString: String =
-    {
-        return "[" + getClass.getSimpleName + "]" + x + "x " + y + "y " + z + "z " + getSlotMask + "s "
-    }
+  override def toString: String =
+  {
+    return "[" + getClass.getSimpleName + "]" + x + "x " + y + "y " + z + "z " + getSlotMask + "s "
+  }
 }

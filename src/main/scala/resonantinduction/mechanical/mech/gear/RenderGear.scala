@@ -60,7 +60,7 @@ class RenderGear extends ISimpleItemRenderer
             GL11.glPushMatrix
             GL11.glTranslatef(x.asInstanceOf[Float] + 0.5f, y.asInstanceOf[Float] + 0.5f, z.asInstanceOf[Float] + 0.5f)
             GL11.glPushMatrix
-            renderGear(part.placementSide.ordinal, part.tier, part.getMultiBlock.isConstructed, Math.toDegrees(part.node.renderAngle))
+            renderGear(part.placementSide.ordinal, part.tier, part.getMultiBlock.isConstructed, Math.toDegrees(part.mechanicalNode.renderAngle))
             GL11.glPopMatrix
             GL11.glPopMatrix
         }

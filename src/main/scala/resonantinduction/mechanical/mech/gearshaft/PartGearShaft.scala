@@ -36,7 +36,7 @@ object PartGearShaft
 class PartGearShaft extends PartMechanical
 {
     //Constructor
-    node = new GearShaftNode(this)
+    mechanicalNode = new GearShaftNode(this)
 
     override def preparePlacement(side: Int, itemDamage: Int)
     {

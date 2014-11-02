@@ -12,17 +12,16 @@ import net.minecraft.client.renderer.RenderBlocks
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.{IIcon, MovingObjectPosition}
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
+import resonant.api.grid.INodeProvider
+import resonant.lib.grid.node.DCNode
 import resonantinduction.core.prefab.node.TMultipartNode
 import resonantinduction.core.prefab.part.ChickenBonesWrapper._
 import resonantinduction.core.prefab.part.connector.PartAbstract
 import resonantinduction.core.util.MultipartUtil
 import resonantinduction.electrical.wire.base.TWire
-import resonant.api.grid.INodeProvider
-import resonant.lib.grid.node.DCNode
 
 import scala.collection.convert.wrapAll._
 
@@ -344,7 +343,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
    * TODO: ForgeDirection may NOT be suitable. Integers are better.
    * @param provider
    */
-  class FlatWireNode(provider: INodeProvider) extends DCNode(provider) with TMultipartNode
+  class FlatWireNode(provider: INodeProvider) extends DCNode(provider) with TMultipartNode[DCNode]
   {
     override def reconstruct()
     {
@@ -749,7 +748,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
       if (canConnectTo(tp))
       {
         if (tp.isInstanceOf[PartFlatWire])
-          return tp.asInstanceOf[PartFlatWire].getNode(classOf[FlatWireNode], null).asInstanceOf[FlatWireNode].connectInternal(PartFlatWire.this, side)
+          return tp.asInstanceOf[PartFlatWire].getNode(classOf[FlatWireNode], null).connectInternal(PartFlatWire.this, side)
 
         return true
       }
