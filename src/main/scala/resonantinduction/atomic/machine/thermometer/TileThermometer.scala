@@ -4,7 +4,8 @@ import java.util.ArrayList
 
 import cpw.mods.fml.common.Optional
 import cpw.mods.fml.relauncher.{Side, SideOnly}
-import li.cil.oc.api.network.{Arguments, Callback, Context, SimpleComponent}
+import li.cil.oc.api.machine.{Arguments, Context, Callback}
+import li.cil.oc.api.network.{SimpleComponent}
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.client.renderer.texture.IIconRegister

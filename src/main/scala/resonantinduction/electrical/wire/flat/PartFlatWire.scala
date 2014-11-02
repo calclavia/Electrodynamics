@@ -99,11 +99,6 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
     {
       println(node)
       println(node.getConnections.size())
-
-      if (player.isSneaking)
-      {
-        node.buffer(100)
-      }
     }
 
     return true
