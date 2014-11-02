@@ -1,6 +1,7 @@
 package resonantinduction.atomic.machine.fulmination
 
 import net.minecraft.block.material.Material
+import resonant.api.electric.EnergyStorage
 import resonant.lib.content.prefab.TEnergyStorage
 import resonant.lib.content.prefab.java.TileElectric
 
@@ -9,13 +10,14 @@ import resonant.lib.content.prefab.java.TileElectric
  */
 object TileFulmination
 {
-  private final val DIAN: Long = 10000000000000L
+  private final val maxEnergy: Long = 10000000000000L
 }
 
 class TileFulmination extends TileElectric(Material.iron) with TEnergyStorage
 {
-  //Constructor
-  energy.setCapacity(TileFulmination.DIAN * 2)
+  //TODO: Dummy
+  energy = new EnergyStorage(0)
+  energy.setCapacity(TileFulmination.maxEnergy * 2)
   this.blockHardness(10)
   this.blockResistance(25000)
 

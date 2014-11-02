@@ -18,6 +18,7 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.ChatComponentText
 import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
+import resonant.api.electric.EnergyStorage
 import resonant.lib.content.prefab.TEnergyStorage
 import resonant.lib.content.prefab.java.TileElectric
 import resonant.lib.multiblock.reference.{IMultiBlockStructure, MultiBlockHandler}
@@ -74,6 +75,8 @@ class TileTesla extends TileElectric(Material.iron) with IMultiBlockStructure[Ti
   var topCache: TileTesla = null
 
   //Constructor
+  //TODO: Dummy
+  energy = new EnergyStorage(0)
   energy.setCapacity(TRANSFER_CAP * 2)
   energy.setMaxTransfer(TRANSFER_CAP)
   setTextureName(Reference.prefix + "material_metal_side")

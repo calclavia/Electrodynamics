@@ -18,6 +18,7 @@ import net.minecraft.util.IIcon
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
+import resonant.api.electric.EnergyStorage
 import resonant.content.spatial.block.SpatialBlock
 import resonant.engine.grid.thermal.{BoilEvent, ThermalPhysics}
 import resonant.lib.content.prefab.TEnergyStorage
@@ -50,7 +51,8 @@ class TileFirebox extends TileElectricInventory(Material.rock) with IPacketRecei
   private var heatEnergy: Long = 0
   private var boiledVolume: Int = 0
 
-  //Constructor
+  //TODO: Dummy
+  energy = new EnergyStorage(0)
   energy.setCapacity(POWER)
   energy.setMaxTransfer((POWER * 2) / 20)
   setIO(ForgeDirection.UP, 0)

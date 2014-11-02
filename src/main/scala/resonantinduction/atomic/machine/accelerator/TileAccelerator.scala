@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.IIcon
 import net.minecraftforge.common.util.ForgeDirection
+import resonant.api.electric.EnergyStorage
 import resonant.api.{IElectromagnet, IRotatable}
 import resonant.lib.content.prefab.TEnergyStorage
 import resonant.lib.content.prefab.java.TileElectricInventory
@@ -44,6 +45,8 @@ class TileAccelerator extends TileElectricInventory(Material.iron) with IElectro
 
   //Constructor
   this.setSizeInventory(4)
+  //TODO: Dummy
+  energy = new EnergyStorage(0)
   energy.setCapacity(Settings.ACCELERATOR_ENERGY_COST_PER_TICK * 20)
   energy.setMaxTransfer(Settings.ACCELERATOR_ENERGY_COST_PER_TICK)
 

@@ -18,7 +18,6 @@ import resonantinduction.core.interfaces.IMechanicalNode
  */
 class TileMotor extends TileNode(Material.iron) with TElectric with IRotatable
 {
-
   var mechNode: IMechanicalNode = NodeRegistry.get(this, classOf[IMechanicalNode])
   /** Generator turns KE -> EE. Inverted one will turn EE -> KE. */
   var isInversed: Boolean = true
@@ -132,7 +131,7 @@ class TileMotor extends TileNode(Material.iron) with TElectric with IRotatable
       if (nodeType.isAssignableFrom(mechNode.getClass))
         return mechNode.asInstanceOf[N]
     }
-    
+
     return null.asInstanceOf[N]
   }
 
