@@ -64,7 +64,7 @@ import resonant.lib.transform.vector.Vector3
         GL11.glPushMatrix
         GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5)
         val tile: TileBattery = t.asInstanceOf[TileBattery]
-        val energyLevel: Int = Math.round((tile.energy.getEnergy.asInstanceOf[Double] / TileBattery.getEnergyForTier(tile.getBlockMetadata).asInstanceOf[Double]) * 8).asInstanceOf[Int]
+        val energyLevel: Int = Math.round((tile.energy.getEnergy / TileBattery.getEnergyForTier(tile.getBlockMetadata).asInstanceOf[Double]) * 8).asInstanceOf[Int]
         RenderUtility.bind(Reference.domain, Reference.modelPath + "battery/battery.png")
         val disabledParts: List[String] = new ArrayList[String]
         val enabledParts: List[String] = new ArrayList[String]

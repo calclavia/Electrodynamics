@@ -144,7 +144,7 @@ class ItemBlockBattery(block: Block) extends ItemBlock(block) with IEnergyItem
     @SuppressWarnings(Array("unchecked"))
     override def getSubItems(par1: Item, par2CreativeTabs: CreativeTabs, par3List: List[_])
     {
-        for (tier <- 0 to TileBattery.MAX_TIER)
+        for (tier <- 0 to TileBattery.maxTier)
         {
             par3List.add(Compatibility.getItemWithCharge(ItemBlockBattery.setTier(new ItemStack(this), tier.asInstanceOf[Byte]), 0))
             par3List.add(Compatibility.getItemWithCharge(ItemBlockBattery.setTier(new ItemStack(this), tier.asInstanceOf[Byte]), TileBattery.getEnergyForTier(tier)))

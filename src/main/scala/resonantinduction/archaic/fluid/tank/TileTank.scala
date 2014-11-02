@@ -35,26 +35,26 @@ object TileTank
   {
     def renderInventoryItem(`type`: IItemRenderer.ItemRenderType, itemStack: ItemStack, data: AnyRef*)
     {
-      GL11.glPushMatrix
+      GL11.glPushMatrix()
       RenderBlockUtility.tessellateBlockWithConnectedTextures(itemStack.getItemDamage, ArchaicContent.blockTank, null, RenderUtility.getIcon(Reference.prefix + "tankEdge"))
-      GL11.glPopMatrix
-      GL11.glPushMatrix
+      GL11.glPopMatrix()
+      GL11.glPushMatrix()
       if (itemStack.getTagCompound != null && itemStack.getTagCompound.hasKey("fluid"))
       {
         renderTank(0, 0, 0, FluidStack.loadFluidStackFromNBT(itemStack.getTagCompound.getCompoundTag("fluid")), VOLUME * FluidContainerRegistry.BUCKET_VOLUME)
       }
-      GL11.glPopMatrix
+      GL11.glPopMatrix()
     }
 
     def renderTank(x: Double, y: Double, z: Double, fluid: FluidStack, capacity: Int)
     {
       val tank: FluidTank = new FluidTank(fluid, capacity)
-      GL11.glPushMatrix
+      GL11.glPushMatrix()
       GL11.glTranslated(0.02, 0.02, 0.02)
       GL11.glScaled(0.92, 0.92, 0.92)
       if (fluid != null)
       {
-        GL11.glPushMatrix
+        GL11.glPushMatrix()
         if (!fluid.getFluid.isGaseous)
         {
           val percentageFilled: Double = tank.getFluidAmount.asInstanceOf[Double] / tank.getCapacity.asInstanceOf[Double]
@@ -69,16 +69,16 @@ object TileTank
           GL11.glEnable(GL11.GL_BLEND)
           GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA)
           val color: Color = new Color(fluid.getFluid.getColor)
-          RenderUtility.enableBlending
+          RenderUtility.enableBlending()
           GL11.glColor4d(color.getRed / 255f, color.getGreen / 255f, color.getBlue / 255f, if (fluid.getFluid.isGaseous) filledPercentage else 1)
           RenderUtility.bind(FluidRenderUtility.getFluidSheet(fluid))
           FluidRenderUtility.renderFluidTesselation(tank, 1, 1, 1, 1)
-          RenderUtility.disableBlending
-          GL11.glPopAttrib
+          RenderUtility.disableBlending()
+          GL11.glPopAttrib()
         }
-        GL11.glPopMatrix
+        GL11.glPopMatrix()
       }
-      GL11.glPopMatrix
+      GL11.glPopMatrix()
     }
   }
 
@@ -129,11 +129,11 @@ class TileTank extends TileTankNode(Material.iron) with ISneakPickup
   {
     if (world != null)
     {
-      GL11.glPushMatrix
+      GL11.glPushMatrix()
       GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5)
       if (fluid != null)
       {
-        GL11.glPushMatrix
+        GL11.glPushMatrix()
         if (!fluid.getFluid.isGaseous)
         {
           GL11.glScaled(0.99, 0.99, 0.99)
@@ -145,15 +145,15 @@ class TileTank extends TileTankNode(Material.iron) with ISneakPickup
           val yNorthWest: Double = FluidUtility.getAveragePercentageFilledForSides(classOf[TileTank], percentageFilled, world, asVector3, ForgeDirection.NORTH, ForgeDirection.WEST)
           FluidRenderUtility.renderFluidTesselation(tank, ySouthEast, yNorthEast, ySouthWest, yNorthWest)
         }
-        GL11.glPopMatrix
+        GL11.glPopMatrix()
       }
-      GL11.glPopMatrix
+      GL11.glPopMatrix()
     }
   }
 
   def getRemovedItems(entity: EntityPlayer): List[ItemStack] =
   {
-    val drops: List[ItemStack] = new ArrayList[ItemStack]
+    val drops = new ArrayList[ItemStack]
     val itemStack: ItemStack = new ItemStack(ArchaicContent.blockTank, 1, 0)
     if (itemStack != null)
     {

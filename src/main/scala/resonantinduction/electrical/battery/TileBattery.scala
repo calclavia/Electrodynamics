@@ -8,8 +8,9 @@ import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraftforge.common.util.ForgeDirection
+import resonant.api.electric.EnergyStorage
 import resonant.content.prefab.java.TileAdvanced
-import resonant.lib.content.prefab.{TEnergyStorage, TElectric}
+import resonant.lib.content.prefab.{TElectric, TEnergyStorage}
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketReceiver
 import resonant.lib.network.netty.AbstractPacket
@@ -27,13 +28,13 @@ object TileBattery
    */
   def getEnergyForTier(tier: Int): Long =
   {
-    return Math.round(Math.pow(500000000, (tier / (MAX_TIER + 0.7f)) + 1) / (500000000)) * (500000000)
+    return Math.round(Math.pow(500000000, (tier / (maxTier + 0.7f)) + 1) / (500000000)) * (500000000)
   }
 
   /** Tiers: 0, 1, 2 */
-  final val MAX_TIER: Int = 2
+  final val maxTier: Int = 2
   /** The transfer rate **/
-  final val DEFAULT_WATTAGE: Long = getEnergyForTier(0)
+  final val defaultPower: Long = getEnergyForTier(0)
 }
 
 class TileBattery extends TileAdvanced(Material.iron) with TElectric with IPacketReceiver with TEnergyStorage
@@ -42,13 +43,15 @@ class TileBattery extends TileAdvanced(Material.iron) with TElectric with IPacke
   private var markDistributionUpdate: Boolean = false
   var renderEnergyAmount: Double = 0
 
-  //Constructor
+  energy = new EnergyStorage
   textureName = "material_metal_side"
   ioMap = 0
   saveIOMap = true
   normalRender = false
   isOpaqueCube = false
   itemBlock = classOf[ItemBlockBattery]
+
+  var doCharge = false
 
   override def update()
   {
@@ -59,7 +62,6 @@ class TileBattery extends TileAdvanced(Material.iron) with TElectric with IPacke
       //TODO: Test, remove this
       if (doCharge)
       {
-        dcNode.positiveTerminals.addAll(getOutputDirections())
         dcNode.buffer(100)
         doCharge = false
       }
@@ -76,8 +78,6 @@ class TileBattery extends TileAdvanced(Material.iron) with TElectric with IPacke
     }
   }
 
-  var doCharge = false
-
   override def activate(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
   {
     super.activate(player, side, hit)
@@ -93,6 +93,14 @@ class TileBattery extends TileAdvanced(Material.iron) with TElectric with IPacke
     }
 
     return true
+  }
+
+  override def toggleIO(side: Int, entityPlayer: EntityPlayer): Boolean =
+  {
+    val res = super.toggleIO(side, entityPlayer)
+    dcNode.positiveTerminals.clear()
+    dcNode.positiveTerminals.addAll(getOutputDirections())
+    return res
   }
 
   override def getDescPacket: AbstractPacket =
