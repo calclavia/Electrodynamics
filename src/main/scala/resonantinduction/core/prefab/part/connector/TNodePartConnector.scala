@@ -52,7 +52,7 @@ trait TNodePartConnector extends PartAbstract with INodeProvider
 
   override def getNode[N <: INode](nodeType: Class[_ <: N], from: ForgeDirection): N =
   {
-    if (nodeType.isAssignableFrom(node.getClass) || node.getClass == nodeType)
+    if (node.getClass.isAssignableFrom(nodeType))
       return node.asInstanceOf[N]
 
     return null.asInstanceOf[N]

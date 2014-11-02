@@ -19,7 +19,11 @@ object MultipartUtil
   def getMultipartTile(access: IBlockAccess, pos: Vector3): TileMultipart =
   {
     val te = pos.getTileEntity(access)
-    return if (te.isInstanceOf[TileMultipart]) te.asInstanceOf[TileMultipart] else null
+
+    if (te.isInstanceOf[TileMultipart])
+      return te.asInstanceOf[TileMultipart]
+    else
+      return null
   }
 
   def getMultipart(world: World, vector: Vector3, partMap: Int): TMultiPart =

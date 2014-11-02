@@ -277,10 +277,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
   /**
    * Multipart Methods
    */
-  override def getStrength(hit: MovingObjectPosition, player: EntityPlayer): Float =
-  {
-    return 4
-  }
+  override def getStrength(hit: MovingObjectPosition, player: EntityPlayer): Float = 4
 
   def getSlotMask: Int = 1 << side
 
@@ -347,8 +344,11 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
   {
     override def reconstruct()
     {
+      super.reconstruct()
+
       if (!world.isRemote)
       {
+        directionMap.clear()
         updateOpenConnections()
 
         /**
@@ -368,7 +368,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
             val absDir = Rotation.rotateSide(side, r)
 
             if (setExternalConnection(r, absDir) || setCornerConnection(r, absDir))
-              calculatedMask = calculatedMask | (1 << absDir)
+              calculatedMask |= 1 << absDir
 
             if ((calculatedMask & (1 << absDir)) == 0)
               disconnect(absDir)
@@ -416,13 +416,12 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
       val pos = new BlockCoord(tile).offset(absDir)
       val tilePart = MultipartUtil.getMultipartTile(world, pos)
 
-      val forgeDir = ForgeDirection.getOrientation(absDir)
+      val toDir = ForgeDirection.getOrientation(absDir)
       val fromDir = ForgeDirection.getOrientation(absDir).getOpposite
 
       if (tilePart != null && r != -1)
       {
         val part = tilePart.partMap(side)
-
 
         if (canConnectTo(part, ForgeDirection.getOrientation(absDir)))
         {
@@ -439,13 +438,13 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
 
               if (wire.canConnectTo(PartFlatWire.this, fromDir) && wire.maskOpen(otherR))
               {
-                connect(dcNode, forgeDir)
+                connect(dcNode, toDir)
                 return true
               }
             }
             else if (canConnectTo(part))
             {
-              connect(dcNode, forgeDir)
+              connect(dcNode, toDir)
               return true
             }
           }
@@ -458,12 +457,12 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
       /**
        * Can't find another wire. Try TileEntity.
        */
-      val tileEntity = world.getTileEntity(pos.x, pos.y, pos.z)
+      val tileEntity = pos.getTileEntity(world)
       val tileComponent = getComponent(tileEntity, fromDir)
 
-      if (canConnectTo(tileEntity, forgeDir))
+      if (canConnectTo(tileEntity, fromDir))
       {
-        connect(tileComponent, forgeDir)
+        connect(tileComponent, toDir)
         return true
       }
 
@@ -485,12 +484,13 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
         if (tpCorner != null)
         {
           val part = tpCorner.partMap(absDir ^ 1)
-          val absForgeDir = ForgeDirection.getOrientation(absDir)
+          val absToDir = ForgeDirection.getOrientation(absDir)
+          val absFromDir = ForgeDirection.getOrientation(absDir).getOpposite
 
-          if (canConnectTo(part, absForgeDir))
+          if (canConnectTo(part, absFromDir))
           {
             //TODO: Check dir
-            connect(part.asInstanceOf[INodeProvider].getNode(classOf[DCNode], absForgeDir.getOpposite).asInstanceOf[DCNode], absForgeDir)
+            connect(part.asInstanceOf[INodeProvider].getNode(classOf[DCNode], absFromDir), absToDir)
             return true
           }
         }
@@ -551,10 +551,10 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
         }
       }
 
-      if (newConn != (connectionMask & 0xF000FF))
+      if (newConn != (PartFlatWire.this.connectionMask & 0xF000FF))
       {
-        val diff: Int = connectionMask ^ newConn
-        connectionMask = connectionMask & ~0xF000FF | newConn
+        val diff: Int = PartFlatWire.this.connectionMask ^ newConn
+        PartFlatWire.this.connectionMask = PartFlatWire.this.connectionMask & ~0xF000FF | newConn
 
         for (r <- 0 until 4)
         {
@@ -590,9 +590,9 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
       {
         newConn |= 0x10000
       }
-      if (newConn != (connectionMask & 0x10F00))
+      if (newConn != (PartFlatWire.this.connectionMask & 0x10F00))
       {
-        connectionMask = connectionMask & ~0x10F00 | newConn
+        PartFlatWire.this.connectionMask = PartFlatWire.this.connectionMask & ~0x10F00 | newConn
         return true
       }
       return false
@@ -615,9 +615,9 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
         }
       }
 
-      if (newConn != (connectionMask & 0xF000))
+      if (newConn != (PartFlatWire.this.connectionMask & 0xF000))
       {
-        connectionMask = connectionMask & ~0xF000 | newConn
+        PartFlatWire.this.connectionMask = PartFlatWire.this.connectionMask & ~0xF000 | newConn
         return true
       }
 
@@ -626,9 +626,11 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
 
     def connectionOpen(r: Int): Boolean =
     {
-      val absDir: Int = Rotation.rotateSide(side, r)
-      val facePart: TMultiPart = tile.partMap(absDir)
-      if (facePart != null && (!(facePart.isInstanceOf[PartFlatWire]) || !canConnectTo(facePart, ForgeDirection.getOrientation(absDir))))
+      val absDir = Rotation.rotateSide(side, r)
+      val facePart = tile.partMap(absDir)
+      val toDir = ForgeDirection.getOrientation(absDir)
+
+      if (facePart != null && (!facePart.isInstanceOf[PartFlatWire] || !canConnectTo(facePart, toDir.getOpposite)))
       {
         return false
       }
@@ -636,6 +638,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
       {
         return false
       }
+
       return true
     }
 
@@ -648,10 +651,12 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
       val absDir: Int = Rotation.rotateSide(side, r)
       val pos: BlockCoord = new BlockCoord(tile)
       pos.offset(absDir)
+
       if (!canConnectThroughCorner(pos, absDir ^ 1, side))
       {
         return 0
       }
+
       pos.offset(side)
       val t: TileMultipart = MultipartUtil.getMultipartTile(world, pos)
 
@@ -761,13 +766,13 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
       val absDir: Int = Rotation.rotateSide(side, r)
       if (canConnectTo(wire, ForgeDirection.getOrientation(absDir)) && maskOpen(r))
       {
-        val oldConn: Int = connectionMask
-        connectionMask |= 0x1 << r
+        val oldConn: Int = PartFlatWire.this.connectionMask
+        PartFlatWire.this.connectionMask |= 0x1 << r
         if (renderThisCorner(wire))
         {
-          connectionMask |= 0x100000 << r
+          PartFlatWire.this.connectionMask |= 0x100000 << r
         }
-        if (oldConn != connectionMask)
+        if (oldConn != PartFlatWire.this.connectionMask)
         {
           sendConnUpdate
         }
@@ -781,9 +786,9 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
       val absDir: Int = Rotation.rotateSide(side, r)
       if (canConnectTo(wire, ForgeDirection.getOrientation(absDir)) && maskOpen(r))
       {
-        val oldConn: Int = connectionMask
-        connectionMask |= 0x10 << r
-        if (oldConn != connectionMask)
+        val oldConn: Int = PartFlatWire.this.connectionMask
+        PartFlatWire.this.connectionMask |= 0x10 << r
+        if (oldConn != PartFlatWire.this.connectionMask)
         {
           sendConnUpdate()
         }
@@ -797,9 +802,9 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
       val absDir: Int = Rotation.rotateSide(side, r)
       if (canConnectTo(wire, ForgeDirection.getOrientation(absDir)))
       {
-        val oldConn: Int = connectionMask
-        connectionMask |= 0x100 << r
-        if (oldConn != connectionMask)
+        val oldConn: Int = PartFlatWire.this.connectionMask
+        PartFlatWire.this.connectionMask |= 0x100 << r
+        if (oldConn != PartFlatWire.this.connectionMask)
         {
           sendConnUpdate()
         }
@@ -814,7 +819,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
     private def getComponent(obj: AnyRef, from: ForgeDirection): DCNode =
     {
       if (obj.isInstanceOf[INodeProvider])
-        return obj.asInstanceOf[INodeProvider].getNode(classOf[DCNode], from).asInstanceOf[DCNode]
+        return obj.asInstanceOf[INodeProvider].getNode(classOf[DCNode], from)
 
       return null
     }

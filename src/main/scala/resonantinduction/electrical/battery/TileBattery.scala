@@ -98,26 +98,30 @@ class TileBattery extends TileAdvanced(Material.iron) with TElectric with IPacke
   override def toggleIO(side: Int, entityPlayer: EntityPlayer): Boolean =
   {
     val res = super.toggleIO(side, entityPlayer)
+
+    dcNode.connectionMask = ForgeDirection.VALID_DIRECTIONS.filter(getIO(_) > 0).map(d => 1 << d.ordinal()).foldLeft(0)(_ | _)
     dcNode.positiveTerminals.clear()
     dcNode.positiveTerminals.addAll(getOutputDirections())
+    notifyChange()
+
     return res
   }
 
   override def getDescPacket: AbstractPacket =
   {
-    return new PacketTile(this, Array[Any](renderEnergyAmount, ioMap))
+    return new PacketTile(this) <<< renderEnergyAmount <<< ioMap
   }
 
-  def read(data: ByteBuf, player: EntityPlayer, `type`: PacketType)
+  override def read(buf: ByteBuf, player: EntityPlayer, packet: PacketType)
   {
-    this.energy.setEnergy(data.readLong)
-    this.ioMap_$eq(data.readShort)
+    energy.setEnergy(buf.readLong)
+    ioMap == buf.readShort
   }
 
-  override def setIO(dir: ForgeDirection, `type`: Int)
+  override def setIO(dir: ForgeDirection, packet: Int)
   {
-    super.setIO(dir, `type`)
-    worldObj.markBlockForUpdate(xCoord, yCoord, zCoord)
+    super.setIO(dir, packet)
+    markUpdate()
   }
 
   override def onPlaced(entityliving: EntityLivingBase, itemStack: ItemStack)
