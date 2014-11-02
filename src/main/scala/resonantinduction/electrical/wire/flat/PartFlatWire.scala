@@ -98,7 +98,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
     if (!world.isRemote)
     {
       println(node)
-      println(node.getConnections.size())
+      println(node.connections.size())
     }
 
     return true
@@ -388,10 +388,12 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
           if (tile.partMap(PartMap.edgeBetween(absDir, side)) == null)
           {
             val part = tile.partMap(absDir)
+            val to = ForgeDirection.getOrientation(absDir)
 
             if (canConnectTo(part))
             {
-              connections.put(part, ForgeDirection.getOrientation(absDir))
+              //TODO: Check dir
+              connect(part.asInstanceOf[INodeProvider].getNode(classOf[DCNode], to.getOpposite).asInstanceOf[DCNode], to)
               skip = true
             }
           }
@@ -438,13 +440,13 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
 
               if (wire.canConnectTo(PartFlatWire.this, fromDir) && wire.maskOpen(otherR))
               {
-                connections.put(dcNode, forgeDir)
+                connect(dcNode, forgeDir)
                 return true
               }
             }
             else if (canConnectTo(part))
             {
-              connections.put(dcNode, forgeDir)
+              connect(dcNode, forgeDir)
               return true
             }
           }
@@ -462,7 +464,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
 
       if (canConnectTo(tileEntity, forgeDir))
       {
-        connections.put(tileComponent, forgeDir)
+        connect(tileComponent, forgeDir)
         return true
       }
 
@@ -488,8 +490,8 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
 
           if (canConnectTo(part, absForgeDir))
           {
-            //TODO: Connect to node, not part.
-            connections.put(part, absForgeDir)
+            //TODO: Check dir
+            connect(part.asInstanceOf[INodeProvider].getNode(classOf[DCNode], absForgeDir.getOpposite).asInstanceOf[DCNode], absForgeDir)
             return true
           }
         }
@@ -502,7 +504,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
       if (!world.isRemote)
       {
         //TODO: Refine this. It's very hacky and may cause errors when the wire connects to a block both ways
-        val inverseCon = connections.map(_.swap)
+        val inverseCon = directionMap.map(_.swap)
         val forgeDir = ForgeDirection.getOrientation(i)
 
         if (inverseCon.contains(forgeDir))
@@ -511,7 +513,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
 
           if (connected != null)
           {
-            connections -= connected
+            disconnect(connected)
           }
         }
       }

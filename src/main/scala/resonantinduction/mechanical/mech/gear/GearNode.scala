@@ -67,7 +67,7 @@ class GearNode(parent: PartGear) extends MechanicalNode(parent: PartGear)
             val instance: MechanicalNode = (tileBehind.asInstanceOf[INodeProvider]).getNode(classOf[MechanicalNode], gear.placementSide.getOpposite).asInstanceOf[MechanicalNode]
             if (instance != null && instance != this && !(instance.getParent.isInstanceOf[PartGearShaft]) && instance.canConnect(this,gear.placementSide.getOpposite))
             {
-                addConnection(instance, gear.placementSide)
+                connect(instance, gear.placementSide)
             }
         }
         for (i <- 0 until 6)
@@ -83,7 +83,7 @@ class GearNode(parent: PartGear) extends MechanicalNode(parent: PartGear)
                 val instance: MechanicalNode = (tile.asInstanceOf[INodeProvider]).getNode(classOf[MechanicalNode], if (checkDir eq gear.placementSide.getOpposite) ForgeDirection.UNKNOWN else checkDir).asInstanceOf[MechanicalNode]
                 if (!connections.containsValue(checkDir) && instance != this && checkDir != gear.placementSide && instance != null && instance.canConnect(this,checkDir.getOpposite))
                 {
-                    addConnection(instance, checkDir)
+                    connect(instance, checkDir)
                 }
             }
         }
@@ -101,7 +101,7 @@ class GearNode(parent: PartGear) extends MechanicalNode(parent: PartGear)
                 val instance: MechanicalNode = (checkTile.asInstanceOf[INodeProvider]).getNode(classOf[MechanicalNode], gear.placementSide).asInstanceOf[MechanicalNode]
                 if (instance != null && instance != this && instance.canConnect(this,checkDir.getOpposite) && !(instance.getParent.isInstanceOf[PartGearShaft]))
                 {
-                    addConnection(instance, checkDir)
+                    connect(instance, checkDir)
                 }
             }
         }

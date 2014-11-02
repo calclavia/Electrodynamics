@@ -35,7 +35,7 @@ class PartFramedWire extends PartFramedNode with TWire
 
     override protected def addConnection(obj: AnyRef, dir: ForgeDirection)
     {
-      super.addConnection(obj, dir)
+      super.connect(obj, dir)
       connectionMask = connectionMask.openMask(dir)
     }
   }

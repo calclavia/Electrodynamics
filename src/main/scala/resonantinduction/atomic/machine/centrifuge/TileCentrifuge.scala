@@ -9,6 +9,7 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
+import resonant.lib.content.prefab.TEnergyStorage
 import resonant.lib.content.prefab.java.TileElectricInventory
 import resonant.lib.grid.Compatibility
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
@@ -26,7 +27,7 @@ object TileCentrifuge
     final val DIAN: Long = 500000
 }
 
-class TileCentrifuge extends TileElectricInventory(Material.iron) with IPacketReceiver with IFluidHandler with IInventory
+class TileCentrifuge extends TileElectricInventory(Material.iron) with IPacketReceiver with IFluidHandler with IInventory with TEnergyStorage
 {
     val gasTank: FluidTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 5)
     var timer: Int = 0

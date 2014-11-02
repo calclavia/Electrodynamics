@@ -10,6 +10,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import resonant.api.IRotatable
 import resonant.engine.ResonantEngine
+import resonant.lib.content.prefab.TEnergyStorage
 import resonant.lib.content.prefab.java.TileElectricInventory
 import resonant.lib.network.Synced
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
@@ -26,7 +27,7 @@ object TileNuclearBoiler
     final val DIAN: Long = 50000
 }
 
-class TileNuclearBoiler extends TileElectricInventory(Material.iron) with IPacketReceiver with IFluidHandler with IRotatable
+class TileNuclearBoiler extends TileElectricInventory(Material.iron) with IPacketReceiver with IFluidHandler with IRotatable with TEnergyStorage
 {
     final val SHI_JIAN: Int = 20 * 15
 

@@ -9,7 +9,6 @@ import resonant.lib.transform.vector.Vector3
 
 class GearShaftNode(parent: INodeProvider) extends MechanicalNode(parent)
 {
-
   override def getTorqueLoad: Double =
   {
     shaft.tier match
@@ -40,9 +39,10 @@ class GearShaftNode(parent: INodeProvider) extends MechanicalNode(parent)
         if (shaft.tile.isInstanceOf[INodeProvider])
         {
           val instance: MechanicalNode = (shaft.tile.asInstanceOf[INodeProvider]).getNode(classOf[MechanicalNode], checkDir).asInstanceOf[MechanicalNode]
+
           if (instance != null && instance != this && instance.canConnect(this, checkDir.getOpposite))
           {
-            addConnection(instance, checkDir)
+            connect(instance, checkDir)
           }
         }
         else
@@ -53,7 +53,7 @@ class GearShaftNode(parent: INodeProvider) extends MechanicalNode(parent)
             val instance: MechanicalNode = (checkTile.asInstanceOf[INodeProvider]).getNode(classOf[MechanicalNode], checkDir.getOpposite).asInstanceOf[MechanicalNode]
             if (instance != null && instance != this && instance.getParent.isInstanceOf[PartGearShaft] && instance.canConnect(this, checkDir.getOpposite))
             {
-              addConnection(instance, checkDir)
+              connect(instance, checkDir)
             }
           }
         }

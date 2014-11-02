@@ -8,6 +8,7 @@ import net.minecraft.network.Packet
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import resonant.engine.ResonantEngine
+import resonant.lib.content.prefab.TEnergyStorage
 import resonant.lib.grid.Compatibility
 import resonant.lib.network.Synced
 import resonant.lib.network.discriminator.PacketAnnotation
@@ -25,7 +26,7 @@ object TileChemicalExtractor
     final val ENERGY: Long = 5000
 }
 
-class TileChemicalExtractor extends TileProcess(Material.iron) with IFluidHandler
+class TileChemicalExtractor extends TileProcess(Material.iron) with IFluidHandler with TEnergyStorage
 {
     energy.setCapacity(TileChemicalExtractor.ENERGY * 2)
     this.setSizeInventory(7)

@@ -20,7 +20,7 @@ import java.util.Map.Entry;
  * @author Calclavia, Darkguardsman
  */
 //Don't convert to scala as this will find its way into RE later - From Darkguardsman
-public class MechanicalNode extends NodeConnector implements TMultipartNode, IMechanicalNode, ISaveObj, IVectorWorld, IUpdate
+public class MechanicalNode extends NodeConnector<MechanicalNode> implements TMultipartNode, IMechanicalNode, ISaveObj, IVectorWorld, IUpdate
 {
 	/**
 	 * Marks that the rotation has changed and should be updated client side
@@ -164,7 +164,7 @@ public class MechanicalNode extends NodeConnector implements TMultipartNode, IMe
 			if (sharePower)
 			{
 				// Power sharing calculations
-				Iterator<Entry<Object, ForgeDirection>> it = getConnections().entrySet().iterator();
+				Iterator<Entry<Object, ForgeDirection>> it = connections().entrySet().iterator();
 
 				while (it.hasNext())
 				{
@@ -331,5 +331,11 @@ public class MechanicalNode extends NodeConnector implements TMultipartNode, IMe
 	public boolean isValidConnection(Object object)
 	{
 		return true;
+	}
+
+	@Override
+	public Class getConnectClass()
+	{
+		return getClass();
 	}
 }

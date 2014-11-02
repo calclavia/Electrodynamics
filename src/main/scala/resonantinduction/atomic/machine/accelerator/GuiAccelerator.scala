@@ -37,7 +37,7 @@ class GuiAccelerator(player: EntityPlayer, tileEntity: TileAccelerator) extends 
         this.fontRendererObj.drawString("Antimatter: " + this.tileEntity.antimatter + " mg", 8, 80, 4210752)
         this.fontRendererObj.drawString("Status:", 8, 90, 4210752)
         this.fontRendererObj.drawString(status, 8, 100, 4210752)
-        this.fontRendererObj.drawString("Buffer: " + this.tileEntity.energy.getEnergy + "/" + new UnitDisplay(UnitDisplay.Unit.JOULES, this.tileEntity.energy.getEnergyCapacity, true), 8, 110, 4210752)
+       // this.fontRendererObj.drawString("Buffer: " + this.tileEntity.energy.getEnergy + "/" + new UnitDisplay(UnitDisplay.Unit.JOULES, this.tileEntity.energy.getEnergyCapacity, true), 8, 110, 4210752)
         this.fontRendererObj.drawString("Facing: " + this.tileEntity.getDirection.getOpposite, 100, 123, 4210752)
     }
 
