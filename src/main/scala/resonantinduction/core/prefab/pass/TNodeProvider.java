@@ -31,9 +31,12 @@ public class TNodeProvider extends TileMultipart implements INodeProvider
 				if (nodePart == null)
 				{
 					nodePart = partMap(i);
+					System.out.println(nodePart);
+					break;
 				}
 			}
 		}
+
 
 		if (nodePart instanceof INodeProvider)
 		{

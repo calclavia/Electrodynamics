@@ -95,18 +95,6 @@ class TileBattery extends TileAdvanced(Material.iron) with TElectric with IPacke
     return true
   }
 
-  override def toggleIO(side: Int, entityPlayer: EntityPlayer): Boolean =
-  {
-    val res = super.toggleIO(side, entityPlayer)
-
-    dcNode.connectionMask = ForgeDirection.VALID_DIRECTIONS.filter(getIO(_) > 0).map(d => 1 << d.ordinal()).foldLeft(0)(_ | _)
-    dcNode.positiveTerminals.clear()
-    dcNode.positiveTerminals.addAll(getOutputDirections())
-    notifyChange()
-
-    return res
-  }
-
   override def getDescPacket: AbstractPacket =
   {
     return new PacketTile(this) <<< renderEnergyAmount <<< ioMap
@@ -121,6 +109,15 @@ class TileBattery extends TileAdvanced(Material.iron) with TElectric with IPacke
   override def setIO(dir: ForgeDirection, packet: Int)
   {
     super.setIO(dir, packet)
+
+    dcNode.connectionMask = ForgeDirection.VALID_DIRECTIONS.filter(getIO(_) > 0).map(d => 1 << d.ordinal()).foldLeft(0)(_ | _)
+    dcNode.connectionMask = 0x3F
+    //TODO: Connection logic having an issue
+    dcNode.positiveTerminals.clear()
+    dcNode.positiveTerminals.addAll(getOutputDirections())
+    notifyChange()
+    dcNode.reconstruct()
+
     markUpdate()
   }
 

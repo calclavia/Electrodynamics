@@ -423,7 +423,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
       {
         val part = tilePart.partMap(side)
 
-        if (canConnectTo(part, ForgeDirection.getOrientation(absDir)))
+        if (canConnectTo(part, fromDir))
         {
           val otherR = (r + 2) % 4
 
