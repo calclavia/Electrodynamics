@@ -110,13 +110,13 @@ class TileBattery extends TileAdvanced(Material.iron) with TElectric with IPacke
   {
     super.setIO(dir, packet)
 
+    //TODO: Not set during init
     dcNode.connectionMask = ForgeDirection.VALID_DIRECTIONS.filter(getIO(_) > 0).map(d => 1 << d.ordinal()).foldLeft(0)(_ | _)
-    dcNode.connectionMask = 0x3F
     //TODO: Connection logic having an issue
     dcNode.positiveTerminals.clear()
     dcNode.positiveTerminals.addAll(getOutputDirections())
     notifyChange()
-    dcNode.reconstruct()
+//    dcNode.reconstruct()
 
     markUpdate()
   }

@@ -82,7 +82,8 @@ trait TWire extends PartAbstract with TNodePartConnector with TMaterial[WireMate
    */
   def canConnectTo(obj: AnyRef): Boolean =
   {
-    if (obj != null && obj.getClass.isAssignableFrom(getClass))
+    //If the object is a wire
+    if (obj != null && obj.getClass == getClass)
     {
       val wire = obj.asInstanceOf[TWire]
 
@@ -107,6 +108,7 @@ trait TWire extends PartAbstract with TNodePartConnector with TMaterial[WireMate
       return true
     else if (obj.isInstanceOf[INodeProvider])
     {
+      //Object not a wire
       val node = obj.asInstanceOf[INodeProvider].getNode(classOf[DCNode], from)
 
       if (node != null)
