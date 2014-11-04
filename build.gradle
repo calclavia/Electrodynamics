@@ -172,17 +172,16 @@ dependencies {
 	{
 		//compile group: 'dev.calclavia.universalelectricity', name: 'universal-electricity', version: "${rootProject.config.version.universalelectricity}", classifier: "dev"
 		compile group: 'dev.calclavia.resonantengine', name: 'resonant-engine', version: "${config.version.resonantengine}", classifier: "dev"
-        compile "li.cil.oc:OpenComputers:MC1.7.10-1.4.0.+:dev"
 	}
 	else
 	{
 		//compile group: 'com.calclavia.universalelectricity', name: 'universal-electricity', version: "${rootProject.config.version.universalelectricity}", classifier: "dev"
 		compile group: 'com.calclavia.resonantengine', name: 'resonant-engine', version: "${config.version.resonantengine}", classifier: "dev"
-        compile "li.cil.oc:OpenComputers:MC1.7.10-1.4.0.+:dev"
 	}
 	
     testCompile 'junit:junit:4.11'
     testCompile 'jmock:jmock:1.1.0'
+    compile "li.cil.oc:OpenComputers:MC1.7.10-1.4.0.+:dev"
     compile "codechicken:CodeChickenLib:${config.version.minecraft}-${config.version.cclib}:dev"
     compile "codechicken:ForgeMultipart:${config.version.minecraft}-${config.version.fmp}:dev"
     compile "codechicken:CodeChickenCore:${config.version.minecraft}-${config.version.cccore}:dev"
