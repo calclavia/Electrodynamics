@@ -16,6 +16,7 @@ import net.minecraft.util.{IIcon, MovingObjectPosition}
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
 import resonant.api.grid.INodeProvider
+import resonant.lib.grid.UpdateTicker
 import resonant.lib.grid.node.DCNode
 import resonantinduction.core.prefab.node.TMultipartNode
 import resonantinduction.core.prefab.part.ChickenBonesWrapper._
@@ -341,6 +342,8 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
   {
     override def reconstruct()
     {
+      UpdateTicker.addUpdater(this)
+
       if (!world.isRemote)
       {
         directionMap.clear()
@@ -457,10 +460,13 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
       val tileEntity = pos.getTileEntity(world)
       val dcNode = getComponent(tileEntity, fromDir)
 
-      if (canConnect(dcNode, fromDir))
+      if (canConnect(dcNode, toDir))
       {
-        connect(dcNode, toDir)
-        return true
+        if(dcNode.canConnect(this, ForgeDirection.UNKNOWN))
+        {
+          connect(dcNode, toDir)
+          return true
+        }
       }
 
       disconnect(absDir)
@@ -714,6 +720,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
           {
             return dcNode.asInstanceOf[FlatWireNode].connectStraight(PartFlatWire.this, (r + 2) % 4)
           }
+
           return true
         }
       }
@@ -723,7 +730,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
         val dcNode = getComponent(tileEntity, fromDir)
 
         if (dcNode != null)
-          return canConnect(dcNode, fromDir)
+          return canConnect(dcNode, toDir) && dcNode.canConnect(this, fromDir)
       }
 
       return false
@@ -844,7 +851,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
       return null
     }
 
-    override def canConnect[B <: DCNode](obj: B, from: ForgeDirection): Boolean =
+    override def canConnect[B <: DCNode](node: B, from: ForgeDirection): Boolean =
     {
       if (node.isInstanceOf[FlatWireNode])
       {

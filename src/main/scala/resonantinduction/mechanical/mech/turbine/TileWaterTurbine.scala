@@ -35,7 +35,6 @@ class TileWaterTurbine extends TileTurbine
   mechanicalNode.torque = defaultTorque
   mechanicalNode = new TurbineNode((this))
   {
-
     override def canConnect[B](other: B, from: ForgeDirection): Boolean =
     {
       if (other.isInstanceOf[MechanicalNode] && !(other.isInstanceOf[TileTurbine]))
@@ -50,8 +49,6 @@ class TileWaterTurbine extends TileTurbine
       return false
     }
   }
-
-  //End Constructor
 
   override def update
   {

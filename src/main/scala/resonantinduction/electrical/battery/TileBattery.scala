@@ -116,7 +116,7 @@ class TileBattery extends TileAdvanced(Material.iron) with TElectric with IPacke
     dcNode.positiveTerminals.clear()
     dcNode.positiveTerminals.addAll(getOutputDirections())
     notifyChange()
-//    dcNode.reconstruct()
+    dcNode.reconstruct()
 
     markUpdate()
   }
