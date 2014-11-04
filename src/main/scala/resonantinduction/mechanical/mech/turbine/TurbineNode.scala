@@ -17,9 +17,9 @@ class TurbineNode(tileTurbineBase: TileTurbine) extends MechanicalNode(tileTurbi
     return getParent.asInstanceOf[TileTurbine]
   }
 
-  override def canConnect(source: AnyRef, from: ForgeDirection): Boolean =
+  override def canConnect[B](other: B, from: ForgeDirection): Boolean =
   {
-    return turbine.getMultiBlock.isPrimary && source.isInstanceOf[MechanicalNode] && !(source.isInstanceOf[TurbineNode]) && from == turbine.getDirection
+    return turbine.getMultiBlock.isPrimary && other.isInstanceOf[MechanicalNode] && !(other.isInstanceOf[TurbineNode]) && from == turbine.getDirection
   }
 
   override def inverseRotation(dir: ForgeDirection): Boolean =

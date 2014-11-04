@@ -441,7 +441,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
               return true
             }
           }
-          else if (canConnect(part, toDir))
+          else if (canConnect(dcNode, toDir))
           {
             connect(dcNode, toDir)
             return true
@@ -844,7 +844,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
       return null
     }
 
-    override def canConnect(node: AnyRef, from: ForgeDirection): Boolean =
+    override def canConnect[B <: DCNode](obj: B, from: ForgeDirection): Boolean =
     {
       if (node.isInstanceOf[FlatWireNode])
       {

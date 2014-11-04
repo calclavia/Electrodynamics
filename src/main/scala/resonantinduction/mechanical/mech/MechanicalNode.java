@@ -315,15 +315,15 @@ public class MechanicalNode extends NodeConnector<MechanicalNode> implements TMu
 	}
 
 	@Override
-	public boolean canConnect(Object object, ForgeDirection direction)
+	public <B extends MechanicalNode> boolean canConnect(B other, ForgeDirection from)
 	{
-		if (canConnect(direction))
+		if (canConnect(from))
 		{
-			if (object instanceof INodeProvider)
+			if (other instanceof INodeProvider)
 			{
-				return ((INodeProvider) object).getNode(MechanicalNode.class, direction.getOpposite()) instanceof MechanicalNode;
+				return ((INodeProvider) other).getNode(MechanicalNode.class, from.getOpposite()) instanceof MechanicalNode;
 			}
-			return object instanceof MechanicalNode;
+			return other instanceof MechanicalNode;
 		}
 		return false;
 	}

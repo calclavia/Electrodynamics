@@ -16,7 +16,7 @@ class GrinderNode(parent: TileGrindingWheel) extends MechanicalNode(parent: Tile
     return getParent.asInstanceOf[TileGrindingWheel]
   }
 
-  override def canConnect(source: AnyRef, from: ForgeDirection): Boolean =
+  override def canConnect[B](other: B, from: ForgeDirection): Boolean =
   {
     if (grider.getDirection == ForgeDirection.UP || grider.getDirection == ForgeDirection.DOWN)
     {
@@ -24,6 +24,7 @@ class GrinderNode(parent: TileGrindingWheel) extends MechanicalNode(parent: Tile
     }
     return grider.getDirection != from && grider.getDirection.getOpposite != from
   }
+
 
   override def inverseRotation(dir: ForgeDirection): Boolean =
   {

@@ -1,11 +1,8 @@
 package resonantinduction.electrical.transformer
 
-import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.lib.grid.Compatibility
 import resonant.api.grid.INodeProvider
 import resonant.lib.grid.node.DCNode
-import resonant.lib.transform.vector.VectorWorld
 
 /**
  * Created by robert on 8/11/2014.
@@ -13,7 +10,7 @@ import resonant.lib.transform.vector.VectorWorld
 class ElectricTransformerNode(parent: INodeProvider) extends DCNode(parent: INodeProvider)
 {
   var connectionDirection: ForgeDirection = ForgeDirection.NORTH
-  var input: Boolean = true;
+  var input = true
   var otherNode: ElectricTransformerNode = null
   var step: Int = 2
 
@@ -33,12 +30,12 @@ class ElectricTransformerNode(parent: INodeProvider) extends DCNode(parent: INod
     return 120
   }
 
-  override def canConnect(source: AnyRef, from: ForgeDirection): Boolean =
+  override def canConnect[B <: DCNode](obj: B, from: ForgeDirection): Boolean =
   {
-    return source.isInstanceOf[INodeProvider] && from == connectionDirection
+    return obj.isInstanceOf[INodeProvider] && from == connectionDirection
   }
-  /*
 
+  /*
   override def addEnergy(dir: ForgeDirection, wattage: Double, doAdd: Boolean): Double =
   {
     if (input)

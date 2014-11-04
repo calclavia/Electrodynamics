@@ -2,10 +2,10 @@ package resonantinduction.mechanical.fluid.pipe
 
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.IFluidHandler
+import resonant.api.grid.INodeProvider
 import resonant.lib.wrapper.BitmaskWrapper._
 import resonantinduction.core.prefab.node.{NodePressure, TMultipartNode}
 import resonantinduction.core.prefab.part.connector.TColorable
-import resonant.api.grid.INodeProvider
 
 /**
  * Pressure node for the pipe
@@ -35,13 +35,13 @@ class PipePressureNode(parent: PartPipe) extends NodePressure(parent) with TMult
           {
             val check = tile.asInstanceOf[INodeProvider].getNode(classOf[NodePressure], dir.getOpposite)
 
-            if (check.isInstanceOf[NodePressure] && canConnect(check,dir) && check.asInstanceOf[NodePressure].canConnect(this, dir.getOpposite))
+            if (check.isInstanceOf[NodePressure] && canConnect(check, dir) && check.asInstanceOf[NodePressure].canConnect(this, dir.getOpposite))
             {
               pipe.connectionMask = pipe.connectionMask.openMask(dir)
               connect(check, dir)
             }
           }
-          else if (canConnect(tile,dir))
+          else if (tile.isInstanceOf[IFluidHandler] && canConnect(tile.asInstanceOf[IFluidHandler], dir))
           {
             pipe.connectionMask = pipe.connectionMask.openMask(dir)
             connect(tile.asInstanceOf[IFluidHandler], dir)
@@ -56,7 +56,7 @@ class PipePressureNode(parent: PartPipe) extends NodePressure(parent) with TMult
     }
   }
 
-  override def canConnect(source: AnyRef, from: ForgeDirection): Boolean =
+  override def canConnect[B <: IFluidHandler](source: B, from: ForgeDirection): Boolean =
   {
     if (!pipe.isBlockedOnSide(from))
     {

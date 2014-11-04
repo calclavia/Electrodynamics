@@ -61,13 +61,13 @@ class GearShaftNode(parent: INodeProvider) extends MechanicalNode(parent)
     }
   }
 
-  override def canConnect(source: AnyRef, from: ForgeDirection): Boolean =
+  override def canConnect[B](other: B, from: ForgeDirection): Boolean =
   {
-    if (source.isInstanceOf[MechanicalNode])
+    if (other.isInstanceOf[MechanicalNode])
     {
-      if ((source.asInstanceOf[MechanicalNode]).getParent.isInstanceOf[PartGear])
+      if ((other.asInstanceOf[MechanicalNode]).getParent.isInstanceOf[PartGear])
       {
-        val gear: PartGear = (source.asInstanceOf[MechanicalNode]).getParent.asInstanceOf[PartGear]
+        val gear: PartGear = (other.asInstanceOf[MechanicalNode]).getParent.asInstanceOf[PartGear]
         if (!(Math.abs(gear.placementSide.offsetX) == Math.abs(shaft.placementSide.offsetX) && Math.abs(gear.placementSide.offsetY) == Math.abs(shaft.placementSide.offsetY) && Math.abs(gear.placementSide.offsetZ) == Math.abs(shaft.placementSide.offsetZ)))
         {
           return false

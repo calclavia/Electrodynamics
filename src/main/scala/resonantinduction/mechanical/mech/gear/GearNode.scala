@@ -4,6 +4,7 @@ import codechicken.lib.vec.Rotation
 import codechicken.multipart.{TMultiPart, TileMultipart}
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.util.ForgeDirection
+import resonant.lib.grid.node.DCNode
 import resonantinduction.core.interfaces.IMechanicalNode
 import resonantinduction.mechanical.mech.MechanicalNode
 import resonantinduction.mechanical.mech.gearshaft.PartGearShaft
@@ -80,7 +81,7 @@ class GearNode(parent: PartGear) extends MechanicalNode(parent: PartGear)
             }
             if (tile.isInstanceOf[INodeProvider])
             {
-                val instance: MechanicalNode = (tile.asInstanceOf[INodeProvider]).getNode(classOf[MechanicalNode], if (checkDir eq gear.placementSide.getOpposite) ForgeDirection.UNKNOWN else checkDir).asInstanceOf[MechanicalNode]
+                val instance: MechanicalNode = (tile.asInstanceOf[INodeProvider]).getNode(classOf[MechanicalNode], if (checkDir == gear.placementSide.getOpposite) ForgeDirection.UNKNOWN else checkDir).asInstanceOf[MechanicalNode]
                 if (!directionMap.containsValue(checkDir) && instance != this && checkDir != gear.placementSide && instance != null && instance.canConnect(this,checkDir.getOpposite))
                 {
                     connect(instance, checkDir)
@@ -111,19 +112,19 @@ class GearNode(parent: PartGear) extends MechanicalNode(parent: PartGear)
      * Can this gear be connected BY the source?
      *
      * @param from - Direction source is coming from.
-     * @param with - The source of the connection.
+     * @param other - The source of the connection.
      * @return True is so.
      */
-    override def canConnect(`with`: AnyRef,from: ForgeDirection): Boolean =
+    override def canConnect[B](other: B, from: ForgeDirection): Boolean =
     {
         if (!gear.getMultiBlock.isPrimary)
         {
             return false
         }
-        if (`with`.isInstanceOf[MechanicalNode])
+        if (other.isInstanceOf[MechanicalNode])
         {
-            val parent: INodeProvider = (`with`.asInstanceOf[MechanicalNode]).getParent
-            if (from eq gear.placementSide.getOpposite)
+            val parent: INodeProvider = (other.asInstanceOf[MechanicalNode]).getParent
+            if (from == gear.placementSide.getOpposite)
             {
                 if (parent.isInstanceOf[PartGear] || parent.isInstanceOf[PartGearShaft])
                 {
@@ -168,21 +169,21 @@ class GearNode(parent: PartGear) extends MechanicalNode(parent: PartGear)
                 if (sourceTile.isInstanceOf[INodeProvider])
                 {
                     val sourceInstance: MechanicalNode = (sourceTile.asInstanceOf[INodeProvider]).getNode(classOf[MechanicalNode], from).asInstanceOf[MechanicalNode]
-                    return sourceInstance eq `with`
+                    return sourceInstance == other
                 }
             }
-            else if (from eq gear.placementSide)
+            else if (from == gear.placementSide)
             {
                 val sourceTile: TileEntity = position.add(from).getTileEntity(world)
                 if (sourceTile.isInstanceOf[INodeProvider])
                 {
                     val sourceInstance: MechanicalNode = (sourceTile.asInstanceOf[INodeProvider]).getNode(classOf[MechanicalNode], from.getOpposite).asInstanceOf[MechanicalNode]
-                    return sourceInstance eq `with`
+                    return sourceInstance == other
                 }
             }
             else
             {
-                val destinationTile: TileEntity = (`with`.asInstanceOf[MechanicalNode]).position.add(from.getOpposite).getTileEntity(world)
+                val destinationTile: TileEntity = (other.asInstanceOf[MechanicalNode]).position.add(from.getOpposite).getTileEntity(world)
                 if (destinationTile.isInstanceOf[INodeProvider] && destinationTile.isInstanceOf[TileMultipart])
                 {
                     val destinationPart: TMultiPart = (destinationTile.asInstanceOf[TileMultipart]).partMap(gear.placementSide.ordinal)
@@ -207,7 +208,7 @@ class GearNode(parent: PartGear) extends MechanicalNode(parent: PartGear)
         return false
     }
 
-    override def getRadius(dir: ForgeDirection, `with`: IMechanicalNode): Double =
+  override def getRadius(dir: ForgeDirection, `with`: IMechanicalNode): Double =
     {
         val deltaPos: Vector3 = new VectorWorld(`with`.asInstanceOf[IVectorWorld]).subtract(position)
         val caseX: Boolean = gear.placementSide.offsetX != 0 && deltaPos.y == 0 && deltaPos.z == 0

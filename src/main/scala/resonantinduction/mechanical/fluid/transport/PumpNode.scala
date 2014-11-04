@@ -1,11 +1,13 @@
 package resonantinduction.mechanical.fluid.transport
 
 import net.minecraftforge.common.util.ForgeDirection
+import net.minecraftforge.fluids.IFluidHandler
 import resonantinduction.core.prefab.node.NodePressure
 import resonant.api.grid.INodeProvider
 
 /**
- * Created by robert on 9/27/2014.
+ * A node for the pump
+ * @author Calclavia
  */
 class PumpNode(parent: INodeProvider) extends NodePressure(parent)
 {
@@ -27,7 +29,7 @@ class PumpNode(parent: INodeProvider) extends NodePressure(parent)
     return 0
   }
 
-  override def canConnect(source: AnyRef, from: ForgeDirection): Boolean =
+  override def canConnect[B <: IFluidHandler](source: B, from: ForgeDirection): Boolean =
   {
     return super.canConnect(source, from) && (from == pump.getDirection || from == pump.getDirection.getOpposite)
   }

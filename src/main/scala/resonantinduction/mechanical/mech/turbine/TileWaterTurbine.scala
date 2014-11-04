@@ -35,15 +35,16 @@ class TileWaterTurbine extends TileTurbine
   mechanicalNode.torque = defaultTorque
   mechanicalNode = new TurbineNode((this))
   {
-    override def canConnect(source: AnyRef, from: ForgeDirection): Boolean =
+
+    override def canConnect[B](other: B, from: ForgeDirection): Boolean =
     {
-      if (source.isInstanceOf[MechanicalNode] && !(source.isInstanceOf[TileTurbine]))
+      if (other.isInstanceOf[MechanicalNode] && !(other.isInstanceOf[TileTurbine]))
       {
         val sourceTile: TileEntity = position.add(from).getTileEntity(getWorld)
         if (sourceTile.isInstanceOf[INodeProvider])
         {
           val sourceInstance: MechanicalNode = sourceTile.asInstanceOf[INodeProvider].getNode(classOf[MechanicalNode], from.getOpposite).asInstanceOf[MechanicalNode]
-          return sourceInstance == source && (from == getDirection.getOpposite || from == getDirection)
+          return sourceInstance == other && (from == getDirection.getOpposite || from == getDirection)
         }
       }
       return false
