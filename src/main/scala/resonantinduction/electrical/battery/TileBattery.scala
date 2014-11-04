@@ -63,7 +63,6 @@ class TileBattery extends TileAdvanced(Material.iron) with TElectric with IPacke
       if (doCharge)
       {
         dcNode.buffer(100)
-        doCharge = false
       }
 
       if (markDistributionUpdate && ticks % 5 == 0)

@@ -82,7 +82,6 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
   {
     this.side = (side ^ 1).toByte
     setMaterial(meta)
-    node.resistance = material.resistance
   }
 
   override def update()
@@ -90,7 +89,13 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
     super.update()
 
     if (node.current > 0)
-      println("CURRENT!" + node.current)
+      println("Current is flowing: " + node)
+  }
+
+  override def setMaterial(i: Int)
+  {
+    super.setMaterial(i)
+    node.resistance = material.resistance
   }
 
   override def activate(player: EntityPlayer, hit: MovingObjectPosition, item: ItemStack): Boolean =
@@ -98,7 +103,6 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
     if (!world.isRemote)
     {
       println(node)
-      println(node.connections.size())
     }
 
     return true
