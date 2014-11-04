@@ -144,7 +144,7 @@ class ItemBlockTank(block: Block) extends ItemBlock(block: Block) with IFluidCon
 
   def getCapacity(container: ItemStack): Int =
   {
-    return TileTank.VOLUME
+    return TileTank.volume
   }
 
   def drain(container: ItemStack, maxDrain: Int, doDrain: Boolean): FluidStack =

@@ -2,6 +2,7 @@ package resonantinduction.core.prefab.node
 
 import cpw.mods.fml.common.network.ByteBufUtils
 import io.netty.buffer.ByteBuf
+import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.nbt.NBTTagCompound
@@ -30,6 +31,33 @@ class TileTankNode(material: Material) extends TileAdvanced(material) with INode
   def getFluidCapacity: Int = getTank.getCapacity
 
   def getTank: IFluidTank = tankNode
+
+  override def start()
+  {
+    super.start()
+    tankNode.reconstruct()
+  }
+
+  override def invalidate()
+  {
+    tankNode.deconstruct()
+    super.invalidate()
+  }
+
+  override def onWorldJoin()
+  {
+    tankNode.reconstruct()
+  }
+
+  override def onNeighborChanged(block: Block)
+  {
+    tankNode.reconstruct()
+  }
+
+  override def onWorldSeparate()
+  {
+    tankNode.deconstruct()
+  }
 
   override def readFromNBT(nbt: NBTTagCompound)
   {
@@ -67,7 +95,7 @@ class TileTankNode(material: Material) extends TileAdvanced(material) with INode
     tankNode.save(tag)
     packet <<< tag
     sendPacket(packet)
-    return packet;
+    return packet
   }
 
   override def read(buf: ByteBuf, id: Int, player: EntityPlayer, t: PacketType): Boolean =
@@ -101,18 +129,6 @@ class TileTankNode(material: Material) extends TileAdvanced(material) with INode
   override def fill(from: ForgeDirection, resource: FluidStack, doFill: Boolean): Int = tankNode.fill(from, resource, doFill)
 
   override def getTankInfo(from: ForgeDirection): Array[FluidTankInfo] = tankNode.getTankInfo(from)
-
-  override def start()
-  {
-    super.start()
-    tankNode.reconstruct()
-  }
-
-  override def invalidate()
-  {
-    tankNode.deconstruct()
-    super.invalidate()
-  }
 
   def setCapacity(capacity: Int)
   {
