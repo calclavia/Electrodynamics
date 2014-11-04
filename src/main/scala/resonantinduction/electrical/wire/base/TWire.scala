@@ -75,46 +75,4 @@ trait TWire extends PartAbstract with TNodePartConnector with TMaterial[WireMate
     super[TInsulatable].save(nbt)
     super[TColorable].save(nbt)
   }
-
-  /**
-   * TODO: This is very messy. Need to reorganize canConnectTo
-   * Can this conductor connect with another potential wire object?
-   */
-  def canConnectTo(obj: AnyRef): Boolean =
-  {
-    //If the object is a wire
-    if (obj != null && obj.getClass == getClass)
-    {
-      val wire = obj.asInstanceOf[TWire]
-
-      if (material == wire.material)
-      {
-        if (insulated && wire.insulated)
-          return this.getColor == wire.getColor || (getColor == TColorable.defaultColor || wire.getColor == TColorable.defaultColor)
-
-        return true
-      }
-    }
-
-    return false
-  }
-
-  /**
-   * Can this conductor connect with another potential wire object AND a DCNode?
-   */
-  def canConnectTo(obj: AnyRef, from: ForgeDirection): Boolean =
-  {
-    if (canConnectTo(obj))
-      return true
-    else if (obj.isInstanceOf[INodeProvider])
-    {
-      //Object not a wire
-      val node = obj.asInstanceOf[INodeProvider].getNode(classOf[DCNode], from)
-
-      if (node != null)
-        return node.asInstanceOf[DCNode].canConnect(from)
-    }
-
-    return false
-  }
 }
