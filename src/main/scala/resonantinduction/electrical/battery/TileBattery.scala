@@ -9,7 +9,7 @@ import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.util.ResourceLocation
-import net.minecraftforge.client.model.{AdvancedModelLoader, IModelCustom}
+import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL11._
@@ -203,7 +203,7 @@ class TileBattery extends TileAdvanced(Material.iron) with TElectric with IPacke
           {
             if (sideCheck.offsetY == 0)
             {
-              if (center.add(sideCheck).isInstanceOf[TileBattery])
+              if (center.add(sideCheck).getTileEntity.isInstanceOf[TileBattery])
               {
                 connectionParts.removeAll(Arrays.asList(connectionPartToEnable(sideCheck.ordinal)))
               }
