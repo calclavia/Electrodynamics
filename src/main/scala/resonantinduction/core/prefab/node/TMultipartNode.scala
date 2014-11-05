@@ -3,14 +3,13 @@ package resonantinduction.core.prefab.node
 import codechicken.multipart.TMultiPart
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
-import resonant.api.grid.INodeProvider
 import resonant.lib.grid.node.NodeConnector
 
 /**
  * A trait that allows nodes to works with Forge Multipart. This trait MUST be mixed in.
  * @author Calclavia
  */
-trait TMultipartNode[A] extends NodeConnector[A]
+trait TMultipartNode[A <: AnyRef] extends NodeConnector[A]
 {
   override def world: World =
   {
