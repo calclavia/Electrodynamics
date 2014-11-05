@@ -181,7 +181,7 @@ dependencies {
 	
     testCompile 'junit:junit:4.11'
     testCompile 'jmock:jmock:1.1.0'
-    compile "li.cil.oc:OpenComputers:MC1.7.10-1.4.0.+:dev"
+    compile "li.cil.oc:OpenComputers:MC1.7.10-1.4.0.+:api"
     compile "codechicken:CodeChickenLib:${config.version.minecraft}-${config.version.cclib}:dev"
     compile "codechicken:ForgeMultipart:${config.version.minecraft}-${config.version.fmp}:dev"
     compile "codechicken:CodeChickenCore:${config.version.minecraft}-${config.version.cccore}:dev"
