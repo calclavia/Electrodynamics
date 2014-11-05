@@ -4,10 +4,10 @@ import codechicken.lib.data.{MCDataInput, MCDataOutput}
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
+import resonant.lib.grid.electric.DCNode
 import resonantinduction.core.prefab.part.connector._
 import resonantinduction.electrical.ElectricalContent
 import resonant.api.grid.INodeProvider
-import resonant.lib.grid.node.DCNode
 
 /**
  * Abstract class extended by both flat and framed wires to handle material, insulation, color and multipart node logic.

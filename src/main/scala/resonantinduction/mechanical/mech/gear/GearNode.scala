@@ -4,7 +4,7 @@ import codechicken.lib.vec.Rotation
 import codechicken.multipart.{TMultiPart, TileMultipart}
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.lib.grid.node.DCNode
+import resonant.lib.grid.electric.DCNode
 import resonantinduction.core.interfaces.IMechanicalNode
 import resonantinduction.mechanical.mech.MechanicalNode
 import resonantinduction.mechanical.mech.gearshaft.PartGearShaft

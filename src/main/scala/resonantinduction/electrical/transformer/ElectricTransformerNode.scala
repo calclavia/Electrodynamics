@@ -2,7 +2,7 @@ package resonantinduction.electrical.transformer
 
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.grid.INodeProvider
-import resonant.lib.grid.node.DCNode
+import resonant.lib.grid.electric.DCNode
 
 /**
  * Created by robert on 8/11/2014.

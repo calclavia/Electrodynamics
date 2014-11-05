@@ -17,7 +17,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
 import resonant.api.grid.INodeProvider
 import resonant.lib.grid.UpdateTicker
-import resonant.lib.grid.node.DCNode
+import resonant.lib.grid.electric.DCNode
 import resonantinduction.core.prefab.node.TMultipartNode
 import resonantinduction.core.prefab.part.ChickenBonesWrapper._
 import resonantinduction.core.prefab.part.connector.{PartAbstract, TColorable}

@@ -7,7 +7,7 @@ import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.client.renderer.RenderBlocks
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.lib.grid.node.DCNode
+import resonant.lib.grid.electric.DCNode
 import resonantinduction.core.prefab.node.TMultipartNode
 import resonantinduction.core.prefab.part.connector.PartFramedNode
 import resonantinduction.electrical.wire.base.TWire
