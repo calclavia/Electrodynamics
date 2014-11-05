@@ -15,6 +15,7 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
 import resonant.content.wrapper.ItemRenderHandler
 import resonant.lib.render.fx.FXElectricBolt2
+import resonant.lib.transform.vector.Vector3
 import resonantinduction.archaic.firebox.{RenderHotPlate, TileHotPlate}
 import resonantinduction.archaic.process.{RenderCastingMold, RenderMillstone, TileCastingMold, TileMillstone}
 import resonantinduction.atomic.gate.RenderQuantumGlyph
@@ -27,7 +28,6 @@ import resonantinduction.atomic.machine.quantum.{GuiQuantumAssembler, RenderQuan
 import resonantinduction.atomic.machine.reactor.{GuiReactorCell, RenderReactorCell, TileReactorCell}
 import resonantinduction.atomic.machine.thermometer.{RenderThermometer, TileThermometer}
 import resonantinduction.electrical.ElectricalContent
-import resonantinduction.electrical.battery.{RenderBattery, TileBattery}
 import resonantinduction.electrical.generator.{RenderMotor, TileMotor}
 import resonantinduction.electrical.laser.fx.{EntityBlockParticleFX, EntityLaserFX, EntityScorchFX}
 import resonantinduction.electrical.multimeter.{GuiMultimeter, PartMultimeter, RenderMultimeter}
@@ -41,7 +41,6 @@ import resonantinduction.mechanical.mech.gearshaft.RenderGearShaft
 import resonantinduction.mechanical.mech.process.crusher.{RenderMechanicalPiston, TileMechanicalPiston}
 import resonantinduction.mechanical.mech.process.grinder.{RenderGrindingWheel, TileGrindingWheel}
 import resonantinduction.mechanical.mech.turbine._
-import resonant.lib.transform.vector.Vector3
 
 /** @author Calclavia */
 @SideOnly(Side.CLIENT) class ClientProxy extends CommonProxy
@@ -73,7 +72,6 @@ import resonant.lib.transform.vector.Vector3
 
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileMotor], new RenderMotor)
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileTesla], new RenderTesla)
-    ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileBattery], new RenderBattery)
 
     //Atomic content
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileCentrifuge], new RenderCentrifuge)

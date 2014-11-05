@@ -4,17 +4,20 @@ import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.block.material.Material
 import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.util.IIcon
+import resonant.content.prefab.RenderConnectedTexture
 import resonant.content.spatial.block.SpatialBlock
 import resonant.lib.content.prefab.java.TileElectric
 import resonantinduction.core.{Reference, Settings}
 import resonant.lib.transform.region.Cuboid
 
-class TileSolarPanel extends TileElectric(Material.iron)
+class TileSolarPanel extends TileElectric(Material.iron) with RenderConnectedTexture
 {
   ioMap = 728
   textureName = "solarPanel_top"
   bounds = new Cuboid(0, 0, 0, 1, 0.3f, 1)
   isOpaqueCube = false
+
+  override val edgeTexture = Reference.prefix + "tankEdge"
 
   @SideOnly(Side.CLIENT)
   override def registerIcons(iconReg: IIconRegister)
