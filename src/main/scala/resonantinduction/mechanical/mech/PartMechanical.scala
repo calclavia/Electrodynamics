@@ -52,18 +52,19 @@ abstract class PartMechanical extends PartAbstract with JNormalOcclusion with TF
     }
   }
 
-  override def update
+  override def update()
   {
-    this.mechanicalNode.update
     if (!world.isRemote)
     {
-      checkClientUpdate
+      checkClientUpdate()
     }
+
     if (frame != null)
     {
       frame.update
     }
-    super.update
+
+    super.update()
   }
 
   override def activate(player: EntityPlayer, hit: MovingObjectPosition, itemStack: ItemStack): Boolean =

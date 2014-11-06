@@ -131,7 +131,7 @@ public class DebugFrameMechanical extends FrameNodeDebug
             @Override
             public String buildLabel()
             {
-                return super.buildLabel() + DebugFrameMechanical.this.getNode().angularVelocity;
+                return super.buildLabel() + DebugFrameMechanical.this.getNode().angularVelocity();
             }
         };
         topPanel.add(velLabel);
@@ -141,7 +141,7 @@ public class DebugFrameMechanical extends FrameNodeDebug
             @Override
             public String buildLabel()
             {
-                return super.buildLabel() + DebugFrameMechanical.this.getNode().renderAngle;
+                return super.buildLabel() + DebugFrameMechanical.this.getNode().renderAngle();
             }
         };
         topPanel.add(angleLabel);
@@ -151,7 +151,7 @@ public class DebugFrameMechanical extends FrameNodeDebug
             @Override
             public String buildLabel()
             {
-                return super.buildLabel() + DebugFrameMechanical.this.getNode().torque;
+                return super.buildLabel() + DebugFrameMechanical.this.getNode().torque();
             }
         };
         topPanel.add(torqueLabel);
