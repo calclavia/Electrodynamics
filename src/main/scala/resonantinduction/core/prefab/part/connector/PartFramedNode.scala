@@ -17,7 +17,7 @@ import scala.collection.convert.wrapAll._
 import scala.collection.mutable
 
 
-abstract class PartFramedNode extends PartAbstract with TNodePartConnector with TSlottedPart with TNormalOcclusion with TIconHitEffects
+abstract class PartFramedNode extends PartAbstract with TPartNodeProvider with TSlottedPart with TNormalOcclusion with TIconHitEffects
 {
     /** Bitmask connections */
     var connectionMask = 0x00

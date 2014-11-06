@@ -2,19 +2,22 @@ package resonantinduction.core.prefab.node
 
 import net.minecraft.block.material.Material
 import net.minecraftforge.common.util.ForgeDirection
+import resonant.lib.prefab.fluid.NodeFluid
 
-class TilePressureNode(material: Material) extends TileTankNode(material: Material)
+class TilePressureNode(material: Material) extends TileFluidProvider(material: Material)
 {
   //Constructor
-  tankNode == new NodePressure(this)
+  fluidNode == new NodePressure(this)
+
+  override protected var fluidNode: NodeFluid = new NodePressure(this)
 
   def getPressureNode: NodePressure =
   {
-    return tankNode.asInstanceOf[NodePressure]
+    return fluidNode.asInstanceOf[NodePressure]
   }
 
   def getPressure(direction: ForgeDirection): Int =
   {
-    return getPressureNode.getPressure(direction)
+    return getPressureNode.pressure(direction)
   }
 }

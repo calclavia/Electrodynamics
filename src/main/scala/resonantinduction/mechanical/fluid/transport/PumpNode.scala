@@ -13,7 +13,7 @@ class PumpNode(parent: INodeProvider) extends NodePressure(parent)
 {
   def pump: TilePump = getParent.asInstanceOf[TilePump]
 
-  override def getPressure(dir: ForgeDirection): Int =
+  override def pressure(dir: ForgeDirection): Int =
   {
     if (pump.mechanicalNode.getPower > 0)
     {

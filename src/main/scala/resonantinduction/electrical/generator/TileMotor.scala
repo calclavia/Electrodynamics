@@ -6,10 +6,10 @@ import net.minecraft.block.material.Material
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.IRotatable
-import resonant.api.grid.{INode, IUpdate, NodeRegistry}
+import resonant.api.grid.{INode, IUpdate}
 import resonant.content.prefab.java.TileNode
 import resonant.lib.content.prefab.TElectric
-import resonantinduction.core.interfaces.IMechanicalNode
+import resonantinduction.mechanical.mech.MechanicalNode
 
 /**
  * A kinetic energy to electrical energy converter.
@@ -18,19 +18,16 @@ import resonantinduction.core.interfaces.IMechanicalNode
  */
 class TileMotor extends TileNode(Material.iron) with TElectric with IRotatable
 {
-  var mechNode: IMechanicalNode = NodeRegistry.get(this, classOf[IMechanicalNode])
+  var mechNode = new MechanicalNode(this)
+
   /** Generator turns KE -> EE. Inverted one will turn EE -> KE. */
   var isInversed: Boolean = true
-  private var gearRatio: Byte = 0
+  private var gearRatio = 0
 
-  //Constructor
-  this.normalRender(false)
-  this.isOpaqueCube(false)
+  normalRender = false
+  isOpaqueCube = false
 
-  def toggleGearRatio: Byte =
-  {
-    return ((gearRatio + 1) % 3).asInstanceOf[Byte]
-  }
+  def toggleGearRatio = ((gearRatio + 1) % 3)
 
   override def start
   {
@@ -86,7 +83,7 @@ class TileMotor extends TileNode(Material.iron) with TElectric with IRotatable
         var setTorque: Double = maxTorque
         val currentTorque: Double = Math.abs(mechNode.getForce(ForgeDirection.UNKNOWN))
         if (currentTorque != 0)
-        {setTorque = Math.min(setTorque, maxTorque) * (mechNode.getForce(ForgeDirection.UNKNOWN) / currentTorque) }
+        {setTorque = Math.min(setTorque, maxTorque) * (mechNode.getForce(ForgeDirection.UNKNOWN) / currentTorque)}
         val currentVelo: Double = Math.abs(mechNode.getAngularSpeed(ForgeDirection.UNKNOWN))
         if (currentVelo != 0) setAngularVelocity = Math.min(+setAngularVelocity, maxAngularVelocity) * (mechNode.getAngularSpeed(ForgeDirection.UNKNOWN) / currentVelo)
         mechNode.apply(this, setTorque - mechNode.getForce(ForgeDirection.UNKNOWN), setAngularVelocity - mechNode.getAngularSpeed(ForgeDirection.UNKNOWN))
@@ -121,7 +118,7 @@ class TileMotor extends TileNode(Material.iron) with TElectric with IRotatable
   {
     super.writeToNBT(nbt)
     nbt.setBoolean("isInversed", isInversed)
-    nbt.setByte("gear", gearRatio)
+    nbt.setByte("gear", gearRatio.toByte)
   }
 
   override def getNode[N <: INode](nodeType: Class[_ <: N], from: ForgeDirection): N =

@@ -1,49 +1,106 @@
 package resonantinduction.core.prefab.node
 
 import net.minecraftforge.common.util.ForgeDirection
-import net.minecraftforge.fluids.{FluidStack, IFluidHandler}
+import net.minecraftforge.fluids.{FluidContainerRegistry, IFluidHandler}
 import resonant.api.grid.{INodeProvider, IUpdate}
+import resonant.lib.prefab.fluid.NodeFluid
 
 import scala.collection.convert.wrapAll._
 
-class NodePressure(parent: INodeProvider, buckets: Int = 1) extends NodeTank(parent, buckets) with IUpdate
+/**
+ * A node for fluid that moves based on pressure
+ *
+ * @param parent Parent(TileEntity or Multipart) that contains this node
+ * @param volume Amount of fluid in liters
+ *
+ * @author Calclavia
+ */
+class NodePressure(parent: INodeProvider, volume: Int = FluidContainerRegistry.BUCKET_VOLUME) extends NodeFluid(parent, volume) with IUpdate
 {
-  private var pressure: Int = 0
+  var maxFlowRate = 20
+  var maxPressure = 100
+  private var _pressure: Int = 0
 
   def update(deltaTime: Double)
   {
     if (!world.isRemote)
     {
       updatePressure()
+      distribute()
+    }
+  }
 
-      if (getFluid != null)
+  def distribute()
+  {
+    directionMap.foreach
+    {
+      case (handler: IFluidHandler, dir: ForgeDirection) =>
       {
-        for (entry <- directionMap.entrySet)
+        if (handler.isInstanceOf[NodePressure])
         {
-          if (entry.getKey.isInstanceOf[INodeProvider] && (entry.getKey.asInstanceOf[INodeProvider]).getNode(classOf[NodePressure], entry.getValue.getOpposite).isInstanceOf[NodePressure])
+          //It's another pressure node
+          val otherNode = handler.asInstanceOf[NodePressure]
+          val pressureA = pressure(dir)
+          val pressureB = otherNode.pressure(dir.getOpposite)
+
+          if (pressureA >= pressureB)
           {
-            val node: NodePressure = (entry.getKey.asInstanceOf[INodeProvider]).getNode(classOf[NodePressure], entry.getValue.getOpposite).asInstanceOf[NodePressure]
-            if (node.getPressure(entry.getValue.getOpposite) <= getPressure(entry.getValue))
+            val tankA = getPrimaryTank
+
+            if (tankA != null)
             {
+              val fluidA = tankA.getFluid
+
+              if (fluidA != null)
+              {
+                val amountA: Int = fluidA.amount
+                if (amountA > 0)
+                {
+                  val tankB = otherNode.getPrimaryTank
+                  if (tankB != null)
+                  {
+                    val amountB: Int = tankB.getFluidAmount
+                    var quantity: Int = Math.max(if (pressureA > pressureB) (pressureA - pressureB) * maxFlowRate else 0, Math.min((amountA - amountB) / 2, maxFlowRate))
+                    quantity = Math.min(Math.min(quantity, tankB.getCapacity - amountB), amountA)
+                    if (quantity > 0)
+                    {
+                      val drainStack = drain(dir.getOpposite, quantity, false)
+                      if (drainStack != null && drainStack.amount > 0)
+                      {
+                        drain(dir.getOpposite, otherNode.fill(dir, drainStack, true), true)
+                      }
+                    }
+                  }
+                }
+              }
             }
           }
-          else if (entry.getKey.isInstanceOf[INodeProvider] && (entry.getKey.asInstanceOf[INodeProvider]).getNode(classOf[NodeTank], entry.getValue.getOpposite).isInstanceOf[NodeTank])
+        }
+        else
+        {
+          //It's a fluid handler.
+          val pressure = this.pressure(dir)
+          val tankPressure =  0
+          val sourceTank = getPrimaryTank
+          val transferAmount = (Math.max(pressure, tankPressure) - Math.min(pressure, tankPressure)) * maxFlowRate
+
+          if (pressure > tankPressure)
           {
-            val node: NodeTank = (entry.getKey.asInstanceOf[INodeProvider]).getNode(classOf[NodeTank], entry.getValue.getOpposite).asInstanceOf[NodeTank]
-            if (node.canFill(entry.getValue.getOpposite, getFluid.getFluid))
+            if (sourceTank.getFluidAmount > 0 && transferAmount > 0)
             {
-              val stack: FluidStack = drain(Integer.MAX_VALUE, false)
-              val drained: Int = node.fill(stack, true)
-              drain(drained, true)
+              val drainStack = drain(dir.getOpposite, transferAmount, false)
+              drain(dir.getOpposite, handler.fill(dir.getOpposite, drainStack, true), true)
             }
           }
-          else if (entry.getKey.isInstanceOf[IFluidHandler])
+          else if (pressure < tankPressure)
           {
-            if ((entry.getKey.asInstanceOf[IFluidHandler]).canFill(entry.getValue.getOpposite, getFluid.getFluid))
+            if (transferAmount > 0)
             {
-              val stack: FluidStack = drain(Integer.MAX_VALUE, false)
-              val drained: Int = (entry.getKey.asInstanceOf[IFluidHandler]).fill(entry.getValue.getOpposite, stack, true)
-              drain(drained, true)
+              val drainStack = handler.drain(dir.getOpposite, transferAmount, false)
+              if (drainStack != null)
+              {
+                handler.drain(dir.getOpposite, fill(dir.getOpposite, drainStack, true), true)
+              }
             }
           }
         }
@@ -53,50 +110,51 @@ class NodePressure(parent: INodeProvider, buckets: Int = 1) extends NodeTank(par
 
   protected def updatePressure()
   {
-    var totalPressure: Int = 0
-    val connectionSize: Int = connections.size
-    var minPressure: Int = 0
-    var maxPressure: Int = 0
-    for (entry <- directionMap.entrySet)
+    var totalPressure = 0
+    val connectionSize = connections.size
+    var minPressure = 0
+    var maxPressure = 0
+
+    directionMap.foreach
     {
-      if (entry.getKey.isInstanceOf[INodeProvider] && (entry.getKey.asInstanceOf[INodeProvider]).getNode(classOf[NodePressure], entry.getValue.getOpposite).isInstanceOf[NodePressure])
+      case (handler: IFluidHandler, dir: ForgeDirection) =>
       {
-        val node: NodePressure = (entry.getKey.asInstanceOf[INodeProvider]).getNode(classOf[NodePressure], entry.getValue.getOpposite).asInstanceOf[NodePressure]
-        val pressure: Int = node.getPressure(entry.getValue.getOpposite)
-        minPressure = Math.min(pressure, minPressure)
-        maxPressure = Math.max(pressure, maxPressure)
-        totalPressure += pressure
+        if (handler.isInstanceOf[NodePressure])
+        {
+          val node = handler.asInstanceOf[NodePressure]
+          val pressure = node.pressure(dir.getOpposite)
+          minPressure = Math.min(pressure, minPressure)
+          maxPressure = Math.max(pressure, maxPressure)
+          totalPressure += pressure
+        }
       }
     }
+
     if (connectionSize == 0)
     {
-      setPressure(0)
+      pressure = 0
     }
     else
     {
       if (minPressure < 0)
-      {
         minPressure += 1
-      }
       if (maxPressure > 0)
-      {
         maxPressure -= 1
-      }
-      setPressure(Math.max(minPressure, Math.min(maxPressure, totalPressure / connectionSize + Integer.signum(totalPressure))))
+
+      pressure = Math.max(minPressure, Math.min(maxPressure, totalPressure / connectionSize + Integer.signum(totalPressure)))
     }
   }
 
-  def getPressure(direction: ForgeDirection): Int =
+  def pressure: Int = _pressure
+
+  def pressure(direction: ForgeDirection): Int = _pressure
+
+  def pressure_=(pressure: Int)
   {
-    return pressure
+    this._pressure = pressure
   }
 
-  def setPressure(pressure: Int)
-  {
-    this.pressure = pressure
-  }
-
-  def canUpdate =true
+  def canUpdate = true
 
   def continueUpdate = true
 }

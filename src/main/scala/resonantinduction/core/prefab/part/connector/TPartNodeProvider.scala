@@ -9,7 +9,7 @@ import resonant.api.grid.{INode, INodeProvider}
  * A node trait that can be mixed into any multipart nodes. Mixing this trait will cause nodes to reconstruct/deconstruct when needed.
  * @author Calclavia
  */
-trait TNodePartConnector extends PartAbstract with INodeProvider
+trait TPartNodeProvider extends PartAbstract with INodeProvider
 {
   protected lazy val node: INode = null
 

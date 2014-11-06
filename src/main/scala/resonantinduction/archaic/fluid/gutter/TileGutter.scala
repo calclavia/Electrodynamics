@@ -17,6 +17,7 @@ import org.lwjgl.opengl.GL11
 import resonant.api.grid.INode
 import resonant.api.recipe.{MachineRecipes, RecipeResource}
 import resonant.content.factory.resources.RecipeType
+import resonant.lib.prefab.fluid.NodeFluid
 import resonant.lib.render.{FluidRenderUtility, RenderUtility}
 import resonant.lib.utility.FluidUtility
 import resonant.lib.utility.inventory.InventoryUtility
@@ -39,34 +40,36 @@ object TileGutter
  */
 class TileGutter extends TilePressureNode(Material.rock)
 {
-  tankNode = new FluidGravityNode(this)
+  fluidNode = new NodePressureGravity(this)
   setTextureName("material_wood_surface")
   isOpaqueCube = false
   normalRender = false
   bounds = new Cuboid(0, 0, 0, 1, 0.99, 1)
+
+  override protected var fluidNode: NodeFluid = new NodePressureGravity(this)
 
   override def getCollisionBoxes: java.lang.Iterable[Cuboid] =
   {
     val list: List[Cuboid] = new ArrayList[Cuboid]
     val thickness = 0.1f
 
-    if (!renderSides.mask(ForgeDirection.DOWN))
+    if (!clientRenderMask.mask(ForgeDirection.DOWN))
     {
       list.add(new Cuboid(0.0F, 0.0F, 0.0F, 1.0F, thickness, 1.0F))
     }
-    if (!renderSides.mask(ForgeDirection.WEST))
+    if (!clientRenderMask.mask(ForgeDirection.WEST))
     {
       list.add(new Cuboid(0.0F, 0.0F, 0.0F, thickness, 1.0F, 1.0F))
     }
-    if (!renderSides.mask(ForgeDirection.NORTH))
+    if (!clientRenderMask.mask(ForgeDirection.NORTH))
     {
       list.add(new Cuboid(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, thickness))
     }
-    if (!renderSides.mask(ForgeDirection.EAST))
+    if (!clientRenderMask.mask(ForgeDirection.EAST))
     {
       list.add(new Cuboid(1.0F - thickness, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F))
     }
-    if (!renderSides.mask(ForgeDirection.SOUTH))
+    if (!clientRenderMask.mask(ForgeDirection.SOUTH))
     {
       list.add(new Cuboid(0.0F, 0.0F, 1.0F - thickness, 1.0F, 1.0F, 1.0F))
     }
@@ -166,7 +169,7 @@ class TileGutter extends TilePressureNode(Material.rock)
     GL11.glPushMatrix()
     GL11.glTranslated(position.x + 0.5, position.y + 0.5, position.z + 0.5)
 
-    render(0, renderSides)
+    render(0, clientRenderMask)
 
     if (world != null)
     {
@@ -189,7 +192,7 @@ class TileGutter extends TilePressureNode(Material.rock)
     GL11.glPopMatrix()
   }
 
-  def render(meta: Int, sides: Byte)
+  def render(meta: Int, sides: Int)
   {
     RenderUtility.bind(TileGutter.TEXTURE)
 

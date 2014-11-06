@@ -14,12 +14,13 @@ import net.minecraftforge.fluids.{FluidContainerRegistry, FluidStack, FluidTank,
 import org.lwjgl.opengl.GL11
 import resonant.api.IRemovable.ISneakPickup
 import resonant.content.prefab.RenderConnectedTexture
+import resonant.lib.prefab.fluid.NodeFluid
 import resonant.lib.render.{FluidRenderUtility, RenderUtility}
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.FluidUtility
 import resonantinduction.archaic.ArchaicContent
 import resonantinduction.core.Reference
-import resonantinduction.core.prefab.node.TileTankNode
+import resonantinduction.core.prefab.node.{NodePressure, TileFluidProvider}
 
 /**
  * Tile/Block class for basic Dynamic tanks
@@ -28,23 +29,21 @@ import resonantinduction.core.prefab.node.TileTankNode
  */
 object TileTank
 {
-  final val volume: Int = 16
+  val volume = 16
 }
 
-class TileTank extends TileTankNode(Material.iron) with ISneakPickup with RenderConnectedTexture
+class TileTank extends TileFluidProvider(Material.iron) with ISneakPickup with RenderConnectedTexture
 {
   isOpaqueCube = false
   normalRender = false
-  forceStandardRender(true)
+  forceStandardRender (true)
   itemBlock = classOf[ItemBlockTank]
-  setCapacity(16 * FluidContainerRegistry.BUCKET_VOLUME)
+  setCapacity(TileTank.volume * FluidContainerRegistry.BUCKET_VOLUME)
 
+  override protected var fluidNode: NodeFluid = new NodePressure(this)
   override val edgeTexture = Reference.prefix + "tankEdge"
 
-  override def shouldSideBeRendered(access: IBlockAccess, x: Int, y: Int, z: Int, side: Int): Boolean =
-  {
-    return access.getBlock(x, y, z) != getBlockType
-  }
+  override def shouldSideBeRendered(access: IBlockAccess, x: Int, y: Int, z: Int, side: Int): Boolean = access.getBlock(x, y, z) != getBlockType
 
   override def use(player: EntityPlayer, side: Int, vector3: Vector3): Boolean =
   {
@@ -52,6 +51,7 @@ class TileTank extends TileTankNode(Material.iron) with ISneakPickup with Render
     {
       return FluidUtility.playerActivatedFluidItem(world, xi, yi, zi, player, side)
     }
+
     return true
   }
 
@@ -61,6 +61,7 @@ class TileTank extends TileTankNode(Material.iron) with ISneakPickup with Render
     {
       return getFluid.getFluid.getLuminosity
     }
+
     return super.getLightValue(access)
   }
 

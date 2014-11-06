@@ -37,10 +37,10 @@ abstract class PartMechanical extends PartAbstract with JNormalOcclusion with TF
     this.tier = itemDamage
   }
 
-  override def onNeighborChanged
+  override def onNeighborChanged()
   {
-    super.onNeighborChanged
-    mechanicalNode.reconstruct
+    super.onNeighborChanged()
+    mechanicalNode.reconstruct()
   }
 
   override def onPartChanged(part: TMultiPart)
@@ -94,7 +94,7 @@ abstract class PartMechanical extends PartAbstract with JNormalOcclusion with TF
     return super.activate(player, hit, itemStack)
   }
 
-  def checkClientUpdate
+  def checkClientUpdate()
   {
     if (Math.abs(prevAngularVelocity - mechanicalNode.angularVelocity) >= 0.1)
     {
@@ -111,22 +111,23 @@ abstract class PartMechanical extends PartAbstract with JNormalOcclusion with TF
     return null.asInstanceOf[N]
   }
 
-  override def onWorldJoin
+  override def onWorldJoin()
   {
-    mechanicalNode.reconstruct
+    mechanicalNode.reconstruct()
   }
 
-  override def onWorldSeparate
+  override def onWorldSeparate()
   {
-    mechanicalNode.deconstruct
+    mechanicalNode.deconstruct()
+
     if (frame != null)
     {
-      frame.closeDebugFrame
+      frame.closeDebugFrame()
     }
   }
 
   /** Packet Code. */
-  def sendRotationPacket
+  def sendRotationPacket()
   {
     if (world != null && !world.isRemote)
     {

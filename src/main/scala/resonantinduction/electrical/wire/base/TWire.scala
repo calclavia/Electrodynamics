@@ -20,7 +20,7 @@ import resonant.api.grid.INodeProvider
  *
  * @author Calclavia
  */
-trait TWire extends PartAbstract with TNodePartConnector with TMaterial[WireMaterial] with TInsulatable with TColorable
+trait TWire extends PartAbstract with TPartNodeProvider with TMaterial[WireMaterial] with TInsulatable with TColorable
 {
   override protected val insulationItem: Item = ElectricalContent.itemInsulation
   material = WireMaterial.COPPER

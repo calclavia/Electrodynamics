@@ -4,12 +4,15 @@ import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.Fluid
 import net.minecraftforge.fluids.FluidStack
 import resonantinduction.core.prefab.node.NodePressure
-import resonantinduction.core.prefab.node.TileTankNode
+import resonantinduction.core.prefab.node.TileFluidProvider
 
-class FluidGravityNode(parent: TileTankNode) extends NodePressure(parent)
+/**
+ * A node for fluid that follows pressure and gravity.
+ * @author Calclavia
+ */
+class NodePressureGravity(parent: TileFluidProvider) extends NodePressure(parent)
 {
-
-    override def getPressure(dir: ForgeDirection): Int =
+    override def pressure(dir: ForgeDirection): Int =
     {
         if (dir eq ForgeDirection.UP)
         {
