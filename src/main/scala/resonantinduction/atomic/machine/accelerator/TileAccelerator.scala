@@ -14,7 +14,7 @@ import resonant.api.{IElectromagnet, IRotatable}
 import resonant.lib.content.prefab.TEnergyStorage
 import resonant.lib.content.prefab.java.TileElectricInventory
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
-import resonant.lib.network.handle.TPacketIDReceiver
+import resonant.lib.network.handle.{TPacketIDReceiver, TPacketSender}
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.BlockUtility
 import resonantinduction.atomic.AtomicContent
@@ -23,7 +23,7 @@ import resonantinduction.core.{Reference, ResonantInduction, Settings}
 
 import scala.collection.JavaConversions._
 
-class TileAccelerator extends TileElectricInventory(Material.iron) with IElectromagnet with IRotatable with TPacketIDReceiver with TEnergyStorage
+class TileAccelerator extends TileElectricInventory(Material.iron) with IElectromagnet with IRotatable with TPacketIDReceiver with TPacketSender with TEnergyStorage
 {
   final val DESC_PACKET_ID = 2;
   /**
@@ -136,7 +136,7 @@ class TileAccelerator extends TileElectricInventory(Material.iron) with IElectro
       {
         for (player <- getPlayersUsing)
         {
-          sendPacketToPlayer(player, getDescPacket)
+          sendPacket(getDescPacket, player)
         }
       }
       lastSpawnTick += 1
@@ -221,13 +221,14 @@ class TileAccelerator extends TileElectricInventory(Material.iron) with IElectro
       if (id == DESC_PACKET_ID)
       {
         this.velocity = buf.readFloat()
-        this.totalEnergyConsumed = buf.readDouble();
-        this.antimatter = buf.readInt();
+        this.totalEnergyConsumed = buf.readDouble()
+        this.antimatter = buf.readInt()
         this.energy.setEnergy(buf.readDouble())
-        return true;
+        return true
       }
     }
-    return super.read(buf, id, player, packet);
+
+    return true
   }
 
   override def getDescPacket: PacketTile =

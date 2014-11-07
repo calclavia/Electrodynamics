@@ -14,8 +14,8 @@ import resonant.api.IFilterable
 import resonant.api.IRemovable.ISneakPickup
 import resonant.lib.content.prefab.java.TileInventory
 import resonant.lib.network.ByteBufWrapper._
-import resonant.lib.network.discriminator.{PacketTile, PacketType}
-import resonant.lib.network.handle.TPacketReceiver
+import resonant.lib.network.discriminator.PacketType
+import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
 import resonantinduction.archaic.ArchaicContent
 
 /** Basic single stack inventory.
@@ -43,7 +43,7 @@ object TileCrate
   }
 }
 
-class TileCrate extends TileInventory(Material.rock) with TPacketReceiver with IFilterable with ISneakPickup
+class TileCrate extends TileInventory(Material.rock) with TPacketReceiver with TPacketSender with IFilterable with ISneakPickup
 {
 
   override protected lazy val inventory = new InventoryCrate(this)
@@ -57,9 +57,10 @@ class TileCrate extends TileInventory(Material.rock) with TPacketReceiver with I
   private var updateTick: Long = 1
   private var doUpdate: Boolean = false
 
-  override def update
+  override def update()
   {
-    super.update
+    super.update()
+
     if (!worldObj.isRemote)
     {
       this.writeToNBT(new NBTTagCompound)
@@ -71,7 +72,7 @@ class TileCrate extends TileInventory(Material.rock) with TPacketReceiver with I
       if (doUpdate)
       {
         doUpdate = false
-        sendPacket(getDescPacket)
+        sendDescPacket()
       }
     }
   }
@@ -160,34 +161,37 @@ class TileCrate extends TileInventory(Material.rock) with TPacketReceiver with I
   {
     if (this.worldObj.isRemote)
     {
-        if (data.readBoolean)
-        {
-          this.sampleStack = ItemStack.loadItemStackFromNBT(data.readTag())
-          this.sampleStack.stackSize = data.readInt
-        }
-        else
-        {
-          this.sampleStack = null
-        }
+      if (data.readBoolean)
+      {
+        this.sampleStack = ItemStack.loadItemStackFromNBT(data.readTag())
+        this.sampleStack.stackSize = data.readInt
+      }
+      else
+      {
+        this.sampleStack = null
+      }
     }
   }
 
-  override def getDescPacket: PacketTile =
+  /**
+   * Override this method
+   * Be sure to super this method or manually write the ID into the packet when sending
+   */
+  override def write(buf: ByteBuf, id: Int)
   {
-    var packet: PacketTile = new PacketTile(this)
-    this.buildSampleStack
-    val stack: ItemStack = this.getSampleStack
+    this.buildSampleStack()
+
+    val stack = this.getSampleStack
     if (stack != null)
     {
-      packet <<< true
-      packet <<< stack
-      packet <<< stack.stackSize
+      buf <<< true
+      buf <<< stack
+      buf <<< stack.stackSize
     }
     else
     {
-      packet <<< false
+      buf <<< false
     }
-    return packet
   }
 
   /** NBT Data */
@@ -237,7 +241,7 @@ class TileCrate extends TileInventory(Material.rock) with TPacketReceiver with I
     }
   }
 
-  @SuppressWarnings(Array("unchecked")) def getRemovedItems(entity: EntityPlayer): List[ItemStack] =
+  def getRemovedItems(entity: EntityPlayer): List[ItemStack] =
   {
     val list = new util.ArrayList[ItemStack]()
     val sampleStack: ItemStack = getSampleStack
@@ -255,14 +259,14 @@ class TileCrate extends TileInventory(Material.rock) with TPacketReceiver with I
   {
     if (this.sampleStack == null)
     {
-      this.buildSampleStack
+      this.buildSampleStack()
     }
     return this.sampleStack
   }
 
   /** Builds the sample stack using the inventory as a point of reference. Assumes all items match
     * each other, and only takes into account stack sizes */
-  def buildSampleStack
+  def buildSampleStack()
   {
     buildSampleStack(true)
   }

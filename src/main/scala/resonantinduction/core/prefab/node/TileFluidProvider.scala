@@ -1,18 +1,15 @@
 package resonantinduction.core.prefab.node
 
-import cpw.mods.fml.common.network.ByteBufUtils
 import io.netty.buffer.ByteBuf
-import net.minecraft.block.Block
 import net.minecraft.block.material.Material
-import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
-import resonant.api.grid.{INode, INodeProvider}
 import resonant.content.prefab.java.TileAdvanced
 import resonant.lib.grid.node.TSpatialNodeProvider
-import resonant.lib.network.discriminator.{PacketTile, PacketType}
-import resonant.lib.network.handle.TPacketIDReceiver
+import resonant.lib.network.ByteBufWrapper._
+import resonant.lib.network.discriminator.PacketType
+import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
 import resonant.lib.prefab.fluid.NodeFluid
 
 /**
@@ -20,16 +17,17 @@ import resonant.lib.prefab.fluid.NodeFluid
  *
  * @author DarkGuardsman, Calclavia
  */
-abstract class TileFluidProvider(material: Material) extends TileAdvanced(material) with TSpatialNodeProvider with IFluidHandler with TPacketIDReceiver
+abstract class TileFluidProvider(material: Material) extends TileAdvanced(material) with TSpatialNodeProvider with IFluidHandler with TPacketReceiver with TPacketSender
 {
-  val descriptionPacket = 0
-  val renderPacket = 1
-
   protected val fluidNode: NodeFluid
   protected var colorID: Int = 0
   protected var clientRenderMask = 0x00
 
-  nodes.add(fluidNode)
+  override def start()
+  {
+    fluidNode.onConnectionChanged = () => sendPacket(1)
+    super.start()
+  }
 
   def getFluid: FluidStack = getTank.getFluid
 
@@ -49,46 +47,44 @@ abstract class TileFluidProvider(material: Material) extends TileAdvanced(materi
     nbt.setInteger("colorID", colorID)
   }
 
-  def sendRenderUpdate
+  override def write(buf: ByteBuf, id: Int)
   {
-    if (!world.isRemote)
+    super.write(buf, id)
+
+    id match
     {
-      val packet: PacketTile = new PacketTile(this);
-      packet <<< renderPacket
-      packet <<< colorID
-      packet <<< fluidNode.connectedBitmask
-      sendPacket(packet)
+      case 0 =>
+      {
+        buf <<< colorID
+        buf <<< fluidNode.connectedBitmask
+        buf <<< fluidNode.getPrimaryTank
+      }
+      case 1 =>
+      {
+        buf <<< colorID
+        buf <<< fluidNode.connectedBitmask
+      }
     }
   }
 
-  override def getDescPacket(): PacketTile =
+  override def read(buf: ByteBuf, id: Int, packet: PacketType)
   {
-    val packet: PacketTile = new PacketTile(this);
-    packet <<< descriptionPacket
-    packet <<< colorID
-    packet <<< fluidNode.connectedBitmask
-    val tag: NBTTagCompound = new NBTTagCompound()
-    fluidNode.save(tag)
-    packet <<< tag
-    sendPacket(packet)
-    return packet
-  }
+    super.read(buf, id, packet)
 
-  override def read(buf: ByteBuf, id: Int, player: EntityPlayer, t: PacketType): Boolean =
-  {
-    if (id == descriptionPacket)
+    id match
     {
-      colorID = buf.readInt()
-      clientRenderMask = buf.readByte()
-      fluidNode.load(ByteBufUtils.readTag(buf))
+      case 0 =>
+      {
+        colorID = buf.readInt()
+        clientRenderMask = buf.readInt()
+        fluidNode.setPrimaryTank(buf.readTank())
+      }
+      case 1 =>
+      {
+        colorID = buf.readInt()
+        clientRenderMask = buf.readInt()
+      }
     }
-    else if (id == renderPacket)
-    {
-      colorID = buf.readInt()
-      clientRenderMask = buf.readByte()
-    }
-
-    return false
   }
 
   override def drain(from: ForgeDirection, resource: FluidStack, doDrain: Boolean): FluidStack = fluidNode.drain(from, resource, doDrain)
@@ -102,11 +98,6 @@ abstract class TileFluidProvider(material: Material) extends TileAdvanced(materi
   override def fill(from: ForgeDirection, resource: FluidStack, doFill: Boolean): Int = fluidNode.fill(from, resource, doFill)
 
   override def getTankInfo(from: ForgeDirection): Array[FluidTankInfo] = fluidNode.getTankInfo(from)
-
-  def setCapacity(capacity: Int)
-  {
-    fluidNode.setCapacity(capacity)
-  }
 
   def getFluidAmount: Int = fluidNode.getFluidAmount
 }

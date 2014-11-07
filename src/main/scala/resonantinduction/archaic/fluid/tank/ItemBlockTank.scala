@@ -8,11 +8,11 @@ import net.minecraft.item.{ItemBlock, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
-import net.minecraftforge.fluids.{FluidStack, IFluidContainerItem}
+import net.minecraftforge.fluids.{FluidContainerRegistry, FluidStack, IFluidContainerItem}
 import resonant.lib.science.UnitDisplay
+import resonant.lib.science.UnitDisplay.Unit
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.wrapper.WrapList._
-import UnitDisplay.Unit
 
 /**
  * @author Darkguardsman
@@ -142,9 +142,9 @@ class ItemBlockTank(block: Block) extends ItemBlock(block: Block) with IFluidCon
     return filled
   }
 
-  def getCapacity(container: ItemStack): Int =
+  override def getCapacity(container: ItemStack): Int =
   {
-    return TileTank.volume
+    return 16 * FluidContainerRegistry.BUCKET_VOLUME
   }
 
   def drain(container: ItemStack, maxDrain: Int, doDrain: Boolean): FluidStack =

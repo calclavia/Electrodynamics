@@ -3,6 +3,7 @@ package resonantinduction.mechanical.machine.edit
 import java.util.EnumSet
 
 import cpw.mods.fml.relauncher.{Side, SideOnly}
+import io.netty.buffer.ByteBuf
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.client.renderer.texture.IIconRegister
@@ -15,12 +16,12 @@ import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
 import resonant.api.IRotatable
 import resonant.lib.content.prefab.java.TileInventory
-import resonant.lib.network.discriminator.PacketTile
-import resonant.lib.network.handle.TPacketReceiver
+import resonant.lib.network.discriminator.{PacketType, PacketTile}
+import resonant.lib.network.handle.{TPacketSender, TPacketReceiver}
 import resonant.lib.render.RenderItemOverlayUtility
+import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.utility.inventory.{InternalInventoryHandler, InventoryUtility}
-import resonant.lib.transform.vector.Vector3
 
 /**
  * @author tgame14
@@ -28,193 +29,192 @@ import resonant.lib.transform.vector.Vector3
  */
 object TilePlacer
 {
-    @SideOnly(Side.CLIENT) private var iconFront: IIcon = null
-    @SideOnly(Side.CLIENT) private var iconBack: IIcon = null
+  @SideOnly(Side.CLIENT) private var iconFront: IIcon = null
+  @SideOnly(Side.CLIENT) private var iconBack: IIcon = null
 }
 
-class TilePlacer extends TileInventory(Material.rock) with IRotatable with TPacketReceiver
+class TilePlacer extends TileInventory(Material.rock) with IRotatable with TPacketSender
 {
-    private var _doWork: Boolean = false
-    private var autoPullItems: Boolean = false
-    private var placeDelay: Int = 0
-    private var invHandler: InternalInventoryHandler = null
+  private var _doWork: Boolean = false
+  private var autoPullItems: Boolean = false
+  private var placeDelay: Int = 0
+  private var invHandler: InternalInventoryHandler = null
 
-    //Constructor
-    setSizeInventory(1)
-    normalRender = false
-    forceItemToRenderAsBlock = true
-    renderStaticBlock = true
-    this.rotationMask = 63
+  //Constructor
+  setSizeInventory(1)
+  normalRender = false
+  forceItemToRenderAsBlock = true
+  renderStaticBlock = true
+  this.rotationMask = 63
 
-
-    def getInvHandler: InternalInventoryHandler =
+  def getInvHandler: InternalInventoryHandler =
+  {
+    if (invHandler == null)
     {
-        if (invHandler == null)
-        {
-            invHandler = new InternalInventoryHandler(this)
-        }
-        return invHandler
+      invHandler = new InternalInventoryHandler(this)
     }
+    return invHandler
+  }
 
-    override def onAdded
-    {
-        work
-    }
+  override def onAdded
+  {
+    work
+  }
 
-    override def onNeighborChanged(block: Block)
-    {
-        work
-    }
+  override def onNeighborChanged(block: Block)
+  {
+    work
+  }
 
-    override def start
-    {
-        super.start
-    }
+  override def start
+  {
+    super.start
+  }
 
-    override def update
+  override def update
+  {
+    super.update
+    if (autoPullItems && this.ticks % 5 == 0)
     {
-        super.update
-        if (autoPullItems && this.ticks % 5 == 0)
-        {
-            if (getStackInSlot(0) == null)
-            {
-                this.setInventorySlotContents(0, this.getInvHandler.tryGrabFromPosition(this.getDirection.getOpposite, 1))
-            }
-        }
-        if (_doWork)
-        {
-            if (placeDelay < java.lang.Byte.MAX_VALUE)
-            {
-                placeDelay += 1
-            }
-            if (placeDelay >= 5)
-            {
-                doWork
-                _doWork = false
-            }
-        }
+      if (getStackInSlot(0) == null)
+      {
+        this.setInventorySlotContents(0, this.getInvHandler.tryGrabFromPosition(this.getDirection.getOpposite, 1))
+      }
     }
+    if (_doWork)
+    {
+      if (placeDelay < java.lang.Byte.MAX_VALUE)
+      {
+        placeDelay += 1
+      }
+      if (placeDelay >= 5)
+      {
+        doWork
+        _doWork = false
+      }
+    }
+  }
 
-    def work
+  def work
+  {
+    if (isIndirectlyPowered)
     {
-        if (isIndirectlyPowered)
-        {
-            _doWork = true
-            placeDelay = 0
-        }
+      _doWork = true
+      placeDelay = 0
     }
+  }
 
-    def doWork
+  def doWork
+  {
+    val side: Int = 0
+    val placePos: Vector3 = asVector3.add(getDirection)
+    val placeStack: ItemStack = getStackInSlot(0)
+    if (InventoryUtility.placeItemBlock(world, placePos.xi, placePos.yi, placePos.zi, placeStack, side))
     {
-        val side: Int = 0
-        val placePos: Vector3 = asVector3.add(getDirection)
-        val placeStack: ItemStack = getStackInSlot(0)
-        if (InventoryUtility.placeItemBlock(world, placePos.xi, placePos.yi, placePos.zi, placeStack, side))
-        {
-            if (placeStack.stackSize <= 0)
-            {
-                setInventorySlotContents(0, null)
-            }
-            markUpdate
-            _doWork = false
-        }
+      if (placeStack.stackSize <= 0)
+      {
+        setInventorySlotContents(0, null)
+      }
+      markUpdate
+      _doWork = false
     }
+  }
 
-    override def use(player: EntityPlayer, hitSide: Int, hit: Vector3): Boolean =
-    {
-        interactCurrentItem(this, 0, player)
-        return true
-    }
+  override def use(player: EntityPlayer, hitSide: Int, hit: Vector3): Boolean =
+  {
+    interactCurrentItem(this, 0, player)
+    return true
+  }
 
-    override def configure(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
+  override def configure(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
+  {
+    if (player.isSneaking)
     {
-        if (player.isSneaking)
-        {
-            this.autoPullItems = !this.autoPullItems
-            player.addChatComponentMessage(new ChatComponentText("AutoExtract: " + this.autoPullItems))
-            return true
-        }
-        return super.configure(player, side, hit)
+      this.autoPullItems = !this.autoPullItems
+      player.addChatComponentMessage(new ChatComponentText("AutoExtract: " + this.autoPullItems))
+      return true
     }
+    return super.configure(player, side, hit)
+  }
 
-    override def getDescPacket: PacketTile =
-    {
-        val nbt: NBTTagCompound = new NBTTagCompound
-        writeToNBT(nbt)
-        return new PacketTile(this, nbt)
-    }
+  override def getDescPacket: PacketTile =
+  {
+    val nbt: NBTTagCompound = new NBTTagCompound
+    writeToNBT(nbt)
+    return new PacketTile(this, nbt)
+  }
 
-    override def onInventoryChanged
-    {
-        sendPacket(getDescPacket)
-    }
+  override def onInventoryChanged
+  {
+    sendDescPacket()
+  }
 
-    override def readFromNBT(nbt: NBTTagCompound)
-    {
-        super.readFromNBT(nbt)
-        this.autoPullItems = nbt.getBoolean("autoPull")
-    }
+  override def readFromNBT(nbt: NBTTagCompound)
+  {
+    super.readFromNBT(nbt)
+    this.autoPullItems = nbt.getBoolean("autoPull")
+  }
 
-    /**
-     * Writes a tile entity to NBT.
-     */
-    override def writeToNBT(nbt: NBTTagCompound)
-    {
-        super.writeToNBT(nbt)
-        nbt.setBoolean("autoPull", this.autoPullItems)
-    }
+  /**
+   * Writes a tile entity to NBT.
+   */
+  override def writeToNBT(nbt: NBTTagCompound)
+  {
+    super.writeToNBT(nbt)
+    nbt.setBoolean("autoPull", this.autoPullItems)
+  }
 
-    override def canStore(stack: ItemStack, slot: Int, side: ForgeDirection): Boolean =
-    {
-        return side == this.getDirection.getOpposite && slot == 0
-    }
+  override def canStore(stack: ItemStack, slot: Int, side: ForgeDirection): Boolean =
+  {
+    return side == this.getDirection.getOpposite && slot == 0
+  }
 
-    @SideOnly(Side.CLIENT) override def getIcon(access: IBlockAccess, side: Int): IIcon =
+  @SideOnly(Side.CLIENT) override def getIcon(access: IBlockAccess, side: Int): IIcon =
+  {
+    val meta: Int = access.getBlockMetadata(xi, yi, zi)
+    if (side == meta)
     {
-        val meta: Int = access.getBlockMetadata(xi, yi, zi)
-        if (side == meta)
-        {
-            return TilePlacer.iconFront
-        }
-        else if (side == (meta ^ 1))
-        {
-            return TilePlacer.iconBack
-        }
-        return getIcon
+      return TilePlacer.iconFront
     }
+    else if (side == (meta ^ 1))
+    {
+      return TilePlacer.iconBack
+    }
+    return getIcon
+  }
 
-    @SideOnly(Side.CLIENT) override def getIcon(side: Int, meta: Int): IIcon =
+  @SideOnly(Side.CLIENT) override def getIcon(side: Int, meta: Int): IIcon =
+  {
+    if (side == (meta ^ 1))
     {
-        if (side == (meta ^ 1))
-        {
-            return TilePlacer.iconFront
-        }
-        else if (side == meta)
-        {
-            return TilePlacer.iconBack
-        }
-        return getIcon
+      return TilePlacer.iconFront
     }
+    else if (side == meta)
+    {
+      return TilePlacer.iconBack
+    }
+    return getIcon
+  }
 
-    @SideOnly(Side.CLIENT) override def registerIcons(iconRegister: IIconRegister)
-    {
-        super.registerIcons(iconRegister)
-        TilePlacer.iconFront = iconRegister.registerIcon(getTextureName + "_front")
-        TilePlacer.iconBack = iconRegister.registerIcon(getTextureName + "_back")
-    }
+  @SideOnly(Side.CLIENT) override def registerIcons(iconRegister: IIconRegister)
+  {
+    super.registerIcons(iconRegister)
+    TilePlacer.iconFront = iconRegister.registerIcon(getTextureName + "_front")
+    TilePlacer.iconBack = iconRegister.registerIcon(getTextureName + "_back")
+  }
 
-    override def renderDynamic(position: Vector3, frame: Float, pass: Int)
+  override def renderDynamic(position: Vector3, frame: Float, pass: Int)
+  {
+    if (world != null)
     {
-        if (world != null)
-        {
-            val set: EnumSet[ForgeDirection] = EnumSet.allOf(classOf[ForgeDirection])
-            set.remove(getDirection)
-            set.remove(getDirection.getOpposite)
-            set.remove(ForgeDirection.UP)
-            set.remove(ForgeDirection.DOWN)
-            GL11.glPushMatrix
-            RenderItemOverlayUtility.renderItemOnSides(this, getStackInSlot(0), position.x, position.y, position.z, LanguageUtility.getLocal("tooltip.noOutput"), set)
-            GL11.glPopMatrix
-        }
+      val set: EnumSet[ForgeDirection] = EnumSet.allOf(classOf[ForgeDirection])
+      set.remove(getDirection)
+      set.remove(getDirection.getOpposite)
+      set.remove(ForgeDirection.UP)
+      set.remove(ForgeDirection.DOWN)
+      GL11.glPushMatrix
+      RenderItemOverlayUtility.renderItemOnSides(this, getStackInSlot(0), position.x, position.y, position.z, LanguageUtility.getLocal("tooltip.noOutput"), set)
+      GL11.glPopMatrix
     }
+  }
 }

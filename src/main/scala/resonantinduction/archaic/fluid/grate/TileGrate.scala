@@ -3,6 +3,7 @@ package resonantinduction.archaic.fluid.grate
 import java.util.{Collections, Comparator, HashMap, PriorityQueue}
 
 import cpw.mods.fml.relauncher.{Side, SideOnly}
+import io.netty.buffer.ByteBuf
 import net.minecraft.block.material.Material
 import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.entity.player.EntityPlayer
@@ -13,6 +14,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.{Fluid, FluidContainerRegistry, FluidRegistry, FluidStack}
 import resonant.api.IRotatable
 import resonant.lib.config.Config
+import resonant.lib.network.discriminator.PacketType
 import resonant.lib.prefab.fluid.NodeFluid
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.FluidUtility
@@ -97,8 +99,8 @@ class TileGrate extends TileFluidProvider(Material.rock) with IRotatable
       {
         val pressure = fluidNode.pressure(getDirection)
         val blockEffect = Math.abs(pressure * grateEffectMultiplier).toInt
-        setCapacity(Math.max(blockEffect * FluidContainerRegistry.BUCKET_VOLUME * grateDrainSpeedMultiplier,
-                             FluidContainerRegistry.BUCKET_VOLUME).toInt)
+        fluidNode.getPrimaryTank.setCapacity(Math.max(blockEffect * FluidContainerRegistry.BUCKET_VOLUME * grateDrainSpeedMultiplier, FluidContainerRegistry.BUCKET_VOLUME).toInt)
+
         if (pressure > 0)
         {
           if (getFluidAmount >= FluidContainerRegistry.BUCKET_VOLUME)

@@ -10,11 +10,10 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.IBlockAccess
 import net.minecraftforge.common.util.ForgeDirection
-import net.minecraftforge.fluids.{FluidContainerRegistry, FluidStack, FluidTank, IFluidTank}
+import net.minecraftforge.fluids.{FluidStack, FluidTank, IFluidTank}
 import org.lwjgl.opengl.GL11
 import resonant.api.IRemovable.ISneakPickup
 import resonant.content.prefab.RenderConnectedTexture
-import resonant.lib.prefab.fluid.NodeFluid
 import resonant.lib.render.{FluidRenderUtility, RenderUtility}
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.FluidUtility
@@ -27,21 +26,16 @@ import resonantinduction.core.prefab.node.{NodePressure, TileFluidProvider}
  *
  * @author Darkguardsman
  */
-object TileTank
-{
-  val volume = 16
-}
-
 class TileTank extends TileFluidProvider(Material.iron) with ISneakPickup with RenderConnectedTexture
 {
-  isOpaqueCube = false
-  normalRender = false
-  forceStandardRender (true)
-  itemBlock = classOf[ItemBlockTank]
-  setCapacity(TileTank.volume * FluidContainerRegistry.BUCKET_VOLUME)
-
   override protected val fluidNode = new NodePressure(this)
   override val edgeTexture = Reference.prefix + "tankEdge"
+
+  isOpaqueCube = false
+  normalRender = false
+  forceStandardRender(true)
+  itemBlock = classOf[ItemBlockTank]
+  nodes.add(fluidNode)
 
   override def shouldSideBeRendered(access: IBlockAccess, x: Int, y: Int, z: Int, side: Int): Boolean = access.getBlock(x, y, z) != getBlockType
 
@@ -111,7 +105,7 @@ class TileTank extends TileFluidProvider(Material.iron) with ISneakPickup with R
 
     if (itemStack.getTagCompound != null && itemStack.getTagCompound.hasKey("fluid"))
     {
-      renderTank(0, 0, 0, FluidStack.loadFluidStackFromNBT(itemStack.getTagCompound.getCompoundTag("fluid")), TileTank.volume * FluidContainerRegistry.BUCKET_VOLUME)
+      renderTank(0, 0, 0, FluidStack.loadFluidStackFromNBT(itemStack.getTagCompound.getCompoundTag("fluid")), fluidNode.getPrimaryTank.getCapacity)
     }
 
     GL11.glPopMatrix()

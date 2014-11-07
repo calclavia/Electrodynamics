@@ -45,6 +45,8 @@ class TileGutter extends TileFluidProvider(Material.rock)
   normalRender = false
   bounds = new Cuboid(0, 0, 0, 1, 0.99, 1)
 
+  nodes.add(fluidNode)
+
   override def getCollisionBoxes: java.lang.Iterable[Cuboid] =
   {
     val list: List[Cuboid] = new ArrayList[Cuboid]

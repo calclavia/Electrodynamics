@@ -23,7 +23,7 @@ import resonant.lib.content.prefab.TEnergyStorage
 import resonant.lib.content.prefab.java.TileElectric
 import resonant.lib.multiblock.reference.{IMultiBlockStructure, MultiBlockHandler}
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
-import resonant.lib.network.handle.TPacketIDReceiver
+import resonant.lib.network.handle.{TPacketSender, TPacketIDReceiver}
 import resonant.lib.render.EnumColor
 import resonant.lib.transform.vector.{Vector3, VectorWorld}
 import resonant.lib.utility.{LanguageUtility, LinkUtility}
@@ -45,7 +45,7 @@ object TileTesla
   final val DEFAULT_COLOR: Int = 12
 }
 
-class TileTesla extends TileElectric(Material.iron) with IMultiBlockStructure[TileTesla] with ITesla with TPacketIDReceiver with TEnergyStorage
+class TileTesla extends TileElectric(Material.iron) with IMultiBlockStructure[TileTesla] with ITesla with TPacketIDReceiver with TPacketSender with TEnergyStorage
 {
 
   final val TRANSFER_CAP: Double = 10000D
@@ -222,11 +222,6 @@ class TileTesla extends TileElectric(Material.iron) with IMultiBlockStructure[Ti
       }
     }
     return canReceive && tileEntity != getMultiBlock.get && !this.outputBlacklist.contains(tileEntity)
-  }
-
-  def sendPacket(id: Int)
-  {
-    super.sendPacket(new PacketTile(xi, yi, zi, this.getPacketData(id).toArray))
   }
 
   override def getDescPacket: PacketTile =
