@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.IBlockAccess
 import net.minecraftforge.common.util.ForgeDirection
-import net.minecraftforge.fluids.{FluidStack, FluidTank, IFluidTank}
+import net.minecraftforge.fluids.{FluidContainerRegistry, FluidStack, FluidTank, IFluidTank}
 import org.lwjgl.opengl.GL11
 import resonant.api.IRemovable.ISneakPickup
 import resonant.content.prefab.RenderConnectedTexture
@@ -18,8 +18,9 @@ import resonant.lib.render.{FluidRenderUtility, RenderUtility}
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.FluidUtility
 import resonantinduction.archaic.ArchaicContent
+import resonantinduction.archaic.fluid.gutter.NodePressureGravity
 import resonantinduction.core.Reference
-import resonantinduction.core.prefab.node.{NodePressure, TileFluidProvider}
+import resonantinduction.core.prefab.node.TileFluidProvider
 
 /**
  * Tile/Block class for basic Dynamic tanks
@@ -28,12 +29,15 @@ import resonantinduction.core.prefab.node.{NodePressure, TileFluidProvider}
  */
 class TileTank extends TileFluidProvider(Material.iron) with ISneakPickup with RenderConnectedTexture
 {
-  override protected val fluidNode = new NodePressure(this)
 
   edgeTexture = Reference.prefix + "tankEdge"
   isOpaqueCube = false
   normalRender = false
   itemBlock = classOf[ItemBlockTank]
+
+  fluidNode = new NodePressureGravity(this, 16 * FluidContainerRegistry.BUCKET_VOLUME)
+  fluidNode.asInstanceOf[NodePressureGravity].maxFlowRate = FluidContainerRegistry.BUCKET_VOLUME
+  fluidNode.onFluidChanged = () => markUpdate()
 
   override def shouldSideBeRendered(access: IBlockAccess, x: Int, y: Int, z: Int, side: Int): Boolean = new Vector3(x, y, z).getBlock(access) != block
 
@@ -41,6 +45,9 @@ class TileTank extends TileFluidProvider(Material.iron) with ISneakPickup with R
   {
     if (!world.isRemote)
     {
+      //TODO: Somehow, the connections are not updating until manual triggers
+      println(fluidNode.connections.size())
+      fluidNode.reconstruct()
       return FluidUtility.playerActivatedFluidItem(world, xi, yi, zi, player, side)
     }
 
@@ -49,9 +56,9 @@ class TileTank extends TileFluidProvider(Material.iron) with ISneakPickup with R
 
   override def getLightValue(access: IBlockAccess): Int =
   {
-    if (getFluid != null && getFluid.getFluid != null)
+    if (fluidNode.getPrimaryTank.getFluid != null && fluidNode.getPrimaryTank.getFluid.getFluid != null)
     {
-      return getFluid.getFluid.getLuminosity
+      return fluidNode.getPrimaryTank.getFluid.getFluid.getLuminosity
     }
 
     return super.getLightValue(access)
@@ -60,7 +67,7 @@ class TileTank extends TileFluidProvider(Material.iron) with ISneakPickup with R
   @SideOnly(Side.CLIENT)
   override def renderDynamic(position: Vector3, frame: Float, pass: Int)
   {
-    renderTankFluid(position.x, position.y, position.z, getFluid)
+    renderTankFluid(position.x, position.y, position.z, fluidNode.getPrimaryTank.getFluid)
   }
 
   /**
@@ -79,7 +86,7 @@ class TileTank extends TileFluidProvider(Material.iron) with ISneakPickup with R
         if (!fluid.getFluid.isGaseous)
         {
           GL11.glScaled(0.99, 0.99, 0.99)
-          val tank: IFluidTank = getTank
+          val tank: IFluidTank = fluidNode.getPrimaryTank
           val percentageFilled: Double = tank.getFluidAmount.toDouble / tank.getCapacity.toDouble
           val ySouthEast: Double = FluidUtility.getAveragePercentageFilledForSides(classOf[TileTank], percentageFilled, world, asVector3, ForgeDirection.SOUTH, ForgeDirection.EAST)
           val yNorthEast: Double = FluidUtility.getAveragePercentageFilledForSides(classOf[TileTank], percentageFilled, world, asVector3, ForgeDirection.NORTH, ForgeDirection.EAST)
@@ -150,9 +157,9 @@ class TileTank extends TileFluidProvider(Material.iron) with ISneakPickup with R
     val itemStack: ItemStack = new ItemStack(ArchaicContent.blockTank, 1, 0)
     if (itemStack != null)
     {
-      if (getTank != null && getTank.getFluid != null)
+      if (fluidNode != null && fluidNode.getFluid != null)
       {
-        val stack: FluidStack = getTank.getFluid
+        val stack: FluidStack = fluidNode.getFluid
         if (stack != null)
         {
           if (itemStack.getTagCompound == null)

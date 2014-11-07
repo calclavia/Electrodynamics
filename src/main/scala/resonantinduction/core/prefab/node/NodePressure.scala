@@ -3,6 +3,7 @@ package resonantinduction.core.prefab.node
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.{FluidContainerRegistry, IFluidHandler}
 import resonant.api.grid.{INodeProvider, IUpdate}
+import resonant.lib.grid.UpdateTicker
 import resonant.lib.prefab.fluid.NodeFluid
 
 import scala.collection.convert.wrapAll._
@@ -21,28 +22,34 @@ class NodePressure(parent: INodeProvider, volume: Int = FluidContainerRegistry.B
   var maxPressure = 100
   private var _pressure: Int = 0
 
+  UpdateTicker.addUpdater(this)
+
   def update(deltaTime: Double)
   {
     if (!world.isRemote)
     {
       updatePressure()
-      distribute()
+      distribute(deltaTime)
     }
   }
 
-  def distribute()
+  def distribute(deltaTime: Double)
   {
+    val flowRate = (maxFlowRate * deltaTime).toInt
+
     directionMap.foreach
     {
       case (handler: IFluidHandler, dir: ForgeDirection) =>
       {
         if (handler.isInstanceOf[NodePressure])
         {
+          //"A" is this node. "B" is the other node
           //It's another pressure node
           val otherNode = handler.asInstanceOf[NodePressure]
           val pressureA = pressure(dir)
           val pressureB = otherNode.pressure(dir.getOpposite)
 
+          //High pressure to low
           if (pressureA >= pressureB)
           {
             val tankA = getPrimaryTank
@@ -53,15 +60,18 @@ class NodePressure(parent: INodeProvider, volume: Int = FluidContainerRegistry.B
 
               if (fluidA != null)
               {
-                val amountA: Int = fluidA.amount
+                val amountA = fluidA.amount
+
                 if (amountA > 0)
                 {
                   val tankB = otherNode.getPrimaryTank
+
                   if (tankB != null)
                   {
-                    val amountB: Int = tankB.getFluidAmount
-                    var quantity: Int = Math.max(if (pressureA > pressureB) (pressureA - pressureB) * maxFlowRate else 0, Math.min((amountA - amountB) / 2, maxFlowRate))
+                    val amountB = tankB.getFluidAmount
+                    var quantity = Math.max(if (pressureA > pressureB) (pressureA - pressureB) * flowRate else Math.min((amountA - amountB) / 2, flowRate), Math.min((amountA - amountB) / 2, flowRate))
                     quantity = Math.min(Math.min(quantity, tankB.getCapacity - amountB), amountA)
+
                     if (quantity > 0)
                     {
                       val drainStack = drain(dir.getOpposite, quantity, false)
@@ -80,9 +90,9 @@ class NodePressure(parent: INodeProvider, volume: Int = FluidContainerRegistry.B
         {
           //It's a fluid handler.
           val pressure = this.pressure(dir)
-          val tankPressure =  0
+          val tankPressure = 0
           val sourceTank = getPrimaryTank
-          val transferAmount = (Math.max(pressure, tankPressure) - Math.min(pressure, tankPressure)) * maxFlowRate
+          val transferAmount = (Math.max(pressure, tankPressure) - Math.min(pressure, tankPressure)) * flowRate
 
           if (pressure > tankPressure)
           {
@@ -154,7 +164,7 @@ class NodePressure(parent: INodeProvider, volume: Int = FluidContainerRegistry.B
     this._pressure = pressure
   }
 
-  def canUpdate = true
+  def canUpdate = !isInvalid
 
-  def continueUpdate = true
+  def continueUpdate = !isInvalid
 }

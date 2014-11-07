@@ -3,7 +3,6 @@ package resonantinduction.archaic.fluid.grate
 import java.util.{Collections, Comparator, HashMap, PriorityQueue}
 
 import cpw.mods.fml.relauncher.{Side, SideOnly}
-import io.netty.buffer.ByteBuf
 import net.minecraft.block.material.Material
 import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.entity.player.EntityPlayer
@@ -14,8 +13,6 @@ import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.{Fluid, FluidContainerRegistry, FluidRegistry, FluidStack}
 import resonant.api.IRotatable
 import resonant.lib.config.Config
-import resonant.lib.network.discriminator.PacketType
-import resonant.lib.prefab.fluid.NodeFluid
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.FluidUtility
 import resonantinduction.archaic.fluid.grate.TileGrate._
@@ -54,7 +51,7 @@ object TileGrate
 
 class TileGrate extends TileFluidProvider(Material.rock) with IRotatable
 {
-  override protected val fluidNode = new NodePressure(this)
+  fluidNode = new NodePressure(this)
   private var gratePath: GratePathfinder = _
   private var fillOver: Boolean = true
   isOpaqueCube = false
@@ -93,30 +90,31 @@ class TileGrate extends TileFluidProvider(Material.rock) with IRotatable
   override def update()
   {
     super.update()
+
     if (!world.isRemote)
     {
       if (ticks % 10 == 0)
       {
-        val pressure = fluidNode.pressure(getDirection)
+        val pressure = fluidNode.asInstanceOf[NodePressure].pressure(getDirection)
         val blockEffect = Math.abs(pressure * grateEffectMultiplier).toInt
         fluidNode.getPrimaryTank.setCapacity(Math.max(blockEffect * FluidContainerRegistry.BUCKET_VOLUME * grateDrainSpeedMultiplier, FluidContainerRegistry.BUCKET_VOLUME).toInt)
 
         if (pressure > 0)
         {
-          if (getFluidAmount >= FluidContainerRegistry.BUCKET_VOLUME)
+          if (fluidNode.getFluidAmount >= FluidContainerRegistry.BUCKET_VOLUME)
           {
             if (gratePath == null)
             {
               gratePath = new GratePathfinder(true)
-              gratePath.startFill(asVectorWorld, getTank.getFluid.getFluid.getID)
+              gratePath.startFill(asVectorWorld, fluidNode.getFluid.getFluid.getID)
             }
-            val filledInWorld = gratePath.tryFill(getFluidAmount, blockEffect)
-            getTank.drain(filledInWorld, true)
+            val filledInWorld = gratePath.tryFill(fluidNode.getFluidAmount, blockEffect)
+            fluidNode.drain(filledInWorld, true)
           }
         }
         else if (pressure < 0)
         {
-          val maxDrain = getTank.getCapacity - getFluidAmount
+          val maxDrain = fluidNode.getCapacity - fluidNode.getFluidAmount
           if (maxDrain > 0)
           {
             if (gratePath == null)
@@ -129,7 +127,7 @@ class TileGrate extends TileFluidProvider(Material.rock) with IRotatable
             }
             if (gratePath != null && gratePath.tryPopulateDrainMap(blockEffect))
             {
-              getTank.fill(gratePath.tryDrain(maxDrain, true), true)
+              fluidNode.fill(gratePath.tryDrain(maxDrain, true), true)
             }
           }
         }
@@ -142,7 +140,7 @@ class TileGrate extends TileFluidProvider(Material.rock) with IRotatable
     this.gratePath = null
   }
 
-  override def fill(from: ForgeDirection, resource: FluidStack, doFill: Boolean): Int = getTank.fill(resource, doFill)
+  override def fill(from: ForgeDirection, resource: FluidStack, doFill: Boolean): Int = fluidNode.fill(resource, doFill)
 
   override def drain(from: ForgeDirection, resource: FluidStack, doDrain: Boolean): FluidStack =
   {
@@ -155,7 +153,7 @@ class TileGrate extends TileFluidProvider(Material.rock) with IRotatable
 
   override def drain(from: ForgeDirection, maxDrain: Int, doDrain: Boolean): FluidStack =
   {
-    getTank.drain(maxDrain, doDrain)
+    fluidNode.drain(maxDrain, doDrain)
   }
 
   protected override def configure(player: EntityPlayer, side: Int, hit: Vector3): Boolean =

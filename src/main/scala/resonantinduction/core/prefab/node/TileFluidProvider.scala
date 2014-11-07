@@ -20,22 +20,18 @@ import resonant.lib.wrapper.BitmaskWrapper._
  */
 abstract class TileFluidProvider(material: Material) extends TileAdvanced(material) with TSpatialNodeProvider with IFluidHandler with TPacketReceiver with TPacketSender
 {
-  protected val fluidNode: NodeFluid
+  private var _fluidNode: NodeFluid = null
   protected var colorID: Int = 0
   protected var clientRenderMask = 0x3F
 
-  override def start()
+  def fluidNode = _fluidNode
+
+  def fluidNode_=(newNode: NodeFluid)
   {
-    fluidNode.onConnectionChanged = () => if(!isInvalid) sendPacket(1)
+    _fluidNode = newNode
+    fluidNode.onConnectionChanged = () => if (!isInvalid) sendPacket(1)
     nodes.add(fluidNode)
-    super.start()
   }
-
-  def getFluid: FluidStack = getTank.getFluid
-
-  def getFluidCapacity: Int = getTank.getCapacity
-
-  def getTank: IFluidTank = fluidNode
 
   override def write(buf: ByteBuf, id: Int)
   {
@@ -104,6 +100,4 @@ abstract class TileFluidProvider(material: Material) extends TileAdvanced(materi
   override def fill(from: ForgeDirection, resource: FluidStack, doFill: Boolean): Int = fluidNode.fill(from, resource, doFill)
 
   override def getTankInfo(from: ForgeDirection): Array[FluidTankInfo] = fluidNode.getTankInfo(from)
-
-  def getFluidAmount: Int = fluidNode.getFluidAmount
 }

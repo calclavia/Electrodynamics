@@ -22,7 +22,7 @@ class WailaFluidTank extends IWailaDataProvider
         val tile: TileEntity = accessor.getTileEntity
         if (tile.isInstanceOf[TileTank])
         {
-            val tank: IFluidTank = (tile.asInstanceOf[TileTank]).getTank
+            val tank: IFluidTank = tile.asInstanceOf[TileTank].fluidNode
             if (tank != null && tank.getFluid != null)
             {
                 currenttip.add(LanguageUtility.getLocal("info.waila.tank.fluid") + " " + tank.getFluid.getFluid.getLocalizedName)

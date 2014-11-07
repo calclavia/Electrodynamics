@@ -76,7 +76,7 @@ class ItemBlockTank(block: Block) extends ItemBlock(block: Block) with IFluidCon
       val tile: TileEntity = world.getTileEntity(x, y, z)
       if (tile.isInstanceOf[TileTank])
       {
-        (tile.asInstanceOf[TileTank]).getTank.fill(getFluid(stack), true)
+        tile.asInstanceOf[TileTank].fluidNode.fill(getFluid(stack), true)
       }
       return true
     }

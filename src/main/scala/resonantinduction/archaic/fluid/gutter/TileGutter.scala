@@ -23,7 +23,7 @@ import resonant.lib.utility.FluidUtility
 import resonant.lib.utility.inventory.InventoryUtility
 import resonant.lib.wrapper.BitmaskWrapper._
 import resonantinduction.core.Reference
-import resonantinduction.core.prefab.node.TileFluidProvider
+import resonantinduction.core.prefab.node.{NodePressure, TileFluidProvider}
 
 object TileGutter
 {
@@ -38,7 +38,7 @@ object TileGutter
  */
 class TileGutter extends TileFluidProvider(Material.rock)
 {
-  override protected val fluidNode = new NodePressureGravity(this)
+  fluidNode = new NodePressureGravity(this)
 
   textureName = "material_wood_surface"
   isOpaqueCube = false
@@ -77,24 +77,24 @@ class TileGutter extends TileFluidProvider(Material.rock)
 
   override def collide(entity: Entity)
   {
-    if (getTank.getFluidAmount > 0)
+    if (fluidNode.getFluidAmount > 0)
     {
       for (i <- 2 to 6)
       {
         val dir: ForgeDirection = ForgeDirection.getOrientation(i)
-        val pressure: Int = fluidNode.pressure(dir)
+        val pressure: Int = fluidNode.asInstanceOf[NodePressure].pressure(dir)
         val pos: Vector3 = asVector3.add(dir)
         val checkTile: TileEntity = pos.getTileEntity(world)
 
         if (checkTile.isInstanceOf[TileGutter])
         {
-          val deltaPressure: Int = pressure - checkTile.asInstanceOf[TileGutter].fluidNode.pressure(dir.getOpposite)
+          val deltaPressure: Int = pressure - checkTile.asInstanceOf[TileGutter].fluidNode.asInstanceOf[NodePressure].pressure(dir.getOpposite)
           entity.motionX += 0.01 * dir.offsetX * deltaPressure
           entity.motionY += 0.01 * dir.offsetY * deltaPressure
           entity.motionZ += 0.01 * dir.offsetZ * deltaPressure
         }
       }
-      if (getTank.getFluid.getFluid.getTemperature >= 373)
+      if (fluidNode.getFluid.getFluid.getTemperature >= 373)
       {
         entity.setFire(5)
       }
@@ -174,7 +174,7 @@ class TileGutter extends TileFluidProvider(Material.rock)
 
     if (world != null)
     {
-      val tank: IFluidTank = getTank
+      val tank: IFluidTank = fluidNode
       val percentageFilled = tank.getFluidAmount / tank.getCapacity.toDouble
 
       if (percentageFilled > 0.1)
