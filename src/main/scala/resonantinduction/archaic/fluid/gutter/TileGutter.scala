@@ -14,18 +14,16 @@ import net.minecraftforge.client.model.{AdvancedModelLoader, IModelCustom}
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.{FluidRegistry, FluidStack, IFluidTank}
 import org.lwjgl.opengl.GL11
-import resonant.api.grid.INode
 import resonant.api.recipe.{MachineRecipes, RecipeResource}
 import resonant.content.factory.resources.RecipeType
-import resonant.lib.prefab.fluid.NodeFluid
 import resonant.lib.render.{FluidRenderUtility, RenderUtility}
+import resonant.lib.transform.region.Cuboid
+import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.FluidUtility
 import resonant.lib.utility.inventory.InventoryUtility
 import resonant.lib.wrapper.BitmaskWrapper._
 import resonantinduction.core.Reference
-import resonantinduction.core.prefab.node.TilePressureNode
-import resonant.lib.transform.region.Cuboid
-import resonant.lib.transform.vector.Vector3
+import resonantinduction.core.prefab.node.TileFluidProvider
 
 object TileGutter
 {
@@ -38,15 +36,14 @@ object TileGutter
  *
  * @author Calclavia
  */
-class TileGutter extends TilePressureNode(Material.rock)
+class TileGutter extends TileFluidProvider(Material.rock)
 {
-  fluidNode = new NodePressureGravity(this)
-  setTextureName("material_wood_surface")
+  override protected val fluidNode = new NodePressureGravity(this)
+
+  textureName = "material_wood_surface"
   isOpaqueCube = false
   normalRender = false
   bounds = new Cuboid(0, 0, 0, 1, 0.99, 1)
-
-  override protected var fluidNode: NodeFluid = new NodePressureGravity(this)
 
   override def getCollisionBoxes: java.lang.Iterable[Cuboid] =
   {
@@ -83,13 +80,13 @@ class TileGutter extends TilePressureNode(Material.rock)
       for (i <- 2 to 6)
       {
         val dir: ForgeDirection = ForgeDirection.getOrientation(i)
-        val pressure: Int = getPressure(dir)
-        val _position: Vector3 = asVector3.add(dir)
-        val checkTile: TileEntity = _position.getTileEntity(world)
+        val pressure: Int = fluidNode.pressure(dir)
+        val pos: Vector3 = asVector3.add(dir)
+        val checkTile: TileEntity = pos.getTileEntity(world)
 
         if (checkTile.isInstanceOf[TileGutter])
         {
-          val deltaPressure: Int = pressure - (checkTile.asInstanceOf[TileGutter]).getPressure(dir.getOpposite)
+          val deltaPressure: Int = pressure - checkTile.asInstanceOf[TileGutter].fluidNode.pressure(dir.getOpposite)
           entity.motionX += 0.01 * dir.offsetX * deltaPressure
           entity.motionY += 0.01 * dir.offsetY * deltaPressure
           entity.motionZ += 0.01 * dir.offsetZ * deltaPressure
@@ -101,7 +98,7 @@ class TileGutter extends TilePressureNode(Material.rock)
       }
       else
       {
-        entity.extinguish
+        entity.extinguish()
       }
     }
     if (entity.isInstanceOf[EntityItem])
@@ -121,8 +118,9 @@ class TileGutter extends TilePressureNode(Material.rock)
         if (!world.isRemote)
         {
           val drainAmount: Int = 50 + world.rand.nextInt(50)
-          val _drain: FluidStack = drain(ForgeDirection.UP, drainAmount, false)
-          if (_drain != null && _drain.amount > 0 && world.rand.nextFloat > 0.9)
+          val drain: FluidStack = fluidNode.drain(ForgeDirection.UP, drainAmount, false)
+
+          if (drain != null && drain.amount > 0 && world.rand.nextFloat > 0.9)
           {
             if (world.rand.nextFloat > 0.1)
             {
@@ -138,7 +136,8 @@ class TileGutter extends TilePressureNode(Material.rock)
             }
             player.inventory.setInventorySlotContents(player.inventory.currentItem, itemStack)
           }
-          drain(ForgeDirection.UP, drainAmount, true)
+
+          fluidNode.drain(ForgeDirection.UP, drainAmount, true)
           world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, "liquid.water", 0.5f, 1)
         }
         return true

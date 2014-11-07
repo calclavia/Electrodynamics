@@ -25,7 +25,7 @@ abstract class TileFluidProvider(material: Material) extends TileAdvanced(materi
   val descriptionPacket = 0
   val renderPacket = 1
 
-  protected var fluidNode: NodeFluid
+  protected val fluidNode: NodeFluid
   protected var colorID: Int = 0
   protected var clientRenderMask = 0x00
 

@@ -40,7 +40,7 @@ class TileTank extends TileFluidProvider(Material.iron) with ISneakPickup with R
   itemBlock = classOf[ItemBlockTank]
   setCapacity(TileTank.volume * FluidContainerRegistry.BUCKET_VOLUME)
 
-  override protected var fluidNode: NodeFluid = new NodePressure(this)
+  override protected val fluidNode = new NodePressure(this)
   override val edgeTexture = Reference.prefix + "tankEdge"
 
   override def shouldSideBeRendered(access: IBlockAccess, x: Int, y: Int, z: Int, side: Int): Boolean = access.getBlock(x, y, z) != getBlockType

@@ -13,15 +13,15 @@ import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.{Fluid, FluidContainerRegistry, FluidRegistry, FluidStack}
 import resonant.api.IRotatable
 import resonant.lib.config.Config
+import resonant.lib.prefab.fluid.NodeFluid
+import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.FluidUtility
 import resonantinduction.archaic.fluid.grate.TileGrate._
 import resonantinduction.core.Reference
-import resonantinduction.core.prefab.node.TilePressureNode
-import resonant.lib.transform.vector.Vector3
+import resonantinduction.core.prefab.node.{NodePressure, TileFluidProvider}
 
 object TileGrate
 {
-
   @Config(comment = "The multiplier for the influence of the grate. Dependent on pressure.")
   private var grateEffectMultiplier: Double = 5
 
@@ -50,9 +50,9 @@ object TileGrate
 
 }
 
-class TileGrate extends TilePressureNode(Material.rock) with IRotatable
+class TileGrate extends TileFluidProvider(Material.rock) with IRotatable
 {
-
+  override protected val fluidNode = new NodePressure(this)
   private var gratePath: GratePathfinder = _
   private var fillOver: Boolean = true
   isOpaqueCube = false
@@ -95,10 +95,10 @@ class TileGrate extends TilePressureNode(Material.rock) with IRotatable
     {
       if (ticks % 10 == 0)
       {
-        val pressure = getPressure(getDirection)
+        val pressure = fluidNode.pressure(getDirection)
         val blockEffect = Math.abs(pressure * grateEffectMultiplier).toInt
         setCapacity(Math.max(blockEffect * FluidContainerRegistry.BUCKET_VOLUME * grateDrainSpeedMultiplier,
-          FluidContainerRegistry.BUCKET_VOLUME).toInt)
+                             FluidContainerRegistry.BUCKET_VOLUME).toInt)
         if (pressure > 0)
         {
           if (getFluidAmount >= FluidContainerRegistry.BUCKET_VOLUME)
@@ -230,7 +230,7 @@ class TileGrate extends TilePressureNode(Material.rock) with IRotatable
             return 0
           }
           val didFill = FluidUtility.fillBlock(TileGrate.this.worldObj, next.position, new FluidStack(fluidType,
-            amount), true)
+                                                                                                      amount), true)
           filled += didFill
           if (FluidUtility.getFluidAmountFromBlock(TileGrate.this.worldObj, next.position) >
               0 ||
@@ -342,7 +342,7 @@ class TileGrate extends TilePressureNode(Material.rock) with IRotatable
             null ||
             this.fluidType.getID !=
             FluidUtility.getFluidFromBlock(TileGrate.this.worldObj, fluidCoord.position)
-              .getID)
+            .getID)
         {
           this.drainNodes.poll()
         }
