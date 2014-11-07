@@ -11,6 +11,7 @@ import resonant.lib.network.ByteBufWrapper._
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
 import resonant.lib.prefab.fluid.NodeFluid
+import resonant.lib.wrapper.BitmaskWrapper._
 
 /**
  * A prefab class for tiles that use the fluid network.
@@ -21,11 +22,12 @@ abstract class TileFluidProvider(material: Material) extends TileAdvanced(materi
 {
   protected val fluidNode: NodeFluid
   protected var colorID: Int = 0
-  protected var clientRenderMask = 0x00
+  protected var clientRenderMask = 0x3F
 
   override def start()
   {
-    fluidNode.onConnectionChanged = () => sendPacket(1)
+    fluidNode.onConnectionChanged = () => if(!isInvalid) sendPacket(1)
+    nodes.add(fluidNode)
     super.start()
   }
 
@@ -34,18 +36,6 @@ abstract class TileFluidProvider(material: Material) extends TileAdvanced(materi
   def getFluidCapacity: Int = getTank.getCapacity
 
   def getTank: IFluidTank = fluidNode
-
-  override def readFromNBT(nbt: NBTTagCompound)
-  {
-    super.readFromNBT(nbt)
-    colorID = nbt.getInteger("colorID")
-  }
-
-  override def writeToNBT(nbt: NBTTagCompound)
-  {
-    super.writeToNBT(nbt)
-    nbt.setInteger("colorID", colorID)
-  }
 
   override def write(buf: ByteBuf, id: Int)
   {
@@ -56,13 +46,13 @@ abstract class TileFluidProvider(material: Material) extends TileAdvanced(materi
       case 0 =>
       {
         buf <<< colorID
-        buf <<< fluidNode.connectedBitmask
+        buf <<< fluidNode.connectedMask.invert
         buf <<< fluidNode.getPrimaryTank
       }
       case 1 =>
       {
         buf <<< colorID
-        buf <<< fluidNode.connectedBitmask
+        buf <<< fluidNode.connectedMask.invert
       }
     }
   }
@@ -85,6 +75,22 @@ abstract class TileFluidProvider(material: Material) extends TileAdvanced(materi
         clientRenderMask = buf.readInt()
       }
     }
+
+    markRender()
+  }
+
+  override def readFromNBT(nbt: NBTTagCompound)
+  {
+    super.readFromNBT(nbt)
+    fluidNode.load(nbt)
+    colorID = nbt.getInteger("colorID")
+  }
+
+  override def writeToNBT(nbt: NBTTagCompound)
+  {
+    super.writeToNBT(nbt)
+    fluidNode.save(nbt)
+    nbt.setInteger("colorID", colorID)
   }
 
   override def drain(from: ForgeDirection, resource: FluidStack, doDrain: Boolean): FluidStack = fluidNode.drain(from, resource, doDrain)

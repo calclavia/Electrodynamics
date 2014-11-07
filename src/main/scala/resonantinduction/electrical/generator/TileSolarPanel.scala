@@ -7,8 +7,8 @@ import net.minecraft.util.IIcon
 import resonant.content.prefab.RenderConnectedTexture
 import resonant.content.spatial.block.SpatialBlock
 import resonant.lib.content.prefab.java.TileElectric
-import resonantinduction.core.{Reference, Settings}
 import resonant.lib.transform.region.Cuboid
+import resonantinduction.core.{Reference, Settings}
 
 class TileSolarPanel extends TileElectric(Material.iron) with RenderConnectedTexture
 {
@@ -17,7 +17,7 @@ class TileSolarPanel extends TileElectric(Material.iron) with RenderConnectedTex
   bounds = new Cuboid(0, 0, 0, 1, 0.3f, 1)
   isOpaqueCube = false
 
-  override val edgeTexture = Reference.prefix + "tankEdge"
+  edgeTexture = Reference.prefix + "tankEdge"
 
   @SideOnly(Side.CLIENT)
   override def registerIcons(iconReg: IIconRegister)
