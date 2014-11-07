@@ -68,18 +68,7 @@ class NodePressure(parent: INodeProvider, volume: Int = FluidContainerRegistry.B
 
                   if (tankB != null)
                   {
-                    val amountB = tankB.getFluidAmount
-                    var quantity = Math.max(if (pressureA > pressureB) (pressureA - pressureB) * flowRate else Math.min((amountA - amountB) / 2, flowRate), Math.min((amountA - amountB) / 2, flowRate))
-                    quantity = Math.min(Math.min(quantity, tankB.getCapacity - amountB), amountA)
-
-                    if (quantity > 0)
-                    {
-                      val drainStack = drain(dir.getOpposite, quantity, false)
-                      if (drainStack != null && drainStack.amount > 0)
-                      {
-                        drain(dir.getOpposite, otherNode.fill(dir, drainStack, true), true)
-                      }
-                    }
+                    doDistribute(dir, this, otherNode, flowRate)
                   }
                 }
               }
@@ -114,6 +103,28 @@ class NodePressure(parent: INodeProvider, volume: Int = FluidContainerRegistry.B
             }
           }
         }
+      }
+    }
+  }
+
+  protected def doDistribute(dir: ForgeDirection, nodeA: NodePressure, nodeB: NodePressure, flowRate: Int)
+  {
+    val tankA = nodeA.getPrimaryTank
+    val tankB = nodeB.getPrimaryTank
+    val pressureA = nodeA.pressure(dir)
+    val pressureB = nodeB.pressure(dir.getOpposite)
+    val amountA = tankA.getFluidAmount
+    val amountB = tankB.getFluidAmount
+
+    var quantity = Math.max(if (pressureA > pressureB) (pressureA - pressureB) * flowRate else Math.min((amountA - amountB) / 2, flowRate), Math.min((amountA - amountB) / 2, flowRate))
+    quantity = Math.min(Math.min(quantity, tankB.getCapacity - amountB), amountA)
+
+    if (quantity > 0)
+    {
+      val drainStack = drain(dir.getOpposite, quantity, false)
+      if (drainStack != null && drainStack.amount > 0)
+      {
+        drain(dir.getOpposite, nodeB.fill(dir, drainStack, true), true)
       }
     }
   }

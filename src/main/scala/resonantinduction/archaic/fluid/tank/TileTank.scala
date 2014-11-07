@@ -29,7 +29,6 @@ import resonantinduction.core.prefab.node.TileFluidProvider
  */
 class TileTank extends TileFluidProvider(Material.iron) with ISneakPickup with RenderConnectedTexture
 {
-
   edgeTexture = Reference.prefix + "tankEdge"
   isOpaqueCube = false
   normalRender = false
@@ -45,8 +44,6 @@ class TileTank extends TileFluidProvider(Material.iron) with ISneakPickup with R
   {
     if (!world.isRemote)
     {
-      //TODO: Somehow, the connections are not updating until manual triggers
-      println(fluidNode.connections.size())
       fluidNode.reconstruct()
       return FluidUtility.playerActivatedFluidItem(world, xi, yi, zi, player, side)
     }
