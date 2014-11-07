@@ -11,7 +11,6 @@ import resonant.lib.network.ByteBufWrapper._
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
 import resonant.lib.prefab.fluid.NodeFluid
-import resonant.lib.wrapper.BitmaskWrapper._
 
 /**
  * A prefab class for tiles that use the fluid network.
@@ -29,7 +28,7 @@ abstract class TileFluidProvider(material: Material) extends TileAdvanced(materi
   def fluidNode_=(newNode: NodeFluid)
   {
     _fluidNode = newNode
-    fluidNode.onConnectionChanged = () => if (!isInvalid) sendPacket(1)
+    fluidNode.onConnectionChanged = () => if (!world.isRemote) sendPacket(1)
     nodes.add(fluidNode)
   }
 
@@ -42,13 +41,13 @@ abstract class TileFluidProvider(material: Material) extends TileAdvanced(materi
       case 0 =>
       {
         buf <<< colorID
-        buf <<< fluidNode.connectedMask.invert
+        buf <<< fluidNode.connectedMask
         buf <<< fluidNode.getPrimaryTank
       }
       case 1 =>
       {
         buf <<< colorID
-        buf <<< fluidNode.connectedMask.invert
+        buf <<< fluidNode.connectedMask
       }
     }
   }
@@ -57,22 +56,25 @@ abstract class TileFluidProvider(material: Material) extends TileAdvanced(materi
   {
     super.read(buf, id, packet)
 
-    id match
+    if (world.isRemote)
     {
-      case 0 =>
+      id match
       {
-        colorID = buf.readInt()
-        clientRenderMask = buf.readInt()
-        fluidNode.setPrimaryTank(buf.readTank())
+        case 0 =>
+        {
+          colorID = buf.readInt()
+          clientRenderMask = buf.readInt()
+          fluidNode.setPrimaryTank(buf.readTank())
+        }
+        case 1 =>
+        {
+          colorID = buf.readInt()
+          clientRenderMask = buf.readInt()
+        }
       }
-      case 1 =>
-      {
-        colorID = buf.readInt()
-        clientRenderMask = buf.readInt()
-      }
-    }
 
-    markRender()
+      markRender()
+    }
   }
 
   override def readFromNBT(nbt: NBTTagCompound)

@@ -5,6 +5,7 @@ import java.util.{ArrayList, List}
 
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.block.material.Material
+import net.minecraft.client.renderer.RenderBlocks
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
@@ -17,11 +18,12 @@ import resonant.content.prefab.RenderConnectedTexture
 import resonant.lib.render.{FluidRenderUtility, RenderUtility}
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.FluidUtility
+import resonant.lib.utility.render.RenderBlockUtility
 import resonantinduction.archaic.ArchaicContent
 import resonantinduction.archaic.fluid.gutter.NodePressureGravity
 import resonantinduction.core.Reference
 import resonantinduction.core.prefab.node.TileFluidProvider
-
+import resonant.lib.wrapper.BitmaskWrapper._
 /**
  * Tile/Block class for basic Dynamic tanks
  *
@@ -44,7 +46,6 @@ class TileTank extends TileFluidProvider(Material.iron) with ISneakPickup with R
   {
     if (!world.isRemote)
     {
-      fluidNode.reconstruct()
       return FluidUtility.playerActivatedFluidItem(world, xi, yi, zi, player, side)
     }
 
@@ -59,6 +60,13 @@ class TileTank extends TileFluidProvider(Material.iron) with ISneakPickup with R
     }
 
     return super.getLightValue(access)
+  }
+
+  @SideOnly(Side.CLIENT)
+  override def renderStatic(renderer: RenderBlocks, pos: Vector3, pass: Int): Boolean =
+  {
+    RenderBlockUtility.tessellateBlockWithConnectedTextures(clientRenderMask, world, pos.xi, pos.yi, pos.zi, tile.getBlockType, if (faceTexture != null) RenderUtility.getIcon(faceTexture) else null, RenderUtility.getIcon(edgeTexture))
+    return true
   }
 
   @SideOnly(Side.CLIENT)
