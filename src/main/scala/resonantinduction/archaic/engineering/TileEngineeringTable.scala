@@ -341,7 +341,7 @@ class TileEngineeringTable extends TileInventory(Material.wood) with IPacketRece
             var idDisplacement: Int = TileEngineeringTable.PLAYER_OUTPUT_END
             for (dir <- ForgeDirection.VALID_DIRECTIONS)
             {
-                val tile: TileEntity = asVectorWorld.add(dir).getTileEntity
+                val tile: TileEntity = toVectorWorld.add(dir).getTileEntity
                 if (tile.isInstanceOf[IInventory])
                 {
                     val inventory: IInventory = tile.asInstanceOf[IInventory]
@@ -408,7 +408,7 @@ class TileEngineeringTable extends TileInventory(Material.wood) with IPacketRece
             var idDisplacement: Int = TileEngineeringTable.PLAYER_OUTPUT_END
             for (dir <- ForgeDirection.VALID_DIRECTIONS)
             {
-                val tile: TileEntity = asVectorWorld.add(dir).getTileEntity
+                val tile: TileEntity = toVectorWorld.add(dir).getTileEntity
                 if (tile.isInstanceOf[IInventory])
                 {
                     val inventory: IInventory = tile.asInstanceOf[IInventory]
@@ -646,7 +646,7 @@ class TileEngineeringTable extends TileInventory(Material.wood) with IPacketRece
             var temporaryInvID: Int = TileEngineeringTable.PLAYER_OUTPUT_END
             for (dir <- ForgeDirection.VALID_DIRECTIONS)
             {
-                val tile: TileEntity = asVectorWorld.add(dir).getTileEntity(worldObj)
+                val tile: TileEntity = toVectorWorld.add(dir).getTileEntity(worldObj)
                 if (tile.isInstanceOf[IInventory])
                 {
                     val inventory: IInventory = tile.asInstanceOf[IInventory]

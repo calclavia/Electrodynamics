@@ -63,7 +63,7 @@ class TileLaserEmitter extends TileAdvanced(Material.iron) with ILaserHandler
 
     if (energy > 0)
     {
-      Laser.spawn(worldObj, asVector3 + 0.5 + new Vector3(getDirection) * 0.51, asVector3 + new Vector3(getDirection) * 0.6 + 0.5, new Vector3(getDirection), energy)
+      Laser.spawn(worldObj, toVector3 + 0.5 + new Vector3(getDirection) * 0.51, toVector3 + new Vector3(getDirection) * 0.6 + 0.5, new Vector3(getDirection), energy)
       energy = 0
     }
   }

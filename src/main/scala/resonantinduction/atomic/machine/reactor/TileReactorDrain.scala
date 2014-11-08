@@ -32,7 +32,7 @@ class TileReactorDrain extends TileAdvanced(Material.iron) with IFluidHandler
     {
         this.tanks.clear
         val world: World = this.worldObj
-        val position: Vector3 = asVector3
+        val position: Vector3 = toVector3
         val finder: Pathfinder = new Pathfinder(new IPathCallBack
         {
             def getConnectedNodes(finder: Pathfinder, currentNode: Vector3): Set[Vector3] =
@@ -64,7 +64,7 @@ class TileReactorDrain extends TileAdvanced(Material.iron) with IFluidHandler
                 }
                 return false
             }
-        }).init(asVector3.add(ForgeDirection.getOrientation(this.getBlockMetadata).getOpposite))
+        }).init(toVector3.add(ForgeDirection.getOrientation(this.getBlockMetadata).getOpposite))
         import scala.collection.JavaConversions._
         for (node <- finder.results)
         {

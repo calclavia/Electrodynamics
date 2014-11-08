@@ -66,7 +66,7 @@ class TileMirror extends TileFocus(Material.glass) with ILaserHandler with IFocu
 
   override def focus(newPosition: Vector3)
   {
-    normal = ((newPosition - asVector3) - 0.5).normalize
+    normal = ((newPosition - toVector3) - 0.5).normalize
     world.markBlockForUpdate(xi, yi, zi)
   }
 
@@ -89,7 +89,7 @@ class TileMirror extends TileFocus(Material.glass) with ILaserHandler with IFocu
     /**
      * Render incoming laser
      */
-    ResonantInduction.proxy.renderLaser(worldObj, renderStart, asVector3 + 0.5, color, energy)
+    ResonantInduction.proxy.renderLaser(worldObj, renderStart, toVector3 + 0.5, color, energy)
 
     /**
      * Calculate Reflection
@@ -102,7 +102,7 @@ class TileMirror extends TileFocus(Material.glass) with ILaserHandler with IFocu
     if (rotateAngle < Math.PI)
     {
       val newDirection = (incidentDirection.clone.transform(new Quaternion(rotateAngle, axisOfReflection))).normalize
-      Laser.spawn(worldObj, asVector3 + 0.5 + newDirection * 0.9, asVector3 + 0.5, newDirection, color, energy / 1.2)
+      Laser.spawn(worldObj, toVector3 + 0.5 + newDirection * 0.9, toVector3 + 0.5, newDirection, color, energy / 1.2)
     }
 
     return true

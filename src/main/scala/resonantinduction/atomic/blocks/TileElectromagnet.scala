@@ -114,7 +114,7 @@ class TileElectromagnet extends SpatialBlock(Material.iron) with IElectromagnet
 
         for (dir <- ForgeDirection.VALID_DIRECTIONS)
         {
-            val check = asVector3 + dir
+            val check = toVector3 + dir
             val checkTile = check.getTileEntity(world)
 
             if (checkTile != null && checkTile.getClass == tile.getClass && check.getBlockMetadata(world) == tile.getBlockMetadata)

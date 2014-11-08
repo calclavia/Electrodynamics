@@ -59,7 +59,7 @@ class TileFocusCrystal extends TileFocus(Material.rock) with ILaserHandler with 
 
     if (energy > 0)
     {
-      Laser.spawn(worldObj, asVector3 + 0.5 + normal * 0.9, asVector3 + 0.5, normal, color, energy)
+      Laser.spawn(worldObj, toVector3 + 0.5 + normal * 0.9, toVector3 + 0.5, normal, color, energy)
       color = new Vector3(1, 1, 1)
       energy = 0
     }
@@ -67,7 +67,7 @@ class TileFocusCrystal extends TileFocus(Material.rock) with ILaserHandler with 
 
   override def focus(newPosition: Vector3)
   {
-    normal = ((newPosition - asVector3) - 0.5).normalize
+    normal = ((newPosition - toVector3) - 0.5).normalize
     world.markBlockForUpdate(xi, yi, zi)
   }
 
@@ -82,7 +82,7 @@ class TileFocusCrystal extends TileFocus(Material.rock) with ILaserHandler with 
 
   override def onLaserHit(renderStart: Vector3, incidentDirection: Vector3, hit: MovingObjectPosition, color: Vector3, energy: Double): Boolean =
   {
-    ResonantInduction.proxy.renderLaser(worldObj, renderStart, asVector3 + 0.5, color, energy)
+    ResonantInduction.proxy.renderLaser(worldObj, renderStart, toVector3 + 0.5, color, energy)
     this.energy += energy
     this.color = (this.color + color) / 2
     return true

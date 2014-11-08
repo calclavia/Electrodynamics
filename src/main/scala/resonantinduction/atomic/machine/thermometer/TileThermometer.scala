@@ -114,7 +114,7 @@ class TileThermometer extends TileAdvanced(Material.piston) with SimpleComponent
                 }
                 else
                 {
-                    detectedTemperature = ThermalGrid.getTemperature(asVectorWorld)
+                    detectedTemperature = ThermalGrid.getTemperature(toVectorWorld)
                 }
                 if (detectedTemperature != previousDetectedTemperature || isProvidingPower != this.isOverThreshold)
                 {

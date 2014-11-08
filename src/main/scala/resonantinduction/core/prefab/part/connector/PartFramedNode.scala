@@ -20,7 +20,7 @@ import scala.collection.mutable
 abstract class PartFramedNode extends PartAbstract with TPartNodeProvider with TSlottedPart with TNormalOcclusion with TIconHitEffects
 {
     /** Bitmask connections */
-    var connectionMask = 0x00
+    protected var clientRenderMask = 0x00
 
     @SideOnly(Side.CLIENT)
     protected var breakIcon: IIcon = null
@@ -50,7 +50,7 @@ abstract class PartFramedNode extends PartAbstract with TPartNodeProvider with T
 
         val list = mutable.Set.empty[IndexedCuboid6]
         list += CuboidShapes.WIRE_CENTER
-        list ++= ForgeDirection.VALID_DIRECTIONS.filter(s => connectionMapContainsSide(connectionMask, s) || s == testingSide).map(s => currentSides(s.ordinal()))
+        list ++= ForgeDirection.VALID_DIRECTIONS.filter(s => connectionMapContainsSide(clientRenderMask, s) || s == testingSide).map(s => currentSides(s.ordinal()))
         return list
     }
 
@@ -65,25 +65,25 @@ abstract class PartFramedNode extends PartAbstract with TPartNodeProvider with T
         return !expandable
     }
 
-    def isCurrentlyConnected(side: ForgeDirection): Boolean = connectionMapContainsSide(connectionMask, side)
+    def isCurrentlyConnected(side: ForgeDirection): Boolean = connectionMapContainsSide(clientRenderMask, side)
 
     /** Packet Methods */
     def sendConnectionUpdate()
     {
         if (!world.isRemote)
-            tile.getWriteStream(this).writeByte(0).writeByte(connectionMask)
+            tile.getWriteStream(this).writeByte(0).writeByte(node)
     }
 
     override def readDesc(packet: MCDataInput)
     {
         super.readDesc(packet)
-        connectionMask = packet.readByte
+        clientRenderMask = packet.readByte
     }
 
     override def writeDesc(packet: MCDataOutput)
     {
         super.writeDesc(packet)
-        packet.writeByte(connectionMask)
+        packet.writeByte(clientRenderMask)
     }
 
     override def read(packet: MCDataInput, packetID: Int)
@@ -92,7 +92,7 @@ abstract class PartFramedNode extends PartAbstract with TPartNodeProvider with T
 
         if (packetID == 0)
         {
-            connectionMask = packet.readByte
+            clientRenderMask = packet.readByte
             tile.markRender()
         }
     }

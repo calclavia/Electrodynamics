@@ -80,11 +80,11 @@ object RenderPipe extends ISimpleItemRenderer
   {
     GL11.glPushMatrix()
     GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5)
-    render(part.getMaterialID, if (part.getColor > 0) ItemDye.field_150922_c(part.getColor) else -1, part.connectionMask)
+    render(part.getMaterialID, if (part.getColor > 0) ItemDye.field_150922_c(part.getColor) else -1, part.clientRenderMask)
     GL11.glPopMatrix()
     GL11.glPushMatrix()
     val fluid = part.tank.getFluid
-    val renderSides = part.connectionMask
+    val renderSides = part.clientRenderMask
 
     if (fluid != null && fluid.amount > 0)
     {

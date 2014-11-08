@@ -107,7 +107,7 @@ class TilePlacer extends TileInventory(Material.rock) with IRotatable with TPack
   def doWork
   {
     val side: Int = 0
-    val placePos: Vector3 = asVector3.add(getDirection)
+    val placePos: Vector3 = toVector3.add(getDirection)
     val placeStack: ItemStack = getStackInSlot(0)
     if (InventoryUtility.placeItemBlock(world, placePos.xi, placePos.yi, placePos.zi, placeStack, side))
     {

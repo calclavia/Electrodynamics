@@ -23,7 +23,7 @@ class TileThermopile extends TileElectric(Material.rock) {
       var heatSources: Int = 0
       var coolingSources: Int = 0
       for (dir <- ForgeDirection.VALID_DIRECTIONS) {
-        val checkPos: Vector3 = asVector3.add(dir)
+        val checkPos: Vector3 = toVector3.add(dir)
         val block: Block = checkPos.getBlock(worldObj)
         if (block eq Blocks.water) {
           coolingSources += 1
@@ -48,7 +48,7 @@ class TileThermopile extends TileElectric(Material.rock) {
           usingTicks += 1; usingTicks
         }) >= MAX_USE_TICKS) {
           for (dir <- ForgeDirection.VALID_DIRECTIONS) {
-            val checkPos: Vector3 = asVector3.add(dir)
+            val checkPos: Vector3 = toVector3.add(dir)
             val blockID: Block = checkPos.getBlock(worldObj)
             if (blockID eq Blocks.water) {
               checkPos.setBlockToAir(worldObj)

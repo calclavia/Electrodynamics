@@ -43,7 +43,7 @@ object RenderFramedWire
     CCRenderState.setBrightness(wire.world, wire.x, wire.y, wire.z)
     renderSide(ForgeDirection.UNKNOWN, wire)
 
-    ForgeDirection.VALID_DIRECTIONS.filter(s => wire.connectionMask.mask(s)).foreach(renderSide(_, wire))
+    ForgeDirection.VALID_DIRECTIONS.filter(s => wire.clientRenderMask.mask(s)).foreach(renderSide(_, wire))
   }
 
   def renderSide(side: ForgeDirection, wire: PartFramedWire)

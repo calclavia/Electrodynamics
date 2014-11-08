@@ -25,7 +25,7 @@ class TileSiren extends SpatialBlock(Material.wood)
                 var volume: Float = 0.5f
                 for (i <- 0 to 6)
                 {
-                    val check: Vector3 = asVector3.add(ForgeDirection.getOrientation(i))
+                    val check: Vector3 = toVector3.add(ForgeDirection.getOrientation(i))
                     if (check.getBlock(world) eq getBlockType)
                     {
                         volume *= 1.5f

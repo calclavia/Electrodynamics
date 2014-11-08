@@ -55,7 +55,7 @@ class TileCentrifuge extends TileElectricInventory(Material.iron) with IPacketRe
         for (i <- 0 to 6)
         {
           val direction: ForgeDirection = ForgeDirection.getOrientation(i)
-          val tileEntity: TileEntity = asVector3.add(direction).getTileEntity(world)
+          val tileEntity: TileEntity = toVector3.add(direction).getTileEntity(world)
           if (tileEntity.isInstanceOf[IFluidHandler] && tileEntity.getClass != this.getClass)
           {
             val fluidHandler: IFluidHandler = (tileEntity.asInstanceOf[IFluidHandler])

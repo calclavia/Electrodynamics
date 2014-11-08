@@ -120,7 +120,7 @@ class TileGrindingWheel extends TileMechanical(Material.rock) with IRotatable
             var didWork: Boolean = false
             if (grindingItem != null)
             {
-                if (TileGrindingWheel.TIMER_GRIND_ITEM.containsKey(grindingItem) && !grindingItem.isDead && asVector3.add(0.5).distance(new Vector3(grindingItem)) < 1)
+                if (TileGrindingWheel.TIMER_GRIND_ITEM.containsKey(grindingItem) && !grindingItem.isDead && toVector3.add(0.5).distance(new Vector3(grindingItem)) < 1)
                 {
                     val timeLeft: Int = TileGrindingWheel.TIMER_GRIND_ITEM.decrease(grindingItem)
                     if (timeLeft <= 0)

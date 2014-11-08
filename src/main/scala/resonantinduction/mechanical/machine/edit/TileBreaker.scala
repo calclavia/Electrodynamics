@@ -89,8 +89,8 @@ class TileBreaker extends TileAdvanced(Material.iron) with IRotatable with IPack
         if (isIndirectlyPowered)
         {
             val dir: ForgeDirection = getDirection
-            val check: Vector3 = asVector3.add(dir)
-            val put: VectorWorld = asVector3.add(dir.getOpposite).asInstanceOf[VectorWorld]
+            val check: Vector3 = toVector3.add(dir)
+            val put: VectorWorld = toVector3.add(dir.getOpposite).asInstanceOf[VectorWorld]
             val block: Block = check.getBlock(world)
             if (block != null)
             {

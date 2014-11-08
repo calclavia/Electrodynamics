@@ -68,13 +68,13 @@ class TileAccelerator extends TileElectricInventory(Material.iron) with IElectro
             //Create new particle if we have materials to spawn it with
             if (getStackInSlot(0) != null && lastSpawnTick >= 40)
             {
-              val spawn_vec: Vector3 = asVector3
+              val spawn_vec: Vector3 = toVector3
               spawn_vec.add(getDirection.getOpposite)
               spawn_vec.add(0.5f)
               if (EntityParticle.canSpawnParticle(worldObj, spawn_vec))
               {
                 totalEnergyConsumed = 0
-                entityParticle = new EntityParticle(worldObj, spawn_vec, asVector3, getDirection.getOpposite)
+                entityParticle = new EntityParticle(worldObj, spawn_vec, toVector3, getDirection.getOpposite)
                 worldObj.spawnEntityInWorld(entityParticle)
                 CalculateParticleDensity
                 decrStackSize(0, 1)

@@ -399,7 +399,7 @@ class TileImprinter extends TileAdvanced(Material.circuits) with ISidedInventory
 
     override def onNeighborChanged(block: Block)
     {
-        val b: Block = asVectorWorld.add(ForgeDirection.getOrientation(1)).getBlock
+        val b: Block = toVectorWorld.add(ForgeDirection.getOrientation(1)).getBlock
         if (Blocks.piston_head eq b)
         {
             onInventoryChanged

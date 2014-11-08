@@ -83,7 +83,7 @@ class TileGutter extends TileFluidProvider(Material.rock)
       {
         val dir: ForgeDirection = ForgeDirection.getOrientation(i)
         val pressure: Int = fluidNode.asInstanceOf[NodePressure].pressure(dir)
-        val pos: Vector3 = asVector3.add(dir)
+        val pos: Vector3 = toVector3.add(dir)
         val checkTile: TileEntity = pos.getTileEntity(world)
 
         if (checkTile.isInstanceOf[TileGutter])

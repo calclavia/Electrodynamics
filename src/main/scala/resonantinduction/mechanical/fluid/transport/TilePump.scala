@@ -36,7 +36,7 @@ class TilePump extends TileMechanical(Material.iron) with IRotatable with IFluid
     super.update
     if (!worldObj.isRemote && mechanicalNode.getPower > 0)
     {
-      val tileIn: TileEntity = asVector3.add(getDirection.getOpposite).getTileEntity(this.worldObj)
+      val tileIn: TileEntity = toVector3.add(getDirection.getOpposite).getTileEntity(this.worldObj)
       if (tileIn.isInstanceOf[IFluidHandler])
       {
         val drain: FluidStack = (tileIn.asInstanceOf[IFluidHandler]).drain(getDirection, pressureNode.getCapacity, false)
@@ -52,7 +52,7 @@ class TilePump extends TileMechanical(Material.iron) with IRotatable with IFluid
   {
     if (from eq getDirection.getOpposite)
     {
-      val tileOut: TileEntity = asVector3.add(from.getOpposite).getTileEntity(this.worldObj)
+      val tileOut: TileEntity = toVector3.add(from.getOpposite).getTileEntity(this.worldObj)
       if (tileOut.isInstanceOf[IFluidHandler]) return (tileOut.asInstanceOf[IFluidHandler]).fill(from, resource, doFill)
     }
     return 0
