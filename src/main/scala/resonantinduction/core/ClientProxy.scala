@@ -35,7 +35,7 @@ import resonantinduction.electrical.tesla.{RenderTesla, TileTesla}
 import resonantinduction.electrical.transformer.RenderTransformer
 import resonantinduction.mechanical.MechanicalContent
 import resonantinduction.mechanical.fluid.pipe.RenderPipe
-import resonantinduction.mechanical.fluid.transport.{RenderPump, TilePump}
+import resonantinduction.mechanical.fluid.transport.TilePump
 import resonantinduction.mechanical.mech.gear.RenderGear
 import resonantinduction.mechanical.mech.gearshaft.RenderGearShaft
 import resonantinduction.mechanical.mech.process.crusher.{RenderMechanicalPiston, TileMechanicalPiston}
@@ -63,7 +63,6 @@ import resonantinduction.mechanical.mech.turbine._
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileWaterTurbine], new RenderWaterTurbine)
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileWindTurbine], new RenderWindTurbine)
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileElectricTurbine], new RenderElectricTurbine)
-    ClientRegistry.bindTileEntitySpecialRenderer(classOf[TilePump], new RenderPump)
 
     //Electrical content
     ItemRenderHandler.register(ElectricalContent.itemTransformer, RenderTransformer.INSTANCE)

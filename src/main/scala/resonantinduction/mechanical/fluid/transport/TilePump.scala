@@ -1,21 +1,36 @@
 package resonantinduction.mechanical.fluid.transport
 
+import java.util.{ArrayList, List}
+
 import net.minecraft.block.material.Material
 import net.minecraft.tileentity.TileEntity
+import net.minecraft.util.ResourceLocation
+import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.{Fluid, FluidStack, FluidTankInfo, IFluidHandler}
+import org.lwjgl.opengl.GL11
 import resonant.api.IRotatable
 import resonant.api.grid.INode
+import resonant.lib.render.RenderUtility
+import resonant.lib.transform.vector.Vector3
+import resonantinduction.core.Reference
 import resonantinduction.mechanical.mech.TileMechanical
+
+import scala.collection.mutable
+
+object TilePump
+{
+  val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "pump.tcn"))
+  val texture = new ResourceLocation(Reference.domain, Reference.modelPath + "pump.png")
+}
 
 class TilePump extends TileMechanical(Material.iron) with IRotatable with IFluidHandler
 {
   var pressureNode: PumpNode = null
 
   //Constructor
-  normalRender(false)
-  isOpaqueCube(false)
-  customItemRender(true)
+  normalRender = false
+  isOpaqueCube = false
   setTextureName("material_steel")
   pressureNode = new PumpNode(this)
 
@@ -46,6 +61,32 @@ class TilePump extends TileMechanical(Material.iron) with IRotatable with IFluid
         }
       }
     }
+  }
+
+  override def renderDynamic(pos: Vector3, frame: Float, pass: Int): Unit =
+  {
+    GL11.glPushMatrix()
+    GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5)
+    GL11.glRotatef(-90, 0, 1, 0)
+    if (tile.getWorldObj != null) RenderUtility.rotateBlockBasedOnDirection(getDirection)
+    RenderUtility.bind(TilePump.texture)
+    val notRendered = mutable.Set.empty[String]
+
+    GL11.glPushMatrix
+    GL11.glRotated(Math.toDegrees(mechanicalNode.renderAngle.asInstanceOf[Float]), 0, 0, 1)
+
+    for (i <- 1 to 12)
+    {
+      val fin: String = "fin" + i
+      val innerFin: String = "innerFin" + i
+      notRendered.add(fin)
+      notRendered.add(innerFin)
+      TilePump.model.renderOnly(fin, innerFin)
+    }
+
+    GL11.glPopMatrix()
+    TilePump.model.renderAllExcept(notRendered.toArray[String]: _*)
+    GL11.glPopMatrix()
   }
 
   def fill(from: ForgeDirection, resource: FluidStack, doFill: Boolean): Int =
@@ -89,14 +130,5 @@ class TilePump extends TileMechanical(Material.iron) with IRotatable with IFluid
       return pressureNode.asInstanceOf[N]
 
     return null.asInstanceOf[N]
-  }
-
-  override def getDirection: ForgeDirection =
-  {
-    return null
-  }
-
-  override def setDirection(direction: ForgeDirection)
-  {
   }
 }
