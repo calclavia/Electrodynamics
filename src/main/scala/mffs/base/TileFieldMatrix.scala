@@ -347,7 +347,7 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
 
     val maxHeight = world.getHeight
 
-    field = mutable.Set((field.view.par map (pos => (pos.transform(rotation) + asVector3 + translation).round) filter (position => position.yi <= maxHeight && position.yi >= 0)).seq.toSeq: _ *)
+    field = mutable.Set((field.view.par map (pos => (pos.transform(rotation) + toVector3 + translation).round) filter (position => position.yi <= maxHeight && position.yi >= 0)).seq.toSeq: _ *)
 
     getModules() foreach (_.onPostCalculate(this, field))
 
@@ -378,7 +378,7 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     val rotation = new EulerAngle(rotationYaw, rotationPitch, 0)
     val maxHeight = world.getHeight
 
-    val field = mutable.Set((newField.view.par map (pos => (pos.transform(rotation) + asVector3 + translation).round) filter (position => position.yi <= maxHeight && position.yi >= 0)).seq.toSeq: _ *)
+    val field = mutable.Set((newField.view.par map (pos => (pos.transform(rotation) + toVector3 + translation).round) filter (position => position.yi <= maxHeight && position.yi >= 0)).seq.toSeq: _ *)
 
     cache(cacheID, field)
     return field

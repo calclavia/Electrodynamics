@@ -76,7 +76,7 @@ abstract class TileMFFS extends SpatialTile(Material.iron) with ICamouflageMater
 		{
 			if (!world.isRemote)
 			{
-				InventoryUtility.dropBlockAsItem(world, asVector3)
+				InventoryUtility.dropBlockAsItem(world, toVector3)
 				world.setBlock(xi, yi, zi, Blocks.air)
 				return true
 			}

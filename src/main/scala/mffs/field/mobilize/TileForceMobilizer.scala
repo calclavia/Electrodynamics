@@ -160,13 +160,13 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
             worldObj.playSoundEffect(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D, Reference.prefix + "fieldmove", 0.6f, 1 - this.worldObj.rand.nextFloat * 0.1f)
           }
 
-          ModularForceFieldSystem.packetHandler.sendToAllAround(packet, world, asVector3, packetRange)
+          ModularForceFieldSystem.packetHandler.sendToAllAround(packet, world, toVector3, packetRange)
         }
         else
         {
           packet <<< 2 <<< getMoveTime <<< (getAbsoluteAnchor + 0.5) <<< (getTargetPosition + 0.5) <<< false <<< coordPacketData.size <<< coordPacketData
           moveTime = getMoveTime
-          ModularForceFieldSystem.packetHandler.sendToAllAround(packet, world, asVector3, packetRange)
+          ModularForceFieldSystem.packetHandler.sendToAllAround(packet, world, toVector3, packetRange)
         }
       }
 
@@ -257,7 +257,7 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
 
           packet <<< coordPacketData.size <<< coordPacketData
 
-          ModularForceFieldSystem.packetHandler.sendToAllAround(packet, world, asVector3, packetRange)
+          ModularForceFieldSystem.packetHandler.sendToAllAround(packet, world, toVector3, packetRange)
           markDirty()
         }
       }
@@ -279,9 +279,9 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
 
       delayedEvents.clear()
       worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, Reference.prefix + "powerdown", 0.6f, 1 - this.worldObj.rand.nextFloat * 0.1f)
-      val playPoint = asVector3 + anchor + 0.5
+      val playPoint = toVector3 + anchor + 0.5
       worldObj.playSoundEffect(playPoint.x, playPoint.y, playPoint.z, Reference.prefix + "powerdown", 0.6f, 1 - this.worldObj.rand.nextFloat * 0.1f)
-      ModularForceFieldSystem.packetHandler.sendToAllAround(new PacketTile(this) <<< TilePacketType.render.id, world, asVector3, packetRange)
+      ModularForceFieldSystem.packetHandler.sendToAllAround(new PacketTile(this) <<< TilePacketType.render.id, world, toVector3, packetRange)
 
 
       if (failedPositions.size > 0)
@@ -291,7 +291,7 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
          */
         val coords = failedPositions.toSeq flatMap (_.toIntList)
         val packetTile = new PacketTile(this) <<< TilePacketType.effect.id <<< 3 <<< coords.size <<< coords
-        ModularForceFieldSystem.packetHandler.sendToAllAround(packetTile, world, asVector3, packetRange)
+        ModularForceFieldSystem.packetHandler.sendToAllAround(packetTile, world, toVector3, packetRange)
       }
 
       failedMove = false
@@ -555,8 +555,8 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
 
   def getSearchBounds: AxisAlignedBB =
   {
-    val positiveScale = asVector3 + getTranslation + getPositiveScale + 1
-    val negativeScale = asVector3 + getTranslation - getNegativeScale
+    val positiveScale = toVector3 + getTranslation + getPositiveScale + 1
+    val negativeScale = toVector3 + getTranslation - getNegativeScale
     val minScale = positiveScale.min(negativeScale)
     val maxScale = positiveScale.max(negativeScale)
     return new Cuboid(minScale, maxScale).toAABB
@@ -621,7 +621,7 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
     return false
   }
 
-  def getAbsoluteAnchor: Vector3 = asVector3.add(this.anchor)
+  def getAbsoluteAnchor: Vector3 = toVector3.add(this.anchor)
 
   protected def moveEntities
   {

@@ -397,7 +397,7 @@ class TileForceField extends SpatialTile(Material.glass) with TPacketReceiver wi
       if (projTile.isInstanceOf[TileElectromagneticProjector])
       {
         val projector = projTile.asInstanceOf[IProjector]
-        if (world.isRemote || (projector.getCalculatedField != null && projector.getCalculatedField.contains(asVector3)))
+        if (world.isRemote || (projector.getCalculatedField != null && projector.getCalculatedField.contains(toVector3)))
         {
           return projTile.asInstanceOf[TileElectromagneticProjector]
         }
@@ -423,7 +423,7 @@ class TileForceField extends SpatialTile(Material.glass) with TPacketReceiver wi
   {
     if (getProjectorSafe != null)
     {
-      camoStack = MFFSUtility.getCamoBlock(getProjector, asVector3)
+      camoStack = MFFSUtility.getCamoBlock(getProjector, toVector3)
     }
   }
 
