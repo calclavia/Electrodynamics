@@ -1,25 +1,23 @@
 package resonantinduction.mechanical.mech
 
 import codechicken.multipart.ControlKeyModifer
-import cpw.mods.fml.common.network.ByteBufUtils
 import io.netty.buffer.ByteBuf
 import net.minecraft.block.material.Material
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.network.Packet
 import resonant.content.prefab.java.TileNode
 import resonant.engine.ResonantEngine
 import resonant.lib.grid.node.TSpatialNodeProvider
-import resonant.lib.network.discriminator.{PacketTile, PacketType}
-import resonant.lib.network.handle.{TPacketSender, TPacketReceiver, IPacketReceiver, IPacketIDReceiver}
-import resonant.lib.transform.vector.Vector3
 import resonant.lib.network.ByteBufWrapper._
+import resonant.lib.network.discriminator.PacketType
+import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
+import resonant.lib.transform.vector.Vector3
+
 /** Prefab for resonantinduction.mechanical tiles
   *
   * @author Calclavia */
-abstract class TileMechanical(material: Material) extends TileNode(material) with TSpatialNodeProvider with TPacketSender with  TPacketReceiver
+abstract class TileMechanical(material: Material) extends TileNode(material) with TSpatialNodeProvider with TPacketSender with TPacketReceiver
 {
   /** Node that handles most mechanical actions */
   var mechanicalNode = new MechanicalNode(this)
@@ -48,7 +46,7 @@ abstract class TileMechanical(material: Material) extends TileNode(material) wit
     {
       if (ticks % 3 == 0 && (mechanicalNode.markTorqueUpdate || mechanicalNode.markRotationUpdate))
       {
-        sendRotationPacket()
+        sendPacket(1)
         mechanicalNode.markRotationUpdate = false
         mechanicalNode.markTorqueUpdate = false
       }
@@ -57,6 +55,7 @@ abstract class TileMechanical(material: Material) extends TileNode(material) wit
 
   override def use(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
   {
+    //Debugging
     val itemStack: ItemStack = player.getHeldItem
 
     if (ResonantEngine.runningAsDev)
@@ -70,11 +69,11 @@ abstract class TileMechanical(material: Material) extends TileNode(material) wit
             if (frame == null)
             {
               frame = new DebugFrameMechanical(this)
-              frame.showDebugFrame
+              frame.showDebugFrame()
             }
             else
             {
-              frame.closeDebugFrame
+              frame.closeDebugFrame()
               frame = null
             }
           }
@@ -84,19 +83,6 @@ abstract class TileMechanical(material: Material) extends TileNode(material) wit
     return false
   }
 
-  override def getDescriptionPacket: Packet =
-  {
-    val tag: NBTTagCompound = new NBTTagCompound
-    writeToNBT(tag)
-    return ResonantEngine.instance.packetHandler.toMCPacket(new PacketTile(xi, yi, zi, Array(nbt_packet_id, tag)))
-  }
-
-  /** Sends the torque and angular velocity to the client */
-  private def sendRotationPacket()
-  {
-    ResonantEngine.instance.packetHandler.sendToAllAround(new PacketTile(xi, yi, zi, Array(vel_packet_id, mechanicalNode.angularVelocity, mechanicalNode.torque)), this)
-  }
-
   override def write(buf: ByteBuf, id: Int): Unit =
   {
     super.write(buf, id)
@@ -104,39 +90,22 @@ abstract class TileMechanical(material: Material) extends TileNode(material) wit
     id match
     {
       case 0 =>
-      case 1 => buf <<< mechanicalNode.angularVelocity <<<  mechanicalNode.torque
+      case 1 => buf <<< mechanicalNode.angularVelocity <<< mechanicalNode.torque
     }
   }
 
   override def read(buf: ByteBuf, id: Int, packetType: PacketType)
   {
-    super.read(buf,id,packetType)
-    if (world.isRemote)
+    super.read(buf, id, packetType)
+
+    id match
     {
-      if (id == nbt_packet_id)
-      {
-        readFromNBT(ByteBufUtils.readTag(buf))
-        return true
-      }
-      else if (id == vel_packet_id)
+      case 0 =>
+      case 1 =>
       {
         mechanicalNode.angularVelocity = buf.readDouble
         mechanicalNode.torque = buf.readDouble
-        return true
       }
     }
-    return false
-  }
-
-  override def readFromNBT(nbt: NBTTagCompound)
-  {
-    super.readFromNBT(nbt)
-    mechanicalNode.load(nbt)
-  }
-
-  override def writeToNBT(nbt: NBTTagCompound)
-  {
-    super.writeToNBT(nbt)
-    mechanicalNode.save(nbt)
   }
 }
