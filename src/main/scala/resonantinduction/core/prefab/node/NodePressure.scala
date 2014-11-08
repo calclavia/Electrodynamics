@@ -22,11 +22,14 @@ class NodePressure(parent: INodeProvider, volume: Int = FluidContainerRegistry.B
   var maxPressure = 100
   private var _pressure: Int = 0
 
-  UpdateTicker.addUpdater(this)
+  override def reconstruct()
+  {
+    super.reconstruct()
+    UpdateTicker.addUpdater(this)
+  }
 
   def update(deltaTime: Double)
   {
-    println(world)
     if (!world.isRemote)
     {
       updatePressure()
@@ -176,7 +179,7 @@ class NodePressure(parent: INodeProvider, volume: Int = FluidContainerRegistry.B
     this._pressure = pressure
   }
 
-  def canUpdate = !isInvalid
+  def canUpdate = !isInvalid && world != null
 
   def continueUpdate = !isInvalid
 }

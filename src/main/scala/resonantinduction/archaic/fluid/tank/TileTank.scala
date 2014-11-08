@@ -11,19 +11,22 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.IBlockAccess
 import net.minecraftforge.common.util.ForgeDirection
-import net.minecraftforge.fluids.{FluidContainerRegistry, FluidStack, FluidTank, IFluidTank}
+import net.minecraftforge.fluids._
 import org.lwjgl.opengl.GL11
 import resonant.api.IRemovable.ISneakPickup
+import resonant.api.grid.INode
 import resonant.content.prefab.RenderConnectedTexture
+import resonant.lib.grid.node.Node
 import resonant.lib.render.{FluidRenderUtility, RenderUtility}
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.FluidUtility
 import resonant.lib.utility.render.RenderBlockUtility
+import resonant.lib.wrapper.BitmaskWrapper._
 import resonantinduction.archaic.ArchaicContent
 import resonantinduction.archaic.fluid.gutter.NodePressureGravity
 import resonantinduction.core.Reference
 import resonantinduction.core.prefab.node.TileFluidProvider
-import resonant.lib.wrapper.BitmaskWrapper._
+
 /**
  * Tile/Block class for basic Dynamic tanks
  *
@@ -37,6 +40,16 @@ class TileTank extends TileFluidProvider(Material.iron) with ISneakPickup with R
   itemBlock = classOf[ItemBlockTank]
 
   fluidNode = new NodePressureGravity(this, 16 * FluidContainerRegistry.BUCKET_VOLUME)
+  {
+    override def connect[B <: IFluidHandler](obj: B, dir: ForgeDirection)
+    {
+      super.connect(obj, dir)
+
+      if (obj.isInstanceOf[INode] && !obj.asInstanceOf[Node].parent.isInstanceOf[TileTank])
+        _connectedMask = _connectedMask.closeMask(dir)
+    }
+  }
+
   fluidNode.asInstanceOf[NodePressureGravity].maxFlowRate = FluidContainerRegistry.BUCKET_VOLUME
   fluidNode.onFluidChanged = () => markUpdate()
 
