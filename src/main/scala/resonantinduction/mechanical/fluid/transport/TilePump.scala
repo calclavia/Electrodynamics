@@ -34,21 +34,10 @@ class TilePump extends TileMechanical(Material.iron) with IRotatable with IFluid
   setTextureName("material_steel")
   pressureNode = new PumpNode(this)
 
-  override def start
+  override def update()
   {
-    pressureNode.reconstruct
-    super.start
-  }
+    super.update()
 
-  override def invalidate
-  {
-    super.invalidate
-    pressureNode.deconstruct
-  }
-
-  override def update
-  {
-    super.update
     if (!worldObj.isRemote && mechanicalNode.getPower > 0)
     {
       val tileIn: TileEntity = toVector3.add(getDirection.getOpposite).getTileEntity(this.worldObj)
@@ -66,7 +55,7 @@ class TilePump extends TileMechanical(Material.iron) with IRotatable with IFluid
   override def renderDynamic(pos: Vector3, frame: Float, pass: Int): Unit =
   {
     GL11.glPushMatrix()
-    GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5)
+    GL11.glTranslated(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5)
     GL11.glRotatef(-90, 0, 1, 0)
     if (tile.getWorldObj != null) RenderUtility.rotateBlockBasedOnDirection(getDirection)
     RenderUtility.bind(TilePump.texture)
