@@ -1,9 +1,14 @@
 package resonantinduction.core.prefab.part.connector
 
+import java.util
+
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.ISave
 import resonant.api.grid.{INode, INodeProvider}
+import resonant.lib.grid.node.Node
+
+import scala.collection.convert.wrapAll._
 
 /**
  * A node trait that can be mixed into any multipart nodes. Mixing this trait will cause nodes to reconstruct/deconstruct when needed.
@@ -11,50 +16,47 @@ import resonant.api.grid.{INode, INodeProvider}
  */
 trait TPartNodeProvider extends PartAbstract with INodeProvider
 {
-  protected lazy val node: INode = null
+  protected val nodes = new util.HashSet[Node]
 
   override def start()
   {
     super.start()
-    node.reconstruct()
+
+    if (!world.isRemote)
+      nodes.foreach(_.reconstruct())
   }
 
   override def onWorldJoin()
   {
-    node.reconstruct()
+    if (!world.isRemote)
+      nodes.foreach(_.reconstruct())
   }
 
   override def onNeighborChanged()
   {
-    node.reconstruct()
+    if (!world.isRemote)
+      nodes.foreach(_.reconstruct())
   }
 
   override def onWorldSeparate()
   {
-    node.deconstruct()
+    nodes.foreach(_.deconstruct())
   }
 
   override def save(nbt: NBTTagCompound)
   {
     super.save(nbt)
-
-    if (node.isInstanceOf[ISave])
-      node.asInstanceOf[ISave].save(nbt)
+    nodes.filter(_.isInstanceOf[ISave]).foreach(_.asInstanceOf[ISave].save(nbt))
   }
 
   override def load(nbt: NBTTagCompound)
   {
     super.load(nbt)
-
-    if (node.isInstanceOf[ISave])
-      node.asInstanceOf[ISave].load(nbt)
+    nodes.filter(_.isInstanceOf[ISave]).foreach(_.asInstanceOf[ISave].load(nbt))
   }
 
   override def getNode[N <: INode](nodeType: Class[_ <: N], from: ForgeDirection): N =
   {
-    if (nodeType.isAssignableFrom(node.getClass))
-      return node.asInstanceOf[N]
-
-    return null.asInstanceOf[N]
+    return nodes.filter(node => nodeType.isAssignableFrom(node.getClass)).headOption.getOrElse(null).asInstanceOf[N]
   }
 }
