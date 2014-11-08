@@ -88,7 +88,7 @@ abstract class PartFramedNode extends PartAbstract with TPartNodeProvider with T
   override def writeDesc(packet: MCDataOutput)
   {
     super.writeDesc(packet)
-    packet.writeByte(clientRenderMask)
+    packet.writeByte(node.connectedMask)
   }
 
   override def read(packet: MCDataInput, packetID: Int)

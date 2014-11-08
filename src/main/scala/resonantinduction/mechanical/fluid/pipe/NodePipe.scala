@@ -16,8 +16,6 @@ class NodePipe(parent: PartPipe) extends NodePressure(parent) with TMultipartNod
 {
   def pipe: PartPipe = getParent.asInstanceOf[PartPipe]
 
-  onConnectionChanged = () => if (!world.isRemote) pipe.sendConnectionUpdate()
-
   override def rebuild()
   {
     for (dir <- ForgeDirection.VALID_DIRECTIONS)

@@ -32,6 +32,7 @@ class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorab
   private var markPacket = true
 
   material = PipeMaterials.ceramic
+  node.onConnectionChanged = () => sendConnectionUpdate()
 
   def preparePlacement(meta: Int)
   {
