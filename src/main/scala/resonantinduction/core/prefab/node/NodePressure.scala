@@ -26,6 +26,7 @@ class NodePressure(parent: INodeProvider, volume: Int = FluidContainerRegistry.B
 
   def update(deltaTime: Double)
   {
+    println(world)
     if (!world.isRemote)
     {
       updatePressure()

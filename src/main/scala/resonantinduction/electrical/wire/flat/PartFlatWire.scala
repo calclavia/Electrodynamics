@@ -76,7 +76,9 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
    */
   var connectionMask = 0x00
 
-  override lazy val node = new FlatWireNode(this)
+  private val node = new FlatWireNode(this)
+
+  nodes.add(node)
 
   def preparePlacement(side: Int, meta: Int)
   {
@@ -392,7 +394,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
             val to = ForgeDirection.getOrientation(absDir)
             val from = to.getOpposite
 
-            if(part != null)
+            if (part != null)
             {
               val node = part.asInstanceOf[INodeProvider].getNode(classOf[DCNode], from)
 
@@ -466,7 +468,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
 
       if (canConnect(dcNode, toDir))
       {
-        if(dcNode.canConnect(this, ForgeDirection.UNKNOWN))
+        if (dcNode.canConnect(this, ForgeDirection.UNKNOWN))
         {
           connect(dcNode, toDir)
           return true

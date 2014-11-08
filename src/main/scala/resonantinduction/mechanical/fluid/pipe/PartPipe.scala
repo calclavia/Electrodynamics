@@ -23,7 +23,7 @@ class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorab
 {
   val tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME)
 
-  override lazy val node = new PipeNode(this)
+  override lazy val node = new NodePipe(this)
 
   /**
    * Computes the average fluid for client to render.

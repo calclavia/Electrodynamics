@@ -12,7 +12,7 @@ import resonantinduction.core.prefab.part.connector.TColorable
  *
  * @author Calclavia, Darkguardsman
  */
-class PipeNode(parent: PartPipe) extends NodePressure(parent) with TMultipartNode[IFluidHandler]
+class NodePipe(parent: PartPipe) extends NodePressure(parent) with TMultipartNode[IFluidHandler]
 {
   def pipe: PartPipe = getParent.asInstanceOf[PartPipe]
 
@@ -47,9 +47,9 @@ class PipeNode(parent: PartPipe) extends NodePressure(parent) with TMultipartNod
   {
     if (!pipe.isBlockedOnSide(from))
     {
-      if (source.isInstanceOf[PipeNode])
+      if (source.isInstanceOf[NodePipe])
       {
-        val otherNode = source.asInstanceOf[PipeNode]
+        val otherNode = source.asInstanceOf[NodePipe]
 
         val otherPipe = otherNode.pipe
 
