@@ -1,7 +1,5 @@
 package resonantinduction.mechanical.fluid.transport
 
-import java.util.{ArrayList, List}
-
 import net.minecraft.block.material.Material
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.ResourceLocation
@@ -10,7 +8,6 @@ import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.{Fluid, FluidStack, FluidTankInfo, IFluidHandler}
 import org.lwjgl.opengl.GL11
 import resonant.api.IRotatable
-import resonant.api.grid.INode
 import resonant.lib.render.RenderUtility
 import resonant.lib.transform.vector.Vector3
 import resonantinduction.core.Reference
@@ -32,6 +29,7 @@ class TilePump extends TileMechanical(Material.iron) with IRotatable with IFluid
   normalRender = false
   isOpaqueCube = false
   setTextureName("material_steel")
+  nodes.add(pressureNode)
 
   override def update()
   {
@@ -40,6 +38,7 @@ class TilePump extends TileMechanical(Material.iron) with IRotatable with IFluid
     if (!worldObj.isRemote && mechanicalNode.getPower > 0)
     {
       val tileIn: TileEntity = toVector3.add(getDirection.getOpposite).getTileEntity(this.worldObj)
+
       if (tileIn.isInstanceOf[IFluidHandler])
       {
         val drain: FluidStack = (tileIn.asInstanceOf[IFluidHandler]).drain(getDirection, pressureNode.getCapacity, false)
@@ -60,8 +59,8 @@ class TilePump extends TileMechanical(Material.iron) with IRotatable with IFluid
     RenderUtility.bind(TilePump.texture)
     val notRendered = mutable.Set.empty[String]
 
-    GL11.glPushMatrix
-    GL11.glRotated(Math.toDegrees(mechanicalNode.angle.asInstanceOf[Float]), 0, 0, 1)
+    GL11.glPushMatrix()
+    GL11.glRotated(Math.toDegrees(mechanicalNode.angle), 0, 0, 1)
 
     for (i <- 1 to 12)
     {
@@ -79,7 +78,7 @@ class TilePump extends TileMechanical(Material.iron) with IRotatable with IFluid
 
   def fill(from: ForgeDirection, resource: FluidStack, doFill: Boolean): Int =
   {
-    if (from eq getDirection.getOpposite)
+    if (from == getDirection.getOpposite)
     {
       val tileOut: TileEntity = toVector3.add(from.getOpposite).getTileEntity(this.worldObj)
       if (tileOut.isInstanceOf[IFluidHandler]) return (tileOut.asInstanceOf[IFluidHandler]).fill(from, resource, doFill)
@@ -87,36 +86,13 @@ class TilePump extends TileMechanical(Material.iron) with IRotatable with IFluid
     return 0
   }
 
-  def drain(from: ForgeDirection, resource: FluidStack, doDrain: Boolean): FluidStack =
-  {
-    return null
-  }
+  def drain(from: ForgeDirection, resource: FluidStack, doDrain: Boolean): FluidStack = null
 
-  def drain(from: ForgeDirection, maxDrain: Int, doDrain: Boolean): FluidStack =
-  {
-    return null
-  }
+  def drain(from: ForgeDirection, maxDrain: Int, doDrain: Boolean): FluidStack = null
 
-  def canFill(from: ForgeDirection, fluid: Fluid): Boolean =
-  {
-    return from eq this.getDirection.getOpposite
-  }
+  def canFill(from: ForgeDirection, fluid: Fluid): Boolean = from == this.getDirection.getOpposite
 
-  def canDrain(from: ForgeDirection, fluid: Fluid): Boolean =
-  {
-    return from eq this.getDirection
-  }
+  def canDrain(from: ForgeDirection, fluid: Fluid): Boolean = from == this.getDirection
 
-  def getTankInfo(from: ForgeDirection): Array[FluidTankInfo] =
-  {
-    return null
-  }
-
-  override def getNode[N <: INode](nodeType: Class[_ <: N], from: ForgeDirection): N =
-  {
-    if (nodeType.isAssignableFrom(pressureNode.getClass))
-      return pressureNode.asInstanceOf[N]
-
-    return null.asInstanceOf[N]
-  }
+  def getTankInfo(from: ForgeDirection): Array[FluidTankInfo] = null
 }

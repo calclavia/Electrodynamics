@@ -23,10 +23,12 @@ abstract class TileMechanical(material: Material) extends TileNode(material) wit
   /** Node that handles most mechanical actions */
   var mechanicalNode = new MechanicalNode(this)
 
+  var markPacket = false
+
   /** External debug GUI */
   var frame: DebugFrameMechanical = null
 
-  mechanicalNode.onVelocityChanged = () => if (!world.isRemote && ticks % 3 == 0) sendPacket(1)
+  mechanicalNode.onVelocityChanged = () => markPacket = true
   nodes.add(mechanicalNode)
 
   override def update()
@@ -43,6 +45,9 @@ abstract class TileMechanical(material: Material) extends TileNode(material) wit
         frame = null
       }
     }
+
+    if (!world.isRemote && markPacket)
+      sendPacket(1)
   }
 
   override def use(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
@@ -82,7 +87,7 @@ abstract class TileMechanical(material: Material) extends TileNode(material) wit
     id match
     {
       case 0 =>
-      case 1 => buf <<< mechanicalNode.angularVelocity <<< mechanicalNode.torque
+      case 1 => buf <<< mechanicalNode.angularVelocity
     }
   }
 
@@ -96,7 +101,6 @@ abstract class TileMechanical(material: Material) extends TileNode(material) wit
       case 1 =>
       {
         mechanicalNode.angularVelocity = buf.readDouble
-        mechanicalNode.torque = buf.readDouble
       }
     }
   }
