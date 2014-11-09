@@ -53,7 +53,7 @@ import resonantinduction.mechanical.mech.turbine._
   override def init()
   {
     //Mech content TODO no-load if mech content is not loaded
-    ItemRenderHandler.register(MechanicalContent.itemGear, RenderGear.INSTANCE)
+    ItemRenderHandler.register(MechanicalContent.itemGear, RenderGear)
     ItemRenderHandler.register(MechanicalContent.itemGearShaft, RenderGearShaft.INSTANCE)
     ItemRenderHandler.register(MechanicalContent.itemPipe, RenderPipe)
     ItemRenderHandler.register(Item.getItemFromBlock(MechanicalContent.blockWaterTurbine), new RenderWaterTurbine)

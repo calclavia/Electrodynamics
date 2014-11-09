@@ -27,13 +27,17 @@ class MechanicalNode(parent: INodeProvider) extends NodeGrid[MechanicalNode](par
   var load = 0.2
 
   /**
+   * Angle calculations
+   */
+  private var prevTime = 0L
+  private var prevAngle = 0D
+  protected var teethDisplacement = 0D
+
+  /**
    * Events
    */
   var onTorqueChanged: () => Unit = () => ()
   var onVelocityChanged: () => Unit = () => ()
-
-  private var prevTime = 0L
-  private var prevAngle = 0D
 
   /**
    * An arbitrary angle value computed based on velocity
@@ -44,18 +48,17 @@ class MechanicalNode(parent: INodeProvider) extends NodeGrid[MechanicalNode](par
     val deltaTime = (System.currentTimeMillis() - prevTime) / 1000D
     prevTime = System.currentTimeMillis()
     prevAngle = (prevAngle + deltaTime * angularVelocity) % (2 * Math.PI)
-    return prevAngle
+    return prevAngle + (if (getMechanicalGrid != null && getMechanicalGrid.spinMap(this)) teethDisplacement else 0D)
   }
 
-  override def getRadius(dir: ForgeDirection, `with`: TMechanicalNode): Double = 0.5
-
-  /**
-   * Called when one revolution is made.
-   */
   @deprecated
   protected def revolve()
   {
+
   }
+
+  @deprecated
+  override def getRadius(dir: ForgeDirection, `with`: TMechanicalNode): Double = 0.5
 
   override def rotate(from: AnyRef, torque: Double, angle: Double)
   {

@@ -17,6 +17,8 @@ import resonantinduction.mechanical.mech.grid.MechanicalNode
  */
 class GearNode(parent: PartGear) extends MechanicalNode(parent: PartGear)
 {
+  teethDisplacement = 0.01D
+
   protected def gear: PartGear = getParent.asInstanceOf[PartGear]
 
   /*

@@ -7,11 +7,12 @@ import net.minecraftforge.client.IItemRenderer
 import net.minecraftforge.client.model.{AdvancedModelLoader, IModelCustom}
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
+import resonant.content.prefab.scal.render.ISimpleItemRenderer
 import resonant.lib.render.RenderUtility
 import resonantinduction.core.Reference
 
 @SideOnly(Side.CLIENT)
-object RenderGear
+object RenderGear extends ISimpleItemRenderer
 {
   final val model: IModelCustom = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "gears.obj"))
 
@@ -65,5 +66,4 @@ object RenderGear
     GL11.glRotatef(90, 1, 0, 0)
     renderGear(-1, itemStack.getItemDamage, false, 0)
   }
-
 }

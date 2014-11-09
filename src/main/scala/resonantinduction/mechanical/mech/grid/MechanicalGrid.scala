@@ -17,7 +17,7 @@ class MechanicalGrid extends GridNode[MechanicalNode](classOf[MechanicalNode]) w
    * A map marking out the relative spin directions of each node.
    * Updated upon recache
    */
-  private val spinMap = mutable.WeakHashMap.empty[MechanicalNode, Boolean]
+  protected[grid] val spinMap = mutable.WeakHashMap.empty[MechanicalNode, Boolean]
 
   /**
    * The power of the mechanical grid
