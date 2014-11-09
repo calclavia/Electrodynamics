@@ -9,7 +9,7 @@ import resonant.api.IRotatable
 import resonant.api.grid.{INode, IUpdate}
 import resonant.content.prefab.java.TileNode
 import resonant.lib.content.prefab.TElectric
-import resonantinduction.mechanical.mech.MechanicalNode
+import resonantinduction.mechanical.mech.grid.MechanicalNode
 
 /**
  * A kinetic energy to electrical energy converter.
@@ -60,12 +60,12 @@ class TileMotor extends TileNode(Material.iron) with TElectric with IRotatable
 
   def receiveMechanical
   {
-    val power: Double = mechNode.getForce(ForgeDirection.UNKNOWN) * mechNode.getAngularSpeed(ForgeDirection.UNKNOWN)
+    val power: Double = mechNode.torque(ForgeDirection.UNKNOWN) * mechNode.angularVelocity(ForgeDirection.UNKNOWN)
     val receive: Double = 0 // dcNode.addEnergy(ForgeDirection.UNKNOWN, power, true)
     if (receive > 0)
     {
       val percentageUsed: Double = receive / power
-      mechNode.apply(this, -mechNode.getForce(ForgeDirection.UNKNOWN) * percentageUsed, -mechNode.getAngularSpeed(ForgeDirection.UNKNOWN) * percentageUsed)
+      mechNode.apply(this, -mechNode.torque(ForgeDirection.UNKNOWN) * percentageUsed, -mechNode.angularVelocity(ForgeDirection.UNKNOWN) * percentageUsed)
     }
   }
 
@@ -81,12 +81,12 @@ class TileMotor extends TileNode(Material.iron) with TElectric with IRotatable
         val maxTorque: Double = (extract) / maxAngularVelocity
         var setAngularVelocity: Double = maxAngularVelocity
         var setTorque: Double = maxTorque
-        val currentTorque: Double = Math.abs(mechNode.getForce(ForgeDirection.UNKNOWN))
+        val currentTorque: Double = Math.abs(mechNode.torque(ForgeDirection.UNKNOWN))
         if (currentTorque != 0)
-        {setTorque = Math.min(setTorque, maxTorque) * (mechNode.getForce(ForgeDirection.UNKNOWN) / currentTorque)}
-        val currentVelo: Double = Math.abs(mechNode.getAngularSpeed(ForgeDirection.UNKNOWN))
-        if (currentVelo != 0) setAngularVelocity = Math.min(+setAngularVelocity, maxAngularVelocity) * (mechNode.getAngularSpeed(ForgeDirection.UNKNOWN) / currentVelo)
-        mechNode.apply(this, setTorque - mechNode.getForce(ForgeDirection.UNKNOWN), setAngularVelocity - mechNode.getAngularSpeed(ForgeDirection.UNKNOWN))
+        {setTorque = Math.min(setTorque, maxTorque) * (mechNode.torque(ForgeDirection.UNKNOWN) / currentTorque)}
+        val currentVelo: Double = Math.abs(mechNode.angularVelocity(ForgeDirection.UNKNOWN))
+        if (currentVelo != 0) setAngularVelocity = Math.min(+setAngularVelocity, maxAngularVelocity) * (mechNode.angularVelocity(ForgeDirection.UNKNOWN) / currentVelo)
+        mechNode.apply(this, setTorque - mechNode.torque(ForgeDirection.UNKNOWN), setAngularVelocity - mechNode.angularVelocity(ForgeDirection.UNKNOWN))
         // dcNode.removeEnergy(ForgeDirection.UNKNOWN, Math.abs(setTorque * setAngularVelocity).asInstanceOf[Long], true)
       }
     }

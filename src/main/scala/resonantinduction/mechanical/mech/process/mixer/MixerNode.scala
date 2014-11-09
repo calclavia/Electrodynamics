@@ -1,8 +1,8 @@
 package resonantinduction.mechanical.mech.process.mixer
 
 import net.minecraftforge.common.util.ForgeDirection
-import resonantinduction.mechanical.mech.MechanicalNode
 import resonant.api.grid.INodeProvider
+import resonantinduction.mechanical.mech.grid.MechanicalNode
 
 /**
  * Node designed just for the Mixer to use
@@ -12,7 +12,6 @@ class MixerNode(parent: INodeProvider) extends MechanicalNode(parent)
 {
     //Constructor
     maxDeltaAngle = Math.toRadians(45)
-    sharePower = false
 
     override def canConnect(direction: ForgeDirection): Boolean =
     {

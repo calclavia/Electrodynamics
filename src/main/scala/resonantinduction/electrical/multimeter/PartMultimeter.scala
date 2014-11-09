@@ -21,7 +21,7 @@ import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.IPacketReceiver
 import resonant.lib.utility.WrenchUtility
 import resonantinduction.core.ResonantInduction
-import resonantinduction.core.interfaces.IMechanicalNode
+import resonantinduction.core.interfaces.TMechanicalNode
 import resonantinduction.core.prefab.part.ChickenBonesWrapper._
 import resonantinduction.core.prefab.part.PartFace
 import resonantinduction.electrical.ElectricalContent
@@ -167,14 +167,14 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
     if (tileEntity.isInstanceOf[INodeProvider])
     {
       val instance = ForgeDirection.values
-        .map(dir => tileEntity.asInstanceOf[INodeProvider].getNode(classOf[IMechanicalNode], dir).asInstanceOf[IMechanicalNode])
+        .map(dir => tileEntity.asInstanceOf[INodeProvider].getNode(classOf[TMechanicalNode], dir).asInstanceOf[TMechanicalNode])
         .headOption.orNull
 
       if (instance != null)
       {
-        getNetwork.torqueGraph.queue(instance.getForce(receivingSide))
-        getNetwork.angularVelocityGraph.queue(instance.getAngularSpeed(receivingSide))
-        getNetwork.powerGraph.queue(instance.getForce(receivingSide) * instance.getAngularSpeed(receivingSide))
+        getNetwork.torqueGraph.queue(instance.torque(receivingSide))
+        getNetwork.angularVelocityGraph.queue(instance.angularVelocity(receivingSide))
+        getNetwork.powerGraph.queue(instance.torque(receivingSide) * instance.angularVelocity(receivingSide))
       }
     }
     if (tileEntity.isInstanceOf[IFluidHandler])

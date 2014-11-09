@@ -79,11 +79,11 @@ class TileGrindingWheel extends TileMechanical(Material.rock) with IRotatable
                 entity.attackEntityFrom(new CustomDamageSource("grinder", this), 2)
             }
         }
-        if (mechanicalNode.getAngularSpeed(ForgeDirection.UNKNOWN) != 0)
+        if (mechanicalNode.angularVelocity(ForgeDirection.UNKNOWN) != 0)
         {
             var dir: ForgeDirection = getDirection
             dir = ForgeDirection.getOrientation(if (!(dir.ordinal % 2 == 0)) dir.ordinal - 1 else dir.ordinal).getOpposite
-            val speed: Double = mechanicalNode.getAngularSpeed(ForgeDirection.UNKNOWN) / 20
+            val speed: Double = mechanicalNode.angularVelocity(ForgeDirection.UNKNOWN) / 20
             var speedX: Double = dir.offsetX * speed
             var speedZ: Double = dir.offsetZ * speed
             var speedY: Double = Math.random * speed

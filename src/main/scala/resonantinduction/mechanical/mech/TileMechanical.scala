@@ -13,6 +13,7 @@ import resonant.lib.network.ByteBufWrapper._
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
 import resonant.lib.transform.vector.Vector3
+import resonantinduction.mechanical.mech.grid.MechanicalNode
 
 /** Prefab for resonantinduction.mechanical tiles
   *
@@ -25,6 +26,7 @@ abstract class TileMechanical(material: Material) extends TileNode(material) wit
   /** External debug GUI */
   var frame: DebugFrameMechanical = null
 
+  mechanicalNode.onStateChanged = () => if (!world.isRemote && ticks % 3 == 0) sendPacket(1)
   nodes.add(mechanicalNode)
 
   override def update()
@@ -39,16 +41,6 @@ abstract class TileMechanical(material: Material) extends TileNode(material) wit
       {
         frame.dispose()
         frame = null
-      }
-    }
-
-    if (!world.isRemote)
-    {
-      if (ticks % 3 == 0 && (mechanicalNode.markTorqueUpdate || mechanicalNode.markRotationUpdate))
-      {
-        sendPacket(1)
-        mechanicalNode.markRotationUpdate = false
-        mechanicalNode.markTorqueUpdate = false
       }
     }
   }

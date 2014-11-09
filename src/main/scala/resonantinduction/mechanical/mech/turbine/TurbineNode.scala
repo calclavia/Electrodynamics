@@ -1,7 +1,7 @@
 package resonantinduction.mechanical.mech.turbine
 
 import net.minecraftforge.common.util.ForgeDirection
-import resonantinduction.mechanical.mech.MechanicalNode
+import resonantinduction.mechanical.mech.grid.MechanicalNode
 
 /**
  * Turbine's Mechanical node

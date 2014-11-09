@@ -19,11 +19,11 @@ class PumpNode(parent: INodeProvider) extends NodePressure(parent)
     {
       if (dir == pump.getDirection)
       {
-        return Math.max(Math.abs(pump.mechanicalNode.getForce(ForgeDirection.UNKNOWN) / 8000d), 2).asInstanceOf[Int]
+        return Math.max(Math.abs(pump.mechanicalNode.torque(ForgeDirection.UNKNOWN) / 8000d), 2).asInstanceOf[Int]
       }
       else if (dir == pump.getDirection.getOpposite)
       {
-        return -Math.max(Math.abs(pump.mechanicalNode.getForce(ForgeDirection.UNKNOWN) / 8000d), 2).asInstanceOf[Int]
+        return -Math.max(Math.abs(pump.mechanicalNode.torque(ForgeDirection.UNKNOWN) / 8000d), 2).asInstanceOf[Int]
       }
     }
     return 0

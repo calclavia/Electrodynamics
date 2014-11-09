@@ -7,15 +7,15 @@ import resonant.content.loader.ContentHolder
 import resonant.lib.network.discriminator.PacketAnnotationManager
 import resonant.lib.recipe.UniversalRecipe
 import resonant.lib.schematic.{SchematicPlate, SchematicRegistry}
-import resonantinduction.core.interfaces.IMechanicalNode
+import resonantinduction.core.interfaces.TMechanicalNode
 import resonantinduction.core.{Reference, ResonantPartFactory, RICreativeTab}
 import resonantinduction.mechanical.fluid.pipe.{ItemPipe, PartPipe, PipeMaterials}
 import resonantinduction.mechanical.fluid.transport.TilePump
 import resonantinduction.mechanical.machine.TileDetector
 import resonantinduction.mechanical.machine.edit.{TileBreaker, TilePlacer}
-import resonantinduction.mechanical.mech.MechanicalNode
 import resonantinduction.mechanical.mech.gear.{ItemGear, PartGear}
 import resonantinduction.mechanical.mech.gearshaft.{ItemGearShaft, PartGearShaft}
+import resonantinduction.mechanical.mech.grid.MechanicalNode
 import resonantinduction.mechanical.mech.process.crusher.TileMechanicalPiston
 import resonantinduction.mechanical.mech.process.grinder.TileGrindingWheel
 import resonantinduction.mechanical.mech.process.mixer.TileMixer
@@ -71,7 +71,7 @@ object MechanicalContent extends ContentHolder
         SchematicRegistry.register("resonantinduction.mechanical.windTurbine",new SchematicPlate("schematic.windTurbine.name", MechanicalContent.blockWindTurbine))
         SchematicRegistry.register("resonantinduction.mechanical.electricalTurbine",new SchematicPlate("schematic.electricTurbine.name", MechanicalContent.blockElectricTurbine))
 
-        NodeRegistry.register(classOf[IMechanicalNode], classOf[MechanicalNode])
+        NodeRegistry.register(classOf[TMechanicalNode], classOf[MechanicalNode])
 
         RICreativeTab.itemStack(new ItemStack(MechanicalContent.blockGrinderWheel))
 

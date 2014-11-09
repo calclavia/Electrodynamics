@@ -14,6 +14,7 @@ import resonant.api.grid.{INode, INodeProvider}
 import resonant.engine.ResonantEngine
 import resonant.lib.transform.vector.VectorWorld
 import resonantinduction.core.prefab.part.connector.PartAbstract
+import resonantinduction.mechanical.mech.grid.MechanicalNode
 
 /** We assume all the force acting on the gear is 90 degrees.
   *

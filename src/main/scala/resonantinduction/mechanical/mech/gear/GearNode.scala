@@ -6,9 +6,9 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.grid.INodeProvider
 import resonant.lib.transform.vector.{IVectorWorld, Vector3, VectorWorld}
-import resonantinduction.core.interfaces.IMechanicalNode
-import resonantinduction.mechanical.mech.MechanicalNode
+import resonantinduction.core.interfaces.TMechanicalNode
 import resonantinduction.mechanical.mech.gearshaft.PartGearShaft
+import resonantinduction.mechanical.mech.grid.MechanicalNode
 
 /**
  * Node for the gear
@@ -40,18 +40,22 @@ class GearNode(parent: PartGear) extends MechanicalNode(parent: PartGear)
 
   override def getTorqueLoad: Double =
   {
-    if (gear.tier == 1) return 0.2
-    if (gear.tier == 2) return 0.1
-    if (gear.tier == 0) return 0
-    return 0.3
+    return gear.tier match
+    {
+      case 0 => 0.1
+      case 1 => 0.2
+      case 2 => 0.15
+    }
   }
 
   override def getAngularVelocityLoad: Double =
   {
-    if (gear.tier == 1) return 0.2
-    if (gear.tier == 2) return 0.1
-    if (gear.tier == 0) return 0
-    return 0.3
+    return gear.tier match
+    {
+      case 0 => 0.1
+      case 1 => 0.2
+      case 2 => 0.15
+    }
   }
 
   override def reconstruct()
@@ -156,7 +160,7 @@ class GearNode(parent: PartGear) extends MechanicalNode(parent: PartGear)
                   val checkPart: TMultiPart = (parent.asInstanceOf[PartGear]).tile.partMap(gear.placementSide.ordinal)
                   if (checkPart.isInstanceOf[PartGear])
                   {
-                    val requiredDirection: ForgeDirection = (checkPart.asInstanceOf[PartGear]).getPosition.subtract(position).toForgeDirection
+                    val requiredDirection: ForgeDirection = (checkPart.asInstanceOf[PartGear]).getPosition.subtract(toVectorWorld).toForgeDirection
                     return (checkPart.asInstanceOf[PartGear]).isCenterMultiBlock && (parent.asInstanceOf[PartGear]).placementSide == requiredDirection
                   }
                 }
@@ -164,7 +168,7 @@ class GearNode(parent: PartGear) extends MechanicalNode(parent: PartGear)
             }
           }
         }
-        val sourceTile: TileEntity = position.add(from.getOpposite).getTileEntity(world)
+        val sourceTile: TileEntity = toVectorWorld.add(from.getOpposite).getTileEntity(world)
         if (sourceTile.isInstanceOf[INodeProvider])
         {
           val sourceInstance: MechanicalNode = (sourceTile.asInstanceOf[INodeProvider]).getNode(classOf[MechanicalNode], from).asInstanceOf[MechanicalNode]
@@ -173,7 +177,7 @@ class GearNode(parent: PartGear) extends MechanicalNode(parent: PartGear)
       }
       else if (from == gear.placementSide)
       {
-        val sourceTile: TileEntity = position.add(from).getTileEntity(world)
+        val sourceTile: TileEntity = toVectorWorld.add(from).getTileEntity(world)
         if (sourceTile.isInstanceOf[INodeProvider])
         {
           val sourceInstance: MechanicalNode = (sourceTile.asInstanceOf[INodeProvider]).getNode(classOf[MechanicalNode], from.getOpposite).asInstanceOf[MechanicalNode]
@@ -182,7 +186,7 @@ class GearNode(parent: PartGear) extends MechanicalNode(parent: PartGear)
       }
       else
       {
-        val destinationTile: TileEntity = (other.asInstanceOf[MechanicalNode]).position.add(from.getOpposite).getTileEntity(world)
+        val destinationTile: TileEntity = (other.asInstanceOf[MechanicalNode]).toVectorWorld.add(from.getOpposite).getTileEntity(world)
         if (destinationTile.isInstanceOf[INodeProvider] && destinationTile.isInstanceOf[TileMultipart])
         {
           val destinationPart: TMultiPart = (destinationTile.asInstanceOf[TileMultipart]).partMap(gear.placementSide.ordinal)
@@ -207,9 +211,9 @@ class GearNode(parent: PartGear) extends MechanicalNode(parent: PartGear)
     return false
   }
 
-  override def getRadius(dir: ForgeDirection, `with`: IMechanicalNode): Double =
+  override def getRadius(dir: ForgeDirection, `with`: TMechanicalNode): Double =
   {
-    val deltaPos: Vector3 = new VectorWorld(`with`.asInstanceOf[IVectorWorld]).subtract(position)
+    val deltaPos: Vector3 = new VectorWorld(`with`.asInstanceOf[IVectorWorld]).subtract(toVectorWorld)
     val caseX: Boolean = gear.placementSide.offsetX != 0 && deltaPos.y == 0 && deltaPos.z == 0
     val caseY: Boolean = gear.placementSide.offsetY != 0 && deltaPos.x == 0 && deltaPos.z == 0
     val caseZ: Boolean = gear.placementSide.offsetZ != 0 && deltaPos.x == 0 && deltaPos.y == 0

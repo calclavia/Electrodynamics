@@ -2,10 +2,10 @@ package resonantinduction.mechanical.mech.gearshaft
 
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.util.ForgeDirection
-import resonantinduction.mechanical.mech.MechanicalNode
 import resonantinduction.mechanical.mech.gear.PartGear
 import resonant.api.grid.INodeProvider
 import resonant.lib.transform.vector.Vector3
+import resonantinduction.mechanical.mech.grid.MechanicalNode
 
 class GearShaftNode(parent: INodeProvider) extends MechanicalNode(parent)
 {

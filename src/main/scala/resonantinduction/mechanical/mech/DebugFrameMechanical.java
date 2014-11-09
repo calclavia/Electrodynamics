@@ -17,6 +17,7 @@ import resonant.lib.debug.UpdatePanel;
 import resonant.lib.debug.UpdatedLabel;
 import resonant.api.grid.INode;
 import resonant.api.grid.INodeProvider;
+import resonantinduction.mechanical.mech.grid.MechanicalNode;
 
 /** Java GUI used to help debug gear information
  *
@@ -108,8 +109,8 @@ public class DebugFrameMechanical extends FrameNodeDebug
                     {
                         case 0: return dir;
                         case 1: return node;
-                        case 2: return node.getForce(dir);
-                        case 3: return node.getAngularSpeed(dir);
+                        case 2: return node.torque(dir);
+                        case 3: return node.angularVelocity(dir);
                     }
                 }
                 return "00000";

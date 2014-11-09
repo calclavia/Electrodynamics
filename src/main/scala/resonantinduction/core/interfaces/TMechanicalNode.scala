@@ -7,9 +7,10 @@ import resonant.lib.transform.vector.IVectorWorld
 /**
  * Applied to any node that will act as a mechanical object
  *
- * @author Darkguardsman
+ * @author Darkguardsman, Calclavia
  */
-abstract trait IMechanicalNode extends INode with IVectorWorld {
+trait TMechanicalNode extends INode with IVectorWorld
+{
   /**
    * Gets the radius of the gear in meters. Used to calculate torque and gear ratio for connections.
    * Is not applied to direct face to face connections
@@ -17,36 +18,36 @@ abstract trait IMechanicalNode extends INode with IVectorWorld {
    * @param side - side of the machine
    * @return radius in meters of the rotation peace
    */
-  def getRadius(side: ForgeDirection, `with`: IMechanicalNode): Double = 0.5
+  def getRadius(side: ForgeDirection, from: TMechanicalNode): Double = 0.5
 
   /**
-   * The Rotational speed of the object
+   * Gets the angular velocity of the mechanical device from a specific side
    *
-   * @param side - side of the machine
-   * @return speed in meters per second
+   * @param from - The side of the mechanical device
+   * @return Angular velocity in meters per second
    */
-  def getAngularSpeed(side: ForgeDirection): Double
+  def angularVelocity(from: ForgeDirection): Double
 
   /**
-   * Force applied from this side
+   * Gets the torque of the mechanical device from a specific side
    *
-   * @param side - side of the machine
+   * @param from - The side of the mechanical device
    * @return force
    */
-  def getForce(side: ForgeDirection): Double
+  def torque(from: ForgeDirection): Double
 
   /**
    * Does the direction flip on this side for rotation
    *
-   * @param side - side of the machine
+   * @param from - The side of the mechanical device
    * @return boolean, true = flipped, false = not
    */
-  def inverseRotation(side: ForgeDirection): Boolean = false
+  def inverseRotation(from: ForgeDirection): Boolean = false
 
   /**
    * Applies rotational force and velocity to this node increasing its current rotation value
    *
-   * @param source          - should not be null
+   * @param source          - The source object that is applying this force
    * @param torque          - force at an angle
    * @param angularVelocity - speed of rotation
    */
