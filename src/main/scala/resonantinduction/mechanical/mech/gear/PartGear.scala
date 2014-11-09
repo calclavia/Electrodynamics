@@ -36,6 +36,7 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
 
   //Constructor
   mechanicalNode = new GearNode(this)
+  mechanicalNode.onVelocityChanged = () => if (getMultiBlock.isPrimary) sendVelocityPacket()
 
   //TODO: Can we not have update ticks here?
   override def update()
@@ -52,11 +53,6 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
     }
 
     getMultiBlock.update()
-  }
-
-  override def checkClientUpdate()
-  {
-    if (getMultiBlock.isPrimary) super.checkClientUpdate
   }
 
   override def activate(player: EntityPlayer, hit: MovingObjectPosition, itemStack: ItemStack): Boolean =

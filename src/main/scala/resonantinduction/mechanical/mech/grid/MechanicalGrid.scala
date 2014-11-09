@@ -77,9 +77,19 @@ class MechanicalGrid extends GridNode[MechanicalNode](classOf[MechanicalNode]) w
     //Set torque and angular velocity of all nodes
     getNodes.foreach(n =>
     {
+      val prevTorque = n.torque
+      val prevAngularVelocity = n.angularVelocity
+
       val inversion = if (spinMap(n)) 1 else -1
       n.torque = delta._1 * n.ratio * inversion
       n.angularVelocity = delta._2 / n.ratio * inversion
+
+      if (Math.abs(prevTorque - n.torque) >= 0.1)
+        n.onTorqueChanged()
+
+      if (Math.abs(prevAngularVelocity - n.angularVelocity) >= 0.1)
+        n.onVelocityChanged()
+
     })
 
     //Clear buffers

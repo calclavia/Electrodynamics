@@ -2,35 +2,27 @@ package resonantinduction.mechanical.mech.gearshaft
 
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.util.ForgeDirection
-import resonantinduction.mechanical.mech.gear.PartGear
 import resonant.api.grid.INodeProvider
 import resonant.lib.transform.vector.Vector3
+import resonantinduction.mechanical.mech.gear.PartGear
 import resonantinduction.mechanical.mech.grid.MechanicalNode
 
-class GearShaftNode(parent: INodeProvider) extends MechanicalNode(parent)
+class GearShaftNode(parent: PartGearShaft) extends MechanicalNode(parent)
 {
   override def getTorqueLoad: Double =
   {
-    shaft.tier match
+    return shaft.tier match
     {
-      case 1 =>
-        return 0.02
-      case 2 =>
-        return 0.01
-      case _ =>
-        return 0.03
+      case 0 => 0.03
+      case 1 => 0.02
+      case 2 => 0.01
     }
   }
 
-  override def getAngularVelocityLoad: Double =
-  {
-    return 0
-  }
+  override def getAngularVelocityLoad: Double = 0
 
-  override def reconstruct()
+  override def rebuild()
   {
-    connections.clear
-
     for (ch <- List(shaft.placementSide, shaft.placementSide.getOpposite))
     {
       val checkDir: ForgeDirection = ch
@@ -81,13 +73,10 @@ class GearShaftNode(parent: INodeProvider) extends MechanicalNode(parent)
   {
     if (shaft.placementSide.offsetY != 0 || shaft.placementSide.offsetZ != 0)
     {
-      return dir eq shaft.placementSide.getOpposite
+      return dir == shaft.placementSide.getOpposite
     }
-    return dir eq shaft.placementSide
+    return dir == shaft.placementSide
   }
 
-  def shaft: PartGearShaft =
-  {
-    return this.getParent.asInstanceOf[PartGearShaft]
-  }
+  def shaft: PartGearShaft = getParent.asInstanceOf[PartGearShaft]
 }

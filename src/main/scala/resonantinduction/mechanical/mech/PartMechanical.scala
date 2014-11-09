@@ -1,17 +1,10 @@
 package resonantinduction.mechanical.mech
 
-import java.util.{ArrayList, List}
-
 import codechicken.lib.data.{MCDataInput, MCDataOutput}
 import codechicken.multipart._
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.init.Items
-import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.util.MovingObjectPosition
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.engine.ResonantEngine
-import resonant.lib.transform.vector.VectorWorld
+import resonant.lib.transform.vector.{Vector3, VectorWorld}
 import resonantinduction.core.prefab.part.connector.{PartAbstract, TPartNodeProvider}
 import resonantinduction.mechanical.mech.grid.MechanicalNode
 
@@ -28,17 +21,15 @@ abstract class PartMechanical extends PartAbstract with JNormalOcclusion with TF
   def mechanicalNode_=(mech: MechanicalNode)
   {
     _mechanicalNode = mech
+    mechanicalNode.onVelocityChanged = () => sendVelocityPacket()
     nodes.add(mechanicalNode)
   }
 
-  protected var prevAngularVelocity: Double = .0
-  /** Packets */
-  private[mech] var markPacketUpdate: Boolean = false
-  /** Simple debug external GUI */
-  private[mech] var frame: DebugFrameMechanical = null
   /** Side of the block this is placed on */
   var placementSide: ForgeDirection = ForgeDirection.UNKNOWN
-  var tier: Int = 0
+
+  /** The tier of this mechanical part */
+  var tier = 0
 
   def preparePlacement(side: Int, itemDamage: Int)
   {
@@ -46,59 +37,8 @@ abstract class PartMechanical extends PartAbstract with JNormalOcclusion with TF
     this.tier = itemDamage
   }
 
-  override def update()
-  {
-    if (!world.isRemote)
-    {
-      checkClientUpdate()
-    }
-
-    if (frame != null)
-    {
-      frame.update
-    }
-
-    super.update()
-  }
-
-  override def activate(player: EntityPlayer, hit: MovingObjectPosition, itemStack: ItemStack): Boolean =
-  {
-    if (ResonantEngine.runningAsDev)
-    {
-      if (itemStack != null && !world.isRemote)
-      {
-        if (itemStack.getItem eq Items.stick)
-        {
-          if (ControlKeyModifer.isControlDown(player))
-          {
-            if (frame == null)
-            {
-              frame = new DebugFrameMechanical(this)
-              frame.showDebugFrame
-            }
-            else
-            {
-              frame.closeDebugFrame
-              frame = null
-            }
-          }
-        }
-      }
-    }
-    return super.activate(player, hit, itemStack)
-  }
-
-  def checkClientUpdate()
-  {
-    if (Math.abs(prevAngularVelocity - mechanicalNode.angularVelocity) >= 0.1)
-    {
-      prevAngularVelocity = mechanicalNode.angularVelocity
-      sendRotationPacket
-    }
-  }
-
   /** Packet Code. */
-  def sendRotationPacket()
+  def sendVelocityPacket()
   {
     if (world != null && !world.isRemote)
     {
@@ -148,27 +88,7 @@ abstract class PartMechanical extends PartAbstract with JNormalOcclusion with TF
     nbt.setByte("tier", tier.asInstanceOf[Byte])
   }
 
-  protected def getItem: ItemStack
+  def getPosition: VectorWorld = new VectorWorld(world, x, y, z)
 
-  override def getDrops: java.lang.Iterable[ItemStack] =
-  {
-    val drops: List[ItemStack] = new ArrayList[ItemStack]
-    drops.add(getItem)
-    return drops
-  }
-
-  override def pickItem(hit: MovingObjectPosition): ItemStack =
-  {
-    return getItem
-  }
-
-  def getPosition: VectorWorld =
-  {
-    return new VectorWorld(world, x, y, z)
-  }
-
-  override def toString: String =
-  {
-    return "[" + getClass.getSimpleName + "]" + x + "x " + y + "y " + z + "z " + getSlotMask + "s "
-  }
+  override def toString: String = "[" + getClass.getSimpleName + "]" + x + "x " + y + "y " + z + "z " + getSlotMask + "s "
 }

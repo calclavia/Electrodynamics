@@ -41,31 +41,21 @@ class PartGearShaft extends PartMechanical
     tier = itemDamage
   }
 
-  protected def getItem: ItemStack =
-  {
-    return new ItemStack(MechanicalContent.itemGearShaft, 1, tier)
-  }
+  protected def getItem: ItemStack = new ItemStack(MechanicalContent.itemGearShaft, 1, tier)
 
-  @SideOnly(Side.CLIENT) override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
+  @SideOnly(Side.CLIENT)
+  override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
   {
     if (pass == 0)
-    {
       RenderGearShaft.INSTANCE.renderDynamic(this, pos.x, pos.y, pos.z, frame)
-    }
   }
 
   /**
    * Multipart Bounds
    */
-  def getSlotMask: Int =
-  {
-    return PartMap.CENTER.mask
-  }
+  def getSlotMask: Int = PartMap.CENTER.mask
 
-  def getOcclusionBoxes: java.lang.Iterable[Cuboid6] =
-  {
-    return getCollisionBoxes
-  }
+  def getOcclusionBoxes: java.lang.Iterable[Cuboid6] = getCollisionBoxes
 
   override def getCollisionBoxes: java.lang.Iterable[Cuboid6] =
   {
@@ -92,8 +82,5 @@ class PartGearShaft extends PartMechanical
     return subParts
   }
 
-  def getBounds: Cuboid6 =
-  {
-    return new Cuboid6(0.375, 0.375, 0.375, 0.625, 0.625, 0.625)
-  }
+  def getBounds: Cuboid6 = new Cuboid6(0.375, 0.375, 0.375, 0.625, 0.625, 0.625)
 }
