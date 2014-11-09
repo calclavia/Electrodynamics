@@ -17,26 +17,23 @@ import resonantinduction.mechanical.mech.grid.MechanicalNode
  */
 class GearNode(parent: PartGear) extends MechanicalNode(parent: PartGear)
 {
+  protected def gear: PartGear = getParent.asInstanceOf[PartGear]
 
-  protected def gear: PartGear =
-  {
-    return this.getParent.asInstanceOf[PartGear]
-  }
-
-  override def update(deltaTime: Double)
-  {
-    super.update(deltaTime)
-    if (!gear.getMultiBlock.isPrimary)
+  /*
+    override def update(deltaTime: Double)
     {
-      torque = 0
-      angularVelocity = 0
-    }
-    else if (gear.tier == 10)
-    {
-      torque = 100
-      angularVelocity = 100
-    }
-  }
+      super.update(deltaTime)
+      if (!gear.getMultiBlock.isPrimary)
+      {
+        torque = 0
+        angularVelocity = 0
+      }
+      else if (gear.tier == 10)
+      {
+        torque = 100
+        angularVelocity = 100
+      }
+    }*/
 
   override def getTorqueLoad: Double =
   {
@@ -58,13 +55,13 @@ class GearNode(parent: PartGear) extends MechanicalNode(parent: PartGear)
     }
   }
 
-  override def reconstruct()
+  override def rebuild()
   {
-    connections.clear
     if (!gear.getMultiBlock.isPrimary || world == null)
     {
       return
     }
+
     val tileBehind: TileEntity = new Vector3(gear.tile).add(gear.placementSide).getTileEntity(world)
     if (tileBehind.isInstanceOf[INodeProvider])
     {
@@ -211,16 +208,16 @@ class GearNode(parent: PartGear) extends MechanicalNode(parent: PartGear)
     return false
   }
 
-  override def getRadius(dir: ForgeDirection, `with`: TMechanicalNode): Double =
+  override def getRadius(dir: ForgeDirection, other: TMechanicalNode): Double =
   {
-    val deltaPos: Vector3 = new VectorWorld(`with`.asInstanceOf[IVectorWorld]).subtract(toVectorWorld)
-    val caseX: Boolean = gear.placementSide.offsetX != 0 && deltaPos.y == 0 && deltaPos.z == 0
-    val caseY: Boolean = gear.placementSide.offsetY != 0 && deltaPos.x == 0 && deltaPos.z == 0
-    val caseZ: Boolean = gear.placementSide.offsetZ != 0 && deltaPos.x == 0 && deltaPos.y == 0
+    val deltaPos: Vector3 = new VectorWorld(other.asInstanceOf[IVectorWorld]).subtract(toVectorWorld)
+    val caseX = gear.placementSide.offsetX != 0 && deltaPos.y == 0 && deltaPos.z == 0
+    val caseY = gear.placementSide.offsetY != 0 && deltaPos.x == 0 && deltaPos.z == 0
+    val caseZ = gear.placementSide.offsetZ != 0 && deltaPos.x == 0 && deltaPos.y == 0
+
     if (caseX || caseY || caseZ)
-    {
-      return super.getRadius(dir, `with`)
-    }
-    return if (gear.getMultiBlock.isConstructed) 1.5f else super.getRadius(dir, `with`)
+      return super.getRadius(dir, other)
+
+    return if (gear.getMultiBlock.isConstructed) 1.5f else super.getRadius(dir, other)
   }
 }

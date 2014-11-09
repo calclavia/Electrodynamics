@@ -21,6 +21,12 @@ trait TMechanicalNode extends INode with IVectorWorld
   def getRadius(side: ForgeDirection, from: TMechanicalNode): Double = 0.5
 
   /**
+   * The mechanical ratio. The higher the ratio, the more torque but less angular velocity.
+   * @return A double greater than zero
+   */
+  def ratio = 1D
+
+  /**
    * Gets the angular velocity of the mechanical device from a specific side
    *
    * @param from - The side of the mechanical device
@@ -51,5 +57,5 @@ trait TMechanicalNode extends INode with IVectorWorld
    * @param torque          - force at an angle
    * @param angularVelocity - speed of rotation
    */
-  def apply(source: AnyRef, torque: Double, angularVelocity: Double)
+  def rotate(source: AnyRef, torque: Double, angularVelocity: Double)
 }

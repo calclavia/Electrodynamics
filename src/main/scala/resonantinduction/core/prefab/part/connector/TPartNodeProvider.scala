@@ -2,6 +2,7 @@ package resonantinduction.core.prefab.part.connector
 
 import java.util
 
+import codechicken.multipart.TMultiPart
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.ISave
@@ -33,6 +34,12 @@ trait TPartNodeProvider extends PartAbstract with INodeProvider
   }
 
   override def onNeighborChanged()
+  {
+    if (!world.isRemote)
+      nodes.foreach(_.reconstruct())
+  }
+
+  override def onPartChanged(part: TMultiPart)
   {
     if (!world.isRemote)
       nodes.foreach(_.reconstruct())

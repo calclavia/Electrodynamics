@@ -10,19 +10,27 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.MovingObjectPosition
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.api.grid.{INode, INodeProvider}
 import resonant.engine.ResonantEngine
 import resonant.lib.transform.vector.VectorWorld
-import resonantinduction.core.prefab.part.connector.PartAbstract
+import resonantinduction.core.prefab.part.connector.{PartAbstract, TPartNodeProvider}
 import resonantinduction.mechanical.mech.grid.MechanicalNode
 
 /** We assume all the force acting on the gear is 90 degrees.
   *
   * @author Calclavia */
-abstract class PartMechanical extends PartAbstract with JNormalOcclusion with TFacePart with INodeProvider with TCuboidPart
+abstract class PartMechanical extends PartAbstract with JNormalOcclusion with TFacePart with TPartNodeProvider with TCuboidPart
 {
   /** Node that handles resonantinduction.mechanical action of the machine */
-  var mechanicalNode: MechanicalNode = null
+  private var _mechanicalNode: MechanicalNode = null
+
+  def mechanicalNode = _mechanicalNode
+
+  def mechanicalNode_=(mech: MechanicalNode)
+  {
+    _mechanicalNode = mech
+    nodes.add(mechanicalNode)
+  }
+
   protected var prevAngularVelocity: Double = .0
   /** Packets */
   private[mech] var markPacketUpdate: Boolean = false
@@ -36,21 +44,6 @@ abstract class PartMechanical extends PartAbstract with JNormalOcclusion with TF
   {
     this.placementSide = ForgeDirection.getOrientation((side).asInstanceOf[Byte])
     this.tier = itemDamage
-  }
-
-  override def onNeighborChanged()
-  {
-    super.onNeighborChanged()
-    mechanicalNode.reconstruct()
-  }
-
-  override def onPartChanged(part: TMultiPart)
-  {
-    super.onPartChanged(part)
-    if (part.isInstanceOf[INodeProvider])
-    {
-      mechanicalNode.reconstruct
-    }
   }
 
   override def update()
@@ -104,29 +97,6 @@ abstract class PartMechanical extends PartAbstract with JNormalOcclusion with TF
     }
   }
 
-  override def getNode[N <: INode](nodeType: Class[_ <: N], from: ForgeDirection): N =
-  {
-    if (classOf[MechanicalNode].isAssignableFrom(nodeType))
-      return mechanicalNode.asInstanceOf[N]
-
-    return null.asInstanceOf[N]
-  }
-
-  override def onWorldJoin()
-  {
-    mechanicalNode.reconstruct()
-  }
-
-  override def onWorldSeparate()
-  {
-    mechanicalNode.deconstruct()
-
-    if (frame != null)
-    {
-      frame.closeDebugFrame()
-    }
-  }
-
   /** Packet Code. */
   def sendRotationPacket()
   {
@@ -134,12 +104,6 @@ abstract class PartMechanical extends PartAbstract with JNormalOcclusion with TF
     {
       getWriteStream.writeByte(1).writeDouble(mechanicalNode.angularVelocity)
     }
-  }
-
-  /** Packet Code. */
-  override def read(packet: MCDataInput)
-  {
-    read(packet, packet.readUByte)
   }
 
   override def read(packet: MCDataInput, packetID: Int)
@@ -168,15 +132,9 @@ abstract class PartMechanical extends PartAbstract with JNormalOcclusion with TF
     packet.writeNBTTagCompound(nbt)
   }
 
-  override def redstoneConductionMap: Int =
-  {
-    return 0
-  }
+  override def redstoneConductionMap: Int = 0
 
-  override def solid(arg0: Int): Boolean =
-  {
-    return true
-  }
+  override def solid(arg0: Int): Boolean = true
 
   override def load(nbt: NBTTagCompound)
   {

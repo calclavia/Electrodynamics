@@ -3,6 +3,7 @@ package resonantinduction.mechanical.mech.grid
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.grid.{INodeProvider, IUpdate}
+import resonant.lib.grid.GridNode
 import resonant.lib.grid.node.NodeGrid
 import resonant.lib.transform.vector.IVectorWorld
 import resonant.lib.utility.nbt.ISaveObj
@@ -14,7 +15,7 @@ import resonantinduction.core.prefab.node.TMultipartNode
  *
  * @author Calclavia, Darkguardsman
  */
-class MechanicalNode(parent: INodeProvider) extends NodeGrid[MechanicalNode](parent) with TMultipartNode[MechanicalNode] with TMechanicalNode with ISaveObj with IVectorWorld with IUpdate
+class MechanicalNode(parent: INodeProvider) extends NodeGrid[MechanicalNode](parent) with TMultipartNode[MechanicalNode] with TMechanicalNode with ISaveObj with IVectorWorld
 {
   /**
    * Allows the node to share its power with other nodes
@@ -25,7 +26,7 @@ class MechanicalNode(parent: INodeProvider) extends NodeGrid[MechanicalNode](par
   var angularVelocity: Double = 0
 
   protected[grid] var bufferTorque = 0D
-  protected[grid] var bufferVelocity = 0D
+  protected[grid] var bufferAngle = 0D
 
   /**
    * Current angle of rotation, mainly used for rendering
@@ -52,89 +53,86 @@ class MechanicalNode(parent: INodeProvider) extends NodeGrid[MechanicalNode](par
 
   override def inverseRotation(side: ForgeDirection): Boolean = false
 
-  override def update(deltaTime: Double)
+  /*
+override def update(deltaTime: Double)
+{
+  if (angularVelocity >= 0)
   {
-    /*
-    if (angularVelocity >= 0)
+    renderAngle += Math.min(angularVelocity, this.maxDeltaAngle) * deltaTime
+  }
+  else
+  {
+    renderAngle += Math.max(angularVelocity, -this.maxDeltaAngle) * deltaTime
+  }
+  if (renderAngle >= Math.PI * 2)
+  {
+    revolve
+    renderAngle = renderAngle % (Math.PI * 2)
+  }
+  if (world != null && !world.isRemote)
+  {
+    val acceleration: Double = this.acceleration * deltaTime
+    if (Math.abs(prevAngularVelocity - angularVelocity) > 0.01f)
     {
-      renderAngle += Math.min(angularVelocity, this.maxDeltaAngle) * deltaTime
+      prevAngularVelocity = angularVelocity
+      onStateChanged()
     }
-    else
+    if (Math.abs(prevTorque - torque) > 0.01f)
     {
-      renderAngle += Math.max(angularVelocity, -this.maxDeltaAngle) * deltaTime
+      prevTorque = torque
+      onStateChanged()
     }
-    if (renderAngle >= Math.PI * 2)
+    val torqueLoss: Double = Math.min(Math.abs(getTorque), (Math.abs(getTorque * getTorqueLoad) + getTorqueLoad / 10) * deltaTime)
+    torque += (if (torque > 0) -torqueLoss else torqueLoss)
+    val velocityLoss: Double = Math.min(Math.abs(getAngularSpeed), (Math.abs(getAngularSpeed * getAngularVelocityLoad) + getAngularVelocityLoad / 10) * deltaTime)
+    angularVelocity += (if (angularVelocity > 0) -velocityLoss else velocityLoss)
+    if (getEnergy <= 0)
     {
-      revolve
-      renderAngle = renderAngle % (Math.PI * 2)
+      angularVelocity = ({torque = 0; torque})
     }
-    if (world != null && !world.isRemote)
-    {
-      val acceleration: Double = this.acceleration * deltaTime
-      if (Math.abs(prevAngularVelocity - angularVelocity) > 0.01f)
-      {
-        prevAngularVelocity = angularVelocity
-        onStateChanged()
-      }
-      if (Math.abs(prevTorque - torque) > 0.01f)
-      {
-        prevTorque = torque
-        onStateChanged()
-      }
-      val torqueLoss: Double = Math.min(Math.abs(getTorque), (Math.abs(getTorque * getTorqueLoad) + getTorqueLoad / 10) * deltaTime)
-      torque += (if (torque > 0) -torqueLoss else torqueLoss)
-      val velocityLoss: Double = Math.min(Math.abs(getAngularSpeed), (Math.abs(getAngularSpeed * getAngularVelocityLoad) + getAngularVelocityLoad / 10) * deltaTime)
-      angularVelocity += (if (angularVelocity > 0) -velocityLoss else velocityLoss)
-      if (getEnergy <= 0)
-      {
-        angularVelocity = ({torque = 0; torque})
-      }
-      power = getEnergy / deltaTime
+    power = getEnergy / deltaTime
 
-      if (sharePower)
+    if (sharePower)
+    {
+      directionMap.foreach
       {
-        directionMap.foreach
+        case (adjacentMech: MechanicalNode, dir: ForgeDirection) =>
         {
-          case (adjacentMech: MechanicalNode, dir: ForgeDirection) =>
+          if (adjacentMech != null)
           {
-            if (adjacentMech != null)
+            val ratio: Double = adjacentMech.getRadius(dir.getOpposite, this) / getRadius(dir, adjacentMech)
+            val inverseRotation: Boolean = this.inverseRotation(dir) && adjacentMech.inverseRotation(dir.getOpposite)
+            val inversion: Int = if (inverseRotation) -1 else 1
+            val targetTorque: Double = inversion * adjacentMech.getTorque / ratio
+            val applyTorque: Double = targetTorque * acceleration
+            if (Math.abs(torque + applyTorque) < Math.abs(targetTorque))
             {
-              val ratio: Double = adjacentMech.getRadius(dir.getOpposite, this) / getRadius(dir, adjacentMech)
-              val inverseRotation: Boolean = this.inverseRotation(dir) && adjacentMech.inverseRotation(dir.getOpposite)
-              val inversion: Int = if (inverseRotation) -1 else 1
-              val targetTorque: Double = inversion * adjacentMech.getTorque / ratio
-              val applyTorque: Double = targetTorque * acceleration
-              if (Math.abs(torque + applyTorque) < Math.abs(targetTorque))
-              {
-                torque += applyTorque
-              }
-              else if (Math.abs(torque - applyTorque) > Math.abs(targetTorque))
-              {
-                torque -= applyTorque
-              }
-              val targetVelocity: Double = inversion * adjacentMech.getAngularSpeed * ratio
-              val applyVelocity: Double = targetVelocity * acceleration
-              if (Math.abs(angularVelocity + applyVelocity) < Math.abs(targetVelocity))
-              {
-                angularVelocity += applyVelocity
-              }
-              else if (Math.abs(angularVelocity - applyVelocity) > Math.abs(targetVelocity))
-              {
-                angularVelocity -= applyVelocity
-              }
+              torque += applyTorque
+            }
+            else if (Math.abs(torque - applyTorque) > Math.abs(targetTorque))
+            {
+              torque -= applyTorque
+            }
+            val targetVelocity: Double = inversion * adjacentMech.getAngularSpeed * ratio
+            val applyVelocity: Double = targetVelocity * acceleration
+            if (Math.abs(angularVelocity + applyVelocity) < Math.abs(targetVelocity))
+            {
+              angularVelocity += applyVelocity
+            }
+            else if (Math.abs(angularVelocity - applyVelocity) > Math.abs(targetVelocity))
+            {
+              angularVelocity -= applyVelocity
             }
           }
         }
       }
     }
-
-    prev_angle = renderAngle
-    */
   }
 
-  override def canUpdate: Boolean = true
+  prev_angle = renderAngle
 
-  override def continueUpdate: Boolean = true
+  }
+*/
 
   /**
    * Called when one revolution is made.
@@ -143,10 +141,10 @@ class MechanicalNode(parent: INodeProvider) extends NodeGrid[MechanicalNode](par
   {
   }
 
-  override def apply(from: AnyRef, torque: Double, angularVelocity: Double)
+  override def rotate(from: AnyRef, torque: Double, angle: Double)
   {
     bufferTorque += torque
-    bufferVelocity += angularVelocity
+    bufferAngle += angle
   }
 
   private def getTorque: Double = if (angularVelocity != 0) torque else 0
@@ -170,7 +168,7 @@ class MechanicalNode(parent: INodeProvider) extends NodeGrid[MechanicalNode](par
 
   def getPower: Double =
   {
-    return getMechanicalGrid.power
+    return 0//getMechanicalGrid.power
   }
 
   def load(nbt: NBTTagCompound)
@@ -186,6 +184,8 @@ class MechanicalNode(parent: INodeProvider) extends NodeGrid[MechanicalNode](par
   }
 
   def getMechanicalGrid: MechanicalGrid = super.getGrid.asInstanceOf[MechanicalGrid]
+
+  override def newGrid: GridNode[MechanicalNode] = new MechanicalGrid
 
   override def isValidConnection(other: AnyRef): Boolean =
   {

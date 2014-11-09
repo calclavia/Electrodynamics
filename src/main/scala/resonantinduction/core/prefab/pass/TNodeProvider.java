@@ -8,7 +8,7 @@ import resonant.api.grid.INode;
 import resonant.api.grid.INodeProvider;
 
 /**
- * TNodeProvider Trait.
+ * TNodeProvider multipart Trait.
  * Keep this in Java for smoother ASM.
  * @author Calclavia
  */
@@ -31,12 +31,10 @@ public class TNodeProvider extends TileMultipart implements INodeProvider
 				if (nodePart == null)
 				{
 					nodePart = partMap(i);
-					System.out.println(nodePart);
 					break;
 				}
 			}
 		}
-
 
 		if (nodePart instanceof INodeProvider)
 		{

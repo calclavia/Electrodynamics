@@ -65,7 +65,7 @@ class TileMotor extends TileNode(Material.iron) with TElectric with IRotatable
     if (receive > 0)
     {
       val percentageUsed: Double = receive / power
-      mechNode.apply(this, -mechNode.torque(ForgeDirection.UNKNOWN) * percentageUsed, -mechNode.angularVelocity(ForgeDirection.UNKNOWN) * percentageUsed)
+      mechNode.rotate(this, -mechNode.torque(ForgeDirection.UNKNOWN) * percentageUsed, -mechNode.angularVelocity(ForgeDirection.UNKNOWN) * percentageUsed)
     }
   }
 
@@ -86,7 +86,7 @@ class TileMotor extends TileNode(Material.iron) with TElectric with IRotatable
         {setTorque = Math.min(setTorque, maxTorque) * (mechNode.torque(ForgeDirection.UNKNOWN) / currentTorque)}
         val currentVelo: Double = Math.abs(mechNode.angularVelocity(ForgeDirection.UNKNOWN))
         if (currentVelo != 0) setAngularVelocity = Math.min(+setAngularVelocity, maxAngularVelocity) * (mechNode.angularVelocity(ForgeDirection.UNKNOWN) / currentVelo)
-        mechNode.apply(this, setTorque - mechNode.torque(ForgeDirection.UNKNOWN), setAngularVelocity - mechNode.angularVelocity(ForgeDirection.UNKNOWN))
+        mechNode.rotate(this, setTorque - mechNode.torque(ForgeDirection.UNKNOWN), setAngularVelocity - mechNode.angularVelocity(ForgeDirection.UNKNOWN))
         // dcNode.removeEnergy(ForgeDirection.UNKNOWN, Math.abs(setTorque * setAngularVelocity).asInstanceOf[Long], true)
       }
     }

@@ -29,7 +29,7 @@ import resonantinduction.mechanical.mech.PartMechanical
 class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
 {
   var isClockwiseCrank: Boolean = true
-  var manualCrankTime: Int = 0
+  var manualCrankTime = 0D
   var multiBlockRadius: Int = 1
   /** Multiblock */
   var multiBlock: GearMultiBlockHandler = null
@@ -37,27 +37,36 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
   //Constructor
   mechanicalNode = new GearNode(this)
 
-  override def update
+  //TODO: Can we not have update ticks here?
+  override def update()
   {
-    super.update
+    super.update()
+
     if (!this.world.isRemote)
     {
       if (manualCrankTime > 0)
       {
-        mechanicalNode.apply(this, if (isClockwiseCrank) 15 else -15, if (isClockwiseCrank) 0.025f else -0.025f)
-        manualCrankTime -= 1
+        mechanicalNode.rotate(this, if (isClockwiseCrank) 15 else -15, if (isClockwiseCrank) 0.025f else -0.025f)
+        manualCrankTime -= 0.1
       }
     }
-    getMultiBlock.update
+
+    getMultiBlock.update()
   }
 
-  override def checkClientUpdate
+  override def checkClientUpdate()
   {
     if (getMultiBlock.isPrimary) super.checkClientUpdate
   }
 
   override def activate(player: EntityPlayer, hit: MovingObjectPosition, itemStack: ItemStack): Boolean =
   {
+    if (!world.isRemote)
+    {
+      println(mechanicalNode)
+      println(mechanicalNode.getMechanicalGrid)
+    }
+
     if (itemStack != null && itemStack.getItem.isInstanceOf[ItemHandCrank])
     {
       if (!world.isRemote && ControlKeyModifer.isControlDown(player))
@@ -68,7 +77,7 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
       }
       isClockwiseCrank = player.isSneaking
       //TODO fix;
-      // getMultiBlock.get.manualCrankTime = 20
+      getMultiBlock.get.manualCrankTime = 2
       world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, Reference.prefix + "gearCrank", 0.5f, 0.9f + world.rand.nextFloat * 0.2f)
       player.addExhaustion(0.01f)
       return true
