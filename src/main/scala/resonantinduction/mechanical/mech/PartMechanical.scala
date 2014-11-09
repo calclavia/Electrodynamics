@@ -2,9 +2,12 @@ package resonantinduction.mechanical.mech
 
 import codechicken.lib.data.{MCDataInput, MCDataOutput}
 import codechicken.multipart._
+import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
+import net.minecraft.util.MovingObjectPosition
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.lib.transform.vector.{Vector3, VectorWorld}
+import resonant.lib.transform.vector.VectorWorld
 import resonantinduction.core.prefab.part.connector.{PartAbstract, TPartNodeProvider}
 import resonantinduction.mechanical.mech.grid.MechanicalNode
 
@@ -16,12 +19,14 @@ abstract class PartMechanical extends PartAbstract with JNormalOcclusion with TF
   /** Node that handles resonantinduction.mechanical action of the machine */
   private var _mechanicalNode: MechanicalNode = null
 
+  protected var markVelocityUpdate = false
+
   def mechanicalNode = _mechanicalNode
 
   def mechanicalNode_=(mech: MechanicalNode)
   {
     _mechanicalNode = mech
-    mechanicalNode.onVelocityChanged = () => sendVelocityPacket()
+    mechanicalNode.onVelocityChanged = () => markVelocityUpdate = true
     nodes.add(mechanicalNode)
   }
 
@@ -31,10 +36,32 @@ abstract class PartMechanical extends PartAbstract with JNormalOcclusion with TF
   /** The tier of this mechanical part */
   var tier = 0
 
+  override def update()
+  {
+    super.update()
+
+    if (markVelocityUpdate)
+    {
+      sendVelocityPacket()
+      markVelocityUpdate = false
+    }
+  }
+
   def preparePlacement(side: Int, itemDamage: Int)
   {
     this.placementSide = ForgeDirection.getOrientation((side).asInstanceOf[Byte])
     this.tier = itemDamage
+  }
+
+  override def activate(player: EntityPlayer, hit: MovingObjectPosition, item: ItemStack): Boolean =
+  {
+    if (!world.isRemote)
+    {
+      println(mechanicalNode)
+      println(mechanicalNode.getMechanicalGrid)
+    }
+
+    super.activate(player, hit, item)
   }
 
   /** Packet Code. */

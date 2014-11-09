@@ -36,7 +36,7 @@ class PartGearShaft extends PartMechanical
 
   override def preparePlacement(side: Int, itemDamage: Int)
   {
-    val dir: ForgeDirection = ForgeDirection.getOrientation((side ^ 1).asInstanceOf[Byte])
+    val dir = ForgeDirection.getOrientation(side ^ 1)
     this.placementSide = ForgeDirection.getOrientation(if (!(dir.ordinal % 2 == 0)) dir.ordinal - 1 else dir.ordinal)
     tier = itemDamage
   }
@@ -47,7 +47,7 @@ class PartGearShaft extends PartMechanical
   override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
   {
     if (pass == 0)
-      RenderGearShaft.INSTANCE.renderDynamic(this, pos.x, pos.y, pos.z, frame)
+      RenderGearShaft.renderDynamic(this, pos.x, pos.y, pos.z, frame)
   }
 
   /**

@@ -36,7 +36,11 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
 
   //Constructor
   mechanicalNode = new GearNode(this)
-  mechanicalNode.onVelocityChanged = () => if (getMultiBlock.isPrimary) sendVelocityPacket()
+  mechanicalNode.onVelocityChanged = () =>
+  {
+    if (getMultiBlock.isPrimary)
+      markVelocityUpdate = true
+  }
 
   //TODO: Can we not have update ticks here?
   override def update()
@@ -57,12 +61,6 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
 
   override def activate(player: EntityPlayer, hit: MovingObjectPosition, itemStack: ItemStack): Boolean =
   {
-    if (!world.isRemote)
-    {
-      println(mechanicalNode)
-      println(mechanicalNode.getMechanicalGrid)
-    }
-
     if (itemStack != null && itemStack.getItem.isInstanceOf[ItemHandCrank])
     {
       if (!world.isRemote && ControlKeyModifer.isControlDown(player))
@@ -123,12 +121,11 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
     return new ItemStack(MechanicalContent.itemGear, 1, tier)
   }
 
-  @SideOnly(Side.CLIENT) override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
+  @SideOnly(Side.CLIENT)
+  override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
   {
     if (pass == 0)
-    {
       RenderGear.renderDynamic(this, pos.x, pos.y, pos.z, tier)
-    }
   }
 
   override def load(nbt: NBTTagCompound)

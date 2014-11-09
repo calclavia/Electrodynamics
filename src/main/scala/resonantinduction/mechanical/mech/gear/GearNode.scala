@@ -19,23 +19,7 @@ class GearNode(parent: PartGear) extends MechanicalNode(parent: PartGear)
 {
   teethDisplacement = 0.01D
 
-  protected def gear: PartGear = getParent.asInstanceOf[PartGear]
-
-  /*
-    override def update(deltaTime: Double)
-    {
-      super.update(deltaTime)
-      if (!gear.getMultiBlock.isPrimary)
-      {
-        torque = 0
-        angularVelocity = 0
-      }
-      else if (gear.tier == 10)
-      {
-        torque = 100
-        angularVelocity = 100
-      }
-    }*/
+  protected def gear = getParent.asInstanceOf[PartGear]
 
   override def getTorqueLoad: Double =
   {
@@ -43,7 +27,7 @@ class GearNode(parent: PartGear) extends MechanicalNode(parent: PartGear)
     {
       case 0 => 0.1
       case 1 => 0.2
-      case 2 => 0.15
+      case 2 => 0.1
     }
   }
 
@@ -53,7 +37,7 @@ class GearNode(parent: PartGear) extends MechanicalNode(parent: PartGear)
     {
       case 0 => 0.1
       case 1 => 0.2
-      case 2 => 0.15
+      case 2 => 0.1
     }
   }
 
@@ -125,15 +109,17 @@ class GearNode(parent: PartGear) extends MechanicalNode(parent: PartGear)
     }
     if (other.isInstanceOf[MechanicalNode])
     {
-      val parent: INodeProvider = (other.asInstanceOf[MechanicalNode]).getParent
+      val parent: INodeProvider = other.asInstanceOf[MechanicalNode].getParent
       if (from == gear.placementSide.getOpposite)
       {
         if (parent.isInstanceOf[PartGear] || parent.isInstanceOf[PartGearShaft])
         {
           if (parent.isInstanceOf[PartGearShaft])
           {
-            val shaft: PartGearShaft = parent.asInstanceOf[PartGearShaft]
-            return shaft.tile.partMap(from.getOpposite.ordinal) != gear && Math.abs(shaft.placementSide.offsetX) == Math.abs(gear.placementSide.offsetX) && Math.abs(shaft.placementSide.offsetY) == Math.abs(gear.placementSide.offsetY) && Math.abs(shaft.placementSide.offsetZ) == Math.abs(gear.placementSide.offsetZ)
+            //We are connecting to a shaft.
+            val shaft = parent.asInstanceOf[PartGearShaft]
+            //Check if the shaft is directing connected to the center of the gear (multiblock cases) and also its direction to make sure the shaft is facing the gear itself
+            return /*shaft.tile.partMap(from.getOpposite.ordinal) != gear && */Math.abs(shaft.placementSide.offsetX) == Math.abs(gear.placementSide.offsetX) && Math.abs(shaft.placementSide.offsetY) == Math.abs(gear.placementSide.offsetY) && Math.abs(shaft.placementSide.offsetZ) == Math.abs(gear.placementSide.offsetZ)
           }
           else if (parent.isInstanceOf[PartGear])
           {
@@ -170,7 +156,7 @@ class GearNode(parent: PartGear) extends MechanicalNode(parent: PartGear)
         val sourceTile: TileEntity = toVectorWorld.add(from.getOpposite).getTileEntity(world)
         if (sourceTile.isInstanceOf[INodeProvider])
         {
-          val sourceInstance: MechanicalNode = (sourceTile.asInstanceOf[INodeProvider]).getNode(classOf[MechanicalNode], from).asInstanceOf[MechanicalNode]
+          val sourceInstance: MechanicalNode = (sourceTile.asInstanceOf[INodeProvider]).getNode(classOf[MechanicalNode], from)
           return sourceInstance == other
         }
       }
@@ -179,21 +165,21 @@ class GearNode(parent: PartGear) extends MechanicalNode(parent: PartGear)
         val sourceTile: TileEntity = toVectorWorld.add(from).getTileEntity(world)
         if (sourceTile.isInstanceOf[INodeProvider])
         {
-          val sourceInstance: MechanicalNode = (sourceTile.asInstanceOf[INodeProvider]).getNode(classOf[MechanicalNode], from.getOpposite).asInstanceOf[MechanicalNode]
+          val sourceInstance: MechanicalNode = (sourceTile.asInstanceOf[INodeProvider]).getNode(classOf[MechanicalNode], from.getOpposite)
           return sourceInstance == other
         }
       }
       else
       {
-        val destinationTile: TileEntity = (other.asInstanceOf[MechanicalNode]).toVectorWorld.add(from.getOpposite).getTileEntity(world)
+        val destinationTile: TileEntity = other.asInstanceOf[MechanicalNode].toVectorWorld.add(from.getOpposite).getTileEntity(world)
         if (destinationTile.isInstanceOf[INodeProvider] && destinationTile.isInstanceOf[TileMultipart])
         {
-          val destinationPart: TMultiPart = (destinationTile.asInstanceOf[TileMultipart]).partMap(gear.placementSide.ordinal)
+          val destinationPart: TMultiPart = destinationTile.asInstanceOf[TileMultipart].partMap(gear.placementSide.ordinal)
           if (destinationPart.isInstanceOf[PartGear])
           {
             if (gear ne destinationPart)
             {
-              return (destinationPart.asInstanceOf[PartGear]).isCenterMultiBlock
+              return destinationPart.asInstanceOf[PartGear].isCenterMultiBlock
             }
             else
             {

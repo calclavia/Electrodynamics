@@ -54,7 +54,7 @@ import resonantinduction.mechanical.mech.turbine._
   {
     //Mech content TODO no-load if mech content is not loaded
     ItemRenderHandler.register(MechanicalContent.itemGear, RenderGear)
-    ItemRenderHandler.register(MechanicalContent.itemGearShaft, RenderGearShaft.INSTANCE)
+    ItemRenderHandler.register(MechanicalContent.itemGearShaft, RenderGearShaft)
     ItemRenderHandler.register(MechanicalContent.itemPipe, RenderPipe)
     ItemRenderHandler.register(Item.getItemFromBlock(MechanicalContent.blockWaterTurbine), new RenderWaterTurbine)
     ItemRenderHandler.register(Item.getItemFromBlock(MechanicalContent.blockWindTurbine), new RenderWindTurbine)

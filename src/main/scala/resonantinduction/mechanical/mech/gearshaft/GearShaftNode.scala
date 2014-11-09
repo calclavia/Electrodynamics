@@ -1,6 +1,5 @@
 package resonantinduction.mechanical.mech.gearshaft
 
-import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.grid.INodeProvider
 import resonant.lib.transform.vector.Vector3
@@ -19,34 +18,44 @@ class GearShaftNode(parent: PartGearShaft) extends MechanicalNode(parent)
     }
   }
 
-  override def getAngularVelocityLoad: Double = 0
+  override def getAngularVelocityLoad: Double =
+  {
+    return shaft.tier match
+    {
+      case 0 => 0.03
+      case 1 => 0.02
+      case 2 => 0.01
+    }
+  }
 
   override def rebuild()
   {
-    for (ch <- List(shaft.placementSide, shaft.placementSide.getOpposite))
+    //Check only two possible sides for connections
+    for (toDir <- Seq(shaft.placementSide, shaft.placementSide.getOpposite))
     {
-      val checkDir: ForgeDirection = ch
-      if (checkDir == shaft.placementSide || checkDir == shaft.placementSide.getOpposite)
-      {
-        if (shaft.tile.isInstanceOf[INodeProvider])
-        {
-          val instance: MechanicalNode = (shaft.tile.asInstanceOf[INodeProvider]).getNode(classOf[MechanicalNode], checkDir).asInstanceOf[MechanicalNode]
+      var found = false
 
-          if (instance != null && instance != this && instance.canConnect(this, checkDir.getOpposite))
-          {
-            connect(instance, checkDir)
-          }
-        }
-        else
+      ///Check within this block for another gear plate that will move this shaft
+      val otherNode = shaft.tile.asInstanceOf[INodeProvider].getNode(classOf[MechanicalNode], toDir)
+
+      if (otherNode != null && otherNode != this && canConnect(otherNode, toDir) && otherNode.canConnect(this, toDir.getOpposite))
+      {
+        connect(otherNode, toDir)
+        found = true
+      }
+
+      if (!found)
+      {
+        ///Check for other gear shafts outside this tile
+        val checkTile = new Vector3(shaft.tile).add(toDir).getTileEntity(world)
+
+        if (checkTile.isInstanceOf[INodeProvider])
         {
-          val checkTile: TileEntity = new Vector3(shaft.tile).add(checkDir).getTileEntity(world)
-          if (checkTile.isInstanceOf[INodeProvider])
+          val instance = (checkTile.asInstanceOf[INodeProvider]).getNode(classOf[MechanicalNode], toDir.getOpposite)
+
+          if (instance != null && instance != this && instance.getParent.isInstanceOf[PartGearShaft] && instance.canConnect(this, toDir.getOpposite))
           {
-            val instance: MechanicalNode = (checkTile.asInstanceOf[INodeProvider]).getNode(classOf[MechanicalNode], checkDir.getOpposite).asInstanceOf[MechanicalNode]
-            if (instance != null && instance != this && instance.getParent.isInstanceOf[PartGearShaft] && instance.canConnect(this, checkDir.getOpposite))
-            {
-              connect(instance, checkDir)
-            }
+            connect(instance, toDir)
           }
         }
       }
