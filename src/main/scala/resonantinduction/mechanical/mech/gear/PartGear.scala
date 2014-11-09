@@ -131,7 +131,7 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
   {
     if (pass == 0)
     {
-      RenderGear.INSTANCE.renderDynamic(this, pos.x, pos.y, pos.z, tier)
+      RenderGear.renderDynamic(this, pos.x, pos.y, pos.z, tier)
     }
   }
 

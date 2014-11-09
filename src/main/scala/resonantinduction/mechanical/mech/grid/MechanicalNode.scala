@@ -33,18 +33,18 @@ class MechanicalNode(parent: INodeProvider) extends NodeGrid[MechanicalNode](par
   var onVelocityChanged: () => Unit = () => ()
 
   private var prevTime = 0L
-  private var angle = 0D
+  private var prevAngle = 0D
 
   /**
    * An arbitrary angle value computed based on velocity
    * @return The angle in radians
    */
-  def renderAngle: Double =
+  def angle: Double =
   {
     val deltaTime = (System.currentTimeMillis() - prevTime) / 1000D
     prevTime = System.currentTimeMillis()
-    angle = (angle + deltaTime * angularVelocity) % (2 * Math.PI)
-    return angle
+    prevAngle = (prevAngle + deltaTime * angularVelocity) % (2 * Math.PI)
+    return prevAngle
   }
 
   override def getRadius(dir: ForgeDirection, `with`: TMechanicalNode): Double = 0.5

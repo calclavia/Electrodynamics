@@ -30,7 +30,7 @@ import resonantinduction.core.Reference
             RenderUtility.rotateBlockBasedOnDirectionUp(tile.getDirection)
             GL11.glTranslatef(0, 0.35f, 0)
             GL11.glRotatef(180, 1, 0, 0)
-            GL11.glRotatef(Math.toDegrees(tile.mechanicalNode.renderAngle).asInstanceOf[Float], 0, 1, 0)
+            GL11.glRotatef(Math.toDegrees(tile.mechanicalNode.angle).asInstanceOf[Float], 0, 1, 0)
             render(tile.tier, tile.multiBlockRadius, tile.getMultiBlock.isConstructed)
             GL11.glPopMatrix
             GL11.glPopMatrix

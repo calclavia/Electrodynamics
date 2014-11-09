@@ -61,7 +61,7 @@ class TilePump extends TileMechanical(Material.iron) with IRotatable with IFluid
     val notRendered = mutable.Set.empty[String]
 
     GL11.glPushMatrix
-    GL11.glRotated(Math.toDegrees(mechanicalNode.renderAngle.asInstanceOf[Float]), 0, 0, 1)
+    GL11.glRotated(Math.toDegrees(mechanicalNode.angle.asInstanceOf[Float]), 0, 0, 1)
 
     for (i <- 1 to 12)
     {

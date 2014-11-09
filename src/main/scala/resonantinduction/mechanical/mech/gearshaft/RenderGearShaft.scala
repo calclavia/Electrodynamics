@@ -53,7 +53,7 @@ import resonantinduction.core.Reference
         {
             glRotatef(90, 0, 0, 1)
         }
-        GL11.glRotatef(Math.toDegrees(part.mechanicalNode.renderAngle).asInstanceOf[Float], 0, 1, 0)
+        GL11.glRotatef(Math.toDegrees(part.mechanicalNode.angle).asInstanceOf[Float], 0, 1, 0)
 
         if (part.tier == 1)
         {

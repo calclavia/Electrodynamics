@@ -30,7 +30,7 @@ import resonantinduction.core.Reference
             GL11.glTranslatef(x.asInstanceOf[Float] + 0.5f, y.asInstanceOf[Float] + 0.5f, z.asInstanceOf[Float] + 0.5f)
             GL11.glPushMatrix
             RenderUtility.rotateBlockBasedOnDirectionUp(tile.getDirection)
-            val mechanicalNodeRenderAngle: Double = tile.mechanicalNode.renderAngle
+            val mechanicalNodeRenderAngle: Double = tile.mechanicalNode.angle
             var renderAngleInDegrees: Float = 0
             if (!java.lang.Double.isNaN(mechanicalNodeRenderAngle))
             {

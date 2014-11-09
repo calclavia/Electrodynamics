@@ -142,7 +142,7 @@ public class DebugFrameMechanical extends FrameNodeDebug
             @Override
             public String buildLabel()
             {
-                return super.buildLabel() + DebugFrameMechanical.this.getNode().renderAngle();
+                return super.buildLabel() + DebugFrameMechanical.this.getNode().angle();
             }
         };
         topPanel.add(angleLabel);

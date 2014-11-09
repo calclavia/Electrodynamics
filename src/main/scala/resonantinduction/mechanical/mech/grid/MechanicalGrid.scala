@@ -57,6 +57,8 @@ class MechanicalGrid extends GridNode[MechanicalNode](classOf[MechanicalNode]) w
         })
       .foldLeft((0D, 0D))((b, a) => (a._1 + b._1, a._2 + b._2))
 
+    var delta = (0D, 0D)
+
     if (input._1 != 0 && input._2 != 0)
     {
       //Calculate the total resistance of all nodes
@@ -66,25 +68,26 @@ class MechanicalGrid extends GridNode[MechanicalNode](classOf[MechanicalNode]) w
         .foldLeft((0D, 0D))((b, a) => (a._1 + b._1, a._2 + b._2))
 
       //Calculate the total change in torque and angular velocity
-      val delta = (input._1 - input._1 * resistance._1, input._2 - input._2 * resistance._2)
-
-      //Calculate power
-      _power = delta._1 * delta._2
-
-      //Set torque and angular velocity of all nodes
-      getNodes.foreach(n =>
-      {
-        n.torque = delta._1 * n.ratio
-        n.angularVelocity = delta._2 / n.ratio
-      })
-
-      //Clear buffers
-      inputs.foreach(n =>
-      {
-        n.bufferTorque = 0
-        n.bufferAngle = 0
-      })
+      delta = (input._1 - input._1 * resistance._1, input._2 - input._2 * resistance._2)
     }
+
+    //Calculate power
+    _power = delta._1 * delta._2
+
+    //Set torque and angular velocity of all nodes
+    getNodes.foreach(n =>
+    {
+      val inversion = if (spinMap(n)) 1 else -1
+      n.torque = delta._1 * n.ratio * inversion
+      n.angularVelocity = delta._2 / n.ratio * inversion
+    })
+
+    //Clear buffers
+    inputs.foreach(n =>
+    {
+      n.bufferTorque = 0
+      n.bufferAngle = 0
+    })
   }
 
   override def continueUpdate = getNodes.size > 0

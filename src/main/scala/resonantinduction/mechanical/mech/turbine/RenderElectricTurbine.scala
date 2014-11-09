@@ -33,12 +33,12 @@ import resonantinduction.core.Reference
                 val mediumBlades: Array[String] = Array[String]("MediumBlade1", "MediumBlade2", "MediumBlade3", "MediumBlade4", "MediumBlade5", "MediumBlade6")
                 val largeBlades: Array[String] = Array[String]("LargeBlade1", "LargeBlade2", "LargeBlade3", "LargeBlade4", "LargeBlade5", "LargeBlade6")
                 GL11.glPushMatrix
-                GL11.glRotated(Math.toDegrees(tile.mechanicalNode.renderAngle), 0, 1, 0)
+                GL11.glRotated(Math.toDegrees(tile.mechanicalNode.angle), 0, 1, 0)
                 RenderElectricTurbine.MODEL_LARGE.renderOnly(blades: _*)
                 RenderElectricTurbine.MODEL_LARGE.renderOnly(largeBlades: _*)
                 GL11.glPopMatrix
                 GL11.glPushMatrix
-                GL11.glRotated(-Math.toDegrees(tile.mechanicalNode.renderAngle), 0, 1, 0)
+                GL11.glRotated(-Math.toDegrees(tile.mechanicalNode.angle), 0, 1, 0)
                 RenderElectricTurbine.MODEL_LARGE.renderOnly(mediumBlades: _*)
                 GL11.glPopMatrix
                 RenderElectricTurbine.MODEL_LARGE.renderAllExcept(ArrayUtils.addAll(ArrayUtils.addAll(blades, mediumBlades: _*), largeBlades: _*): _*)
@@ -78,11 +78,11 @@ import resonantinduction.core.Reference
                 val renderA: Array[String] = ArrayUtils.addAll(bladesA, sheildsA: _*)
                 val renderB: Array[String] = ArrayUtils.addAll(bladesB, sheildsB: _*)
                 GL11.glPushMatrix
-                GL11.glRotated(Math.toDegrees(tile.mechanicalNode.renderAngle), 0, 1, 0)
+                GL11.glRotated(Math.toDegrees(tile.mechanicalNode.angle), 0, 1, 0)
                 RenderElectricTurbine.MODEL_SMALL.renderOnly(renderA: _*)
                 GL11.glPopMatrix
                 GL11.glPushMatrix
-                GL11.glRotated(-Math.toDegrees(tile.mechanicalNode.renderAngle), 0, 1, 0)
+                GL11.glRotated(-Math.toDegrees(tile.mechanicalNode.angle), 0, 1, 0)
                 RenderElectricTurbine.MODEL_SMALL.renderOnly(renderB: _*)
                 GL11.glPopMatrix
                 RenderElectricTurbine.MODEL_SMALL.renderAllExcept(ArrayUtils.addAll(renderA, renderB: _*): _*)

@@ -37,7 +37,7 @@ import cpw.mods.fml.relauncher.SideOnly
             glScalef(0.51f, 0.5f, 0.5f)
             val dir: ForgeDirection = tile.getDirection
             RenderUtility.rotateBlockBasedOnDirection(dir)
-            glRotatef(Math.toDegrees(tile.mechanicalNode.renderAngle).asInstanceOf[Float], 0, 0, 1)
+            glRotatef(Math.toDegrees(tile.mechanicalNode.angle).asInstanceOf[Float], 0, 0, 1)
             RenderUtility.bind(Reference.blockTextureDirectory + "planks_oak.png")
             RenderGrindingWheel.MODEL.renderAllExcept("teeth")
             RenderUtility.bind(Reference.blockTextureDirectory + "cobblestone.png")

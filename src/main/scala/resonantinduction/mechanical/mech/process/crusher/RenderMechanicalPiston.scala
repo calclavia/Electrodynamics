@@ -37,7 +37,7 @@ import cpw.mods.fml.relauncher.SideOnly
             else RenderUtility.rotateBlockBasedOnDirection(tile.getDirection)
         }
         RenderUtility.bind(RenderMechanicalPiston.TEXTURE)
-        val angle: Double = tile.mechanicalNode.renderAngle
+        val angle: Double = tile.mechanicalNode.angle
         GL11.glPushMatrix
         GL11.glRotated(-Math.toDegrees(angle), 0, 0, 1)
         RenderMechanicalPiston.MODEL.renderAllExcept(ArrayUtils.addAll(shaftParts, staticParts: _*): _*)
