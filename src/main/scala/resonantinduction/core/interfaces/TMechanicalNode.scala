@@ -29,18 +29,16 @@ trait TMechanicalNode extends INode with IVectorWorld
   /**
    * Gets the angular velocity of the mechanical device from a specific side
    *
-   * @param from - The side of the mechanical device
    * @return Angular velocity in meters per second
    */
-  def angularVelocity(from: ForgeDirection): Double
+  def angularVelocity: Double
 
   /**
    * Gets the torque of the mechanical device from a specific side
    *
-   * @param from - The side of the mechanical device
    * @return force
    */
-  def torque(from: ForgeDirection): Double
+  def torque: Double
 
   /**
    * Does the direction flip on this side for rotation

@@ -10,9 +10,6 @@ import resonantinduction.mechanical.mech.grid.MechanicalNode
  */
 class MixerNode(parent: INodeProvider) extends MechanicalNode(parent)
 {
-    //Constructor
-    maxDeltaAngle = Math.toRadians(45)
-
     override def canConnect(direction: ForgeDirection): Boolean =
     {
         return direction == ForgeDirection.DOWN || direction == ForgeDirection.UP

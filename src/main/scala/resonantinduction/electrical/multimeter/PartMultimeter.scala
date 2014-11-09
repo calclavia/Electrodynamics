@@ -172,9 +172,9 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
 
       if (instance != null)
       {
-        getNetwork.torqueGraph.queue(instance.torque(receivingSide))
-        getNetwork.angularVelocityGraph.queue(instance.angularVelocity(receivingSide))
-        getNetwork.powerGraph.queue(instance.torque(receivingSide) * instance.angularVelocity(receivingSide))
+        getNetwork.torqueGraph.queue(instance.torque)
+        getNetwork.angularVelocityGraph.queue(instance.angularVelocity)
+        getNetwork.powerGraph.queue(instance.torque * instance.angularVelocity)
       }
     }
     if (tileEntity.isInstanceOf[IFluidHandler])

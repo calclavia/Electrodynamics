@@ -140,14 +140,12 @@ abstract class PartMechanical extends PartAbstract with JNormalOcclusion with TF
   {
     placementSide = ForgeDirection.getOrientation(nbt.getByte("side"))
     tier = nbt.getByte("tier")
-    mechanicalNode.load(nbt)
   }
 
   override def save(nbt: NBTTagCompound)
   {
     nbt.setByte("side", placementSide.ordinal.asInstanceOf[Byte])
     nbt.setByte("tier", tier.asInstanceOf[Byte])
-    mechanicalNode.save(nbt)
   }
 
   protected def getItem: ItemStack

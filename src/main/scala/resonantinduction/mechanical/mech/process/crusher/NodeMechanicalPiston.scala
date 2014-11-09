@@ -8,9 +8,6 @@ import resonantinduction.mechanical.mech.grid.MechanicalNode
  */
 class NodeMechanicalPiston(parent: TileMechanicalPiston) extends MechanicalNode(parent)
 {
-    //Constructor
-    maxDeltaAngle = Math.toRadians(45)
-
     override def canConnect(dir: ForgeDirection): Boolean =
     {
         return dir ne (getParent.asInstanceOf[TileMechanicalPiston]).getDirection

@@ -26,7 +26,7 @@ abstract class TileMechanical(material: Material) extends TileNode(material) wit
   /** External debug GUI */
   var frame: DebugFrameMechanical = null
 
-  mechanicalNode.onStateChanged = () => if (!world.isRemote && ticks % 3 == 0) sendPacket(1)
+  mechanicalNode.onVelocityChanged = () => if (!world.isRemote && ticks % 3 == 0) sendPacket(1)
   nodes.add(mechanicalNode)
 
   override def update()

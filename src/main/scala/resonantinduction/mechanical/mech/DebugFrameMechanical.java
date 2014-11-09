@@ -109,8 +109,8 @@ public class DebugFrameMechanical extends FrameNodeDebug
                     {
                         case 0: return dir;
                         case 1: return node;
-                        case 2: return node.torque(dir);
-                        case 3: return node.angularVelocity(dir);
+                        case 2: return node.torque();
+                        case 3: return node.angularVelocity();
                     }
                 }
                 return "00000";

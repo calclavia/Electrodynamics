@@ -99,7 +99,7 @@ class TileMixer extends TileMechanical(Material.iron)
    */
   def canWork: Boolean =
   {
-    return mechanicalNode.angularVelocity(ForgeDirection.UNKNOWN) != 0 && !areaBlockedFromMoving
+    return mechanicalNode.angularVelocity != 0 && !areaBlockedFromMoving
   }
 
   def doWork
@@ -113,7 +113,7 @@ class TileMixer extends TileMechanical(Material.iron)
       val entity: Entity = obj.asInstanceOf[Entity]
       val originalPosition: Vector3 = new Vector3(entity)
       val relativePosition: Vector3 = originalPosition.clone.subtract(toVector3.add(0.5))
-      relativePosition.transform(new Quaternion(-mechanicalNode.angularVelocity(ForgeDirection.UNKNOWN), new Vector3(1, 0, 0)))
+      relativePosition.transform(new Quaternion(-mechanicalNode.angularVelocity, new Vector3(1, 0, 0)))
       val newPosition: Vector3 = toVector3.add(0.5).add(relativePosition)
       val difference: Vector3 = newPosition.subtract(originalPosition).multiply(0.5)
       entity.addVelocity(difference.x, difference.y, difference.z)

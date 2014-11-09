@@ -60,18 +60,18 @@ class TileMotor extends TileNode(Material.iron) with TElectric with IRotatable
 
   def receiveMechanical
   {
-    val power: Double = mechNode.torque(ForgeDirection.UNKNOWN) * mechNode.angularVelocity(ForgeDirection.UNKNOWN)
+    val power: Double = mechNode.torque * mechNode.angularVelocity
     val receive: Double = 0 // dcNode.addEnergy(ForgeDirection.UNKNOWN, power, true)
     if (receive > 0)
     {
       val percentageUsed: Double = receive / power
-      mechNode.rotate(this, -mechNode.torque(ForgeDirection.UNKNOWN) * percentageUsed, -mechNode.angularVelocity(ForgeDirection.UNKNOWN) * percentageUsed)
+      mechNode.rotate(this, -mechNode.torque * percentageUsed, -mechNode.angularVelocity * percentageUsed)
     }
   }
 
   def produceMechanical
   {
-    val extract: Double = 0 //dcNode.removeEnergy(ForgeDirection.UNKNOWN, dcNode.getEnergy(ForgeDirection.UNKNOWN), false)
+    val extract: Double = 0 //dcNode.removeEnergy(ForgeDirection.UNKNOWN, dcNode.getEnergy, false)
     if (extract > 0)
     {
       val torqueRatio: Long = ((gearRatio + 1) / 2.2d * (extract)).asInstanceOf[Long]
@@ -81,12 +81,12 @@ class TileMotor extends TileNode(Material.iron) with TElectric with IRotatable
         val maxTorque: Double = (extract) / maxAngularVelocity
         var setAngularVelocity: Double = maxAngularVelocity
         var setTorque: Double = maxTorque
-        val currentTorque: Double = Math.abs(mechNode.torque(ForgeDirection.UNKNOWN))
+        val currentTorque: Double = Math.abs(mechNode.torque)
         if (currentTorque != 0)
-        {setTorque = Math.min(setTorque, maxTorque) * (mechNode.torque(ForgeDirection.UNKNOWN) / currentTorque)}
-        val currentVelo: Double = Math.abs(mechNode.angularVelocity(ForgeDirection.UNKNOWN))
-        if (currentVelo != 0) setAngularVelocity = Math.min(+setAngularVelocity, maxAngularVelocity) * (mechNode.angularVelocity(ForgeDirection.UNKNOWN) / currentVelo)
-        mechNode.rotate(this, setTorque - mechNode.torque(ForgeDirection.UNKNOWN), setAngularVelocity - mechNode.angularVelocity(ForgeDirection.UNKNOWN))
+        {setTorque = Math.min(setTorque, maxTorque) * (mechNode.torque / currentTorque)}
+        val currentVelo: Double = Math.abs(mechNode.angularVelocity)
+        if (currentVelo != 0) setAngularVelocity = Math.min(+setAngularVelocity, maxAngularVelocity) * (mechNode.angularVelocity / currentVelo)
+        mechNode.rotate(this, setTorque - mechNode.torque, setAngularVelocity - mechNode.angularVelocity)
         // dcNode.removeEnergy(ForgeDirection.UNKNOWN, Math.abs(setTorque * setAngularVelocity).asInstanceOf[Long], true)
       }
     }
