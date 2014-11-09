@@ -78,14 +78,7 @@ class GearShaftNode(parent: PartGearShaft) extends MechanicalNode(parent)
     return from == shaft.placementSide || from == shaft.placementSide.getOpposite
   }
 
-  override def inverseRotation(dir: ForgeDirection): Boolean =
-  {
-    if (shaft.placementSide.offsetY != 0 || shaft.placementSide.offsetZ != 0)
-    {
-      return dir == shaft.placementSide.getOpposite
-    }
-    return dir == shaft.placementSide
-  }
+  override def inverseRotation(dir: ForgeDirection): Boolean = false
 
   def shaft: PartGearShaft = getParent.asInstanceOf[PartGearShaft]
 }

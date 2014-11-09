@@ -1,5 +1,6 @@
 package resonantinduction.mechanical.mech.grid
 
+import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.grid.IUpdate
 import resonant.lib.grid.{GridNode, UpdateTicker}
 
@@ -39,7 +40,7 @@ class MechanicalGrid extends GridNode[MechanicalNode](classOf[MechanicalNode]) w
   override protected def populateNode(node: MechanicalNode, prev: MechanicalNode)
   {
     super.populateNode(node, prev)
-    spinMap += (node -> (if (prev != null) !spinMap(prev) else false))
+    spinMap += (node -> (if (prev != null) !spinMap(prev) && node.inverseRotation(ForgeDirection.UNKNOWN) && prev.inverseRotation(ForgeDirection.UNKNOWN) else false))
   }
 
   override def update(deltaTime: Double)
@@ -68,7 +69,7 @@ class MechanicalGrid extends GridNode[MechanicalNode](classOf[MechanicalNode]) w
         .foldLeft((0D, 0D))((b, a) => (a._1 + b._1, a._2 + b._2))
 
       //Calculate the total change in torque and angular velocity
-      delta = (input._1 - input._1 * resistance._1, input._2 - input._2 * resistance._2)
+      delta = (input._1 - input._1 * resistance._1 / getNodes.size(), input._2 - input._2 * resistance._2 / getNodes.size())
     }
 
     //Calculate power
