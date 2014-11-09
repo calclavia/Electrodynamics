@@ -2,9 +2,7 @@ package resonantinduction.archaic.crate
 
 import net.minecraft.block.Block
 import net.minecraft.inventory.InventoryCrafting
-import net.minecraft.item.Item
-import net.minecraft.item.ItemStack
-import net.minecraft.item.crafting.IRecipe
+import net.minecraft.item.{Item, ItemStack}
 import net.minecraftforge.oredict.ShapedOreRecipe
 import resonantinduction.archaic.ArchaicContent
 
@@ -13,7 +11,7 @@ import resonantinduction.archaic.ArchaicContent
  *
  * @author Darkguardsman
  */
-class CrateRecipe(result: ItemStack, recipe: AnyRef*) extends ShapedOreRecipe(result, recipe) with IRecipe
+class CrateRecipe(result: ItemStack, recipe: AnyRef*) extends ShapedOreRecipe(result, recipe)
 {
     def this(result: Block, recipe: AnyRef*)
     {
