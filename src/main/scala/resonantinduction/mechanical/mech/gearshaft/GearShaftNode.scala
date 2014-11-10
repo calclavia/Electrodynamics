@@ -3,7 +3,9 @@ package resonantinduction.mechanical.mech.gearshaft
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.grid.INodeProvider
 import resonant.lib.transform.vector.Vector3
-import resonantinduction.mechanical.mech.gear.PartGear
+import resonant.lib.wrapper.ForgeDirectionWrapper._
+import resonantinduction.core.interfaces.TMechanicalNode
+import resonantinduction.mechanical.mech.gear.{GearNode, PartGear}
 import resonantinduction.mechanical.mech.grid.MechanicalNode
 
 class GearShaftNode(parent: PartGearShaft) extends MechanicalNode(parent)
@@ -78,7 +80,7 @@ class GearShaftNode(parent: PartGearShaft) extends MechanicalNode(parent)
     return from == shaft.placementSide || from == shaft.placementSide.getOpposite
   }
 
-  override def inverseRotation(dir: ForgeDirection): Boolean = false
+  override def inverseRotation(other: TMechanicalNode): Boolean = other.isInstanceOf[GearNode] && other.asInstanceOf[GearNode].parent.asInstanceOf[PartGear].placementSide.offset < Vector3.zero
 
   def shaft: PartGearShaft = getParent.asInstanceOf[PartGearShaft]
 }

@@ -6,8 +6,9 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.grid.INodeProvider
 import resonant.lib.transform.vector.{IVectorWorld, Vector3, VectorWorld}
+import resonant.lib.wrapper.ForgeDirectionWrapper._
 import resonantinduction.core.interfaces.TMechanicalNode
-import resonantinduction.mechanical.mech.gearshaft.PartGearShaft
+import resonantinduction.mechanical.mech.gearshaft.{GearShaftNode, PartGearShaft}
 import resonantinduction.mechanical.mech.grid.MechanicalNode
 
 /**
@@ -119,7 +120,7 @@ class GearNode(parent: PartGear) extends MechanicalNode(parent: PartGear)
             //We are connecting to a shaft.
             val shaft = parent.asInstanceOf[PartGearShaft]
             //Check if the shaft is directing connected to the center of the gear (multiblock cases) and also its direction to make sure the shaft is facing the gear itself
-            return /*shaft.tile.partMap(from.getOpposite.ordinal) != gear && */Math.abs(shaft.placementSide.offsetX) == Math.abs(gear.placementSide.offsetX) && Math.abs(shaft.placementSide.offsetY) == Math.abs(gear.placementSide.offsetY) && Math.abs(shaft.placementSide.offsetZ) == Math.abs(gear.placementSide.offsetZ)
+            return /*shaft.tile.partMap(from.getOpposite.ordinal) != gear && */ Math.abs(shaft.placementSide.offsetX) == Math.abs(gear.placementSide.offsetX) && Math.abs(shaft.placementSide.offsetY) == Math.abs(gear.placementSide.offsetY) && Math.abs(shaft.placementSide.offsetZ) == Math.abs(gear.placementSide.offsetZ)
           }
           else if (parent.isInstanceOf[PartGear])
           {
@@ -195,6 +196,8 @@ class GearNode(parent: PartGear) extends MechanicalNode(parent: PartGear)
     }
     return false
   }
+
+  override def inverseRotation(other: TMechanicalNode): Boolean = !other.isInstanceOf[GearShaftNode] || (other.isInstanceOf[GearShaftNode] && parent.placementSide.offset < Vector3.zero)
 
   override def getRadius(dir: ForgeDirection, other: TMechanicalNode): Double =
   {

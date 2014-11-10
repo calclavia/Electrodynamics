@@ -22,8 +22,9 @@ class TurbineNode(tileTurbineBase: TileTurbine) extends MechanicalNode(tileTurbi
     return turbine.getMultiBlock.isPrimary && other.isInstanceOf[MechanicalNode] && !(other.isInstanceOf[TurbineNode]) && from == turbine.getDirection
   }
 
+  /**
   override def inverseRotation(dir: ForgeDirection): Boolean =
   {
     return dir == turbine.getDirection.getOpposite
-  }
+  }*/
 }

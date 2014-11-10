@@ -11,11 +11,11 @@ import org.lwjgl.opengl.GL11.glRotatef
 import resonant.content.prefab.scal.render.ISimpleItemRenderer
 import resonant.lib.render.RenderUtility
 import resonantinduction.core.Reference
-
+import resonant.lib.wrapper.ForgeDirectionWrapper._
 @SideOnly(Side.CLIENT)
 object RenderGearShaft extends ISimpleItemRenderer
 {
-  final val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "gears.obj"))
+  val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "gears.obj"))
 
   def renderInventoryItem(`type`: IItemRenderer.ItemRenderType, itemStack: ItemStack, data: AnyRef*)
   {
@@ -51,7 +51,8 @@ object RenderGearShaft extends ISimpleItemRenderer
     {
       glRotatef(90, 0, 0, 1)
     }
-    GL11.glRotatef(Math.toDegrees(part.mechanicalNode.angle).asInstanceOf[Float], 0, 1, 0)
+
+    GL11.glRotated(Math.toDegrees(part.mechanicalNode.angle) * part.placementSide.offset.toArray.sum, 0, 1, 0)
 
     if (part.tier == 1)
     {

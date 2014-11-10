@@ -57,8 +57,7 @@ abstract class PartMechanical extends PartAbstract with JNormalOcclusion with TF
   {
     if (!world.isRemote)
     {
-      println(mechanicalNode)
-      println(mechanicalNode.getMechanicalGrid)
+      println("Vel: " + mechanicalNode.angularVelocity)
     }
 
     super.activate(player, hit, item)

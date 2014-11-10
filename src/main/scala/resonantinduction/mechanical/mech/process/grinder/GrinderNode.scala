@@ -22,9 +22,9 @@ class GrinderNode(parent: TileGrindingWheel) extends MechanicalNode(parent: Tile
     return grider.getDirection != from && grider.getDirection.getOpposite != from
   }
 
-
+/*
   override def inverseRotation(dir: ForgeDirection): Boolean =
   {
     return !(dir.offsetX > 0 || dir.offsetZ < 0 || dir.offsetY < 0)
-  }
+  }*/
 }

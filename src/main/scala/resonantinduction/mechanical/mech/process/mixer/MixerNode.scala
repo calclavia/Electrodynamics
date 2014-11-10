@@ -15,8 +15,9 @@ class MixerNode(parent: INodeProvider) extends MechanicalNode(parent)
         return direction == ForgeDirection.DOWN || direction == ForgeDirection.UP
     }
 
+    /*
     override def inverseRotation(dir: ForgeDirection): Boolean =
     {
         return dir == ForgeDirection.DOWN
-    }
+    }*/
 }

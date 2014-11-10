@@ -199,7 +199,8 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
     return FaceMicroClass.aBounds(0x10 | this.placementSide.ordinal)
   }
 
-  @SideOnly(Side.CLIENT) override def getRenderBounds: Cuboid6 = Cuboid6.full.copy.expand(multiBlockRadius)
+  @SideOnly(Side.CLIENT)
+  override def getRenderBounds: Cuboid6 = Cuboid6.full.copy.expand(multiBlockRadius)
 
   override def toString = "[PartGear]" + x + "x " + y + "y " + z + "z " + getSlotMask + "s "
 }

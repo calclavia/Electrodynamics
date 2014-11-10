@@ -9,6 +9,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
 import resonant.content.prefab.scal.render.ISimpleItemRenderer
 import resonant.lib.render.RenderUtility
+import resonant.lib.wrapper.ForgeDirectionWrapper._
 import resonantinduction.core.Reference
 
 @SideOnly(Side.CLIENT)
@@ -51,7 +52,7 @@ object RenderGear extends ISimpleItemRenderer
       GL11.glPushMatrix()
       GL11.glTranslatef(x.toFloat + 0.5f, y.toFloat + 0.5f, z.toFloat + 0.5f)
       GL11.glPushMatrix()
-      renderGear(part.placementSide.ordinal, part.tier, part.getMultiBlock.isConstructed, Math.toDegrees(part.mechanicalNode.angle) * (part.placementSide.offsetX + part.placementSide.offsetY + part.placementSide.offsetZ))
+      renderGear(part.placementSide.ordinal, part.tier, part.getMultiBlock.isConstructed, Math.toDegrees(part.mechanicalNode.angle))
       GL11.glPopMatrix()
       GL11.glPopMatrix()
     }

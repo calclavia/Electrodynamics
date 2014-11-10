@@ -1,6 +1,5 @@
 package resonantinduction.mechanical.mech.grid
 
-import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.grid.IUpdate
 import resonant.lib.grid.{GridNode, UpdateTicker}
 
@@ -40,7 +39,8 @@ class MechanicalGrid extends GridNode[MechanicalNode](classOf[MechanicalNode]) w
   override protected def populateNode(node: MechanicalNode, prev: MechanicalNode)
   {
     super.populateNode(node, prev)
-    spinMap += (node -> (if (prev != null) !spinMap(prev) && node.inverseRotation(ForgeDirection.UNKNOWN) && prev.inverseRotation(ForgeDirection.UNKNOWN) else false))
+    val dir = if (prev != null) (if (node.inverseRotation(prev)) !spinMap(prev) else spinMap(prev)) else false
+    spinMap += (node -> dir)
   }
 
   override def update(deltaTime: Double)

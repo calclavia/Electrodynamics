@@ -43,10 +43,10 @@ trait TMechanicalNode extends INode with IVectorWorld
   /**
    * Does the direction flip on this side for rotation
    *
-   * @param from - The side of the mechanical device
+   * @param other - The other mechanical node
    * @return boolean, true = flipped, false = not
    */
-  def inverseRotation(from: ForgeDirection): Boolean = false
+  def inverseRotation(other: TMechanicalNode): Boolean = true
 
   /**
    * Applies rotational force and velocity to this node increasing its current rotation value
