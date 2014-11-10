@@ -30,7 +30,7 @@ class PartFramedWire extends PartFramedNode with TWire
       super.reconstruct()
 
       if (connectionMask != prevCon)
-        sendConnectionUpdate()
+        sendPacket(0)
     }
 
     override def connect[B <: DCNode](obj: B, dir: ForgeDirection) =

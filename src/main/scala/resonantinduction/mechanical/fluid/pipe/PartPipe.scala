@@ -32,7 +32,7 @@ class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorab
   private var markPacket = true
 
   material = PipeMaterials.ceramic
-  node.onConnectionChanged = () => sendConnectionUpdate()
+  node.onConnectionChanged = () => sendPacket(0)
 
   def preparePlacement(meta: Int)
   {
@@ -64,42 +64,35 @@ class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorab
    */
   override def write(packet: MCDataOutput, id: Int)
   {
-    super[TMaterial].write(packet,id)
-    super[PartFramedNode].write(packet,id)
-    super[TColorable].write(packet,id)
+    super[PartFramedNode].write(packet, id)
 
-    if(id == 3)
+//    super[TMaterial].write(packet, id)
+//    super[TColorable].write(packet, id)
+
+ /*
+    if (id == 3)
     {
       //Tank Packet
       val nbt = new NBTTagCompound
-      var averageAmount: Int = 0
-      if (averageTankData.size > 0)
-      {
-        for (i <- 0 until averageTankData.size)
-        {
-          {
-            averageAmount += averageTankData.get(i)
-          }
-        }
-
-        averageAmount /= averageTankData.size
-      }
+      val averageAmount = averageTankData.reduce(_ + _) / averageTankData.size
       val tempTank = if (tank.getFluid != null) new FluidTank(tank.getFluid.getFluid, averageAmount, tank.getCapacity) else new FluidTank(tank.getCapacity)
       tempTank.writeToNBT(nbt)
       packet.writeInt(tank.getCapacity).writeNBTTagCompound(nbt)
-    }
+    }*/
   }
 
   override def read(packet: MCDataInput, packetID: Int)
   {
     super[PartFramedNode].read(packet, packetID)
-    super[TColorable].read(packet, packetID)
 
+//    super[TMaterial].read(packet, packetID)
+//    super[TColorable].read(packet, packetID)
+/*
     if (packetID == 3)
     {
       tank.setCapacity(packet.readInt)
       tank.readFromNBT(packet.readNBTTagCompound)
-    }
+    }*/
   }
 
   /**

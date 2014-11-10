@@ -72,26 +72,24 @@ abstract class PartFramedNode extends PartAbstract with TPartNodeProvider with T
 
   def isCurrentlyConnected(side: ForgeDirection): Boolean = connectionMapContainsSide(clientRenderMask, side)
 
-  /** Packet Methods */
-  def sendConnectionUpdate()
-  {
-    if (!world.isRemote)
-      tile.getWriteStream(this).writeByte(0).writeByte(node.connectedMask)
-  }
-
   override def write(packet: MCDataOutput, id: Int)
   {
     super.write(packet, id)
-    packet.writeByte(node.connectedMask)
+
+    if (id == 0)
+    {
+      //      packet.writeByte(0)
+      //      packet.writeByte(node.connectedMask.toByte)
+    }
   }
 
-  override def read(packet: MCDataInput, packetID: Int)
+  override def read(packet: MCDataInput, id: Int)
   {
-    super.read(packet, packetID)
+    super.read(packet, id)
 
-    if (packetID == 0)
+    if (id == 0)
     {
-      clientRenderMask = packet.readByte
+      //      clientRenderMask = packet.readByte()
       tile.markRender()
     }
   }
