@@ -20,7 +20,7 @@ import scala.collection.mutable
 abstract class PartFramedNode extends PartAbstract with TPartNodeProvider with TSlottedPart with TNormalOcclusion with TIconHitEffects
 {
   /** Bitmask connections */
-  protected var clientRenderMask = 0x00
+  var clientRenderMask = 0x00
 
   @SideOnly(Side.CLIENT)
   protected var breakIcon: IIcon = null

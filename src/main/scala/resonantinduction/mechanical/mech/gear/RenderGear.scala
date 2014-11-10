@@ -39,13 +39,9 @@ object RenderGear extends ISimpleItemRenderer
     GL11.glRotated(angle, 0, 1, 0)
 
     if (isLarge)
-    {
       RenderGear.model.renderOnly("LargeGear")
-    }
     else
-    {
       RenderGear.model.renderOnly("SmallGear")
-    }
   }
 
   def renderDynamic(part: PartGear, x: Double, y: Double, z: Double, tier: Int)
@@ -53,9 +49,9 @@ object RenderGear extends ISimpleItemRenderer
     if (part.getMultiBlock.isPrimary)
     {
       GL11.glPushMatrix()
-      GL11.glTranslatef(x.asInstanceOf[Float] + 0.5f, y.asInstanceOf[Float] + 0.5f, z.asInstanceOf[Float] + 0.5f)
+      GL11.glTranslatef(x.toFloat + 0.5f, y.toFloat + 0.5f, z.toFloat + 0.5f)
       GL11.glPushMatrix()
-      renderGear(part.placementSide.ordinal, part.tier, part.getMultiBlock.isConstructed, Math.toDegrees(part.mechanicalNode.angle))
+      renderGear(part.placementSide.ordinal, part.tier, part.getMultiBlock.isConstructed, Math.toDegrees(part.mechanicalNode.angle) * (part.placementSide.offsetX + part.placementSide.offsetY + part.placementSide.offsetZ))
       GL11.glPopMatrix()
       GL11.glPopMatrix()
     }
