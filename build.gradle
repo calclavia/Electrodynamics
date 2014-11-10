@@ -154,6 +154,5 @@ repositories {
 }
 
 dependencies {
-    compile group: 'dev.calclavia.universalelectricity', name: 'universal-electricity', version: "${config.version.universalelectricity}", classifier: "dev"
     compile group: 'dev.calclavia.resonantengine', name: 'resonant-engine', version: "${config.version.resonantengine}", classifier: "dev"
 }
