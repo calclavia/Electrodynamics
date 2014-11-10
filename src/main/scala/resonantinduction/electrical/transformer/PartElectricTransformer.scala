@@ -38,34 +38,30 @@ class PartElectricTransformer extends PartFace with INodeProvider
     inputNode.otherNode = outputNode
   }
 
-  override def readDesc(packet: MCDataInput)
+  override def read(packet: MCDataInput, id: Int)
   {
-    super.readDesc(packet)
+    super.read(packet, id)
     multiplier = packet.readByte
   }
 
-  override def writeDesc(packet: MCDataOutput)
+  override def write(packet: MCDataOutput, id: Int)
   {
-    super.writeDesc(packet)
+    super.write(packet, id)
     packet.writeByte(multiplier)
   }
 
-  override def doesTick: Boolean =
-  {
-    return false
-  }
+  override def doesTick: Boolean = false
 
   protected def getItem: ItemStack =
   {
     return new ItemStack(ElectricalContent.itemTransformer)
   }
 
-  @SideOnly(Side.CLIENT) override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
+  @SideOnly(Side.CLIENT)
+  override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
   {
     if (pass == 0)
-    {
-      RenderTransformer.INSTANCE.render(this, pos.x, pos.y, pos.z)
-    }
+      RenderTransformer.render(this, pos.x, pos.y, pos.z)
   }
 
   override def load(nbt: NBTTagCompound)

@@ -1,14 +1,13 @@
 package resonantinduction.core.prefab.part.connector
 
 import codechicken.lib.data.{MCDataInput, MCDataOutput}
-import codechicken.multipart.TMultiPart
 import net.minecraft.nbt.NBTTagCompound
 
 /**
  * Trait applied to objects that can associates with a material.
  * @author Calclavia
  */
-trait TMaterial[M] extends TMultiPart
+trait TMaterial[M] extends PartAbstract
 {
   var material: M = _
 
@@ -16,14 +15,16 @@ trait TMaterial[M] extends TMultiPart
 
   def getMaterialID: Int
 
-  override def readDesc(packet: MCDataInput)
+  override def read(packet: MCDataInput, id: Int)
   {
-    setMaterial(packet.readByte)
+    if (id == 0)
+      setMaterial(packet.readByte)
   }
 
-  override def writeDesc(packet: MCDataOutput)
+  override def write(packet: MCDataOutput, id: Int)
   {
-    packet.writeByte(getMaterialID.toByte)
+    if (id == 0)
+      packet.writeByte(getMaterialID.toByte)
   }
 
   override def save(nbt: NBTTagCompound)

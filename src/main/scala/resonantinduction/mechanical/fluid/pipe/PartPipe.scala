@@ -54,49 +54,40 @@ class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorab
 
     if (!world.isRemote && markPacket)
     {
-      sendFluidUpdate()
+      sendPacket(3)
       markPacket = false
     }
   }
 
   /**
-   * Sends fluid level to the client to be used in the renderer
-   */
-  def sendFluidUpdate()
-  {
-    val nbt = new NBTTagCompound
-    var averageAmount: Int = 0
-    if (averageTankData.size > 0)
-    {
-      for (i <- 0 until averageTankData.size)
-      {
-        {
-          averageAmount += averageTankData.get(i)
-        }
-      }
-
-      averageAmount /= averageTankData.size
-    }
-    val tempTank: FluidTank = if (tank.getFluid != null) new FluidTank(tank.getFluid.getFluid, averageAmount, tank.getCapacity) else new FluidTank(tank.getCapacity)
-    tempTank.writeToNBT(nbt)
-    tile.getWriteStream(this).writeByte(3).writeInt(tank.getCapacity).writeNBTTagCompound(nbt)
-  }
-
-  /**
    * Packet Methods
    */
-  override def writeDesc(packet: MCDataOutput)
+  override def write(packet: MCDataOutput, id: Int)
   {
-    super[TMaterial].writeDesc(packet)
-    super[PartFramedNode].writeDesc(packet)
-    super[TColorable].writeDesc(packet)
-  }
+    super[TMaterial].write(packet,id)
+    super[PartFramedNode].write(packet,id)
+    super[TColorable].write(packet,id)
 
-  override def readDesc(packet: MCDataInput)
-  {
-    super[TMaterial].readDesc(packet)
-    super[PartFramedNode].readDesc(packet)
-    super[TColorable].readDesc(packet)
+    if(id == 3)
+    {
+      //Tank Packet
+      val nbt = new NBTTagCompound
+      var averageAmount: Int = 0
+      if (averageTankData.size > 0)
+      {
+        for (i <- 0 until averageTankData.size)
+        {
+          {
+            averageAmount += averageTankData.get(i)
+          }
+        }
+
+        averageAmount /= averageTankData.size
+      }
+      val tempTank = if (tank.getFluid != null) new FluidTank(tank.getFluid.getFluid, averageAmount, tank.getCapacity) else new FluidTank(tank.getCapacity)
+      tempTank.writeToNBT(nbt)
+      packet.writeInt(tank.getCapacity).writeNBTTagCompound(nbt)
+    }
   }
 
   override def read(packet: MCDataInput, packetID: Int)

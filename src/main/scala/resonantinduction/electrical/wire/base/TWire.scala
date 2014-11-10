@@ -3,11 +3,8 @@ package resonantinduction.electrical.wire.base
 import codechicken.lib.data.{MCDataInput, MCDataOutput}
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraftforge.common.util.ForgeDirection
-import resonant.lib.grid.electric.DCNode
 import resonantinduction.core.prefab.part.connector._
 import resonantinduction.electrical.ElectricalContent
-import resonant.api.grid.INodeProvider
 
 /**
  * Abstract class extended by both flat and framed wires to handle material, insulation, color and multipart node logic.
@@ -23,6 +20,7 @@ import resonant.api.grid.INodeProvider
 trait TWire extends PartAbstract with TPartNodeProvider with TMaterial[WireMaterial] with TInsulatable with TColorable
 {
   override protected val insulationItem: Item = ElectricalContent.itemInsulation
+
   material = WireMaterial.COPPER
 
   def preparePlacement(side: Int, meta: Int)
@@ -39,24 +37,18 @@ trait TWire extends PartAbstract with TPartNodeProvider with TMaterial[WireMater
   /**
    * Packet Methods
    */
-  override def writeDesc(packet: MCDataOutput)
+  override def write(packet: MCDataOutput, id: Int)
   {
-    super[TMaterial].writeDesc(packet)
-    super[TInsulatable].writeDesc(packet)
-    super[TColorable].writeDesc(packet)
+    super[TMaterial].write(packet, id)
+    super[TInsulatable].write(packet, id)
+    super[TColorable].write(packet, id)
   }
 
-  override def readDesc(packet: MCDataInput)
+  override def read(packet: MCDataInput, id: Int)
   {
-    super[TMaterial].readDesc(packet)
-    super[TInsulatable].readDesc(packet)
-    super[TColorable].readDesc(packet)
-  }
-
-  override def read(packet: MCDataInput, packetID: Int)
-  {
-    super[TInsulatable].read(packet, packetID)
-    super[TColorable].read(packet, packetID)
+    super[TMaterial].read(packet, id)
+    super[TInsulatable].read(packet, id)
+    super[TColorable].read(packet, id)
   }
 
   /**

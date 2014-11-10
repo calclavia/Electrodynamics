@@ -96,19 +96,19 @@ trait TInsulatable extends PartAbstract
       drops += new ItemStack(insulationItem)
   }
 
-  override def writeDesc(packet: MCDataOutput)
+  override def write(packet: MCDataOutput, id: Int)
   {
-    packet.writeBoolean(insulated)
-  }
+    super.write(packet, id)
 
-  override def readDesc(packet: MCDataInput)
-  {
-    _insulated = packet.readBoolean
+    if (id <= 1)
+      packet.writeBoolean(insulated)
   }
 
   override def read(packet: MCDataInput, packetID: Int)
   {
-    if (packetID == 1)
+    super.read(packet,packetID)
+
+    if (packetID <= 1)
       _insulated = packet.readBoolean
   }
 

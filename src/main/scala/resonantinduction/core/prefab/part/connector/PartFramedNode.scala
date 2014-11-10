@@ -79,15 +79,9 @@ abstract class PartFramedNode extends PartAbstract with TPartNodeProvider with T
       tile.getWriteStream(this).writeByte(0).writeByte(node.connectedMask)
   }
 
-  override def readDesc(packet: MCDataInput)
+  override def write(packet: MCDataOutput, id: Int)
   {
-    super.readDesc(packet)
-    clientRenderMask = packet.readByte
-  }
-
-  override def writeDesc(packet: MCDataOutput)
-  {
-    super.writeDesc(packet)
+    super.write(packet, id)
     packet.writeByte(node.connectedMask)
   }
 

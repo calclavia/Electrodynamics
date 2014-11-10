@@ -16,17 +16,17 @@ import net.minecraft.util.{ChatComponentText, MovingObjectPosition}
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.{FluidTankInfo, IFluidHandler}
 import resonant.api.IRemovable
+import resonant.api.grid.INodeProvider
 import resonant.lib.grid.Compatibility
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.IPacketReceiver
+import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.WrenchUtility
 import resonantinduction.core.ResonantInduction
 import resonantinduction.core.interfaces.TMechanicalNode
 import resonantinduction.core.prefab.part.ChickenBonesWrapper._
 import resonantinduction.core.prefab.part.PartFace
 import resonantinduction.electrical.ElectricalContent
-import resonant.api.grid.INodeProvider
-import resonant.lib.transform.vector.Vector3
 
 import scala.collection.convert.wrapAll._
 
@@ -68,7 +68,8 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
 
   override def preRemove
   {
-    if (!world.isRemote) getNetwork.remove(this)
+    if (!world.isRemote)
+      getNetwork.remove(this)
   }
 
   def updateDesc
@@ -76,9 +77,9 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
     writeDesc(getWriteStream)
   }
 
-  def updateGraph
+  def updateGraph()
   {
-    writeGraph(getWriteStream)
+    sendPacket(2)
   }
 
   /** Gets the multimeter on the same plane. */
@@ -190,43 +191,32 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
     getNetwork.energyCapacityGraph.queue(Compatibility.getMaxEnergy(tileEntity, receivingSide))
   }
 
-  override def readDesc(packet: MCDataInput)
+  override def write(packet: MCDataOutput, id: Int)
   {
-    packet.readByte
-    placementSide = ForgeDirection.getOrientation(packet.readByte)
-    facing = packet.readByte
-    detectMode = DetectModes(packet.readByte).asInstanceOf[DetectModes.DetectMode]
-    detectType = packet.readByte
-    graphType = packet.readByte
-    getNetwork.center = new Vector3(packet.readNBTTagCompound)
-    getNetwork.size = new Vector3(packet.readNBTTagCompound)
-    getNetwork.isEnabled = packet.readBoolean
-  }
+    super.write(packet, id)
 
-  override def writeDesc(packet: MCDataOutput)
-  {
-    packet.writeByte(0)
-    packet.writeByte(placementSide.ordinal)
-    packet.writeByte(facing)
-    packet.writeByte(detectMode.id)
-    packet.writeByte(detectType)
-    packet.writeByte(graphType)
-    packet.writeNBTTagCompound(getNetwork.center.writeNBT(new NBTTagCompound))
-    packet.writeNBTTagCompound(getNetwork.size.writeNBT(new NBTTagCompound))
-    packet.writeBoolean(getNetwork.isEnabled)
-  }
-
-  def writeGraph(packet: MCDataOutput)
-  {
-    packet.writeByte(2)
-    isPrimary = getNetwork.isPrimary(this)
-    packet.writeBoolean(isPrimary)
-    if (isPrimary) packet.writeNBTTagCompound(getNetwork.save)
-  }
-
-  override def read(packet: MCDataInput)
-  {
-    read(packet, packet.readUByte)
+    id match
+    {
+      case 0 =>
+      {
+        packet.writeByte(placementSide.ordinal)
+        packet.writeByte(facing)
+        packet.writeByte(detectMode.id)
+        packet.writeByte(detectType)
+        packet.writeByte(graphType)
+        packet.writeNBTTagCompound(getNetwork.center.writeNBT(new NBTTagCompound))
+        packet.writeNBTTagCompound(getNetwork.size.writeNBT(new NBTTagCompound))
+        packet.writeBoolean(getNetwork.isEnabled)
+      }
+      case 2 =>
+      {
+        //Graph
+        packet.writeByte(2)
+        isPrimary = getNetwork.isPrimary(this)
+        packet.writeBoolean(isPrimary)
+        if (isPrimary) packet.writeNBTTagCompound(getNetwork.save)
+      }
+    }
   }
 
   override def read(packet: MCDataInput, packetID: Int)

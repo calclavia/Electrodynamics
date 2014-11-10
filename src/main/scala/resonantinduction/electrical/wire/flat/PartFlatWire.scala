@@ -163,34 +163,33 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
     tag.setInteger("connMap", connectionMask)
   }
 
-  override def writeDesc(packet: MCDataOutput)
+  override def write(packet: MCDataOutput, id: Int)
   {
-    super.writeDesc(packet)
-    packet.writeByte(side)
-    packet.writeInt(connectionMask)
-  }
+    super.write(packet, id)
 
-  override def readDesc(packet: MCDataInput)
-  {
-    super.readDesc(packet)
-    side = packet.readByte
-    connectionMask = packet.readInt
-  }
-
-  override def read(packet: MCDataInput, packetID: Int)
-  {
-    super.read(packet, packetID)
-
-    if (packetID == 3)
+    id match
     {
-      connectionMask = packet.readInt
-      tile.markRender()
+      case 0 =>
+        packet.writeByte(side)
+        packet.writeInt(connectionMask)
+      case 3 =>
+        packet.writeInt(connectionMask)
     }
   }
 
-  def sendConnUpdate()
+  override def read(packet: MCDataInput, id: Int)
   {
-    tile.getWriteStream(this).writeByte(3).writeInt(connectionMask)
+    super.read(packet, id)
+
+    id match
+    {
+      case 0 =>
+        side = packet.readByte
+        connectionMask = packet.readInt
+      case 3 =>
+        connectionMask = packet.readInt
+        tile.markRender()
+    }
   }
 
   /**
@@ -234,7 +233,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
     super.onAdded()
 
     if (!world.isRemote)
-      sendConnUpdate()
+      sendPacket(3)
   }
 
   override def onPartChanged(part: TMultiPart)
@@ -242,7 +241,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
     super.onPartChanged(part)
 
     if (!world.isRemote)
-      sendConnUpdate()
+      sendPacket(3)
   }
 
   override def onNeighborChanged()
@@ -254,7 +253,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
     super.onNeighborChanged()
 
     if (!world.isRemote)
-      sendConnUpdate()
+      sendPacket(3)
   }
 
   def notifyCornerChange(r: Int)
@@ -799,7 +798,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
         }
         if (oldConn != PartFlatWire.this.connectionMask)
         {
-          sendConnUpdate
+          sendPacket(3)
         }
         return true
       }
@@ -819,7 +818,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
         PartFlatWire.this.connectionMask |= 0x10 << r
         if (oldConn != PartFlatWire.this.connectionMask)
         {
-          sendConnUpdate()
+          sendPacket(3)
         }
         return true
       }
@@ -839,7 +838,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
         PartFlatWire.this.connectionMask |= 0x100 << r
         if (oldConn != PartFlatWire.this.connectionMask)
         {
-          sendConnUpdate()
+          sendPacket(3)
         }
         return true
       }

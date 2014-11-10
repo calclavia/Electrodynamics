@@ -8,10 +8,11 @@ import net.minecraft.client.renderer.RenderBlocks
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.lib.grid.electric.DCNode
+import resonant.lib.wrapper.BitmaskWrapper._
 import resonantinduction.core.prefab.node.TMultipartNode
 import resonantinduction.core.prefab.part.connector.PartFramedNode
 import resonantinduction.electrical.wire.base.TWire
-import resonant.lib.wrapper.BitmaskWrapper._
+
 /**
  * Fluid transport pipe
  *
@@ -48,20 +49,16 @@ class PartFramedWire extends PartFramedNode with TWire
   /**
    * Packet Methods
    */
-  override def writeDesc(packet: MCDataOutput)
+  override def write(packet: MCDataOutput, id: Int)
   {
-    super[PartFramedNode].writeDesc(packet)
-    super[TWire].writeDesc(packet)
-  }
-
-  override def readDesc(packet: MCDataInput)
-  {
-    super[PartFramedNode].readDesc(packet)
-    super[TWire].readDesc(packet)
+    super.write(packet, id)
+    super[PartFramedNode].write(packet, id)
+    super[TWire].write(packet, id)
   }
 
   override def read(packet: MCDataInput, packetID: Int)
   {
+    super.read(packet, packetID)
     super[PartFramedNode].read(packet, packetID)
     super[TWire].read(packet, packetID)
   }

@@ -36,13 +36,13 @@ abstract class PartFace extends PartAbstract with TCuboidPart with JNormalOcclus
     this.facing = (facing - 2).asInstanceOf[Byte]
   }
 
-  override def readDesc(packet: MCDataInput)
+  override def read(packet: MCDataInput, id: Int)
   {
     placementSide = ForgeDirection.getOrientation(packet.readByte)
     facing = packet.readByte
   }
 
-  override def writeDesc(packet: MCDataOutput)
+  override def write(packet: MCDataOutput, id: Int)
   {
     packet.writeByte(placementSide.ordinal)
     packet.writeByte(facing)

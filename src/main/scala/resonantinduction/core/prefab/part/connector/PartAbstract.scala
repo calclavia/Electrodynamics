@@ -70,30 +70,24 @@ abstract class PartAbstract extends TMultiPart with TraitTicker
     write(getWriteStream, id)
   }
 
-  def write(packet: MCDataOutput, id: Int)
-  {
-    packet.writeByte(id)
-  }
-
-  /**
-   * Should NOT override!
-   */
-  override def writeDesc(packet: MCDataOutput)
+  override final def writeDesc(packet: MCDataOutput)
   {
     write(packet, 0)
   }
 
-  /**
-   * Should NOT override!
-   */
-  override def readDesc(packet: MCDataInput)
+  override final def readDesc(packet: MCDataInput)
   {
     read(packet)
   }
 
-  override def read(packet: MCDataInput)
+  override final def read(packet: MCDataInput)
   {
     read(packet, packet.readUByte)
+  }
+
+  def write(packet: MCDataOutput, id: Int)
+  {
+    packet.writeByte(id)
   }
 
   def read(packet: MCDataInput, id: Int)

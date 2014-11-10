@@ -42,7 +42,7 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
       markVelocityUpdate = true
   }
 
-  mechanicalNode.onGridReconstruct = () => if(!world.isRemote) sendPacket(2)
+  mechanicalNode.onGridReconstruct = () => if (world != null && !world.isRemote) sendPacket(2)
 
   //TODO: Can we not have update ticks here?
   override def update()
@@ -95,7 +95,7 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
   /** Is this gear block the one in the center-edge of the multiblock that can interact with other
     * gears?
     *
-    * @return */
+    * @return*/
   def isCenterMultiBlock: Boolean =
   {
     if (!getMultiBlock.isConstructed)

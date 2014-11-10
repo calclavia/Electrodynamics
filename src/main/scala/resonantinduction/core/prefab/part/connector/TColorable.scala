@@ -67,22 +67,22 @@ trait TColorable extends PartAbstract
     return false
   }
 
-  override def readDesc(packet: MCDataInput)
+  override def write(packet: MCDataOutput, id: Int)
   {
-    colorID = packet.readByte
-  }
+    super.write(packet, id)
 
-  override def writeDesc(packet: MCDataOutput)
-  {
-    packet.writeByte(colorID.toByte)
+    if (id == 0 || id == 2)
+      packet.writeByte(colorID.toByte)
   }
 
   override def read(packet: MCDataInput, packetID: Int)
   {
-    if (packetID == 2)
+    packetID match
     {
-      colorID = packet.readInt()
-      tile.markRender()
+      case 0 => colorID = packet.readByte
+      case 2 =>
+        colorID = packet.readInt()
+        tile.markRender()
     }
   }
 
