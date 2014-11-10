@@ -17,7 +17,7 @@ class MechanicalGrid extends GridNode[MechanicalNode](classOf[MechanicalNode]) w
    * A map marking out the relative spin directions of each node.
    * Updated upon recache
    */
-  protected[grid] val spinMap = mutable.WeakHashMap.empty[MechanicalNode, Boolean]
+  val spinMap = mutable.WeakHashMap.empty[MechanicalNode, Boolean]
 
   /**
    * The power of the mechanical grid
@@ -41,6 +41,10 @@ class MechanicalGrid extends GridNode[MechanicalNode](classOf[MechanicalNode]) w
     super.populateNode(node, prev)
     val dir = if (prev != null) (if (node.inverseRotation(prev)) !spinMap(prev) else spinMap(prev)) else false
     spinMap += (node -> dir)
+
+    //Set mechanical node's initial angle
+    if (prev != null)
+      node.prevAngle = (prev.prevAngle + prev.angleDisplacement) % (2 * Math.PI)
   }
 
   override def update(deltaTime: Double)

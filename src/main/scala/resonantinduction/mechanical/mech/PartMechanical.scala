@@ -42,7 +42,7 @@ abstract class PartMechanical extends PartAbstract with JNormalOcclusion with TF
 
     if (markVelocityUpdate)
     {
-      sendVelocityPacket()
+      sendPacket(1)
       markVelocityUpdate = false
     }
   }
@@ -57,45 +57,40 @@ abstract class PartMechanical extends PartAbstract with JNormalOcclusion with TF
   {
     if (!world.isRemote)
     {
-      println("Vel: " + mechanicalNode.angularVelocity)
+      println("Angle: " + mechanicalNode.prevAngle)
+      sendPacket(2)
     }
 
     super.activate(player, hit, item)
   }
 
-  /** Packet Code. */
-  def sendVelocityPacket()
+  override def write(packet: MCDataOutput, id: Int)
   {
-    if (world != null && !world.isRemote)
+    super.write(packet, id)
+
+    id match
     {
-      getWriteStream.writeByte(1).writeDouble(mechanicalNode.angularVelocity)
+      case 0 =>
+      {
+        val nbt = new NBTTagCompound
+        save(nbt)
+        packet.writeNBTTagCompound(nbt)
+      }
+      case 1 => packet.writeFloat(mechanicalNode.angularVelocity.toFloat)
+      case 2 => packet.writeFloat(mechanicalNode.prevAngle.toFloat)
     }
   }
 
-  override def read(packet: MCDataInput, packetID: Int)
+  override def read(packet: MCDataInput, id: Int)
   {
-    if (packetID == 0)
-    {
-      load(packet.readNBTTagCompound)
-    }
-    else if (packetID == 1)
-    {
-      mechanicalNode.angularVelocity = packet.readDouble
-    }
-  }
+    super.read(packet, id)
 
-  override def readDesc(packet: MCDataInput)
-  {
-    packet.readByte
-    load(packet.readNBTTagCompound)
-  }
-
-  override def writeDesc(packet: MCDataOutput)
-  {
-    packet.writeByte(0)
-    val nbt: NBTTagCompound = new NBTTagCompound
-    save(nbt)
-    packet.writeNBTTagCompound(nbt)
+    id match
+    {
+      case 0 => load(packet.readNBTTagCompound)
+      case 1 => mechanicalNode.angularVelocity = packet.readFloat()
+      case 2 => mechanicalNode.prevAngle = packet.readFloat()
+    }
   }
 
   override def redstoneConductionMap: Int = 0

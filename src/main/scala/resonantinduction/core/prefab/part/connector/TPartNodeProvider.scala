@@ -47,7 +47,8 @@ trait TPartNodeProvider extends PartAbstract with INodeProvider
 
   override def onWorldSeparate()
   {
-    nodes.foreach(_.deconstruct())
+    if (!world.isRemote)
+      nodes.foreach(_.deconstruct())
   }
 
   override def save(nbt: NBTTagCompound)

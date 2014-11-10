@@ -42,6 +42,8 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
       markVelocityUpdate = true
   }
 
+  mechanicalNode.onGridReconstruct = () => if(!world.isRemote) sendPacket(2)
+
   //TODO: Can we not have update ticks here?
   override def update()
   {

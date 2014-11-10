@@ -15,23 +15,30 @@ import resonantinduction.core.prefab.node.TMultipartNode
  */
 class MechanicalNode(parent: INodeProvider) extends NodeGrid[MechanicalNode](parent) with TMultipartNode[MechanicalNode] with TMechanicalNode with IVectorWorld
 {
-  /**
-   * Allows the node to share its power with other nodes
-   */
   var torque = 0D
   var angularVelocity = 0D
 
+  /**
+   * Buffer values used by the grid to transfer mechanical energy.
+   */
   protected[grid] var bufferTorque = 0D
   protected[grid] var bufferAngle = 0D
 
+  /**
+   * A percentage value indicating how much friction the node has.
+   */
   var load = 0.2
 
   /**
    * Angle calculations
    */
-  private var prevTime = 0L
-  private var prevAngle = 0D
-  protected var teethDisplacement = 0D
+  protected var prevTime = 0L
+  var prevAngle = 0D
+
+  /**
+   * The amount of angle in radians displaced. This is used to align the gear teeth.
+   */
+  var angleDisplacement = 0D
 
   /**
    * Events
@@ -48,7 +55,7 @@ class MechanicalNode(parent: INodeProvider) extends NodeGrid[MechanicalNode](par
     val deltaTime = (System.currentTimeMillis() - prevTime) / 1000D
     prevTime = System.currentTimeMillis()
     prevAngle = (prevAngle + deltaTime * angularVelocity) % (2 * Math.PI)
-    return prevAngle + (if (getMechanicalGrid != null && getMechanicalGrid.spinMap(this)) teethDisplacement else 0D)
+    return prevAngle
   }
 
   @deprecated
@@ -76,7 +83,8 @@ class MechanicalNode(parent: INodeProvider) extends NodeGrid[MechanicalNode](par
    */
   def getAngularVelocityLoad: Double = load
 
-  def getPower: Double = getMechanicalGrid.power
+  //TODO: Create new grids automatically?
+  def getPower: Double = if (getMechanicalGrid != null) getMechanicalGrid.power else 0
 
   def getMechanicalGrid: MechanicalGrid = super.getGrid.asInstanceOf[MechanicalGrid]
 

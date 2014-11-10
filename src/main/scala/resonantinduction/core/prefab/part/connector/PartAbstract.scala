@@ -1,6 +1,6 @@
 package resonantinduction.core.prefab.part.connector
 
-import codechicken.lib.data.MCDataInput
+import codechicken.lib.data.{MCDataInput, MCDataOutput}
 import codechicken.multipart.{IRedstonePart, TMultiPart}
 import net.minecraft.item.ItemStack
 import net.minecraft.util.MovingObjectPosition
@@ -59,12 +59,44 @@ abstract class PartAbstract extends TMultiPart with TraitTicker
     return false
   }
 
+  /**
+   * Packet methods
+   *
+   * Zero is always the description packet.
+   */
+  def sendPacket(id: Int)
+  {
+    assert(!world.isRemote, "[PartAbstract] Attempt to send packet from client side!")
+    write(getWriteStream, id)
+  }
+
+  def write(packet: MCDataOutput, id: Int)
+  {
+    packet.writeByte(id)
+  }
+
+  /**
+   * Should NOT override!
+   */
+  override def writeDesc(packet: MCDataOutput)
+  {
+    write(packet, 0)
+  }
+
+  /**
+   * Should NOT override!
+   */
+  override def readDesc(packet: MCDataInput)
+  {
+    read(packet)
+  }
+
   override def read(packet: MCDataInput)
   {
     read(packet, packet.readUByte)
   }
 
-  def read(packet: MCDataInput, packetID: Int)
+  def read(packet: MCDataInput, id: Int)
   {
 
   }
