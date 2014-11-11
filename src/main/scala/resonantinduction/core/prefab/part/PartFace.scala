@@ -56,7 +56,7 @@ abstract class PartFace extends PartAbstract with TCuboidPart with JNormalOcclus
 
   override def solid(arg0: Int): Boolean = true
 
-  override def getOcclusionBoxes: JIterable[Cuboid6] = CuboidShapes.PANEL(placementSide.ordinal).toList
+  override def getOcclusionBoxes: JIterable[Cuboid6] = CuboidShapes.panel(placementSide.ordinal).toList
 
   override def occlusionTest(npart: TMultiPart): Boolean = NormalOcclusionTest.apply(this, npart)
 

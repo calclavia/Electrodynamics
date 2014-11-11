@@ -1,8 +1,11 @@
 package resonantinduction.mechanical.fluid.pipe
 
+import java.lang.{Iterable => JIterable}
+
 import codechicken.lib.data.{MCDataInput, MCDataOutput}
+import codechicken.lib.raytracer.IndexedCuboid6
 import codechicken.lib.render.CCRenderState
-import codechicken.lib.vec.Vector3
+import codechicken.lib.vec.{Cuboid6, Vector3}
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.client.renderer.RenderBlocks
 import net.minecraft.item.ItemStack
@@ -10,9 +13,14 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import resonant.lib.`type`.EvictingList
+import resonantinduction.core.prefab.part.CuboidShapes
 import resonantinduction.core.prefab.part.connector.{PartFramedNode, TColorable, TMaterial}
 import resonantinduction.mechanical.MechanicalContent
 import resonantinduction.mechanical.fluid.pipe.PipeMaterials.PipeMaterial
+import resonant.lib.wrapper.BitmaskWrapper._
+
+import scala.collection.convert.wrapAll._
+import scala.collection.mutable
 
 /**
  * Fluid transport pipe
@@ -33,6 +41,17 @@ class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorab
 
   material = PipeMaterials.ceramic
   node.onConnectionChanged = () => sendPacket(0)
+
+  override def getBounds: Cuboid6 = CuboidShapes.thickCenter
+
+  override def getSubParts: JIterable[IndexedCuboid6] =
+  {
+    val sideCuboids = CuboidShapes.thickSegment
+    val list = mutable.Set.empty[IndexedCuboid6]
+    list += CuboidShapes.thickCenter
+    list ++= ForgeDirection.VALID_DIRECTIONS.filter(s => clientRenderMask.mask(s) || s == testingSide).map(s => sideCuboids(s.ordinal()))
+    return list
+  }
 
   def preparePlacement(meta: Int)
   {
@@ -65,11 +84,9 @@ class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorab
   override def write(packet: MCDataOutput, id: Int)
   {
     super[PartFramedNode].write(packet, id)
+    super[TMaterial].write(packet, id)
+    super[TColorable].write(packet, id)
 
-//    super[TMaterial].write(packet, id)
-//    super[TColorable].write(packet, id)
-
- /*
     if (id == 3)
     {
       //Tank Packet
@@ -78,21 +95,20 @@ class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorab
       val tempTank = if (tank.getFluid != null) new FluidTank(tank.getFluid.getFluid, averageAmount, tank.getCapacity) else new FluidTank(tank.getCapacity)
       tempTank.writeToNBT(nbt)
       packet.writeInt(tank.getCapacity).writeNBTTagCompound(nbt)
-    }*/
+    }
   }
 
   override def read(packet: MCDataInput, packetID: Int)
   {
     super[PartFramedNode].read(packet, packetID)
+    super[TMaterial].read(packet, packetID)
+    super[TColorable].read(packet, packetID)
 
-//    super[TMaterial].read(packet, packetID)
-//    super[TColorable].read(packet, packetID)
-/*
     if (packetID == 3)
     {
       tank.setCapacity(packet.readInt)
       tank.readFromNBT(packet.readNBTTagCompound)
-    }*/
+    }
   }
 
   /**

@@ -34,13 +34,8 @@ trait TColorable extends PartAbstract
     {
       tile.notifyPartChange(this)
       onPartChanged(this)
-      sendColorUpdate()
+      sendPacket(2)
     }
-  }
-
-  def sendColorUpdate()
-  {
-    //tile.getWriteStream(this).writeByte(2).writeInt(this.colorID)
   }
 
   /**
@@ -69,21 +64,14 @@ trait TColorable extends PartAbstract
 
   override def write(packet: MCDataOutput, id: Int)
   {
-    super.write(packet, id)
-
     if (id == 0 || id == 2)
       packet.writeByte(colorID.toByte)
   }
 
-  override def read(packet: MCDataInput, packetID: Int)
+  override def read(packet: MCDataInput, id: Int)
   {
-    packetID match
-    {
-      case 0 => colorID = packet.readByte
-      case 2 =>
-        colorID = packet.readInt()
-        tile.markRender()
-    }
+    if (id == 0 || id == 2)
+      colorID = packet.readByte()
   }
 
   override def save(nbt: NBTTagCompound)

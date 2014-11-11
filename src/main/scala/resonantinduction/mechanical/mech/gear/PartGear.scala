@@ -184,7 +184,7 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
   def getOcclusionBoxes: java.lang.Iterable[Cuboid6] =
   {
     val list: java.util.List[Cuboid6] = new util.ArrayList[Cuboid6];
-    for (v <- CuboidShapes.PANEL(this.placementSide.ordinal))
+    for (v <- CuboidShapes.panel(this.placementSide.ordinal))
     {
       list.add(v)
     }

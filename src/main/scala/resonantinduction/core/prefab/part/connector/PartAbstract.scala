@@ -77,7 +77,7 @@ abstract class PartAbstract extends TMultiPart with TraitTicker
 
   override final def readDesc(packet: MCDataInput)
   {
-    read(packet)
+    read(packet, packet.readUByte)
   }
 
   override final def read(packet: MCDataInput)

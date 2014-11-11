@@ -15,16 +15,16 @@ trait TMaterial[M] extends PartAbstract
 
   def getMaterialID: Int
 
-  override def read(packet: MCDataInput, id: Int)
-  {
-    if (id == 0)
-      setMaterial(packet.readByte)
-  }
-
   override def write(packet: MCDataOutput, id: Int)
   {
     if (id == 0)
       packet.writeByte(getMaterialID.toByte)
+  }
+
+  override def read(packet: MCDataInput, id: Int)
+  {
+    if (id == 0)
+      setMaterial(packet.readUByte())
   }
 
   override def save(nbt: NBTTagCompound)

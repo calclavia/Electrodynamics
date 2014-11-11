@@ -12,6 +12,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.{IIcon, MovingObjectPosition}
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.lib.grid.node.NodeConnector
+import resonant.lib.wrapper.BitmaskWrapper._
 import resonantinduction.core.prefab.part.CuboidShapes
 
 import scala.collection.convert.wrapAll._
@@ -26,7 +27,7 @@ abstract class PartFramedNode extends PartAbstract with TPartNodeProvider with T
   protected var breakIcon: IIcon = null
 
   /** Client Side */
-  private var testingSide: ForgeDirection = null
+  protected var testingSide: ForgeDirection = null
 
   protected val node: NodeConnector[_]
 
@@ -35,27 +36,21 @@ abstract class PartFramedNode extends PartAbstract with TPartNodeProvider with T
 
   override def getStrength(hit: MovingObjectPosition, player: EntityPlayer): Float = 10f
 
-  override def getBounds: Cuboid6 = CuboidShapes.WIRE_CENTER
+  override def getBounds: Cuboid6 = CuboidShapes.center
 
   override def getBrokenIcon(side: Int): IIcon = breakIcon
 
   def getOcclusionBoxes: Set[Cuboid6] = getCollisionBoxes
 
   /** Rendering and block bounds. */
-  override def getCollisionBoxes: Set[Cuboid6] =
-  {
-    val collisionBoxes = mutable.Set.empty[Cuboid6]
-    collisionBoxes ++= getSubParts
-    return collisionBoxes
-  }
+  override def getCollisionBoxes: Set[Cuboid6] = mutable.Set.empty[Cuboid6] ++ getSubParts
 
   override def getSubParts: JIterable[IndexedCuboid6] =
   {
-    val currentSides = if (this.isInstanceOf[TInsulatable] && this.asInstanceOf[TInsulatable].insulated) CuboidShapes.WIRE_INSULATION else CuboidShapes.WIRE_SEGMENTS
-
+    val sideCuboids = if (this.isInstanceOf[TInsulatable] && this.asInstanceOf[TInsulatable].insulated) CuboidShapes.thickSegment else CuboidShapes.segment
     val list = mutable.Set.empty[IndexedCuboid6]
-    list += CuboidShapes.WIRE_CENTER
-    list ++= ForgeDirection.VALID_DIRECTIONS.filter(s => connectionMapContainsSide(clientRenderMask, s) || s == testingSide).map(s => currentSides(s.ordinal()))
+    list += CuboidShapes.center
+    list ++= ForgeDirection.VALID_DIRECTIONS.filter(s => clientRenderMask.mask(s) || s == testingSide).map(s => sideCuboids(s.ordinal()))
     return list
   }
 
@@ -70,7 +65,7 @@ abstract class PartFramedNode extends PartAbstract with TPartNodeProvider with T
     return !expandable
   }
 
-  def isCurrentlyConnected(side: ForgeDirection): Boolean = connectionMapContainsSide(clientRenderMask, side)
+  def isCurrentlyConnected(side: ForgeDirection): Boolean = clientRenderMask.mask(side)
 
   override def write(packet: MCDataOutput, id: Int)
   {
@@ -78,8 +73,7 @@ abstract class PartFramedNode extends PartAbstract with TPartNodeProvider with T
 
     if (id == 0)
     {
-      //      packet.writeByte(0)
-      //      packet.writeByte(node.connectedMask.toByte)
+      packet.writeByte(node.connectedMask.toByte)
     }
   }
 
@@ -89,11 +83,11 @@ abstract class PartFramedNode extends PartAbstract with TPartNodeProvider with T
 
     if (id == 0)
     {
-      //      clientRenderMask = packet.readByte()
-      tile.markRender()
+      clientRenderMask = packet.readByte()
     }
   }
 
+  @deprecated
   def connectionMapContainsSide(connections: Int, side: ForgeDirection): Boolean =
   {
     val tester = 1 << side.ordinal
