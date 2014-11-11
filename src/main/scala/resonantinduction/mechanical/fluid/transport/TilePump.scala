@@ -29,6 +29,7 @@ class TilePump extends TileMechanical(Material.iron) with IRotatable with IFluid
   normalRender = false
   isOpaqueCube = false
   setTextureName("material_steel")
+
   nodes.add(pressureNode)
 
   override def update()
@@ -37,16 +38,16 @@ class TilePump extends TileMechanical(Material.iron) with IRotatable with IFluid
 
     if (!worldObj.isRemote && mechanicalNode.getPower > 0)
     {
-      val tileIn: TileEntity = toVector3.add(getDirection.getOpposite).getTileEntity(this.worldObj)
+      //Push fluid inside this block to its front
+      //TODO: Allow change of direction based on angular velocity
+      val drain = pressureNode.drain(getDirection, pressureNode.getCapacity, false)
 
-      if (tileIn.isInstanceOf[IFluidHandler])
+      if (drain != null)
       {
-        val drain: FluidStack = (tileIn.asInstanceOf[IFluidHandler]).drain(getDirection, pressureNode.getCapacity, false)
-        if (drain != null)
-        {
-          (tileIn.asInstanceOf[IFluidHandler]).drain(getDirection, fill(getDirection.getOpposite, drain, true), true)
-        }
+        pressureNode.drain(getDirection, fill(getDirection.getOpposite, drain, true), true)
       }
+
+      pressureNode.maxFlowRate = Math.abs(mechanicalNode.angularVelocity * 15).toInt
     }
   }
 
@@ -90,9 +91,9 @@ class TilePump extends TileMechanical(Material.iron) with IRotatable with IFluid
 
   def drain(from: ForgeDirection, maxDrain: Int, doDrain: Boolean): FluidStack = null
 
-  def canFill(from: ForgeDirection, fluid: Fluid): Boolean = from == this.getDirection.getOpposite
+  def canFill(from: ForgeDirection, fluid: Fluid): Boolean = from == getDirection.getOpposite
 
-  def canDrain(from: ForgeDirection, fluid: Fluid): Boolean = from == this.getDirection
+  def canDrain(from: ForgeDirection, fluid: Fluid): Boolean = from == getDirection
 
   def getTankInfo(from: ForgeDirection): Array[FluidTankInfo] = null
 }

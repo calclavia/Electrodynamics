@@ -14,18 +14,12 @@ import resonant.lib.utility.nbt.NBTUtility
 import resonant.lib.wrapper.WrapList._
 import resonant.lib.transform.vector.Vector3
 
-/** Handheld thermometer */
-object ItemBlockThermometer
-{
-  final val ENERGY_CONSUMPTION: Int = 1000
-}
-
 class ItemBlockThermometer(block: Block) extends ItemBlockSaved(block: Block)
 {
-
   override def addInformation(itemStack: ItemStack, player: EntityPlayer, par3List: List[_], par4: Boolean)
   {
     super.addInformation(itemStack, player, par3List, par4)
+
     val coord: Vector3 = getSavedCoord(itemStack)
     if (coord != null)
     {

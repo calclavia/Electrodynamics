@@ -18,7 +18,7 @@ import resonant.api.grid.INodeProvider
 import resonant.lib.transform.vector.Vector3
 
 /** Reduced version of the main turbine class */
-class TileTurbine extends TileMechanical(Material.wood) with IMultiBlockStructure[TileTurbine] with INodeProvider with IPacketIDReceiver
+class TileTurbine extends TileMechanical(Material.wood) with IMultiBlockStructure[TileTurbine] with INodeProvider
 {
     /** Tier of the tile */
     var tier: Int = 0

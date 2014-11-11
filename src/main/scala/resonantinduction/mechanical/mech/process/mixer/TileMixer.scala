@@ -52,11 +52,6 @@ class TileMixer extends TileMechanical(Material.iron)
   customItemRender(true)
   setTextureName("material_metal_top")
 
-  override def getNodes(nodes: List[INode])
-  {
-    if (mechanicalNode != null) nodes.add(this.mechanicalNode)
-  }
-
   override def update
   {
     super.update

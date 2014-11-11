@@ -1,9 +1,12 @@
 package resonantinduction.mechanical.mech.turbine
 
+import io.netty.buffer.ByteBuf
+import net.minecraft.entity.player.EntityPlayer
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.{Fluid, FluidStack, FluidTank, FluidTankInfo}
 import resonant.api.IBoilHandler
 import resonant.lib.content.prefab.{TElectric, TEnergyStorage}
+import resonant.lib.network.discriminator.PacketType
 import resonantinduction.core.{Reference, Settings}
 
 class TileElectricTurbine extends TileTurbine with IBoilHandler with TElectric with TEnergyStorage

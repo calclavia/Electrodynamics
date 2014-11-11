@@ -34,16 +34,11 @@ class TileMechanicalPiston extends TileMechanical(Material.piston)
 
     //Constructor
     mechanicalNode = new NodeMechanicalPiston(this)
-    isOpaqueCube(false)
-    normalRender(false)
-    customItemRender(true)
+    isOpaqueCube=false
+    normalRender=false
+    customItemRender=true
     rotationMask = 63
     setTextureName("material_steel_dark")
-
-    override def getNodes(nodes: List[INode])
-    {
-        if (mechanicalNode != null) nodes.add(this.mechanicalNode)
-    }
 
     override def update
     {

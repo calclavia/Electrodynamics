@@ -6,8 +6,9 @@ import net.minecraft.block.material.Material
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
-import resonant.content.prefab.java.TileNode
+import resonant.content.spatial.block.SpatialTile
 import resonant.engine.ResonantEngine
+import resonant.lib.content.prefab.TRotatable
 import resonant.lib.grid.node.TSpatialNodeProvider
 import resonant.lib.network.ByteBufWrapper._
 import resonant.lib.network.discriminator.PacketType
@@ -18,18 +19,26 @@ import resonantinduction.mechanical.mech.grid.MechanicalNode
 /** Prefab for resonantinduction.mechanical tiles
   *
   * @author Calclavia */
-abstract class TileMechanical(material: Material) extends TileNode(material) with TSpatialNodeProvider with TPacketSender with TPacketReceiver
+abstract class TileMechanical(material: Material) extends SpatialTile(material: Material) with TRotatable with TSpatialNodeProvider with TPacketSender with TPacketReceiver
 {
   /** Node that handles most mechanical actions */
-  var mechanicalNode = new MechanicalNode(this)
+  private var _mechanicalNode: MechanicalNode = null
+
+  def mechanicalNode = _mechanicalNode
+
+  def mechanicalNode_=(newNode: MechanicalNode)
+  {
+    _mechanicalNode = newNode
+    mechanicalNode.onVelocityChanged = () => markPacket = true
+    nodes.add(mechanicalNode)
+  }
 
   var markPacket = false
 
   /** External debug GUI */
   var frame: DebugFrameMechanical = null
 
-  mechanicalNode.onVelocityChanged = () => markPacket = true
-  nodes.add(mechanicalNode)
+  mechanicalNode = new MechanicalNode(this)
 
   override def update()
   {
@@ -80,14 +89,14 @@ abstract class TileMechanical(material: Material) extends TileNode(material) wit
     return false
   }
 
-  override def write(buf: ByteBuf, id: Int): Unit =
+  override def write(buf: ByteBuf, id: Int)
   {
     super.write(buf, id)
 
     id match
     {
       case 0 =>
-      case 1 => buf <<< mechanicalNode.angularVelocity
+      case 1 => buf <<< mechanicalNode.angularVelocity.toFloat
     }
   }
 
@@ -98,10 +107,7 @@ abstract class TileMechanical(material: Material) extends TileNode(material) wit
     id match
     {
       case 0 =>
-      case 1 =>
-      {
-        mechanicalNode.angularVelocity = buf.readDouble
-      }
+      case 1 => mechanicalNode.angularVelocity = buf.readFloat()
     }
   }
 }
