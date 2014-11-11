@@ -15,12 +15,17 @@ class PumpNode(parent: INodeProvider) extends NodePressure(parent)
 
   override def pressure(dir: ForgeDirection): Int =
   {
-    if (dir == pump.getDirection)
+    if(pump.mechanicalNode.getPower > 0)
     {
-      return Math.max(Math.abs(pump.mechanicalNode.torque / 8000d), 2) toInt
+      if (dir == pump.getDirection)
+      {
+        return Math.max(Math.log(Math.abs(pump.mechanicalNode.torque)), 2) toInt
+      }
+
+      return -Math.max(Math.log(Math.abs(pump.mechanicalNode.torque)), 2).toInt
     }
 
-    return -Math.max(Math.abs(pump.mechanicalNode.torque / 8000d), 2).toInt
+    return 0
   }
 
   override def canConnect[B <: IFluidHandler](source: B, from: ForgeDirection): Boolean =

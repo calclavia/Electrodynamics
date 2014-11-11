@@ -9,9 +9,12 @@ import net.minecraftforge.client.IItemRenderer.ItemRenderType
 import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
+import resonant.api.grid.INodeProvider
 import resonant.content.prefab.scal.render.ISimpleItemRenderer
 import resonant.lib.render.{FluidRenderUtility, RenderUtility}
-import resonant.lib.utility.WorldUtility
+import resonant.lib.transform.vector.Vector3
+import resonant.lib.utility.{FluidUtility, WorldUtility}
+import resonant.lib.wrapper.BitmaskWrapper._
 import resonantinduction.core.Reference
 
 @SideOnly(Side.CLIENT)
@@ -81,21 +84,27 @@ object RenderPipe extends ISimpleItemRenderer
     GL11.glPushMatrix()
     GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5)
     render(part.getMaterialID, if (part.getColor > 0) ItemDye.field_150922_c(part.getColor) else -1, part.clientRenderMask)
-    GL11.glPopMatrix()
-    GL11.glPushMatrix()
+
     val fluid = part.tank.getFluid
-    val renderSides = part.clientRenderMask
+    val pos = new Vector3(x, y, z)
 
     if (fluid != null && fluid.amount > 0)
     {
-      GL11.glScaled(0.99, 0.99, 0.99)
-      val tank = part.tank
-      val percentageFilled: Double = tank.getFluidAmount.asInstanceOf[Double] / tank.getCapacity.asInstanceOf[Double]
-      val ySouthEast = percentageFilled
-      val yNorthEast = percentageFilled
-      val ySouthWest = percentageFilled
-      val yNorthWest = percentageFilled
-      FluidRenderUtility.renderFluidTesselation(tank, ySouthEast, yNorthEast, ySouthWest, yNorthWest)
+      ForgeDirection.VALID_DIRECTIONS.filter(d => part.clientRenderMask.mask(d.ordinal())).foreach(
+        dir =>
+        {
+          GL11.glPushMatrix()
+          GL11.glTranslated(dir.offsetX * 0.33, dir.offsetY * 0.33, dir.offsetZ * 0.33)
+          GL11.glScaled(0.33, 0.33, 0.33)
+          val tank = part.tank
+          val percentageFilled = tank.getFluidAmount.toDouble / tank.getCapacity.toDouble
+          val ySouthEast = FluidUtility.getAveragePercentageFilledForSides(classOf[INodeProvider], percentageFilled, part.world, pos, ForgeDirection.SOUTH, ForgeDirection.EAST)
+          val yNorthEast = FluidUtility.getAveragePercentageFilledForSides(classOf[INodeProvider], percentageFilled, part.world, pos, ForgeDirection.NORTH, ForgeDirection.EAST)
+          val ySouthWest = FluidUtility.getAveragePercentageFilledForSides(classOf[INodeProvider], percentageFilled, part.world, pos, ForgeDirection.SOUTH, ForgeDirection.WEST)
+          val yNorthWest = FluidUtility.getAveragePercentageFilledForSides(classOf[INodeProvider], percentageFilled, part.world, pos, ForgeDirection.NORTH, ForgeDirection.WEST)
+          FluidRenderUtility.renderFluidTesselation(tank, ySouthEast, yNorthEast, ySouthWest, yNorthWest)
+          GL11.glPopMatrix()
+        })
     }
 
     GL11.glPopMatrix()

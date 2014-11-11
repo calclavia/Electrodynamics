@@ -51,7 +51,7 @@ class TileTank extends TileFluidProvider(Material.iron) with ISneakPickup with R
   }
 
   fluidNode.asInstanceOf[NodePressureGravity].maxFlowRate = FluidContainerRegistry.BUCKET_VOLUME
-  fluidNode.onFluidChanged = () => markUpdate()
+  fluidNode.onFluidChanged = () => if(!world.isRemote) sendPacket(0)
 
   override def shouldSideBeRendered(access: IBlockAccess, x: Int, y: Int, z: Int, side: Int): Boolean = new Vector3(x, y, z).getBlock(access) != block
 
@@ -59,6 +59,7 @@ class TileTank extends TileFluidProvider(Material.iron) with ISneakPickup with R
   {
     if (!world.isRemote)
     {
+      println(fluidNode.asInstanceOf[NodePressureGravity].pressure)
       return FluidUtility.playerActivatedFluidItem(world, xi, yi, zi, player, side)
     }
 
@@ -106,10 +107,10 @@ class TileTank extends TileFluidProvider(Material.iron) with ISneakPickup with R
           GL11.glScaled(0.99, 0.99, 0.99)
           val tank: IFluidTank = fluidNode.getPrimaryTank
           val percentageFilled: Double = tank.getFluidAmount.toDouble / tank.getCapacity.toDouble
-          val ySouthEast: Double = FluidUtility.getAveragePercentageFilledForSides(classOf[TileTank], percentageFilled, world, toVector3, ForgeDirection.SOUTH, ForgeDirection.EAST)
-          val yNorthEast: Double = FluidUtility.getAveragePercentageFilledForSides(classOf[TileTank], percentageFilled, world, toVector3, ForgeDirection.NORTH, ForgeDirection.EAST)
-          val ySouthWest: Double = FluidUtility.getAveragePercentageFilledForSides(classOf[TileTank], percentageFilled, world, toVector3, ForgeDirection.SOUTH, ForgeDirection.WEST)
-          val yNorthWest: Double = FluidUtility.getAveragePercentageFilledForSides(classOf[TileTank], percentageFilled, world, toVector3, ForgeDirection.NORTH, ForgeDirection.WEST)
+          val ySouthEast = FluidUtility.getAveragePercentageFilledForSides(classOf[TileTank], percentageFilled, world, toVector3, ForgeDirection.SOUTH, ForgeDirection.EAST)
+          val yNorthEast = FluidUtility.getAveragePercentageFilledForSides(classOf[TileTank], percentageFilled, world, toVector3, ForgeDirection.NORTH, ForgeDirection.EAST)
+          val ySouthWest = FluidUtility.getAveragePercentageFilledForSides(classOf[TileTank], percentageFilled, world, toVector3, ForgeDirection.SOUTH, ForgeDirection.WEST)
+          val yNorthWest = FluidUtility.getAveragePercentageFilledForSides(classOf[TileTank], percentageFilled, world, toVector3, ForgeDirection.NORTH, ForgeDirection.WEST)
           FluidRenderUtility.renderFluidTesselation(tank, ySouthEast, yNorthEast, ySouthWest, yNorthWest)
         }
         GL11.glPopMatrix()

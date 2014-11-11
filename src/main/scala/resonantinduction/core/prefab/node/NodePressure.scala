@@ -5,6 +5,7 @@ import net.minecraftforge.fluids.{FluidContainerRegistry, IFluidHandler}
 import resonant.api.grid.{INodeProvider, IUpdate}
 import resonant.lib.grid.UpdateTicker
 import resonant.lib.prefab.fluid.NodeFluid
+import resonantinduction.archaic.fluid.gutter.NodePressureGravity
 
 import scala.collection.convert.wrapAll._
 
@@ -18,7 +19,7 @@ import scala.collection.convert.wrapAll._
  */
 class NodePressure(parent: INodeProvider, volume: Int = FluidContainerRegistry.BUCKET_VOLUME) extends NodeFluid(parent, volume) with IUpdate
 {
-  var maxFlowRate = 20
+  var maxFlowRate = 1000
   var maxPressure = 100
   private var _pressure: Int = 0
 
@@ -120,7 +121,7 @@ class NodePressure(parent: INodeProvider, volume: Int = FluidContainerRegistry.B
     val amountA = tankA.getFluidAmount
     val amountB = tankB.getFluidAmount
 
-    var quantity = Math.max(if (pressureA > pressureB) (pressureA - pressureB) * flowRate else Math.min((amountA - amountB) / 2, flowRate), Math.min((amountA - amountB) / 2, flowRate))
+    var quantity = if (pressureA > pressureB) (pressureA - pressureB) * flowRate else 0
     quantity = Math.min(Math.min(quantity, tankB.getCapacity - amountB), amountA)
 
     if (quantity > 0)

@@ -8,8 +8,10 @@ import codechicken.lib.render.CCRenderState
 import codechicken.lib.vec.{Cuboid6, Vector3}
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.client.renderer.RenderBlocks
+import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
+import net.minecraft.util.MovingObjectPosition
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import resonant.lib.`type`.EvictingList
@@ -41,6 +43,7 @@ class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorab
 
   material = PipeMaterials.ceramic
   node.onConnectionChanged = () => sendPacket(0)
+  node.onFluidChanged = () => markPacket = true
 
   override def getBounds: Cuboid6 = CuboidShapes.thickCenter
 
@@ -76,6 +79,17 @@ class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorab
       sendPacket(3)
       markPacket = false
     }
+  }
+
+  /**
+   * Changes the wire's color.
+   */
+  override def activate(player: EntityPlayer, part: MovingObjectPosition, itemStack: ItemStack) : Boolean =
+  {
+    if(!world.isRemote)
+      println(node.pressure)
+
+    return super.activate(player, part, itemStack)
   }
 
   /**

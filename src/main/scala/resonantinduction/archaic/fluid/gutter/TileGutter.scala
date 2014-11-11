@@ -12,7 +12,7 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.model.{AdvancedModelLoader, IModelCustom}
 import net.minecraftforge.common.util.ForgeDirection
-import net.minecraftforge.fluids.{FluidRegistry, FluidStack, IFluidTank}
+import net.minecraftforge.fluids.{Fluid, FluidRegistry, FluidStack, IFluidTank}
 import org.lwjgl.opengl.GL11
 import resonant.api.recipe.{MachineRecipes, RecipeResource}
 import resonant.content.factory.resources.RecipeType
@@ -39,6 +39,26 @@ object TileGutter
 class TileGutter extends TileFluidProvider(Material.rock)
 {
   fluidNode = new NodePressureGravity(this)
+  {
+    override def canFill(from: ForgeDirection, fluid: Fluid): Boolean =
+    {
+      return from != ForgeDirection.UP && !fluid.isGaseous
+    }
+
+    override def canDrain(from: ForgeDirection, fluid: Fluid): Boolean =
+    {
+      return from != ForgeDirection.UP && !fluid.isGaseous
+    }
+
+    override def fill(from: ForgeDirection, resource: FluidStack, doFill: Boolean): Int =
+    {
+      if (!resource.getFluid.isGaseous)
+      {
+        return super.fill(from, resource, doFill)
+      }
+      return 0
+    }
+  }
 
   textureName = "material_wood_surface"
   isOpaqueCube = false

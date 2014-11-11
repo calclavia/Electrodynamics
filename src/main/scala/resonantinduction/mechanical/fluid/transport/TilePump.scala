@@ -47,7 +47,7 @@ class TilePump extends TileMechanical(Material.iron) with IRotatable with IFluid
         pressureNode.drain(getDirection, fill(getDirection.getOpposite, drain, true), true)
       }
 
-      pressureNode.maxFlowRate = Math.abs(mechanicalNode.angularVelocity * 15).toInt
+      pressureNode.maxFlowRate = Math.abs(mechanicalNode.angularVelocity * 2000).toInt
     }
   }
 

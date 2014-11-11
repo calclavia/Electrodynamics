@@ -53,7 +53,7 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
     {
       if (manualCrankTime > 0)
       {
-        mechanicalNode.rotate(this, if (isClockwiseCrank) 15 else -15, if (isClockwiseCrank) 0.025f else -0.025f)
+        mechanicalNode.rotate(this, if (isClockwiseCrank) 50 else -50, if (isClockwiseCrank) 0.05f else -0.05f)
         manualCrankTime -= 0.1
       }
     }
@@ -71,8 +71,9 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
         getMultiBlock.get.mechanicalNode.angularVelocity = -getMultiBlock.get.mechanicalNode.angularVelocity
         return true
       }
+
       isClockwiseCrank = player.isSneaking
-      //TODO fix;
+
       getMultiBlock.get.manualCrankTime = 2
       world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, Reference.prefix + "gearCrank", 0.5f, 0.9f + world.rand.nextFloat * 0.2f)
       player.addExhaustion(0.01f)
