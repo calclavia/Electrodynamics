@@ -261,7 +261,7 @@ class TileEngineeringTable extends TileInventory(Material.wood) with IPacketRece
             {
                 playerSlots = new Array[Int](invPlayer.getSizeInventory)
 
-                for (i <- 0 to playerSlots.length)
+                for (i <- 0 until playerSlots.length)
                 {
                     playerSlots(i) = i + TileEngineeringTable.CRAFTING_OUTPUT_END
 
@@ -451,7 +451,7 @@ class TileEngineeringTable extends TileInventory(Material.wood) with IPacketRece
     {
         val inventoryCrafting: InventoryCrafting = new InventoryCrafting(new ContainerDummy(this), 3, 3)
 
-        for (i <- 0 to this.craftingMatrix.length)
+        for (i <- 0 until this.craftingMatrix.length)
         {
             inventoryCrafting.setInventorySlotContents(i, this.craftingMatrix(i))
         }
