@@ -1,14 +1,14 @@
 package resonantinduction.electrical.generator
 
-import java.util.HashSet
-
 import net.minecraft.block.material.Material
+import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraftforge.common.util.ForgeDirection
+import net.minecraft.util.ChatComponentText
 import resonant.api.IRotatable
-import resonant.api.grid.{INode, IUpdate}
-import resonant.content.prefab.java.TileNode
+import resonant.content.prefab.java.TileAdvanced
 import resonant.lib.content.prefab.TElectric
+import resonant.lib.grid.node.TSpatialNodeProvider
+import resonant.lib.transform.vector.Vector3
 import resonantinduction.mechanical.mech.grid.MechanicalNode
 
 /**
@@ -16,130 +16,67 @@ import resonantinduction.mechanical.mech.grid.MechanicalNode
  *
  * @author Calclavia
  */
-class TileMotor extends TileNode(Material.iron) with TElectric with IRotatable
+class TileMotor extends TileAdvanced(Material.iron) with TElectric with TSpatialNodeProvider with IRotatable
 {
   var mechNode = new MechanicalNode(this)
 
-  /** Generator turns KE -> EE. Inverted one will turn EE -> KE. */
-  var isInversed: Boolean = true
   private var gearRatio = 0
 
   normalRender = false
   isOpaqueCube = false
+  nodes.add(dcNode)
+  nodes.add(mechNode)
 
-  def toggleGearRatio = ((gearRatio + 1) % 3)
+  def toggleGearRatio() = (gearRatio + 1) % 3
 
-  override def start
+  override def update()
   {
-    super.start
-    if (mechNode != null) mechNode.reconstruct
-  }
+    //TODO: Debug
+    val deltaPower = 100d //Math.abs(mechNode.power - dcNode.power)
 
-  override def invalidate
-  {
-    mechNode.deconstruct
-    super.invalidate
-  }
-
-  override def update
-  {
-    super.update
-    if (mechNode != null && mechNode.isInstanceOf[IUpdate])
+    if (false && mechNode.power > dcNode.power)
     {
-      mechNode.asInstanceOf[IUpdate].update(0.05f)
-      if (!isInversed)
+      //Produce electricity
+      dcNode.buffer(deltaPower)
+      //TODO: Resist mech energy
+    }
+    //    else if (dcNode.power > mechNode.power)
+    else
+    {
+      //Produce mechanical energy
+      val mechRatio = Math.pow(gearRatio + 1, 3) * 400
+
+      if (mechRatio > 0)
       {
-        receiveMechanical
-      }
-      else
-      {
-        produceMechanical
+        mechNode.rotate(this, deltaPower * mechRatio, deltaPower / mechRatio)
+        //TODO: Resist DC energy
       }
     }
   }
 
-  def receiveMechanical
+  override protected def use(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
   {
-    val power: Double = mechNode.torque * mechNode.angularVelocity
-    val receive: Double = 0 // dcNode.addEnergy(ForgeDirection.UNKNOWN, power, true)
-    if (receive > 0)
+    if (!world.isRemote)
     {
-      val percentageUsed: Double = receive / power
-      mechNode.rotate(this, -mechNode.torque * percentageUsed, -mechNode.angularVelocity * percentageUsed)
+      gearRatio = (gearRatio + 1) % 3
+      player.addChatComponentMessage(new ChatComponentText("Toggled gear ratio: " + gearRatio))
+      return true
     }
-  }
 
-  def produceMechanical
-  {
-    val extract: Double = 0 //dcNode.removeEnergy(ForgeDirection.UNKNOWN, dcNode.getEnergy, false)
-    if (extract > 0)
-    {
-      val torqueRatio: Long = ((gearRatio + 1) / 2.2d * (extract)).asInstanceOf[Long]
-      if (torqueRatio > 0)
-      {
-        val maxAngularVelocity: Double = extract / torqueRatio.asInstanceOf[Float]
-        val maxTorque: Double = (extract) / maxAngularVelocity
-        var setAngularVelocity: Double = maxAngularVelocity
-        var setTorque: Double = maxTorque
-        val currentTorque: Double = Math.abs(mechNode.torque)
-        if (currentTorque != 0)
-        {setTorque = Math.min(setTorque, maxTorque) * (mechNode.torque / currentTorque)}
-        val currentVelo: Double = Math.abs(mechNode.angularVelocity)
-        if (currentVelo != 0) setAngularVelocity = Math.min(+setAngularVelocity, maxAngularVelocity) * (mechNode.angularVelocity / currentVelo)
-        mechNode.rotate(this, setTorque - mechNode.torque, setAngularVelocity - mechNode.angularVelocity)
-        // dcNode.removeEnergy(ForgeDirection.UNKNOWN, Math.abs(setTorque * setAngularVelocity).asInstanceOf[Long], true)
-      }
-    }
-  }
-
-  override def getInputDirections: HashSet[ForgeDirection] =
-  {
-    return getOutputDirections
-  }
-
-  override def getOutputDirections: HashSet[ForgeDirection] =
-  {
-    val dirs: HashSet[ForgeDirection] = new HashSet[ForgeDirection]
-    for (dir <- ForgeDirection.VALID_DIRECTIONS)
-    {
-      if (dir != getDirection && dir != getDirection.getOpposite && dir != ForgeDirection.UNKNOWN) dirs.add(dir)
-    }
-    return dirs
+    return false
   }
 
   override def readFromNBT(nbt: NBTTagCompound)
   {
     super.readFromNBT(nbt)
-    isInversed = nbt.getBoolean("isInversed")
     gearRatio = nbt.getByte("gear")
   }
 
   override def writeToNBT(nbt: NBTTagCompound)
   {
     super.writeToNBT(nbt)
-    nbt.setBoolean("isInversed", isInversed)
     nbt.setByte("gear", gearRatio.toByte)
   }
 
-  override def getNode[N <: INode](nodeType: Class[_ <: N], from: ForgeDirection): N =
-  {
-    if (from == getDirection || from == getDirection.getOpposite)
-    {
-      if (nodeType.isAssignableFrom(mechNode.getClass))
-        return mechNode.asInstanceOf[N]
-    }
-
-    return null.asInstanceOf[N]
-  }
-
-  override def getNodes(nodes: java.util.List[INode])
-  {
-    nodes.add(this.mechNode)
-    nodes.add(this.dcNode)
-  }
-
-  override def toString: String =
-  {
-    return "[TileMotor]" + x + "x " + y + "y " + z + "z "
-  }
+  override def toString: String = "[TileMotor]" + x + "x " + y + "y " + z + "z "
 }

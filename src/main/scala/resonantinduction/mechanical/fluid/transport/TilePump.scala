@@ -36,7 +36,7 @@ class TilePump extends TileMechanical(Material.iron) with IRotatable with IFluid
   {
     super.update()
 
-    if (!worldObj.isRemote && mechanicalNode.getPower > 0)
+    if (!worldObj.isRemote && mechanicalNode.power > 0)
     {
       //Push fluid inside this block to its front
       //TODO: Allow change of direction based on angular velocity

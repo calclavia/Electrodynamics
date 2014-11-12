@@ -84,7 +84,7 @@ class MechanicalNode(parent: INodeProvider) extends NodeGrid[MechanicalNode](par
   def getAngularVelocityLoad: Double = load
 
   //TODO: Create new grids automatically?
-  def getPower: Double = if (getMechanicalGrid != null) getMechanicalGrid.power else 0
+  def power: Double = if (getMechanicalGrid != null) getMechanicalGrid.power else 0
 
   def getMechanicalGrid: MechanicalGrid = super.getGrid.asInstanceOf[MechanicalGrid]
 
