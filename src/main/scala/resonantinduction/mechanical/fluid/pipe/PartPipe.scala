@@ -31,8 +31,6 @@ import scala.collection.mutable
  */
 class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorable with IFluidHandler
 {
-  val tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME)
-
   override lazy val node = new NodePipe(this)
 
   /**
@@ -72,7 +70,7 @@ class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorab
   {
     super.update()
 
-    averageTankData.add(tank.getFluidAmount)
+    averageTankData.add(node.getFluidAmount)
 
     if (!world.isRemote && markPacket)
     {
@@ -87,7 +85,7 @@ class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorab
   override def activate(player: EntityPlayer, part: MovingObjectPosition, itemStack: ItemStack) : Boolean =
   {
     if(!world.isRemote)
-      println(node.pressure)
+      println(node.pressure + " : " + node.getFluidAmount)
 
     return super.activate(player, part, itemStack)
   }
@@ -103,12 +101,12 @@ class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorab
 
     if (id == 3)
     {
-      //Tank Packet
+      //node Packet
       val nbt = new NBTTagCompound
       val averageAmount = averageTankData.reduce(_ + _) / averageTankData.size
-      val tempTank = if (tank.getFluid != null) new FluidTank(tank.getFluid.getFluid, averageAmount, tank.getCapacity) else new FluidTank(tank.getCapacity)
+      val tempTank = node.getPrimaryTank//if (node.getFluid != null) new FluidTank(node.getFluid.getFluid, averageAmount, node.getCapacity) else new FluidTank(node.getCapacity)
       tempTank.writeToNBT(nbt)
-      packet.writeInt(tank.getCapacity).writeNBTTagCompound(nbt)
+      packet.writeInt(node.getCapacity).writeNBTTagCompound(nbt)
     }
   }
 
@@ -118,10 +116,10 @@ class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorab
     super[TMaterial].read(packet, packetID)
     super[TColorable].read(packet, packetID)
 
-    if (packetID == 3)
+    if (packetID == 3 && world.isRemote)
     {
-      tank.setCapacity(packet.readInt)
-      tank.readFromNBT(packet.readNBTTagCompound)
+      node.setPrimaryTank(new FluidTank(packet.readInt))
+      node.getPrimaryTank.readFromNBT(packet.readNBTTagCompound)
     }
   }
 
@@ -134,7 +132,7 @@ class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorab
     super[TMaterial].load(nbt)
     super[TColorable].load(nbt)
 
-    tank.readFromNBT(nbt)
+    node.load(nbt)
   }
 
   override def save(nbt: NBTTagCompound)
@@ -143,7 +141,7 @@ class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorab
     super[TMaterial].save(nbt)
     super[TColorable].save(nbt)
 
-    tank.writeToNBT(nbt)
+    node.save(nbt)
   }
 
   @SideOnly(Side.CLIENT)
@@ -161,7 +159,7 @@ class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorab
       if (doFill)
         markPacket = true
 
-      return tank.fill(resource, doFill)
+      return node.fill(resource, doFill)
     }
     return 0
   }
@@ -178,7 +176,7 @@ class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorab
       if (doDrain)
         markPacket = true
 
-      return tank.drain(maxDrain, doDrain)
+      return node.drain(maxDrain, doDrain)
     }
     return null
   }
@@ -187,7 +185,7 @@ class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorab
 
   override def canDrain(from: ForgeDirection, fluid: Fluid): Boolean = true
 
-  override def getTankInfo(from: ForgeDirection): Array[FluidTankInfo] = Array[FluidTankInfo](tank.getInfo)
+  override def getTankInfo(from: ForgeDirection): Array[FluidTankInfo] = Array[FluidTankInfo](node.getInfo)
 
   override def drawBreaking(renderBlocks: RenderBlocks)
   {

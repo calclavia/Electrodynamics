@@ -15,14 +15,14 @@ class PumpNode(parent: INodeProvider) extends NodePressure(parent)
 
   override def pressure(dir: ForgeDirection): Int =
   {
-    if(pump.mechanicalNode.getPower > 0)
+    if (pump.mechanicalNode.getPower > 0)
     {
       if (dir == pump.getDirection)
       {
-        return Math.max(Math.log(Math.abs(pump.mechanicalNode.torque)), 2) toInt
+        return Math.max(Math.log(Math.abs(pump.mechanicalNode.torque) + 1), 2).toInt
       }
 
-      return -Math.max(Math.log(Math.abs(pump.mechanicalNode.torque)), 2).toInt
+      return -Math.max(Math.log(Math.abs(pump.mechanicalNode.torque) + 1), 2).toInt
     }
 
     return 0

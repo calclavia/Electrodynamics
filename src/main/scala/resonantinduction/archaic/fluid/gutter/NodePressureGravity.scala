@@ -28,6 +28,7 @@ class NodePressureGravity(parent: TileFluidProvider, volume: Int = FluidContaine
     else
       quantity = if (pressureA > pressureB) (pressureA - pressureB) * flowRate else 0
 
+    //TODO: There's a slight pressure backflow
     quantity = Math.min(Math.min(quantity, tankB.getCapacity - amountB), amountA)
 
     if (quantity > 0)
