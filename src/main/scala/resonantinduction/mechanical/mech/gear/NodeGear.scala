@@ -16,13 +16,13 @@ import resonantinduction.mechanical.mech.grid.NodeMechanical
  *
  * @author Calclavia, Edited by: Darkguardsman
  */
-class GearNode(parent: PartGear) extends NodeMechanical(parent: PartGear)
+class NodeGear(parent: PartGear) extends NodeMechanical(parent: PartGear)
 {
   angleDisplacement = Math.PI / 12
 
   protected def gear = getParent.asInstanceOf[PartGear]
 
-  override def getTorqueLoad: Double =
+  override def getLoad: Double =
   {
     return gear.tier match
     {

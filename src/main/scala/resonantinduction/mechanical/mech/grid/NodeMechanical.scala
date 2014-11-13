@@ -8,6 +8,8 @@ import resonant.lib.transform.vector.IVectorWorld
 import resonantinduction.core.interfaces.TMechanicalNode
 import resonantinduction.core.prefab.node.TMultipartNode
 
+import scala.beans.BeanProperty
+
 /**
  * Prefab node for the mechanical system used by almost ever mechanical object in Resonant Induction. Handles connections to other tiles, and shares power with them
  *
@@ -22,12 +24,11 @@ class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](par
    * Buffer values used by the grid to transfer mechanical energy.
    */
   protected[grid] var bufferTorque = 0D
-  protected[grid] var bufferAngle = 0D
 
   /**
-   * A percentage value indicating how much friction the node has.
+   * A percentage value indicating how much friction the loss.
    */
-  var load = 0.2
+  var load = 0.1D
 
   /**
    * Angle calculations
@@ -43,7 +44,9 @@ class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](par
   /**
    * Events
    */
+  @BeanProperty
   var onTorqueChanged: () => Unit = () => ()
+  @BeanProperty
   var onVelocityChanged: () => Unit = () => ()
 
   /**
@@ -64,27 +67,23 @@ class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](par
 
   }
 
-  @deprecated
-  override def getRadius(dir: ForgeDirection, `with`: TMechanicalNode): Double = 0.5
+  //Moment of inertia = m * r ^ 2
+  def momentOfInertia = 1d
 
-  override def rotate(from: AnyRef, torque: Double, angle: Double)
+  def getLoad = load
+
+  override def rotate(torque: Double)
   {
     bufferTorque += torque
-    bufferAngle += angle
   }
-
-  /**
-   * The percentage of torque loss every second
-   */
-  def getTorqueLoad: Double = load
 
   /**
    * The percentage of angular velocity loss every second
    */
-  def getAngularVelocityLoad: Double = load
+  def getAngularVelocityLoad: Double = getLoad
 
   //TODO: Create new grids automatically?
-  def power: Double = if (getMechanicalGrid != null) getMechanicalGrid.power else 0
+  def power: Double = torque * angularVelocity
 
   def getMechanicalGrid: MechanicalGrid = super.grid.asInstanceOf[MechanicalGrid]
 

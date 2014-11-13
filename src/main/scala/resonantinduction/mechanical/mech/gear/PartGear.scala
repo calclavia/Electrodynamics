@@ -35,7 +35,7 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
   var multiBlock: GearMultiBlockHandler = null
 
   //Constructor
-  mechanicalNode = new GearNode(this)
+  mechanicalNode = new NodeGear(this)
   mechanicalNode.onVelocityChanged = () =>
   {
     if (getMultiBlock.isPrimary)
@@ -53,7 +53,7 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
     {
       if (manualCrankTime > 0)
       {
-        mechanicalNode.rotate(this, if (isClockwiseCrank) 50 else -50, if (isClockwiseCrank) 0.05f else -0.05f)
+        mechanicalNode.rotate(if (isClockwiseCrank) 50 else -50)
         manualCrankTime -= 0.1
       }
     }

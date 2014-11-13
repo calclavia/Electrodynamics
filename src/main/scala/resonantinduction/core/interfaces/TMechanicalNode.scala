@@ -51,9 +51,7 @@ trait TMechanicalNode extends INode with IVectorWorld
   /**
    * Applies rotational force and velocity to this node increasing its current rotation value
    *
-   * @param source          - The source object that is applying this force
    * @param torque          - force at an angle
-   * @param angularVelocity - speed of rotation
    */
-  def rotate(source: AnyRef, torque: Double, angularVelocity: Double)
+  def rotate(torque: Double)
 }

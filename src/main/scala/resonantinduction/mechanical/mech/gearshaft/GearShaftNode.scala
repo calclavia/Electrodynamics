@@ -5,12 +5,12 @@ import resonant.api.grid.INodeProvider
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.wrapper.ForgeDirectionWrapper._
 import resonantinduction.core.interfaces.TMechanicalNode
-import resonantinduction.mechanical.mech.gear.{GearNode, PartGear}
+import resonantinduction.mechanical.mech.gear.{NodeGear, PartGear}
 import resonantinduction.mechanical.mech.grid.NodeMechanical
 
 class GearShaftNode(parent: PartGearShaft) extends NodeMechanical(parent)
 {
-  override def getTorqueLoad: Double =
+  override def getLoad: Double =
   {
     return shaft.tier match
     {
@@ -80,7 +80,7 @@ class GearShaftNode(parent: PartGearShaft) extends NodeMechanical(parent)
     return from == shaft.placementSide || from == shaft.placementSide.getOpposite
   }
 
-  override def inverseRotation(other: TMechanicalNode): Boolean = other.isInstanceOf[GearNode] && other.asInstanceOf[GearNode].parent.asInstanceOf[PartGear].placementSide.offset < Vector3.zero
+  override def inverseRotation(other: TMechanicalNode): Boolean = other.isInstanceOf[NodeGear] && other.asInstanceOf[NodeGear].parent.asInstanceOf[PartGear].placementSide.offset < Vector3.zero
 
   def shaft: PartGearShaft = getParent.asInstanceOf[PartGearShaft]
 }
