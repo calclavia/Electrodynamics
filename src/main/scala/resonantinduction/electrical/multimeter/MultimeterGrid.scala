@@ -129,7 +129,7 @@ class MultimeterGrid extends Grid[PartMultimeter](classOf[PartMultimeter]) with 
       size = new Vector3(Math.abs(upperBound.x) + Math.abs(lowerBound.x), Math.abs(upperBound.y) + Math.abs(lowerBound.y), Math.abs(upperBound.z) + Math.abs(lowerBound.z))
       val area: Double = (if (size.x != 0) size.x else 1) * (if (size.y != 0) size.y else 1) * (if (size.z != 0) size.z else 1)
       isEnabled = area == getNodes.size
-      UpdateTicker.addUpdater(this)
+      UpdateTicker.threaded.addUpdater(this)
 
       getNodes foreach (c =>
       {

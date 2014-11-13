@@ -13,8 +13,8 @@ import net.minecraft.util.MovingObjectPosition
 import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.grid.INode
+import resonant.lib.grid.UpdateTicker
 import resonant.lib.multiblock.reference.IMultiBlockStructure
-import resonant.lib.transform.vector.VectorWorld
 import resonant.lib.utility.WrenchUtility
 import resonantinduction.core.Reference
 import resonantinduction.core.prefab.part.CuboidShapes
@@ -39,12 +39,10 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
   mechanicalNode.onVelocityChanged = () =>
   {
     if (getMultiBlock.isPrimary)
-      markVelocityUpdate = true
+      UpdateTicker.world.enqueue(() => if (world != null) sendPacket(1))
 
-    if(mechanicalNode.angularVelocity == 0)
-    {
-      //mark
-    }
+    if (mechanicalNode.angularVelocity == 0)
+      UpdateTicker.world.enqueue(() => if (world != null) sendPacket(2))
   }
 
   mechanicalNode.onGridReconstruct = () => if (world != null && !world.isRemote) sendPacket(2)
@@ -59,7 +57,7 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
       if (manualCrankTime > 0)
       {
         //A punch his around 5000 Newtons
-        mechanicalNode.rotate((if (isClockwiseCrank) 3 else -3) * manualCrankTime)
+        mechanicalNode.rotate((if (isClockwiseCrank) 2 else -2) * manualCrankTime)
         manualCrankTime -= 1
       }
     }
@@ -104,30 +102,18 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
     getMultiBlock.deconstruct()
   }
 
-  /** Is this gear block the one in the center-edge of the multiblock that can interact with other
-    * gears?
-    *
-    * @return*/
+  /**
+   * Is this gear block the one in the center-edge of the multiblock that can interact with other gears?
+   * @return Returning true implies that this gear is able to connect to other ones side-by-side.
+   */
   def isCenterMultiBlock: Boolean =
   {
     if (!getMultiBlock.isConstructed)
     {
       return true
     }
-    val primaryPos: VectorWorld = getMultiBlock.getPrimary.getPosition
-    if (primaryPos.xi == x && placementSide.offsetX == 0)
-    {
-      return true
-    }
-    if (primaryPos.yi == y && placementSide.offsetY == 0)
-    {
-      return true
-    }
-    if (primaryPos.zi == z && placementSide.offsetZ == 0)
-    {
-      return true
-    }
-    return false
+    val primaryPos = getMultiBlock.getPrimary.getPosition
+    return (primaryPos.xi == x && placementSide.offsetX == 0) || (primaryPos.yi == y && placementSide.offsetY == 0) || (primaryPos.zi == z && placementSide.offsetZ == 0)
   }
 
   protected def getItem: ItemStack =

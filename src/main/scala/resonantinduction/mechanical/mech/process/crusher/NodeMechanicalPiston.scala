@@ -13,7 +13,7 @@ class NodeMechanicalPiston(parent: TileMechanicalPiston) extends NodeMechanical(
         return dir ne (getParent.asInstanceOf[TileMechanicalPiston]).getDirection
     }
 
-    protected override def revolve
+    protected def revolve
     {
         getParent.asInstanceOf[TileMechanicalPiston].markRevolve = true
     }

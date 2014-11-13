@@ -27,7 +27,7 @@ class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) w
   override def reconstruct(first: NodeMechanical)
   {
     super.reconstruct(first)
-    UpdateTicker.addUpdater(this)
+    UpdateTicker.threaded.addUpdater(this)
 
     load = getNodes.map(n => n.getLoad).foldLeft(0D)(_ + _)
   }
@@ -73,7 +73,7 @@ class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) w
         if (Math.abs(n.torque - prevTorque) >= 0.1)
           n.onTorqueChanged()
 
-        if (Math.abs(n.angularVelocity - prevAngularVelocity) >= 0.001)
+        if (Math.abs(n.angularVelocity - prevAngularVelocity) >= 0.01)
           n.onVelocityChanged()
 
         //Clear buffers

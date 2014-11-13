@@ -1,6 +1,5 @@
 package resonantinduction.core.interfaces
 
-import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.grid.INode
 import resonant.lib.transform.vector.IVectorWorld
 
@@ -24,6 +23,18 @@ trait TMechanicalNode extends INode with IVectorWorld
    * @return force
    */
   def torque: Double
+
+  /**
+   * The mechanical load
+   * @return Torque in Newton meters per second
+   */
+  def getLoad = 10D
+
+  /**
+   * Moment of inertia = m * r * r
+   * Where "m" is the mass and "r" is the radius of the object.
+   */
+  def momentOfInertia = 2 * 0.5 * 0.5
 
   /**
    * Does the direction flip on this side for rotation

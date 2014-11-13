@@ -26,7 +26,7 @@ class NodeFluidPressure(parent: INodeProvider, volume: Int = FluidContainerRegis
   override def reconstruct()
   {
     super.reconstruct()
-    UpdateTicker.addUpdater(this)
+    UpdateTicker.threaded.addUpdater(this)
   }
 
   def update(deltaTime: Double)

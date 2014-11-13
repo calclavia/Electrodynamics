@@ -347,7 +347,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
   {
     override def reconstruct()
     {
-      UpdateTicker.addUpdater(this)
+      UpdateTicker.threaded.addUpdater(this)
 
       if (!world.isRemote)
       {

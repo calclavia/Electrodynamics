@@ -1,6 +1,5 @@
 package resonantinduction.mechanical.mech.grid
 
-import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.grid.INodeProvider
 import resonant.lib.grid.GridNode
 import resonant.lib.grid.node.NodeGrid
@@ -24,11 +23,6 @@ class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](par
    * Buffer values used by the grid to transfer mechanical energy.
    */
   protected[grid] var bufferTorque = 0D
-
-  /**
-   * The mechanical load
-   */
-  var load = 10D
 
   /**
    * Angle calculations
@@ -61,20 +55,6 @@ class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](par
     return prevAngle
   }
 
-  @deprecated
-  protected def revolve()
-  {
-
-  }
-
-  //Moment of inertia = m * r ^ 2
-  def momentOfInertia = 1d
-
-  /**
-   * The mechanical load
-   * @return Torque in Newton meters per second
-   */
-  def getLoad = load
 
   override def rotate(torque: Double)
   {
