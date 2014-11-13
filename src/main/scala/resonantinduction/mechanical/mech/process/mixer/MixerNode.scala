@@ -2,13 +2,13 @@ package resonantinduction.mechanical.mech.process.mixer
 
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.grid.INodeProvider
-import resonantinduction.mechanical.mech.grid.MechanicalNode
+import resonantinduction.mechanical.mech.grid.NodeMechanical
 
 /**
  * Node designed just for the Mixer to use
  * @param parent - instance of TileMixer that will host this node, should never be null
  */
-class MixerNode(parent: INodeProvider) extends MechanicalNode(parent)
+class MixerNode(parent: INodeProvider) extends NodeMechanical(parent)
 {
     override def canConnect(direction: ForgeDirection): Boolean =
     {

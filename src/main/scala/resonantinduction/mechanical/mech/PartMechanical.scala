@@ -9,7 +9,7 @@ import net.minecraft.util.MovingObjectPosition
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.lib.transform.vector.VectorWorld
 import resonantinduction.core.prefab.part.connector.{PartAbstract, TPartNodeProvider}
-import resonantinduction.mechanical.mech.grid.MechanicalNode
+import resonantinduction.mechanical.mech.grid.NodeMechanical
 
 /** We assume all the force acting on the gear is 90 degrees.
   *
@@ -17,13 +17,13 @@ import resonantinduction.mechanical.mech.grid.MechanicalNode
 abstract class PartMechanical extends PartAbstract with JNormalOcclusion with TFacePart with TPartNodeProvider with TCuboidPart
 {
   /** Node that handles resonantinduction.mechanical action of the machine */
-  private var _mechanicalNode: MechanicalNode = null
+  private var _mechanicalNode: NodeMechanical = null
 
   protected var markVelocityUpdate = false
 
   def mechanicalNode = _mechanicalNode
 
-  def mechanicalNode_=(mech: MechanicalNode)
+  def mechanicalNode_=(mech: NodeMechanical)
   {
     _mechanicalNode = mech
     mechanicalNode.onVelocityChanged = () => markVelocityUpdate = true

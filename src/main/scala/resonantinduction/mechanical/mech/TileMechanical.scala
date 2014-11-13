@@ -14,7 +14,7 @@ import resonant.lib.network.ByteBufWrapper._
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
 import resonant.lib.transform.vector.Vector3
-import resonantinduction.mechanical.mech.grid.MechanicalNode
+import resonantinduction.mechanical.mech.grid.NodeMechanical
 
 /** Prefab for resonantinduction.mechanical tiles
   *
@@ -22,11 +22,11 @@ import resonantinduction.mechanical.mech.grid.MechanicalNode
 abstract class TileMechanical(material: Material) extends SpatialTile(material: Material) with TRotatable with TSpatialNodeProvider with TPacketSender with TPacketReceiver
 {
   /** Node that handles most mechanical actions */
-  private var _mechanicalNode: MechanicalNode = null
+  private var _mechanicalNode: NodeMechanical = null
 
   def mechanicalNode = _mechanicalNode
 
-  def mechanicalNode_=(newNode: MechanicalNode)
+  def mechanicalNode_=(newNode: NodeMechanical)
   {
     _mechanicalNode = newNode
     mechanicalNode.onVelocityChanged = () => markPacket = true
@@ -38,7 +38,7 @@ abstract class TileMechanical(material: Material) extends SpatialTile(material: 
   /** External debug GUI */
   var frame: DebugFrameMechanical = null
 
-  mechanicalNode = new MechanicalNode(this)
+  mechanicalNode = new NodeMechanical(this)
 
   override def update()
   {

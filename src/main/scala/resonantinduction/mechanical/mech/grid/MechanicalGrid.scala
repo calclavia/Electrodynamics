@@ -10,14 +10,14 @@ import scala.collection.mutable
  * A grid that manages the mechanical objects
  * @author Calclavia
  */
-class MechanicalGrid extends GridNode[MechanicalNode](classOf[MechanicalNode]) with IUpdate
+class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) with IUpdate
 {
 
   /**
    * A map marking out the relative spin directions of each node.
    * Updated upon recache
    */
-  val spinMap = mutable.WeakHashMap.empty[MechanicalNode, Boolean]
+  val spinMap = mutable.WeakHashMap.empty[NodeMechanical, Boolean]
 
   /**
    * The power of the mechanical grid
@@ -30,13 +30,13 @@ class MechanicalGrid extends GridNode[MechanicalNode](classOf[MechanicalNode]) w
   /**
    * Rebuild the node list starting from the first node and recursively iterating through its connections.
    */
-  override def reconstruct(first: MechanicalNode)
+  override def reconstruct(first: NodeMechanical)
   {
     super.reconstruct(first)
     UpdateTicker.addUpdater(this)
   }
 
-  override protected def populateNode(node: MechanicalNode, prev: MechanicalNode)
+  override protected def populateNode(node: NodeMechanical, prev: NodeMechanical)
   {
     super.populateNode(node, prev)
 

@@ -17,7 +17,7 @@ import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.FluidUtility
 import resonantinduction.archaic.fluid.grate.TileGrate._
 import resonantinduction.core.Reference
-import resonantinduction.core.prefab.node.{NodePressure, TileFluidProvider}
+import resonantinduction.core.prefab.node.{NodeFluidPressure, TileFluidProvider}
 
 object TileGrate
 {
@@ -51,7 +51,7 @@ object TileGrate
 
 class TileGrate extends TileFluidProvider(Material.rock) with IRotatable
 {
-  fluidNode = new NodePressure(this)
+  fluidNode = new NodeFluidPressure(this)
   private var gratePath: GratePathfinder = _
   private var fillOver: Boolean = true
   isOpaqueCube = false
@@ -95,7 +95,7 @@ class TileGrate extends TileFluidProvider(Material.rock) with IRotatable
     {
       if (ticks % 10 == 0)
       {
-        val pressure = fluidNode.asInstanceOf[NodePressure].pressure(getDirection)
+        val pressure = fluidNode.asInstanceOf[NodeFluidPressure].pressure(getDirection)
         val blockEffect = Math.abs(pressure * grateEffectMultiplier).toInt
         fluidNode.getPrimaryTank.setCapacity(Math.max(blockEffect * FluidContainerRegistry.BUCKET_VOLUME * grateDrainSpeedMultiplier, FluidContainerRegistry.BUCKET_VOLUME).toInt)
 

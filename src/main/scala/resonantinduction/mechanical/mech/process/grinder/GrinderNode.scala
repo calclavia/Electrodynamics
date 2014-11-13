@@ -1,12 +1,12 @@
 package resonantinduction.mechanical.mech.process.grinder
 
 import net.minecraftforge.common.util.ForgeDirection
-import resonantinduction.mechanical.mech.grid.MechanicalNode
+import resonantinduction.mechanical.mech.grid.NodeMechanical
 
 /** Node just for the grinder
   *
   * @author Darkguardsman */
-class GrinderNode(parent: TileGrindingWheel) extends MechanicalNode(parent: TileGrindingWheel)
+class GrinderNode(parent: TileGrindingWheel) extends NodeMechanical(parent: TileGrindingWheel)
 {
   def grider: TileGrindingWheel =
   {

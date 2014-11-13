@@ -23,7 +23,7 @@ import resonant.lib.utility.FluidUtility
 import resonant.lib.utility.render.RenderBlockUtility
 import resonant.lib.wrapper.BitmaskWrapper._
 import resonantinduction.archaic.ArchaicContent
-import resonantinduction.archaic.fluid.gutter.NodePressureGravity
+import resonantinduction.archaic.fluid.gutter.NodeFluidGravity
 import resonantinduction.core.Reference
 import resonantinduction.core.prefab.node.TileFluidProvider
 
@@ -39,7 +39,7 @@ class TileTank extends TileFluidProvider(Material.iron) with ISneakPickup with R
   normalRender = false
   itemBlock = classOf[ItemBlockTank]
 
-  fluidNode = new NodePressureGravity(this, 16 * FluidContainerRegistry.BUCKET_VOLUME)
+  fluidNode = new NodeFluidGravity(this, 16 * FluidContainerRegistry.BUCKET_VOLUME)
   {
     override def connect[B <: IFluidHandler](obj: B, dir: ForgeDirection)
     {
@@ -50,7 +50,7 @@ class TileTank extends TileFluidProvider(Material.iron) with ISneakPickup with R
     }
   }
 
-  fluidNode.asInstanceOf[NodePressureGravity].maxFlowRate = FluidContainerRegistry.BUCKET_VOLUME
+  fluidNode.asInstanceOf[NodeFluidGravity].maxFlowRate = FluidContainerRegistry.BUCKET_VOLUME
   fluidNode.onFluidChanged = () => if(!world.isRemote) sendPacket(0)
 
   override def shouldSideBeRendered(access: IBlockAccess, x: Int, y: Int, z: Int, side: Int): Boolean = new Vector3(x, y, z).getBlock(access) != block
@@ -59,7 +59,7 @@ class TileTank extends TileFluidProvider(Material.iron) with ISneakPickup with R
   {
     if (!world.isRemote)
     {
-      println(fluidNode.asInstanceOf[NodePressureGravity].pressure)
+      println(fluidNode.asInstanceOf[NodeFluidGravity].pressure)
       return FluidUtility.playerActivatedFluidItem(world, xi, yi, zi, player, side)
     }
 

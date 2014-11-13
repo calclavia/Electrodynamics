@@ -3,7 +3,7 @@ package resonantinduction.mechanical.fluid.pipe
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.IFluidHandler
 import resonant.api.grid.INodeProvider
-import resonantinduction.core.prefab.node.{NodePressure, TMultipartNode}
+import resonantinduction.core.prefab.node.{NodeFluidPressure, TMultipartNode}
 import resonantinduction.core.prefab.part.connector.TColorable
 
 /**
@@ -11,7 +11,7 @@ import resonantinduction.core.prefab.part.connector.TColorable
  *
  * @author Calclavia, Darkguardsman
  */
-class NodePipe(parent: PartPipe) extends NodePressure(parent) with TMultipartNode[IFluidHandler]
+class NodePipe(parent: PartPipe) extends NodeFluidPressure(parent) with TMultipartNode[IFluidHandler]
 {
   def pipe: PartPipe = getParent.asInstanceOf[PartPipe]
 
@@ -25,9 +25,9 @@ class NodePipe(parent: PartPipe) extends NodePressure(parent) with TMultipartNod
       {
         if (tile.isInstanceOf[INodeProvider])
         {
-          val check = tile.asInstanceOf[INodeProvider].getNode(classOf[NodePressure], dir.getOpposite)
+          val check = tile.asInstanceOf[INodeProvider].getNode(classOf[NodeFluidPressure], dir.getOpposite)
 
-          if (check.isInstanceOf[NodePressure] && canConnect(check, dir) && check.asInstanceOf[NodePressure].canConnect(this, dir.getOpposite))
+          if (check.isInstanceOf[NodeFluidPressure] && canConnect(check, dir) && check.asInstanceOf[NodeFluidPressure].canConnect(this, dir.getOpposite))
           {
             connect(check, dir)
           }

@@ -17,7 +17,7 @@ import resonant.lib.debug.UpdatePanel;
 import resonant.lib.debug.UpdatedLabel;
 import resonant.api.grid.INode;
 import resonant.api.grid.INodeProvider;
-import resonantinduction.mechanical.mech.grid.MechanicalNode;
+import resonantinduction.mechanical.mech.grid.NodeMechanical;
 
 /** Java GUI used to help debug gear information
  *
@@ -31,7 +31,7 @@ public class DebugFrameMechanical extends FrameNodeDebug
 
     public DebugFrameMechanical(INodeProvider node)
     {
-        super(node, MechanicalNode.class);
+        super(node, NodeMechanical.class);
     }
 
     @Override
@@ -104,7 +104,7 @@ public class DebugFrameMechanical extends FrameNodeDebug
                 if (getNode() != null && getNode().connections() != null)
                 {
                     ForgeDirection dir = (ForgeDirection) getNode().directionMap().values().toArray()[row];
-                    MechanicalNode node = (MechanicalNode) getNode().directionMap().keySet().toArray()[row];
+                    NodeMechanical node = (NodeMechanical) getNode().directionMap().keySet().toArray()[row];
                     switch(col)
                     {
                         case 0: return dir;
@@ -160,12 +160,12 @@ public class DebugFrameMechanical extends FrameNodeDebug
     }
 
     @Override
-    public MechanicalNode getNode()
+    public NodeMechanical getNode()
     {
         INode node = super.getNode();
-        if (node instanceof MechanicalNode)
+        if (node instanceof NodeMechanical)
         {
-            return (MechanicalNode) node;
+            return (NodeMechanical) node;
         }
         return null;
     }

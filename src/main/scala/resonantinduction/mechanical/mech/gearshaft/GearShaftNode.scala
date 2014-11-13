@@ -6,9 +6,9 @@ import resonant.lib.transform.vector.Vector3
 import resonant.lib.wrapper.ForgeDirectionWrapper._
 import resonantinduction.core.interfaces.TMechanicalNode
 import resonantinduction.mechanical.mech.gear.{GearNode, PartGear}
-import resonantinduction.mechanical.mech.grid.MechanicalNode
+import resonantinduction.mechanical.mech.grid.NodeMechanical
 
-class GearShaftNode(parent: PartGearShaft) extends MechanicalNode(parent)
+class GearShaftNode(parent: PartGearShaft) extends NodeMechanical(parent)
 {
   override def getTorqueLoad: Double =
   {
@@ -38,7 +38,7 @@ class GearShaftNode(parent: PartGearShaft) extends MechanicalNode(parent)
       var found = false
 
       ///Check within this block for another gear plate that will move this shaft
-      val otherNode = shaft.tile.asInstanceOf[INodeProvider].getNode(classOf[MechanicalNode], toDir)
+      val otherNode = shaft.tile.asInstanceOf[INodeProvider].getNode(classOf[NodeMechanical], toDir)
 
       if (otherNode != null && otherNode != this && canConnect(otherNode, toDir) && otherNode.canConnect(this, toDir.getOpposite))
       {
@@ -53,7 +53,7 @@ class GearShaftNode(parent: PartGearShaft) extends MechanicalNode(parent)
 
         if (checkTile.isInstanceOf[INodeProvider])
         {
-          val instance = (checkTile.asInstanceOf[INodeProvider]).getNode(classOf[MechanicalNode], toDir.getOpposite)
+          val instance = (checkTile.asInstanceOf[INodeProvider]).getNode(classOf[NodeMechanical], toDir.getOpposite)
 
           if (instance != null && instance != this && instance.getParent.isInstanceOf[PartGearShaft] && instance.canConnect(this, toDir.getOpposite))
           {
@@ -66,11 +66,11 @@ class GearShaftNode(parent: PartGearShaft) extends MechanicalNode(parent)
 
   override def canConnect[B](other: B, from: ForgeDirection): Boolean =
   {
-    if (other.isInstanceOf[MechanicalNode])
+    if (other.isInstanceOf[NodeMechanical])
     {
-      if ((other.asInstanceOf[MechanicalNode]).getParent.isInstanceOf[PartGear])
+      if ((other.asInstanceOf[NodeMechanical]).getParent.isInstanceOf[PartGear])
       {
-        val gear: PartGear = (other.asInstanceOf[MechanicalNode]).getParent.asInstanceOf[PartGear]
+        val gear: PartGear = (other.asInstanceOf[NodeMechanical]).getParent.asInstanceOf[PartGear]
         if (!(Math.abs(gear.placementSide.offsetX) == Math.abs(shaft.placementSide.offsetX) && Math.abs(gear.placementSide.offsetY) == Math.abs(shaft.placementSide.offsetY) && Math.abs(gear.placementSide.offsetZ) == Math.abs(shaft.placementSide.offsetZ)))
         {
           return false

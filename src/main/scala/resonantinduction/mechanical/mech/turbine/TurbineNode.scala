@@ -1,7 +1,7 @@
 package resonantinduction.mechanical.mech.turbine
 
 import net.minecraftforge.common.util.ForgeDirection
-import resonantinduction.mechanical.mech.grid.MechanicalNode
+import resonantinduction.mechanical.mech.grid.NodeMechanical
 
 /**
  * Turbine's Mechanical node
@@ -9,7 +9,7 @@ import resonantinduction.mechanical.mech.grid.MechanicalNode
  *
  * @author Calclavia, Darkguardsman
  */
-class TurbineNode(tileTurbineBase: TileTurbine) extends MechanicalNode(tileTurbineBase)
+class TurbineNode(tileTurbineBase: TileTurbine) extends NodeMechanical(tileTurbineBase)
 {
 
   def turbine: TileTurbine =
@@ -19,7 +19,7 @@ class TurbineNode(tileTurbineBase: TileTurbine) extends MechanicalNode(tileTurbi
 
   override def canConnect[B](other: B, from: ForgeDirection): Boolean =
   {
-    return turbine.getMultiBlock.isPrimary && other.isInstanceOf[MechanicalNode] && !(other.isInstanceOf[TurbineNode]) && from == turbine.getDirection
+    return turbine.getMultiBlock.isPrimary && other.isInstanceOf[NodeMechanical] && !(other.isInstanceOf[TurbineNode]) && from == turbine.getDirection
   }
 
   /**

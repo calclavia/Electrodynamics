@@ -2,15 +2,15 @@ package resonantinduction.archaic.fluid.gutter
 
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.FluidContainerRegistry
-import resonantinduction.core.prefab.node.{NodePressure, TileFluidProvider}
+import resonantinduction.core.prefab.node.{NodeFluidPressure, TileFluidProvider}
 
 /**
  * A node for fluid that follows pressure and gravity.
  * @author Calclavia
  */
-class NodePressureGravity(parent: TileFluidProvider, volume: Int = FluidContainerRegistry.BUCKET_VOLUME) extends NodePressure(parent, volume)
+class NodeFluidGravity(parent: TileFluidProvider, volume: Int = FluidContainerRegistry.BUCKET_VOLUME) extends NodeFluidPressure(parent, volume)
 {
-  override protected def doDistribute(dir: ForgeDirection, nodeA: NodePressure, nodeB: NodePressure, flowRate: Int)
+  override protected def doDistribute(dir: ForgeDirection, nodeA: NodeFluidPressure, nodeB: NodeFluidPressure, flowRate: Int)
   {
     val tankA = nodeA.getPrimaryTank
     val tankB = nodeB.getPrimaryTank
@@ -23,7 +23,7 @@ class NodePressureGravity(parent: TileFluidProvider, volume: Int = FluidContaine
 
     if (dir == ForgeDirection.DOWN)
       quantity = Math.max(if (pressureA > pressureB) (pressureA - pressureB) * flowRate else amountA, amountA)
-    else if (nodeB.isInstanceOf[NodePressureGravity])
+    else if (nodeB.isInstanceOf[NodeFluidGravity])
       quantity = Math.max(if (pressureA > pressureB) (pressureA - pressureB) * flowRate else Math.min((amountA - amountB) / 2, flowRate), Math.min((amountA - amountB) / 2, flowRate))
     else
       quantity = if (pressureA > pressureB) (pressureA - pressureB) * flowRate else 0

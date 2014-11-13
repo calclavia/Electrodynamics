@@ -23,7 +23,7 @@ import resonant.lib.utility.FluidUtility
 import resonant.lib.utility.inventory.InventoryUtility
 import resonant.lib.wrapper.BitmaskWrapper._
 import resonantinduction.core.Reference
-import resonantinduction.core.prefab.node.{NodePressure, TileFluidProvider}
+import resonantinduction.core.prefab.node.{NodeFluidPressure, TileFluidProvider}
 
 object TileGutter
 {
@@ -38,7 +38,7 @@ object TileGutter
  */
 class TileGutter extends TileFluidProvider(Material.rock)
 {
-  fluidNode = new NodePressureGravity(this)
+  fluidNode = new NodeFluidGravity(this)
   {
     override def canFill(from: ForgeDirection, fluid: Fluid): Boolean =
     {
@@ -102,13 +102,13 @@ class TileGutter extends TileFluidProvider(Material.rock)
       for (i <- 2 to 6)
       {
         val dir: ForgeDirection = ForgeDirection.getOrientation(i)
-        val pressure: Int = fluidNode.asInstanceOf[NodePressure].pressure(dir)
+        val pressure: Int = fluidNode.asInstanceOf[NodeFluidPressure].pressure(dir)
         val pos: Vector3 = toVector3.add(dir)
         val checkTile: TileEntity = pos.getTileEntity(world)
 
         if (checkTile.isInstanceOf[TileGutter])
         {
-          val deltaPressure: Int = pressure - checkTile.asInstanceOf[TileGutter].fluidNode.asInstanceOf[NodePressure].pressure(dir.getOpposite)
+          val deltaPressure: Int = pressure - checkTile.asInstanceOf[TileGutter].fluidNode.asInstanceOf[NodeFluidPressure].pressure(dir.getOpposite)
           entity.motionX += 0.01 * dir.offsetX * deltaPressure
           entity.motionY += 0.01 * dir.offsetY * deltaPressure
           entity.motionZ += 0.01 * dir.offsetZ * deltaPressure

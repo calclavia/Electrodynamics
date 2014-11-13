@@ -17,7 +17,7 @@ import resonant.lib.wrapper.WrapList._
 import resonantinduction.core.Settings
 import resonant.api.grid.INodeProvider
 import resonant.lib.transform.vector.Vector3
-import resonantinduction.mechanical.mech.grid.MechanicalNode
+import resonantinduction.mechanical.mech.grid.NodeMechanical
 
 /**
  * The vertical water turbine collects flowing water flowing on X axis.
@@ -37,12 +37,12 @@ class TileWaterTurbine extends TileTurbine
   {
     override def canConnect[B](other: B, from: ForgeDirection): Boolean =
     {
-      if (other.isInstanceOf[MechanicalNode] && !(other.isInstanceOf[TileTurbine]))
+      if (other.isInstanceOf[NodeMechanical] && !(other.isInstanceOf[TileTurbine]))
       {
-        val sourceTile: TileEntity = position.add(from).getTileEntity(getWorld)
+        val sourceTile: TileEntity = toVectorWorld.add(from).getTileEntity
         if (sourceTile.isInstanceOf[INodeProvider])
         {
-          val sourceInstance: MechanicalNode = sourceTile.asInstanceOf[INodeProvider].getNode(classOf[MechanicalNode], from.getOpposite).asInstanceOf[MechanicalNode]
+          val sourceInstance: NodeMechanical = sourceTile.asInstanceOf[INodeProvider].getNode(classOf[NodeMechanical], from.getOpposite).asInstanceOf[NodeMechanical]
           return sourceInstance == other && (from == getDirection.getOpposite || from == getDirection)
         }
       }

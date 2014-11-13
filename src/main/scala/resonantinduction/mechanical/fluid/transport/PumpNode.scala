@@ -3,13 +3,13 @@ package resonantinduction.mechanical.fluid.transport
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.IFluidHandler
 import resonant.api.grid.INodeProvider
-import resonantinduction.core.prefab.node.NodePressure
+import resonantinduction.core.prefab.node.NodeFluidPressure
 
 /**
  * A node for the pump
  * @author Calclavia
  */
-class PumpNode(parent: INodeProvider) extends NodePressure(parent)
+class PumpNode(parent: INodeProvider) extends NodeFluidPressure(parent)
 {
   def pump: TilePump = getParent.asInstanceOf[TilePump]
 

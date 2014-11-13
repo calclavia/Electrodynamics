@@ -5,7 +5,7 @@ import net.minecraftforge.fluids.{FluidContainerRegistry, IFluidHandler}
 import resonant.api.grid.{INodeProvider, IUpdate}
 import resonant.lib.grid.UpdateTicker
 import resonant.lib.prefab.fluid.NodeFluid
-import resonantinduction.archaic.fluid.gutter.NodePressureGravity
+import resonantinduction.archaic.fluid.gutter.NodeFluidGravity
 
 import scala.collection.convert.wrapAll._
 
@@ -17,7 +17,7 @@ import scala.collection.convert.wrapAll._
  *
  * @author Calclavia
  */
-class NodePressure(parent: INodeProvider, volume: Int = FluidContainerRegistry.BUCKET_VOLUME) extends NodeFluid(parent, volume) with IUpdate
+class NodeFluidPressure(parent: INodeProvider, volume: Int = FluidContainerRegistry.BUCKET_VOLUME) extends NodeFluid(parent, volume) with IUpdate
 {
   var maxFlowRate = 1000
   var maxPressure = 100
@@ -46,11 +46,11 @@ class NodePressure(parent: INodeProvider, volume: Int = FluidContainerRegistry.B
     {
       case (handler: IFluidHandler, dir: ForgeDirection) =>
       {
-        if (handler.isInstanceOf[NodePressure])
+        if (handler.isInstanceOf[NodeFluidPressure])
         {
           //"A" is this node. "B" is the other node
           //It's another pressure node
-          val otherNode = handler.asInstanceOf[NodePressure]
+          val otherNode = handler.asInstanceOf[NodeFluidPressure]
           val pressureA = pressure(dir)
           val pressureB = otherNode.pressure(dir.getOpposite)
 
@@ -112,7 +112,7 @@ class NodePressure(parent: INodeProvider, volume: Int = FluidContainerRegistry.B
     }
   }
 
-  protected def doDistribute(dir: ForgeDirection, nodeA: NodePressure, nodeB: NodePressure, flowRate: Int)
+  protected def doDistribute(dir: ForgeDirection, nodeA: NodeFluidPressure, nodeB: NodeFluidPressure, flowRate: Int)
   {
     val tankA = nodeA.getPrimaryTank
     val tankB = nodeB.getPrimaryTank
@@ -145,9 +145,9 @@ class NodePressure(parent: INodeProvider, volume: Int = FluidContainerRegistry.B
     {
       case (handler: IFluidHandler, dir: ForgeDirection) =>
       {
-        if (handler.isInstanceOf[NodePressure])
+        if (handler.isInstanceOf[NodeFluidPressure])
         {
-          val node = handler.asInstanceOf[NodePressure]
+          val node = handler.asInstanceOf[NodeFluidPressure]
           val pressure = node.pressure(dir.getOpposite)
           minPressure = Math.min(pressure, minPressure)
           maxPressure = Math.max(pressure, maxPressure)

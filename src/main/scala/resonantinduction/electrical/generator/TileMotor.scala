@@ -9,7 +9,7 @@ import resonant.content.prefab.java.TileAdvanced
 import resonant.lib.content.prefab.TElectric
 import resonant.lib.grid.node.TSpatialNodeProvider
 import resonant.lib.transform.vector.Vector3
-import resonantinduction.mechanical.mech.grid.MechanicalNode
+import resonantinduction.mechanical.mech.grid.NodeMechanical
 
 /**
  * A kinetic energy to electrical energy converter.
@@ -18,7 +18,7 @@ import resonantinduction.mechanical.mech.grid.MechanicalNode
  */
 class TileMotor extends TileAdvanced(Material.iron) with TElectric with TSpatialNodeProvider with IRotatable
 {
-  var mechNode = new MechanicalNode(this)
+  var mechNode = new NodeMechanical(this)
 
   private var gearRatio = 0
 

@@ -9,14 +9,14 @@ import resonant.lib.transform.vector.{IVectorWorld, Vector3, VectorWorld}
 import resonant.lib.wrapper.ForgeDirectionWrapper._
 import resonantinduction.core.interfaces.TMechanicalNode
 import resonantinduction.mechanical.mech.gearshaft.{GearShaftNode, PartGearShaft}
-import resonantinduction.mechanical.mech.grid.MechanicalNode
+import resonantinduction.mechanical.mech.grid.NodeMechanical
 
 /**
  * Node for the gear
  *
  * @author Calclavia, Edited by: Darkguardsman
  */
-class GearNode(parent: PartGear) extends MechanicalNode(parent: PartGear)
+class GearNode(parent: PartGear) extends NodeMechanical(parent: PartGear)
 {
   angleDisplacement = Math.PI / 12
 
@@ -52,7 +52,7 @@ class GearNode(parent: PartGear) extends MechanicalNode(parent: PartGear)
     val tileBehind: TileEntity = new Vector3(gear.tile).add(gear.placementSide).getTileEntity(world)
     if (tileBehind.isInstanceOf[INodeProvider])
     {
-      val instance: MechanicalNode = (tileBehind.asInstanceOf[INodeProvider]).getNode(classOf[MechanicalNode], gear.placementSide.getOpposite)
+      val instance: NodeMechanical = (tileBehind.asInstanceOf[INodeProvider]).getNode(classOf[NodeMechanical], gear.placementSide.getOpposite)
       if (instance != null && instance != this && !(instance.getParent.isInstanceOf[PartGearShaft]) && instance.canConnect(this, gear.placementSide.getOpposite))
       {
         connect(instance, gear.placementSide)
@@ -68,7 +68,7 @@ class GearNode(parent: PartGear) extends MechanicalNode(parent: PartGear)
       }
       if (tile.isInstanceOf[INodeProvider])
       {
-        val instance: MechanicalNode = (tile.asInstanceOf[INodeProvider]).getNode(classOf[MechanicalNode], if (checkDir == gear.placementSide.getOpposite) ForgeDirection.UNKNOWN else checkDir).asInstanceOf[MechanicalNode]
+        val instance: NodeMechanical = (tile.asInstanceOf[INodeProvider]).getNode(classOf[NodeMechanical], if (checkDir == gear.placementSide.getOpposite) ForgeDirection.UNKNOWN else checkDir).asInstanceOf[NodeMechanical]
         if (!directionMap.containsValue(checkDir) && instance != this && checkDir != gear.placementSide && instance != null && instance.canConnect(this, checkDir.getOpposite))
         {
           connect(instance, checkDir)
@@ -86,7 +86,7 @@ class GearNode(parent: PartGear) extends MechanicalNode(parent: PartGear)
       val checkTile: TileEntity = new Vector3(gear.tile).add(checkDir).getTileEntity(world)
       if (!directionMap.containsValue(checkDir) && checkTile.isInstanceOf[INodeProvider])
       {
-        val instance: MechanicalNode = (checkTile.asInstanceOf[INodeProvider]).getNode(classOf[MechanicalNode], gear.placementSide)
+        val instance: NodeMechanical = (checkTile.asInstanceOf[INodeProvider]).getNode(classOf[NodeMechanical], gear.placementSide)
         if (instance != null && instance != this && instance.canConnect(this, checkDir.getOpposite) && !(instance.getParent.isInstanceOf[PartGearShaft]))
         {
           connect(instance, checkDir)
@@ -108,9 +108,9 @@ class GearNode(parent: PartGear) extends MechanicalNode(parent: PartGear)
     {
       return false
     }
-    if (other.isInstanceOf[MechanicalNode])
+    if (other.isInstanceOf[NodeMechanical])
     {
-      val parent: INodeProvider = other.asInstanceOf[MechanicalNode].getParent
+      val parent: INodeProvider = other.asInstanceOf[NodeMechanical].getParent
       if (from == gear.placementSide.getOpposite)
       {
         if (parent.isInstanceOf[PartGear] || parent.isInstanceOf[PartGearShaft])
@@ -157,7 +157,7 @@ class GearNode(parent: PartGear) extends MechanicalNode(parent: PartGear)
         val sourceTile: TileEntity = toVectorWorld.add(from.getOpposite).getTileEntity(world)
         if (sourceTile.isInstanceOf[INodeProvider])
         {
-          val sourceInstance: MechanicalNode = (sourceTile.asInstanceOf[INodeProvider]).getNode(classOf[MechanicalNode], from)
+          val sourceInstance: NodeMechanical = (sourceTile.asInstanceOf[INodeProvider]).getNode(classOf[NodeMechanical], from)
           return sourceInstance == other
         }
       }
@@ -166,13 +166,13 @@ class GearNode(parent: PartGear) extends MechanicalNode(parent: PartGear)
         val sourceTile: TileEntity = toVectorWorld.add(from).getTileEntity(world)
         if (sourceTile.isInstanceOf[INodeProvider])
         {
-          val sourceInstance: MechanicalNode = (sourceTile.asInstanceOf[INodeProvider]).getNode(classOf[MechanicalNode], from.getOpposite)
+          val sourceInstance: NodeMechanical = (sourceTile.asInstanceOf[INodeProvider]).getNode(classOf[NodeMechanical], from.getOpposite)
           return sourceInstance == other
         }
       }
       else
       {
-        val destinationTile: TileEntity = other.asInstanceOf[MechanicalNode].toVectorWorld.add(from.getOpposite).getTileEntity(world)
+        val destinationTile: TileEntity = other.asInstanceOf[NodeMechanical].toVectorWorld.add(from.getOpposite).getTileEntity(world)
         if (destinationTile.isInstanceOf[INodeProvider] && destinationTile.isInstanceOf[TileMultipart])
         {
           val destinationPart: TMultiPart = destinationTile.asInstanceOf[TileMultipart].partMap(gear.placementSide.ordinal)
