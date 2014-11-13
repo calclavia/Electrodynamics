@@ -81,12 +81,6 @@ class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](par
     bufferTorque += torque
   }
 
-  /**
-   * The percentage of angular velocity loss every second
-   */
-  def getAngularVelocityLoad: Double = getLoad
-
-  //TODO: Create new grids automatically?
   def power: Double = torque * angularVelocity
 
   def getMechanicalGrid: MechanicalGrid = super.grid.asInstanceOf[MechanicalGrid]

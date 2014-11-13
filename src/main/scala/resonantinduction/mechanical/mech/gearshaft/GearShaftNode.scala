@@ -14,19 +14,9 @@ class GearShaftNode(parent: PartGearShaft) extends NodeMechanical(parent)
   {
     return shaft.tier match
     {
-      case 0 => 0.03
-      case 1 => 0.02
-      case 2 => 0.01
-    }
-  }
-
-  override def getAngularVelocityLoad: Double =
-  {
-    return shaft.tier match
-    {
-      case 0 => 0.03
-      case 1 => 0.02
-      case 2 => 0.01
+      case 0 => 15
+      case 1 => 10
+      case 2 => 5
     }
   }
 

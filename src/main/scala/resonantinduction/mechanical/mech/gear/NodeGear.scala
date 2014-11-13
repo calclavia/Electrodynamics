@@ -32,14 +32,14 @@ class NodeGear(parent: PartGear) extends NodeMechanical(parent: PartGear)
     }
   }
 
-  override def getAngularVelocityLoad: Double =
+  override def reconstruct()
   {
-    return gear.tier match
+    if (!parent.getMultiBlock.isPrimary)
     {
-      case 0 => 0.1
-      case 1 => 0.2
-      case 2 => 0.1
+      parent.getMultiBlock.getPrimary.mechanicalNode.reconstruct()
     }
+
+    super.reconstruct()
   }
 
   override def rebuild()
@@ -199,8 +199,9 @@ class NodeGear(parent: PartGear) extends NodeMechanical(parent: PartGear)
 
   override def inverseRotation(other: TMechanicalNode): Boolean = !other.isInstanceOf[GearShaftNode] || (other.isInstanceOf[GearShaftNode] && parent.placementSide.offset < Vector3.zero)
 
-  override def ratio = if (gear.getMultiBlock.isConstructed) 1.5f else super.ratio
+  override def momentOfInertia = if (gear.getMultiBlock.isConstructed) 1.5f else super.momentOfInertia
 
+  /*
   override def getRadius(dir: ForgeDirection, other: TMechanicalNode): Double =
   {
     //The ratio is the same if it is a gear placed back to back with each other OR a shaft
@@ -213,5 +214,5 @@ class NodeGear(parent: PartGear) extends NodeMechanical(parent: PartGear)
       return super.getRadius(dir, other)
 
     return if (gear.getMultiBlock.isConstructed) 1.5f else super.getRadius(dir, other)
-  }
+  }*/
 }

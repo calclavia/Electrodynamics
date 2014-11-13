@@ -40,6 +40,11 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
   {
     if (getMultiBlock.isPrimary)
       markVelocityUpdate = true
+
+    if(mechanicalNode.angularVelocity == 0)
+    {
+      //mark
+    }
   }
 
   mechanicalNode.onGridReconstruct = () => if (world != null && !world.isRemote) sendPacket(2)
@@ -54,7 +59,7 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
       if (manualCrankTime > 0)
       {
         //A punch his around 5000 Newtons
-        mechanicalNode.rotate(if (isClockwiseCrank) 50 else -50)
+        mechanicalNode.rotate((if (isClockwiseCrank) 3 else -3) * manualCrankTime)
         manualCrankTime -= 1
       }
     }
@@ -65,7 +70,8 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
   override def activate(player: EntityPlayer, hit: MovingObjectPosition, itemStack: ItemStack): Boolean =
   {
     if (!world.isRemote)
-      println(mechanicalNode.connections)
+      println(mechanicalNode)
+
     if (itemStack != null && itemStack.getItem.isInstanceOf[ItemHandCrank])
     {
       if (!world.isRemote && ControlKeyModifer.isControlDown(player))
@@ -95,13 +101,13 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
   override def preRemove
   {
     super.preRemove
-    getMultiBlock.deconstruct
+    getMultiBlock.deconstruct()
   }
 
   /** Is this gear block the one in the center-edge of the multiblock that can interact with other
     * gears?
     *
-    * @return */
+    * @return*/
   def isCenterMultiBlock: Boolean =
   {
     if (!getMultiBlock.isConstructed)
@@ -155,14 +161,16 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
     return world
   }
 
-  def onMultiBlockChanged
+  def onMultiBlockChanged()
   {
     if (world != null)
     {
       tile.notifyPartChange(this)
+
       if (!world.isRemote)
       {
-        sendDescUpdate
+        mechanicalNode.reconstruct()
+        sendDescUpdate()
       }
     }
   }

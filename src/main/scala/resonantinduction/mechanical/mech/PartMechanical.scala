@@ -53,17 +53,6 @@ abstract class PartMechanical extends PartAbstract with JNormalOcclusion with TF
     this.tier = itemDamage
   }
 
-  override def activate(player: EntityPlayer, hit: MovingObjectPosition, item: ItemStack): Boolean =
-  {
-    if (!world.isRemote)
-    {
-      println("Angle: " + mechanicalNode.prevAngle)
-      sendPacket(2)
-    }
-
-    super.activate(player, hit, item)
-  }
-
   override def write(packet: MCDataOutput, id: Int)
   {
     super.write(packet, id)

@@ -12,21 +12,6 @@ import resonant.lib.transform.vector.IVectorWorld
 trait TMechanicalNode extends INode with IVectorWorld
 {
   /**
-   * Gets the radius of the gear in meters. Used to calculate torque and gear ratio for connections.
-   * Is not applied to direct face to face connections
-   *
-   * @param side - side of the machine
-   * @return radius in meters of the rotation peace
-   */
-  def getRadius(side: ForgeDirection, from: TMechanicalNode): Double = 0.5
-
-  /**
-   * The mechanical ratio. The higher the ratio, the more torque but less angular velocity.
-   * @return A double greater than zero
-   */
-  def ratio = 1D
-
-  /**
    * Gets the angular velocity of the mechanical device from a specific side
    *
    * @return Angular velocity in meters per second

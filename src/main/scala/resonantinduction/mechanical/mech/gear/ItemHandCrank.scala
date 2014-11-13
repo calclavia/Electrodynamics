@@ -1,5 +1,6 @@
 package resonantinduction.mechanical.mech.gear
 
+import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.Item
 import net.minecraft.world.World
 
@@ -7,8 +8,5 @@ class ItemHandCrank extends Item
 {
   setMaxStackSize(1)
 
-  def shouldPassSneakingClickToBlock(world: World, x: Int, y: Int, z: Int): Boolean =
-  {
-    return true
-  }
+  override def doesSneakBypassUse(world: World, x: Int, y: Int, z: Int, player: EntityPlayer) = true
 }

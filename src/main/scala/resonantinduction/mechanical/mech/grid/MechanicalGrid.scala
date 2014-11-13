@@ -66,14 +66,14 @@ class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) w
         val prevAngularVelocity = n.angularVelocity
 
         val inversion = if (spinMap(n)) 1 else -1
-        n.torque = deltaTorque * n.ratio * inversion
+        n.torque = deltaTorque * inversion
         val angularAcceleration = deltaTorque / n.momentOfInertia
-        n.angularVelocity = angularAcceleration / n.ratio * deltaTime * inversion
+        n.angularVelocity = angularAcceleration * deltaTime * inversion
 
-        if (Math.abs(prevTorque - n.torque) >= 0.1)
+        if (Math.abs(n.torque - prevTorque) >= 0.1)
           n.onTorqueChanged()
 
-        if (Math.abs(prevAngularVelocity - n.angularVelocity) >= 0.01)
+        if (Math.abs(n.angularVelocity - prevAngularVelocity) >= 0.001)
           n.onVelocityChanged()
 
         //Clear buffers
