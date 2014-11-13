@@ -26,9 +26,9 @@ class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](par
   protected[grid] var bufferTorque = 0D
 
   /**
-   * A percentage value indicating how much friction the loss.
+   * The mechanical load
    */
-  var load = 0.1D
+  var load = 10D
 
   /**
    * Angle calculations
@@ -70,6 +70,10 @@ class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](par
   //Moment of inertia = m * r ^ 2
   def momentOfInertia = 1d
 
+  /**
+   * The mechanical load
+   * @return Torque in Newton meters per second
+   */
   def getLoad = load
 
   override def rotate(torque: Double)

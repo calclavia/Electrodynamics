@@ -19,7 +19,7 @@ class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) w
    */
   val spinMap = mutable.WeakHashMap.empty[NodeMechanical, Boolean]
 
-  private var friction = 0D
+  private var load = 0D
 
   /**
    * Rebuild the node list starting from the first node and recursively iterating through its connections.
@@ -29,7 +29,7 @@ class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) w
     super.reconstruct(first)
     UpdateTicker.addUpdater(this)
 
-    friction = getNodes.map(n => n.getLoad).foldLeft(0D)(_ + _)
+    load = getNodes.map(n => n.getLoad).foldLeft(0D)(_ + _)
   }
 
   override protected def populateNode(node: NodeMechanical, prev: NodeMechanical)
@@ -54,32 +54,31 @@ class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) w
 
       //Calculate the total input equivalent torque
       val inputTorque = inputs
-                        .map(n => n.bufferTorque * (if (spinMap(n)) 1 else -1))
-                        .foldLeft(0D)(_ + _)
+        .map(n => n.bufferTorque * (if (spinMap(n)) 1 else -1))
+        .foldLeft(0D)(_ + _)
 
-      val deltaTorque = inputTorque - friction * inputTorque
+      val deltaTorque = if (inputTorque != 0) Math.max(Math.abs(inputTorque) - load * deltaTime, 0) * inputTorque / Math.abs(inputTorque) else 0
 
       //Set torque and angular velocity of all nodes
-      getNodes.foreach(
-        n =>
-        {
-          val prevTorque = n.torque
-          val prevAngularVelocity = n.angularVelocity
+      getNodes.foreach(n =>
+      {
+        val prevTorque = n.torque
+        val prevAngularVelocity = n.angularVelocity
 
-          val inversion = if (spinMap(n)) 1 else -1
-          n.torque = deltaTorque * n.ratio * inversion
-          val angularAcceleration = deltaTorque / n.momentOfInertia
-          n.angularVelocity = angularAcceleration / n.ratio * deltaTime * inversion
+        val inversion = if (spinMap(n)) 1 else -1
+        n.torque = deltaTorque * n.ratio * inversion
+        val angularAcceleration = deltaTorque / n.momentOfInertia
+        n.angularVelocity = angularAcceleration / n.ratio * deltaTime * inversion
 
-          if (Math.abs(prevTorque - n.torque) >= 0.1)
-            n.onTorqueChanged()
+        if (Math.abs(prevTorque - n.torque) >= 0.1)
+          n.onTorqueChanged()
 
-          if (Math.abs(prevAngularVelocity - n.angularVelocity) >= 0.1)
-            n.onVelocityChanged()
+        if (Math.abs(prevAngularVelocity - n.angularVelocity) >= 0.01)
+          n.onVelocityChanged()
 
-          //Clear buffers
-          n.bufferTorque = 0
-        })
+        //Clear buffers
+        n.bufferTorque = 0
+      })
     }
   }
 

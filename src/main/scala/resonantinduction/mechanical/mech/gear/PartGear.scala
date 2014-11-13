@@ -29,7 +29,7 @@ import resonantinduction.mechanical.mech.PartMechanical
 class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
 {
   var isClockwiseCrank: Boolean = true
-  var manualCrankTime = 0D
+  var manualCrankTime = 0
   var multiBlockRadius: Int = 1
   /** Multiblock */
   val multiBlock = new GearMultiBlockHandler(this)
@@ -53,8 +53,9 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
     {
       if (manualCrankTime > 0)
       {
+        //A punch his around 5000 Newtons
         mechanicalNode.rotate(if (isClockwiseCrank) 50 else -50)
-        manualCrankTime -= 0.1
+        manualCrankTime -= 1
       }
     }
 
@@ -75,8 +76,8 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
       }
 
       isClockwiseCrank = player.isSneaking
+      getMultiBlock.get.manualCrankTime = 40
 
-      getMultiBlock.get.manualCrankTime = 2
       world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, Reference.prefix + "gearCrank", 0.5f, 0.9f + world.rand.nextFloat * 0.2f)
       player.addExhaustion(0.01f)
       return true
