@@ -32,7 +32,7 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
   var manualCrankTime = 0D
   var multiBlockRadius: Int = 1
   /** Multiblock */
-  var multiBlock: GearMultiBlockHandler = null
+  val multiBlock = new GearMultiBlockHandler(this)
 
   //Constructor
   mechanicalNode = new NodeGear(this)
@@ -63,6 +63,8 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
 
   override def activate(player: EntityPlayer, hit: MovingObjectPosition, itemStack: ItemStack): Boolean =
   {
+    if (!world.isRemote)
+      println(mechanicalNode.connections)
     if (itemStack != null && itemStack.getItem.isInstanceOf[ItemHandCrank])
     {
       if (!world.isRemote && ControlKeyModifer.isControlDown(player))
@@ -79,11 +81,13 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
       player.addExhaustion(0.01f)
       return true
     }
+
     if (WrenchUtility.isWrench(itemStack))
     {
-      getMultiBlock.toggleConstruct
+      getMultiBlock.toggleConstruct()
       return true
     }
+
     return super.activate(player, hit, itemStack)
   }
 
@@ -96,7 +100,7 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
   /** Is this gear block the one in the center-edge of the multiblock that can interact with other
     * gears?
     *
-    * @return*/
+    * @return */
   def isCenterMultiBlock: Boolean =
   {
     if (!getMultiBlock.isConstructed)
@@ -143,12 +147,7 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
     getMultiBlock.save(nbt)
   }
 
-  override def getMultiBlockVectors: java.util.List[resonant.lib.transform.vector.Vector3] =
-  {
-    val vec = new resonant.lib.transform.vector.Vector3(this.x, this.y, this.z)
-    var array: java.util.List[resonant.lib.transform.vector.Vector3] = vec.getAround(this.world, placementSide, 1)
-    return array
-  }
+  override def getMultiBlockVectors: java.util.List[resonant.lib.transform.vector.Vector3] = new resonant.lib.transform.vector.Vector3().getAround(this.world, placementSide, 1)
 
   def getWorld: World =
   {
@@ -167,11 +166,7 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
     }
   }
 
-  def getMultiBlock: GearMultiBlockHandler =
-  {
-    if (multiBlock == null) multiBlock = new GearMultiBlockHandler(this)
-    return multiBlock
-  }
+  override def getMultiBlock: GearMultiBlockHandler = multiBlock
 
   override def getNode[N <: INode](nodeType: Class[_ <: N], from: ForgeDirection): N =
   {

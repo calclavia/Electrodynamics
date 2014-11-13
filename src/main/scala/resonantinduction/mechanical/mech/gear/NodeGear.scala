@@ -199,8 +199,11 @@ class NodeGear(parent: PartGear) extends NodeMechanical(parent: PartGear)
 
   override def inverseRotation(other: TMechanicalNode): Boolean = !other.isInstanceOf[GearShaftNode] || (other.isInstanceOf[GearShaftNode] && parent.placementSide.offset < Vector3.zero)
 
+  override def ratio = if (gear.getMultiBlock.isConstructed) 1.5f else super.ratio
+
   override def getRadius(dir: ForgeDirection, other: TMechanicalNode): Double =
   {
+    //The ratio is the same if it is a gear placed back to back with each other OR a shaft
     val deltaPos: Vector3 = new VectorWorld(other.asInstanceOf[IVectorWorld]).subtract(toVectorWorld)
     val caseX = gear.placementSide.offsetX != 0 && deltaPos.y == 0 && deltaPos.z == 0
     val caseY = gear.placementSide.offsetY != 0 && deltaPos.x == 0 && deltaPos.z == 0
