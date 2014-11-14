@@ -95,7 +95,6 @@ object MechanicalContent extends ContentHolder
     recipes += shaped(new ItemStack(blockWaterTurbine, 1, 1), "SWS", "WGW", "SWS", 'G', new ItemStack(blockWaterTurbine, 1, 0), 'W', Blocks.stone, 'S', Items.stick)
     recipes += shaped(new ItemStack(blockWaterTurbine, 1, 2), "SWS", "WGW", "SWS", 'G', new ItemStack(blockWaterTurbine, 1, 1), 'W', UniversalRecipe.PRIMARY_METAL.get, 'S', Items.stick)
 
-    recipes += shaped(blockElectricTurbine, " B ", "BMB", " B ", 'B', UniversalRecipe.SECONDARY_PLATE.get, 'M', UniversalRecipe.MOTOR.get)
     recipes += shaped(blockPump, "PPP", "GGG", "PPP", 'P', itemPipe, 'G', new ItemStack(itemGear, 1, 2))
 
     recipes += shaped(new ItemStack(itemPipe, 3, PipeMaterials.ceramic.id), "BBB", "   ", "BBB", 'B', Items.brick)

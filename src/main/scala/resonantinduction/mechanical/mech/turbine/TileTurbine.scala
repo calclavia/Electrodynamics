@@ -30,7 +30,7 @@ class TileTurbine extends TileMechanical(Material.wood) with IMultiBlockStructur
   normalRender = false
   isOpaqueCube = false
   setTextureName("material_wood_surface")
-  mechanicalNode = new TurbineNode(this)
+  mechanicalNode = new NodeTurbine(this)
   rotationMask = 63
 
   override def onRemove(block: Block, par1: Int)
@@ -127,20 +127,6 @@ class TileTurbine extends TileMechanical(Material.wood) with IMultiBlockStructur
   def getWorld: World =
   {
     return worldObj
-  }
-
-  override def use(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
-  {
-    if (player.getCurrentEquippedItem != null && player.getCurrentEquippedItem.getItem.isInstanceOf[ItemHandCrank])
-    {
-      if (!world.isRemote)
-      {
-        mechanicalNode.torque = -mechanicalNode.torque
-        mechanicalNode.angularVelocity = -mechanicalNode.angularVelocity
-      }
-      return true
-    }
-    return super.use(player, side, hit)
   }
 
   override def configure(player: EntityPlayer, side: Int, hit: Vector3): Boolean =

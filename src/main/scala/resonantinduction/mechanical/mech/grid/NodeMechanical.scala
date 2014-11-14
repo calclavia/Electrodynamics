@@ -16,8 +16,24 @@ import scala.beans.BeanProperty
  */
 class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](parent) with TMultipartNode[NodeMechanical] with TMechanicalNode with IVectorWorld
 {
-  var torque = 0D
-  var angularVelocity = 0D
+  protected[grid] var _torque = 0D
+  protected[grid] var _angularVelocity = 0D
+
+  /**
+   * Gets the angular velocity of the mechanical device from a specific side
+   *
+   * @return Angular velocity in meters per second
+   */
+  override def angularVelocity = _angularVelocity
+
+  def angularVelocity_=(newVel: Double) = _angularVelocity = newVel
+
+  /**
+   * Gets the torque of the mechanical device from a specific side
+   *
+   * @return force
+   */
+  override def torque = _torque
 
   /**
    * Buffer values used by the grid to transfer mechanical energy.
@@ -54,7 +70,6 @@ class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](par
     prevAngle = (prevAngle + deltaTime * angularVelocity) % (2 * Math.PI)
     return prevAngle
   }
-
 
   override def rotate(torque: Double)
   {

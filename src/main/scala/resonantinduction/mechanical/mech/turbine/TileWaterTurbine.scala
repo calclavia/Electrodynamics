@@ -1,6 +1,5 @@
 package resonantinduction.mechanical.mech.turbine
 
-import java.lang.reflect.Method
 import java.util.List
 
 import cpw.mods.fml.relauncher.ReflectionHelper
@@ -12,11 +11,11 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.Vec3
 import net.minecraft.world.IBlockAccess
 import net.minecraftforge.common.util.ForgeDirection
+import resonant.api.grid.INodeProvider
 import resonant.content.prefab.itemblock.ItemBlockMetadata
+import resonant.lib.transform.vector.Vector3
 import resonant.lib.wrapper.WrapList._
 import resonantinduction.core.Settings
-import resonant.api.grid.INodeProvider
-import resonant.lib.transform.vector.Vector3
 import resonantinduction.mechanical.mech.grid.NodeMechanical
 
 /**
@@ -28,63 +27,57 @@ import resonantinduction.mechanical.mech.grid.NodeMechanical
  */
 class TileWaterTurbine extends TileTurbine
 {
-  var powerTicks: Int = 0
+  var powerTicks = 0
 
   //Constructor
-  this.itemBlock_$eq(classOf[ItemBlockMetadata])
-  mechanicalNode.torque = defaultTorque
-  mechanicalNode = new TurbineNode((this))
+  itemBlock = classOf[ItemBlockMetadata]
+  mechanicalNode = new NodeTurbine(this)
   {
     override def canConnect[B](other: B, from: ForgeDirection): Boolean =
     {
       if (other.isInstanceOf[NodeMechanical] && !(other.isInstanceOf[TileTurbine]))
       {
         val sourceTile: TileEntity = toVectorWorld.add(from).getTileEntity
+
         if (sourceTile.isInstanceOf[INodeProvider])
         {
           val sourceInstance: NodeMechanical = sourceTile.asInstanceOf[INodeProvider].getNode(classOf[NodeMechanical], from.getOpposite).asInstanceOf[NodeMechanical]
           return sourceInstance == other && (from == getDirection.getOpposite || from == getDirection)
         }
       }
+
       return false
     }
   }
 
-  override def update
+  override def update()
   {
-    super.update
-    if (getMultiBlock.isConstructed)
-    {
-      mechanicalNode.torque = (defaultTorque / (1d / multiBlockRadius)).asInstanceOf[Long]
-    }
-    else
-    {
-      mechanicalNode.torque = defaultTorque / 12
-    }
+    super.update()
+
     if (getDirection.offsetY != 0)
     {
-      maxPower = 10000
       if (powerTicks > 0)
       {
-        getMultiBlock.get.power += getWaterPower
+        getMultiBlock.get.mechanicalNode.rotate(getWaterPower)
         powerTicks -= 1
       }
+
       if (ticks % 20 == 0)
       {
         val blockIDAbove: Block = worldObj.getBlock(xCoord, yCoord + 1, zCoord)
         val metadata: Int = worldObj.getBlockMetadata(xCoord, yCoord + 1, zCoord)
-        val isWater: Boolean = (blockIDAbove == Blocks.water || blockIDAbove == Blocks.flowing_water)
+        val isWater: Boolean = blockIDAbove == Blocks.water || blockIDAbove == Blocks.flowing_water
         if (isWater && worldObj.isAirBlock(xCoord, yCoord - 1, zCoord) && metadata == 0)
         {
           powerTicks = 20
           worldObj.setBlockToAir(xCoord, yCoord + 1, zCoord)
           worldObj.setBlock(xCoord, yCoord - 1, zCoord, Blocks.flowing_water)
+          getMultiBlock.get.mechanicalNode.rotate(10000)
         }
       }
     }
     else
     {
-      maxPower = 2500
       val currentDir: ForgeDirection = getDirection
       for (dir <- ForgeDirection.VALID_DIRECTIONS)
       {
@@ -95,32 +88,21 @@ class TileWaterTurbine extends TileTurbine
           val metadata: Int = worldObj.getBlockMetadata(check.xi, check.yi, check.zi)
           if (blockID == Blocks.water || blockID == Blocks.flowing_water)
           {
-            try
+
+            val m = ReflectionHelper.findMethod(classOf[BlockDynamicLiquid], null, Array[String]("getFlowVector", "func_72202_i"), classOf[IBlockAccess], Integer.TYPE, Integer.TYPE, Integer.TYPE)
+            val vector = new Vector3(m.invoke(Blocks.water, Array(worldObj, check.xi, check.yi, check.zi)).asInstanceOf[Vec3])
+            val invert = (currentDir.offsetZ > 0 && vector.x < 0) || (currentDir.offsetZ < 0 && vector.x > 0) || (currentDir.offsetX > 0 && vector.z > 0) || (currentDir.offsetX < 0 && vector.z < 0)
+
+            if (getDirection.offsetX != 0)
             {
-              val m: Method = ReflectionHelper.findMethod(classOf[BlockDynamicLiquid], null, Array[String]("getFlowVector", "func_72202_i"), classOf[IBlockAccess], Integer.TYPE, Integer.TYPE, Integer.TYPE)
-              val vector: Vector3 = new Vector3(m.invoke(Blocks.water, Array(worldObj, check.xi, check.yi, check.zi)).asInstanceOf[Vec3])
-              if ((currentDir.offsetZ > 0 && vector.x < 0) || (currentDir.offsetZ < 0 && vector.x > 0) || (currentDir.offsetX > 0 && vector.z > 0) || (currentDir.offsetX < 0 && vector.z < 0))
-              {
-                mechanicalNode.torque = -mechanicalNode.torque
-              }
-              if (getDirection.offsetX != 0)
-              {
-                getMultiBlock.get.power += Math.abs(getWaterPower * vector.z * (7 - metadata) / 7f)
-                powerTicks = 20
-              }
-              if (getDirection.offsetZ != 0)
-              {
-                getMultiBlock.get.power += Math.abs(getWaterPower * vector.x * (7 - metadata) / 7f)
-                powerTicks = 20
-              }
+              getMultiBlock.get.mechanicalNode.rotate(if (invert) -1 else 1 * Math.abs(getWaterPower * vector.z * (7 - metadata) / 7f))
+              powerTicks = 20
             }
-            catch
-              {
-                case e: Exception =>
-                {
-                  e.printStackTrace
-                }
-              }
+            if (getDirection.offsetZ != 0)
+            {
+              getMultiBlock.get.mechanicalNode.rotate(if (invert) -1 else 1 * Math.abs(getWaterPower * vector.x * (7 - metadata) / 7f))
+              powerTicks = 20
+            }
           }
         }
       }
@@ -131,10 +113,7 @@ class TileWaterTurbine extends TileTurbine
    * Gravitation Potential Energy:
    * PE = mgh
    */
-  private def getWaterPower: Long =
-  {
-    return (maxPower / (2 - tier + 1)) * Settings.WATER_POWER_RATIO
-  }
+  private def getWaterPower = (10000 / (2 - tier + 1)) * Settings.WATER_POWER_RATIO
 
   override def getSubBlocks(par1: Item, par2CreativeTabs: CreativeTabs, par3List: List[_])
   {

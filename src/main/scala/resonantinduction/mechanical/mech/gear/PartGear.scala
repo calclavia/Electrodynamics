@@ -72,13 +72,6 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
 
     if (itemStack != null && itemStack.getItem.isInstanceOf[ItemHandCrank])
     {
-      if (!world.isRemote && ControlKeyModifer.isControlDown(player))
-      {
-        getMultiBlock.get.mechanicalNode.torque = -getMultiBlock.get.mechanicalNode.torque
-        getMultiBlock.get.mechanicalNode.angularVelocity = -getMultiBlock.get.mechanicalNode.angularVelocity
-        return true
-      }
-
       isClockwiseCrank = player.isSneaking
       getMultiBlock.get.manualCrankTime = 40
 

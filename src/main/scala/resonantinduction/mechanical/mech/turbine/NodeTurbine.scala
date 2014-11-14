@@ -9,8 +9,14 @@ import resonantinduction.mechanical.mech.grid.NodeMechanical
  *
  * @author Calclavia, Darkguardsman
  */
-class TurbineNode(parent: TileTurbine) extends NodeMechanical(parent)
+class NodeTurbine(parent: TileTurbine) extends NodeMechanical(parent)
 {
+
+  /**
+   * The mechanical load
+   * @return Torque in Newton meters per second
+   */
+  override def getLoad = 100d
 
   /**
    * Moment of inertia = m * r * r
@@ -25,7 +31,7 @@ class TurbineNode(parent: TileTurbine) extends NodeMechanical(parent)
 
   override def canConnect[B](other: B, from: ForgeDirection): Boolean =
   {
-    return turbine.getMultiBlock.isPrimary && other.isInstanceOf[NodeMechanical] && !(other.isInstanceOf[TurbineNode]) && from == turbine.getDirection
+    return turbine.getMultiBlock.isPrimary && other.isInstanceOf[NodeMechanical] && !(other.isInstanceOf[NodeTurbine]) && from == turbine.getDirection
   }
 
   /**
