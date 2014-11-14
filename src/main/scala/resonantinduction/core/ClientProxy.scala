@@ -61,7 +61,6 @@ import resonantinduction.mechanical.mech.turbine._
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileGrindingWheel], new RenderGrindingWheel)
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileWaterTurbine], new RenderWaterTurbine)
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileWindTurbine], new RenderWindTurbine)
-    ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileElectricTurbine], new RenderElectricTurbine)
 
     //Electrical content
     ItemRenderHandler.register(ElectricalContent.itemTransformer, RenderTransformer)
@@ -75,7 +74,6 @@ import resonantinduction.mechanical.mech.turbine._
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileCentrifuge], new RenderCentrifuge)
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TilePlasmaHeater], new RenderPlasmaHeater)
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileNuclearBoiler], new RenderNuclearBoiler)
-    ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileElectricTurbine], new RenderElectricTurbine)
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileThermometer], new RenderThermometer)
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileChemicalExtractor], new RenderChemicalExtractor)
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileReactorCell], new RenderReactorCell)

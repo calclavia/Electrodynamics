@@ -9,8 +9,14 @@ import resonantinduction.mechanical.mech.grid.NodeMechanical
  *
  * @author Calclavia, Darkguardsman
  */
-class TurbineNode(tileTurbineBase: TileTurbine) extends NodeMechanical(tileTurbineBase)
+class TurbineNode(parent: TileTurbine) extends NodeMechanical(parent)
 {
+
+  /**
+   * Moment of inertia = m * r * r
+   * Where "m" is the mass and "r" is the radius of the object.
+   */
+  override def momentOfInertia = parent.multiBlockRadius * parent.multiBlockRadius
 
   def turbine: TileTurbine =
   {
@@ -26,5 +32,5 @@ class TurbineNode(tileTurbineBase: TileTurbine) extends NodeMechanical(tileTurbi
   override def inverseRotation(dir: ForgeDirection): Boolean =
   {
     return dir == turbine.getDirection.getOpposite
-  }*/
+  } */
 }
