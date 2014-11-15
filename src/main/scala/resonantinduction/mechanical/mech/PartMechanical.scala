@@ -45,8 +45,9 @@ abstract class PartMechanical extends PartAbstract with JNormalOcclusion with TF
     id match
     {
       case 0 =>
-        packet.writeByte(placementSide.ordinal.toByte)
-        packet.writeByte(tier.toByte)
+        val tag = new NBTTagCompound
+        save(tag)
+        packet.writeNBTTagCompound(tag)
       case 1 => packet.writeFloat(mechanicalNode.angularVelocity.toFloat)
       case 2 => packet.writeFloat(mechanicalNode.prevAngle.toFloat)
     }
@@ -59,8 +60,7 @@ abstract class PartMechanical extends PartAbstract with JNormalOcclusion with TF
     id match
     {
       case 0 =>
-        placementSide = ForgeDirection.getOrientation(packet.readByte())
-        tier = packet.readByte()
+        load(packet.readNBTTagCompound())
       case 1 => mechanicalNode.angularVelocity = packet.readFloat()
       case 2 => mechanicalNode.prevAngle = packet.readFloat()
     }
