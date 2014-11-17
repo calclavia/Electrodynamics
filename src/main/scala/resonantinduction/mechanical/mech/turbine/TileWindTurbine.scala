@@ -7,7 +7,7 @@ import net.minecraft.init.{Blocks, Items}
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.world.biome.{BiomeGenBase, BiomeGenOcean, BiomeGenPlains}
 import net.minecraftforge.common.util.ForgeDirection
-import net.minecraftforge.fluids.{FluidTankInfo, FluidStack, Fluid, FluidTank}
+import net.minecraftforge.fluids.{Fluid, FluidStack, FluidTank, FluidTankInfo}
 import resonant.api.IBoilHandler
 import resonant.content.prefab.itemblock.ItemBlockMetadata
 import resonant.lib.transform.vector.Vector3
@@ -15,16 +15,26 @@ import resonant.lib.utility.inventory.InventoryUtility
 import resonant.lib.wrapper.WrapList._
 import resonantinduction.core.Settings
 
-/** The vertical wind turbine collects airflow. The horizontal wind turbine collects steam from steam
-  * power plants.
-  *
-  * @author Calclavia */
+/**
+ * The vertical wind turbine collects airflow.
+ *
+ * The horizontal wind turbine collects steam from steam power plants.
+ *
+ * @author Calclavia
+ */
 class TileWindTurbine extends TileTurbine with IBoilHandler
 {
+  /**
+   * Wind simulations
+   */
   private final val openBlockCache = new Array[Byte](224)
   private var checkCount = 0
   private var efficiency = 0f
   private var windTorque = 0d
+
+  /**
+   * Steam simulations
+   */
   private val gasTank = new FluidTank(1000)
 
   //Constructor
@@ -34,26 +44,34 @@ class TileWindTurbine extends TileTurbine with IBoilHandler
   {
     super.update()
 
-    if (tier == 0 && getDirection.offsetY == 0 && worldObj.isRaining && worldObj.isThundering && worldObj.rand.nextFloat < 0.00000008)
+    if (!worldObj.isRemote)
     {
-      InventoryUtility.dropItemStack(worldObj, new Vector3(x, y, z), new ItemStack(Blocks.wool, 1 + worldObj.rand.nextInt(2)))
-      InventoryUtility.dropItemStack(worldObj, new Vector3(x, y, z), new ItemStack(Items.stick, 3 + worldObj.rand.nextInt(8)))
-      worldObj.setBlockToAir(xCoord, yCoord, zCoord)
-    }
-    else if (!getMultiBlock.isPrimary)
-    {
-      if (getDirection.offsetY == 0)
+      if (tier == 0 && getDirection.offsetY == 0 && worldObj.isRaining && worldObj.isThundering && worldObj.rand.nextFloat < 0.00000008)
       {
-        if (ticks % 20 == 0 && !worldObj.isRemote)
-        {
-          computePower()
-        }
-
-        getMultiBlock.get.mechanicalNode.rotate(3000)
+        //Break under storm
+        InventoryUtility.dropItemStack(worldObj, new Vector3(x, y, z), new ItemStack(Blocks.wool, 1 + worldObj.rand.nextInt(2)))
+        InventoryUtility.dropItemStack(worldObj, new Vector3(x, y, z), new ItemStack(Items.stick, 3 + worldObj.rand.nextInt(8)))
+        worldObj.setBlockToAir(xCoord, yCoord, zCoord)
       }
-      else
+      else if (!getMultiBlock.isPrimary)
       {
-        getMultiBlock.get.mechanicalNode.rotate(10000)
+        //Only execute code in the primary block
+
+        if (getDirection.offsetY == 0)
+        {
+          //This is a vertical wind turbine
+          if (ticks % 20 == 0)
+          {
+            computePower()
+          }
+
+          getMultiBlock.get.mechanicalNode.rotate(windTorque)
+        }
+        else
+        {
+          //This is a horizontal turbine
+          getMultiBlock.get.mechanicalNode.rotate(if (gasTank.getFluid != null) gasTank.drain(gasTank.getFluidAmount, true).amount else 0 * 1000 * Settings.steamMultiplier)
+        }
       }
     }
   }
@@ -95,25 +113,18 @@ class TileWindTurbine extends TileTurbine with IBoilHandler
     }
 
     efficiency = efficiency - openBlockCache(checkCount) + openAirBlocks
-    openBlockCache(checkCount) = openAirBlocks.asInstanceOf[Byte]
+    openBlockCache(checkCount) = openAirBlocks.toByte
     checkCount = (checkCount + 1) % (openBlockCache.length - 1)
-    val multiblockMultiplier: Float = (multiBlockRadius + 0.5f) * 2
+    val multiblockMultiplier = (multiBlockRadius + 0.5f) * 2
 
-    var materialMultiplier: Float = 1
-    if (tier == 0)
+    val materialMultiplier = tier match
     {
-      materialMultiplier = 1.1f
-    }
-    else if (tier == 1)
-    {
-      materialMultiplier = 0.9f
-    }
-    else
-    {
-      materialMultiplier = 1
+      case 0 => 1.1f
+      case 1 => 0.9f
+      case 2 => 1f
     }
 
-    val biome: BiomeGenBase = worldObj.getBiomeGenForCoords(xCoord, zCoord)
+    val biome = worldObj.getBiomeGenForCoords(xCoord, zCoord)
     val hasBonus: Boolean = biome.isInstanceOf[BiomeGenOcean] || biome.isInstanceOf[BiomeGenPlains] || biome == BiomeGenBase.river
     val windSpeed: Float = (worldObj.rand.nextFloat / 8) + (yCoord / 256f) * (if (hasBonus) 1.2f else 1) + worldObj.getRainStrength(1.5f)
 
@@ -138,10 +149,5 @@ class TileWindTurbine extends TileTurbine with IBoilHandler
 
   override def canDrain(from: ForgeDirection, fluid: Fluid): Boolean = false
 
-  override def getTankInfo(from: ForgeDirection): Array[FluidTankInfo] =
-  {
-    val re: Array[FluidTankInfo] = new Array[FluidTankInfo](1)
-    re(1) = gasTank.getInfo
-    return re
-  }
+  override def getTankInfo(from: ForgeDirection): Array[FluidTankInfo] = Array(gasTank.getInfo)
 }
