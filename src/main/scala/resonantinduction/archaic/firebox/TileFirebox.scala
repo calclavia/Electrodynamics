@@ -4,7 +4,6 @@ import java.util.List
 
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import io.netty.buffer.ByteBuf
-import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.creativetab.CreativeTabs
@@ -19,13 +18,12 @@ import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import resonant.api.electric.EnergyStorage
-import resonant.content.spatial.block.SpatialBlock
+import resonant.content.spatial.block.{SpatialBlock, SpatialTile}
 import resonant.engine.grid.thermal.{BoilEvent, ThermalPhysics}
-import resonant.lib.content.prefab.TEnergyStorage
-import resonant.lib.content.prefab.java.TileElectricInventory
-import resonant.lib.network.Synced
-import resonant.lib.network.discriminator.{PacketAnnotation, PacketType}
-import resonant.lib.network.handle.IPacketReceiver
+import resonant.lib.content.prefab.{TElectric, TInventory}
+import resonant.lib.network.ByteBufWrapper._
+import resonant.lib.network.discriminator.PacketType
+import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.FluidUtility
 import resonant.lib.wrapper.WrapList._
@@ -36,7 +34,7 @@ import resonantinduction.core.Reference
  *
  * @author Calclavia
  */
-class TileFirebox extends TileElectricInventory(Material.rock) with IPacketReceiver with IFluidHandler with TEnergyStorage
+class TileFirebox extends SpatialTile(Material.rock) with IFluidHandler with TInventory with TElectric with TPacketSender with TPacketReceiver
 {
   /**
    * 1KG of coal ~= 24MJ
@@ -45,30 +43,32 @@ class TileFirebox extends TileElectricInventory(Material.rock) with IPacketRecei
    * The power of the firebox in terms of thermal energy. The thermal energy can be transfered
    * into fluids to increase their internal energy.
    */
-  private final val POWER: Long = 100000
+  private final val power: Long = 100000
   protected var tank: FluidTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME)
-  @Synced private var burnTime: Int = 0
+  private var burnTime: Int = 0
   private var heatEnergy: Long = 0
   private var boiledVolume: Int = 0
 
-  //TODO: Dummy
-  energy = new EnergyStorage(0)
-  energy.setCapacity(POWER)
-  energy.setMaxTransfer((POWER * 2) / 20)
+  val energy = new EnergyStorage(0)
+  energy.setCapacity(power)
+  energy.setMaxTransfer((power * 2) / 20)
   setIO(ForgeDirection.UP, 0)
 
-  override def update
+  override def update()
   {
+    super.update()
+
     if (!worldObj.isRemote)
     {
-      val drainFluid: FluidStack = tank.drain(FluidContainerRegistry.BUCKET_VOLUME, false)
+      val drainFluid = tank.drain(FluidContainerRegistry.BUCKET_VOLUME, false)
+
       if (drainFluid != null && drainFluid.amount == FluidContainerRegistry.BUCKET_VOLUME && drainFluid.fluidID == FluidRegistry.LAVA.getID)
       {
         if (burnTime == 0)
         {
           tank.drain(FluidContainerRegistry.BUCKET_VOLUME, true)
           burnTime += 20000
-          worldObj.markBlockForUpdate(xCoord, yCoord, zCoord)
+          sendPacket(0)
         }
       }
       else if (isElectrical && energy.checkExtract)
@@ -76,7 +76,7 @@ class TileFirebox extends TileElectricInventory(Material.rock) with IPacketRecei
         energy.extractEnergy
         if (burnTime == 0)
         {
-          worldObj.markBlockForUpdate(xCoord, yCoord, zCoord)
+          sendPacket(0)
         }
         burnTime += 2
       }
@@ -86,17 +86,19 @@ class TileFirebox extends TileElectricInventory(Material.rock) with IPacketRecei
         {
           burnTime += TileEntityFurnace.getItemBurnTime(this.getStackInSlot(0))
           decrStackSize(0, 1)
-          worldObj.markBlockForUpdate(xCoord, yCoord, zCoord)
+          sendPacket(0)
         }
       }
-      val block: Block = worldObj.getBlock(xCoord, yCoord + 1, zCoord)
+
+      val block = worldObj.getBlock(xCoord, yCoord + 1, zCoord)
+
       if (burnTime > 0)
       {
         if (block == null)
         {
           worldObj.setBlock(xCoord, yCoord + 1, zCoord, Blocks.fire)
         }
-        heatEnergy += POWER / 20
+        heatEnergy += power / 20
         var usedHeat: Boolean = false
         if (block eq Blocks.water)
         {
@@ -121,20 +123,23 @@ class TileFirebox extends TileElectricInventory(Material.rock) with IPacketRecei
         {
           heatEnergy = 0
         }
-        if (({
-          burnTime -= 1;
-          burnTime
-        }) == 0)
+
+        burnTime -= 1
+
+        if (burnTime == 0)
         {
-          if (block eq Blocks.fire)
+          if (block == Blocks.fire)
           {
             worldObj.setBlockToAir(xCoord, yCoord + 1, zCoord)
           }
-          worldObj.markBlockForUpdate(xCoord, yCoord, zCoord)
+
+          sendPacket(0)
         }
       }
     }
   }
+
+  override def getSizeInventory = 1
 
   /**
    * Approximately 327600 + 2257000 = 2584600.
@@ -174,14 +179,20 @@ class TileFirebox extends TileElectricInventory(Material.rock) with IPacketRecei
     return i == 0 && canBurn(itemStack)
   }
 
-  override def getDescPacket: PacketAnnotation =
+  /**
+   * Override this method
+   * Be sure to super this method or manually write the ID into the packet when sending
+   */
+  override def write(buf: ByteBuf, id: Int)
   {
-    return new PacketAnnotation(this)
+    super.write(buf, id)
+    buf <<< burnTime
   }
 
-  def read(data: ByteBuf, player: EntityPlayer, `type`: PacketType)
+  override def read(buf: ByteBuf, id: Int, packetType: PacketType)
   {
-    this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord)
+    super.read(buf, id, packetType)
+    markRender()
   }
 
   override def readFromNBT(nbt: NBTTagCompound)
@@ -232,7 +243,8 @@ class TileFirebox extends TileElectricInventory(Material.rock) with IPacketRecei
     return Array[FluidTankInfo](tank.getInfo)
   }
 
-  @SideOnly(Side.CLIENT) override def registerIcons(iconReg: IIconRegister)
+  @SideOnly(Side.CLIENT)
+  override def registerIcons(iconReg: IIconRegister)
   {
     super.registerIcons(iconReg)
     SpatialBlock.icon.put("firebox_side_on", iconReg.registerIcon(Reference.prefix + "firebox_side_on"))
@@ -245,7 +257,8 @@ class TileFirebox extends TileElectricInventory(Material.rock) with IPacketRecei
     SpatialBlock.icon.put("firebox_electric_top_off", iconReg.registerIcon(Reference.prefix + "firebox_electric_top_off"))
   }
 
-  @SideOnly(Side.CLIENT) override def getIcon(side: Int, meta: Int): IIcon =
+  @SideOnly(Side.CLIENT)
+  override def getIcon(side: Int, meta: Int): IIcon =
   {
     if (side == 0)
     {

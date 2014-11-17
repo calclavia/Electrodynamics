@@ -88,12 +88,14 @@ class TileEngineeringTable extends TileInventory(Material.wood) with IPacketRece
     isOpaqueCube(false)
     itemBlock(classOf[ItemBlockSaved])
 
-    @SideOnly(Side.CLIENT) override def getIcon(side: Int, meta: Int): IIcon =
+    @SideOnly(Side.CLIENT)
+    override def getIcon(side: Int, meta: Int): IIcon =
     {
         return if (side == 1) TileEngineeringTable.iconTop else (if (side == meta) TileEngineeringTable.iconFront else TileEngineeringTable.iconSide)
     }
 
-    @SideOnly(Side.CLIENT) override def registerIcons(iconRegister: IIconRegister)
+    @SideOnly(Side.CLIENT)
+    override def registerIcons(iconRegister: IIconRegister)
     {
         TileEngineeringTable.iconTop = iconRegister.registerIcon(getTextureName + "_top")
         TileEngineeringTable.iconFront = iconRegister.registerIcon(getTextureName + "_front")
