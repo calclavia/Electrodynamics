@@ -39,6 +39,7 @@ class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](par
    * Buffer values used by the grid to transfer mechanical energy.
    */
   protected[grid] var bufferTorque = 0D
+  var bufferDefaultTorque = 0D
 
   /**
    * Angle calculations
@@ -83,4 +84,6 @@ class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](par
   override def newGrid: GridNode[NodeMechanical] = new MechanicalGrid
 
   override def isValidConnection(other: AnyRef): Boolean = other.isInstanceOf[NodeMechanical]
+
+  override def toString = "NodeMechanical[Connections: "+connections.size() + " Torque: " + torque + " Angular Velocity:" + angularVelocity+"]"
 }

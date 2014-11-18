@@ -41,8 +41,8 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
     if (getMultiBlock.isPrimary)
       UpdateTicker.world.enqueue(() => if (world != null) sendPacket(1))
 
-    if (mechanicalNode.angularVelocity == 0)
-      UpdateTicker.world.enqueue(() => if (world != null) sendPacket(2))
+//    if (mechanicalNode.angularVelocity == 0)
+//      UpdateTicker.world.enqueue(() => if (world != null) sendPacket(2))
   }
 
   mechanicalNode.onGridReconstruct = () => if (world != null && !world.isRemote) sendPacket(2)
@@ -89,9 +89,9 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
     return super.activate(player, hit, itemStack)
   }
 
-  override def preRemove
+  override def preRemove()
   {
-    super.preRemove
+    super.preRemove()
     getMultiBlock.deconstruct()
   }
 

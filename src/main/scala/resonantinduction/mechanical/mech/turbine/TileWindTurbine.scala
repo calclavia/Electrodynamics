@@ -64,7 +64,7 @@ class TileWindTurbine extends TileTurbine with IBoilHandler
             computePower()
           }
 
-          getMultiBlock.get.mechanicalNode.rotate(windTorque)
+          getMultiBlock.get.mechanicalNode.bufferDefaultTorque = windTorque
         }
         else
         {
