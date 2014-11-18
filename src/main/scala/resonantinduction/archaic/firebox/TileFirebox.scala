@@ -148,7 +148,7 @@ class TileFirebox extends SpatialTile(Material.rock) with IFluidHandler with TIn
     if (isBurning)
     {
       val f: Float = x.toFloat + 0.5F
-      val f1: Float = y.toFloat + 0.0F + world.rand.nextFloat() * 6.0F / 16.0F
+      val f1: Float = y.toFloat + 0.5F + world.rand.nextFloat() * 6.0F / 16.0F
       val f2: Float = z.toFloat + 0.5F
       val f3: Float = 0.52F
       val f4: Float = world.rand.nextFloat() * 0.6F - 0.3F

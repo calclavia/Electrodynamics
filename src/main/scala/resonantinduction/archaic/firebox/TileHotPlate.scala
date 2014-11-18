@@ -27,11 +27,12 @@ import resonantinduction.core.Reference
  */
 object TileHotPlate
 {
-  final val MAX_SMELT_TIME: Int = 200
+  final val maxSmeltTime: Int = 200
 }
 
 class TileHotPlate extends TileInventory(Material.iron) with TPacketSender with TPacketReceiver
 {
+  /** Amount of smelt time left */
   final val smeltTime = Array[Int](0, 0, 0, 0)
   final val stackSizeCache = Array[Int](0, 0, 0, 0)
 
@@ -57,7 +58,7 @@ class TileHotPlate extends TileInventory(Material.iron) with TPacketSender with 
           if (smeltTime(i) <= 0)
           {
             stackSizeCache(i) = this.getStackInSlot(i).stackSize
-            smeltTime(i) = TileHotPlate.MAX_SMELT_TIME * stackSizeCache(i)
+            smeltTime(i) = TileHotPlate.maxSmeltTime * stackSizeCache(i)
             worldObj.markBlockForUpdate(xCoord, yCoord, zCoord)
           }
           else if (smeltTime(i) > 0)
@@ -88,20 +89,26 @@ class TileHotPlate extends TileInventory(Material.iron) with TPacketSender with 
   override def randomDisplayTick()
   {
     val height = 0.2
-    val deviation = 0.2
+    val deviation = 0.22
 
-    (0 until 4).foreach(
+    (0 to 3).foreach(
       i =>
       {
-        if (smeltTime(0) > 0)
-          world.spawnParticle("smoke", x + 0.5 - deviation + world.rand.deviate(0.1), y + height, z + 0.5 - deviation + world.rand.deviate(0.1), 0.0D, 0.0D, 0.0D)
-        if (smeltTime(1) > 0)
-          world.spawnParticle("smoke", x + 0.5 - deviation + world.rand.deviate(0.1), y + height, z + 0.5 + deviation + world.rand.deviate(0.1), 0.0D, 0.0D, 0.0D)
-        if (smeltTime(2) > 0)
-          world.spawnParticle("smoke", x + 0.5 + deviation + world.rand.deviate(0.1), y + height, z + 0.5 - deviation + world.rand.deviate(0.1), 0.0D, 0.0D, 0.0D)
-        if (smeltTime(3) > 0)
-          world.spawnParticle("smoke", x + 0.5 + deviation + world.rand.deviate(0.1), y + height, z + 0.5 + deviation + world.rand.deviate(0.1), 0.0D, 0.0D, 0.0D)
-      })
+        if (smeltTime(i) > 0)
+        {
+          for (t <- 0 until (TileHotPlate.maxSmeltTime * stackSizeCache(i) - smeltTime(i)))
+          {
+            i match
+            {
+              case 0 => world.spawnParticle("smoke", x + 0.5 - deviation + world.rand.deviate(0.1), y + height, z + 0.5 - deviation + world.rand.deviate(0.1), 0.0D, 0.0D, 0.0D)
+              case 1 => world.spawnParticle("smoke", x + 0.5 - deviation + world.rand.deviate(0.1), y + height, z + 0.5 + deviation + world.rand.deviate(0.1), 0.0D, 0.0D, 0.0D)
+              case 2 => world.spawnParticle("smoke", x + 0.5 + deviation + world.rand.deviate(0.1), y + height, z + 0.5 - deviation + world.rand.deviate(0.1), 0.0D, 0.0D, 0.0D)
+              case 3 => world.spawnParticle("smoke", x + 0.5 + deviation + world.rand.deviate(0.1), y + height, z + 0.5 + deviation + world.rand.deviate(0.1), 0.0D, 0.0D, 0.0D)
+            }
+          }
+        }
+      }
+    )
   }
 
   override def onInventoryChanged()
@@ -114,7 +121,7 @@ class TileHotPlate extends TileInventory(Material.iron) with TPacketSender with 
         {
           if (smeltTime(i) > 0)
           {
-            smeltTime(i) += (getStackInSlot(i).stackSize - stackSizeCache(i)) * TileHotPlate.MAX_SMELT_TIME
+            smeltTime(i) += (getStackInSlot(i).stackSize - stackSizeCache(i)) * TileHotPlate.maxSmeltTime
           }
           stackSizeCache(i) = getStackInSlot(i).stackSize
         }
@@ -177,20 +184,18 @@ class TileHotPlate extends TileInventory(Material.iron) with TPacketSender with 
   override def readFromNBT(nbt: NBTTagCompound)
   {
     super.readFromNBT(nbt)
-    for (i <- 0 until getSizeInventory)
-    {
-      smeltTime(i) = nbt.getInteger("smeltTime" + i)
-    }
+
+    (0 until stackSizeCache.size).foreach(i => stackSizeCache(i) = nbt.getInteger("stackSizeCache" + i))
+    (0 until getSizeInventory).foreach(i => smeltTime(i) = nbt.getInteger("smeltTime" + i))
+
   }
 
   override def writeToNBT(nbt: NBTTagCompound)
   {
     super.writeToNBT(nbt)
-
-    for (i <- 0 until getSizeInventory)
-    {
-      nbt.setInteger("smeltTime" + i, smeltTime(i))
-    }
+    
+    (0 until stackSizeCache.size).foreach(i => nbt.setInteger("stackSizeCache" + i, stackSizeCache(i)))
+    (0 until getSizeInventory).foreach(i => nbt.setInteger("smeltTime" + i, smeltTime(i)))
   }
 
   @SideOnly(Side.CLIENT)
