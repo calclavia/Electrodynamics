@@ -42,7 +42,7 @@ class TileThermometer extends TileAdvanced(Material.piston) with SimpleComponent
     @Synced private var isProvidingPower: Boolean = false
 
     //Constructor
-    canProvidePower = true
+    providePower = true
     normalRender = false
     renderStaticBlock = true
     itemBlock = classOf[ItemBlockThermometer]

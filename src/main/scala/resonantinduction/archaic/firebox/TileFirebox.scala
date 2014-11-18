@@ -49,6 +49,7 @@ class TileFirebox extends SpatialTile(Material.rock) with IFluidHandler with TIn
   private var heatEnergy = 0d
   private var boiledVolume = 0
 
+  tickRandomly = true
   val energy = new EnergyStorage(0)
   energy.setCapacity(power)
   energy.setMaxTransfer((power * 2) / 20)
@@ -139,6 +140,31 @@ class TileFirebox extends SpatialTile(Material.rock) with IFluidHandler with TIn
           sendPacket(0)
         }
       }
+    }
+  }
+
+  override def randomDisplayTick(): Unit =
+  {
+    if (isBurning)
+    {
+      val f: Float = x.toFloat + 0.5F
+      val f1: Float = y.toFloat + 0.0F + world.rand.nextFloat() * 6.0F / 16.0F
+      val f2: Float = z.toFloat + 0.5F
+      val f3: Float = 0.52F
+      val f4: Float = world.rand.nextFloat() * 0.6F - 0.3F
+
+
+      world.spawnParticle("smoke", (f - f3).toDouble, f1.toDouble, (f2 + f4).toDouble, 0.0D, 0.0D, 0.0D)
+      world.spawnParticle("flame", (f - f3).toDouble, f1.toDouble, (f2 + f4).toDouble, 0.0D, 0.0D, 0.0D)
+
+      world.spawnParticle("smoke", (f + f3).toDouble, f1.toDouble, (f2 + f4).toDouble, 0.0D, 0.0D, 0.0D)
+      world.spawnParticle("flame", (f + f3).toDouble, f1.toDouble, (f2 + f4).toDouble, 0.0D, 0.0D, 0.0D)
+
+      world.spawnParticle("smoke", (f + f4).toDouble, f1.toDouble, (f2 - f3).toDouble, 0.0D, 0.0D, 0.0D)
+      world.spawnParticle("flame", (f + f4).toDouble, f1.toDouble, (f2 - f3).toDouble, 0.0D, 0.0D, 0.0D)
+
+      world.spawnParticle("smoke", (f + f4).toDouble, f1.toDouble, (f2 + f3).toDouble, 0.0D, 0.0D, 0.0D)
+      world.spawnParticle("flame", (f + f4).toDouble, f1.toDouble, (f2 + f3).toDouble, 0.0D, 0.0D, 0.0D)
     }
   }
 
@@ -294,5 +320,4 @@ class TileFirebox extends SpatialTile(Material.rock) with IFluidHandler with TIn
     par3List.add(new ItemStack(par1, 1, 0))
     par3List.add(new ItemStack(par1, 1, 1))
   }
-
 }

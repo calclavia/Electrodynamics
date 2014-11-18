@@ -1,7 +1,5 @@
 package resonantinduction.archaic.firebox
 
-import java.util.{ArrayList, List}
-
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import io.netty.buffer.ByteBuf
 import net.minecraft.block.material.Material
@@ -15,10 +13,11 @@ import net.minecraft.world.IBlockAccess
 import resonant.content.spatial.block.SpatialBlock
 import resonant.lib.content.prefab.java.TileInventory
 import resonant.lib.network.ByteBufWrapper._
-import resonant.lib.network.discriminator.{PacketTile, PacketType}
+import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
 import resonant.lib.transform.region.Cuboid
 import resonant.lib.transform.vector.{Vector2, Vector3}
+import resonant.lib.wrapper.RandomWrapper._
 import resonantinduction.core.Reference
 
 /**
@@ -33,14 +32,15 @@ object TileHotPlate
 
 class TileHotPlate extends TileInventory(Material.iron) with TPacketSender with TPacketReceiver
 {
-  final val smeltTime: Array[Int] = Array[Int](0, 0, 0, 0)
-  final val stackSizeCache: Array[Int] = Array[Int](0, 0, 0, 0)
+  final val smeltTime = Array[Int](0, 0, 0, 0)
+  final val stackSizeCache = Array[Int](0, 0, 0, 0)
 
   //Constructor
   setSizeInventory(4)
   bounds = new Cuboid(0, 0, 0, 1, 0.2f, 1)
   forceItemToRenderAsBlock = true
   isOpaqueCube = false
+  tickRandomly = true
 
   override def update()
   {
@@ -63,14 +63,15 @@ class TileHotPlate extends TileInventory(Material.iron) with TPacketSender with 
           else if (smeltTime(i) > 0)
           {
             smeltTime(i) -= 1
+
             if (smeltTime(i) == 0)
             {
               if (!worldObj.isRemote)
               {
-                val outputStack: ItemStack = FurnaceRecipes.smelting.getSmeltingResult(getStackInSlot(i)).copy
+                val outputStack = FurnaceRecipes.smelting.getSmeltingResult(getStackInSlot(i)).copy
                 outputStack.stackSize = stackSizeCache(i)
                 setInventorySlotContents(i, outputStack)
-                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord)
+                markUpdate()
               }
             }
           }
@@ -82,6 +83,25 @@ class TileHotPlate extends TileInventory(Material.iron) with TPacketSender with 
         }
       }
     }
+  }
+
+  override def randomDisplayTick()
+  {
+    val height = 0.2
+    val deviation = 0.2
+
+    (0 until 4).foreach(
+      i =>
+      {
+        if (smeltTime(0) > 0)
+          world.spawnParticle("smoke", x + 0.5 - deviation + world.rand.deviate(0.1), y + height, z + 0.5 - deviation + world.rand.deviate(0.1), 0.0D, 0.0D, 0.0D)
+        if (smeltTime(1) > 0)
+          world.spawnParticle("smoke", x + 0.5 - deviation + world.rand.deviate(0.1), y + height, z + 0.5 + deviation + world.rand.deviate(0.1), 0.0D, 0.0D, 0.0D)
+        if (smeltTime(2) > 0)
+          world.spawnParticle("smoke", x + 0.5 + deviation + world.rand.deviate(0.1), y + height, z + 0.5 - deviation + world.rand.deviate(0.1), 0.0D, 0.0D, 0.0D)
+        if (smeltTime(3) > 0)
+          world.spawnParticle("smoke", x + 0.5 + deviation + world.rand.deviate(0.1), y + height, z + 0.5 + deviation + world.rand.deviate(0.1), 0.0D, 0.0D, 0.0D)
+      })
   }
 
   override def onInventoryChanged()
@@ -124,25 +144,9 @@ class TileHotPlate extends TileInventory(Material.iron) with TPacketSender with 
     return false
   }
 
-  def canSmelt(stack: ItemStack): Boolean =
-  {
-    return stack != null && FurnaceRecipes.smelting.getSmeltingResult(stack) != null
-  }
+  def canSmelt(stack: ItemStack): Boolean = stack != null && FurnaceRecipes.smelting.getSmeltingResult(stack) != null
 
-  def isSmelting: Boolean =
-  {
-
-    for (i <- 0 until getSizeInventory)
-    {
-      if (getSmeltTime(i) > 0)
-      {
-        return true
-      }
-
-    }
-
-    return false
-  }
+  def isSmelting: Boolean = (0 until getSizeInventory).exists(getSmeltTime(_) > 0)
 
   def getSmeltTime(i: Int): Int =
   {
