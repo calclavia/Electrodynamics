@@ -51,12 +51,11 @@ class TileWindTurbine extends TileTurbine with IBoilHandler
         //Break under storm
         InventoryUtility.dropItemStack(worldObj, new Vector3(x, y, z), new ItemStack(Blocks.wool, 1 + worldObj.rand.nextInt(2)))
         InventoryUtility.dropItemStack(worldObj, new Vector3(x, y, z), new ItemStack(Items.stick, 3 + worldObj.rand.nextInt(8)))
-        worldObj.setBlockToAir(xCoord, yCoord, zCoord)
+        toVectorWorld.setBlockToAir()
       }
-      else if (!getMultiBlock.isPrimary)
+      else if (getMultiBlock.isPrimary)
       {
         //Only execute code in the primary block
-
         if (getDirection.offsetY == 0)
         {
           //This is a vertical wind turbine
@@ -78,35 +77,32 @@ class TileWindTurbine extends TileTurbine with IBoilHandler
 
   private def computePower()
   {
-    val checkSize: Int = 10
-    val height: Int = yCoord + checkCount / 28
-    val deviation: Int = checkCount % 7
+    val checkSize = 10
+    val height = yCoord + checkCount / 28
+    val deviation = checkCount % 7
     var checkDir: ForgeDirection = null
     var check: Vector3 = null
-    val cc: Int = checkCount / 7 % 4
+    val cc = checkCount / 7 % 4
 
-    if (cc == 0)
+    cc match
     {
-      checkDir = ForgeDirection.NORTH
-      check = new Vector3(xCoord - 3 + deviation, height, zCoord - 4)
+      case 0 =>
+        checkDir = ForgeDirection.NORTH
+        check = new Vector3(xCoord - 3 + deviation, height, zCoord - 4)
+      case 1 =>
+        checkDir = ForgeDirection.WEST
+        check = new Vector3(xCoord - 4, height, zCoord - 3 + deviation)
+      case 2 =>
+        checkDir = ForgeDirection.WEST
+        check = new Vector3(xCoord - 4, height, zCoord - 3 + deviation)
+      case 3 =>
+        checkDir = ForgeDirection.EAST
+        check = new Vector3(xCoord + 4, height, zCoord - 3 + deviation)
     }
-    else if (cc == 1)
-    {
-      checkDir = ForgeDirection.WEST
-      check = new Vector3(xCoord - 4, height, zCoord - 3 + deviation)
-    }
-    else if (cc == 2)
-    {
-      checkDir = ForgeDirection.SOUTH
-      check = new Vector3(xCoord - 3 + deviation, height, zCoord + 4)
-    }
-    else
-    {
-      checkDir = ForgeDirection.EAST
-      check = new Vector3(xCoord + 4, height, zCoord - 3 + deviation)
-    }
-    var openAirBlocks: Int = 0
-    while (openAirBlocks < checkSize && worldObj.isAirBlock(check.xi, check.yi, check.zi))
+
+    var openAirBlocks = 0
+
+    while (openAirBlocks < checkSize && world.isAirBlock(check.xi, check.yi, check.zi))
     {
       check.add(checkDir)
       openAirBlocks += 1
@@ -125,10 +121,10 @@ class TileWindTurbine extends TileTurbine with IBoilHandler
     }
 
     val biome = worldObj.getBiomeGenForCoords(xCoord, zCoord)
-    val hasBonus: Boolean = biome.isInstanceOf[BiomeGenOcean] || biome.isInstanceOf[BiomeGenPlains] || biome == BiomeGenBase.river
-    val windSpeed: Float = (worldObj.rand.nextFloat / 8) + (yCoord / 256f) * (if (hasBonus) 1.2f else 1) + worldObj.getRainStrength(1.5f)
+    val hasBonus = biome.isInstanceOf[BiomeGenOcean] || biome.isInstanceOf[BiomeGenPlains] || biome == BiomeGenBase.river
+    val windSpeed = (worldObj.rand.nextFloat / 8) + (yCoord / 256f) * (if (hasBonus) 1.2f else 1) + worldObj.getRainStrength(1.5f)
 
-    windTorque = materialMultiplier * multiblockMultiplier * windSpeed * efficiency * Settings.WIND_POWER_RATIO
+    windTorque = materialMultiplier * multiblockMultiplier * windSpeed * efficiency * Settings.WIND_POWER_RATIO / 20
   }
 
   override def getSubBlocks(par1: Item, par2CreativeTabs: CreativeTabs, par3List: List[_])

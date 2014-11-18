@@ -11,7 +11,7 @@ class TurbineMBlockHandler(wrapper: TileTurbine) extends MultiBlockHandler[TileT
         val tile: TileEntity = position.getTileEntity(this.tile.getWorld)
         if (tile != null && wrapperClass.isAssignableFrom(tile.getClass))
         {
-            if ((tile.asInstanceOf[TileTurbine]).getDirection == this.tile.getDirection && (tile.asInstanceOf[TileTurbine]).tier == this.tile.tier)
+            if (tile.asInstanceOf[TileTurbine].getDirection == this.tile.getDirection && tile.asInstanceOf[TileTurbine].tier == this.tile.tier)
             {
                 return tile.asInstanceOf[TileTurbine]
             }

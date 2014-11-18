@@ -3,6 +3,7 @@ package resonantinduction.mechanical.mech.turbine
 import java.util.{HashSet, Set}
 
 import cpw.mods.fml.relauncher.{Side, SideOnly}
+import io.netty.buffer.ByteBuf
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.entity.player.EntityPlayer
@@ -10,11 +11,13 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.AxisAlignedBB
 import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.api.grid.INodeProvider
 import resonant.lib.multiblock.reference.IMultiBlockStructure
+import resonant.lib.network.ByteBufWrapper._
+import resonant.lib.network.discriminator.PacketType
 import resonant.lib.transform.vector.Vector3
 import resonantinduction.mechanical.mech.TileMechanical
-import resonantinduction.mechanical.mech.gear.ItemHandCrank
+
+import scala.collection.JavaConversions._
 
 /** Reduced version of the main turbine class */
 class TileTurbine extends TileMechanical(Material.wood) with IMultiBlockStructure[TileTurbine]
@@ -24,7 +27,7 @@ class TileTurbine extends TileMechanical(Material.wood) with IMultiBlockStructur
   /** Radius of large turbine? */
   var multiBlockRadius = 1
   /** MutliBlock methods. */
-  private var multiBlock: TurbineMBlockHandler = null
+  private val multiBlock = new TurbineMBlockHandler(this)
 
   //Constructor
   normalRender = false
@@ -35,20 +38,21 @@ class TileTurbine extends TileMechanical(Material.wood) with IMultiBlockStructur
 
   override def onRemove(block: Block, par1: Int)
   {
-    super.onRemove(block, par1)
     getMultiBlock.deconstruct()
+    super.onRemove(block, par1)
   }
 
   override def update()
   {
     super.update()
+
     getMultiBlock.update()
 
     if (getMultiBlock.isPrimary)
     {
       if (mechanicalNode.angularVelocity != 0)
       {
-        playSound
+        playSound()
       }
     }
   }
@@ -56,7 +60,7 @@ class TileTurbine extends TileMechanical(Material.wood) with IMultiBlockStructur
   def getArea: Int = (((multiBlockRadius + 0.5) * 2) * ((multiBlockRadius + 0.5) * 2)).toInt
 
   /** Called to play sound effects */
-  def playSound
+  def playSound()
   {
   }
 
@@ -114,7 +118,6 @@ class TileTurbine extends TileMechanical(Material.wood) with IMultiBlockStructur
 
   def getMultiBlock: TurbineMBlockHandler =
   {
-    if (multiBlock == null) multiBlock = new TurbineMBlockHandler(this)
     return multiBlock
   }
 
@@ -122,6 +125,22 @@ class TileTurbine extends TileMechanical(Material.wood) with IMultiBlockStructur
   {
     worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, if (getBlockType != null) getBlockType else null)
     worldObj.markBlockForUpdate(xCoord, yCoord, zCoord)
+  }
+
+  override def write(buf: ByteBuf, id: Int)
+  {
+    super.write(buf, id)
+
+    if (id == 0)
+      buf <<<< writeToNBT
+  }
+
+  override def read(buf: ByteBuf, id: Int, packetType: PacketType)
+  {
+    super.read(buf, id, packetType)
+
+    if (id == 0)
+      buf >>>> readFromNBT
   }
 
   def getWorld: World =
@@ -135,9 +154,9 @@ class TileTurbine extends TileMechanical(Material.wood) with IMultiBlockStructur
     {
       if (getMultiBlock.isConstructed)
       {
-        getMultiBlock.deconstruct
+        getMultiBlock.deconstruct()
         multiBlockRadius += 1
-        if (!getMultiBlock.construct)
+        if (!getMultiBlock.construct())
         {
           multiBlockRadius = 1
         }
@@ -145,10 +164,10 @@ class TileTurbine extends TileMechanical(Material.wood) with IMultiBlockStructur
       }
       else
       {
-        if (!getMultiBlock.construct)
+        if (!getMultiBlock.construct())
         {
           multiBlockRadius = 1
-          getMultiBlock.construct
+          getMultiBlock.construct()
         }
       }
     }
@@ -164,7 +183,6 @@ class TileTurbine extends TileMechanical(Material.wood) with IMultiBlockStructur
         val str: Set[TileTurbine] = getMultiBlock.getPrimary.getMultiBlock.getStructure
         if (str != null) toFlip.addAll(str)
       }
-      import scala.collection.JavaConversions._
       for (turbine <- toFlip)
       {
         if (side == turbine.getDirection.ordinal) world.setBlockMetadataWithNotify(turbine.xCoord, turbine.yCoord, turbine.zCoord, side ^ 1, 3)
