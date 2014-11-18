@@ -43,11 +43,11 @@ class TileFirebox extends SpatialTile(Material.rock) with IFluidHandler with TIn
    * The power of the firebox in terms of thermal energy. The thermal energy can be transfered
    * into fluids to increase their internal energy.
    */
-  private final val power: Long = 100000
-  protected var tank: FluidTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME)
-  private var burnTime: Int = 0
-  private var heatEnergy: Long = 0
-  private var boiledVolume: Int = 0
+  private final val power = 100000
+  protected val tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME)
+  private var burnTime = 0
+  private var heatEnergy = 0d
+  private var boiledVolume = 0
 
   val energy = new EnergyStorage(0)
   energy.setCapacity(power)
@@ -94,16 +94,19 @@ class TileFirebox extends SpatialTile(Material.rock) with IFluidHandler with TIn
 
       if (burnTime > 0)
       {
-        if (block == null)
+        if (block.isAir(world, xi, yi + 1, zi))
         {
           worldObj.setBlock(xCoord, yCoord + 1, zCoord, Blocks.fire)
         }
         heatEnergy += power / 20
-        var usedHeat: Boolean = false
-        if (block eq Blocks.water)
+        var usedHeat = false
+
+        if (block == Blocks.water)
         {
+          //Boil water
           usedHeat = true
-          val volume: Int = 100
+          val volume = 100
+
           if (heatEnergy >= getRequiredBoilWaterEnergy(volume))
           {
             if (FluidRegistry.getFluid("steam") != null)
@@ -192,6 +195,7 @@ class TileFirebox extends SpatialTile(Material.rock) with IFluidHandler with TIn
   override def read(buf: ByteBuf, id: Int, packetType: PacketType)
   {
     super.read(buf, id, packetType)
+    burnTime = buf.readInt()
     markRender()
   }
 
@@ -230,7 +234,7 @@ class TileFirebox extends SpatialTile(Material.rock) with IFluidHandler with TIn
 
   def canFill(from: ForgeDirection, fluid: Fluid): Boolean =
   {
-    return fluid eq FluidRegistry.LAVA
+    return fluid == FluidRegistry.LAVA
   }
 
   def canDrain(from: ForgeDirection, fluid: Fluid): Boolean =
@@ -261,15 +265,15 @@ class TileFirebox extends SpatialTile(Material.rock) with IFluidHandler with TIn
   override def getIcon(side: Int, meta: Int): IIcon =
   {
     if (side == 0)
-    {
       return SpatialBlock.icon.get("firebox")
-    }
-    val isElectric: Boolean = meta == 1
-    val isBurning: Boolean = false
+
+    val isElectric = meta == 1
+
+    val isBurning = burnTime > 0
+
     if (side == 1)
-    {
       return if (isBurning) (if (isElectric) SpatialBlock.icon.get("firebox_electric_top_on") else SpatialBlock.icon.get("firebox_top_on")) else (if (isElectric) SpatialBlock.icon.get("firebox_electric_top_off") else SpatialBlock.icon.get("firebox_top_off"))
-    }
+
     return if (isBurning) (if (isElectric) SpatialBlock.icon.get("firebox_electric_side_on") else SpatialBlock.icon.get("firebox_side_on")) else (if (isElectric) SpatialBlock.icon.get("firebox_electric_side_off") else SpatialBlock.icon.get("firebox_side_off"))
   }
 
