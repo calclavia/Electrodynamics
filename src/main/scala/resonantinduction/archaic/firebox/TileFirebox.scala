@@ -172,10 +172,7 @@ class TileFirebox extends SpatialTile(Material.rock) with IFluidHandler with TIn
     return TileEntityFurnace.getItemBurnTime(stack) > 0
   }
 
-  def isBurning: Boolean =
-  {
-    return burnTime > 0
-  }
+  def isBurning: Boolean = burnTime > 0
 
   override def isItemValidForSlot(i: Int, itemStack: ItemStack): Boolean =
   {
@@ -268,8 +265,6 @@ class TileFirebox extends SpatialTile(Material.rock) with IFluidHandler with TIn
       return SpatialBlock.icon.get("firebox")
 
     val isElectric = meta == 1
-
-    val isBurning = burnTime > 0
 
     if (side == 1)
       return if (isBurning) (if (isElectric) SpatialBlock.icon.get("firebox_electric_top_on") else SpatialBlock.icon.get("firebox_top_on")) else (if (isElectric) SpatialBlock.icon.get("firebox_electric_top_off") else SpatialBlock.icon.get("firebox_top_off"))

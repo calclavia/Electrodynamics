@@ -2,7 +2,6 @@ package resonantinduction.archaic.firebox
 
 import java.util.{ArrayList, List}
 
-import cpw.mods.fml.common.network.ByteBufUtils
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import io.netty.buffer.ByteBuf
 import net.minecraft.block.material.Material
@@ -12,10 +11,12 @@ import net.minecraft.item.ItemStack
 import net.minecraft.item.crafting.FurnaceRecipes
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.IIcon
+import net.minecraft.world.IBlockAccess
 import resonant.content.spatial.block.SpatialBlock
 import resonant.lib.content.prefab.java.TileInventory
+import resonant.lib.network.ByteBufWrapper._
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
-import resonant.lib.network.handle.IPacketReceiver
+import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
 import resonant.lib.transform.region.Cuboid
 import resonant.lib.transform.vector.{Vector2, Vector3}
 import resonantinduction.core.Reference
@@ -30,15 +31,14 @@ object TileHotPlate
   final val MAX_SMELT_TIME: Int = 200
 }
 
-class TileHotPlate extends TileInventory(Material.iron) with IPacketReceiver
+class TileHotPlate extends TileInventory(Material.iron) with TPacketSender with TPacketReceiver
 {
   final val smeltTime: Array[Int] = Array[Int](0, 0, 0, 0)
   final val stackSizeCache: Array[Int] = Array[Int](0, 0, 0, 0)
-  private final val POWER: Int = 50000
 
   //Constructor
   setSizeInventory(4)
-  bounds(new Cuboid(0, 0, 0, 1, 0.2f, 1))
+  bounds = new Cuboid(0, 0, 0, 1, 0.2f, 1)
   forceItemToRenderAsBlock = true
   isOpaqueCube = false
 
@@ -50,7 +50,7 @@ class TileHotPlate extends TileInventory(Material.iron) with IPacketReceiver
     {
       var didSmelt = false
 
-      for (i <- 0 to getSizeInventory)
+      for (i <- 0 until getSizeInventory)
       {
         if (canSmelt(this.getStackInSlot(i)))
         {
@@ -126,7 +126,7 @@ class TileHotPlate extends TileInventory(Material.iron) with IPacketReceiver
 
   def canSmelt(stack: ItemStack): Boolean =
   {
-    return FurnaceRecipes.smelting.getSmeltingResult(stack) != null
+    return stack != null && FurnaceRecipes.smelting.getSmeltingResult(stack) != null
   }
 
   def isSmelting: Boolean =
@@ -154,39 +154,20 @@ class TileHotPlate extends TileInventory(Material.iron) with IPacketReceiver
     return i < getSizeInventory && canSmelt(itemStack)
   }
 
-  override def getDescPacket: PacketTile =
+  override def write(buf: ByteBuf, id: Int)
   {
-    return new PacketTile(this, this.getPacketData(0).toArray)
+    super.write(buf, id)
+    val nbt = new NBTTagCompound
+    writeToNBT(nbt)
+    buf <<< nbt
   }
 
-  /**
-   * 1 - Description Packet
-   * 2 - Energy Update
-   * 3 - Tesla Beam
-   */
-  def getPacketData(`type`: Int): List[Any] =
+  override def read(buf: ByteBuf, id: Int, packetType: PacketType)
   {
-    val list: List[Any] = new ArrayList[Any]
-    val nbt: NBTTagCompound = new NBTTagCompound
-    this.writeToNBT(nbt)
-    list.add(nbt)
-    return list
-  }
+    super.read(buf, id, packetType)
 
-  def read(data: ByteBuf, player: EntityPlayer, `type`: PacketType)
-  {
-    try
-    {
-      this.readFromNBT(ByteBufUtils.readTag(data))
-      this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord)
-    }
-    catch
-      {
-        case e: Exception =>
-        {
-          e.printStackTrace
-        }
-      }
+    readFromNBT(buf.readTag())
+    markRender()
   }
 
   override def readFromNBT(nbt: NBTTagCompound)
@@ -213,6 +194,15 @@ class TileHotPlate extends TileInventory(Material.iron) with IPacketReceiver
   {
     super.registerIcons(iconReg)
     SpatialBlock.icon.put("electricHotPlate", iconReg.registerIcon(Reference.prefix + "electricHotPlate"))
+    SpatialBlock.icon.put("hotPlate_on", iconReg.registerIcon(Reference.prefix + "hotPlate_on"))
+  }
+
+  /**
+   * Called in the world.
+   */
+  override def getIcon(access: IBlockAccess, side: Int): IIcon =
+  {
+    return if (access.getBlockMetadata(xi, yi, zi) == 1) SpatialBlock.icon.get("electricHotPlate") else (if (canRun) SpatialBlock.icon.get("hotPlate_on") else SpatialBlock.icon.get(getTextureName))
   }
 
   @SideOnly(Side.CLIENT)
