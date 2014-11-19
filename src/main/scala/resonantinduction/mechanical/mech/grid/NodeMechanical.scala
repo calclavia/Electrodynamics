@@ -76,6 +76,7 @@ class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](par
   override def rotate(torque: Double)
   {
     bufferTorque += torque
+    bufferAngularVelocity += torque
   }
 
   def power: Double = torque * angularVelocity

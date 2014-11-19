@@ -57,7 +57,7 @@ class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) w
         }
       )
 
-      getNodes.foreach(n => recurse(Seq(n)))
+      getNodes.filter(n => n.bufferTorque != 0 && n.bufferAngularVelocity != 0).foreach(n => recurse(Seq(n)))
 
       /*
       //Find all nodes that are currently producing energy
@@ -105,8 +105,8 @@ class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) w
       val prev = passed(passed.size - 2)
       val ratio = curr.radius / prev.radius
       val invert = if (curr.inverseRotation(prev)) 1 else -1
-      curr._torque += prev.torque * ratio * invert
-      curr._angularVelocity += prev.angularVelocity / ratio * invert
+      curr._torque += passed(0).torque * ratio * invert
+      curr._angularVelocity += passed(0).angularVelocity / ratio * invert
     }
     else
     {
