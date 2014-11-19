@@ -8,7 +8,7 @@ import resonant.content.loader.ContentHolder
 import resonant.lib.network.discriminator.PacketAnnotationManager
 import resonant.lib.recipe.UniversalRecipe
 import resonant.lib.schematic.{SchematicPlate, SchematicRegistry}
-import resonantinduction.core.interfaces.TMechanicalNode
+import resonantinduction.core.interfaces.TNodeMechanical
 import resonantinduction.core.{RICreativeTab, Reference, ResonantPartFactory}
 import resonantinduction.mechanical.fluid.pipe.{ItemPipe, PartPipe, PipeMaterials}
 import resonantinduction.mechanical.fluid.transport.TilePump
@@ -54,7 +54,7 @@ object MechanicalContent extends ContentHolder
     SchematicRegistry.register("resonantinduction.mechanical.waterTurbine", new SchematicPlate("schematic.waterTurbine.name", MechanicalContent.blockWaterTurbine))
     SchematicRegistry.register("resonantinduction.mechanical.windTurbine", new SchematicPlate("schematic.windTurbine.name", MechanicalContent.blockWindTurbine))
 
-    NodeRegistry.register(classOf[TMechanicalNode], classOf[NodeMechanical])
+    NodeRegistry.register(classOf[TNodeMechanical], classOf[NodeMechanical])
 
     RICreativeTab.itemStack(new ItemStack(MechanicalContent.blockGrinderWheel))
 

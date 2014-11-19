@@ -4,7 +4,7 @@ import resonant.api.grid.INodeProvider
 import resonant.lib.grid.GridNode
 import resonant.lib.grid.node.NodeGrid
 import resonant.lib.transform.vector.IVectorWorld
-import resonantinduction.core.interfaces.TMechanicalNode
+import resonantinduction.core.interfaces.TNodeMechanical
 import resonantinduction.core.prefab.node.TMultipartNode
 
 import scala.beans.BeanProperty
@@ -14,7 +14,7 @@ import scala.beans.BeanProperty
  *
  * @author Calclavia, Darkguardsman
  */
-class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](parent) with TMultipartNode[NodeMechanical] with TMechanicalNode with IVectorWorld
+class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](parent) with TMultipartNode[NodeMechanical] with TNodeMechanical with IVectorWorld
 {
   protected[grid] var _torque = 0D
   protected[grid] var _angularVelocity = 0D
@@ -39,6 +39,7 @@ class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](par
    * Buffer values used by the grid to transfer mechanical energy.
    */
   protected[grid] var bufferTorque = 0D
+  protected[grid] var bufferAngularVelocity = 0D
   var bufferDefaultTorque = 0D
 
   /**

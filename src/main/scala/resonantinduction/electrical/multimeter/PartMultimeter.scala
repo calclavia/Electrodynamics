@@ -23,7 +23,7 @@ import resonant.lib.network.handle.IPacketReceiver
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.WrenchUtility
 import resonantinduction.core.ResonantInduction
-import resonantinduction.core.interfaces.TMechanicalNode
+import resonantinduction.core.interfaces.TNodeMechanical
 import resonantinduction.core.prefab.part.ChickenBonesWrapper._
 import resonantinduction.core.prefab.part.PartFace
 import resonantinduction.electrical.ElectricalContent
@@ -168,7 +168,7 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
     if (tileEntity.isInstanceOf[INodeProvider])
     {
       val instance = ForgeDirection.values
-        .map(dir => tileEntity.asInstanceOf[INodeProvider].getNode(classOf[TMechanicalNode], dir).asInstanceOf[TMechanicalNode])
+        .map(dir => tileEntity.asInstanceOf[INodeProvider].getNode(classOf[TNodeMechanical], dir).asInstanceOf[TNodeMechanical])
         .headOption.orNull
 
       if (instance != null)

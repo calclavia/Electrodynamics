@@ -8,7 +8,7 @@ import resonant.lib.transform.vector.IVectorWorld
  *
  * @author Darkguardsman, Calclavia
  */
-trait TMechanicalNode extends INode with IVectorWorld
+trait TNodeMechanical extends INode with IVectorWorld
 {
   /**
    * Gets the angular velocity of the mechanical device from a specific side
@@ -31,10 +31,9 @@ trait TMechanicalNode extends INode with IVectorWorld
   def getLoad = 10D
 
   /**
-   * Moment of inertia = m * r * r
-   * Where "m" is the mass and "r" is the radius of the object.
+   * The radius of rotation
    */
-  def momentOfInertia = 2 * 0.5 * 0.5
+  def radius = 0.5
 
   /**
    * Does the direction flip on this side for rotation
@@ -42,7 +41,7 @@ trait TMechanicalNode extends INode with IVectorWorld
    * @param other - The other mechanical node
    * @return boolean, true = flipped, false = not
    */
-  def inverseRotation(other: TMechanicalNode): Boolean = true
+  def inverseRotation(other: TNodeMechanical): Boolean = true
 
   /**
    * Applies rotational force and velocity to this node increasing its current rotation value

@@ -7,7 +7,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.grid.INodeProvider
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.wrapper.ForgeDirectionWrapper._
-import resonantinduction.core.interfaces.TMechanicalNode
+import resonantinduction.core.interfaces.TNodeMechanical
 import resonantinduction.mechanical.mech.gearshaft.{GearShaftNode, PartGearShaft}
 import resonantinduction.mechanical.mech.grid.NodeMechanical
 
@@ -206,9 +206,9 @@ class NodeGear(parent: PartGear) extends NodeMechanical(parent: PartGear)
     return false
   }
 
-  override def inverseRotation(other: TMechanicalNode): Boolean = !other.isInstanceOf[GearShaftNode] || (other.isInstanceOf[GearShaftNode] && parent.placementSide.offset < Vector3.zero)
+  override def inverseRotation(other: TNodeMechanical): Boolean = !other.isInstanceOf[GearShaftNode] || (other.isInstanceOf[GearShaftNode] && parent.placementSide.offset < Vector3.zero)
 
-  override def momentOfInertia = if (gear.getMultiBlock.isConstructed) 1.5 * 1.5 else super.momentOfInertia
+  override def radius = if (gear.getMultiBlock.isConstructed) 1.5 * 1.5 else super.radius
 
   /*
   override def getRadius(dir: ForgeDirection, other: TMechanicalNode): Double =

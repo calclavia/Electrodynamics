@@ -49,37 +49,75 @@ class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) w
   {
     getNodes synchronized
     {
+      getNodes.foreach(
+        n =>
+        {
+          n._torque = 0
+          n._angularVelocity = 0
+        }
+      )
+
+      getNodes.foreach(n => recurse(Seq(n)))
+
+      /*
       //Find all nodes that are currently producing energy
       val inputs = getNodes.filter(n => n.bufferTorque != 0)
 
       //Calculate the total input equivalent torque
       val inputTorque = inputs
-        .map(n => n.bufferTorque * (if (spinMap(n)) 1 else -1))
-        .foldLeft(0D)(_ + _)
+                        .map(n => n.bufferTorque * (if (spinMap(n)) 1 else -1))
+                        .foldLeft(0D)(_ + _)
 
       val deltaTorque = if (inputTorque != 0) Math.max(Math.abs(inputTorque) - load * deltaTime, 0) * inputTorque / Math.abs(inputTorque) else 0
 
+
       //Set torque and angular velocity of all nodes
-      getNodes.foreach(n =>
-      {
-        val prevTorque = n.torque
-        val prevAngularVelocity = n.angularVelocity
+      getNodes.foreach(
+        n =>
+        {
+          val prevTorque = n.torque
+          val prevAngularVelocity = n.angularVelocity
 
-        val inversion = if (spinMap(n)) 1 else -1
-        n._torque = deltaTorque * inversion
-        val angularAcceleration = deltaTorque / n.momentOfInertia
-        n._angularVelocity = angularAcceleration * deltaTime * inversion
+          val inversion = if (spinMap(n)) 1 else -1
+          n._torque = deltaTorque * inversion
+          val angularAcceleration = deltaTorque / n.radius
+          n._angularVelocity = angularAcceleration * deltaTime * inversion
 
-        if (Math.abs(n.torque - prevTorque) > 0)
-          n.onTorqueChanged()
+          if (Math.abs(n.torque - prevTorque) > 0)
+            n.onTorqueChanged()
 
-        if (Math.abs(n.angularVelocity - prevAngularVelocity) > 0)
-          n.onVelocityChanged()
+          if (Math.abs(n.angularVelocity - prevAngularVelocity) > 0)
+            n.onVelocityChanged()
 
-        //Clear buffers
-        n.bufferTorque = n.bufferDefaultTorque
-      })
+          //Clear buffers
+          n.bufferTorque = n.bufferDefaultTorque
+        })
+        */
     }
+  }
+
+  def recurse(passed: Seq[NodeMechanical])
+  {
+    val curr = passed(passed.size - 1)
+
+    if (passed.size > 1)
+    {
+      val prev = passed(passed.size - 2)
+      val ratio = curr.radius / prev.radius
+      val invert = if (curr.inverseRotation(prev)) 1 else -1
+      curr._torque += prev.torque * ratio * invert
+      curr._angularVelocity += prev.angularVelocity / ratio * invert
+    }
+    else
+    {
+      curr._torque += curr.bufferTorque
+      curr._angularVelocity += curr.bufferAngularVelocity
+      curr.bufferTorque = 0
+      curr.bufferAngularVelocity = 0
+    }
+
+    if (curr.power > 0)
+      curr.connections.foreach(c => recurse(passed :+ c))
   }
 
   override def continueUpdate = getNodes.size > 0
