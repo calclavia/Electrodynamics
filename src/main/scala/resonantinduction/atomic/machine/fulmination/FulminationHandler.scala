@@ -1,12 +1,6 @@
 package resonantinduction.atomic.machine.fulmination
 
-import java.util.{ArrayList, HashSet, List}
-
-import cpw.mods.fml.common.eventhandler.SubscribeEvent
-import net.minecraft.util.Vec3
-import resonant.api.explosion.ExplosionEvent
-import resonantinduction.atomic.AtomicContent
-import resonant.lib.transform.vector.Vector3
+import java.util.{ArrayList, List}
 
 /**
  * Atomic Science Event Handling.
@@ -32,7 +26,8 @@ class FulminationHandler
         FulminationHandler.list.remove(tileEntity)
     }
 
-    @SubscribeEvent def BaoZha(evt: ExplosionEvent.DoExplosionEvent)
+  /**
+    //@SubscribeEvent def BaoZha(evt: ExplosionEvent.DoExplosionEvent)
     {
         if (evt.iExplosion != null)
         {
@@ -73,5 +68,5 @@ class FulminationHandler
                 }
             }
         }
-    }
+    } */
 }
