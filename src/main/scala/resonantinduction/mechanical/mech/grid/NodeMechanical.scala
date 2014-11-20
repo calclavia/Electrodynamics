@@ -19,6 +19,9 @@ class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](par
   protected[grid] var _torque = 0D
   protected[grid] var _angularVelocity = 0D
 
+  protected[grid] var prevTorque = 0D
+  protected[grid] var prevAngularVelocity = 0D
+
   /**
    * Gets the angular velocity of the mechanical device from a specific side
    *
@@ -73,7 +76,7 @@ class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](par
     return prevAngle
   }
 
-  override def rotate(torque: Double)
+  override def rotate(torque: Double, angularVelocity : Double)
   {
     bufferTorque += torque
     bufferAngularVelocity += torque

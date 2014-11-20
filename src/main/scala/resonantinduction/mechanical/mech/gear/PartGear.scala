@@ -4,7 +4,6 @@ import java.util
 
 import codechicken.lib.vec.{Cuboid6, Vector3}
 import codechicken.microblock.FaceMicroClass
-import codechicken.multipart.ControlKeyModifer
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
@@ -41,8 +40,8 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
     if (getMultiBlock.isPrimary)
       UpdateTicker.world.enqueue(() => if (world != null) sendPacket(1))
 
-//    if (mechanicalNode.angularVelocity == 0)
-//      UpdateTicker.world.enqueue(() => if (world != null) sendPacket(2))
+    //    if (mechanicalNode.angularVelocity == 0)
+    //      UpdateTicker.world.enqueue(() => if (world != null) sendPacket(2))
   }
 
   mechanicalNode.onGridReconstruct = () => if (world != null && !world.isRemote) sendPacket(2)
@@ -57,7 +56,7 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
       if (manualCrankTime > 0)
       {
         //A punch his around 5000 Newtons
-        mechanicalNode.rotate((if (isClockwiseCrank) 2 else -2) * manualCrankTime)
+        mechanicalNode.rotate((if (isClockwiseCrank) 2 else -2) * manualCrankTime, (if (isClockwiseCrank) 2 else -2) * manualCrankTime)
         manualCrankTime -= 1
       }
     }

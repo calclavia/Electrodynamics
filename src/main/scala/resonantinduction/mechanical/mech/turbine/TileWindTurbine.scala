@@ -69,7 +69,7 @@ class TileWindTurbine extends TileTurbine with IBoilHandler
         else
         {
           //This is a horizontal turbine
-          getMultiBlock.get.mechanicalNode.rotate(if (gasTank.getFluid != null) gasTank.drain(gasTank.getFluidAmount, true).amount else 0 * 1000 * Settings.steamMultiplier)
+          getMultiBlock.get.mechanicalNode.rotate(if (gasTank.getFluid != null) gasTank.drain(gasTank.getFluidAmount, true).amount else 0 * 1000 * Settings.steamMultiplier, 10)
         }
       }
     }

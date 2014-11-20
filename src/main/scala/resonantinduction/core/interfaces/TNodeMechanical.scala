@@ -48,5 +48,5 @@ trait TNodeMechanical extends INode with IVectorWorld
    *
    * @param torque          - force at an angle
    */
-  def rotate(torque: Double)
+  def rotate(torque: Double, angularVelocity : Double)
 }

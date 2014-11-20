@@ -48,7 +48,7 @@ class TileMotor extends TileAdvanced(Material.iron) with TElectric with TSpatial
 
       if (mechRatio > 0)
       {
-        mechNode.rotate(deltaPower)
+        mechNode.rotate(deltaPower, deltaPower / mechRatio)
         //TODO: Resist DC energy
       }
     }
