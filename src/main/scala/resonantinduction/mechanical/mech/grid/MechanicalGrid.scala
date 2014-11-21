@@ -68,8 +68,12 @@ class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) w
           if (n.prevTorque != n.torque)
             n.onTorqueChanged()
 
-          if (n.prevAngularVelocity != n.angularVelocity)
+//          if (n.prevAngularVelocity != n.angularVelocity)
             n.onVelocityChanged()
+
+          //TODO: Solve problem with "buffer" not syncing up with this thread.
+          n.bufferTorque = n.bufferDefaultTorque
+          n.bufferAngularVelocity = n.bufferDefaultAngularVelocity
         }
       )
     }
@@ -84,15 +88,13 @@ class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) w
       val prev = passed(passed.size - 2)
       val ratio = curr.radius / prev.radius
       val invert = if (curr.inverseRotation(prev)) -1 else 1
-      curr._torque += prev.torque * ratio * invert
-      curr._angularVelocity += prev.angularVelocity / ratio * invert
+      curr._torque += Math.abs(passed(0).bufferTorque) * ratio * invert * Math.signum(prev.torque)
+      curr._angularVelocity += Math.abs(passed(0).bufferAngularVelocity) * deltaTime / ratio * invert * Math.signum(prev.angularVelocity)
     }
     else
     {
       curr._torque += curr.bufferTorque
       curr._angularVelocity += curr.bufferAngularVelocity * deltaTime
-      curr.bufferTorque = 0
-      curr.bufferAngularVelocity = 0
     }
 
     if (curr.power > 0)

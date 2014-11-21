@@ -55,10 +55,12 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
     {
       if (manualCrankTime > 0)
       {
-        //A punch his around 5000 Newtons
-        mechanicalNode.rotate((if (isClockwiseCrank) 2 else -2) * manualCrankTime, (if (isClockwiseCrank) 2 else -2) * manualCrankTime)
+        //A punch has around 5000 Newtons
+        mechanicalNode.rotate((if (isClockwiseCrank) 2 else -2) * manualCrankTime, (if (isClockwiseCrank) 0.5 else -0.5) * manualCrankTime)
         manualCrankTime -= 1
       }
+      mechanicalNode.bufferDefaultTorque = (if (isClockwiseCrank) 2 else -2) * manualCrankTime
+      mechanicalNode.bufferDefaultAngularVelocity = (if (isClockwiseCrank) 0.5 else -0.5) * manualCrankTime
     }
 
     getMultiBlock.update()

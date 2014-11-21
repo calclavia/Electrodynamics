@@ -5,7 +5,7 @@ import codechicken.multipart.{TMultiPart, TileMultipart}
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.grid.INodeProvider
-import resonant.lib.transform.vector.Vector3
+import resonant.lib.transform.vector.{VectorWorld, Vector3}
 import resonant.lib.wrapper.ForgeDirectionWrapper._
 import resonantinduction.core.interfaces.TNodeMechanical
 import resonantinduction.mechanical.mech.gearshaft.{GearShaftNode, PartGearShaft}
@@ -208,20 +208,16 @@ class NodeGear(parent: PartGear) extends NodeMechanical(parent: PartGear)
 
   override def inverseRotation(other: TNodeMechanical): Boolean = !other.isInstanceOf[GearShaftNode] || (other.isInstanceOf[GearShaftNode] && parent.placementSide.offset < Vector3.zero)
 
-  override def radius = if (gear.getMultiBlock.isConstructed) 1.5 * 1.5 else super.radius
-
-  /*
-  override def getRadius(dir: ForgeDirection, other: TMechanicalNode): Double =
+  override def radius( other: TNodeMechanical): Double =
   {
-    //The ratio is the same if it is a gear placed back to back with each other OR a shaft
-    val deltaPos: Vector3 = new VectorWorld(other.asInstanceOf[IVectorWorld]).subtract(toVectorWorld)
+    val deltaPos = other.asInstanceOf[NodeMechanical].toVectorWorld - toVectorWorld
     val caseX = gear.placementSide.offsetX != 0 && deltaPos.y == 0 && deltaPos.z == 0
     val caseY = gear.placementSide.offsetY != 0 && deltaPos.x == 0 && deltaPos.z == 0
     val caseZ = gear.placementSide.offsetZ != 0 && deltaPos.x == 0 && deltaPos.y == 0
 
     if (caseX || caseY || caseZ)
-      return super.getRadius(dir, other)
+      return super.radius( other)
 
-    return if (gear.getMultiBlock.isConstructed) 1.5f else super.getRadius(dir, other)
-  }*/
+    if (gear.getMultiBlock.isConstructed) 1.5 else super.radius(other)
+  }
 }

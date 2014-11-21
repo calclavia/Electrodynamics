@@ -44,6 +44,7 @@ class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](par
   protected[grid] var bufferTorque = 0D
   protected[grid] var bufferAngularVelocity = 0D
   var bufferDefaultTorque = 0D
+  var bufferDefaultAngularVelocity = 0D
 
   /**
    * Angle calculations
@@ -79,7 +80,7 @@ class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](par
   override def rotate(torque: Double, angularVelocity : Double)
   {
     bufferTorque += torque
-    bufferAngularVelocity += torque
+    bufferAngularVelocity += angularVelocity
   }
 
   def power: Double = torque * angularVelocity

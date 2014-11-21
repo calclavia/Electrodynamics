@@ -33,7 +33,7 @@ trait TNodeMechanical extends INode with IVectorWorld
   /**
    * The radius of rotation
    */
-  def radius = 0.5
+  def radius(other: TNodeMechanical) = 0.5
 
   /**
    * Does the direction flip on this side for rotation
@@ -48,5 +48,5 @@ trait TNodeMechanical extends INode with IVectorWorld
    *
    * @param torque          - force at an angle
    */
-  def rotate(torque: Double, angularVelocity : Double)
+  def rotate(torque: Double, angularVelocity: Double)
 }
