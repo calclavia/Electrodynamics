@@ -12,7 +12,7 @@ import resonant.lib.transform.vector.Vector3
 
 class SchematicFissionReactor extends Schematic
 {
-    def getName: String =
+    override def getName: String =
     {
         return "schematic.fissionReactor.name"
     }
