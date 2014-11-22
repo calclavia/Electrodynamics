@@ -26,14 +26,14 @@ import resonantinduction.mechanical.mech.PartMechanical
  */
 class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
 {
-  var isClockwiseCrank: Boolean = true
+  var isClockwiseCrank = true
   var manualCrankTime = 0
-  var multiBlockRadius: Int = 1
-  /** Multiblock */
+  var multiBlockRadius = 1
   val multiBlock = new GearMultiBlockHandler(this)
 
   //Constructor
   mechanicalNode = new NodeGear(this)
+
   mechanicalNode.onVelocityChanged = () =>
   {
     if (getMultiBlock.isPrimary)

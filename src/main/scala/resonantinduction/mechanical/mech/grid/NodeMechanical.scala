@@ -8,6 +8,7 @@ import resonantinduction.core.interfaces.TNodeMechanical
 import resonantinduction.core.prefab.node.TMultipartNode
 
 import scala.beans.BeanProperty
+import scala.collection.convert.wrapAll._
 
 /**
  * Prefab node for the mechanical system used by almost ever mechanical object in Resonant Induction. Handles connections to other tiles, and shares power with them
@@ -75,7 +76,22 @@ class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](par
     return prevAngle
   }
 
-  override def rotate(torque: Double, angularVelocity : Double)
+  /**
+   * Sets the mechanical node's angle based on its connections
+   */
+  def resetAngle()
+  {
+    connections.foreach(
+      n =>
+      {
+        val diff = Math.round((n.prevAngle - prevAngle) * angleDisplacement)
+        n.prevAngle = (prevAngle + diff) % (Math.PI * 2)
+      }
+    )
+    prevTime = System.currentTimeMillis()
+  }
+
+  override def rotate(torque: Double, angularVelocity: Double)
   {
     bufferTorque += torque
     bufferAngularVelocity += angularVelocity
@@ -89,5 +105,5 @@ class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](par
 
   override def isValidConnection(other: AnyRef): Boolean = other.isInstanceOf[NodeMechanical]
 
-  override def toString = "NodeMechanical[Connections: "+connections.size() + " Torque: " + torque + " Angular Velocity:" + angularVelocity+"]"
+  override def toString = "NodeMechanical[Connections: " + connections.size() + " Torque: " + torque + " Angular Velocity:" + angularVelocity + "]"
 }

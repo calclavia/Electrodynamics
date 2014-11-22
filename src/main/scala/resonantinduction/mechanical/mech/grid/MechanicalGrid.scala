@@ -20,21 +20,7 @@ class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) w
   {
     super.reconstruct(first)
     UpdateTicker.world.addUpdater(this)
-
     load = getNodes.map(n => n.getLoad).foldLeft(0D)(_ + _)
-  }
-
-  override protected def populateNode(node: NodeMechanical, prev: NodeMechanical)
-  {
-    super.populateNode(node, prev)
-
-    //TODO: Check if gears are LOCKED (when two nodes obtain undesirable spins)
-//    val dir = if (prev != null) if (node.inverseRotation(prev)) !spinMap(prev) else spinMap(prev) else false
-//    spinMap += (node -> dir)
-
-    //Set mechanical node's initial angle
-    if (prev != null)
-      node.prevAngle = (prev.prevAngle + prev.angleDisplacement) % (2 * Math.PI)
   }
 
   override def update(deltaTime: Double)
@@ -81,7 +67,7 @@ class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) w
 
   def recurse(deltaTime: Double, torque: Double, angularVelocity: Double, passed: Seq[NodeMechanical])
   {
-    val curr = passed(passed.size - 1)
+    val curr = passed.last
 
     if (passed.size > 1)
     {

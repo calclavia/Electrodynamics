@@ -16,6 +16,8 @@ import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
 import resonant.lib.transform.vector.Vector3
 import resonantinduction.mechanical.mech.grid.NodeMechanical
 
+import scala.collection.convert.wrapAll._
+
 /** Prefab for resonantinduction.mechanical tiles
   *
   * @author Calclavia */
@@ -30,6 +32,7 @@ abstract class TileMechanical(material: Material) extends SpatialTile(material: 
   {
     _mechanicalNode = newNode
     mechanicalNode.onVelocityChanged = () => sendPacket(1)
+    nodes.remove(nodes.filter(_.isInstanceOf[NodeMechanical]))
     nodes.add(mechanicalNode)
   }
 
