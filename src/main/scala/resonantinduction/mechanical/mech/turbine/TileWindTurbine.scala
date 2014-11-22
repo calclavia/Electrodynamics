@@ -30,7 +30,7 @@ class TileWindTurbine extends TileTurbine with IBoilHandler
   private final val openBlockCache = new Array[Byte](224)
   private var checkCount = 0
   private var efficiency = 0f
-  private var windTorque = 0d
+  private var windPower = 0d
 
   /**
    * Steam simulations
@@ -64,7 +64,7 @@ class TileWindTurbine extends TileTurbine with IBoilHandler
             computePower()
           }
 
-          getMultiBlock.get.mechanicalNode.bufferDefaultTorque = windTorque
+          getMultiBlock.get.mechanicalNode.rotate(windPower * multiBlockRadius, windPower / multiBlockRadius)
         }
         else
         {
@@ -124,7 +124,7 @@ class TileWindTurbine extends TileTurbine with IBoilHandler
     val hasBonus = biome.isInstanceOf[BiomeGenOcean] || biome.isInstanceOf[BiomeGenPlains] || biome == BiomeGenBase.river
     val windSpeed = (worldObj.rand.nextFloat / 8) + (yCoord / 256f) * (if (hasBonus) 1.2f else 1) + worldObj.getRainStrength(1.5f)
 
-    windTorque = materialMultiplier * multiblockMultiplier * windSpeed * efficiency * Settings.WIND_POWER_RATIO / 20
+    windPower = materialMultiplier * multiblockMultiplier * windSpeed * efficiency * Settings.WIND_POWER_RATIO / 20
   }
 
   override def getSubBlocks(par1: Item, par2CreativeTabs: CreativeTabs, par3List: List[_])

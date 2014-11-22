@@ -49,7 +49,7 @@ abstract class PartMechanical extends PartAbstract with JNormalOcclusion with TF
         save(tag)
         packet.writeNBTTagCompound(tag)
       case 1 => packet.writeFloat(mechanicalNode.angularVelocity.toFloat)
-      case 2 => packet.writeFloat(mechanicalNode.prevAngle.toFloat)
+      case 2 => packet.writeFloat(mechanicalNode.angle.toFloat)
     }
   }
 
@@ -62,7 +62,9 @@ abstract class PartMechanical extends PartAbstract with JNormalOcclusion with TF
       case 0 =>
         load(packet.readNBTTagCompound())
       case 1 => mechanicalNode.angularVelocity = packet.readFloat()
-      case 2 => mechanicalNode.prevAngle = packet.readFloat()
+      case 2 =>
+        mechanicalNode.prevAngle = packet.readFloat()
+        mechanicalNode.prevTime = System.currentTimeMillis()
     }
   }
 

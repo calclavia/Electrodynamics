@@ -9,7 +9,6 @@ import net.minecraft.item.ItemStack
 import resonant.content.spatial.block.SpatialTile
 import resonant.engine.ResonantEngine
 import resonant.lib.content.prefab.TRotatable
-import resonant.lib.grid.UpdateTicker
 import resonant.lib.grid.node.TSpatialNodeProvider
 import resonant.lib.network.ByteBufWrapper._
 import resonant.lib.network.discriminator.PacketType
@@ -30,7 +29,7 @@ abstract class TileMechanical(material: Material) extends SpatialTile(material: 
   def mechanicalNode_=(newNode: NodeMechanical)
   {
     _mechanicalNode = newNode
-    mechanicalNode.onVelocityChanged = () => UpdateTicker.world.enqueue(() => sendPacket(1))
+    mechanicalNode.onVelocityChanged = () => sendPacket(1)
     nodes.add(mechanicalNode)
   }
 

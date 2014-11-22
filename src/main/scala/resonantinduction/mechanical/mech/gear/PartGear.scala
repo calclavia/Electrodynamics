@@ -12,7 +12,6 @@ import net.minecraft.util.MovingObjectPosition
 import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.grid.INode
-import resonant.lib.grid.UpdateTicker
 import resonant.lib.multiblock.reference.IMultiBlockStructure
 import resonant.lib.utility.WrenchUtility
 import resonantinduction.core.Reference
@@ -38,10 +37,10 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
   mechanicalNode.onVelocityChanged = () =>
   {
     if (getMultiBlock.isPrimary)
-      UpdateTicker.world.enqueue(() => if (world != null) sendPacket(1))
+      if (world != null) sendPacket(1)
 
-    //    if (mechanicalNode.angularVelocity == 0)
-    //      UpdateTicker.world.enqueue(() => if (world != null) sendPacket(2))
+//    if (mechanicalNode.angularVelocity == 0)
+//      if (world != null) sendPacket(2)
   }
 
   mechanicalNode.onGridReconstruct = () => if (world != null && !world.isRemote) sendPacket(2)
@@ -59,8 +58,6 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
         mechanicalNode.rotate((if (isClockwiseCrank) 2 else -2) * manualCrankTime, (if (isClockwiseCrank) 0.5 else -0.5) * manualCrankTime)
         manualCrankTime -= 1
       }
-      mechanicalNode.bufferDefaultTorque = (if (isClockwiseCrank) 2 else -2) * manualCrankTime
-      mechanicalNode.bufferDefaultAngularVelocity = (if (isClockwiseCrank) 0.5 else -0.5) * manualCrankTime
     }
 
     getMultiBlock.update()
@@ -69,7 +66,7 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
   override def activate(player: EntityPlayer, hit: MovingObjectPosition, itemStack: ItemStack): Boolean =
   {
     if (!world.isRemote)
-      println(mechanicalNode)
+      println(mechanicalNode.grid)
 
     if (itemStack != null && itemStack.getItem.isInstanceOf[ItemHandCrank])
     {

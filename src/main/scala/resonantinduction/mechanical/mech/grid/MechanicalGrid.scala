@@ -27,7 +27,7 @@ class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) w
   override def reconstruct(first: NodeMechanical)
   {
     super.reconstruct(first)
-    UpdateTicker.threaded.addUpdater(this)
+    UpdateTicker.world.addUpdater(this)
 
     load = getNodes.map(n => n.getLoad).foldLeft(0D)(_ + _)
   }
@@ -52,53 +52,62 @@ class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) w
       getNodes.foreach(
         n =>
         {
-          n.prevTorque = n.torque
-          n.prevAngularVelocity = n.angularVelocity
-
           n._torque = 0
           n._angularVelocity = 0
         }
       )
 
-      getNodes.filter(n => n.bufferTorque != 0 && n.bufferAngularVelocity != 0).foreach(n => recurse(deltaTime, Seq(n)))
+      getNodes.filter(n => n.bufferTorque != 0 && n.bufferAngularVelocity != 0).foreach(n => recurse(deltaTime, n.bufferTorque, n.bufferAngularVelocity, Seq(n)))
 
-      getNodes.foreach(
-        n =>
-        {
-          if (n.prevTorque != n.torque)
-            n.onTorqueChanged()
-
-//          if (n.prevAngularVelocity != n.angularVelocity)
-            n.onVelocityChanged()
-
-          //TODO: Solve problem with "buffer" not syncing up with this thread.
-          n.bufferTorque = n.bufferDefaultTorque
-          n.bufferAngularVelocity = n.bufferDefaultAngularVelocity
-        }
-      )
+      //UpdateTicker world enqueue
+      resetNodes()
     }
   }
 
-  def recurse(deltaTime: Double, passed: Seq[NodeMechanical])
+  def resetNodes()
+  {
+    getNodes.foreach(
+      n =>
+      {
+        if (n.prevTorque != n.torque)
+        {
+          n.prevTorque = n.torque
+          n.onTorqueChanged()
+        }
+
+        if (n.prevAngularVelocity != n.angularVelocity)
+        {
+          n.prevAngularVelocity = n.angularVelocity
+          n.onVelocityChanged()
+        }
+
+        n.bufferTorque = 0
+        n.bufferAngularVelocity = 0
+      }
+    )
+  }
+
+  def recurse(deltaTime: Double, torque: Double, angularVelocity: Double, passed: Seq[NodeMechanical])
   {
     val curr = passed(passed.size - 1)
 
     if (passed.size > 1)
     {
       val prev = passed(passed.size - 2)
-      val ratio = curr.radius / prev.radius
+      val ratio = curr.radius(prev) / prev.radius(curr)
       val invert = if (curr.inverseRotation(prev)) -1 else 1
-      curr._torque += Math.abs(passed(0).bufferTorque) * ratio * invert * Math.signum(prev.torque)
-      curr._angularVelocity += Math.abs(passed(0).bufferAngularVelocity) * deltaTime / ratio * invert * Math.signum(prev.angularVelocity)
+      val addTorque = torque * ratio * invert
+      val addVel = angularVelocity / ratio * invert
+      curr._torque += addTorque
+      curr._angularVelocity += addVel * deltaTime
+      curr.connections.filter(!passed.contains(_)).foreach(c => recurse(deltaTime, addTorque, addVel, passed :+ c))
     }
     else
     {
-      curr._torque += curr.bufferTorque
-      curr._angularVelocity += curr.bufferAngularVelocity * deltaTime
+      curr._torque += torque
+      curr._angularVelocity += angularVelocity * deltaTime
+      curr.connections.filter(!passed.contains(_)).foreach(c => recurse(deltaTime, torque, angularVelocity, passed :+ c))
     }
-
-    if (curr.power > 0)
-      curr.connections.filter(!passed.contains(_)).foreach(c => recurse(deltaTime, passed :+ c))
   }
 
   override def continueUpdate = getNodes.size > 0

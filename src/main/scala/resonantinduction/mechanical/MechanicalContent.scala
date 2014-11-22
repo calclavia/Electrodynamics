@@ -66,11 +66,6 @@ object MechanicalContent extends ContentHolder
     ResonantPartFactory.register(classOf[PartPipe])
   }
 
-  override def init()
-  {
-    super.init()
-  }
-
   /**
    * Recipe registration
    */

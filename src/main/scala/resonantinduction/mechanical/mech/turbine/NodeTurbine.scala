@@ -1,6 +1,7 @@
 package resonantinduction.mechanical.mech.turbine
 
 import net.minecraftforge.common.util.ForgeDirection
+import resonantinduction.core.interfaces.TNodeMechanical
 import resonantinduction.mechanical.mech.grid.NodeMechanical
 
 /**
@@ -22,7 +23,7 @@ class NodeTurbine(parent: TileTurbine) extends NodeMechanical(parent)
    * Moment of inertia = m * r * r
    * Where "m" is the mass and "r" is the radius of the object.
    */
-  override def radius = parent.multiBlockRadius * parent.multiBlockRadius
+  override def radius(other: TNodeMechanical) = parent.multiBlockRadius * parent.multiBlockRadius
 
   def turbine: TileTurbine =
   {

@@ -43,13 +43,11 @@ class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](par
    */
   protected[grid] var bufferTorque = 0D
   protected[grid] var bufferAngularVelocity = 0D
-  var bufferDefaultTorque = 0D
-  var bufferDefaultAngularVelocity = 0D
 
   /**
    * Angle calculations
    */
-  protected var prevTime = 0L
+  var prevTime = System.currentTimeMillis()
   var prevAngle = 0D
 
   /**
