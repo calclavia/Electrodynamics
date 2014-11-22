@@ -25,8 +25,8 @@ trait TNodeMechanical extends INode with IVectorWorld
   def torque: Double
 
   /**
-   * The mechanical load
-   * @return Energy loss in joules
+   * The mechanical load energy loss per second.
+   * @return Power loss in Watts.
    */
   def getLoad = 10D
 

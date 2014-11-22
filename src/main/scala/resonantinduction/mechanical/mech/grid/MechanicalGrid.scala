@@ -84,9 +84,9 @@ class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) w
     {
       //Calculate energy loss
       val power = torque * angularVelocity
-      val netPower = power - load
-      val netTorque = netPower * (torque / power)
-      val netVelocity = netPower * (angularVelocity / power)
+      val netEnergy = power - load * deltaTime
+      val netTorque = netEnergy * (torque / power)
+      val netVelocity = netEnergy * (angularVelocity / power)
 
       curr._torque += netTorque
       curr._angularVelocity += netVelocity * deltaTime

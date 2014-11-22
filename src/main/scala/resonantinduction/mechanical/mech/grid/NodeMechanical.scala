@@ -2,7 +2,7 @@ package resonantinduction.mechanical.mech.grid
 
 import resonant.api.grid.INodeProvider
 import resonant.lib.grid.GridNode
-import resonant.lib.grid.node.NodeGrid
+import resonant.lib.grid.node.{NodeGrid, TTileConnector}
 import resonant.lib.transform.vector.IVectorWorld
 import resonantinduction.core.interfaces.TNodeMechanical
 import resonantinduction.core.prefab.node.TMultipartNode
@@ -15,7 +15,7 @@ import scala.collection.convert.wrapAll._
  *
  * @author Calclavia, Darkguardsman
  */
-class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](parent) with TMultipartNode[NodeMechanical] with TNodeMechanical with IVectorWorld
+class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](parent) with TTileConnector[NodeMechanical] with TMultipartNode[NodeMechanical] with TNodeMechanical with IVectorWorld
 {
   protected[grid] var _torque = 0D
   protected[grid] var _angularVelocity = 0D
@@ -85,7 +85,7 @@ class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](par
       n =>
       {
         val diff = Math.round((n.prevAngle - prevAngle) * angleDisplacement)
-        n.prevAngle = (prevAngle + diff) % (Math.PI * 2)
+        n.prevAngle = (prevAngle + angleDisplacement) % (Math.PI * 2)
       }
     )
     prevTime = System.currentTimeMillis()
@@ -104,6 +104,11 @@ class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](par
   override def newGrid: GridNode[NodeMechanical] = new MechanicalGrid
 
   override def isValidConnection(other: AnyRef): Boolean = other.isInstanceOf[NodeMechanical]
+
+  /**
+   * The class used to compare when making connections
+   */
+  override protected def getCompareClass = classOf[NodeMechanical]
 
   override def toString = "NodeMechanical[Connections: " + connections.size() + " Torque: " + torque + " Angular Velocity:" + angularVelocity + "]"
 }

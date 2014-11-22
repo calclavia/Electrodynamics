@@ -121,7 +121,7 @@ class TileTurbine extends TileMechanical(Material.wood) with IMultiBlockStructur
     return multiBlock
   }
 
-  def onMultiBlockChanged
+  def onMultiBlockChanged()
   {
     worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, if (getBlockType != null) getBlockType else null)
     worldObj.markBlockForUpdate(xCoord, yCoord, zCoord)

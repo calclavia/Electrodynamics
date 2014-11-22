@@ -60,11 +60,9 @@ class TileWindTurbine extends TileTurbine with IBoilHandler
         {
           //This is a vertical wind turbine
           if (ticks % 20 == 0)
-          {
             computePower()
-          }
 
-          getMultiBlock.get.mechanicalNode.rotate(windPower * multiBlockRadius, windPower / multiBlockRadius)
+          getMultiBlock.get.mechanicalNode.rotate(windPower * multiBlockRadius / 20, windPower / multiBlockRadius / 20)
         }
         else
         {
@@ -111,7 +109,7 @@ class TileWindTurbine extends TileTurbine with IBoilHandler
     efficiency = efficiency - openBlockCache(checkCount) + openAirBlocks
     openBlockCache(checkCount) = openAirBlocks.toByte
     checkCount = (checkCount + 1) % (openBlockCache.length - 1)
-    val multiblockMultiplier = (multiBlockRadius + 0.5f) * 2
+    val multiblockMultiplier = multiBlockRadius + 0.5f
 
     val materialMultiplier = tier match
     {
@@ -122,7 +120,7 @@ class TileWindTurbine extends TileTurbine with IBoilHandler
 
     val biome = worldObj.getBiomeGenForCoords(xCoord, zCoord)
     val hasBonus = biome.isInstanceOf[BiomeGenOcean] || biome.isInstanceOf[BiomeGenPlains] || biome == BiomeGenBase.river
-    val windSpeed = (worldObj.rand.nextFloat / 8) + (yCoord / 256f) * (if (hasBonus) 1.2f else 1) + worldObj.getRainStrength(1.5f)
+    val windSpeed = (worldObj.rand.nextFloat / 5) + (yCoord / 256f) * (if (hasBonus) 1.2f else 1) + worldObj.getRainStrength(0.5f)
 
     windPower = materialMultiplier * multiblockMultiplier * windSpeed * efficiency * Settings.WIND_POWER_RATIO / 20
   }
