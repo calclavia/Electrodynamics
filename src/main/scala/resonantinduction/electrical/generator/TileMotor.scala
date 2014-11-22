@@ -1,14 +1,20 @@
 package resonantinduction.electrical.generator
 
+import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.block.material.Material
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.util.ChatComponentText
+import net.minecraft.util.{ChatComponentText, ResourceLocation}
+import net.minecraftforge.client.model.AdvancedModelLoader
+import org.lwjgl.opengl.GL11
 import resonant.api.IRotatable
 import resonant.content.prefab.java.TileAdvanced
 import resonant.lib.content.prefab.TElectric
 import resonant.lib.grid.node.TSpatialNodeProvider
+import resonant.lib.render.RenderUtility
 import resonant.lib.transform.vector.Vector3
+import resonantinduction.core.Reference
 import resonantinduction.mechanical.mech.grid.NodeMechanical
 
 /**
@@ -16,6 +22,14 @@ import resonantinduction.mechanical.mech.grid.NodeMechanical
  *
  * @author Calclavia
  */
+object TileMotor
+{
+  @SideOnly(Side.CLIENT)
+  val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "motor.tcn"))
+  @SideOnly(Side.CLIENT)
+  val texture = new ResourceLocation(Reference.domain, Reference.modelPath + "motor.png")
+}
+
 class TileMotor extends TileAdvanced(Material.iron) with TElectric with TSpatialNodeProvider with IRotatable
 {
   var mechNode = new NodeMechanical(this)
@@ -64,6 +78,18 @@ class TileMotor extends TileAdvanced(Material.iron) with TElectric with TSpatial
     }
 
     return false
+  }
+
+  @SideOnly(Side.CLIENT)
+  override def renderDynamic(pos: Vector3, frame: Float, pass: Int): Unit =
+  {
+    GL11.glPushMatrix()
+    GL11.glTranslatef(pos.x.toFloat + 0.5f, pos.y.toFloat + 0.5f, pos.z.toFloat + 0.5f)
+    GL11.glRotatef(90, 0, 1, 0)
+    RenderUtility.rotateBlockBasedOnDirection(getDirection)
+    RenderUtility.bind(TileMotor.texture)
+    TileMotor.model.renderAll()
+    GL11.glPopMatrix()
   }
 
   override def readFromNBT(nbt: NBTTagCompound)

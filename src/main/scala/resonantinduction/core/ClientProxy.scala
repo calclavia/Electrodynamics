@@ -28,7 +28,6 @@ import resonantinduction.atomic.machine.quantum.{GuiQuantumAssembler, RenderQuan
 import resonantinduction.atomic.machine.reactor.{GuiReactorCell, RenderReactorCell, TileReactorCell}
 import resonantinduction.atomic.machine.thermometer.{RenderThermometer, TileThermometer}
 import resonantinduction.electrical.ElectricalContent
-import resonantinduction.electrical.generator.{RenderMotor, TileMotor}
 import resonantinduction.electrical.laser.fx.{EntityBlockParticleFX, EntityLaserFX, EntityScorchFX}
 import resonantinduction.electrical.multimeter.{GuiMultimeter, PartMultimeter, RenderMultimeter}
 import resonantinduction.electrical.tesla.{RenderTesla, TileTesla}
@@ -67,7 +66,6 @@ import resonantinduction.mechanical.mech.turbine._
     ItemRenderHandler.register(ElectricalContent.itemMultimeter, RenderMultimeter)
     ItemRenderHandler.register(ElectricalContent.itemQuantumGlyph, RenderQuantumGlyph)
 
-    ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileMotor], new RenderMotor)
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileTesla], new RenderTesla)
 
     //Atomic content
