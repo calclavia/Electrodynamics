@@ -5,10 +5,10 @@ import codechicken.multipart.{TMultiPart, TileMultipart}
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.grid.INodeProvider
-import resonant.lib.transform.vector.{VectorWorld, Vector3}
+import resonant.lib.transform.vector.Vector3
 import resonant.lib.wrapper.ForgeDirectionWrapper._
 import resonantinduction.core.interfaces.TNodeMechanical
-import resonantinduction.mechanical.mech.gearshaft.{GearShaftNode, PartGearShaft}
+import resonantinduction.mechanical.mech.gearshaft.{NodeGearShaft, PartGearShaft}
 import resonantinduction.mechanical.mech.grid.NodeMechanical
 
 /**
@@ -18,7 +18,7 @@ import resonantinduction.mechanical.mech.grid.NodeMechanical
  */
 class NodeGear(parent: PartGear) extends NodeMechanical(parent: PartGear)
 {
-  angleDisplacement = Math.PI / 12
+  override def angleDisplacement = if (gear.getMultiBlock.isConstructed) Math.PI / 36 else Math.PI / 12
 
   protected def gear = getParent.asInstanceOf[PartGear]
 
@@ -52,8 +52,8 @@ class NodeGear(parent: PartGear) extends NodeMechanical(parent: PartGear)
     val tileBehind = new Vector3(gear.tile).add(gear.placementSide).getTileEntity(world)
     if (tileBehind.isInstanceOf[INodeProvider])
     {
-      val instance: NodeMechanical = (tileBehind.asInstanceOf[INodeProvider]).getNode(classOf[NodeMechanical], gear.placementSide.getOpposite)
-      if (instance != null && instance != this && !(instance.getParent.isInstanceOf[PartGearShaft]) && instance.canConnect(this, gear.placementSide.getOpposite))
+      val instance: NodeMechanical = tileBehind.asInstanceOf[INodeProvider].getNode(classOf[NodeMechanical], gear.placementSide.getOpposite)
+      if (instance != null && instance != this && !instance.getParent.isInstanceOf[PartGearShaft] && instance.canConnect(this, gear.placementSide.getOpposite))
       {
         connect(instance, gear.placementSide)
       }
@@ -89,7 +89,7 @@ class NodeGear(parent: PartGear) extends NodeMechanical(parent: PartGear)
       {
         val instance = checkTile.asInstanceOf[INodeProvider].getNode(classOf[NodeMechanical], gear.placementSide)
 
-        if (instance != null && instance != this && instance.canConnect(this, toDir.getOpposite) && !instance.isInstanceOf[GearShaftNode])
+        if (instance != null && instance != this && instance.canConnect(this, toDir.getOpposite) && !instance.isInstanceOf[NodeGearShaft])
         {
           connect(instance, toDir)
         }
@@ -129,13 +129,13 @@ class NodeGear(parent: PartGear) extends NodeMechanical(parent: PartGear)
           }
           else if (otherParent.isInstanceOf[PartGear])
           {
-            if ((otherParent.asInstanceOf[PartGear]).tile == gear.tile && !gear.getMultiBlock.isConstructed)
+            if (otherParent.asInstanceOf[PartGear].tile == gear.tile && !gear.getMultiBlock.isConstructed)
             {
               return true
             }
-            if ((otherParent.asInstanceOf[PartGear]).placementSide != gear.placementSide)
+            if (otherParent.asInstanceOf[PartGear].placementSide != gear.placementSide)
             {
-              val part = gear.tile.partMap((otherParent.asInstanceOf[PartGear]).placementSide.ordinal)
+              val part = gear.tile.partMap(otherParent.asInstanceOf[PartGear].placementSide.ordinal)
               if (part.isInstanceOf[PartGear])
               {
                 val sourceGear: PartGear = part.asInstanceOf[PartGear]
@@ -148,11 +148,11 @@ class NodeGear(parent: PartGear) extends NodeMechanical(parent: PartGear)
               {
                 if (gear.getMultiBlock.isConstructed)
                 {
-                  val checkPart: TMultiPart = (otherParent.asInstanceOf[PartGear]).tile.partMap(gear.placementSide.ordinal)
+                  val checkPart: TMultiPart = otherParent.asInstanceOf[PartGear].tile.partMap(gear.placementSide.ordinal)
                   if (checkPart.isInstanceOf[PartGear])
                   {
-                    val requiredDirection: ForgeDirection = (checkPart.asInstanceOf[PartGear]).getPosition.subtract(toVectorWorld).toForgeDirection
-                    return (checkPart.asInstanceOf[PartGear]).isCenterMultiBlock && (otherParent.asInstanceOf[PartGear]).placementSide == requiredDirection
+                    val requiredDirection: ForgeDirection = checkPart.asInstanceOf[PartGear].getPosition.subtract(toVectorWorld).toForgeDirection
+                    return checkPart.asInstanceOf[PartGear].isCenterMultiBlock && otherParent.asInstanceOf[PartGear].placementSide == requiredDirection
                   }
                 }
               }
@@ -172,7 +172,7 @@ class NodeGear(parent: PartGear) extends NodeMechanical(parent: PartGear)
         val sourceTile: TileEntity = toVectorWorld.add(from).getTileEntity(world)
         if (sourceTile.isInstanceOf[INodeProvider])
         {
-          val sourceInstance: NodeMechanical = (sourceTile.asInstanceOf[INodeProvider]).getNode(classOf[NodeMechanical], from.getOpposite)
+          val sourceInstance: NodeMechanical = sourceTile.asInstanceOf[INodeProvider].getNode(classOf[NodeMechanical], from.getOpposite)
           return sourceInstance == other
         }
       }
@@ -206,9 +206,9 @@ class NodeGear(parent: PartGear) extends NodeMechanical(parent: PartGear)
     return false
   }
 
-  override def inverseRotation(other: TNodeMechanical): Boolean = !other.isInstanceOf[GearShaftNode] || (other.isInstanceOf[GearShaftNode] && parent.placementSide.offset < Vector3.zero)
+  override def inverseRotation(other: TNodeMechanical): Boolean = !other.isInstanceOf[NodeGearShaft] || (other.isInstanceOf[NodeGearShaft] && parent.placementSide.offset < Vector3.zero)
 
-  override def radius( other: TNodeMechanical): Double =
+  override def radius(other: TNodeMechanical): Double =
   {
     val deltaPos = other.asInstanceOf[NodeMechanical].toVectorWorld - toVectorWorld
     val caseX = gear.placementSide.offsetX != 0 && deltaPos.y == 0 && deltaPos.z == 0
@@ -216,7 +216,7 @@ class NodeGear(parent: PartGear) extends NodeMechanical(parent: PartGear)
     val caseZ = gear.placementSide.offsetZ != 0 && deltaPos.x == 0 && deltaPos.y == 0
 
     if (caseX || caseY || caseZ)
-      return super.radius( other)
+      return super.radius(other)
 
     if (gear.getMultiBlock.isConstructed) 1.5 else super.radius(other)
   }

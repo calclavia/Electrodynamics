@@ -51,17 +51,17 @@ class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](par
   var prevAngle = 0D
 
   /**
-   * The amount of angle in radians displaced. This is used to align the gear teeth.
-   */
-  var angleDisplacement = 0D
-
-  /**
    * Events
    */
   @BeanProperty
   var onTorqueChanged: () => Unit = () => ()
   @BeanProperty
   var onVelocityChanged: () => Unit = () => ()
+
+  /**
+   * The amount of angle in radians displaced. This is used to align the gear teeth.
+   */
+  def angleDisplacement = 0D
 
   /**
    * An arbitrary angle value computed based on velocity

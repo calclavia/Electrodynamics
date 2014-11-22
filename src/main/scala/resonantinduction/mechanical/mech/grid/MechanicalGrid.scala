@@ -4,7 +4,6 @@ import resonant.api.grid.IUpdate
 import resonant.lib.grid.{GridNode, UpdateTicker}
 
 import scala.collection.convert.wrapAll._
-import scala.collection.mutable
 
 /**
  * A grid that manages the mechanical objects
@@ -12,13 +11,6 @@ import scala.collection.mutable
  */
 class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) with IUpdate
 {
-
-  /**
-   * A map marking out the relative spin directions of each node.
-   * Updated upon recache
-   */
-  val spinMap = mutable.WeakHashMap.empty[NodeMechanical, Boolean]
-
   private var load = 0D
 
   /**
@@ -37,8 +29,8 @@ class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) w
     super.populateNode(node, prev)
 
     //TODO: Check if gears are LOCKED (when two nodes obtain undesirable spins)
-    val dir = if (prev != null) if (node.inverseRotation(prev)) !spinMap(prev) else spinMap(prev) else false
-    spinMap += (node -> dir)
+//    val dir = if (prev != null) if (node.inverseRotation(prev)) !spinMap(prev) else spinMap(prev) else false
+//    spinMap += (node -> dir)
 
     //Set mechanical node's initial angle
     if (prev != null)
@@ -104,9 +96,15 @@ class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) w
     }
     else
     {
-      curr._torque += torque
-      curr._angularVelocity += angularVelocity * deltaTime
-      curr.connections.filter(!passed.contains(_)).foreach(c => recurse(deltaTime, torque, angularVelocity, passed :+ c))
+      //Calculate energy loss
+      val power = torque * angularVelocity
+      val netPower = power - load
+      val netTorque = netPower * (torque / power)
+      val netVelocity = netPower * (angularVelocity / power)
+
+      curr._torque += netTorque
+      curr._angularVelocity += netVelocity * deltaTime
+      curr.connections.filter(!passed.contains(_)).foreach(c => recurse(deltaTime, netTorque, netVelocity, passed :+ c))
     }
   }
 

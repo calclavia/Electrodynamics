@@ -39,8 +39,8 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
     if (getMultiBlock.isPrimary)
       if (world != null) sendPacket(1)
 
-//    if (mechanicalNode.angularVelocity == 0)
-//      if (world != null) sendPacket(2)
+    if (mechanicalNode.angularVelocity == 0)
+      if (world != null) sendPacket(2)
   }
 
   mechanicalNode.onGridReconstruct = () => if (world != null && !world.isRemote) sendPacket(2)

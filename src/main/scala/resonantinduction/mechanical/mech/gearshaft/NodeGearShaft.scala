@@ -8,7 +8,7 @@ import resonantinduction.core.interfaces.TNodeMechanical
 import resonantinduction.mechanical.mech.gear.{NodeGear, PartGear}
 import resonantinduction.mechanical.mech.grid.NodeMechanical
 
-class GearShaftNode(parent: PartGearShaft) extends NodeMechanical(parent)
+class NodeGearShaft(parent: PartGearShaft) extends NodeMechanical(parent)
 {
   override def getLoad: Double =
   {
