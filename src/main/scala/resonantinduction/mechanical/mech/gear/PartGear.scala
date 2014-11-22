@@ -66,7 +66,7 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
   override def activate(player: EntityPlayer, hit: MovingObjectPosition, itemStack: ItemStack): Boolean =
   {
     if (!world.isRemote)
-      println(mechanicalNode.grid)
+      println(mechanicalNode)
 
     if (itemStack != null && itemStack.getItem.isInstanceOf[ItemHandCrank])
     {

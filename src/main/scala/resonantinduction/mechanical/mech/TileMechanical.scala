@@ -32,7 +32,7 @@ abstract class TileMechanical(material: Material) extends SpatialTile(material: 
   {
     _mechanicalNode = newNode
     mechanicalNode.onVelocityChanged = () => sendPacket(1)
-    nodes.remove(nodes.filter(_.isInstanceOf[NodeMechanical]))
+    nodes.removeAll(nodes.filter(_.isInstanceOf[NodeMechanical]))
     nodes.add(mechanicalNode)
   }
 
@@ -60,7 +60,9 @@ abstract class TileMechanical(material: Material) extends SpatialTile(material: 
   override def use(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
   {
     if (!world.isRemote)
+    {
       println(mechanicalNode)
+    }
 
     //Debugging
     val itemStack: ItemStack = player.getHeldItem

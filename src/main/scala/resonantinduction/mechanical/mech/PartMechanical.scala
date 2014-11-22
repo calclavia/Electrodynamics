@@ -4,7 +4,6 @@ import codechicken.lib.data.{MCDataInput, MCDataOutput}
 import codechicken.multipart._
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.lib.grid.UpdateTicker
 import resonant.lib.transform.vector.VectorWorld
 import resonantinduction.core.prefab.part.connector.{PartAbstract, TPartNodeProvider}
 import resonantinduction.mechanical.mech.grid.NodeMechanical
@@ -22,7 +21,7 @@ abstract class PartMechanical extends PartAbstract with JNormalOcclusion with TF
   def mechanicalNode_=(mech: NodeMechanical)
   {
     _mechanicalNode = mech
-    mechanicalNode.onVelocityChanged = () => UpdateTicker.world.enqueue(() => sendPacket(1))
+    mechanicalNode.onVelocityChanged = () => if (world != null) sendPacket(1)
     nodes.add(mechanicalNode)
   }
 

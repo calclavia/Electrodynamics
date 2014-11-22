@@ -71,6 +71,7 @@ class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) w
 
     if (passed.size > 1)
     {
+      //Pass energy to every single node
       val prev = passed(passed.size - 2)
       val ratio = curr.radius(prev) / prev.radius(curr)
       val invert = if (curr.inverseRotation(prev)) -1 else 1
