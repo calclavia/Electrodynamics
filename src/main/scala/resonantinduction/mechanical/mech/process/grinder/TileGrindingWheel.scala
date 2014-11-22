@@ -20,30 +20,28 @@ import resonantinduction.mechanical.mech.TileMechanical
  */
 object TileGrindingWheel
 {
-  final val PROCESS_TIME: Int = 20 * 20
+  final val processTime: Int = 20 * 20
   /**
    * A map of ItemStacks and their remaining grind-time left.
    */
-  final val TIMER_GRIND_ITEM: Timer[EntityItem] = new Timer[EntityItem]
+  final val grindingTimer: Timer[EntityItem] = new Timer[EntityItem]
 }
 
-class TileGrindingWheel extends TileMechanical(Material.rock) with IRotatable
+class TileGrindingWheel extends TileMechanical(Material.rock)
 {
-
-  var grindingItem: EntityItem = null
+  private var grindingItem: EntityItem = null
   private final val requiredTorque: Long = 250
-  private var counter: Double = 0
+  private var counter = 0d
 
-  //Constructor
-  mechanicalNode = new GrinderNode(this)
-  bounds(new Cuboid(0.05f, 0.05f, 0.05f, 0.95f, 0.95f, 0.95f))
-  isOpaqueCube(false)
-  normalRender(false)
-  setTextureName("material_steel_dark")
+  mechanicalNode = new NodeGrinder(this)
+  bounds = new Cuboid(0.05f, 0.05f, 0.05f, 0.95f, 0.95f, 0.95f)
+  isOpaqueCube = false
+  normalRender = false
+  textureName = "material_steel_dark"
 
-  override def update
+  override def update()
   {
-    super.update
+    super.update()
     counter = Math.max(counter + Math.abs(mechanicalNode.torque), 0)
     doWork
   }
@@ -52,7 +50,7 @@ class TileGrindingWheel extends TileMechanical(Material.rock) with IRotatable
   {
     if (entity.isInstanceOf[EntityItem])
     {
-      (entity.asInstanceOf[EntityItem]).age -= 1
+      entity.asInstanceOf[EntityItem].age -= 1
     }
     if (canWork)
     {
@@ -64,9 +62,9 @@ class TileGrindingWheel extends TileMechanical(Material.rock) with IRotatable
           {
             grindingItem = entity.asInstanceOf[EntityItem]
           }
-          if (!TileGrindingWheel.TIMER_GRIND_ITEM.containsKey(entity.asInstanceOf[EntityItem]))
+          if (!TileGrindingWheel.grindingTimer.containsKey(entity.asInstanceOf[EntityItem]))
           {
-            TileGrindingWheel.TIMER_GRIND_ITEM.put(entity.asInstanceOf[EntityItem], TileGrindingWheel.PROCESS_TIME)
+            TileGrindingWheel.grindingTimer.put(entity.asInstanceOf[EntityItem], TileGrindingWheel.processTime)
           }
         }
         else
@@ -108,10 +106,7 @@ class TileGrindingWheel extends TileMechanical(Material.rock) with IRotatable
    *
    * @return
    */
-  def canWork: Boolean =
-  {
-    return counter >= requiredTorque
-  }
+  def canWork: Boolean = counter >= requiredTorque
 
   def doWork
   {
@@ -120,9 +115,9 @@ class TileGrindingWheel extends TileMechanical(Material.rock) with IRotatable
       var didWork: Boolean = false
       if (grindingItem != null)
       {
-        if (TileGrindingWheel.TIMER_GRIND_ITEM.containsKey(grindingItem) && !grindingItem.isDead && toVector3.add(0.5).distance(new Vector3(grindingItem)) < 1)
+        if (TileGrindingWheel.grindingTimer.containsKey(grindingItem) && !grindingItem.isDead && toVector3.add(0.5).distance(new Vector3(grindingItem)) < 1)
         {
-          val timeLeft: Int = TileGrindingWheel.TIMER_GRIND_ITEM.decrease(grindingItem)
+          val timeLeft: Int = TileGrindingWheel.grindingTimer.decrease(grindingItem)
           if (timeLeft <= 0)
           {
             if (this.doGrind(grindingItem))
@@ -131,13 +126,13 @@ class TileGrindingWheel extends TileMechanical(Material.rock) with IRotatable
               if (grindingItem.getEntityItem.stackSize <= 0)
               {
                 grindingItem.setDead
-                TileGrindingWheel.TIMER_GRIND_ITEM.remove(grindingItem)
+                TileGrindingWheel.grindingTimer.remove(grindingItem)
                 grindingItem = null
               }
               else
               {
                 grindingItem.setEntityItemStack(grindingItem.getEntityItem)
-                TileGrindingWheel.TIMER_GRIND_ITEM.put(grindingItem, TileGrindingWheel.PROCESS_TIME)
+                TileGrindingWheel.grindingTimer.put(grindingItem, TileGrindingWheel.processTime)
               }
             }
           }
@@ -157,7 +152,7 @@ class TileGrindingWheel extends TileMechanical(Material.rock) with IRotatable
         }
         else
         {
-          TileGrindingWheel.TIMER_GRIND_ITEM.remove(grindingItem)
+          TileGrindingWheel.grindingTimer.remove(grindingItem)
           grindingItem = null
         }
       }
@@ -195,19 +190,5 @@ class TileGrindingWheel extends TileMechanical(Material.rock) with IRotatable
       }
     }
     return results.length > 0
-  }
-
-  override def getDirection: ForgeDirection =
-  {
-    if (worldObj != null)
-    {
-      return ForgeDirection.getOrientation(getBlockMetadata)
-    }
-    return ForgeDirection.UNKNOWN
-  }
-
-  override def setDirection(direction: ForgeDirection)
-  {
-    worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, direction.ordinal, 3)
   }
 }
