@@ -43,7 +43,7 @@ class TileGrindingWheel extends TileMechanical(Material.rock)
   {
     super.update()
     counter = Math.max(counter + Math.abs(mechanicalNode.torque), 0)
-    doWork
+    doWork()
   }
 
   override def collide(entity: Entity)

@@ -30,8 +30,8 @@ class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) w
       getNodes.foreach(
         n =>
         {
-          n._torque = 0
-          n._angularVelocity = 0
+          n.torque = 0
+          n.angularVelocity = 0
         }
       )
 
@@ -77,20 +77,20 @@ class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) w
       val invert = if (curr.inverseRotation(prev)) -1 else 1
       val addTorque = torque * ratio * invert
       val addVel = angularVelocity / ratio * invert
-      curr._torque += addTorque
-      curr._angularVelocity += addVel * deltaTime
+      curr.torque += addTorque
+      curr.angularVelocity += addVel * deltaTime
       curr.connections.filter(!passed.contains(_)).foreach(c => recurse(deltaTime, addTorque, addVel, passed :+ c))
     }
     else
     {
       //Calculate energy loss
       val power = torque * angularVelocity
-      val netEnergy = power - load * deltaTime
+      val netEnergy = Math.max(power - load * deltaTime, 0)
       val netTorque = netEnergy * (torque / power)
       val netVelocity = netEnergy * (angularVelocity / power)
 
-      curr._torque += netTorque
-      curr._angularVelocity += netVelocity * deltaTime
+      curr.torque += netTorque
+      curr.angularVelocity += netVelocity * deltaTime
       curr.connections.filter(!passed.contains(_)).foreach(c => recurse(deltaTime, netTorque, netVelocity, passed :+ c))
     }
   }

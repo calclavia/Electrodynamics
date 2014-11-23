@@ -2,7 +2,7 @@ package resonantinduction.mechanical.mech.turbine
 
 import java.util.List
 
-import cpw.mods.fml.relauncher.{SideOnly, Side}
+import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.init.{Blocks, Items}
 import net.minecraft.item.{Item, ItemStack}
@@ -33,6 +33,7 @@ object TileWindTurbine
   @SideOnly(Side.CLIENT)
   val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "windTurbines.obj"))
 }
+
 class TileWindTurbine extends TileTurbine with IBoilHandler
 {
   /**
@@ -75,12 +76,12 @@ class TileWindTurbine extends TileTurbine with IBoilHandler
             computePower()
 
           windPower = MathUtility.lerp(windPower, nextWindPower, ticks % 20 / 20d)
-
           getMultiBlock.get.mechanicalNode.rotate(windPower * multiBlockRadius / 20, windPower / multiBlockRadius / 20)
         }
 
         //Generate from steam
-        getMultiBlock.get.mechanicalNode.rotate(if (gasTank.getFluid != null) gasTank.drain(gasTank.getFluidAmount, true).amount else 0 * 1000 * Settings.steamMultiplier, 10)
+        val steamPower = if (gasTank.getFluid != null) gasTank.drain(gasTank.getFluidAmount, true).amount else 0 * 1000 * Settings.steamMultiplier
+        getMultiBlock.get.mechanicalNode.rotate(steamPower * multiBlockRadius / 20, steamPower / multiBlockRadius / 20)
       }
     }
   }
@@ -134,7 +135,7 @@ class TileWindTurbine extends TileTurbine with IBoilHandler
     val hasBonus = biome.isInstanceOf[BiomeGenOcean] || biome.isInstanceOf[BiomeGenPlains] || biome == BiomeGenBase.river
     val windSpeed = (worldObj.rand.nextFloat / 5) + (yCoord / 256f) * (if (hasBonus) 1.2f else 1) + worldObj.getRainStrength(0.5f)
 
-    nextWindPower = materialMultiplier * multiblockMultiplier * windSpeed * efficiency * Settings.WIND_POWER_RATIO / 20
+    nextWindPower = 10 * materialMultiplier * multiblockMultiplier * windSpeed * efficiency * Settings.WIND_POWER_RATIO / 20
   }
 
   override def getSubBlocks(par1: Item, par2CreativeTabs: CreativeTabs, par3List: List[_])
@@ -190,10 +191,12 @@ class TileWindTurbine extends TileTurbine with IBoilHandler
     if (tier == 0)
     {
       RenderUtility.bind(Reference.blockTextureDirectory + "planks_oak.png")
-    } else if (tier == 1)
+    }
+    else if (tier == 1)
     {
       RenderUtility.bind(Reference.blockTextureDirectory + "cobblestone.png")
-    } else if (tier == 2)
+    }
+    else if (tier == 2)
     {
       RenderUtility.bind(Reference.blockTextureDirectory + "iron_block.png")
 

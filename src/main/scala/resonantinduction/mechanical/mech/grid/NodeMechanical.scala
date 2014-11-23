@@ -17,8 +17,8 @@ import scala.collection.convert.wrapAll._
  */
 class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](parent) with TTileConnector[NodeMechanical] with TMultipartNode[NodeMechanical] with TNodeMechanical with IVectorWorld
 {
-  protected[grid] var _torque = 0D
-  protected[grid] var _angularVelocity = 0D
+  private var _torque = 0D
+  private var _angularVelocity = 0D
 
   protected[grid] var prevTorque = 0D
   protected[grid] var prevAngularVelocity = 0D
@@ -38,6 +38,8 @@ class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](par
    * @return force
    */
   override def torque = _torque
+
+  def torque_=(newTorque: Double) = _torque = newTorque
 
   /**
    * Buffer values used by the grid to transfer mechanical energy.
