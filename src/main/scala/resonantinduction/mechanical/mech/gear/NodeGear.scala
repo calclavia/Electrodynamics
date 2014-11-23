@@ -1,7 +1,7 @@
 package resonantinduction.mechanical.mech.gear
 
 import codechicken.lib.vec.Rotation
-import codechicken.multipart.{TMultiPart, TileMultipart}
+import codechicken.multipart.TileMultipart
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.grid.INodeProvider
@@ -49,29 +49,36 @@ class NodeGear(parent: PartGear) extends NodeMechanical(parent: PartGear)
       return
     }
 
+    //Check behind
     val tileBehind = new Vector3(gear.tile).add(gear.placementSide).getTileEntity(world)
     if (tileBehind.isInstanceOf[INodeProvider])
     {
-      val instance: NodeMechanical = tileBehind.asInstanceOf[INodeProvider].getNode(classOf[NodeMechanical], gear.placementSide.getOpposite)
-      if (instance != null && instance != this && !instance.getParent.isInstanceOf[PartGearShaft] && instance.canConnect(this, gear.placementSide.getOpposite))
+      val other = tileBehind.asInstanceOf[INodeProvider].getNode(classOf[NodeMechanical], gear.placementSide.getOpposite)
+
+      if (other != null && other != this && !other.getParent.isInstanceOf[PartGearShaft] && other.canConnect(this, gear.placementSide.getOpposite))
       {
-        connect(instance, gear.placementSide)
+        connect(other, gear.placementSide)
       }
     }
+
+    //Check internal
     for (i <- 0 until 6)
     {
-      val checkDir: ForgeDirection = ForgeDirection.getOrientation(i)
+      val toDir = if (ForgeDirection.getOrientation(i) == gear.placementSide.getOpposite) ForgeDirection.UNKNOWN else ForgeDirection.getOrientation(i)
       var tile: TileEntity = gear.tile
-      if (gear.getMultiBlock.isConstructed && checkDir != gear.placementSide && checkDir != gear.placementSide.getOpposite)
+
+      if (gear.getMultiBlock.isConstructed && toDir != gear.placementSide && toDir != gear.placementSide.getOpposite)
       {
-        tile = new Vector3(gear.tile).add(checkDir).getTileEntity(world)
+        tile = new Vector3(gear.tile).add(toDir).getTileEntity(world)
       }
+
       if (tile.isInstanceOf[INodeProvider])
       {
-        val instance: NodeMechanical = tile.asInstanceOf[INodeProvider].getNode(classOf[NodeMechanical], if (checkDir == gear.placementSide.getOpposite) ForgeDirection.UNKNOWN else checkDir).asInstanceOf[NodeMechanical]
-        if (!directionMap.containsValue(checkDir) && instance != this && checkDir != gear.placementSide && instance != null && instance.canConnect(this, checkDir.getOpposite))
+        val other = tile.asInstanceOf[INodeProvider].getNode(classOf[NodeMechanical], toDir)
+
+        if (other != this && toDir != gear.placementSide && other != null && canConnect(other, toDir) && other.canConnect(this, toDir.getOpposite))
         {
-          connect(instance, checkDir)
+          connect(other, toDir)
         }
       }
     }
@@ -89,7 +96,7 @@ class NodeGear(parent: PartGear) extends NodeMechanical(parent: PartGear)
       {
         val other = checkTile.asInstanceOf[INodeProvider].getNode(classOf[NodeMechanical], gear.placementSide)
 
-        if (other != null && other != this && canConnect(other, toDir.getOpposite) && other.canConnect(this, toDir) && !other.isInstanceOf[NodeGearShaft])
+        if (other != null && other != this && canConnect(other, toDir) && other.canConnect(this, toDir.getOpposite) && !other.isInstanceOf[NodeGearShaft])
         {
           connect(other, toDir)
         }
@@ -129,9 +136,11 @@ class NodeGear(parent: PartGear) extends NodeMechanical(parent: PartGear)
           }
           else if (otherParent.isInstanceOf[PartGear])
           {
-            if (otherParent.asInstanceOf[PartGear].tile == gear.tile && !gear.getMultiBlock.isConstructed)
+            //Check internal gears
+              if (otherParent.asInstanceOf[PartGear].tile == parent.tile && !parent.getMultiBlock.isConstructed)
             {
               return true
+//              otherParent.asInstanceOf[PartGear].placementSide != parent.placementSide.getOpposite
             }
             if (otherParent.asInstanceOf[PartGear].placementSide != gear.placementSide)
             {
@@ -148,10 +157,10 @@ class NodeGear(parent: PartGear) extends NodeMechanical(parent: PartGear)
               {
                 if (gear.getMultiBlock.isConstructed)
                 {
-                  val checkPart: TMultiPart = otherParent.asInstanceOf[PartGear].tile.partMap(gear.placementSide.ordinal)
+                  val checkPart = otherParent.asInstanceOf[PartGear].tile.partMap(gear.placementSide.ordinal)
                   if (checkPart.isInstanceOf[PartGear])
                   {
-                    val requiredDirection: ForgeDirection = checkPart.asInstanceOf[PartGear].getPosition.subtract(toVectorWorld).toForgeDirection
+                    val requiredDirection = checkPart.asInstanceOf[PartGear].getPosition.subtract(toVectorWorld).toForgeDirection
                     return checkPart.asInstanceOf[PartGear].isCenterMultiBlock && otherParent.asInstanceOf[PartGear].placementSide == requiredDirection
                   }
                 }
@@ -159,7 +168,8 @@ class NodeGear(parent: PartGear) extends NodeMechanical(parent: PartGear)
             }
           }
         }
-        val sourceTile: TileEntity = toVectorWorld.add(from.getOpposite).getTileEntity(world)
+
+        val sourceTile = toVectorWorld.add(from.getOpposite).getTileEntity(world)
         if (sourceTile.isInstanceOf[INodeProvider])
         {
           val sourceInstance = sourceTile.asInstanceOf[INodeProvider].getNode(classOf[NodeMechanical], from)
@@ -176,7 +186,7 @@ class NodeGear(parent: PartGear) extends NodeMechanical(parent: PartGear)
           return sourceInstance == other
         }
       }
-      else
+      else if (from != ForgeDirection.UNKNOWN)
       {
         //This object is from the sides of the gear. It can either be a gear within this block or outside
         if (other.isInstanceOf[NodeGear])
@@ -197,7 +207,7 @@ class NodeGear(parent: PartGear) extends NodeMechanical(parent: PartGear)
             {
               //We found another gear, but check if we are connecting to the center spaces of the gear
               //If this is a multiblock, "otherTile" would be the center of that gear, not the adjacent
-              val adjacentTile = toVectorWorld.add(from.getOpposite).getTileEntity
+              val adjacentTile = toVectorWorld.add(from).getTileEntity
 
               if (adjacentTile.isInstanceOf[TileMultipart])
               {
