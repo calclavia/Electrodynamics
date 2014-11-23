@@ -6,6 +6,7 @@ import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.init.{Blocks, Items}
 import net.minecraft.item.{Item, ItemStack}
+import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.ResourceLocation
 import net.minecraft.world.biome.{BiomeGenBase, BiomeGenOcean, BiomeGenPlains}
 import net.minecraftforge.client.model.AdvancedModelLoader
@@ -18,6 +19,7 @@ import resonant.lib.render.RenderUtility
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.MathUtility
 import resonant.lib.utility.inventory.InventoryUtility
+import resonant.lib.wrapper.NBTWrapper._
 import resonant.lib.wrapper.WrapList._
 import resonantinduction.core.{Reference, Settings}
 
@@ -39,7 +41,7 @@ class TileWindTurbine extends TileTurbine with IBoilHandler
   /**
    * Wind simulations
    */
-  private final val openBlockCache = new Array[Byte](224)
+  private var openBlockCache = new Array[Byte](224)
   private var checkCount = 0
   private var efficiency = 0f
   private var windPower = 0d
@@ -122,7 +124,7 @@ class TileWindTurbine extends TileTurbine with IBoilHandler
     efficiency = efficiency - openBlockCache(checkCount) + openAirBlocks
     openBlockCache(checkCount) = openAirBlocks.toByte
     checkCount = (checkCount + 1) % (openBlockCache.length - 1)
-    val multiblockMultiplier = multiBlockRadius + 0.5f
+    val multiblockMultiplier = (multiBlockRadius / 2) * (multiBlockRadius / 2)
 
     val materialMultiplier = tier match
     {
@@ -157,6 +159,24 @@ class TileWindTurbine extends TileTurbine with IBoilHandler
   override def canDrain(from: ForgeDirection, fluid: Fluid): Boolean = false
 
   override def getTankInfo(from: ForgeDirection): Array[FluidTankInfo] = Array(gasTank.getInfo)
+
+  /** Reads a tile entity from NBT. */
+  override def readFromNBT(nbt: NBTTagCompound)
+  {
+    super.readFromNBT(nbt)
+    checkCount = nbt.getInteger("checkCount")
+    efficiency = nbt.getFloat("efficiency")
+    openBlockCache = nbt.getArray[Byte]("openBlockCache")
+  }
+
+  /** Writes a tile entity to NBT. */
+  override def writeToNBT(nbt: NBTTagCompound)
+  {
+    super.writeToNBT(nbt)
+    nbt.setInteger("checkCount", checkCount)
+    nbt.setFloat("efficiency", efficiency)
+    nbt.setArray("openBlockCache", openBlockCache)
+  }
 
   @SideOnly(Side.CLIENT)
   override def renderDynamic(pos: Vector3, frame: Float, pass: Int): Unit =

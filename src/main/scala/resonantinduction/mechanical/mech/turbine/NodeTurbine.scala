@@ -37,15 +37,6 @@ class NodeTurbine(parent: TileTurbine) extends NodeMechanical(parent)
 
   override def canConnect[B <: NodeMechanical](other: B, from: ForgeDirection): Boolean =
   {
-    if (!other.isInstanceOf[NodeTurbine])
-      println(other.getClass + " vs " + turbine.getDirection)
-
     return turbine.getMultiBlock.isPrimary && other.isInstanceOf[NodeMechanical] && !other.isInstanceOf[NodeTurbine] && from == turbine.getDirection
   }
-
-  /**
-  override def inverseRotation(dir: ForgeDirection): Boolean =
-  {
-    return dir == turbine.getDirection.getOpposite
-  } */
 }

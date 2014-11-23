@@ -64,24 +64,6 @@ class TileTurbine extends TileMechanical(Material.wood) with IMultiBlockStructur
   {
   }
 
-  /** Reads a tile entity from NBT. */
-  override def readFromNBT(nbt: NBTTagCompound)
-  {
-    super.readFromNBT(nbt)
-    multiBlockRadius = nbt.getInteger("multiBlockRadius")
-    tier = nbt.getInteger("tier")
-    getMultiBlock.load(nbt)
-  }
-
-  /** Writes a tile entity to NBT. */
-  override def writeToNBT(nbt: NBTTagCompound)
-  {
-    super.writeToNBT(nbt)
-    nbt.setInteger("multiBlockRadius", multiBlockRadius)
-    nbt.setInteger("tier", tier)
-    getMultiBlock.save(nbt)
-  }
-
   @SideOnly(Side.CLIENT)
   override def getRenderBoundingBox: AxisAlignedBB =
   {
@@ -127,12 +109,22 @@ class TileTurbine extends TileMechanical(Material.wood) with IMultiBlockStructur
     worldObj.markBlockForUpdate(xCoord, yCoord, zCoord)
   }
 
-  override def write(buf: ByteBuf, id: Int)
+  /** Reads a tile entity from NBT. */
+  override def readFromNBT(nbt: NBTTagCompound)
   {
-    super.write(buf, id)
+    super.readFromNBT(nbt)
+    multiBlockRadius = nbt.getInteger("multiBlockRadius")
+    tier = nbt.getInteger("tier")
+    getMultiBlock.load(nbt)
+  }
 
-    if (id == 0)
-      buf <<<< writeToNBT
+  /** Writes a tile entity to NBT. */
+  override def writeToNBT(nbt: NBTTagCompound)
+  {
+    super.writeToNBT(nbt)
+    nbt.setInteger("multiBlockRadius", multiBlockRadius)
+    nbt.setInteger("tier", tier)
+    getMultiBlock.save(nbt)
   }
 
   override def read(buf: ByteBuf, id: Int, packetType: PacketType)
@@ -140,7 +132,23 @@ class TileTurbine extends TileMechanical(Material.wood) with IMultiBlockStructur
     super.read(buf, id, packetType)
 
     if (id == 0)
-      buf >>>> readFromNBT
+    {
+      multiBlockRadius = buf.readInt()
+      tier = buf.readInt()
+      buf >>>> getMultiBlock.load
+    }
+  }
+
+  override def write(buf: ByteBuf, id: Int)
+  {
+    super.write(buf, id)
+
+    if (id == 0)
+    {
+      buf <<< multiBlockRadius
+      buf <<< tier
+      buf <<<< getMultiBlock.save
+    }
   }
 
   def getWorld: World =
