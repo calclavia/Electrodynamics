@@ -9,7 +9,7 @@ import resonantinduction.mechanical.mech.grid.NodeMechanical
  */
 class NodeGrinder(parent: TileGrindingWheel) extends NodeMechanical(parent: TileGrindingWheel)
 {
-  override def getLoad = 1000d
+  override def getLoad = 1000d * angularVelocity
 
   override def canConnect[B <: NodeMechanical](other: B, from: ForgeDirection): Boolean =
   {

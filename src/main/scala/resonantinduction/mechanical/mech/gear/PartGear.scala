@@ -43,14 +43,21 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
       if (world != null) sendPacket(2)
   }
 
-  mechanicalNode.onGridReconstruct = () => if (world != null && !world.isRemote) sendPacket(2)
+  mechanicalNode.onGridReconstruct = () =>
+  {
+    if (world != null)
+    {
+      sendPacket(1)
+      sendPacket(2)
+    }
+  }
 
   //TODO: Can we not have update ticks here?
   override def update()
   {
     super.update()
 
-    if (!this.world.isRemote)
+    if (!world.isRemote)
     {
       if (manualCrankTime > 0)
       {
@@ -66,7 +73,7 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
   override def activate(player: EntityPlayer, hit: MovingObjectPosition, itemStack: ItemStack): Boolean =
   {
     if (!world.isRemote)
-      println(mechanicalNode)
+      println(mechanicalNode + " in " + mechanicalNode.grid)
 
     if (itemStack != null && itemStack.getItem.isInstanceOf[ItemHandCrank])
     {

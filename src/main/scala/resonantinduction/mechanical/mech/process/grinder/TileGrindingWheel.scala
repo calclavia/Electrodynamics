@@ -44,6 +44,12 @@ class TileGrindingWheel extends TileMechanical(Material.rock)
     super.update()
     counter = Math.max(counter + Math.abs(mechanicalNode.torque), 0)
     doWork()
+
+    if(!world.isRemote)
+    {
+      println(mechanicalNode)
+      sendPacket(1)
+    }
   }
 
   override def collide(entity: Entity)
