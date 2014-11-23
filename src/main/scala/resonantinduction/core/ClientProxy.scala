@@ -55,11 +55,9 @@ import resonantinduction.mechanical.mech.turbine._
     ItemRenderHandler.register(MechanicalContent.itemGearShaft, RenderGearShaft)
     ItemRenderHandler.register(MechanicalContent.itemPipe, RenderPipe)
     ItemRenderHandler.register(Item.getItemFromBlock(MechanicalContent.blockWaterTurbine), new RenderWaterTurbine)
-    ItemRenderHandler.register(Item.getItemFromBlock(MechanicalContent.blockWindTurbine), new RenderWindTurbine)
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileMechanicalPiston], new RenderMechanicalPiston)
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileGrindingWheel], new RenderGrindingWheel)
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileWaterTurbine], new RenderWaterTurbine)
-    ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileWindTurbine], new RenderWindTurbine)
 
     //Electrical content
     ItemRenderHandler.register(ElectricalContent.itemTransformer, RenderTransformer)

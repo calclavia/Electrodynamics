@@ -10,23 +10,20 @@ import net.minecraft.entity.item.EntityItem
 import net.minecraft.init.Blocks
 import net.minecraft.item.ItemStack
 import net.minecraft.util.{AxisAlignedBB, ResourceLocation}
-import net.minecraftforge.client.IItemRenderer
 import net.minecraftforge.client.model.{AdvancedModelLoader, IModelCustom}
-import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.IFluidBlock
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL11._
 import resonant.api.recipe.MachineRecipes
 import resonant.content.factory.resources.RecipeType
-import resonant.content.factory.resources.block.BlockFluidMixture
 import resonant.engine.ResonantEngine
+import resonant.lib.prefab.block.BlockFluidMixture
 import resonant.lib.render.RenderUtility
+import resonant.lib.transform.rotation.Quaternion
+import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.Timer
 import resonantinduction.core.Reference
 import resonantinduction.mechanical.mech.TileMechanical
-import resonant.api.grid.INode
-import resonant.lib.transform.rotation.Quaternion
-import resonant.lib.transform.vector.Vector3
 
 import scala.collection.JavaConversions._
 
@@ -182,7 +179,7 @@ class TileMixer extends TileMechanical(Material.iron)
         if (block.isInstanceOf[BlockFluidMixture])
         {
           val itemStack: ItemStack = entity.getEntityItem.copy
-          if ((block.asInstanceOf[BlockFluidMixture]).mix(worldObj, mixPosition.xi, mixPosition.yi, mixPosition.zi, itemStack))
+          if (block.asInstanceOf[BlockFluidMixture].mix(worldObj, mixPosition.xi, mixPosition.yi, mixPosition.zi, itemStack))
           {
             worldObj.notifyBlocksOfNeighborChange(mixPosition.xi, mixPosition.yi, mixPosition.zi, mixPosition.getBlock(worldObj))
             return true

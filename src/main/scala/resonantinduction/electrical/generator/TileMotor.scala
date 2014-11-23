@@ -36,6 +36,7 @@ class TileMotor extends TileAdvanced(Material.iron) with TElectric with TSpatial
 
   private var gearRatio = 0
 
+  textureName = "material_wood_surface"
   normalRender = false
   isOpaqueCube = false
   nodes.add(dcNode)

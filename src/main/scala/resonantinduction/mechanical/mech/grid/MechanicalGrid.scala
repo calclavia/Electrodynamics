@@ -37,7 +37,7 @@ class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) w
 
       getNodes.filter(n => n.bufferTorque != 0 && n.bufferAngularVelocity != 0).foreach(n => recurse(deltaTime, n.bufferTorque, n.bufferAngularVelocity, Seq(n)))
 
-      //UpdateTicker world enqueue
+      //      UpdateTicker.world.enqueue(resetNodes)
       resetNodes()
     }
   }

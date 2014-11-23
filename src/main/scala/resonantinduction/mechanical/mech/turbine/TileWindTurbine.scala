@@ -2,18 +2,23 @@ package resonantinduction.mechanical.mech.turbine
 
 import java.util.List
 
+import cpw.mods.fml.relauncher.{SideOnly, Side}
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.init.{Blocks, Items}
 import net.minecraft.item.{Item, ItemStack}
+import net.minecraft.util.ResourceLocation
 import net.minecraft.world.biome.{BiomeGenBase, BiomeGenOcean, BiomeGenPlains}
+import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.{Fluid, FluidStack, FluidTank, FluidTankInfo}
+import org.lwjgl.opengl.GL11
 import resonant.api.IBoilHandler
 import resonant.content.prefab.itemblock.ItemBlockMetadata
+import resonant.lib.render.RenderUtility
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.inventory.InventoryUtility
 import resonant.lib.wrapper.WrapList._
-import resonantinduction.core.Settings
+import resonantinduction.core.{Reference, Settings}
 
 /**
  * The vertical wind turbine collects airflow.
@@ -22,6 +27,11 @@ import resonantinduction.core.Settings
  *
  * @author Calclavia
  */
+object TileWindTurbine
+{
+  @SideOnly(Side.CLIENT)
+  val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "windTurbines.obj"))
+}
 class TileWindTurbine extends TileTurbine with IBoilHandler
 {
   /**
@@ -58,17 +68,15 @@ class TileWindTurbine extends TileTurbine with IBoilHandler
         //Only execute code in the primary block
         if (getDirection.offsetY == 0)
         {
-          //This is a vertical wind turbine
+          //This is a vertical wind turbine, generate from airflow
           if (ticks % 20 == 0)
             computePower()
 
           getMultiBlock.get.mechanicalNode.rotate(windPower * multiBlockRadius / 20, windPower / multiBlockRadius / 20)
         }
-        else
-        {
-          //This is a horizontal turbine
-          getMultiBlock.get.mechanicalNode.rotate(if (gasTank.getFluid != null) gasTank.drain(gasTank.getFluidAmount, true).amount else 0 * 1000 * Settings.steamMultiplier, 10)
-        }
+
+        //Generate from steam
+        getMultiBlock.get.mechanicalNode.rotate(if (gasTank.getFluid != null) gasTank.drain(gasTank.getFluidAmount, true).amount else 0 * 1000 * Settings.steamMultiplier, 10)
       }
     }
   }
@@ -144,4 +152,73 @@ class TileWindTurbine extends TileTurbine with IBoilHandler
   override def canDrain(from: ForgeDirection, fluid: Fluid): Boolean = false
 
   override def getTankInfo(from: ForgeDirection): Array[FluidTankInfo] = Array(gasTank.getInfo)
+
+  @SideOnly(Side.CLIENT)
+  override def renderDynamic(pos: Vector3, frame: Float, pass: Int): Unit =
+  {
+    if (getMultiBlock.isPrimary)
+    {
+      GL11.glPushMatrix()
+      GL11.glTranslated(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5)
+      GL11.glPushMatrix()
+      RenderUtility.rotateBlockBasedOnDirectionUp(getDirection)
+      GL11.glTranslatef(0, 0.35f, 0)
+      GL11.glRotatef(180, 1, 0, 0)
+      GL11.glRotatef(Math.toDegrees(mechanicalNode.angle).asInstanceOf[Float], 0, 1, 0)
+      render(tier, multiBlockRadius, getMultiBlock.isConstructed)
+      GL11.glPopMatrix()
+      GL11.glPopMatrix()
+    }
+  }
+
+  @SideOnly(Side.CLIENT)
+  override def renderInventory(itemStack: ItemStack)
+  {
+    GL11.glPushMatrix()
+    GL11.glTranslatef(0.5f, 0.5f, 0.5f)
+    render(itemStack.getItemDamage, 1, false)
+    GL11.glPopMatrix()
+  }
+
+  @SideOnly(Side.CLIENT)
+  def render(tier: Int, size: Int, isConstructed: Boolean)
+  {
+    if (tier == 0)
+    {
+      RenderUtility.bind(Reference.blockTextureDirectory + "planks_oak.png")
+    } else if (tier == 1)
+    {
+      RenderUtility.bind(Reference.blockTextureDirectory + "cobblestone.png")
+    } else if (tier == 2)
+    {
+      RenderUtility.bind(Reference.blockTextureDirectory + "iron_block.png")
+
+    }
+    if (isConstructed)
+    {
+      GL11.glScalef(0.3f, 1, 0.3f)
+      GL11.glScalef(size * 2 + 1, Math.min(size, 2), size * 2 + 1)
+      if (tier == 2)
+      {
+        GL11.glTranslatef(0, -0.11f, 0)
+        TileWindTurbine.model.renderOnly("LargeMetalBlade")
+        TileWindTurbine.model.renderOnly("LargeMetalHub")
+      }
+      else
+      {
+        TileWindTurbine.model.renderOnly("LargeBladeArm")
+        GL11.glScalef(1f, 2f, 1f)
+        GL11.glTranslatef(0, -0.05f, 0)
+        TileWindTurbine.model.renderOnly("LargeHub")
+        RenderUtility.bind(Reference.blockTextureDirectory + "wool_colored_white.png")
+        TileWindTurbine.model.renderOnly("LargeBlade")
+      }
+    }
+    else
+    {
+      TileWindTurbine.model.renderOnly("SmallBlade")
+      RenderUtility.bind(Reference.blockTextureDirectory + "log_oak.png")
+      TileWindTurbine.model.renderOnly("SmallHub")
+    }
+  }
 }

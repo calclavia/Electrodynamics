@@ -108,7 +108,7 @@ class TileGrindingWheel extends TileMechanical(Material.rock)
    */
   def canWork: Boolean = counter >= requiredTorque
 
-  def doWork
+  def doWork()
   {
     if (canWork)
     {
@@ -125,7 +125,7 @@ class TileGrindingWheel extends TileMechanical(Material.rock)
               grindingItem.getEntityItem.stackSize -= 1;
               if (grindingItem.getEntityItem.stackSize <= 0)
               {
-                grindingItem.setDead
+                grindingItem.setDead()
                 TileGrindingWheel.grindingTimer.remove(grindingItem)
                 grindingItem = null
               }

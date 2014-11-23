@@ -110,5 +110,5 @@ class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](par
    */
   override protected def getCompareClass = classOf[NodeMechanical]
 
-  override def toString = "NodeMechanical[Connections: " + connections.size() + " Torque: " + torque + " Angular Velocity:" + angularVelocity + "]"
+  override def toString = "NodeMechanical[Connections: " + connections.size() + " Torque: " + torque + " Angular Velocity: " + angularVelocity + "]"
 }

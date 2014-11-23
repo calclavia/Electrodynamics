@@ -30,10 +30,10 @@ class TileTurbine extends TileMechanical(Material.wood) with IMultiBlockStructur
   private val multiBlock = new TurbineMBlockHandler(this)
 
   //Constructor
+  mechanicalNode = new NodeTurbine(this)
   normalRender = false
   isOpaqueCube = false
-  setTextureName("material_wood_surface")
-  mechanicalNode = new NodeTurbine(this)
+  textureName = "material_wood_surface"
   rotationMask = 63
 
   override def onRemove(block: Block, par1: Int)
