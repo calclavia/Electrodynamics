@@ -10,9 +10,8 @@ import resonantinduction.core.Reference
 /** Event handler for texture events
   * @author Calclavia
   */
-class TextureHookHandler
+object TextureHookHandler
 {
-
   @SubscribeEvent
   @SideOnly(Side.CLIENT)
   def preTextureHook(event: TextureStitchEvent.Pre)
@@ -40,7 +39,8 @@ class TextureHookHandler
   }
 
   @SubscribeEvent
-  @SideOnly(Side.CLIENT) def postTextureHook(event: TextureStitchEvent.Post)
+  @SideOnly(Side.CLIENT)
+  def postTextureHook(event: TextureStitchEvent.Post)
   {
     AtomicContent.FLUID_URANIUM_HEXAFLOURIDE.setIcons(RenderUtility.loadedIconMap.get(Reference.prefix + "uraniumHexafluoride"))
     AtomicContent.FLUID_STEAM.setIcons(RenderUtility.loadedIconMap.get(Reference.prefix + "steam"))

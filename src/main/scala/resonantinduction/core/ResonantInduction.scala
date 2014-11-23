@@ -15,7 +15,7 @@ import resonantinduction.archaic.ArchaicContent
 import resonantinduction.atomic.AtomicContent
 import resonantinduction.core.handler.TextureHookHandler
 import resonantinduction.electrical.ElectricalContent
-import resonantinduction.mechanical.MechanicalContent
+import resonantinduction.mechanical.{MechanicalContent, MicroblockHighlightHandler}
 
 import scala.collection.convert.wrapAll._
 
@@ -45,7 +45,8 @@ final object ResonantInduction
     Settings.config = new Configuration(evt.getSuggestedConfigurationFile)
     ConfigHandler.sync(Settings, Settings.config)
 
-    MinecraftForge.EVENT_BUS.register(new TextureHookHandler)
+    MinecraftForge.EVENT_BUS.register(TextureHookHandler)
+    MinecraftForge.EVENT_BUS.register(MicroblockHighlightHandler)
 
     loadables.applyModule(proxy)
     loadables.applyModule(packetHandler)
