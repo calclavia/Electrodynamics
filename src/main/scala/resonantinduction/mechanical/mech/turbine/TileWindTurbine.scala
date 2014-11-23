@@ -16,6 +16,7 @@ import resonant.api.IBoilHandler
 import resonant.content.prefab.itemblock.ItemBlockMetadata
 import resonant.lib.render.RenderUtility
 import resonant.lib.transform.vector.Vector3
+import resonant.lib.utility.MathUtility
 import resonant.lib.utility.inventory.InventoryUtility
 import resonant.lib.wrapper.WrapList._
 import resonantinduction.core.{Reference, Settings}
@@ -41,6 +42,7 @@ class TileWindTurbine extends TileTurbine with IBoilHandler
   private var checkCount = 0
   private var efficiency = 0f
   private var windPower = 0d
+  private var nextWindPower = 0d
 
   /**
    * Steam simulations
@@ -71,6 +73,8 @@ class TileWindTurbine extends TileTurbine with IBoilHandler
           //This is a vertical wind turbine, generate from airflow
           if (ticks % 20 == 0)
             computePower()
+
+          windPower = MathUtility.lerp(windPower, nextWindPower, ticks % 20 / 20d)
 
           getMultiBlock.get.mechanicalNode.rotate(windPower * multiBlockRadius / 20, windPower / multiBlockRadius / 20)
         }
@@ -130,7 +134,7 @@ class TileWindTurbine extends TileTurbine with IBoilHandler
     val hasBonus = biome.isInstanceOf[BiomeGenOcean] || biome.isInstanceOf[BiomeGenPlains] || biome == BiomeGenBase.river
     val windSpeed = (worldObj.rand.nextFloat / 5) + (yCoord / 256f) * (if (hasBonus) 1.2f else 1) + worldObj.getRainStrength(0.5f)
 
-    windPower = materialMultiplier * multiblockMultiplier * windSpeed * efficiency * Settings.WIND_POWER_RATIO / 20
+    nextWindPower = materialMultiplier * multiblockMultiplier * windSpeed * efficiency * Settings.WIND_POWER_RATIO / 20
   }
 
   override def getSubBlocks(par1: Item, par2CreativeTabs: CreativeTabs, par3List: List[_])
