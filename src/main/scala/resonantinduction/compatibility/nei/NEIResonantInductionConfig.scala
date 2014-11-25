@@ -1,8 +1,6 @@
 package resonantinduction.compatibility.nei
 
 import codechicken.nei.api.{API, IConfigureNEI}
-import net.minecraft.item.ItemStack
-import resonant.engine.ResonantEngine
 
 class NEIResonantInductionConfig extends IConfigureNEI
 {
@@ -18,10 +16,8 @@ class NEIResonantInductionConfig extends IConfigureNEI
         API.registerUsageHandler(new RISawmillRecipeHandler)
         API.registerRecipeHandler(new RISmelterRecipeHandler)
         API.registerUsageHandler(new RISmelterRecipeHandler)
-        import scala.collection.JavaConversions._
-        for (block <- ResonantEngine.resourceFactory.mixtureFactory.blockMixtureFluids.values) API.hideItem(new ItemStack(block))
-        import scala.collection.JavaConversions._
-        for (block <- ResonantEngine.resourceFactory.moltenFactory.blockMoltenFluids.values) API.hideItem(new ItemStack(block))
+        //for (block <- ResonantEngine.resourceFactory.mixtureFactory.blockMixtureFluids.values) API.hideItem(new ItemStack(block))
+        //for (block <- ResonantEngine.resourceFactory.moltenFactory.blockMoltenFluids.values) API.hideItem(new ItemStack(block))
     }
 
     def getName: String =
