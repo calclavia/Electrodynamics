@@ -163,7 +163,7 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
 
   override def getNode[N <: INode](nodeType: Class[_ <: N], from: ForgeDirection): N =
   {
-    if (nodeType.isAssignableFrom(mechanicalNode.getClass))
+    if (nodeType.isAssignableFrom(mechanicalNode.getClass) && from == placementSide)
       return getMultiBlock.get.mechanicalNode.asInstanceOf[N]
 
     return null.asInstanceOf[N]

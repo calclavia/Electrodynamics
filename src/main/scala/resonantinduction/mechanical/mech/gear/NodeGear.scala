@@ -122,68 +122,78 @@ class NodeGear(parent: PartGear) extends NodeMechanical(parent: PartGear)
     {
       val otherParent = other.getParent
 
-      if (from == gear.placementSide.getOpposite)
+      if (from == gear.placementSide)
       {
-        //This object is coming from the front of the gear
-        if (otherParent.isInstanceOf[PartGear] || otherParent.isInstanceOf[PartGearShaft])
+        //This object is coming from the back of the gear
+
+        //Check if it's a gear that's connected back-to-back
+        if (otherParent.isInstanceOf[PartGear])
         {
-          if (otherParent.isInstanceOf[PartGearShaft])
+          val otherGearPart = otherParent.asInstanceOf[PartGear]
+
+          if (otherGearPart.placementSide == parent.placementSide.getOpposite)
           {
-            //We are connecting to a shaft.
-            val shaft = otherParent.asInstanceOf[PartGearShaft]
-            //Check if the shaft is directing connected to the center of the gear (multiblock cases) and also its direction to make sure the shaft is facing the gear itself
-            return /*shaft.tile.partMap(from.getOpposite.ordinal) != gear && */ Math.abs(shaft.placementSide.offsetX) == Math.abs(gear.placementSide.offsetX) && Math.abs(shaft.placementSide.offsetY) == Math.abs(gear.placementSide.offsetY) && Math.abs(shaft.placementSide.offsetZ) == Math.abs(gear.placementSide.offsetZ)
+            //Check if it is the center of another gear (if it is a multiblock)
+            return otherGearPart.getMultiBlock.isPrimary
           }
-          else if (otherParent.isInstanceOf[PartGear])
+        }
+
+        //It's not a gear. It might be be another tile node
+        val sourceTile = toVectorWorld.add(from).getTileEntity(world)
+
+        if (sourceTile.isInstanceOf[INodeProvider])
+        {
+          //Found a potential node. Check if it is actually adjacent to the gear.
+          val sourceInstance = sourceTile.asInstanceOf[INodeProvider].getNode(classOf[NodeMechanical], from)
+          return sourceInstance == other
+        }
+      }
+      else if (from == gear.placementSide.getOpposite)
+      {
+        //This object is from the front of the gear
+
+        //Check if it's a gear internally
+        if (otherParent.isInstanceOf[PartGear])
+        {
+          //Check internal gears
+          if (otherParent.asInstanceOf[PartGear].tile == parent.tile && !parent.getMultiBlock.isConstructed)
           {
-            //Check internal gears
-              if (otherParent.asInstanceOf[PartGear].tile == parent.tile && !parent.getMultiBlock.isConstructed)
+            return true
+            //              otherParent.asInstanceOf[PartGear].placementSide != parent.placementSide.getOpposite
+          }
+          if (otherParent.asInstanceOf[PartGear].placementSide != gear.placementSide)
+          {
+            val part = gear.tile.partMap(otherParent.asInstanceOf[PartGear].placementSide.ordinal)
+            if (part.isInstanceOf[PartGear])
             {
-              return true
-//              otherParent.asInstanceOf[PartGear].placementSide != parent.placementSide.getOpposite
-            }
-            if (otherParent.asInstanceOf[PartGear].placementSide != gear.placementSide)
-            {
-              val part = gear.tile.partMap(otherParent.asInstanceOf[PartGear].placementSide.ordinal)
-              if (part.isInstanceOf[PartGear])
+              val sourceGear: PartGear = part.asInstanceOf[PartGear]
+              if (sourceGear.isCenterMultiBlock && !sourceGear.getMultiBlock.isPrimary)
               {
-                val sourceGear: PartGear = part.asInstanceOf[PartGear]
-                if (sourceGear.isCenterMultiBlock && !sourceGear.getMultiBlock.isPrimary)
-                {
-                  return true
-                }
+                return true
               }
-              else
+            }
+            else
+            {
+              if (gear.getMultiBlock.isConstructed)
               {
-                if (gear.getMultiBlock.isConstructed)
+                val checkPart = otherParent.asInstanceOf[PartGear].tile.partMap(gear.placementSide.ordinal)
+                if (checkPart.isInstanceOf[PartGear])
                 {
-                  val checkPart = otherParent.asInstanceOf[PartGear].tile.partMap(gear.placementSide.ordinal)
-                  if (checkPart.isInstanceOf[PartGear])
-                  {
-                    val requiredDirection = checkPart.asInstanceOf[PartGear].getPosition.subtract(toVectorWorld).toForgeDirection
-                    return checkPart.asInstanceOf[PartGear].isCenterMultiBlock && otherParent.asInstanceOf[PartGear].placementSide == requiredDirection
-                  }
+                  val requiredDirection = checkPart.asInstanceOf[PartGear].getPosition.subtract(toVectorWorld).toForgeDirection
+                  return checkPart.asInstanceOf[PartGear].isCenterMultiBlock && otherParent.asInstanceOf[PartGear].placementSide == requiredDirection
                 }
               }
             }
           }
         }
 
-        val sourceTile = toVectorWorld.add(from.getOpposite).getTileEntity(world)
-        if (sourceTile.isInstanceOf[INodeProvider])
+        //Check if it's a shaft
+        if (otherParent.isInstanceOf[PartGearShaft])
         {
-          val sourceInstance = sourceTile.asInstanceOf[INodeProvider].getNode(classOf[NodeMechanical], from)
-          return sourceInstance == other
-        }
-      }
-      else if (from == gear.placementSide)
-      {
-        //This object is from the back of the gear
-        val sourceTile: TileEntity = toVectorWorld.add(from).getTileEntity(world)
-        if (sourceTile.isInstanceOf[INodeProvider])
-        {
-          val sourceInstance: NodeMechanical = sourceTile.asInstanceOf[INodeProvider].getNode(classOf[NodeMechanical], from.getOpposite)
-          return sourceInstance == other
+          //We are connecting to a shaft.
+          val shaft = otherParent.asInstanceOf[PartGearShaft]
+          /*shaft.tile.partMap(from.getOpposite.ordinal) != gear && */
+          return  Math.abs(shaft.placementSide.offsetX) == Math.abs(gear.placementSide.offsetX) && Math.abs(shaft.placementSide.offsetY) == Math.abs(gear.placementSide.offsetY) && Math.abs(shaft.placementSide.offsetZ) == Math.abs(gear.placementSide.offsetZ)
         }
       }
       else if (from != ForgeDirection.UNKNOWN)

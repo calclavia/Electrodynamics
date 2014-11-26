@@ -37,6 +37,8 @@ class NodeTurbine(parent: TileTurbine) extends NodeMechanical(parent)
 
   override def canConnect[B <: NodeMechanical](other: B, from: ForgeDirection): Boolean =
   {
-    return turbine.getMultiBlock.isPrimary && other.isInstanceOf[NodeMechanical] && !other.isInstanceOf[NodeTurbine] && from == turbine.getDirection
+    return turbine.getMultiBlock.isPrimary && other.isInstanceOf[NodeMechanical] && !other.isInstanceOf[NodeTurbine] && canConnect(from)
   }
+
+  override def canConnect(from: ForgeDirection) = from == turbine.getDirection
 }
