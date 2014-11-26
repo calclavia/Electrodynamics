@@ -64,7 +64,7 @@ class NodeGear(parent: PartGear) extends NodeMechanical(parent: PartGear)
     //Check internal
     for (i <- 0 until 6)
     {
-      val toDir = if (ForgeDirection.getOrientation(i) == gear.placementSide.getOpposite) ForgeDirection.UNKNOWN else ForgeDirection.getOrientation(i)
+      val toDir = ForgeDirection.getOrientation(i)
       var tile: TileEntity = gear.tile
 
       if (gear.getMultiBlock.isConstructed && toDir != gear.placementSide && toDir != gear.placementSide.getOpposite)
@@ -74,7 +74,7 @@ class NodeGear(parent: PartGear) extends NodeMechanical(parent: PartGear)
 
       if (tile.isInstanceOf[INodeProvider])
       {
-        val other = tile.asInstanceOf[INodeProvider].getNode(classOf[NodeMechanical], toDir)
+        val other = tile.asInstanceOf[INodeProvider].getNode(classOf[NodeMechanical], if (toDir == gear.placementSide.getOpposite) ForgeDirection.UNKNOWN else toDir)
 
         if (other != this && toDir != gear.placementSide && other != null && canConnect(other, toDir) && other.canConnect(this, toDir.getOpposite))
         {
@@ -193,7 +193,7 @@ class NodeGear(parent: PartGear) extends NodeMechanical(parent: PartGear)
           //We are connecting to a shaft.
           val shaft = otherParent.asInstanceOf[PartGearShaft]
           /*shaft.tile.partMap(from.getOpposite.ordinal) != gear && */
-          return  Math.abs(shaft.placementSide.offsetX) == Math.abs(gear.placementSide.offsetX) && Math.abs(shaft.placementSide.offsetY) == Math.abs(gear.placementSide.offsetY) && Math.abs(shaft.placementSide.offsetZ) == Math.abs(gear.placementSide.offsetZ)
+          return Math.abs(shaft.placementSide.offsetX) == Math.abs(gear.placementSide.offsetX) && Math.abs(shaft.placementSide.offsetY) == Math.abs(gear.placementSide.offsetY) && Math.abs(shaft.placementSide.offsetZ) == Math.abs(gear.placementSide.offsetZ)
         }
       }
       else if (from != ForgeDirection.UNKNOWN)
