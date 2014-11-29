@@ -2,6 +2,7 @@ package resonantinduction.electrical.generator
 
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.block.material.Material
+import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
@@ -44,9 +45,20 @@ class TileMotor extends TileAdvanced(Material.iron) with TElectric with TSpatial
 
   def toggleGearRatio() = (gearRatio + 1) % 3
 
+  /**
+   * Called when the block is placed by a living entity
+   * @param entityLiving - entity who placed the block
+   * @param itemStack - ItemStack the entity used to place the block
+   */
+  override def onPlaced(entityLiving: EntityLivingBase, itemStack: ItemStack)
+  {
+    super.onPlaced(entityLiving, itemStack)
+    mechNode.connectionMask = 1 << getDirection.getOpposite.ordinal
+  }
+
   override def update()
   {
-    //TODO: Debug
+    //TODO: Debug with free energy
     val deltaPower = 100d //Math.abs(mechNode.power - dcNode.power)
 
     if (false && mechNode.power > dcNode.power)

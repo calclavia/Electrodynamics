@@ -11,7 +11,20 @@ import scala.collection.convert.wrapAll._
  */
 class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) with IUpdate
 {
+  /**
+   * The energy loss of this grid
+   */
   private var load = 0D
+
+  /**
+   * Determines if this grid is locked (invalid opposite gear connections)
+   */
+  private var isLocked = false
+
+  /**
+   * The nodes that the grid is currently recusing through
+   */
+  private var passed = Seq.empty[NodeMechanical]
 
   /**
    * Rebuild the node list starting from the first node and recursively iterating through its connections.
@@ -20,6 +33,7 @@ class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) w
   {
     super.reconstruct(first)
     UpdateTicker.world.addUpdater(this)
+    isLocked = false
   }
 
   override def update(deltaTime: Double)
@@ -37,7 +51,18 @@ class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) w
         }
       )
 
-      getNodes.filter(n => n.bufferTorque != 0 && n.bufferAngularVelocity != 0).foreach(n => recurse(deltaTime, n.bufferTorque, n.bufferAngularVelocity, Seq(n)))
+      if (!isLocked)
+      {
+        getNodes.filter(n => n.bufferTorque != 0 && n.bufferAngularVelocity != 0).foreach(
+          n =>
+          {
+            passed = Seq(n)
+            recurse(deltaTime, n.bufferTorque, n.bufferAngularVelocity)
+          }
+        )
+      }
+
+      passed = Seq.empty[NodeMechanical]
 
       //      UpdateTicker.world.enqueue(resetNodes)
       resetNodes()
@@ -67,7 +92,7 @@ class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) w
     )
   }
 
-  def recurse(deltaTime: Double, torque: Double, angularVelocity: Double, passed: Seq[NodeMechanical])
+  def recurse(deltaTime: Double, torque: Double, angularVelocity: Double)
   {
     val curr = passed.last
 
@@ -81,10 +106,32 @@ class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) w
       val addVel = angularVelocity / ratio * invert
       curr.torque += addTorque
       curr.angularVelocity += addVel * deltaTime
-      curr.connections.filter(!passed.contains(_)).foreach(c => recurse(deltaTime, addTorque, addVel, passed :+ c))
+
+      curr.connections.foreach(c =>
+      {
+        if (c != prev)
+        {
+          if (!passed.contains(c))
+          {
+            passed :+= c
+            recurse(deltaTime, addTorque, addVel)
+          }
+          else
+          {
+            //Check for grid lock
+            val sudoInvert = if (c.inverseRotation(curr) && curr.inverseNext(c)) -1 else 1
+
+            if (Math.signum(c.angularVelocity) != sudoInvert * Math.signum(addVel))
+            {
+              isLocked = true
+            }
+          }
+        }
+      })
     }
     else
     {
+      //This is the first node.
       //Calculate energy loss
       val power = torque * angularVelocity
       val netEnergy = Math.max(power - load * deltaTime, 0)
@@ -93,11 +140,15 @@ class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) w
 
       curr.torque += netTorque
       curr.angularVelocity += netVelocity * deltaTime
-      curr.connections.filter(!passed.contains(_)).foreach(c => recurse(deltaTime, netTorque, netVelocity, passed :+ c))
+      curr.connections.foreach(c =>
+      {
+        passed :+= c
+        recurse(deltaTime, netTorque, netVelocity)
+      })
     }
   }
 
-  override def continueUpdate = getNodes.size > 0
+  override def continueUpdate = getNodes.size > 0 && !dead
 
   override def canUpdate = getNodes.size > 0
 }

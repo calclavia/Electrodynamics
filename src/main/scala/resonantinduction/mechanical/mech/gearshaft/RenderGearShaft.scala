@@ -49,7 +49,7 @@ object RenderGearShaft extends ISimpleItemRenderer
     }
     else if (dir == ForgeDirection.WEST)
     {
-      glRotatef(90, 0, 0, 1)
+      glRotatef(-90, 0, 0, 1)
     }
 
     GL11.glRotated(Math.toDegrees(part.mechanicalNode.angle) * part.placementSide.offset.toArray.sum, 0, 1, 0)
