@@ -10,7 +10,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.ResourceLocation
-import net.minecraftforge.client.model.{AdvancedModelLoader, IModelCustom}
+import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.{Fluid, FluidRegistry, FluidStack, IFluidTank}
 import org.lwjgl.opengl.GL11
@@ -27,8 +27,10 @@ import resonantinduction.core.prefab.node.{NodeFluidPressure, TileFluidProvider}
 
 object TileGutter
 {
-  @SideOnly(Side.CLIENT) private var MODEL: IModelCustom = _
-  @SideOnly(Side.CLIENT) private var TEXTURE: ResourceLocation = _
+  @SideOnly(Side.CLIENT)
+  private val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "gutter.tcn"))
+  @SideOnly(Side.CLIENT)
+  private val texture = new ResourceLocation(Reference.domain, Reference.modelPath + "gutter.png")
 }
 
 /**
@@ -64,8 +66,6 @@ class TileGutter extends TileFluidProvider(Material.rock)
   isOpaqueCube = false
   normalRender = false
   bounds = new Cuboid(0, 0, 0, 1, 0.99, 1)
-
-  nodes.add(fluidNode)
 
   override def getCollisionBoxes: java.lang.Iterable[Cuboid] =
   {
@@ -164,6 +164,8 @@ class TileGutter extends TileFluidProvider(Material.rock)
         }
         return true
       }
+
+      return FluidUtility.playerActivatedFluidItem(world, xi, yi, zi, player, side)
     }
     return true
   }
@@ -176,17 +178,14 @@ class TileGutter extends TileFluidProvider(Material.rock)
     }
   }
 
+  @SideOnly(Side.CLIENT)
+  override def renderInventory(itemStack: ItemStack)
+  {
+    render(0, 0x0)
+  }
+
   override def renderDynamic(position: Vector3, frame: Float, pass: Int)
   {
-    if (TileGutter.MODEL == null)
-    {
-      TileGutter.MODEL = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "gutter.tcn"))
-    }
-    if (TileGutter.TEXTURE == null)
-    {
-      TileGutter.TEXTURE = new ResourceLocation(Reference.domain, Reference.modelPath + "gutter.png")
-    }
-
     GL11.glPushMatrix()
     GL11.glTranslated(position.x + 0.5, position.y + 0.5, position.z + 0.5)
 
@@ -215,7 +214,7 @@ class TileGutter extends TileFluidProvider(Material.rock)
 
   def render(meta: Int, sides: Int)
   {
-    RenderUtility.bind(TileGutter.TEXTURE)
+    RenderUtility.bind(TileGutter.texture)
 
     for (dir <- ForgeDirection.VALID_DIRECTIONS)
     {
@@ -231,11 +230,11 @@ class TileGutter extends TileFluidProvider(Material.rock)
         }
         if (!sides.mask(dir))
         {
-          TileGutter.MODEL.renderOnly("left")
+          TileGutter.model.renderOnly("left")
         }
         if (!sides.mask(dir) || !sides.mask(dir.getRotation(ForgeDirection.UP)))
         {
-          TileGutter.MODEL.renderOnly("backCornerL")
+          TileGutter.model.renderOnly("backCornerL")
         }
         GL11.glPopMatrix()
       }
@@ -243,7 +242,7 @@ class TileGutter extends TileFluidProvider(Material.rock)
 
     if (!sides.mask(ForgeDirection.DOWN))
     {
-      TileGutter.MODEL.renderOnly("base")
+      TileGutter.model.renderOnly("base")
     }
   }
 }
