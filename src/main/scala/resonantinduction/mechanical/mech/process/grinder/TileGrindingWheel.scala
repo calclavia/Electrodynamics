@@ -14,12 +14,14 @@ import resonant.content.factory.resources.RecipeType
 import resonant.lib.prefab.damage.CustomDamageSource
 import resonant.lib.render.RenderUtility
 import resonant.lib.transform.region.Cuboid
+import resonant.lib.transform.rotation.AngleAxis
 import resonant.lib.transform.vector.Vector3
-import resonant.lib.utility.{MathUtility, Timer}
+import resonant.lib.utility.Timer
 import resonantinduction.core.{Reference, ResonantInduction}
 import resonantinduction.mechanical.mech.TileMechanical
 
 /**
+ * The grinding wheel. This block will face the direction in which it can rotate.
  * @author Calclavia
  */
 object TileGrindingWheel
@@ -45,6 +47,7 @@ class TileGrindingWheel extends TileMechanical(Material.rock)
   isOpaqueCube = false
   normalRender = false
   textureName = "material_steel_dark"
+  rotationMask = 0x3F
 
   override def update()
   {
@@ -84,15 +87,15 @@ class TileGrindingWheel extends TileMechanical(Material.rock)
 
     if (mechanicalNode.angularVelocity != 0)
     {
+      //The velocity added should be tangent to the circle
+      val deltaVector = new Vector3(entity) - center
+      val deltaAngle = Math.toDegrees(mechanicalNode.angularVelocity / 20)
       var dir = getDirection
-      dir = ForgeDirection.getOrientation(if (dir.ordinal % 2 != 0) dir.ordinal - 1 else dir.ordinal).getOpposite
-
-      val speed = mechanicalNode.angularVelocity / 20
-      val speedX = MathUtility.absCap(dir.offsetX * speed, 1)
-      val speedZ = MathUtility.absCap(dir.offsetZ * speed, 1)
-      val speedY = MathUtility.absCap(dir.offsetY * speed, 1)
-
-      entity.addVelocity(speedX, speedY, speedZ)
+      dir = ForgeDirection.getOrientation(if (dir.ordinal() % 2 != 0) dir.ordinal() - 1 else dir.ordinal()).getOpposite
+      val deltaEulerAngle = new AngleAxis(deltaAngle, new Vector3(dir))
+      val deltaPos = deltaVector.transform(deltaEulerAngle)
+      val velocity = deltaPos / 20
+      entity.addVelocity(velocity.x, velocity.y, velocity.z)
     }
   }
 
@@ -192,7 +195,15 @@ class TileGrindingWheel extends TileMechanical(Material.rock)
     glPushMatrix()
     glTranslated(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5)
     glScalef(0.51f, 0.5f, 0.5f)
-    val dir = getDirection
+
+    var dir = getDirection
+    dir = ForgeDirection.getOrientation(if (dir.ordinal() % 2 != 0) dir.ordinal() - 1 else dir.ordinal())
+
+    if (dir.offsetY == 0)
+      glRotated(90, 0, 1, 0)
+    else
+      glRotated(90, 0, 1, 0)
+
     RenderUtility.rotateBlockBasedOnDirection(dir)
     glRotated(Math.toDegrees(mechanicalNode.angle), 0, 0, 1)
     RenderUtility.bind(Reference.blockTextureDirectory + "planks_oak.png")

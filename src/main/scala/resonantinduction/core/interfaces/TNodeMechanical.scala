@@ -38,10 +38,17 @@ trait TNodeMechanical extends INode with IVectorWorld
   /**
    * Does the direction flip on this side for rotation
    *
-   * @param other - The other mechanical node
+   * @param prev - The other mechanical node
    * @return boolean, true = flipped, false = not
    */
-  def inverseRotation(other: TNodeMechanical): Boolean = true
+  def inverseRotation(prev: TNodeMechanical): Boolean = true
+
+  /**
+   * Does this node flip the next node's rotation?
+   * @param next - The next node
+   * @return True to flip the next node
+   */
+  def inverseNext(next: TNodeMechanical): Boolean = true
 
   /**
    * Applies rotational force and velocity to this node increasing its current rotation value

@@ -232,7 +232,15 @@ class NodeGear(parent: PartGear) extends NodeMechanical(parent: PartGear)
     return false
   }
 
-  override def inverseRotation(other: TNodeMechanical): Boolean = !other.isInstanceOf[NodeGearShaft] || (other.isInstanceOf[NodeGearShaft] && parent.placementSide.offset < Vector3.zero)
+  override def inverseRotation(other: TNodeMechanical): Boolean =
+  {
+    if (other.isInstanceOf[NodeGearShaft])
+    {
+      return parent.placementSide.offset < Vector3.zero
+    }
+
+    return !other.isInstanceOf[NodeGearShaft]
+  }
 
   override def radius(other: TNodeMechanical): Double =
   {
