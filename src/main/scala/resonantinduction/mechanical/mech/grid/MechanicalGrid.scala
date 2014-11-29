@@ -20,18 +20,20 @@ class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) w
   {
     super.reconstruct(first)
     UpdateTicker.world.addUpdater(this)
-    load = getNodes.map(n => n.getLoad).foldLeft(0D)(_ + _)
   }
 
   override def update(deltaTime: Double)
   {
     getNodes synchronized
     {
+      load = 0
+
       getNodes.foreach(
         n =>
         {
           n.torque = 0
           n.angularVelocity = 0
+          load += n.getLoad
         }
       )
 

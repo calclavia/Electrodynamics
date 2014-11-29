@@ -1,17 +1,21 @@
 package resonantinduction.mechanical.mech.process.grinder
 
+import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.block.material.Material
 import net.minecraft.entity.Entity
 import net.minecraft.entity.item.EntityItem
 import net.minecraft.item.{ItemBlock, ItemStack}
+import net.minecraft.util.ResourceLocation
+import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.api.IRotatable
-import resonant.api.recipe.{MachineRecipes, RecipeResource}
+import org.lwjgl.opengl.GL11._
+import resonant.api.recipe.MachineRecipes
 import resonant.content.factory.resources.RecipeType
 import resonant.lib.prefab.damage.CustomDamageSource
+import resonant.lib.render.RenderUtility
 import resonant.lib.transform.region.Cuboid
 import resonant.lib.transform.vector.Vector3
-import resonant.lib.utility.Timer
+import resonant.lib.utility.{MathUtility, Timer}
 import resonantinduction.core.{Reference, ResonantInduction}
 import resonantinduction.mechanical.mech.TileMechanical
 
@@ -25,6 +29,9 @@ object TileGrindingWheel
    * A map of ItemStacks and their remaining grind-time left.
    */
   final val grindingTimer: Timer[EntityItem] = new Timer[EntityItem]
+
+  @SideOnly(Side.CLIENT)
+  final val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "grinder.obj"))
 }
 
 class TileGrindingWheel extends TileMechanical(Material.rock)
@@ -44,12 +51,6 @@ class TileGrindingWheel extends TileMechanical(Material.rock)
     super.update()
     counter = Math.max(counter + Math.abs(mechanicalNode.torque), 0)
     doWork()
-
-    if(!world.isRemote)
-    {
-      println(mechanicalNode)
-      sendPacket(1)
-    }
   }
 
   override def collide(entity: Entity)
@@ -58,11 +59,12 @@ class TileGrindingWheel extends TileMechanical(Material.rock)
     {
       entity.asInstanceOf[EntityItem].age -= 1
     }
+
     if (canWork)
     {
       if (entity.isInstanceOf[EntityItem])
       {
-        if (canGrind((entity.asInstanceOf[EntityItem]).getEntityItem))
+        if (canGrind(entity.asInstanceOf[EntityItem].getEntityItem))
         {
           if (grindingItem == null)
           {
@@ -73,36 +75,23 @@ class TileGrindingWheel extends TileMechanical(Material.rock)
             TileGrindingWheel.grindingTimer.put(entity.asInstanceOf[EntityItem], TileGrindingWheel.processTime)
           }
         }
-        else
-        {
-          entity.setPosition(entity.posX, entity.posY - 1.2, entity.posZ)
-        }
       }
       else
       {
         entity.attackEntityFrom(new CustomDamageSource("grinder", this), 2)
       }
     }
+
     if (mechanicalNode.angularVelocity != 0)
     {
-      var dir: ForgeDirection = getDirection
-      dir = ForgeDirection.getOrientation(if (!(dir.ordinal % 2 == 0)) dir.ordinal - 1 else dir.ordinal).getOpposite
-      val speed: Double = mechanicalNode.angularVelocity / 20
-      var speedX: Double = dir.offsetX * speed
-      var speedZ: Double = dir.offsetZ * speed
-      var speedY: Double = Math.random * speed
-      if (Math.abs(speedX) > 1)
-      {
-        speedX = if (speedX > 0) 1 else -1
-      }
-      if (Math.abs(speedZ) > 1)
-      {
-        speedZ = if (speedZ > 0) 1 else -1
-      }
-      if (Math.abs(speedZ) > 1)
-      {
-        speedY = if (speedY > 0) 1 else -1
-      }
+      var dir = getDirection
+      dir = ForgeDirection.getOrientation(if (dir.ordinal % 2 != 0) dir.ordinal - 1 else dir.ordinal).getOpposite
+
+      val speed = mechanicalNode.angularVelocity / 20
+      val speedX = MathUtility.absCap(dir.offsetX * speed, 1)
+      val speedZ = MathUtility.absCap(dir.offsetZ * speed, 1)
+      val speedY = MathUtility.absCap(dir.offsetY * speed, 1)
+
       entity.addVelocity(speedX, speedY, speedZ)
     }
   }
@@ -118,7 +107,8 @@ class TileGrindingWheel extends TileMechanical(Material.rock)
   {
     if (canWork)
     {
-      var didWork: Boolean = false
+      var didWork = false
+
       if (grindingItem != null)
       {
         if (TileGrindingWheel.grindingTimer.containsKey(grindingItem) && !grindingItem.isDead && toVector3.add(0.5).distance(new Vector3(grindingItem)) < 1)
@@ -173,28 +163,42 @@ class TileGrindingWheel extends TileMechanical(Material.rock)
     }
   }
 
-  def canGrind(itemStack: ItemStack): Boolean =
-  {
-    return MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER.name, itemStack).length > 0
-  }
+  def canGrind(itemStack: ItemStack): Boolean = MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER.name, itemStack).length > 0
 
   private def doGrind(entity: EntityItem): Boolean =
   {
     val itemStack: ItemStack = entity.getEntityItem
-    val results: Array[RecipeResource] = MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER.name, itemStack)
+    val results = MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER.name, itemStack)
+
     for (resource <- results)
     {
       val outputStack: ItemStack = resource.getItemStack
-      if (!this.worldObj.isRemote)
+
+      if (!world.isRemote)
       {
         val entityItem: EntityItem = new EntityItem(this.worldObj, entity.posX, entity.posY - 1.2, entity.posZ, outputStack)
         entityItem.delayBeforeCanPickup = 20
         entityItem.motionX = 0
         entityItem.motionY = 0
         entityItem.motionZ = 0
-        this.worldObj.spawnEntityInWorld(entityItem)
+        world.spawnEntityInWorld(entityItem)
       }
     }
     return results.length > 0
+  }
+
+  override def renderDynamic(pos: Vector3, frame: Float, pass: Int): Unit =
+  {
+    glPushMatrix()
+    glTranslated(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5)
+    glScalef(0.51f, 0.5f, 0.5f)
+    val dir = getDirection
+    RenderUtility.rotateBlockBasedOnDirection(dir)
+    glRotated(Math.toDegrees(mechanicalNode.angle), 0, 0, 1)
+    RenderUtility.bind(Reference.blockTextureDirectory + "planks_oak.png")
+    TileGrindingWheel.model.renderAllExcept("teeth")
+    RenderUtility.bind(Reference.blockTextureDirectory + "cobblestone.png")
+    TileGrindingWheel.model.renderOnly("teeth")
+    glPopMatrix()
   }
 }

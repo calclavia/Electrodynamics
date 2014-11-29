@@ -37,7 +37,6 @@ import resonantinduction.mechanical.fluid.pipe.RenderPipe
 import resonantinduction.mechanical.mech.gear.RenderGear
 import resonantinduction.mechanical.mech.gearshaft.RenderGearShaft
 import resonantinduction.mechanical.mech.process.crusher.{RenderMechanicalPiston, TileMechanicalPiston}
-import resonantinduction.mechanical.mech.process.grinder.{RenderGrindingWheel, TileGrindingWheel}
 import resonantinduction.mechanical.mech.turbine._
 
 /** @author Calclavia */
@@ -56,7 +55,6 @@ import resonantinduction.mechanical.mech.turbine._
     ItemRenderHandler.register(MechanicalContent.itemPipe, RenderPipe)
     ItemRenderHandler.register(Item.getItemFromBlock(MechanicalContent.blockWaterTurbine), new RenderWaterTurbine)
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileMechanicalPiston], new RenderMechanicalPiston)
-    ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileGrindingWheel], new RenderGrindingWheel)
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileWaterTurbine], new RenderWaterTurbine)
 
     //Electrical content

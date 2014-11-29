@@ -6,6 +6,7 @@ import net.minecraft.block.material.Material
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
+import net.minecraftforge.common.util.ForgeDirection
 import resonant.content.spatial.block.SpatialTile
 import resonant.engine.ResonantEngine
 import resonant.lib.content.prefab.TRotatable
@@ -57,11 +58,20 @@ abstract class TileMechanical(material: Material) extends SpatialTile(material: 
     }
   }
 
+  override def setDirection(direction: ForgeDirection): Unit =
+  {
+    super.setDirection(direction)
+
+    if (!world.isRemote)
+      nodes.foreach(_.reconstruct())
+  }
+
   override def use(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
   {
     if (!world.isRemote)
     {
-      println(mechanicalNode)
+      println(mechanicalNode + " in " + mechanicalNode.grid)
+      mechanicalNode.reconstruct()
     }
 
     //Debugging
