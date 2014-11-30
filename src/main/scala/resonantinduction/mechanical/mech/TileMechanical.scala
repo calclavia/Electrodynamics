@@ -7,9 +7,9 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
 import net.minecraftforge.common.util.ForgeDirection
+import resonant.content.prefab.scal.TRotatable
 import resonant.content.spatial.block.SpatialTile
 import resonant.engine.ResonantEngine
-import resonant.lib.content.prefab.TRotatable
 import resonant.lib.grid.node.TSpatialNodeProvider
 import resonant.lib.network.ByteBufWrapper._
 import resonant.lib.network.discriminator.PacketType

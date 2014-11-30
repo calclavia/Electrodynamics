@@ -131,6 +131,12 @@ class TileGutter extends TileFluidProvider(Material.rock)
 
   override def activate(player: EntityPlayer, side: Int, vector3: Vector3): Boolean =
   {
+    if (!world.isRemote)
+    {
+      fluidNode.onFluidChanged()
+      println(fluidNode.getFluidAmount)
+    }
+
     if (player.getCurrentEquippedItem != null)
     {
       var itemStack: ItemStack = player.getCurrentEquippedItem
@@ -165,7 +171,8 @@ class TileGutter extends TileFluidProvider(Material.rock)
         return true
       }
 
-      return FluidUtility.playerActivatedFluidItem(world, xi, yi, zi, player, side)
+      FluidUtility.playerActivatedFluidItem(world, xi, yi, zi, player, side)
+      return true
     }
     return true
   }

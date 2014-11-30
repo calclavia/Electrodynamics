@@ -28,6 +28,7 @@ abstract class TileFluidProvider(material: Material) extends TileAdvanced(materi
   def fluidNode_=(newNode: NodeFluid)
   {
     _fluidNode = newNode
+    fluidNode.onFluidChanged = () => if (!world.isRemote) sendPacket(0)
     fluidNode.onConnectionChanged = () => if (!world.isRemote) sendPacket(1)
     nodes.add(fluidNode)
   }
