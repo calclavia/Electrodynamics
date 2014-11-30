@@ -49,16 +49,17 @@ import scala.collection.JavaConversions._
  */
 object TileEngineeringTable
 {
-    final val CRAFTING_MATRIX_END: Int = 9
-    final val CRAFTING_OUTPUT_END: Int = CRAFTING_MATRIX_END + 1
-    final val PLAYER_OUTPUT_END: Int = CRAFTING_OUTPUT_END + 40
-    final val CENTER_SLOT: Int = 4
-    final val CRAFTING_OUTPUT_SLOT: Int = 0
+    val CRAFTING_MATRIX_END: Int = 9
+    val CRAFTING_OUTPUT_END: Int = CRAFTING_MATRIX_END + 1
+    val PLAYER_OUTPUT_END: Int = CRAFTING_OUTPUT_END + 40
+    val CENTER_SLOT: Int = 4
+    val CRAFTING_OUTPUT_SLOT: Int = 0
     /**
      * 9 slots for crafting, 1 slot for a output.
      */
-    final val CRAFTING_MATRIX_SIZE: Int = 9
-    final val craftingSlots: Array[Int] = Array(0, 1, 2, 3, 4, 5, 6, 7, 8)
+    val CRAFTING_MATRIX_SIZE: Int = 9
+    val craftingSlots: Array[Int] = Array(0, 1, 2, 3, 4, 5, 6, 7, 8)
+
     @SideOnly(Side.CLIENT) private var iconTop: IIcon = null
     @SideOnly(Side.CLIENT) private var iconFront: IIcon = null
     @SideOnly(Side.CLIENT) private var iconSide: IIcon = null
