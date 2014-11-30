@@ -14,12 +14,12 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.mffs.machine.{IFieldMatrix, IPermissionProvider}
 import resonant.api.mffs.modules.{IModule, IProjectorMode}
-import resonant.lib.content.prefab.TRotatable
+import resonant.content.prefab.scal.TRotatable
 import resonant.lib.network.ByteBufWrapper.ByteBufWrapper
 import resonant.lib.network.discriminator.PacketType
-import resonant.lib.utility.RotationUtility
 import resonant.lib.transform.rotation.EulerAngle
 import resonant.lib.transform.vector.Vector3
+import resonant.lib.utility.RotationUtility
 
 import scala.collection.convert.wrapAll._
 import scala.collection.mutable
@@ -47,8 +47,8 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     /**
      * Evaluated queued objects
      */
-      delayedEvents foreach (_.update())
-      delayedEvents.dequeueAll(_.ticks < 0)
+    delayedEvents foreach (_.update())
+    delayedEvents.dequeueAll(_.ticks < 0)
   }
 
   def clearQueue() = delayedEvents.clear()

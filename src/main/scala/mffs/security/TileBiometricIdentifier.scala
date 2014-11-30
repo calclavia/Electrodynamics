@@ -11,8 +11,8 @@ import mffs.{ModularForceFieldSystem, Settings}
 import net.minecraft.client.renderer.RenderBlocks
 import net.minecraft.item.ItemStack
 import resonant.api.mffs.card.IAccessCard
+import resonant.content.prefab.scal.TRotatable
 import resonant.lib.access.java.Permission
-import resonant.lib.content.prefab.TRotatable
 import resonant.lib.transform.vector.Vector3
 
 object TileBiometricIdentifier
