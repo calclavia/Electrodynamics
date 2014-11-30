@@ -19,4 +19,4 @@ Support
 * CyanideX
 
 ### License
-"Resonant Induction" is under the Calclavia Mod License: http://calclavia.com/calclavia-mod-license/
+"Resonant Induction" is under the Calclavia Mod License: http://calclavia.com/calclavia-mod-license/ 
