@@ -165,6 +165,10 @@ repositories {
     }
 	
     mavenCentral()
+    maven {
+        name = "ic2"
+        url = "http://maven.ic2.player.to/"
+    }
 }
 
 dependencies {
@@ -186,4 +190,6 @@ dependencies {
     compile "codechicken:ForgeMultipart:${config.version.minecraft}-${config.version.fmp}:dev"
     compile "codechicken:CodeChickenCore:${config.version.minecraft}-${config.version.cccore}:dev"
     compile "codechicken:NotEnoughItems:${config.version.minecraft}-${config.version.nei}:dev"
+    compile "mcp.mobius.waila:Waila:1.5.6_dev1_1.7.10"
+    compile "net.industrial-craft:industrialcraft-2:2.2.654-experimental:api"
 }
