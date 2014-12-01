@@ -23,7 +23,7 @@ import resonant.lib.content.prefab.TEnergyStorage
 import resonant.lib.content.prefab.java.TileElectric
 import resonant.lib.multiblock.reference.{IMultiBlockStructure, MultiBlockHandler}
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
-import resonant.lib.network.handle.{TPacketSender, TPacketIDReceiver}
+import resonant.lib.network.handle.{TPacketIDReceiver, TPacketSender}
 import resonant.lib.render.EnumColor
 import resonant.lib.transform.vector.{Vector3, VectorWorld}
 import resonant.lib.utility.{LanguageUtility, LinkUtility}
@@ -118,7 +118,7 @@ class TileTesla extends TileElectric(Material.iron) with IMultiBlockStructure[Ti
           }
           else
           {
-            ResonantInduction.proxy.renderElectricShock(this.worldObj, topTeslaVector.clone.add(0.5), topTeslaVector.clone.add(new Vector3(0.5, java.lang.Double.POSITIVE_INFINITY, 0.5)), false)
+            ResonantInduction.proxy.renderElectricShock(this.worldObj, topTeslaVector.clone.add(0.5), topTeslaVector + new Vector3(0.5, java.lang.Double.POSITIVE_INFINITY, 0.5), false)
           }
         }
         else
@@ -179,7 +179,7 @@ class TileTesla extends TileElectric(Material.iron) with IMultiBlockStructure[Ti
                   heightRange = (tesla.asInstanceOf[TileTesla]).getHeight
                 }
                 val distance: Double = topTeslaVector.distance(targetVector)
-                ResonantInduction.proxy.renderElectricShock(this.worldObj, topTesla.toVector3.add(new Vector3(0.5)), targetVector.add(new Vector3(0.5, Math.random * heightRange / 3 - heightRange / 3, 0.5)), EnumColor.DYES(this.dyeID).toColor)
+                ResonantInduction.proxy.renderElectricShock(this.worldObj, topTesla.toVector3 + new Vector3(0.5), targetVector + new Vector3(0.5, Math.random * heightRange / 3 - heightRange / 3, 0.5), EnumColor.DYES(this.dyeID).toColor)
                 this.transfer(tesla, Math.min(transferEnergy, TRANSFER_CAP))
                 if (!sentPacket && transferEnergy > 0)
                 {
@@ -317,8 +317,8 @@ class TileTesla extends TileElectric(Material.iron) with IMultiBlockStructure[Ti
     val mainTile: TileTesla = getLowestTesla
     mainTile.getMultiBlock.deconstruct
     mainTile.getMultiBlock.construct
-    val isTop: Boolean = toVector3.add(new Vector3(0, 1, 0)).getTileEntity(this.worldObj).isInstanceOf[TileTesla]
-    val isBottom: Boolean = toVector3.add(new Vector3(0, -1, 0)).getTileEntity(this.worldObj).isInstanceOf[TileTesla]
+    val isTop: Boolean = (toVector3 + new Vector3(0, 1, 0)).getTileEntity(this.worldObj).isInstanceOf[TileTesla]
+    val isBottom: Boolean = (toVector3 + new Vector3(0, -1, 0)).getTileEntity(this.worldObj).isInstanceOf[TileTesla]
     if (isTop && isBottom)
     {
       this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, 1, 3)
@@ -381,7 +381,7 @@ class TileTesla extends TileElectric(Material.iron) with IMultiBlockStructure[Ti
     var exit = false
     while (!exit)
     {
-      val t: TileEntity = toVector3.add(new Vector3(0, y, 0)).getTileEntity(this.worldObj)
+      val t: TileEntity = (toVector3 + new Vector3(0, y, 0)).getTileEntity(this.worldObj)
       if (t.isInstanceOf[TileTesla])
       {
         this.connectedTeslas.add(t.asInstanceOf[TileTesla])
@@ -512,7 +512,7 @@ class TileTesla extends TileElectric(Material.iron) with IMultiBlockStructure[Ti
       val t: TileEntity = checkPosition.getTileEntity(this.worldObj)
       if (t.isInstanceOf[TileTesla])
       {
-        vectors.add(checkPosition.clone.subtract(getPosition))
+        vectors.add(checkPosition - getPosition)
       }
       else
       {

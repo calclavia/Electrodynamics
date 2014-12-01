@@ -10,9 +10,9 @@ import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
 import resonant.content.prefab.scal.render.ISimpleItemRenderer
 import resonant.lib.render.RenderUtility
+import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.LanguageUtility
 import resonantinduction.core.Reference
-import resonant.lib.transform.vector.Vector3
 
 /**
  * Class used to render text onto the multimeter block.
@@ -130,7 +130,7 @@ object RenderMultimeter extends ISimpleItemRenderer
     {
       GL11.glPushMatrix()
       GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5)
-      val centerTranslation: Vector3 = part.getNetwork.center.clone.subtract(new Vector3(part.x, part.y, part.z)).add(-0.5)
+      val centerTranslation: Vector3 = part.getNetwork.center - new Vector3(part.x, part.y, part.z) - 0.5
       GL11.glTranslated(centerTranslation.x, centerTranslation.y, centerTranslation.z)
       RenderUtility.rotateFaceBlockToSideOutwards(part.getDirection.getOpposite)
       if (part.getDirection.offsetY != 0)

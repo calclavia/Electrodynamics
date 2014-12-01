@@ -25,11 +25,11 @@ import resonant.lib.network.Synced
 import resonant.lib.network.Synced.{SyncedInput, SyncedOutput}
 import resonant.lib.network.discriminator.PacketAnnotation
 import resonant.lib.prefab.poison.PoisonRadiation
-import resonant.lib.utility.inventory.InventoryUtility
-import resonantinduction.atomic.machine.plasma.TilePlasma
-import resonantinduction.atomic.AtomicContent
-import resonantinduction.core.Reference
 import resonant.lib.transform.vector.{Vector3, VectorWorld}
+import resonant.lib.utility.inventory.InventoryUtility
+import resonantinduction.atomic.AtomicContent
+import resonantinduction.atomic.machine.plasma.TilePlasma
+import resonantinduction.core.Reference
 
 import scala.collection.convert.wrapAll._
 
@@ -79,8 +79,8 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
     val mainTile: TileReactorCell = getLowest
     mainTile.getMultiBlock.deconstruct
     mainTile.getMultiBlock.construct
-    val top: Boolean = toVector3.add(new Vector3(0, 1, 0)).getTileEntity(worldObj).isInstanceOf[TileReactorCell]
-    val bottom: Boolean = toVector3.add(new Vector3(0, -1, 0)).getTileEntity(worldObj).isInstanceOf[TileReactorCell]
+    val top: Boolean = (toVector3 + new Vector3(0, 1, 0)).getTileEntity(worldObj).isInstanceOf[TileReactorCell]
+    val bottom: Boolean = (toVector3 + new Vector3(0, -1, 0)).getTileEntity(worldObj).isInstanceOf[TileReactorCell]
     if (top && bottom)
     {
       worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 1, 3)
@@ -326,7 +326,7 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
       val t: TileEntity = checkPosition.getTileEntity(this.worldObj)
       if (t.isInstanceOf[TileReactorCell])
       {
-        vectors.add(checkPosition.clone.subtract(getPosition))
+        vectors.add(checkPosition - getPosition)
       }
       else
       {

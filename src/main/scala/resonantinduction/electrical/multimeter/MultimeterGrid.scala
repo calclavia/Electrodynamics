@@ -124,8 +124,8 @@ class MultimeterGrid extends Grid[PartMultimeter](classOf[PartMultimeter]) with 
       lowerBound = null
       super.reconstruct
       center = upperBound.midPoint(lowerBound)
-      upperBound.subtract(center)
-      lowerBound.subtract(center)
+      upperBound -= center
+      lowerBound -= center
       size = new Vector3(Math.abs(upperBound.x) + Math.abs(lowerBound.x), Math.abs(upperBound.y) + Math.abs(lowerBound.y), Math.abs(upperBound.z) + Math.abs(lowerBound.z))
       val area: Double = (if (size.x != 0) size.x else 1) * (if (size.y != 0) size.y else 1) * (if (size.z != 0) size.z else 1)
       isEnabled = area == getNodes.size
