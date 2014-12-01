@@ -51,6 +51,8 @@ object MechanicalContent extends ContentHolder
   {
     super.preInit()
 
+    RICreativeTab.itemStack = new ItemStack(itemGear)
+
     SchematicRegistry.register("resonantinduction.mechanical.waterTurbine", new SchematicPlate("schematic.waterTurbine.name", MechanicalContent.blockWaterTurbine))
     SchematicRegistry.register("resonantinduction.mechanical.windTurbine", new SchematicPlate("schematic.windTurbine.name", MechanicalContent.blockWindTurbine))
 

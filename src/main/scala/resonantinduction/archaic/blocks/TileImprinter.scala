@@ -52,7 +52,7 @@ class TileImprinter extends TileAdvanced(Material.circuits) with ISidedInventory
                 case e: Exception =>
                 {
                     e.printStackTrace
-                }
+            }
             }
     }
 

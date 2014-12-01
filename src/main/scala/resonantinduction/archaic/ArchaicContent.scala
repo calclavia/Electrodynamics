@@ -7,7 +7,7 @@ import net.minecraftforge.oredict.OreDictionary
 import resonant.content.loader.ContentHolder
 import resonant.lib.recipe.UniversalRecipe
 import resonantinduction.archaic.blocks.{ItemImprint, TileImprinter, TileTurntable}
-import resonantinduction.archaic.engineering.{ItemHammer, TileEngineeringTable}
+import resonantinduction.archaic.engineering.ItemHammer
 import resonantinduction.archaic.firebox.{TileFirebox, TileHotPlate}
 import resonantinduction.archaic.fluid.grate.TileGrate
 import resonantinduction.archaic.fluid.gutter.TileGutter
@@ -23,7 +23,7 @@ object ArchaicContent extends ContentHolder
   var itemHammer: Item = new ItemHammer
   var itemHandCrank: Item = new ItemHandCrank
 
-  var blockEngineeringTable: Block = new TileEngineeringTable
+  //  var blockEngineeringTable: Block = new TileEngineeringTable
   var blockCrate: Block = null
   //manager.newBlock(classOf[BlockCrate])
   var blockImprinter: Block = new TileImprinter
@@ -43,7 +43,6 @@ object ArchaicContent extends ContentHolder
 
   override def postInit()
   {
-    RICreativeTab.itemStack = new ItemStack(ArchaicContent.blockEngineeringTable)
     if (OreDictionary.getOres("cobblestone") == null)
     {
       OreDictionary.registerOre("cobblestone", Blocks.cobblestone)
@@ -53,7 +52,7 @@ object ArchaicContent extends ContentHolder
       OreDictionary.registerOre("stickWood", Items.stick)
     }
 
-    recipes += shaped(ArchaicContent.blockEngineeringTable, "P", "C", 'P', Blocks.wooden_pressure_plate, 'C', Blocks.crafting_table)
+    //    recipes += shaped(ArchaicContent.blockEngineeringTable, "P", "C", 'P', Blocks.wooden_pressure_plate, 'C', Blocks.crafting_table)
     //recipes += shaped(ArchaicBlocks.blockFilter, "B", "P", "B", 'B', Blocks.iron_bars, 'P', Items.paper)
 
     //recipes += shaped(new ItemStack(ArchaicBlocks.blockCrate, 1, 0), "WWW", "WSW", "WWW", 'S', "stickWood", 'W', "logWood")
