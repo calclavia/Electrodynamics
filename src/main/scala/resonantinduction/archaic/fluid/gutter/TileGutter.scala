@@ -17,12 +17,14 @@ import net.minecraftforge.fluids._
 import org.lwjgl.opengl.GL11
 import resonant.api.recipe.{MachineRecipes, RecipeResource}
 import resonant.content.factory.resources.RecipeType
+import resonant.lib.prefab.fluid.NodeFluid
 import resonant.lib.render.{FluidRenderUtility, RenderUtility}
 import resonant.lib.transform.region.Cuboid
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.FluidUtility
 import resonant.lib.utility.inventory.InventoryUtility
 import resonant.lib.wrapper.BitmaskWrapper._
+import resonantinduction.archaic.fluid.tank.TileTank
 import resonantinduction.core.Reference
 import resonantinduction.core.prefab.node.{NodeFluidPressure, TileFluidProvider}
 
@@ -272,6 +274,15 @@ class TileGutter extends TileFluidProvider(Material.rock)
 
   class NodeGutter(parent: TileFluidProvider) extends NodeFluidGravity(parent)
   {
+
+    override def canConnect[B <: IFluidHandler](other: B, from: ForgeDirection)
+    {
+      if (other.isInstanceOf[NodeFluid] && other.asInstanceOf[NodeFluid].parent.isInstanceOf[TileTank])
+        return false
+
+      return super.canConnect(other, from)
+    }
+
     override def canFill(from: ForgeDirection, fluid: Fluid): Boolean =
     {
       return from != ForgeDirection.UP && !fluid.isGaseous
