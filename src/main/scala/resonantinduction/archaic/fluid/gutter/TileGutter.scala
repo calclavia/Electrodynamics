@@ -25,6 +25,8 @@ import resonant.lib.wrapper.BitmaskWrapper._
 import resonantinduction.core.Reference
 import resonantinduction.core.prefab.node.{NodeFluidPressure, TileFluidProvider}
 
+import scala.collection.convert.wrapAll._
+
 object TileGutter
 {
   @SideOnly(Side.CLIENT)
@@ -40,27 +42,7 @@ object TileGutter
  */
 class TileGutter extends TileFluidProvider(Material.rock)
 {
-  fluidNode = new NodeFluidGravity(this)
-  {
-    override def canFill(from: ForgeDirection, fluid: Fluid): Boolean =
-    {
-      return from != ForgeDirection.UP && !fluid.isGaseous
-    }
-
-    override def canDrain(from: ForgeDirection, fluid: Fluid): Boolean =
-    {
-      return from != ForgeDirection.UP && !fluid.isGaseous
-    }
-
-    override def fill(from: ForgeDirection, resource: FluidStack, doFill: Boolean): Int =
-    {
-      if (!resource.getFluid.isGaseous)
-      {
-        return super.fill(from, resource, doFill)
-      }
-      return 0
-    }
-  }
+  fluidNode = new NodeGutter(this)
 
   textureName = "material_wood_surface"
   isOpaqueCube = false
@@ -165,10 +147,24 @@ class TileGutter extends TileFluidProvider(Material.rock)
         return true
       }
 
-      FluidUtility.playerActivatedFluidItem(world, xi, yi, zi, player, side)
+      FluidUtility.playerActivatedFluidItem(findGutters().map(_.getPrimaryTank).toList, player, side)
       return true
     }
     return true
+  }
+
+  //Recurse through all gutter blocks
+  private def findGutters(traverse: Set[NodeGutter] = Set(fluidNode.asInstanceOf[NodeGutter])): Set[NodeGutter] =
+  {
+    val current = traverse.last
+    var foundGutters = traverse
+
+    current.connections
+      .filter(g => g.isInstanceOf[NodeGutter] && !traverse.contains(g))
+      .map(_.asInstanceOf[NodeGutter])
+      .foreach(g => foundGutters ++= findGutters(traverse + g))
+
+    return foundGutters
   }
 
   override def onFillRain()
@@ -206,7 +202,6 @@ class TileGutter extends TileFluidProvider(Material.rock)
         val ySouthWest = FluidUtility.getAveragePercentageFilledForSides(classOf[TileGutter], percentageFilled, world, toVectorWorld, ForgeDirection.SOUTH, ForgeDirection.WEST)
         val yNorthWest = FluidUtility.getAveragePercentageFilledForSides(classOf[TileGutter], percentageFilled, world, toVectorWorld, ForgeDirection.NORTH, ForgeDirection.WEST)
         FluidRenderUtility.renderFluidTesselation(tank, ySouthEast, yNorthEast, ySouthWest, yNorthWest)
-        println(ySouthEast, yNorthEast, ySouthWest, yNorthWest)
         GL11.glPopMatrix()
       }
     }
@@ -247,4 +242,27 @@ class TileGutter extends TileFluidProvider(Material.rock)
       TileGutter.model.renderOnly("base")
     }
   }
+
+  class NodeGutter(parent: TileFluidProvider) extends NodeFluidGravity(parent)
+  {
+    override def canFill(from: ForgeDirection, fluid: Fluid): Boolean =
+    {
+      return from != ForgeDirection.UP && !fluid.isGaseous
+    }
+
+    override def canDrain(from: ForgeDirection, fluid: Fluid): Boolean =
+    {
+      return from != ForgeDirection.UP && !fluid.isGaseous
+    }
+
+    override def fill(from: ForgeDirection, resource: FluidStack, doFill: Boolean): Int =
+    {
+      if (!resource.getFluid.isGaseous)
+      {
+        return super.fill(from, resource, doFill)
+      }
+      return 0
+    }
+  }
+
 }
