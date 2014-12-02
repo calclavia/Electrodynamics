@@ -131,12 +131,6 @@ class TileGutter extends TileFluidProvider(Material.rock)
 
   override def activate(player: EntityPlayer, side: Int, vector3: Vector3): Boolean =
   {
-    if (!world.isRemote)
-    {
-      fluidNode.onFluidChanged()
-      println(fluidNode.getFluidAmount)
-    }
-
     if (player.getCurrentEquippedItem != null)
     {
       var itemStack: ItemStack = player.getCurrentEquippedItem
@@ -191,10 +185,10 @@ class TileGutter extends TileFluidProvider(Material.rock)
     render(0, 0x0)
   }
 
-  override def renderDynamic(position: Vector3, frame: Float, pass: Int)
+  override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
   {
     GL11.glPushMatrix()
-    GL11.glTranslated(position.x + 0.5, position.y + 0.5, position.z + 0.5)
+    GL11.glTranslated(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5)
 
     render(0, clientRenderMask)
 
@@ -207,11 +201,12 @@ class TileGutter extends TileFluidProvider(Material.rock)
       {
         GL11.glPushMatrix()
         GL11.glScaled(0.99, 0.99, 0.99)
-        val ySouthEast = FluidUtility.getAveragePercentageFilledForSides(classOf[TileGutter], percentageFilled, world, position, ForgeDirection.SOUTH, ForgeDirection.EAST)
-        val yNorthEast = FluidUtility.getAveragePercentageFilledForSides(classOf[TileGutter], percentageFilled, world, position, ForgeDirection.NORTH, ForgeDirection.EAST)
-        val ySouthWest = FluidUtility.getAveragePercentageFilledForSides(classOf[TileGutter], percentageFilled, world, position, ForgeDirection.SOUTH, ForgeDirection.WEST)
-        val yNorthWest = FluidUtility.getAveragePercentageFilledForSides(classOf[TileGutter], percentageFilled, world, position, ForgeDirection.NORTH, ForgeDirection.WEST)
+        val ySouthEast = FluidUtility.getAveragePercentageFilledForSides(classOf[TileGutter], percentageFilled, world, toVectorWorld, ForgeDirection.SOUTH, ForgeDirection.EAST)
+        val yNorthEast = FluidUtility.getAveragePercentageFilledForSides(classOf[TileGutter], percentageFilled, world, toVectorWorld, ForgeDirection.NORTH, ForgeDirection.EAST)
+        val ySouthWest = FluidUtility.getAveragePercentageFilledForSides(classOf[TileGutter], percentageFilled, world, toVectorWorld, ForgeDirection.SOUTH, ForgeDirection.WEST)
+        val yNorthWest = FluidUtility.getAveragePercentageFilledForSides(classOf[TileGutter], percentageFilled, world, toVectorWorld, ForgeDirection.NORTH, ForgeDirection.WEST)
         FluidRenderUtility.renderFluidTesselation(tank, ySouthEast, yNorthEast, ySouthWest, yNorthWest)
+        println(ySouthEast, yNorthEast, ySouthWest, yNorthWest)
         GL11.glPopMatrix()
       }
     }
