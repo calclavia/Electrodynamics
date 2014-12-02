@@ -4,7 +4,8 @@ import java.util.ArrayList
 
 import cpw.mods.fml.common.Optional
 import cpw.mods.fml.relauncher.{Side, SideOnly}
-import li.cil.oc.api.network.{Arguments, Callback, Context, SimpleComponent}
+import li.cil.oc.api.machine.{Arguments, Callback, Context}
+import li.cil.oc.api.network.SimpleComponent
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.client.renderer.texture.IIconRegister
@@ -82,6 +83,16 @@ class TileThermometer extends TileAdvanced(Material.piston) with SimpleComponent
       setThreshold(getThershold + 10)
     }
     return true
+  }
+
+  def setThreshold(newThreshold: Int)
+  {
+    threshold = newThreshold % TileThermometer.MAX_THRESHOLD
+    if (threshold <= 0)
+    {
+      threshold = TileThermometer.MAX_THRESHOLD
+    }
+    markUpdate
   }
 
   override def getStrongRedstonePower(access: IBlockAccess, side: Int): Int =
@@ -166,19 +177,30 @@ class TileThermometer extends TileAdvanced(Material.piston) with SimpleComponent
     }
   }
 
+  @Callback
+  @Optional.Method(modid = "OpenComputers")
+  def getTemperature(context: Context, args: Arguments): Array[Any] =
+  {
+    return Array[Any](this.detectedTemperature)
+  }
+
+  @Callback
+  @Optional.Method(modid = "OpenComputers")
+  def getWarningTemperature(context: Context, args: Arguments): Array[Any] =
+  {
+    return Array[Any](this.getThershold)
+  }
+
   def getThershold: Int =
   {
     return threshold
   }
 
-  def setThreshold(newThreshold: Int)
+  @Callback
+  @Optional.Method(modid = "OpenComputers")
+  def isAboveWarningTemperature(context: Context, args: Arguments): Array[Any] =
   {
-    threshold = newThreshold % TileThermometer.MAX_THRESHOLD
-    if (threshold <= 0)
-    {
-      threshold = TileThermometer.MAX_THRESHOLD
-    }
-    markUpdate
+    return Array[Any](this.isOverThreshold)
   }
 
   def isOverThreshold: Boolean =
@@ -188,25 +210,7 @@ class TileThermometer extends TileAdvanced(Material.piston) with SimpleComponent
 
   @Callback
   @Optional.Method(modid = "OpenComputers")
-  def getTemperature(context: Context, args: Arguments): Array[Any] =
-  {
-    return Array[Any](this.detectedTemperature)
-  }
-
-  @Callback
-  @Optional.Method(modid = "OpenComputers") def getWarningTemperature(context: Context, args: Arguments): Array[Any] =
-  {
-    return Array[Any](this.getThershold)
-  }
-
-  @Callback
-  @Optional.Method(modid = "OpenComputers") def isAboveWarningTemperature(context: Context, args: Arguments): Array[Any] =
-  {
-    return Array[Any](this.isOverThreshold)
-  }
-
-  @Callback
-  @Optional.Method(modid = "OpenComputers") def setWarningTemperature(context: Context, args: Arguments): Array[Any] =
+  def setWarningTemperature(context: Context, args: Arguments): Array[Any] =
   {
     if (args.count <= 0)
     {
@@ -216,7 +220,7 @@ class TileThermometer extends TileAdvanced(Material.piston) with SimpleComponent
     {
       throw new IllegalArgumentException("Too many Arguments. Must provide one argument")
     }
-    if (!(args.isInteger(0)))
+    if (!args.isInteger(0))
     {
       throw new IllegalArgumentException("Invalid Argument. Must provide an Integer")
     }
@@ -229,6 +233,6 @@ class TileThermometer extends TileAdvanced(Material.piston) with SimpleComponent
 
   def getComponentName: String =
   {
-    return "AS Thermometer"
+    return "Thermometer"
   }
 }
