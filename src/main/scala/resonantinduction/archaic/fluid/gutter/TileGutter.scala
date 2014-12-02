@@ -3,6 +3,7 @@ package resonantinduction.archaic.fluid.gutter
 import java.util.{ArrayList, List}
 
 import cpw.mods.fml.relauncher.{Side, SideOnly}
+import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.entity.Entity
 import net.minecraft.entity.item.EntityItem
@@ -12,7 +13,7 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
-import net.minecraftforge.fluids.{Fluid, FluidRegistry, FluidStack, IFluidTank}
+import net.minecraftforge.fluids._
 import org.lwjgl.opengl.GL11
 import resonant.api.recipe.{MachineRecipes, RecipeResource}
 import resonant.content.factory.resources.RecipeType
@@ -111,6 +112,31 @@ class TileGutter extends TileFluidProvider(Material.rock)
     }
   }
 
+  override def onNeighborChanged(block: Block)
+  {
+    super.onNeighborChanged(block)
+
+    if (!world.isRemote)
+    {
+      val posAbove = toVectorWorld + new Vector3(0, 1, 0)
+      val blockAbove = posAbove.getBlock
+      val tanks = findAllTanks
+
+      def drainAbove(doDrain: Boolean) =
+      {
+        val stack = FluidUtility.drainBlock(posAbove.world, posAbove, doDrain)
+
+        if (stack != null)
+          FluidUtility.fillAllTanks(tanks, stack, doDrain)
+        else
+          0
+      }
+
+      if (drainAbove(false) == FluidContainerRegistry.BUCKET_VOLUME)
+        drainAbove(true)
+    }
+  }
+
   override def activate(player: EntityPlayer, side: Int, vector3: Vector3): Boolean =
   {
     if (player.getCurrentEquippedItem != null)
@@ -147,8 +173,7 @@ class TileGutter extends TileFluidProvider(Material.rock)
         return true
       }
 
-      FluidUtility.playerActivatedFluidItem(findGutters().map(_.getPrimaryTank).toList, player, side)
-      return true
+      return FluidUtility.playerActivatedFluidItem(findAllTanks, player, side)
     }
     return true
   }
@@ -166,6 +191,8 @@ class TileGutter extends TileFluidProvider(Material.rock)
 
     return foundGutters
   }
+
+  private def findAllTanks = findGutters().map(_.getPrimaryTank).toList
 
   override def onFillRain()
   {
