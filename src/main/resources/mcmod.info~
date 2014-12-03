@@ -1,5 +1,5 @@
 [{
-    "modid": "ResonantInductionCore",
+    "modid": "ResonantInductionCore,
     "name": "Resonant Induction",
     "description": "Resonant Induction is a Minecraft mod that brings in realistic, world-based technology advancement experience into Minecraft.",
     "version": "${version}",
