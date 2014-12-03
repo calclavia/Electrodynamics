@@ -275,7 +275,7 @@ class TileGutter extends TileFluidProvider(Material.rock)
   class NodeGutter(parent: TileFluidProvider) extends NodeFluidGravity(parent)
   {
 
-    override def canConnect[B <: IFluidHandler](other: B, from: ForgeDirection)
+    override def canConnect[B <: IFluidHandler](other: B, from: ForgeDirection) : Boolean =
     {
       if (other.isInstanceOf[NodeFluid] && other.asInstanceOf[NodeFluid].parent.isInstanceOf[TileTank])
         return false
