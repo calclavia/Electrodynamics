@@ -2,7 +2,7 @@ package resonantinduction.atomic.machine.reactor
 
 import net.minecraft.entity.player.InventoryPlayer
 import org.lwjgl.opengl.GL11
-import resonant.lib.gui.GuiContainerBase
+import resonant.lib.prefab.gui.GuiContainerBase
 import resonant.lib.utility.LanguageUtility
 
 class GuiReactorCell(inventory: InventoryPlayer, tileEntity: TileReactorCell) extends GuiContainerBase(new ContainerReactorCell(inventory.player, tileEntity))

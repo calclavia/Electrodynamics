@@ -1,7 +1,7 @@
 package resonantinduction.atomic.machine.accelerator
 
 import net.minecraft.entity.player.EntityPlayer
-import resonant.lib.gui.GuiContainerBase
+import resonant.lib.prefab.gui.GuiContainerBase
 import resonant.lib.science.UnitDisplay
 import resonantinduction.core.Settings
 import resonant.lib.transform.vector.Vector3

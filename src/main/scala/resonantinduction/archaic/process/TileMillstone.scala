@@ -14,8 +14,8 @@ import resonant.api.recipe.{MachineRecipes, RecipeResource}
 import resonant.content.factory.resources.RecipeType
 import resonant.content.spatial.block.SpatialBlock
 import resonant.lib.content.prefab.java.TileInventory
-import resonant.lib.network.discriminator.{PacketTile, PacketType}
-import resonant.lib.network.handle.IPacketReceiver
+import resonant.engine.network.discriminator.{PacketTile, PacketType}
+import resonant.engine.network.handle.IPacketReceiver
 import resonant.lib.utility.inventory.InventoryUtility
 import resonantinduction.core.Reference
 import resonantinduction.mechanical.mech.gear.ItemHandCrank

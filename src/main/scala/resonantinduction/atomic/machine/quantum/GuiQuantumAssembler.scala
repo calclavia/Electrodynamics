@@ -3,7 +3,7 @@ package resonantinduction.atomic.machine.quantum
 import net.minecraft.entity.player.InventoryPlayer
 import net.minecraft.util.ResourceLocation
 import org.lwjgl.opengl.GL11
-import resonant.lib.gui.GuiContainerBase
+import resonant.lib.prefab.gui.GuiContainerBase
 import resonant.lib.science.UnitDisplay
 import resonantinduction.core.Reference
 

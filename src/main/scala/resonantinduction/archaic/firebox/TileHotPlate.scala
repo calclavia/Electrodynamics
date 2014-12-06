@@ -12,9 +12,9 @@ import net.minecraft.util.IIcon
 import net.minecraft.world.IBlockAccess
 import resonant.content.spatial.block.SpatialBlock
 import resonant.lib.content.prefab.java.TileInventory
-import resonant.lib.network.ByteBufWrapper._
-import resonant.lib.network.discriminator.PacketType
-import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
+import resonant.engine.network.ByteBufWrapper._
+import resonant.engine.network.discriminator.PacketType
+import resonant.engine.network.handle.{TPacketReceiver, TPacketSender}
 import resonant.lib.transform.region.Cuboid
 import resonant.lib.transform.vector.{Vector2, Vector3}
 import resonant.lib.wrapper.RandomWrapper._

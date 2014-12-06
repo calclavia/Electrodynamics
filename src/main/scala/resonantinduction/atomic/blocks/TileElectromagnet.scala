@@ -14,9 +14,8 @@ import org.lwjgl.opengl.GL11._
 import resonant.api.IElectromagnet
 import resonant.content.prefab.itemblock.ItemBlockMetadata
 import resonant.content.spatial.block.SpatialBlock
-import resonant.lib.render.RenderUtility
+import resonant.lib.render.{RenderBlockUtility, RenderUtility}
 import resonant.lib.utility.WorldUtility
-import resonant.lib.utility.render.RenderBlockUtility
 import resonant.lib.wrapper.WrapList._
 import resonant.lib.transform.vector.Vector3
 

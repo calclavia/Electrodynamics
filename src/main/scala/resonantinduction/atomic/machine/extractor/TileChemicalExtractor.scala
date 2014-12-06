@@ -11,8 +11,8 @@ import resonant.api.electric.EnergyStorage
 import resonant.engine.ResonantEngine
 import resonant.lib.content.prefab.TEnergyStorage
 import resonant.lib.grid.Compatibility
-import resonant.lib.network.Synced
-import resonant.lib.network.discriminator.PacketAnnotation
+import resonant.engine.network.Synced
+import resonant.engine.network.discriminator.PacketAnnotation
 import resonant.lib.transform.vector.Vector3
 import resonantinduction.atomic.AtomicContent
 import resonantinduction.core.Settings

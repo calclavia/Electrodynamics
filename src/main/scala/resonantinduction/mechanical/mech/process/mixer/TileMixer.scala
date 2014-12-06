@@ -17,11 +17,11 @@ import org.lwjgl.opengl.GL11._
 import resonant.api.recipe.MachineRecipes
 import resonant.content.factory.resources.RecipeType
 import resonant.engine.ResonantEngine
+import resonant.lib.`type`.Timer
 import resonant.lib.prefab.block.BlockFluidMixture
 import resonant.lib.render.RenderUtility
 import resonant.lib.transform.rotation.Quaternion
 import resonant.lib.transform.vector.Vector3
-import resonant.lib.utility.Timer
 import resonantinduction.core.Reference
 import resonantinduction.mechanical.mech.TileMechanical
 

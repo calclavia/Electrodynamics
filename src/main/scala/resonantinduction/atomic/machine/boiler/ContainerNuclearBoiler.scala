@@ -4,7 +4,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.{IInventory, Slot}
 import net.minecraft.item.ItemStack
 import net.minecraftforge.fluids.FluidContainerRegistry
-import resonant.lib.gui.ContainerBase
+import resonant.lib.prefab.gui.ContainerBase
 import resonant.lib.prefab.slot.{SlotEnergyItem, SlotSpecific}
 import resonantinduction.atomic.AtomicContent
 

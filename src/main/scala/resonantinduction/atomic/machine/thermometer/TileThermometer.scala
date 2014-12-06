@@ -17,8 +17,8 @@ import net.minecraft.world.IBlockAccess
 import resonant.content.prefab.itemblock.ItemBlockSaved
 import resonant.content.prefab.java.TileAdvanced
 import resonant.engine.grid.thermal.ThermalGrid
-import resonant.lib.network.Synced
-import resonant.lib.network.discriminator.PacketAnnotation
+import resonant.engine.network.Synced
+import resonant.engine.network.discriminator.PacketAnnotation
 import resonant.lib.transform.vector.{Vector3, VectorWorld}
 import resonant.lib.utility.inventory.InventoryUtility
 import resonantinduction.core.Reference

@@ -16,8 +16,8 @@ import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
 import resonant.api.IRotatable
 import resonant.lib.content.prefab.java.TileInventory
-import resonant.lib.network.discriminator.{PacketType, PacketTile}
-import resonant.lib.network.handle.{TPacketSender, TPacketReceiver}
+import resonant.engine.network.discriminator.{PacketType, PacketTile}
+import resonant.engine.network.handle.{TPacketSender, TPacketReceiver}
 import resonant.lib.render.RenderItemOverlayUtility
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.LanguageUtility

@@ -17,10 +17,9 @@ import resonant.api.IRemovable.ISneakPickup
 import resonant.api.grid.INode
 import resonant.content.prefab.RenderConnectedTexture
 import resonant.lib.grid.node.Node
-import resonant.lib.render.{FluidRenderUtility, RenderUtility}
+import resonant.lib.render.{RenderBlockUtility, FluidRenderUtility, RenderUtility}
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.FluidUtility
-import resonant.lib.utility.render.RenderBlockUtility
 import resonant.lib.wrapper.BitmaskWrapper._
 import resonantinduction.archaic.ArchaicContent
 import resonantinduction.archaic.fluid.gutter.NodeFluidGravity

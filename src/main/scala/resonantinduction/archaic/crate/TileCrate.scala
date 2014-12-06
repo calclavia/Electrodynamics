@@ -13,9 +13,9 @@ import net.minecraftforge.oredict.OreDictionary
 import resonant.api.IFilterable
 import resonant.api.IRemovable.ISneakPickup
 import resonant.lib.content.prefab.java.TileInventory
-import resonant.lib.network.ByteBufWrapper._
-import resonant.lib.network.discriminator.PacketType
-import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
+import resonant.engine.network.ByteBufWrapper._
+import resonant.engine.network.discriminator.PacketType
+import resonant.engine.network.handle.{TPacketReceiver, TPacketSender}
 import resonantinduction.archaic.ArchaicContent
 
 /** Basic single stack inventory.

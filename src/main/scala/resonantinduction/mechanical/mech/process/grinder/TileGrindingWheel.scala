@@ -11,12 +11,12 @@ import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11._
 import resonant.api.recipe.MachineRecipes
 import resonant.content.factory.resources.RecipeType
+import resonant.lib.`type`.Timer
 import resonant.lib.prefab.damage.CustomDamageSource
 import resonant.lib.render.RenderUtility
 import resonant.lib.transform.region.Cuboid
 import resonant.lib.transform.rotation.AngleAxis
 import resonant.lib.transform.vector.Vector3
-import resonant.lib.utility.Timer
 import resonantinduction.core.{Reference, ResonantInduction}
 import resonantinduction.mechanical.mech.TileMechanical
 

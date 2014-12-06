@@ -5,7 +5,7 @@ import net.minecraft.init.{Blocks, Items}
 import net.minecraft.item.{Item, ItemStack}
 import resonant.api.grid.NodeRegistry
 import resonant.content.loader.ContentHolder
-import resonant.lib.network.discriminator.PacketAnnotationManager
+import resonant.engine.network.discriminator.PacketAnnotationManager
 import resonant.lib.recipe.UniversalRecipe
 import resonant.lib.schematic.{SchematicPlate, SchematicRegistry}
 import resonantinduction.core.interfaces.TNodeMechanical

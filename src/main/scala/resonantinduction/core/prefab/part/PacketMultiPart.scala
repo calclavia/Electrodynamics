@@ -4,8 +4,8 @@ import codechicken.multipart.{TMultiPart, TileMultipart}
 import io.netty.buffer.ByteBuf
 import io.netty.channel.ChannelHandlerContext
 import net.minecraft.entity.player.EntityPlayer
-import resonant.lib.network.discriminator.PacketType
-import resonant.lib.network.handle.TPacketReceiver
+import resonant.engine.network.discriminator.PacketType
+import resonant.engine.network.handle.TPacketReceiver
 import resonant.lib.transform.vector.Vector3
 
 /**

@@ -16,9 +16,9 @@ import org.lwjgl.opengl.GL11._
 import resonant.api.electric.EnergyStorage
 import resonant.content.prefab.java.TileAdvanced
 import resonant.lib.content.prefab.{TElectric, TEnergyStorage}
-import resonant.lib.network.discriminator.{PacketTile, PacketType}
-import resonant.lib.network.handle.IPacketReceiver
-import resonant.lib.network.netty.AbstractPacket
+import resonant.engine.network.discriminator.{PacketTile, PacketType}
+import resonant.engine.network.handle.IPacketReceiver
+import resonant.engine.network.netty.AbstractPacket
 import resonant.lib.render.RenderUtility
 import resonant.lib.transform.vector.Vector3
 import resonantinduction.core.Reference

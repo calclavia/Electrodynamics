@@ -21,8 +21,8 @@ import org.lwjgl.opengl.GL11
 import resonant.content.prefab.java.TileAdvanced
 import resonant.content.spatial.block.SpatialBlock
 import resonant.engine.ResonantEngine
-import resonant.lib.network.discriminator.{PacketTile, PacketType}
-import resonant.lib.network.handle.IPacketReceiver
+import resonant.engine.network.discriminator.{PacketTile, PacketType}
+import resonant.engine.network.handle.IPacketReceiver
 import resonant.lib.render.RenderItemOverlayUtility
 import resonant.lib.utility.inventory.InventoryUtility
 import resonantinduction.core.Reference

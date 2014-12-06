@@ -24,8 +24,8 @@ import resonant.api.event.PlasmaEvent
 import resonant.api.recipe.QuantumAssemblerRecipes
 import resonant.content.loader.{ContentHolder, ExplicitContentName}
 import resonant.engine.grid.thermal.EventThermal
-import resonant.lib.network.discriminator.PacketAnnotationManager
-import resonant.lib.ore.OreGenerator
+import resonant.engine.network.discriminator.PacketAnnotationManager
+import resonant.lib.prefab.ore.OreGenerator
 import resonant.lib.recipe.UniversalRecipe
 import resonant.lib.schematic.SchematicRegistry
 import resonant.lib.transform.vector.VectorWorld

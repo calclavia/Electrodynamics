@@ -18,8 +18,8 @@ import net.minecraftforge.fluids.{FluidTankInfo, IFluidHandler}
 import resonant.api.IRemovable
 import resonant.api.grid.INodeProvider
 import resonant.lib.grid.Compatibility
-import resonant.lib.network.discriminator.PacketType
-import resonant.lib.network.handle.IPacketReceiver
+import resonant.engine.network.discriminator.PacketType
+import resonant.engine.network.handle.IPacketReceiver
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.WrenchUtility
 import resonantinduction.core.ResonantInduction

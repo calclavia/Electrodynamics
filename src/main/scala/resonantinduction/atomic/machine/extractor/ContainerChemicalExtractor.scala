@@ -2,7 +2,7 @@ package resonantinduction.atomic.machine.extractor
 
 import net.minecraft.entity.player.InventoryPlayer
 import net.minecraft.inventory.{Slot, SlotFurnace}
-import resonant.lib.gui.ContainerBase
+import resonant.lib.prefab.gui.ContainerBase
 import resonant.lib.prefab.slot.SlotEnergyItem
 
 /**

@@ -21,9 +21,9 @@ import resonant.api.electric.EnergyStorage
 import resonant.content.spatial.block.{SpatialBlock, SpatialTile}
 import resonant.engine.grid.thermal.{BoilEvent, ThermalPhysics}
 import resonant.lib.content.prefab.{TElectric, TInventory}
-import resonant.lib.network.ByteBufWrapper._
-import resonant.lib.network.discriminator.PacketType
-import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
+import resonant.engine.network.ByteBufWrapper._
+import resonant.engine.network.discriminator.PacketType
+import resonant.engine.network.handle.{TPacketReceiver, TPacketSender}
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.FluidUtility
 import resonant.lib.wrapper.WrapList._

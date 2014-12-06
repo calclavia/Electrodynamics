@@ -3,7 +3,7 @@ package resonantinduction.atomic.machine.accelerator
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.{IInventory, Slot, SlotFurnace}
 import net.minecraft.item.ItemStack
-import resonant.lib.gui.ContainerBase
+import resonant.lib.prefab.gui.ContainerBase
 import resonantinduction.atomic.AtomicContent
 
 /**

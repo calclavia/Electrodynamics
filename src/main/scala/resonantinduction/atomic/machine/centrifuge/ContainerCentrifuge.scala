@@ -3,7 +3,7 @@ package resonantinduction.atomic.machine.centrifuge
 import net.minecraft.entity.player.{EntityPlayer, InventoryPlayer}
 import net.minecraft.inventory.{IInventory, Slot, SlotFurnace}
 import net.minecraft.item.ItemStack
-import resonant.lib.gui.ContainerBase
+import resonant.lib.prefab.gui.ContainerBase
 import resonant.lib.prefab.slot.SlotEnergyItem
 import resonantinduction.atomic.AtomicContent
 

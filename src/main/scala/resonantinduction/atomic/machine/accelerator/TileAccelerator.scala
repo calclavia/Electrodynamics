@@ -13,8 +13,8 @@ import resonant.api.electric.EnergyStorage
 import resonant.api.{IElectromagnet, IRotatable}
 import resonant.lib.content.prefab.TEnergyStorage
 import resonant.lib.content.prefab.java.TileElectricInventory
-import resonant.lib.network.discriminator.{PacketTile, PacketType}
-import resonant.lib.network.handle.{TPacketIDReceiver, TPacketSender}
+import resonant.engine.network.discriminator.{PacketTile, PacketType}
+import resonant.engine.network.handle.{TPacketIDReceiver, TPacketSender}
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.BlockUtility
 import resonantinduction.atomic.AtomicContent

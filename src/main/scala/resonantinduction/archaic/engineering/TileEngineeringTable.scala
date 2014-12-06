@@ -28,9 +28,9 @@ import resonant.content.prefab.itemblock.ItemBlockSaved
 import resonant.engine.ResonantEngine
 import resonant.lib.`type`.Pair
 import resonant.lib.content.prefab.java.TileInventory
-import resonant.lib.gui.ContainerDummy
-import resonant.lib.network.discriminator.{PacketTile, PacketType}
-import resonant.lib.network.handle.IPacketReceiver
+import resonant.lib.prefab.gui.ContainerDummy
+import resonant.engine.network.discriminator.{PacketTile, PacketType}
+import resonant.engine.network.handle.IPacketReceiver
 import resonant.lib.render.RenderItemOverlayUtility
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.utility.inventory.AutoCraftingManager.IAutoCrafter

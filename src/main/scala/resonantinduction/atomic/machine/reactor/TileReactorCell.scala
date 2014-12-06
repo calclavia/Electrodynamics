@@ -21,9 +21,9 @@ import resonant.api.{IReactor, IReactorComponent}
 import resonant.engine.grid.thermal.{ThermalGrid, ThermalPhysics}
 import resonant.lib.content.prefab.java.TileInventory
 import resonant.lib.multiblock.reference.{IMultiBlockStructure, MultiBlockHandler}
-import resonant.lib.network.Synced
-import resonant.lib.network.Synced.{SyncedInput, SyncedOutput}
-import resonant.lib.network.discriminator.PacketAnnotation
+import resonant.engine.network.Synced
+import resonant.engine.network.Synced.{SyncedInput, SyncedOutput}
+import resonant.engine.network.discriminator.PacketAnnotation
 import resonant.lib.prefab.poison.PoisonRadiation
 import resonant.lib.transform.vector.{Vector3, VectorWorld}
 import resonant.lib.utility.inventory.InventoryUtility

@@ -11,9 +11,9 @@ import resonant.content.prefab.scal.TRotatable
 import resonant.content.spatial.block.SpatialTile
 import resonant.engine.ResonantEngine
 import resonant.lib.grid.node.TSpatialNodeProvider
-import resonant.lib.network.ByteBufWrapper._
-import resonant.lib.network.discriminator.PacketType
-import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
+import resonant.engine.network.ByteBufWrapper._
+import resonant.engine.network.discriminator.PacketType
+import resonant.engine.network.handle.{TPacketReceiver, TPacketSender}
 import resonant.lib.transform.vector.Vector3
 import resonantinduction.mechanical.mech.grid.NodeMechanical
 
