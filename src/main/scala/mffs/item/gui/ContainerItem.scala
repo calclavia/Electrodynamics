@@ -4,7 +4,7 @@ import mffs.slot.SlotDisabled
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.{IInventory, Slot}
 import net.minecraft.item.ItemStack
-import resonant.lib.gui.ContainerBase
+import resonant.lib.prefab.gui.ContainerBase
 import resonant.lib.utility.inventory.{ExternalInventory, InventoryUtility}
 import resonant.lib.transform.vector.Vector3
 

@@ -14,11 +14,11 @@ import resonant.api.blocks.ICamouflageMaterial
 import resonant.api.mffs.machine.IActivatable
 import resonant.content.prefab.scal.TRotatable
 import resonant.content.spatial.block.SpatialTile
-import resonant.lib.network.ByteBufWrapper.ByteBufWrapper
-import resonant.lib.network.IPlayerUsing
-import resonant.lib.network.discriminator.PacketType
-import resonant.lib.network.handle.{IPacketIDReceiver, TPacketSender}
-import resonant.lib.network.netty.PacketManager
+import resonant.engine.network.ByteBufWrapper.ByteBufWrapper
+import resonant.engine.network.IPlayerUsing
+import resonant.engine.network.discriminator.PacketType
+import resonant.engine.network.handle.{IPacketIDReceiver, TPacketSender}
+import resonant.engine.network.netty.PacketManager
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.inventory.InventoryUtility
 

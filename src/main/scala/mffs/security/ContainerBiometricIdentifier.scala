@@ -3,7 +3,7 @@ package mffs.security
 import mffs.item.card.ItemCardFrequency
 import mffs.slot.SlotBase
 import net.minecraft.entity.player.EntityPlayer
-import resonant.lib.gui.ContainerBase
+import resonant.lib.prefab.gui.ContainerBase
 import resonant.lib.prefab.slot.SlotSpecific
 
 class ContainerBiometricIdentifier(player: EntityPlayer, tile: TileBiometricIdentifier) extends ContainerBase(tile)

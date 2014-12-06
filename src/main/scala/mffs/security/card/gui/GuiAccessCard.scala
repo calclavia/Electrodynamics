@@ -8,7 +8,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.Container
 import net.minecraft.item.ItemStack
 import resonant.lib.access.java.Permissions
-import resonant.lib.network.discriminator.PacketPlayerItem
+import resonant.engine.network.discriminator.PacketPlayerItem
 import resonant.lib.render.EnumColor
 import resonant.lib.wrapper.WrapList._
 

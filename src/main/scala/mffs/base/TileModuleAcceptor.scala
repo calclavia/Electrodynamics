@@ -10,8 +10,8 @@ import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.fluids.FluidContainerRegistry
 import resonant.api.mffs.modules.{IModule, IModuleProvider}
-import resonant.lib.network.ByteBufWrapper.ByteBufWrapper
-import resonant.lib.network.discriminator.PacketType
+import resonant.engine.network.ByteBufWrapper.ByteBufWrapper
+import resonant.engine.network.discriminator.PacketType
 
 import scala.collection.convert.wrapAll._
 

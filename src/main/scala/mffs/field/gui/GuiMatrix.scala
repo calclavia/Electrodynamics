@@ -1,7 +1,7 @@
 package mffs.field.gui
 
 import mffs.base.{GuiMFFS, TileFieldMatrix}
-import resonant.lib.gui.GuiContainerBase.SlotType
+import resonant.lib.prefab.gui.GuiContainerBase.SlotType
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.transform.region.Rectangle
 import resonant.lib.transform.vector.Vector2

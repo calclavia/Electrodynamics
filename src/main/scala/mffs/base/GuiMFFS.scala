@@ -6,8 +6,8 @@ import net.minecraft.client.gui.GuiButton
 import net.minecraft.init.Blocks
 import net.minecraft.inventory.Container
 import net.minecraft.item.ItemStack
-import resonant.lib.gui.GuiContainerBase
-import resonant.lib.network.discriminator.PacketTile
+import resonant.lib.prefab.gui.GuiContainerBase
+import resonant.engine.network.discriminator.PacketTile
 import resonant.lib.render.EnumColor
 import resonant.lib.science.UnitDisplay
 import resonant.lib.wrapper.WrapList._
