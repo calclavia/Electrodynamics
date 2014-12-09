@@ -4,7 +4,7 @@ import net.minecraft.entity.player.InventoryPlayer
 import net.minecraft.util.StatCollector
 import resonant.lib.prefab.gui.GuiContainerBase
 import resonant.lib.prefab.gui.GuiContainerBase.SlotType
-import resonant.lib.science.UnitDisplay
+import resonant.lib.utility.science.UnitDisplay
 
 class GuiCentrifuge(par1InventoryPlayer: InventoryPlayer, tileEntity: TileCentrifuge) extends GuiContainerBase(new ContainerCentrifuge(par1InventoryPlayer, tileEntity))
 {

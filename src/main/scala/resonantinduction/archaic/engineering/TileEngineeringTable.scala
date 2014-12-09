@@ -21,8 +21,9 @@ import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.oredict.OreDictionary
 import org.apache.commons.lang3.ArrayUtils
 import org.lwjgl.opengl.GL11
+import resonant.api.gui.ISlotPickResult
 import resonant.api.recipe.{MachineRecipes, RecipeResource}
-import resonant.api.{IRotatable, ISlotPickResult}
+import resonant.api.tile.IRotatable
 import resonant.content.factory.resources.RecipeType
 import resonant.content.prefab.itemblock.ItemBlockSaved
 import resonant.engine.ResonantEngine

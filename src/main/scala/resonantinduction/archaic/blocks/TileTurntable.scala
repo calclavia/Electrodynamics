@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.util.IIcon
 import net.minecraft.world.{IBlockAccess, World}
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.api.IRotatable
+import resonant.api.tile.IRotatable
 import resonant.content.prefab.scal.TRotatable
 import resonant.content.spatial.block.SpatialBlock
 import resonant.lib.transform.vector.Vector3

@@ -10,7 +10,7 @@ import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.world.World
 import org.lwjgl.input.Keyboard
 import resonant.lib.render.EnumColor
-import resonant.lib.science.UnitDisplay
+import resonant.lib.utility.science.UnitDisplay
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.wrapper.WrapList._
 import resonantinduction.core.ResonantPartFactory

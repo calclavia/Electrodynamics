@@ -14,7 +14,7 @@ import net.minecraft.util.{ChatComponentText, IIcon}
 import net.minecraft.world.IBlockAccess
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
-import resonant.api.IRotatable
+import resonant.api.tile.IRotatable
 import resonant.lib.content.prefab.java.TileInventory
 import resonant.engine.network.discriminator.{PacketType, PacketTile}
 import resonant.engine.network.handle.{TPacketSender, TPacketReceiver}

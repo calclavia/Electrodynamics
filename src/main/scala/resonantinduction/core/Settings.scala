@@ -5,8 +5,8 @@ import net.minecraft.block.Block
 import net.minecraft.item.ItemStack
 import net.minecraftforge.common.config.Configuration
 import resonant.api.recipe.QuantumAssemblerRecipes
-import resonant.lib.config.Config
-import resonant.lib.config.ConfigEvent.PostConfigEvent
+import resonant.lib.mod.config.Config
+import resonant.lib.mod.config.ConfigEvent.PostConfigEvent
 import resonant.lib.prefab.poison.PotionRadiation
 
 import scala.collection.convert.wrapAll._

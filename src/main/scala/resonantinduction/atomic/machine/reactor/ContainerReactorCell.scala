@@ -4,7 +4,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.Slot
 import net.minecraft.item.ItemStack
 import resonant.lib.prefab.gui.ContainerBase
-import resonant.lib.prefab.slot.SlotSpecific
+import resonant.lib.prefab.gui.slot.SlotSpecific
 import resonantinduction.atomic.items.{ItemBreederFuel, ItemFissileFuel}
 
 class ContainerReactorCell(player: EntityPlayer, tileEntity: TileReactorCell) extends ContainerBase(tileEntity)

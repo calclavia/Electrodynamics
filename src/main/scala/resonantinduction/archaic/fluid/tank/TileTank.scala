@@ -13,8 +13,9 @@ import net.minecraft.world.IBlockAccess
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import org.lwjgl.opengl.GL11
-import resonant.api.IRemovable.ISneakPickup
-import resonant.api.grid.INode
+import resonant.api.tile.IRemovable
+import IRemovable.ISneakPickup
+import resonant.api.tile.node.INode
 import resonant.content.prefab.RenderConnectedTexture
 import resonant.lib.grid.node.Node
 import resonant.lib.render.{RenderBlockUtility, FluidRenderUtility, RenderUtility}

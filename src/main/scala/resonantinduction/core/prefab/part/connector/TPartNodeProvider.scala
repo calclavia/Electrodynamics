@@ -6,7 +6,8 @@ import codechicken.multipart.TMultiPart
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.ISave
-import resonant.api.grid.{INode, INodeProvider}
+import resonant.api.tile.INodeProvider
+import resonant.api.tile.node.INode
 import resonant.lib.grid.node.Node
 
 import scala.collection.convert.wrapAll._

@@ -15,7 +15,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import resonant.content.prefab.java.TileAdvanced
 import resonant.content.spatial.block.SpatialBlock
-import resonant.lib.path.{IPathCallBack, Pathfinder}
+import resonant.lib.utility.path.{IPathCallBack, Pathfinder}
 import resonant.lib.transform.vector.Vector3
 
 /**

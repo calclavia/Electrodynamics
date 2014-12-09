@@ -8,7 +8,8 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.{ChatComponentText, MovingObjectPosition}
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.api.grid.{INode, INodeProvider}
+import resonant.api.tile.INodeProvider
+import resonant.api.tile.node.INode
 import resonant.lib.utility.WrenchUtility
 import resonantinduction.core.prefab.part.PartFace
 import resonantinduction.electrical.ElectricalContent

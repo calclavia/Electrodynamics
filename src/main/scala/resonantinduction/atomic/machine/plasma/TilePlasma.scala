@@ -14,7 +14,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.event.PlasmaEvent
 import resonant.content.prefab.java.TileAdvanced
 import resonant.engine.grid.thermal.ThermalGrid
-import resonant.lib.config.Config
+import resonant.lib.mod.config.Config
 import resonant.lib.transform.vector.Vector3
 
 object TilePlasma

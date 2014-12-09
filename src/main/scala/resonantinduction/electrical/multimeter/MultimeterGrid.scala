@@ -1,11 +1,11 @@
 package resonantinduction.electrical.multimeter
 
 import net.minecraft.nbt.{NBTTagCompound, NBTTagList}
+import resonant.api.IUpdate
 import resonant.lib.grid.{UpdateTicker, Grid}
-import resonant.lib.science.UnitDisplay
+import resonant.lib.utility.science.UnitDisplay
 import resonant.lib.utility.LanguageUtility
 import resonantinduction.electrical.multimeter.graph._
-import resonant.api.grid.IUpdate
 import resonant.lib.transform.vector.Vector3
 
 import scala.collection.convert.wrapAll._

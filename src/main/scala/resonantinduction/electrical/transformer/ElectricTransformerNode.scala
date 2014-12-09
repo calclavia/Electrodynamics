@@ -1,7 +1,7 @@
 package resonantinduction.electrical.transformer
 
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.api.grid.INodeProvider
+import resonant.api.tile.INodeProvider
 import resonant.lib.grid.electric.DCNode
 
 /**

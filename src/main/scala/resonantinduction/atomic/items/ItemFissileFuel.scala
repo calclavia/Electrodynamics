@@ -9,7 +9,7 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.FluidStack
-import resonant.api.{IReactor, IReactorComponent}
+import resonant.api.tile.{IReactorComponent, IReactor}
 import resonant.lib.wrapper.WrapList._
 import resonantinduction.atomic.AtomicContent
 import resonantinduction.atomic.machine.reactor.TileReactorCell

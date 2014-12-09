@@ -7,7 +7,7 @@ import net.minecraft.block.Block
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
-import resonant.lib.prefab.AbstractProxy
+import resonant.lib.mod.AbstractProxy
 import resonantinduction.atomic.machine.accelerator.{ContainerAccelerator, TileAccelerator}
 import resonantinduction.atomic.machine.boiler.{ContainerNuclearBoiler, TileNuclearBoiler}
 import resonantinduction.atomic.machine.centrifuge.{ContainerCentrifuge, TileCentrifuge}

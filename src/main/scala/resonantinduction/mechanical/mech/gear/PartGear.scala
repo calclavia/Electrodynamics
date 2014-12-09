@@ -11,8 +11,8 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.MovingObjectPosition
 import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.api.grid.INode
-import resonant.lib.multiblock.reference.IMultiBlockStructure
+import resonant.api.tile.node.INode
+import resonant.lib.prefab.multiblock.reference.IMultiBlockStructure
 import resonant.lib.utility.WrenchUtility
 import resonantinduction.core.Reference
 import resonantinduction.core.prefab.part.CuboidShapes

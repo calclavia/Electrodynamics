@@ -6,7 +6,7 @@ import net.minecraft.block.Block
 import net.minecraft.init.Blocks
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.lib.`type`.Pair
-import resonant.lib.schematic.Schematic
+import resonant.lib.world.schematic.Schematic
 import resonantinduction.atomic.AtomicContent
 import resonant.lib.transform.vector.Vector3
 

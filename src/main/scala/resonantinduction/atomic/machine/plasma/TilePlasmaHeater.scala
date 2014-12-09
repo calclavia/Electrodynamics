@@ -10,15 +10,15 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.network.Packet
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
-import resonant.api.ITagRender
-import resonant.api.electric.EnergyStorage
+import resonant.api.tile.ITagRender
 import resonant.engine.ResonantEngine
-import resonant.lib.config.Config
+import resonant.lib.grid.energy.EnergyStorage
+import resonant.lib.mod.config.Config
 import resonant.lib.content.prefab.TEnergyStorage
 import resonant.lib.content.prefab.java.TileElectric
 import resonant.engine.network.discriminator.{PacketTile, PacketType}
 import resonant.engine.network.handle.IPacketReceiver
-import resonant.lib.science.UnitDisplay
+import resonant.lib.utility.science.UnitDisplay
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.{FluidUtility, LanguageUtility}
 import resonantinduction.atomic.AtomicContent

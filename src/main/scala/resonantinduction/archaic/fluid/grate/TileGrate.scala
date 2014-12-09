@@ -11,8 +11,8 @@ import net.minecraft.util.{ChatComponentText, IIcon}
 import net.minecraft.world.IBlockAccess
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.{Fluid, FluidContainerRegistry, FluidRegistry, FluidStack}
-import resonant.api.IRotatable
-import resonant.lib.config.Config
+import resonant.api.tile.IRotatable
+import resonant.lib.mod.config.Config
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.FluidUtility
 import resonantinduction.archaic.fluid.grate.TileGrate._

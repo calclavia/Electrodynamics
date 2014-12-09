@@ -1,9 +1,9 @@
 package resonantinduction.atomic.machine.fulmination
 
 import net.minecraft.block.material.Material
-import resonant.api.electric.EnergyStorage
 import resonant.lib.content.prefab.TEnergyStorage
 import resonant.lib.content.prefab.java.TileElectric
+import resonant.lib.grid.energy.EnergyStorage
 
 /**
  * Fulmination TileEntity

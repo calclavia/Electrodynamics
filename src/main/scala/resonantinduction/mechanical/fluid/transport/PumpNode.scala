@@ -2,7 +2,7 @@ package resonantinduction.mechanical.fluid.transport
 
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.IFluidHandler
-import resonant.api.grid.INodeProvider
+import resonant.api.tile.INodeProvider
 import resonantinduction.core.prefab.node.NodeFluidPressure
 
 /**

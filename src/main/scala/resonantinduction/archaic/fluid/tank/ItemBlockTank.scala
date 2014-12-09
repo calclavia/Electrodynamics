@@ -9,8 +9,8 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
 import net.minecraftforge.fluids.{FluidContainerRegistry, FluidStack, IFluidContainerItem}
-import resonant.lib.science.UnitDisplay
-import resonant.lib.science.UnitDisplay.Unit
+import resonant.lib.utility.science.UnitDisplay
+import resonant.lib.utility.science.UnitDisplay.Unit
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.wrapper.WrapList._
 

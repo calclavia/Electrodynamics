@@ -1,6 +1,6 @@
 package resonantinduction.core.interfaces
 
-import resonant.api.grid.INode
+import resonant.api.tile.node.INode
 import resonant.lib.transform.vector.IVectorWorld
 
 /**

@@ -15,7 +15,7 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.{IIcon, MovingObjectPosition}
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
-import resonant.api.grid.INodeProvider
+import resonant.api.tile.INodeProvider
 import resonant.lib.grid.UpdateTicker
 import resonant.lib.grid.electric.DCNode
 import resonantinduction.core.prefab.node.TMultipartNode

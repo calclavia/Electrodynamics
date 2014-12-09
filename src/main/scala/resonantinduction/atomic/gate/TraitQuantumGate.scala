@@ -1,7 +1,7 @@
 package resonantinduction.atomic.gate
 
 import codechicken.multipart.TileMultipart
-import resonant.api.blocks.IBlockFrequency
+import resonant.api.tile.IBlockFrequency
 
 class TraitQuantumGate extends TileMultipart with IQuantumGate
 {

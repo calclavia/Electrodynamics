@@ -1,6 +1,6 @@
 package resonantinduction.mechanical.mech.grid
 
-import resonant.api.grid.IUpdate
+import resonant.api.IUpdate
 import resonant.lib.grid.{GridNode, UpdateTicker}
 
 import scala.collection.convert.wrapAll._

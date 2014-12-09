@@ -2,7 +2,8 @@ package resonantinduction.core.prefab.node
 
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.{FluidContainerRegistry, IFluidHandler}
-import resonant.api.grid.{INodeProvider, IUpdate}
+import resonant.api.IUpdate
+import resonant.api.tile.INodeProvider
 import resonant.lib.grid.UpdateTicker
 import resonant.lib.prefab.fluid.NodeFluid
 import resonantinduction.archaic.fluid.gutter.NodeFluidGravity

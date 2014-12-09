@@ -1,6 +1,6 @@
 package resonantinduction.mechanical.mech.grid
 
-import resonant.api.grid.INodeProvider
+import resonant.api.tile.INodeProvider
 import resonant.lib.grid.GridNode
 import resonant.lib.grid.node.{NodeGrid, TTileConnector}
 import resonant.lib.transform.vector.IVectorWorld

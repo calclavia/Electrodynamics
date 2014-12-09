@@ -9,8 +9,8 @@ import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.config.Configuration
 import org.modstats.{ModstatInfo, Modstats}
 import resonant.engine.{References, ResonantEngine}
-import resonant.lib.config.ConfigHandler
-import resonant.lib.loadable.LoadableHandler
+import resonant.lib.mod.config.ConfigHandler
+import resonant.lib.mod.loadable.LoadableHandler
 import resonantinduction.archaic.ArchaicContent
 import resonantinduction.atomic.AtomicContent
 import resonantinduction.core.handler.TextureHookHandler

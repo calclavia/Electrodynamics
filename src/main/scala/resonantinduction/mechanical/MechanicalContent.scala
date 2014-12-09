@@ -3,11 +3,11 @@ package resonantinduction.mechanical
 import net.minecraft.block.Block
 import net.minecraft.init.{Blocks, Items}
 import net.minecraft.item.{Item, ItemStack}
-import resonant.api.grid.NodeRegistry
+import resonant.api.tile.node.NodeRegistry
 import resonant.content.loader.ContentHolder
 import resonant.engine.network.discriminator.PacketAnnotationManager
-import resonant.lib.recipe.UniversalRecipe
-import resonant.lib.schematic.{SchematicPlate, SchematicRegistry}
+import resonant.lib.utility.recipe.UniversalRecipe
+import resonant.lib.world.schematic.{SchematicPlate, SchematicRegistry}
 import resonantinduction.core.interfaces.TNodeMechanical
 import resonantinduction.core.{RICreativeTab, Reference, ResonantPartFactory}
 import resonantinduction.mechanical.fluid.pipe.{ItemPipe, PartPipe, PipeMaterials}

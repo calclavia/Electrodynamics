@@ -13,7 +13,7 @@ import net.minecraftforge.client.event.TextureStitchEvent
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.oredict.{OreDictionary, ShapelessOreRecipe}
 import resonant.content.loader.{ContentHolder, ExplicitContentName}
-import resonant.lib.recipe.UniversalRecipe
+import resonant.lib.utility.recipe.UniversalRecipe
 import resonantinduction.atomic.gate.{ItemQuantumGlyph, PartQuantumGlyph}
 import resonantinduction.core.{RICreativeTab, Reference, ResonantPartFactory}
 import resonantinduction.electrical.battery.{ItemBlockBattery, TileBattery}

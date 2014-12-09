@@ -4,7 +4,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.StatCollector
 import resonant.lib.prefab.gui.GuiContainerBase
 import resonant.lib.prefab.gui.GuiContainerBase.SlotType
-import resonant.lib.science.UnitDisplay
+import resonant.lib.utility.science.UnitDisplay
 
 class GuiNuclearBoiler(player: EntityPlayer, tileEntity: TileNuclearBoiler) extends GuiContainerBase(new ContainerNuclearBoiler(player, tileEntity))
 {

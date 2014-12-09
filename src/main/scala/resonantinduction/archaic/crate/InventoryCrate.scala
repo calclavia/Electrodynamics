@@ -2,7 +2,7 @@ package resonantinduction.archaic.crate
 
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
-import resonant.api.IInventoryProvider
+import resonant.api.tile.IInventoryProvider
 import resonant.lib.utility.inventory.ExternalInventory
 
 import scala.util.control.Breaks._

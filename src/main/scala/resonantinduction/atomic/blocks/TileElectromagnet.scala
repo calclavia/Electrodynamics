@@ -11,11 +11,11 @@ import net.minecraft.util.IIcon
 import net.minecraft.world.IBlockAccess
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11._
-import resonant.api.IElectromagnet
+import resonant.api.tile.IElectromagnet
 import resonant.content.prefab.itemblock.ItemBlockMetadata
 import resonant.content.spatial.block.SpatialBlock
 import resonant.lib.render.{RenderBlockUtility, RenderUtility}
-import resonant.lib.utility.WorldUtility
+import resonant.lib.world.WorldUtility
 import resonant.lib.wrapper.WrapList._
 import resonant.lib.transform.vector.Vector3
 

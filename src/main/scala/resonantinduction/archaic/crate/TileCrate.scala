@@ -10,8 +10,9 @@ import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.oredict.OreDictionary
-import resonant.api.IFilterable
-import resonant.api.IRemovable.ISneakPickup
+import resonant.api.tile.{IRemovable, IFilterable}
+import IRemovable.ISneakPickup
+import resonant.api.tile.IFilterable
 import resonant.lib.content.prefab.java.TileInventory
 import resonant.engine.network.ByteBufWrapper._
 import resonant.engine.network.discriminator.PacketType

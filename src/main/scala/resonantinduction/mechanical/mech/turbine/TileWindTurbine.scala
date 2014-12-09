@@ -13,7 +13,7 @@ import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.{Fluid, FluidStack, FluidTank, FluidTankInfo}
 import org.lwjgl.opengl.GL11
-import resonant.api.IBoilHandler
+import resonant.api.tile.IBoilHandler
 import resonant.content.prefab.itemblock.ItemBlockMetadata
 import resonant.lib.render.RenderUtility
 import resonant.lib.transform.vector.Vector3

@@ -14,7 +14,7 @@ import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.input.Keyboard
 import resonant.lib.render.EnumColor
-import resonant.lib.science.UnitDisplay
+import resonant.lib.utility.science.UnitDisplay
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.wrapper.WrapList._
 import resonantinduction.core.util.MultipartUtil

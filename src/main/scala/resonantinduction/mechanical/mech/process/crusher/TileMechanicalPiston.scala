@@ -10,13 +10,13 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
 import resonant.api.recipe.{MachineRecipes, RecipeResource}
+import resonant.api.tile.node.INode
 import resonant.content.factory.resources.RecipeType
-import resonant.lib.config.Config
+import resonant.lib.mod.config.Config
 import resonant.lib.utility.MovementUtility
 import resonant.lib.utility.inventory.InventoryUtility
 import resonantinduction.core.ResonantInduction
 import resonantinduction.mechanical.mech.TileMechanical
-import resonant.api.grid.INode
 import resonant.lib.transform.vector.Vector3
 
 /**

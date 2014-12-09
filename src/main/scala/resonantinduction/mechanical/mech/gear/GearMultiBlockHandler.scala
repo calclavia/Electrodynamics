@@ -3,7 +3,7 @@ package resonantinduction.mechanical.mech.gear
 import codechicken.multipart.{TMultiPart, TileMultipart}
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.lib.multiblock.reference.MultiBlockHandler
+import resonant.lib.prefab.multiblock.reference.MultiBlockHandler
 import resonant.lib.transform.vector.Vector3
 
 class GearMultiBlockHandler(wrapper: PartGear) extends MultiBlockHandler[PartGear](wrapper: PartGear)

@@ -1,6 +1,6 @@
 package resonantinduction.atomic.gate;
 
-import resonant.api.blocks.IBlockFrequency;
+import resonant.api.tile.IBlockFrequency;
 
 /**
  * Only TileEntities should implement this.

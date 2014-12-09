@@ -9,7 +9,7 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.{ChatComponentText, ResourceLocation}
 import net.minecraftforge.client.model.AdvancedModelLoader
 import org.lwjgl.opengl.GL11
-import resonant.api.IRotatable
+import resonant.api.tile.IRotatable
 import resonant.content.prefab.java.TileAdvanced
 import resonant.lib.content.prefab.TElectric
 import resonant.lib.grid.node.TSpatialNodeProvider

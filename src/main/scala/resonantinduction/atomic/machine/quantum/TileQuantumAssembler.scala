@@ -6,12 +6,12 @@ import net.minecraft.entity.item.EntityItem
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
-import resonant.api.electric.EnergyStorage
 import resonant.api.recipe.QuantumAssemblerRecipes
 import resonant.lib.content.prefab.TEnergyStorage
 import resonant.lib.content.prefab.java.TileElectricInventory
 import resonant.engine.network.discriminator.{PacketTile, PacketType}
 import resonant.engine.network.handle.IPacketReceiver
+import resonant.lib.grid.energy.EnergyStorage
 import resonant.lib.transform.vector.Vector3
 import resonantinduction.atomic.AtomicContent
 import resonantinduction.core.Reference

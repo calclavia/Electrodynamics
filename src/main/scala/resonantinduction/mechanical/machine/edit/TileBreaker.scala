@@ -12,7 +12,7 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.IIcon
 import net.minecraft.world.IBlockAccess
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.api.IRotatable
+import resonant.api.tile.IRotatable
 import resonant.content.prefab.java.TileAdvanced
 import resonant.engine.network.discriminator.PacketTile
 import resonant.engine.network.discriminator.PacketType

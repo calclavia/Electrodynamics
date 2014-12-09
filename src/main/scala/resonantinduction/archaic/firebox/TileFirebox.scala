@@ -17,13 +17,13 @@ import net.minecraft.util.IIcon
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
-import resonant.api.electric.EnergyStorage
 import resonant.content.spatial.block.{SpatialBlock, SpatialTile}
 import resonant.engine.grid.thermal.{BoilEvent, ThermalPhysics}
 import resonant.lib.content.prefab.{TElectric, TInventory}
 import resonant.engine.network.ByteBufWrapper._
 import resonant.engine.network.discriminator.PacketType
 import resonant.engine.network.handle.{TPacketReceiver, TPacketSender}
+import resonant.lib.grid.energy.EnergyStorage
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.FluidUtility
 import resonant.lib.wrapper.WrapList._

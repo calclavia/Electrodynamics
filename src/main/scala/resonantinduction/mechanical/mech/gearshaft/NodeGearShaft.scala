@@ -1,7 +1,7 @@
 package resonantinduction.mechanical.mech.gearshaft
 
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.api.grid.INodeProvider
+import resonant.api.tile.INodeProvider
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.wrapper.ForgeDirectionWrapper._
 import resonantinduction.core.interfaces.TNodeMechanical

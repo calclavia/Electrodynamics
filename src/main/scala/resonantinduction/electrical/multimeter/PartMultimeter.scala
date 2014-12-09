@@ -15,11 +15,10 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.{ChatComponentText, MovingObjectPosition}
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.{FluidTankInfo, IFluidHandler}
-import resonant.api.IRemovable
-import resonant.api.grid.INodeProvider
-import resonant.lib.grid.Compatibility
+import resonant.api.tile.{INodeProvider, IRemovable}
 import resonant.engine.network.discriminator.PacketType
 import resonant.engine.network.handle.IPacketReceiver
+import resonant.lib.mod.compat.energy.Compatibility
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.WrenchUtility
 import resonantinduction.core.ResonantInduction

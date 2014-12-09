@@ -6,7 +6,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.api.{IFilterable, IRotatable}
+import resonant.api.tile.{IRotatable, IFilterable}
 import resonant.lib.content.prefab.java.TileInventory
 import resonant.lib.transform.vector.Vector3
 

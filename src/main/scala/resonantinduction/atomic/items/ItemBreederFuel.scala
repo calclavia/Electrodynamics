@@ -1,7 +1,7 @@
 package resonantinduction.atomic.items
 
 import net.minecraft.item.ItemStack
-import resonant.api.{IReactor, IReactorComponent}
+import resonant.api.tile.{IReactorComponent, IReactor}
 
 /**
  * Breeder rods

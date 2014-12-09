@@ -11,7 +11,7 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.AxisAlignedBB
 import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.lib.multiblock.reference.IMultiBlockStructure
+import resonant.lib.prefab.multiblock.reference.IMultiBlockStructure
 import resonant.engine.network.ByteBufWrapper._
 import resonant.engine.network.discriminator.PacketType
 import resonant.lib.transform.vector.Vector3

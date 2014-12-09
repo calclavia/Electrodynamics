@@ -19,15 +19,15 @@ import net.minecraftforge.common.{ForgeChunkManager, MinecraftForge}
 import net.minecraftforge.event.entity.player.FillBucketEvent
 import net.minecraftforge.fluids.{Fluid, FluidContainerRegistry, FluidRegistry, FluidStack}
 import net.minecraftforge.oredict.{OreDictionary, ShapelessOreRecipe}
-import resonant.api.IElectromagnet
+import resonant.api.tile.IElectromagnet
 import resonant.api.event.PlasmaEvent
 import resonant.api.recipe.QuantumAssemblerRecipes
 import resonant.content.loader.{ContentHolder, ExplicitContentName}
 import resonant.engine.grid.thermal.EventThermal
 import resonant.engine.network.discriminator.PacketAnnotationManager
 import resonant.lib.prefab.ore.OreGenerator
-import resonant.lib.recipe.UniversalRecipe
-import resonant.lib.schematic.SchematicRegistry
+import resonant.lib.utility.recipe.UniversalRecipe
+import resonant.lib.world.schematic.SchematicRegistry
 import resonant.lib.transform.vector.VectorWorld
 import resonantinduction.atomic.blocks._
 import resonantinduction.atomic.items._

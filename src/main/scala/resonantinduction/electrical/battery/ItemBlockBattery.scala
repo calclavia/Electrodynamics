@@ -10,9 +10,9 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.World
 import resonant.api.items.IEnergyItem
-import resonant.lib.grid.Compatibility
+import resonant.lib.mod.compat.energy.Compatibility
 import resonant.lib.render.EnumColor
-import resonant.lib.science.UnitDisplay
+import resonant.lib.utility.science.UnitDisplay
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.wrapper.WrapList._
 

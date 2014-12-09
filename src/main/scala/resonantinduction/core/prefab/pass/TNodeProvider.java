@@ -4,8 +4,8 @@ import codechicken.multipart.PartMap;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 import net.minecraftforge.common.util.ForgeDirection;
-import resonant.api.grid.INode;
-import resonant.api.grid.INodeProvider;
+import resonant.api.tile.node.INode;
+import resonant.api.tile.INodeProvider;
 
 /**
  * TNodeProvider multipart Trait.

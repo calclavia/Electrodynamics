@@ -13,7 +13,7 @@ import net.minecraft.world.{ChunkCoordIntPair, World}
 import net.minecraftforge.common.ForgeChunkManager
 import net.minecraftforge.common.ForgeChunkManager.Type
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.api.IElectromagnet
+import resonant.api.tile.IElectromagnet
 import resonant.lib.prefab.poison.PoisonRadiation
 import resonantinduction.core.{ResonantInduction, Reference}
 import resonant.lib.transform.vector.Vector3

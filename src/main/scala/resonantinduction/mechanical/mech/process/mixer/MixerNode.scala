@@ -1,7 +1,7 @@
 package resonantinduction.mechanical.mech.process.mixer
 
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.api.grid.INodeProvider
+import resonant.api.tile.INodeProvider
 import resonantinduction.mechanical.mech.grid.NodeMechanical
 
 /**

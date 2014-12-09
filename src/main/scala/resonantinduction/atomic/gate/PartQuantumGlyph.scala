@@ -13,7 +13,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.{ChatComponentText, MovingObjectPosition}
-import resonant.api.blocks.IBlockFrequency
+import resonant.api.tile.IBlockFrequency
 import resonant.api.mffs.fortron.FrequencyGridRegistry
 import resonantinduction.electrical.ElectricalContent
 import resonant.lib.transform.vector.VectorWorld

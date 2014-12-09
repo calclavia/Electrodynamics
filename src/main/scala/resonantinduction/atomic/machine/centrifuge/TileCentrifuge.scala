@@ -9,12 +9,12 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
-import resonant.api.electric.EnergyStorage
 import resonant.lib.content.prefab.TEnergyStorage
 import resonant.lib.content.prefab.java.TileElectricInventory
-import resonant.lib.grid.Compatibility
 import resonant.engine.network.discriminator.{PacketTile, PacketType}
 import resonant.engine.network.handle.IPacketReceiver
+import resonant.lib.grid.energy.EnergyStorage
+import resonant.lib.mod.compat.energy.Compatibility
 import resonant.lib.transform.vector.Vector3
 import resonantinduction.atomic.AtomicContent
 import resonantinduction.core.Settings

@@ -11,7 +11,7 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.Vec3
 import net.minecraft.world.IBlockAccess
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.api.grid.INodeProvider
+import resonant.api.tile.INodeProvider
 import resonant.content.prefab.itemblock.ItemBlockMetadata
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.wrapper.WrapList._

@@ -12,7 +12,7 @@ import org.lwjgl.opengl.GL11
 import resonant.content.prefab.scal.render.ISimpleItemRenderer
 import resonant.lib.render.{FluidRenderUtility, RenderUtility}
 import resonant.lib.transform.vector.Vector3
-import resonant.lib.utility.WorldUtility
+import resonant.lib.world.WorldUtility
 import resonant.lib.wrapper.BitmaskWrapper._
 import resonantinduction.core.Reference
 
