@@ -10,7 +10,7 @@ import net.minecraft.entity.player.{EntityPlayer, EntityPlayerMP}
 import net.minecraft.init.Blocks
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.network.Packet
-import resonant.api.blocks.ICamouflageMaterial
+import resonant.api.tile.ICamouflageMaterial
 import resonant.api.mffs.machine.IActivatable
 import resonant.content.prefab.scal.TRotatable
 import resonant.content.spatial.block.SpatialTile

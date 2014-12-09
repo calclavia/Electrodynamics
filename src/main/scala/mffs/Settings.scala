@@ -4,8 +4,8 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent
 import net.minecraft.block.Block
 import net.minecraftforge.common.config.Configuration
 import resonant.api.mffs.Blacklist
-import resonant.lib.config.Config
-import resonant.lib.config.ConfigEvent.PostConfigEvent
+import resonant.lib.mod.config.Config
+import resonant.lib.mod.config.ConfigEvent.PostConfigEvent
 import scala.collection.convert.wrapAll._
 /**
  * MFFS Configuration Settings

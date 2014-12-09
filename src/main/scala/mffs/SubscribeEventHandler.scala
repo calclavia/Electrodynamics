@@ -23,7 +23,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action
 import resonant.api.mffs.event.{EventForceMobilize, EventStabilize}
 import resonant.api.mffs.fortron.FrequencyGridRegistry
-import resonant.lib.config.ConfigHandler
+import resonant.lib.mod.config.ConfigHandler
 import resonant.lib.event.ChunkModifiedEvent
 import resonant.lib.transform.vector.Vector3
 

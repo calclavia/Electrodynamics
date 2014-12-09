@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL11
 import resonant.lib.prefab.gui.GuiContainerBase.SlotType
 import resonant.engine.network.discriminator.PacketTile
 import resonant.lib.render.EnumColor
-import resonant.lib.science.UnitDisplay
+import resonant.lib.utility.science.UnitDisplay
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.wrapper.WrapList._
 

@@ -16,8 +16,8 @@ import net.minecraftforge.common.config.Configuration
 import net.minecraftforge.fluids.{Fluid, FluidRegistry, FluidStack}
 import org.modstats.{ModstatInfo, Modstats}
 import resonant.api.mffs.Blacklist
-import resonant.lib.config.ConfigHandler
-import resonant.lib.loadable.LoadableHandler
+import resonant.lib.mod.config.ConfigHandler
+import resonant.lib.mod.loadable.LoadableHandler
 import resonant.engine.network.netty.PacketManager
 import resonant.lib.prefab.damage.CustomDamageSource
 

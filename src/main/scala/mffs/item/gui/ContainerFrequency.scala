@@ -3,7 +3,7 @@ package mffs.item.gui
 import mffs.item.card.ItemCardFrequency
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
-import resonant.lib.prefab.slot.SlotSpecific
+import resonant.lib.prefab.gui.slot.SlotSpecific
 
 /**
  * @author Calclavia

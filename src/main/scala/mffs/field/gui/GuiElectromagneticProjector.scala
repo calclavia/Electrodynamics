@@ -10,7 +10,7 @@ import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
 import resonant.engine.network.discriminator.PacketTile
 import resonant.lib.render.EnumColor
-import resonant.lib.science.UnitDisplay
+import resonant.lib.utility.science.UnitDisplay
 import resonant.lib.wrapper.WrapList._
 
 class GuiElectromagneticProjector(player: EntityPlayer, tile: TileElectromagneticProjector) extends GuiMatrix(new ContainerElectromagneticProjector(player, tile), tile)

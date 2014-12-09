@@ -17,7 +17,7 @@ import net.minecraft.init.{Blocks, Items}
 import net.minecraft.item.ItemStack
 import net.minecraftforge.oredict.OreDictionary
 import resonant.content.loader.{ContentHolder, ExplicitContentName}
-import resonant.lib.recipe.UniversalRecipe
+import resonant.lib.utility.recipe.UniversalRecipe
 
 /**
  * The main content of MFFS

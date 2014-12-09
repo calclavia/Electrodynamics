@@ -2,9 +2,9 @@ package mffs.production
 
 import cofh.api.energy.IEnergyHandler
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.api.electric.EnergyStorage
 import resonant.lib.content.prefab.TElectric
-import resonant.lib.grid.Compatibility
+import resonant.lib.grid.energy.EnergyStorage
+import resonant.lib.mod.compat.energy.Compatibility
 
 /**
  * A temporary energy bridge between TE and UE

@@ -4,7 +4,7 @@ import mffs.item.card.ItemCardFrequency
 import mffs.slot.SlotBase
 import net.minecraft.entity.player.EntityPlayer
 import resonant.lib.prefab.gui.ContainerBase
-import resonant.lib.prefab.slot.SlotSpecific
+import resonant.lib.prefab.gui.slot.SlotSpecific
 
 class ContainerFortronCapacitor(player: EntityPlayer, tileEntity: TileFortronCapacitor) extends ContainerBase(tileEntity)
 {

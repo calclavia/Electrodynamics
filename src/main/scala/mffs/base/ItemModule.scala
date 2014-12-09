@@ -9,7 +9,7 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
 import resonant.api.mffs.machine.{IFieldMatrix, IProjector}
 import resonant.api.mffs.modules.IModule
-import resonant.lib.science.UnitDisplay
+import resonant.lib.utility.science.UnitDisplay
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.transform.region.Cuboid
 import resonant.lib.transform.vector.Vector3
