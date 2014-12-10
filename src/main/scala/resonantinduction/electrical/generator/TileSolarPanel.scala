@@ -4,9 +4,9 @@ import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.block.material.Material
 import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.util.IIcon
-import resonant.content.prefab.RenderConnectedTexture
-import resonant.content.spatial.block.SpatialBlock
-import resonant.lib.content.prefab.java.TileElectric
+import resonant.lib.prefab.tile.TileElectric
+import resonant.lib.prefab.tile.spatial.SpatialBlock
+import resonant.lib.render.block.RenderConnectedTexture
 import resonant.lib.transform.region.Cuboid
 import resonantinduction.core.{Reference, Settings}
 

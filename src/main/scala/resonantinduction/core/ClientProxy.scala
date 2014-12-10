@@ -13,7 +13,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.Item
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
-import resonant.content.wrapper.ItemRenderHandler
+import resonant.lib.render.wrapper.ItemRenderHandler
 import resonant.lib.render.fx.FXElectricBolt2
 import resonant.lib.transform.vector.Vector3
 import resonantinduction.archaic.firebox.{RenderHotPlate, TileHotPlate}

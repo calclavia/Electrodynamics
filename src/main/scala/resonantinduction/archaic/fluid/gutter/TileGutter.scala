@@ -16,7 +16,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import org.lwjgl.opengl.GL11
 import resonant.api.recipe.{MachineRecipes, RecipeResource}
-import resonant.content.factory.resources.RecipeType
+import resonant.lib.factory.resources.RecipeType
 import resonant.lib.grid.UpdateTicker
 import resonant.lib.prefab.fluid.NodeFluid
 import resonant.lib.render.{FluidRenderUtility, RenderUtility}

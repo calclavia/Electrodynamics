@@ -13,8 +13,8 @@ import net.minecraft.util.{IIcon, MathHelper}
 import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
-import resonant.content.prefab.java.TileAdvanced
-import resonant.content.spatial.block.SpatialBlock
+import resonant.lib.prefab.tile.TileAdvanced
+import resonant.lib.prefab.tile.spatial.SpatialBlock
 import resonant.lib.utility.path.{IPathCallBack, Pathfinder}
 import resonant.lib.transform.vector.Vector3
 

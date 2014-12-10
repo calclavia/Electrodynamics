@@ -11,11 +11,11 @@ import net.minecraftforge.fluids._
 import resonant.api.tile.IRotatable
 import resonant.engine.ResonantEngine
 import resonant.lib.content.prefab.TEnergyStorage
-import resonant.lib.content.prefab.java.TileElectricInventory
-import resonant.engine.network.Synced
-import resonant.engine.network.discriminator.{PacketTile, PacketType}
-import resonant.engine.network.handle.IPacketReceiver
+import resonant.lib.network.Synced
+import resonant.lib.network.discriminator.{PacketTile, PacketType}
+import resonant.lib.network.handle.IPacketReceiver
 import resonant.lib.grid.energy.EnergyStorage
+import resonant.lib.prefab.tile.TileElectricInventory
 import resonant.lib.transform.vector.Vector3
 import resonantinduction.atomic.AtomicContent
 import resonantinduction.core.Settings

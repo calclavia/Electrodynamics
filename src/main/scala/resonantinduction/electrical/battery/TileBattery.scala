@@ -13,12 +13,12 @@ import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL11._
-import resonant.content.prefab.java.TileAdvanced
 import resonant.lib.content.prefab.{TElectric, TEnergyStorage}
-import resonant.engine.network.discriminator.{PacketTile, PacketType}
-import resonant.engine.network.handle.IPacketReceiver
-import resonant.engine.network.netty.AbstractPacket
+import resonant.lib.network.discriminator.{PacketTile, PacketType}
+import resonant.lib.network.handle.IPacketReceiver
+import resonant.lib.network.netty.AbstractPacket
 import resonant.lib.grid.energy.EnergyStorage
+import resonant.lib.prefab.tile.TileAdvanced
 import resonant.lib.render.RenderUtility
 import resonant.lib.transform.vector.Vector3
 import resonantinduction.core.Reference

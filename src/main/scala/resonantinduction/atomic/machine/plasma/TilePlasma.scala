@@ -12,9 +12,9 @@ import net.minecraft.world.IBlockAccess
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.event.PlasmaEvent
-import resonant.content.prefab.java.TileAdvanced
-import resonant.engine.grid.thermal.ThermalGrid
+import resonant.lib.grid.thermal.ThermalGrid
 import resonant.lib.mod.config.Config
+import resonant.lib.prefab.tile.TileAdvanced
 import resonant.lib.transform.vector.Vector3
 
 object TilePlasma

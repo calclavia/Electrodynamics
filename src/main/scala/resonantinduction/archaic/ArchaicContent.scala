@@ -4,7 +4,7 @@ import net.minecraft.block.Block
 import net.minecraft.init.{Blocks, Items}
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraftforge.oredict.OreDictionary
-import resonant.content.loader.ContentHolder
+import resonant.lib.mod.content.ContentHolder
 import resonant.lib.utility.recipe.UniversalRecipe
 import resonantinduction.archaic.blocks.{ItemImprint, TileImprinter, TileTurntable}
 import resonantinduction.archaic.engineering.ItemHammer

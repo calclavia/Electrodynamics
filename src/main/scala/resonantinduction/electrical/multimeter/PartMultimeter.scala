@@ -16,8 +16,8 @@ import net.minecraft.util.{ChatComponentText, MovingObjectPosition}
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.{FluidTankInfo, IFluidHandler}
 import resonant.api.tile.{INodeProvider, IRemovable}
-import resonant.engine.network.discriminator.PacketType
-import resonant.engine.network.handle.IPacketReceiver
+import resonant.lib.network.discriminator.PacketType
+import resonant.lib.network.handle.IPacketReceiver
 import resonant.lib.mod.compat.energy.Compatibility
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.WrenchUtility

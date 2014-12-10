@@ -10,11 +10,11 @@ import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import resonant.api.recipe.MachineRecipes
 import resonant.api.recipe.RecipeResource
-import resonant.content.factory.resources.RecipeType
-import resonant.lib.content.prefab.java.TileInventory
-import resonant.engine.network.discriminator.PacketTile
-import resonant.engine.network.discriminator.PacketType
-import resonant.engine.network.handle.IPacketReceiver
+import resonant.lib.factory.resources.RecipeType
+import resonant.lib.network.discriminator.PacketTile
+import resonant.lib.network.discriminator.PacketType
+import resonant.lib.network.handle.IPacketReceiver
+import resonant.lib.prefab.tile.TileInventory
 import resonant.lib.utility.FluidUtility
 import resonant.lib.utility.inventory.InventoryUtility
 import resonantinduction.core.Reference

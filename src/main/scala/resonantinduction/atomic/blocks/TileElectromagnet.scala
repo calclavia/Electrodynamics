@@ -12,8 +12,8 @@ import net.minecraft.world.IBlockAccess
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11._
 import resonant.api.tile.IElectromagnet
-import resonant.content.prefab.itemblock.ItemBlockMetadata
-import resonant.content.spatial.block.SpatialBlock
+import resonant.lib.prefab.tile.item.ItemBlockMetadata
+import resonant.lib.prefab.tile.spatial.SpatialBlock
 import resonant.lib.render.{RenderBlockUtility, RenderUtility}
 import resonant.lib.world.WorldUtility
 import resonant.lib.wrapper.WrapList._

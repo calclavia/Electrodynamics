@@ -18,13 +18,13 @@ import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.{Fluid, FluidContainerRegistry, FluidStack, FluidTank, FluidTankInfo, IFluidHandler}
 import resonant.api.event.PlasmaEvent
 import resonant.api.tile.{IReactorComponent, IReactor}
-import resonant.engine.grid.thermal.{ThermalGrid, ThermalPhysics}
-import resonant.lib.content.prefab.java.TileInventory
-import resonant.lib.prefab.multiblock.reference.{IMultiBlockStructure, MultiBlockHandler}
-import resonant.engine.network.Synced
-import resonant.engine.network.Synced.{SyncedInput, SyncedOutput}
-import resonant.engine.network.discriminator.PacketAnnotation
+import resonant.lib.grid.thermal.{ThermalGrid, ThermalPhysics}
+import resonant.lib.prefab.tile.multiblock.reference.{IMultiBlockStructure, MultiBlockHandler}
+import resonant.lib.network.Synced
+import resonant.lib.network.Synced.{SyncedInput, SyncedOutput}
+import resonant.lib.network.discriminator.PacketAnnotation
 import resonant.lib.prefab.poison.PoisonRadiation
+import resonant.lib.prefab.tile.TileInventory
 import resonant.lib.transform.vector.{Vector3, VectorWorld}
 import resonant.lib.utility.inventory.InventoryUtility
 import resonantinduction.atomic.AtomicContent

@@ -24,14 +24,14 @@ import org.lwjgl.opengl.GL11
 import resonant.api.gui.ISlotPickResult
 import resonant.api.recipe.{MachineRecipes, RecipeResource}
 import resonant.api.tile.IRotatable
-import resonant.content.factory.resources.RecipeType
-import resonant.content.prefab.itemblock.ItemBlockSaved
+import resonant.lib.factory.resources.RecipeType
+import resonant.lib.prefab.tile.item.ItemBlockSaved
 import resonant.engine.ResonantEngine
 import resonant.lib.`type`.Pair
-import resonant.lib.content.prefab.java.TileInventory
 import resonant.lib.prefab.gui.ContainerDummy
-import resonant.engine.network.discriminator.{PacketTile, PacketType}
-import resonant.engine.network.handle.IPacketReceiver
+import resonant.lib.network.discriminator.{PacketTile, PacketType}
+import resonant.lib.network.handle.IPacketReceiver
+import resonant.lib.prefab.tile.TileInventory
 import resonant.lib.render.RenderItemOverlayUtility
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.utility.inventory.AutoCraftingManager.IAutoCrafter

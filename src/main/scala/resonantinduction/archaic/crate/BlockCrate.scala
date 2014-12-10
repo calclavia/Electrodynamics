@@ -13,7 +13,7 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.IIcon
 import net.minecraft.world.World
 import net.minecraftforge.oredict.OreDictionary
-import resonant.content.spatial.block.SpatialBlock
+import resonant.lib.prefab.tile.spatial.SpatialBlock
 import resonant.lib.wrapper.WrapList._
 import resonantinduction.archaic.ArchaicContent
 import resonantinduction.core.Reference

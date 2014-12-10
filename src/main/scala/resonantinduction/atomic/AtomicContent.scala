@@ -22,9 +22,10 @@ import net.minecraftforge.oredict.{OreDictionary, ShapelessOreRecipe}
 import resonant.api.tile.IElectromagnet
 import resonant.api.event.PlasmaEvent
 import resonant.api.recipe.QuantumAssemblerRecipes
-import resonant.content.loader.{ContentHolder, ExplicitContentName}
-import resonant.engine.grid.thermal.EventThermal
-import resonant.engine.network.discriminator.PacketAnnotationManager
+import resonant.content.loader.ExplicitContentName
+import resonant.lib.grid.thermal.EventThermal
+import resonant.lib.network.discriminator.PacketAnnotationManager
+import resonant.lib.mod.content.{ContentHolder, ExplicitContentName}
 import resonant.lib.prefab.ore.OreGenerator
 import resonant.lib.utility.recipe.UniversalRecipe
 import resonant.lib.world.schematic.SchematicRegistry

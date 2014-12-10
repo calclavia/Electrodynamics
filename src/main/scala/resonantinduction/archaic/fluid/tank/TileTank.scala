@@ -16,8 +16,8 @@ import org.lwjgl.opengl.GL11
 import resonant.api.tile.IRemovable
 import IRemovable.ISneakPickup
 import resonant.api.tile.node.INode
-import resonant.content.prefab.RenderConnectedTexture
 import resonant.lib.grid.node.Node
+import resonant.lib.render.block.RenderConnectedTexture
 import resonant.lib.render.{RenderBlockUtility, FluidRenderUtility, RenderUtility}
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.FluidUtility

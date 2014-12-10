@@ -19,11 +19,11 @@ import net.minecraft.util.ChatComponentText
 import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.lib.content.prefab.TEnergyStorage
-import resonant.lib.content.prefab.java.TileElectric
 import resonant.lib.grid.energy.EnergyStorage
-import resonant.lib.prefab.multiblock.reference.{IMultiBlockStructure, MultiBlockHandler}
-import resonant.engine.network.discriminator.{PacketTile, PacketType}
-import resonant.engine.network.handle.{TPacketIDReceiver, TPacketSender}
+import resonant.lib.prefab.tile.multiblock.reference.{IMultiBlockStructure, MultiBlockHandler}
+import resonant.lib.network.discriminator.{PacketTile, PacketType}
+import resonant.lib.network.handle.{TPacketIDReceiver, TPacketSender}
+import resonant.lib.prefab.tile.TileElectric
 import resonant.lib.render.EnumColor
 import resonant.lib.transform.vector.{Vector3, VectorWorld}
 import resonant.lib.utility.{LanguageUtility, LinkUtility}

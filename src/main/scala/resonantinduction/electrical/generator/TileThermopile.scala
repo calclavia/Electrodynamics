@@ -8,10 +8,10 @@ import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.init.Blocks
 import net.minecraft.util.IIcon
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.content.spatial.block.SpatialBlock
+import resonant.lib.prefab.tile.TileElectric
+import resonant.lib.prefab.tile.spatial.SpatialBlock
 import resonantinduction.core.Reference
 import resonant.lib.transform.vector.Vector3
-import resonant.lib.content.prefab.java.TileElectric
 
 class TileThermopile extends TileElectric(Material.rock) {
 

@@ -4,8 +4,8 @@ import net.minecraft.block.Block
 import net.minecraft.init.{Blocks, Items}
 import net.minecraft.item.{Item, ItemStack}
 import resonant.api.tile.node.NodeRegistry
-import resonant.content.loader.ContentHolder
-import resonant.engine.network.discriminator.PacketAnnotationManager
+import resonant.lib.network.discriminator.PacketAnnotationManager
+import resonant.lib.mod.content.ContentHolder
 import resonant.lib.utility.recipe.UniversalRecipe
 import resonant.lib.world.schematic.{SchematicPlate, SchematicRegistry}
 import resonantinduction.core.interfaces.TNodeMechanical

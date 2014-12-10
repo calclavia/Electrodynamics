@@ -15,10 +15,10 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.{AxisAlignedBB, IIcon}
 import net.minecraft.world.IBlockAccess
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.content.spatial.block.SpatialBlock
 import resonant.engine.ResonantEngine
-import resonant.engine.network.discriminator.{PacketTile, PacketType}
-import resonant.engine.network.handle.IPacketIDReceiver
+import resonant.lib.network.discriminator.{PacketTile, PacketType}
+import resonant.lib.network.handle.IPacketIDReceiver
+import resonant.lib.prefab.tile.spatial.SpatialBlock
 import resonantinduction.archaic.blocks.TileFilterable
 import resonantinduction.core.Reference
 import resonantinduction.mechanical.MechanicalContent

@@ -7,7 +7,7 @@ import net.minecraftforge.client.IItemRenderer
 import net.minecraftforge.client.model.{AdvancedModelLoader, IModelCustom}
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
-import resonant.content.prefab.scal.render.ISimpleItemRenderer
+import resonant.api.items.ISimpleItemRenderer
 import resonant.lib.render.RenderUtility
 import resonant.lib.wrapper.ForgeDirectionWrapper._
 import resonantinduction.core.Reference

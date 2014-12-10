@@ -15,9 +15,9 @@ import resonant.engine.ResonantEngine
 import resonant.lib.grid.energy.EnergyStorage
 import resonant.lib.mod.config.Config
 import resonant.lib.content.prefab.TEnergyStorage
-import resonant.lib.content.prefab.java.TileElectric
-import resonant.engine.network.discriminator.{PacketTile, PacketType}
-import resonant.engine.network.handle.IPacketReceiver
+import resonant.lib.network.discriminator.{PacketTile, PacketType}
+import resonant.lib.network.handle.IPacketReceiver
+import resonant.lib.prefab.tile.TileElectric
 import resonant.lib.utility.science.UnitDisplay
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.{FluidUtility, LanguageUtility}

@@ -1,7 +1,7 @@
 package resonantinduction.atomic.machine.reactor
 
 import net.minecraft.block.material.Material
-import resonant.content.spatial.block.SpatialBlock
+import resonant.lib.prefab.tile.spatial.SpatialBlock
 import resonant.lib.transform.region.Cuboid
 
 /**

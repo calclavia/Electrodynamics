@@ -10,7 +10,7 @@ import net.minecraft.util.IIcon
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import resonant.api.tile.IBoilHandler
-import resonant.content.prefab.java.TileAdvanced
+import resonant.lib.prefab.tile.TileAdvanced
 
 /**
  * Funnel for gas.

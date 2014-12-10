@@ -3,7 +3,7 @@ package resonantinduction.core
 import net.minecraft.block.Block
 import net.minecraft.init.{Blocks, Items}
 import net.minecraft.item.ItemStack
-import resonant.content.loader.ContentHolder
+import resonant.lib.mod.content.ContentHolder
 import resonantinduction.core.content.BlockDecoration
 
 /**

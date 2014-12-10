@@ -9,8 +9,8 @@ import net.minecraft.util.IIcon
 import net.minecraft.world.{IBlockAccess, World}
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.tile.IRotatable
-import resonant.content.prefab.scal.TRotatable
-import resonant.content.spatial.block.SpatialBlock
+import resonant.lib.prefab.tile.traits.TRotatable
+import resonant.lib.prefab.tile.spatial.SpatialBlock
 import resonant.lib.transform.vector.Vector3
 import resonantinduction.core.Reference
 

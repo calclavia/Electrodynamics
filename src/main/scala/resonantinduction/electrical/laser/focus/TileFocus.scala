@@ -5,7 +5,7 @@ import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.content.prefab.java.TileAdvanced
+import resonant.lib.prefab.tile.TileAdvanced
 import resonant.lib.transform.vector.Vector3
 
 /**

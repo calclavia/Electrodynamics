@@ -12,7 +12,7 @@ import net.minecraft.util.Vec3
 import net.minecraft.world.IBlockAccess
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.tile.INodeProvider
-import resonant.content.prefab.itemblock.ItemBlockMetadata
+import resonant.lib.prefab.tile.item.ItemBlockMetadata
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.wrapper.WrapList._
 import resonantinduction.core.Settings

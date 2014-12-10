@@ -10,9 +10,9 @@ import net.minecraft.util.{ChatComponentText, ResourceLocation}
 import net.minecraftforge.client.model.AdvancedModelLoader
 import org.lwjgl.opengl.GL11
 import resonant.api.tile.IRotatable
-import resonant.content.prefab.java.TileAdvanced
 import resonant.lib.content.prefab.TElectric
 import resonant.lib.grid.node.TSpatialNodeProvider
+import resonant.lib.prefab.tile.TileAdvanced
 import resonant.lib.render.RenderUtility
 import resonant.lib.transform.vector.Vector3
 import resonantinduction.core.Reference

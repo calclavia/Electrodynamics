@@ -11,11 +11,11 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.IIcon
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.recipe.{MachineRecipes, RecipeResource}
-import resonant.content.factory.resources.RecipeType
-import resonant.content.spatial.block.SpatialBlock
-import resonant.lib.content.prefab.java.TileInventory
-import resonant.engine.network.discriminator.{PacketTile, PacketType}
-import resonant.engine.network.handle.IPacketReceiver
+import resonant.lib.factory.resources.RecipeType
+import resonant.lib.network.discriminator.{PacketTile, PacketType}
+import resonant.lib.network.handle.IPacketReceiver
+import resonant.lib.prefab.tile.TileInventory
+import resonant.lib.prefab.tile.spatial.SpatialBlock
 import resonant.lib.utility.inventory.InventoryUtility
 import resonantinduction.core.Reference
 import resonantinduction.mechanical.mech.gear.ItemHandCrank

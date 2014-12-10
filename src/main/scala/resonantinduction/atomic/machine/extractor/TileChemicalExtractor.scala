@@ -9,8 +9,8 @@ import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import resonant.engine.ResonantEngine
 import resonant.lib.content.prefab.TEnergyStorage
-import resonant.engine.network.Synced
-import resonant.engine.network.discriminator.PacketAnnotation
+import resonant.lib.network.Synced
+import resonant.lib.network.discriminator.PacketAnnotation
 import resonant.lib.grid.energy.EnergyStorage
 import resonant.lib.mod.compat.energy.Compatibility
 import resonant.lib.transform.vector.Vector3

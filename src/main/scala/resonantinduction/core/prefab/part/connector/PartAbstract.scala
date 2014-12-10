@@ -4,7 +4,7 @@ import codechicken.lib.data.{MCDataInput, MCDataOutput}
 import codechicken.multipart.{IRedstonePart, TMultiPart}
 import net.minecraft.item.ItemStack
 import net.minecraft.util.MovingObjectPosition
-import resonant.content.spatial.block.TraitTicker
+import resonant.lib.prefab.TraitTicker
 import resonantinduction.core.ResonantPartFactory
 
 import scala.collection.convert.wrapAll._

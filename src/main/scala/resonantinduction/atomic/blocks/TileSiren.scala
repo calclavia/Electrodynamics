@@ -4,7 +4,7 @@ import net.minecraft.block.material.Material
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.content.spatial.block.SpatialBlock
+import resonant.lib.prefab.tile.spatial.SpatialBlock
 import resonantinduction.core.Reference
 import resonant.lib.transform.vector.Vector3
 

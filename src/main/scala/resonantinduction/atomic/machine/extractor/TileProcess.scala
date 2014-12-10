@@ -7,7 +7,7 @@ import net.minecraftforge.fluids.FluidStack
 import net.minecraftforge.fluids.FluidTank
 import resonant.api.recipe.MachineRecipes
 import resonant.api.recipe.RecipeResource
-import resonant.lib.content.prefab.java.TileElectricInventory
+import resonant.lib.prefab.tile.TileElectricInventory
 
 /**
  * General class for all machines that do traditional recipe processing

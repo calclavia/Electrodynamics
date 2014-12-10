@@ -12,7 +12,8 @@ import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.event.TextureStitchEvent
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.oredict.{OreDictionary, ShapelessOreRecipe}
-import resonant.content.loader.{ContentHolder, ExplicitContentName}
+import resonant.content.loader.ContentHolder
+import resonant.lib.mod.content.{ExplicitContentName, ContentHolder}
 import resonant.lib.utility.recipe.UniversalRecipe
 import resonantinduction.atomic.gate.{ItemQuantumGlyph, PartQuantumGlyph}
 import resonantinduction.core.{RICreativeTab, Reference, ResonantPartFactory}

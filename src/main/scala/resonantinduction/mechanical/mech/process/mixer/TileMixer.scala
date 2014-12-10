@@ -15,10 +15,10 @@ import net.minecraftforge.fluids.IFluidBlock
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL11._
 import resonant.api.recipe.MachineRecipes
-import resonant.content.factory.resources.RecipeType
+import resonant.lib.factory.resources.RecipeType
 import resonant.engine.ResonantEngine
 import resonant.lib.`type`.Timer
-import resonant.lib.prefab.block.BlockFluidMixture
+import resonant.lib.prefab.tile.BlockFluidMixture
 import resonant.lib.render.RenderUtility
 import resonant.lib.transform.rotation.Quaternion
 import resonant.lib.transform.vector.Vector3

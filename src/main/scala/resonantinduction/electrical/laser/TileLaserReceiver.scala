@@ -11,7 +11,7 @@ import net.minecraft.world.IBlockAccess
 import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11._
-import resonant.content.prefab.java.TileAdvanced
+import resonant.lib.prefab.tile.TileAdvanced
 import resonant.lib.render.RenderUtility
 import resonantinduction.core.Reference
 import resonant.lib.transform.vector.Vector3

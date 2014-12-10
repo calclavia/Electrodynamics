@@ -8,8 +8,8 @@ import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.util.IIcon
-import resonant.content.prefab.itemblock.ItemBlockMetadata
-import resonant.content.spatial.block.SpatialBlock
+import resonant.lib.prefab.tile.item.ItemBlockMetadata
+import resonant.lib.prefab.tile.spatial.SpatialBlock
 import resonant.lib.wrapper.WrapList._
 import resonantinduction.core.Reference
 

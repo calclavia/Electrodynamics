@@ -1,7 +1,7 @@
 package resonantinduction.atomic.items
 
 import net.minecraft.item.ItemStack
-import resonant.content.prefab.itemblock.ItemTooltip
+import resonant.lib.prefab.item.ItemTooltip
 import resonant.lib.utility.LanguageUtility
 import resonantinduction.atomic.AtomicContent
 import resonantinduction.core.{Reference, RICreativeTab}

@@ -8,7 +8,7 @@ import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL11.glRotatef
-import resonant.content.prefab.scal.render.ISimpleItemRenderer
+import resonant.api.items.ISimpleItemRenderer
 import resonant.lib.render.RenderUtility
 import resonantinduction.core.Reference
 import resonant.lib.wrapper.ForgeDirectionWrapper._

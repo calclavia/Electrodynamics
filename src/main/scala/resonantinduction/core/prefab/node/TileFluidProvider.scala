@@ -5,12 +5,13 @@ import net.minecraft.block.material.Material
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
-import resonant.content.prefab.java.TileAdvanced
-import resonant.engine.network.ByteBufWrapper._
-import resonant.engine.network.discriminator.PacketType
-import resonant.engine.network.handle.{TPacketReceiver, TPacketSender}
+import resonant.lib.wrapper.ByteBufWrapper
+import ByteBufWrapper._
+import resonant.lib.network.discriminator.PacketType
+import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
 import resonant.lib.grid.node.TSpatialNodeProvider
 import resonant.lib.prefab.fluid.NodeFluid
+import resonant.lib.prefab.tile.TileAdvanced
 
 /**
  * A prefab class for tiles that use the fluid network.
