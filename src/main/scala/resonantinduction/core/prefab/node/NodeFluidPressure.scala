@@ -21,6 +21,7 @@ class NodeFluidPressure(parent: INodeProvider, volume: Int = FluidContainerRegis
 {
   var maxFlowRate = 1000
   var maxPressure = 100
+  var doPressureUpdate = true
   private var _pressure: Int = 0
 
   override def reconstruct()
@@ -33,7 +34,8 @@ class NodeFluidPressure(parent: INodeProvider, volume: Int = FluidContainerRegis
   {
     if (!world.isRemote)
     {
-      updatePressure()
+      if (doPressureUpdate)
+        updatePressure()
       distribute(deltaTime)
     }
   }

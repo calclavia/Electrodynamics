@@ -47,6 +47,7 @@ object TileGutter
 class TileGutter extends TileFluidProvider(Material.rock)
 {
   fluidNode = new NodeGutter(this)
+  fluidNode.asInstanceOf[NodeGutter].doPressureUpdate = false
   fluidNode.onFluidChanged = () =>
   {
     if (!world.isRemote)
