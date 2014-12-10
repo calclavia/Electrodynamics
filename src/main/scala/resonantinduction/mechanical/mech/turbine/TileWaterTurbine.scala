@@ -3,7 +3,7 @@ package resonantinduction.mechanical.mech.turbine
 import java.util.List
 
 import cpw.mods.fml.relauncher.ReflectionHelper
-import net.minecraft.block.{Block, BlockLiquid}
+import net.minecraft.block.BlockLiquid
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.init.Blocks
 import net.minecraft.item.{Item, ItemStack}
@@ -64,10 +64,13 @@ class TileWaterTurbine extends TileTurbine
 
       if (ticks % 20 == 0)
       {
-        val blockIDAbove: Block = worldObj.getBlock(xCoord, yCoord + 1, zCoord)
-        val metadata: Int = worldObj.getBlockMetadata(xCoord, yCoord + 1, zCoord)
-        val isWater: Boolean = blockIDAbove == Blocks.water || blockIDAbove == Blocks.flowing_water
-        if (isWater && worldObj.isAirBlock(xCoord, yCoord - 1, zCoord) && metadata == 0)
+        val blockAbove = worldObj.getBlock(xCoord, yCoord + 1, zCoord)
+        val blockBelow = worldObj.getBlock(xCoord, yCoord - 1, zCoord)
+        val metadata = worldObj.getBlockMetadata(xCoord, yCoord + 1, zCoord)
+        val isWater = blockAbove == Blocks.water || blockAbove == Blocks.flowing_water
+        val isBelowAvailable = worldObj.isAirBlock(xCoord, yCoord - 1, zCoord) || blockBelow == Blocks.water || blockBelow == Blocks.flowing_water
+
+        if (isWater && metadata == 0 && isBelowAvailable)
         {
           powerTicks = 20
           worldObj.setBlockToAir(xCoord, yCoord + 1, zCoord)
@@ -79,16 +82,17 @@ class TileWaterTurbine extends TileTurbine
     else
     {
       val currentDir: ForgeDirection = getDirection
+
       for (dir <- ForgeDirection.VALID_DIRECTIONS)
       {
         if (dir != currentDir && dir != currentDir.getOpposite)
         {
           val check: Vector3 = toVector3.add(dir)
-          val blockID: Block = worldObj.getBlock(check.xi, check.yi, check.zi)
+          val block = worldObj.getBlock(check.xi, check.yi, check.zi)
           val metadata: Int = worldObj.getBlockMetadata(check.xi, check.yi, check.zi)
-          if (blockID == Blocks.water || blockID == Blocks.flowing_water)
-          {
 
+          if (block == Blocks.water || block == Blocks.flowing_water)
+          {
             val m = ReflectionHelper.findMethod(classOf[BlockLiquid], null, Array[String]("getFlowVector", "func_72202_i"), classOf[IBlockAccess], Integer.TYPE, Integer.TYPE, Integer.TYPE)
             val vector = new Vector3(m.invoke(Blocks.water, worldObj, check.xi: Integer, check.yi: Integer, check.zi: Integer).asInstanceOf[Vec3])
             val invert = (currentDir.offsetZ > 0 && vector.x < 0) || (currentDir.offsetZ < 0 && vector.x > 0) || (currentDir.offsetX > 0 && vector.z > 0) || (currentDir.offsetX < 0 && vector.z < 0)
