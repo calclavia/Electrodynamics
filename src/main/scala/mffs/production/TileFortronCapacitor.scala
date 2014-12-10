@@ -17,8 +17,9 @@ import net.minecraftforge.fluids.IFluidContainerItem
 import resonant.api.mffs.card.ICoordLink
 import resonant.api.mffs.fortron.{FrequencyGridRegistry, IFortronCapacitor, IFortronFrequency, IFortronStorage}
 import resonant.api.mffs.modules.IModule
-import resonant.engine.network.ByteBufWrapper.ByteBufWrapper
-import resonant.engine.network.discriminator.PacketType
+import resonant.lib.wrapper.ByteBufWrapper
+import ByteBufWrapper.ByteBufWrapper
+import resonant.lib.network.discriminator.PacketType
 import resonant.lib.transform.vector.Vector3
 
 import scala.collection.JavaConversions._

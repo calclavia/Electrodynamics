@@ -22,8 +22,9 @@ import net.minecraft.world.{IBlockAccess, World}
 import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import resonant.api.mffs.machine.IProjector
 import resonant.api.mffs.modules.{IModule, IProjectorMode}
-import resonant.engine.network.ByteBufWrapper.ByteBufWrapper
-import resonant.engine.network.discriminator.{PacketTile, PacketType}
+import resonant.lib.wrapper.ByteBufWrapper
+import ByteBufWrapper.ByteBufWrapper
+import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.transform.region.Cuboid
 import resonant.lib.transform.vector.Vector3
 

@@ -8,9 +8,10 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import resonant.api.mffs.fortron.{FrequencyGridRegistry, IFortronFrequency}
-import resonant.engine.network.ByteBufWrapper.ByteBufWrapper
-import resonant.engine.network.discriminator.PacketType
-import resonant.engine.network.netty.PacketManager
+import resonant.lib.wrapper.ByteBufWrapper
+import ByteBufWrapper.ByteBufWrapper
+import resonant.lib.network.discriminator.PacketType
+import resonant.lib.network.netty.PacketManager
 
 import scala.collection.convert.wrapAll._
 

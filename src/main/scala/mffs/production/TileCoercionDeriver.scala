@@ -12,8 +12,9 @@ import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import resonant.api.mffs.modules.IModule
-import resonant.engine.network.ByteBufWrapper.ByteBufWrapper
-import resonant.engine.network.discriminator.PacketType
+import resonant.lib.wrapper.ByteBufWrapper
+import ByteBufWrapper.ByteBufWrapper
+import resonant.lib.network.discriminator.PacketType
 import resonant.lib.mod.compat.energy.Compatibility
 import resonant.lib.transform.vector.Vector3
 

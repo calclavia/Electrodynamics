@@ -6,8 +6,9 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import resonant.lib.content.prefab.TInventory
-import resonant.engine.network.ByteBufWrapper.ByteBufWrapper
-import resonant.engine.network.discriminator.{PacketTile, PacketType}
+import resonant.lib.wrapper.ByteBufWrapper
+import ByteBufWrapper.ByteBufWrapper
+import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.utility.inventory.TPrefabInventory
 
 /**

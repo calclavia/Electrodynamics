@@ -18,7 +18,7 @@ import org.modstats.{ModstatInfo, Modstats}
 import resonant.api.mffs.Blacklist
 import resonant.lib.mod.config.ConfigHandler
 import resonant.lib.mod.loadable.LoadableHandler
-import resonant.engine.network.netty.PacketManager
+import resonant.lib.network.netty.PacketManager
 import resonant.lib.prefab.damage.CustomDamageSource
 
 import scala.collection.convert.wrapAll._
