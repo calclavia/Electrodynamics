@@ -79,15 +79,13 @@ object ElectricalContent extends ContentHolder
   {
     super.init()
 
-    RICreativeTab.itemStack(new ItemStack(ElectricalContent.itemTransformer))
-
     OreDictionary.registerOre("wire", ElectricalContent.itemWire)
     OreDictionary.registerOre("motor", ElectricalContent.blockMotor)
     OreDictionary.registerOre("battery", ItemBlockBattery.setTier(new ItemStack(ElectricalContent.blockBattery, 1, 0), 0.asInstanceOf[Byte]))
     OreDictionary.registerOre("batteryBox", ItemBlockBattery.setTier(new ItemStack(ElectricalContent.blockBattery, 1, 0), 0.asInstanceOf[Byte]))
   }
 
-  override def postInit
+  override def postInit()
   {
     recipes += shaped(blockTesla, "WEW", " C ", "DID", 'W', "wire", 'E', Items.ender_eye, 'C', UniversalRecipe.BATTERY.get, 'D', Items.diamond, 'I', UniversalRecipe.PRIMARY_PLATE.get)
     recipes += shaped(itemMultimeter, "WWW", "ICI", 'W', "wire", 'C', UniversalRecipe.BATTERY.get, 'I', UniversalRecipe.PRIMARY_METAL.get)
@@ -141,7 +139,7 @@ object ElectricalContent extends ContentHolder
   @SideOnly(Side.CLIENT)
   def preTextureHook(event: TextureStitchEvent.Pre)
   {
-    if (event.map.getTextureType() == 0)
+    if (event.map.getTextureType == 0)
     {
       RenderFlatWire.wireIcon = event.map.registerIcon(Reference.prefix + "models/flatWire")
       RenderFramedWire.wireIcon = event.map.registerIcon(Reference.prefix + "models/wire")

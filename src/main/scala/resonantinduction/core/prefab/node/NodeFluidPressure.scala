@@ -6,7 +6,6 @@ import resonant.api.IUpdate
 import resonant.api.tile.INodeProvider
 import resonant.lib.grid.UpdateTicker
 import resonant.lib.prefab.fluid.NodeFluid
-import resonantinduction.archaic.fluid.gutter.NodeFluidGravity
 
 import scala.collection.convert.wrapAll._
 
@@ -43,68 +42,71 @@ class NodeFluidPressure(parent: INodeProvider, volume: Int = FluidContainerRegis
   {
     val flowRate = (maxFlowRate * deltaTime).toInt
 
-    directionMap.foreach
+    directionMap synchronized
     {
-      case (handler: IFluidHandler, dir: ForgeDirection) =>
+      directionMap.foreach
       {
-        if (handler.isInstanceOf[NodeFluidPressure])
+        case (handler: IFluidHandler, dir: ForgeDirection) =>
         {
-          //"A" is this node. "B" is the other node
-          //It's another pressure node
-          val otherNode = handler.asInstanceOf[NodeFluidPressure]
-          val pressureA = pressure(dir)
-          val pressureB = otherNode.pressure(dir.getOpposite)
-
-          //High pressure to low
-          if (pressureA >= pressureB)
+          if (handler.isInstanceOf[NodeFluidPressure])
           {
-            val tankA = getPrimaryTank
+            //"A" is this node. "B" is the other node
+            //It's another pressure node
+            val otherNode = handler.asInstanceOf[NodeFluidPressure]
+            val pressureA = pressure(dir)
+            val pressureB = otherNode.pressure(dir.getOpposite)
 
-            if (tankA != null)
+            //High pressure to low
+            if (pressureA >= pressureB)
             {
-              val fluidA = tankA.getFluid
+              val tankA = getPrimaryTank
 
-              if (fluidA != null)
+              if (tankA != null)
               {
-                val amountA = fluidA.amount
+                val fluidA = tankA.getFluid
 
-                if (amountA > 0)
+                if (fluidA != null)
                 {
-                  val tankB = otherNode.getPrimaryTank
+                  val amountA = fluidA.amount
 
-                  if (tankB != null)
+                  if (amountA > 0)
                   {
-                    doDistribute(dir, this, otherNode, flowRate)
+                    val tankB = otherNode.getPrimaryTank
+
+                    if (tankB != null)
+                    {
+                      doDistribute(dir, this, otherNode, flowRate)
+                    }
                   }
                 }
               }
             }
           }
-        }
-        else
-        {
-          //It's a fluid handler.
-          val pressure = this.pressure(dir)
-          val tankPressure = 0
-          val sourceTank = getPrimaryTank
-          val transferAmount = (Math.max(pressure, tankPressure) - Math.min(pressure, tankPressure)) * flowRate
+          else
+          {
+            //It's a fluid handler.
+            val pressure = this.pressure(dir)
+            val tankPressure = 0
+            val sourceTank = getPrimaryTank
+            val transferAmount = (Math.max(pressure, tankPressure) - Math.min(pressure, tankPressure)) * flowRate
 
-          if (pressure > tankPressure)
-          {
-            if (sourceTank.getFluidAmount > 0 && transferAmount > 0)
+            if (pressure > tankPressure)
             {
-              val drainStack = drain(dir.getOpposite, transferAmount, false)
-              drain(dir.getOpposite, handler.fill(dir.getOpposite, drainStack, true), true)
-            }
-          }
-          else if (pressure < tankPressure)
-          {
-            if (transferAmount > 0)
-            {
-              val drainStack = handler.drain(dir.getOpposite, transferAmount, false)
-              if (drainStack != null)
+              if (sourceTank.getFluidAmount > 0 && transferAmount > 0)
               {
-                handler.drain(dir.getOpposite, fill(dir.getOpposite, drainStack, true), true)
+                val drainStack = drain(dir.getOpposite, transferAmount, false)
+                drain(dir.getOpposite, handler.fill(dir.getOpposite, drainStack, true), true)
+              }
+            }
+            else if (pressure < tankPressure)
+            {
+              if (transferAmount > 0)
+              {
+                val drainStack = handler.drain(dir.getOpposite, transferAmount, false)
+                if (drainStack != null)
+                {
+                  handler.drain(dir.getOpposite, fill(dir.getOpposite, drainStack, true), true)
+                }
               }
             }
           }

@@ -22,11 +22,16 @@ class NodeFluidGravity(parent: TileFluidProvider, volume: Int = FluidContainerRe
     var quantity = 0
 
     if (dir == ForgeDirection.DOWN)
+    {
       quantity = Math.max(if (pressureA > pressureB) (pressureA - pressureB) * flowRate else amountA, amountA)
-    else if (nodeB.isInstanceOf[NodeFluidGravity])
-      quantity = Math.max(if (pressureA > pressureB) (pressureA - pressureB) * flowRate else Math.min((amountA - amountB) / 2, flowRate), Math.min((amountA - amountB) / 2, flowRate))
-    else
-      quantity = if (pressureA > pressureB) (pressureA - pressureB) * flowRate else 0
+    }
+    else if (dir != ForgeDirection.UP)
+    {
+      if (nodeB.isInstanceOf[NodeFluidGravity])
+        quantity = Math.max(if (pressureA > pressureB) (pressureA - pressureB) * flowRate else Math.min((amountA - amountB) / 2, flowRate), Math.min((amountA - amountB) / 2, flowRate))
+      else
+        quantity = if (pressureA > pressureB) (pressureA - pressureB) * flowRate else 0
+    }
 
     //TODO: There's a slight pressure backflow
     quantity = Math.min(Math.min(quantity, tankB.getCapacity - amountB), amountA)

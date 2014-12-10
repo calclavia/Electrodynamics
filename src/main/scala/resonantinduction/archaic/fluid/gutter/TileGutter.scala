@@ -17,6 +17,7 @@ import net.minecraftforge.fluids._
 import org.lwjgl.opengl.GL11
 import resonant.api.recipe.{MachineRecipes, RecipeResource}
 import resonant.content.factory.resources.RecipeType
+import resonant.lib.grid.UpdateTicker
 import resonant.lib.prefab.fluid.NodeFluid
 import resonant.lib.render.{FluidRenderUtility, RenderUtility}
 import resonant.lib.transform.region.Cuboid
@@ -46,6 +47,15 @@ object TileGutter
 class TileGutter extends TileFluidProvider(Material.rock)
 {
   fluidNode = new NodeGutter(this)
+  fluidNode.onFluidChanged = () =>
+  {
+    if (!world.isRemote)
+    {
+      //TODO: Check if this is very costly
+//      UpdateTicker.world.enqueue(checkFluidAbove)
+      sendPacket(0)
+    }
+  }
 
   textureName = "material_wood_surface"
   isOpaqueCube = false
@@ -114,10 +124,23 @@ class TileGutter extends TileFluidProvider(Material.rock)
     }
   }
 
+  /**
+   * Called when the block is first added to the world
+   */
+  override def onWorldJoin()
+  {
+    super.onWorldJoin()
+    checkFluidAbove()
+  }
+
   override def onNeighborChanged(block: Block)
   {
     super.onNeighborChanged(block)
+    checkFluidAbove()
+  }
 
+  def checkFluidAbove()
+  {
     if (!world.isRemote)
     {
       val posAbove = toVectorWorld + new Vector3(0, 1, 0)
@@ -274,8 +297,7 @@ class TileGutter extends TileFluidProvider(Material.rock)
 
   class NodeGutter(parent: TileFluidProvider) extends NodeFluidGravity(parent)
   {
-
-    override def canConnect[B <: IFluidHandler](other: B, from: ForgeDirection) : Boolean =
+    override def canConnect[B <: IFluidHandler](other: B, from: ForgeDirection): Boolean =
     {
       if (other.isInstanceOf[NodeFluid] && other.asInstanceOf[NodeFluid].parent.isInstanceOf[TileTank])
         return false
