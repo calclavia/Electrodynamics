@@ -48,13 +48,19 @@ class TileGutter extends TileFluidProvider(Material.rock)
 {
   fluidNode = new NodeGutter(this)
   fluidNode.asInstanceOf[NodeGutter].doPressureUpdate = false
+
+  fluidNode.onConnectionChanged = () =>
+  {
+    sendPacket(0)
+  }
+
   fluidNode.onFluidChanged = () =>
   {
     if (!world.isRemote)
     {
       //TODO: Check if this is very costly
 //      UpdateTicker.world.enqueue(checkFluidAbove)
-      sendPacket(0)
+      sendPacket(1)
     }
   }
 
@@ -298,6 +304,21 @@ class TileGutter extends TileFluidProvider(Material.rock)
 
   class NodeGutter(parent: TileFluidProvider) extends NodeFluidGravity(parent)
   {
+
+    override def connect[B <: IFluidHandler](obj: B, dir: ForgeDirection) =
+    {
+      super.connect(obj, dir)
+
+      if (obj.isInstanceOf[NodeGutter])
+        clientRenderMask = clientRenderMask.openMask(dir)
+    }
+
+    override def clearConnections()
+    {
+      super.clearConnections()
+      clientRenderMask = 0x00
+    }
+
     override def canConnect[B <: IFluidHandler](other: B, from: ForgeDirection): Boolean =
     {
       if (other.isInstanceOf[NodeFluid] && other.asInstanceOf[NodeFluid].parent.isInstanceOf[TileTank])

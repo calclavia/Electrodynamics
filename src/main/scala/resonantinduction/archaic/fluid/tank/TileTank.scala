@@ -52,7 +52,7 @@ class TileTank extends TileFluidProvider(Material.iron) with ISneakPickup with R
 
   fluidNode.asInstanceOf[NodeFluidGravity].maxFlowRate = FluidContainerRegistry.BUCKET_VOLUME
   fluidNode.asInstanceOf[NodeFluidGravity].doPressureUpdate = false
-  fluidNode.onFluidChanged = () => if(!world.isRemote) sendPacket(0)
+  fluidNode.onFluidChanged = () => if(!world.isRemote) sendPacket(1)
 
   override def shouldSideBeRendered(access: IBlockAccess, x: Int, y: Int, z: Int, side: Int): Boolean = new Vector3(x, y, z).getBlock(access) != block
 

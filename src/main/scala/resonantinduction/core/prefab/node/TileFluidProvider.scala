@@ -6,10 +6,10 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import resonant.content.prefab.java.TileAdvanced
-import resonant.lib.grid.node.TSpatialNodeProvider
 import resonant.engine.network.ByteBufWrapper._
 import resonant.engine.network.discriminator.PacketType
 import resonant.engine.network.handle.{TPacketReceiver, TPacketSender}
+import resonant.lib.grid.node.TSpatialNodeProvider
 import resonant.lib.prefab.fluid.NodeFluid
 
 /**
@@ -28,9 +28,23 @@ abstract class TileFluidProvider(material: Material) extends TileAdvanced(materi
   def fluidNode_=(newNode: NodeFluid)
   {
     _fluidNode = newNode
-    fluidNode.onFluidChanged = () => if (!world.isRemote) sendPacket(0)
-    fluidNode.onConnectionChanged = () => if (!world.isRemote) sendPacket(1)
+    fluidNode.onConnectionChanged = () =>
+    {
+      clientRenderMask = fluidNode.connectedMask
+      sendPacket(0)
+    }
+    fluidNode.onFluidChanged = () => if (!world.isRemote) sendPacket(1)
     nodes.add(fluidNode)
+  }
+
+  override def start()
+  {
+    super.start()
+
+    if(!world.isRemote)
+    {
+      fluidNode.onConnectionChanged()
+    }
   }
 
   override def write(buf: ByteBuf, id: Int)
@@ -42,13 +56,12 @@ abstract class TileFluidProvider(material: Material) extends TileAdvanced(materi
       case 0 =>
       {
         buf <<< colorID
-        buf <<< fluidNode.connectedMask
+        buf <<< clientRenderMask
         buf <<< fluidNode.getPrimaryTank
       }
       case 1 =>
       {
-        buf <<< colorID
-        buf <<< fluidNode.connectedMask
+        buf <<< fluidNode.getPrimaryTank
       }
     }
   }
@@ -69,8 +82,7 @@ abstract class TileFluidProvider(material: Material) extends TileAdvanced(materi
         }
         case 1 =>
         {
-          colorID = buf.readInt()
-          clientRenderMask = buf.readInt()
+          fluidNode.setPrimaryTank(buf.readTank())
         }
       }
 
