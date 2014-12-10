@@ -10,14 +10,12 @@ import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.oredict.OreDictionary
-import resonant.api.tile.{IRemovable, IFilterable}
-import IRemovable.ISneakPickup
 import resonant.api.tile.IFilterable
-import resonant.lib.wrapper.ByteBufWrapper
-import ByteBufWrapper._
+import resonant.api.tile.IRemovable.ISneakPickup
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
 import resonant.lib.prefab.tile.TileInventory
+import resonant.lib.wrapper.ByteBufWrapper._
 import resonantinduction.archaic.ArchaicContent
 
 /** Basic single stack inventory.

@@ -10,8 +10,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import resonant.lib.prefab.tile.traits.TRotatable
 import resonant.engine.ResonantEngine
 import resonant.lib.grid.node.TSpatialNodeProvider
-import resonant.lib.wrapper.ByteBufWrapper
-import ByteBufWrapper._
+import resonant.lib.wrapper.ByteBufWrapper._
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
 import resonant.lib.prefab.tile.spatial.SpatialTile

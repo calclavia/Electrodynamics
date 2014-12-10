@@ -17,11 +17,9 @@ import net.minecraft.util.IIcon
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
-import resonant.content.spatial.block.SpatialTile
 import resonant.lib.grid.thermal.{BoilEvent, ThermalPhysics}
 import resonant.lib.content.prefab.{TElectric, TInventory}
-import resonant.lib.wrapper.ByteBufWrapper
-import ByteBufWrapper._
+import resonant.lib.wrapper.ByteBufWrapper._
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
 import resonant.lib.grid.energy.EnergyStorage

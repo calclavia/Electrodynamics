@@ -5,8 +5,7 @@ import net.minecraft.block.material.Material
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
-import resonant.lib.wrapper.ByteBufWrapper
-import ByteBufWrapper._
+import resonant.lib.wrapper.ByteBufWrapper._
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
 import resonant.lib.grid.node.TSpatialNodeProvider
