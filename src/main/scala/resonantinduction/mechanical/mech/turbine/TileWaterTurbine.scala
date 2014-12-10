@@ -3,7 +3,7 @@ package resonantinduction.mechanical.mech.turbine
 import java.util.List
 
 import cpw.mods.fml.relauncher.ReflectionHelper
-import net.minecraft.block.{BlockLiquid, Block, BlockDynamicLiquid}
+import net.minecraft.block.{Block, BlockLiquid}
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.init.Blocks
 import net.minecraft.item.{Item, ItemStack}
@@ -90,7 +90,7 @@ class TileWaterTurbine extends TileTurbine
           {
 
             val m = ReflectionHelper.findMethod(classOf[BlockLiquid], null, Array[String]("getFlowVector", "func_72202_i"), classOf[IBlockAccess], Integer.TYPE, Integer.TYPE, Integer.TYPE)
-            val vector = new Vector3(m.invoke(Blocks.water, Array(worldObj, check.xi, check.yi, check.zi)).asInstanceOf[Vec3])
+            val vector = new Vector3(m.invoke(Blocks.water, worldObj, check.xi: Integer, check.yi: Integer, check.zi: Integer).asInstanceOf[Vec3])
             val invert = (currentDir.offsetZ > 0 && vector.x < 0) || (currentDir.offsetZ < 0 && vector.x > 0) || (currentDir.offsetX > 0 && vector.z > 0) || (currentDir.offsetX < 0 && vector.z < 0)
 
             if (getDirection.offsetX != 0)

@@ -123,7 +123,7 @@ class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) w
 
             if (Math.signum(c.angularVelocity) != sudoInvert * Math.signum(addVel))
             {
-              isLocked = true
+              isLocked = false
             }
           }
         }
