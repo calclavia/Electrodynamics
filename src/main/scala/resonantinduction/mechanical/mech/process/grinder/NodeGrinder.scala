@@ -16,5 +16,5 @@ class NodeGrinder(parent: TileGrindingWheel) extends NodeMechanical(parent: Tile
 
   override def inverseRotation(other: TNodeMechanical): Boolean = if (other.isInstanceOf[NodeGear])  (toVector3 - other.asInstanceOf[NodeMechanical].toVector3).toArray.sum < 0 else false
 
-  override def inverseNext(other: TNodeMechanical): Boolean = super.inverseNext(other) //if (other.isInstanceOf[NodeGear]) (toVector3 - other.asInstanceOf[NodeMechanical].toVector3).toArray.sum < 0 else super.inverseNext(other)
+  override def inverseNext(other: TNodeMechanical): Boolean = if (other.isInstanceOf[NodeGear]) (toVector3 - other.asInstanceOf[NodeMechanical].toVector3).toArray.sum < 0 else false
 }

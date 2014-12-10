@@ -24,7 +24,7 @@ class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) w
   /**
    * The nodes that the grid is currently recusing through
    */
-  private var passed = Seq.empty[NodeMechanical]
+  private var allPassed = Seq.empty[NodeMechanical]
 
   /**
    * Rebuild the node list starting from the first node and recursively iterating through its connections.
@@ -56,13 +56,13 @@ class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) w
         getNodes.filter(n => n.bufferTorque != 0 && n.bufferAngularVelocity != 0).foreach(
           n =>
           {
-            passed = Seq(n)
-            recurse(deltaTime, n.bufferTorque, n.bufferAngularVelocity)
+            allPassed = Seq(n)
+            recurse(Seq(n), deltaTime, n.bufferTorque, n.bufferAngularVelocity)
           }
         )
       }
 
-      passed = Seq.empty[NodeMechanical]
+      allPassed = Seq.empty[NodeMechanical]
 
       //      UpdateTicker.world.enqueue(resetNodes)
       resetNodes()
@@ -92,7 +92,7 @@ class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) w
     )
   }
 
-  def recurse(deltaTime: Double, torque: Double, angularVelocity: Double)
+  def recurse(passed: Seq[NodeMechanical], deltaTime: Double, torque: Double, angularVelocity: Double)
   {
     val curr = passed.last
 
@@ -111,10 +111,10 @@ class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) w
       {
         if (c != prev)
         {
-          if (!passed.contains(c))
+          if (!allPassed.contains(c))
           {
-            passed :+= c
-            recurse(deltaTime, addTorque, addVel)
+            allPassed :+= c
+            recurse(passed :+ c, deltaTime, addTorque, addVel)
           }
           else
           {
@@ -123,7 +123,7 @@ class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) w
 
             if (Math.signum(c.angularVelocity) != sudoInvert * Math.signum(addVel))
             {
-              isLocked = false
+              isLocked = true
             }
           }
         }
@@ -142,8 +142,8 @@ class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) w
       curr.angularVelocity += netVelocity * deltaTime
       curr.connections.foreach(c =>
       {
-        passed :+= c
-        recurse(deltaTime, netTorque, netVelocity)
+        allPassed :+= c
+        recurse(passed :+ c, deltaTime, netTorque, netVelocity)
       })
     }
   }
