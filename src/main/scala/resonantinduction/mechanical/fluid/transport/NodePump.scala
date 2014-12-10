@@ -9,7 +9,7 @@ import resonantinduction.core.prefab.node.NodeFluidPressure
  * A node for the pump
  * @author Calclavia
  */
-class PumpNode(parent: INodeProvider) extends NodeFluidPressure(parent)
+class NodePump(parent: INodeProvider) extends NodeFluidPressure(parent)
 {
   def pump: TilePump = getParent.asInstanceOf[TilePump]
 
@@ -19,10 +19,10 @@ class PumpNode(parent: INodeProvider) extends NodeFluidPressure(parent)
     {
       if (dir == pump.getDirection)
       {
-        return Math.max(Math.log(Math.abs(pump.mechanicalNode.torque) + 1), 2).toInt
+        return Math.max(Math.log(Math.abs(pump.mechanicalNode.torque) + 1) * 3, 2).toInt
       }
 
-      return -Math.max(Math.log(Math.abs(pump.mechanicalNode.torque) + 1), 2).toInt
+      return -Math.max(Math.log(Math.abs(pump.mechanicalNode.torque) + 1) * 3, 2).toInt
     }
 
     return 0

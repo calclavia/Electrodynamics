@@ -23,7 +23,7 @@ object TilePump
 
 class TilePump extends TileMechanical(Material.iron) with IRotatable with IFluidHandler
 {
-  val pressureNode = new PumpNode(this)
+  val pressureNode = new NodePump(this)
 
   //Constructor
   normalRender = false
