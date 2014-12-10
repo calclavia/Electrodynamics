@@ -11,8 +11,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.world.World
 import resonant.lib.access.java.Permissions
 import resonant.lib.access.scala.AccessUser
-import resonant.lib.wrapper.ByteBufWrapper
-import ByteBufWrapper.ByteBufWrapper
+import resonant.lib.wrapper.ByteBufWrapper._
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.TPacketReceiver
 import resonant.lib.utility.LanguageUtility

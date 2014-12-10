@@ -13,8 +13,7 @@ import net.minecraft.network.Packet
 import resonant.api.tile.{IPlayerUsing, ICamouflageMaterial}
 import resonant.api.mffs.machine.IActivatable
 import resonant.lib.prefab.tile.traits.TRotatable
-import resonant.lib.wrapper.ByteBufWrapper
-import ByteBufWrapper.ByteBufWrapper
+import resonant.lib.wrapper.ByteBufWrapper._
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{IPacketIDReceiver, TPacketSender}
 import resonant.lib.network.netty.PacketManager

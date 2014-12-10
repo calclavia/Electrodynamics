@@ -22,8 +22,7 @@ import resonant.api.mffs.Blacklist
 import resonant.api.mffs.card.ICoordLink
 import resonant.api.mffs.event.EventForceMobilize
 import resonant.api.mffs.modules.{IModule, IProjectorMode}
-import resonant.lib.wrapper.ByteBufWrapper
-import ByteBufWrapper.ByteBufWrapper
+import resonant.lib.wrapper.ByteBufWrapper._
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.transform.region.Cuboid
 import resonant.lib.transform.vector.{Vector3, VectorWorld}

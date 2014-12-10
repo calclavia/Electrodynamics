@@ -16,7 +16,6 @@ import net.minecraft.block.Block
 import net.minecraft.init.{Blocks, Items}
 import net.minecraft.item.ItemStack
 import net.minecraftforge.oredict.OreDictionary
-import resonant.content.loader.ContentHolder
 import resonant.lib.mod.content.{ContentHolder, ExplicitContentName}
 import resonant.lib.utility.recipe.UniversalRecipe
 

@@ -15,8 +15,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.mffs.machine.{IFieldMatrix, IPermissionProvider}
 import resonant.api.mffs.modules.{IModule, IProjectorMode}
 import resonant.lib.prefab.tile.traits.TRotatable
-import resonant.lib.wrapper.ByteBufWrapper
-import ByteBufWrapper.ByteBufWrapper
+import resonant.lib.wrapper.ByteBufWrapper._
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.transform.rotation.EulerAngle
 import resonant.lib.transform.vector.Vector3
