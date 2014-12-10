@@ -26,11 +26,11 @@ import resonantinduction.mechanical.mech.TileMechanical
  */
 object TileGrindingWheel
 {
-  final val processTime: Int = 20 * 20
+  final val processTime = 20 * 20
   /**
    * A map of ItemStacks and their remaining grind-time left.
    */
-  final val grindingTimer: Timer[EntityItem] = new Timer[EntityItem]
+  final val grindingTimer = new Timer[EntityItem]
 
   @SideOnly(Side.CLIENT)
   final val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "grinder.obj"))
@@ -92,8 +92,8 @@ class TileGrindingWheel extends TileMechanical(Material.rock)
       val deltaAngle = Math.toDegrees(mechanicalNode.angularVelocity / 20)
       var dir = getDirection
       dir = ForgeDirection.getOrientation(if (dir.ordinal() % 2 != 0) dir.ordinal() - 1 else dir.ordinal()).getOpposite
-      val deltaEulerAngle = new AngleAxis(deltaAngle, new Vector3(dir))
-      val deltaPos = deltaVector.transform(deltaEulerAngle)
+      val rotation = new AngleAxis(deltaAngle, new Vector3(dir))
+      val deltaPos = deltaVector.transform(rotation) - deltaVector
       val velocity = deltaPos / 20
       entity.addVelocity(velocity.x, velocity.y, velocity.z)
     }
@@ -101,8 +101,6 @@ class TileGrindingWheel extends TileMechanical(Material.rock)
 
   /**
    * Can this machine work this tick?
-   *
-   * @return
    */
   def canWork: Boolean = counter >= requiredTorque
 
