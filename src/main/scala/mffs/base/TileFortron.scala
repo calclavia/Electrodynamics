@@ -8,9 +8,9 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import resonant.api.mffs.fortron.{FrequencyGridRegistry, IFortronFrequency}
-import resonant.engine.network.ByteBufWrapper.ByteBufWrapper
-import resonant.engine.network.discriminator.PacketType
-import resonant.engine.network.netty.PacketManager
+import resonant.lib.wrapper.ByteBufWrapper._
+import resonant.lib.network.discriminator.PacketType
+import resonant.lib.network.netty.PacketManager
 
 import scala.collection.convert.wrapAll._
 
@@ -99,7 +99,7 @@ abstract class TileFortron extends TileFrequency with IFluidHandler with IFortro
 	 */
 	override def fill(from: ForgeDirection, resource: FluidStack, doFill: Boolean): Int =
 	{
-		if (resource.isFluidEqual(FortronUtility.FLUIDSTACK_FORTRON))
+		if (resource.isFluidEqual(FortronUtility.fluidstackFortron))
 		{
 			return this.fortronTank.fill(resource, doFill)
 		}

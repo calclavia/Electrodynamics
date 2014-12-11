@@ -13,7 +13,7 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.fluids.IFluidBlock
 import resonant.api.mffs.Blacklist
 import resonant.api.mffs.machine.IProjector
-import resonant.engine.network.discriminator.PacketTile
+import resonant.lib.network.discriminator.PacketTile
 import resonant.lib.transform.vector.Vector3
 
 class ItemModuleDisintegration extends ItemModule
@@ -44,7 +44,7 @@ class ItemModuleDisintegration extends ItemModule
         itemStack =>
         {
           MFFSUtility.getFilterBlock(itemStack) != null &&
-          (itemStack.isItemEqual(new ItemStack(block, 1, blockMetadata)) || (itemStack.asInstanceOf[ItemBlock].field_150939_a == block && projector.getModuleCount(Content.moduleApproximation) > 0))
+          (itemStack.isItemEqual(new ItemStack(block, 1, blockMetadata)) || (itemStack.getItem.asInstanceOf[ItemBlock].field_150939_a == block && projector.getModuleCount(Content.moduleApproximation) > 0))
         })
 
       if (proj.isInvertedFilter != filterMatch)

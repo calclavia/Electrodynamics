@@ -18,7 +18,7 @@ import org.modstats.{ModstatInfo, Modstats}
 import resonant.api.mffs.Blacklist
 import resonant.lib.mod.config.ConfigHandler
 import resonant.lib.mod.loadable.LoadableHandler
-import resonant.engine.network.netty.PacketManager
+import resonant.lib.network.netty.PacketManager
 import resonant.lib.prefab.damage.CustomDamageSource
 
 import scala.collection.convert.wrapAll._
@@ -67,10 +67,8 @@ object ModularForceFieldSystem
     /**
      * Fluid Instantiation
      */
-    FortronUtility.FLUID_FORTRON = new Fluid("fortron")
-    FortronUtility.FLUID_FORTRON.setGaseous(true)
-    FluidRegistry.registerFluid(FortronUtility.FLUID_FORTRON)
-    FortronUtility.FLUIDSTACK_FORTRON = new FluidStack(FortronUtility.FLUID_FORTRON, 0)
+    FortronUtility.fluidFortron.setGaseous(true)
+    FluidRegistry.registerFluid(FortronUtility.fluidFortron)
 
     Settings.config.save()
   }

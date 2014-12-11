@@ -10,15 +10,14 @@ import net.minecraft.entity.player.{EntityPlayer, EntityPlayerMP}
 import net.minecraft.init.Blocks
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.network.Packet
-import resonant.api.tile.ICamouflageMaterial
+import resonant.api.tile.{IPlayerUsing, ICamouflageMaterial}
 import resonant.api.mffs.machine.IActivatable
-import resonant.content.prefab.scal.TRotatable
-import resonant.content.spatial.block.SpatialTile
-import resonant.engine.network.ByteBufWrapper.ByteBufWrapper
-import resonant.engine.network.IPlayerUsing
-import resonant.engine.network.discriminator.PacketType
-import resonant.engine.network.handle.{IPacketIDReceiver, TPacketSender}
-import resonant.engine.network.netty.PacketManager
+import resonant.lib.prefab.tile.traits.TRotatable
+import resonant.lib.wrapper.ByteBufWrapper._
+import resonant.lib.network.discriminator.PacketType
+import resonant.lib.network.handle.{IPacketIDReceiver, TPacketSender}
+import resonant.lib.network.netty.PacketManager
+import resonant.lib.prefab.tile.spatial.SpatialTile
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.inventory.InventoryUtility
 

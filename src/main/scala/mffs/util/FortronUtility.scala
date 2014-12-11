@@ -19,22 +19,13 @@ import scala.collection.mutable
  */
 object FortronUtility
 {
-  var FLUID_FORTRON: Fluid = null
-  var FLUIDSTACK_FORTRON: FluidStack = null
+  lazy val fluidFortron = new Fluid("fortron")
+  lazy val fluidstackFortron = new FluidStack(FortronUtility.fluidFortron, 0)
 
   def getFortron(amount: Int): FluidStack =
   {
-    val stack: FluidStack = new FluidStack(FLUID_FORTRON, amount)
+    val stack: FluidStack = new FluidStack(fluidFortron, amount)
     return stack
-  }
-
-  def getAmount(liquidStack: FluidStack): Int =
-  {
-    if (liquidStack != null)
-    {
-      return liquidStack.amount
-    }
-    return 0
   }
 
   def getAmount(fortronTank: FluidTank): Int =
@@ -42,6 +33,15 @@ object FortronUtility
     if (fortronTank != null)
     {
       return getAmount(fortronTank.getFluid)
+    }
+    return 0
+  }
+
+  def getAmount(liquidStack: FluidStack): Int =
+  {
+    if (liquidStack != null)
+    {
+      return liquidStack.amount
     }
     return 0
   }

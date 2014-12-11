@@ -14,7 +14,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import resonant.api.mffs.fortron.FrequencyGridRegistry
 import resonant.api.mffs.machine.IProjector
-import resonant.engine.grid.frequency.FrequencyGrid
+import resonant.lib.grid.frequency.FrequencyGrid
 import resonant.lib.access.java.Permission
 import resonant.lib.transform.rotation.EulerAngle
 import resonant.lib.transform.vector.Vector3

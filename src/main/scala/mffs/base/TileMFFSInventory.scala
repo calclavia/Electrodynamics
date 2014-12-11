@@ -6,8 +6,8 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import resonant.lib.content.prefab.TInventory
-import resonant.engine.network.ByteBufWrapper.ByteBufWrapper
-import resonant.engine.network.discriminator.{PacketTile, PacketType}
+import resonant.lib.wrapper.ByteBufWrapper._
+import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.utility.inventory.TPrefabInventory
 
 /**
@@ -40,13 +40,6 @@ abstract class TileMFFSInventory extends TileMFFS with TInventory with TPrefabIn
 
 
     return false
-  }
-
-  def sendInventoryToClients
-  {
-    val nbt: NBTTagCompound = new NBTTagCompound
-    this.writeToNBT(nbt)
-    ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(this, TilePacketType.inventory.id: Integer, nbt))
   }
 
   /**

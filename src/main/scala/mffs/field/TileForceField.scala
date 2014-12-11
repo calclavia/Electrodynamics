@@ -19,10 +19,10 @@ import net.minecraft.util.{IIcon, MovingObjectPosition}
 import net.minecraft.world.IBlockAccess
 import resonant.api.mffs.machine.{IForceField, IProjector}
 import resonant.api.mffs.modules.IModule
-import resonant.content.spatial.block.SpatialTile
-import resonant.engine.network.ByteBufWrapper.ByteBufWrapper
-import resonant.engine.network.discriminator.{PacketTile, PacketType}
-import resonant.engine.network.handle.TPacketReceiver
+import resonant.lib.wrapper.ByteBufWrapper._
+import resonant.lib.network.discriminator.{PacketTile, PacketType}
+import resonant.lib.network.handle.TPacketReceiver
+import resonant.lib.prefab.tile.spatial.SpatialTile
 import resonant.lib.transform.region.Cuboid
 import resonant.lib.transform.vector.Vector3
 

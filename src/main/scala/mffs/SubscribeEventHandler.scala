@@ -52,7 +52,7 @@ object SubscribeEventHandler
   @SideOnly(Side.CLIENT)
   def textureHook(event: TextureStitchEvent.Post)
   {
-    FortronUtility.FLUID_FORTRON.setIcons(fluidIconMap.get(Reference.prefix + "fortron"))
+    FortronUtility.fluidFortron.setIcons(fluidIconMap.get(Reference.prefix + "fortron"))
   }
 
   @SubscribeEvent
