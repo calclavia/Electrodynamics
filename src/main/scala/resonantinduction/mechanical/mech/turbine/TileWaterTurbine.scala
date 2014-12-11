@@ -35,7 +35,7 @@ class TileWaterTurbine extends TileTurbine
   {
     override def canConnect[B](other: B, from: ForgeDirection): Boolean =
     {
-      if (other.isInstanceOf[NodeMechanical] && !(other.isInstanceOf[TileTurbine]))
+      if (other.isInstanceOf[NodeMechanical] && !other.isInstanceOf[TileTurbine])
       {
         val sourceTile: TileEntity = toVectorWorld.add(from).getTileEntity
 
@@ -68,9 +68,8 @@ class TileWaterTurbine extends TileTurbine
         val blockBelow = worldObj.getBlock(xCoord, yCoord - 1, zCoord)
         val metadata = worldObj.getBlockMetadata(xCoord, yCoord + 1, zCoord)
         val isWater = blockAbove == Blocks.water || blockAbove == Blocks.flowing_water
-        val isBelowAvailable = worldObj.isAirBlock(xCoord, yCoord - 1, zCoord) || blockBelow == Blocks.water || blockBelow == Blocks.flowing_water
 
-        if (isWater && metadata == 0 && isBelowAvailable)
+        if (isWater && metadata == 0 && blockBelow.isReplaceable(world, xi, yi - 1, zi))
         {
           powerTicks = 20
           worldObj.setBlockToAir(xCoord, yCoord + 1, zCoord)
