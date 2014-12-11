@@ -14,7 +14,7 @@ import net.minecraft.block.BlockSkull
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Blocks
 import net.minecraft.item.ItemSkull
-import net.minecraft.nbt.{NBTTagCompound, NBTUtil}
+import net.minecraft.nbt.NBTUtil
 import net.minecraft.tileentity.{TileEntity, TileEntitySkull}
 import net.minecraft.util.{ChatComponentText, IIcon}
 import net.minecraftforge.client.event.TextureStitchEvent
@@ -23,8 +23,8 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action
 import resonant.api.mffs.event.{EventForceMobilize, EventStabilize}
 import resonant.api.mffs.fortron.FrequencyGridRegistry
-import resonant.lib.mod.config.ConfigHandler
 import resonant.lib.event.ChunkModifiedEvent
+import resonant.lib.mod.config.ConfigHandler
 import resonant.lib.transform.vector.Vector3
 
 import scala.collection.JavaConversions._
@@ -69,7 +69,7 @@ object SubscribeEventHandler
 
     if (tileEntity.isInstanceOf[TileFortron])
     {
-      (tileEntity.asInstanceOf[TileFortron]).markSendFortron = false
+      tileEntity.asInstanceOf[TileFortron].markSendFortron = false
     }
   }
 
@@ -88,25 +88,28 @@ object SubscribeEventHandler
 
       if (tile.isInstanceOf[TileEntitySkull])
       {
-        val nbt: NBTTagCompound = evt.itemStack.getTagCompound()
+        val nbt = evt.itemStack.getTagCompound
 
-        var gameprofile: GameProfile = null
-
-        if (nbt.hasKey("SkullOwner", 10))
+        if (nbt != null)
         {
-          gameprofile = NBTUtil.func_152459_a(nbt.getCompoundTag("SkullOwner"))
-        }
-        else if (nbt.hasKey("SkullOwner", 8) && nbt.getString("SkullOwner").length > 0)
-        {
-          gameprofile = new GameProfile(null.asInstanceOf[UUID], nbt.getString("SkullOwner"))
-        }
+          var gameProfile: GameProfile = null
 
-        if (gameprofile != null)
-          tile.asInstanceOf[TileEntitySkull].func_152106_a(gameprofile)
-        else
-          tile.asInstanceOf[TileEntitySkull].func_152107_a(evt.itemStack.getItemDamage)
+          if (nbt.hasKey("SkullOwner", 10))
+          {
+            gameProfile = NBTUtil.func_152459_a(nbt.getCompoundTag("SkullOwner"))
+          }
+          else if (nbt.hasKey("SkullOwner", 8) && nbt.getString("SkullOwner").length > 0)
+          {
+            gameProfile = new GameProfile(null.asInstanceOf[UUID], nbt.getString("SkullOwner"))
+          }
 
-        Blocks.skull.asInstanceOf[BlockSkull].func_149965_a(evt.world, evt.x, evt.y, evt.z, tile.asInstanceOf[TileEntitySkull])
+          if (gameProfile != null)
+            tile.asInstanceOf[TileEntitySkull].func_152106_a(gameProfile)
+          else
+            tile.asInstanceOf[TileEntitySkull].func_152107_a(evt.itemStack.getItemDamage)
+
+          Blocks.skull.asInstanceOf[BlockSkull].func_149965_a(evt.world, evt.x, evt.y, evt.z, tile.asInstanceOf[TileEntitySkull])
+        }
       }
 
       evt.itemStack.stackSize -= 1
@@ -168,7 +171,7 @@ object SubscribeEventHandler
   @SubscribeEvent
   def livingSpawnEvent(evt: LivingSpawnEvent)
   {
-    if (!(evt.entity.isInstanceOf[EntityPlayer]))
+    if (!evt.entity.isInstanceOf[EntityPlayer])
     {
       if (MFFSUtility.getRelevantProjectors(evt.world, new Vector3(evt.entityLiving)).exists(_.getModuleCount(Content.moduleAntiSpawn) > 0))
       {
