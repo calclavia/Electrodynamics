@@ -92,7 +92,7 @@ class ItemImprint extends Item
     //Constructor
     setUnlocalizedName(Reference.prefix + "imprint")
     setTextureName(Reference.prefix + "imprint")
-    setCreativeTab(RICreativeTab.tab)
+    setCreativeTab(RICreativeTab)
     setHasSubtypes(true)
     setMaxStackSize(1)
 

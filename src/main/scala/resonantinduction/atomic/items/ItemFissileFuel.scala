@@ -45,7 +45,7 @@ class ItemFissileFuel extends ItemRadioactive with IReactorComponent
     this.setNoRepair
     this.setUnlocalizedName(Reference.prefix + "rodBreederFuel")
     this.setTextureName(Reference.prefix + "breederFuel")
-    setCreativeTab(RICreativeTab.tab)
+    setCreativeTab(RICreativeTab)
 
     def onReact(itemStack: ItemStack, reactor: IReactor)
     {

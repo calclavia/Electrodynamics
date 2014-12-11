@@ -24,7 +24,7 @@ class ItemHazmat(slot: Int) extends ItemArmor(ItemHazmat.hazmatArmorMaterial, Re
     {
         this(slot)
         this.setUnlocalizedName(Reference.prefix + name)
-        this.setCreativeTab(RICreativeTab.tab)
+        this.setCreativeTab(RICreativeTab)
         this.setMaxDamage(200000)
     }
 

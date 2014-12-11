@@ -58,8 +58,6 @@ object MechanicalContent extends ContentHolder
 
     NodeRegistry.register(classOf[TNodeMechanical], classOf[NodeMechanical])
 
-    RICreativeTab.itemStack(new ItemStack(MechanicalContent.blockGrinderWheel))
-
     PacketAnnotationManager.INSTANCE.register(classOf[TileWindTurbine])
     PacketAnnotationManager.INSTANCE.register(classOf[TileWaterTurbine])
 

@@ -135,7 +135,7 @@ object AtomicContent extends ContentHolder
     PacketAnnotationManager.INSTANCE.register(classOf[TileAccelerator])
 
     //Buckets
-    itemBucketToxic = manager.newItem("bucketToxicWaste", new ItemBucket(AtomicContent.blockPlasma)).setCreativeTab(RICreativeTab.tab).setContainerItem(Items.bucket).setTextureName(Reference.prefix + "bucketToxicWaste")
+    itemBucketToxic = manager.newItem("bucketToxicWaste", new ItemBucket(AtomicContent.blockPlasma)).setCreativeTab(RICreativeTab).setContainerItem(Items.bucket).setTextureName(Reference.prefix + "bucketToxicWaste")
 
     //Schematics
     SchematicRegistry.register("resonantInduction.atomic.accelerator", new SchematicAccelerator)
@@ -191,27 +191,29 @@ object AtomicContent extends ContentHolder
       }
     })
     Settings.config.save
-    RICreativeTab.itemStack(new ItemStack(AtomicContent.blockReactorCell))
 
   }
 
   override def postInit()
   {
     super.postInit()
+
     if (Loader.isModLoaded("IC2") && Settings.allowAlternateRecipes)
     {
       OreDictionary.registerOre("cellEmpty", IC2Items.getItem("cell"))
       val cellEmptyName: String = OreDictionary.getOreName(OreDictionary.getOreID("cellEmpty"))
-      if (cellEmptyName eq "Unknown")
+      if (cellEmptyName == "Unknown")
       {
       }
       GameRegistry.addRecipe(new ShapelessOreRecipe(AtomicContent.itemYellowCake, IC2Items.getItem("reactorUraniumSimple")))
       GameRegistry.addRecipe(new ShapelessOreRecipe(IC2Items.getItem("cell"), AtomicContent.itemCell))
       GameRegistry.addRecipe(new ShapelessOreRecipe(AtomicContent.itemCell, "cellEmpty"))
     }
+
     EntityRegistry.registerGlobalEntityID(classOf[EntityParticle], "ASParticle", EntityRegistry.findGlobalUniqueEntityId)
     EntityRegistry.registerModEntity(classOf[EntityParticle], "ASParticle", ENTITY_ID_PREFIX, ResonantInduction, 80, 3, true)
-    Settings.config.load
+    Settings.config.load()
+
     for (oreName <- OreDictionary.getOreNames)
     {
       if (oreName.startsWith("ingot"))
@@ -225,7 +227,8 @@ object AtomicContent extends ContentHolder
         }
       }
     }
-    Settings.config.save
+
+    Settings.config.save()
 
     recipes += shapeless(new ItemStack(itemAntimatter, 1, 1), itemAntimatter, itemAntimatter, itemAntimatter, itemAntimatter, itemAntimatter, AtomicContent.itemAntimatter, itemAntimatter, itemAntimatter)
     recipes += shapeless(new ItemStack(itemAntimatter, 8, 0), new ItemStack(AtomicContent.itemAntimatter, 1, 1))

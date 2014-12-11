@@ -15,16 +15,5 @@ object RICreativeTab extends CreativeTabs(CreativeTabs.getNextID, "resonantinduc
 {
   var itemStack: ItemStack = null
 
-  override def getTabIconItem: Item =
-  {
-    if (itemStack != null)
-      return itemStack.getItem
-    else
-      return Items.iron_ingot
-  }
-
-  def itemStack(item: ItemStack)
-  { itemStack = item }
-
-  def tab = this
+  override def getTabIconItem: Item =itemStack.getItem
 }

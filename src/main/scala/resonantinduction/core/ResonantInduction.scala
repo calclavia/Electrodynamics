@@ -57,8 +57,6 @@ final object ResonantInduction
     loadables.applyModule(AtomicContent)
 
     loadables.preInit()
-
-    RICreativeTab.itemStack = new ItemStack(CoreContent.decoration)
   }
 
   @EventHandler

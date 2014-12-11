@@ -47,6 +47,7 @@ object ArchaicContent extends ContentHolder
     {
       OreDictionary.registerOre("cobblestone", Blocks.cobblestone)
     }
+
     if (OreDictionary.getOres("stickWood") == null)
     {
       OreDictionary.registerOre("stickWood", Items.stick)

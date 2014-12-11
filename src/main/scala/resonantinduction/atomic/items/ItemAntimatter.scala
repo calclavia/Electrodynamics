@@ -23,7 +23,7 @@ class ItemAntimatter extends ItemCell
     this.setHasSubtypes(true)
     this.setUnlocalizedName(Reference.prefix + "antimatter")
     this.setTextureName(Reference.prefix + "antimatter")
-    setCreativeTab(RICreativeTab.tab)
+    setCreativeTab(RICreativeTab)
 
     @SideOnly(Side.CLIENT) override def registerIcons(iconRegister: IIconRegister)
     {

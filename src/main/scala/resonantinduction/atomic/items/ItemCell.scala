@@ -17,7 +17,7 @@ class ItemCell extends ItemTooltip
         if (!name.equalsIgnoreCase("cellEmpty")) this.setContainerItem(AtomicContent.itemCell)
         this.setUnlocalizedName(Reference.prefix + name)
         this.setTextureName(Reference.prefix + name)
-        setCreativeTab(RICreativeTab.tab)
+        setCreativeTab(RICreativeTab)
     }
 
     override def getUnlocalizedName(itemstack: ItemStack): String =
