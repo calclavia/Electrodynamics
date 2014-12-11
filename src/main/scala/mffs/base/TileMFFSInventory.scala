@@ -42,13 +42,6 @@ abstract class TileMFFSInventory extends TileMFFS with TInventory with TPrefabIn
     return false
   }
 
-  def sendInventoryToClients
-  {
-    val nbt: NBTTagCompound = new NBTTagCompound
-    this.writeToNBT(nbt)
-    ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(this, TilePacketType.inventory.id: Integer, nbt))
-  }
-
   /**
    * Inventory Methods
    */
