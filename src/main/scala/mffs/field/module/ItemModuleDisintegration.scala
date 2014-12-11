@@ -44,7 +44,7 @@ class ItemModuleDisintegration extends ItemModule
         itemStack =>
         {
           MFFSUtility.getFilterBlock(itemStack) != null &&
-          (itemStack.isItemEqual(new ItemStack(block, 1, blockMetadata)) || (itemStack.asInstanceOf[ItemBlock].field_150939_a == block && projector.getModuleCount(Content.moduleApproximation) > 0))
+          (itemStack.isItemEqual(new ItemStack(block, 1, blockMetadata)) || (itemStack.getItem.asInstanceOf[ItemBlock].field_150939_a == block && projector.getModuleCount(Content.moduleApproximation) > 0))
         })
 
       if (proj.isInvertedFilter != filterMatch)
