@@ -13,7 +13,7 @@ import resonant.lib.prefab.item.TFluidContainerItem
  */
 class ItemCardInfinite extends ItemCard with TFluidContainerItem
 {
-  override def fill(container: ItemStack, resource: FluidStack, doFill: Boolean): Int = if (resource.getFluid == FortronUtility.FLUID_FORTRON) resource.amount else 0
+  override def fill(container: ItemStack, resource: FluidStack, doFill: Boolean): Int = if (resource.getFluid == FortronUtility.fluidFortron) resource.amount else 0
 
-  override def drain(container: ItemStack, maxDrain: Int, doDrain: Boolean): FluidStack = new FluidStack(FortronUtility.FLUID_FORTRON, maxDrain)
+  override def drain(container: ItemStack, maxDrain: Int, doDrain: Boolean): FluidStack = new FluidStack(FortronUtility.fluidFortron, maxDrain)
 }

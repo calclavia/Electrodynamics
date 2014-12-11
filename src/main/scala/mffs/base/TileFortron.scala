@@ -99,7 +99,7 @@ abstract class TileFortron extends TileFrequency with IFluidHandler with IFortro
 	 */
 	override def fill(from: ForgeDirection, resource: FluidStack, doFill: Boolean): Int =
 	{
-		if (resource.isFluidEqual(FortronUtility.FLUIDSTACK_FORTRON))
+		if (resource.isFluidEqual(FortronUtility.fluidstackFortron))
 		{
 			return this.fortronTank.fill(resource, doFill)
 		}
