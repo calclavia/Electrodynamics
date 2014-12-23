@@ -2,12 +2,12 @@ package mffs.security.module
 
 import java.util.Set
 
+import mffs.ModularForceFieldSystem
 import mffs.field.TileElectromagneticProjector
-import mffs.{ModularForceFieldSystem, Settings}
+import mffs.security.MFFSPermissions
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.util.{ChatComponentTranslation, ChatComponentText}
+import net.minecraft.util.ChatComponentTranslation
 import resonant.api.mffs.machine.IProjector
-import resonant.lib.utility.LanguageUtility
 import resonant.lib.transform.vector.Vector3
 
 class ItemModuleAntiPersonnel extends ItemModuleDefense
@@ -18,15 +18,16 @@ class ItemModuleAntiPersonnel extends ItemModuleDefense
     val entities = getEntitiesInField(projector)
 
     entities.view
-      .filter(entity => entity.isInstanceOf[EntityPlayer])
-      .map(_.asInstanceOf[EntityPlayer])
-      .filter(player => !player.capabilities.isCreativeMode && !player.isEntityInvulnerable)
-      .foreach(
+    .filter(entity => entity.isInstanceOf[EntityPlayer])
+    .map(_.asInstanceOf[EntityPlayer])
+    .filter(player => !player.capabilities.isCreativeMode && !player.isEntityInvulnerable)
+    .filter(p => projector.hasPermission(p.getGameProfile, MFFSPermissions.defense))
+    .foreach(
         player =>
         {
           (0 until player.inventory.getSizeInventory)
-            .filter(player.inventory.getStackInSlot(_) != null)
-            .foreach(
+          .filter(player.inventory.getStackInSlot(_) != null)
+          .foreach(
               i =>
               {
                 proj.mergeIntoInventory(player.inventory.getStackInSlot(i))
