@@ -7,21 +7,18 @@ import cpw.mods.fml.common.Mod.EventHandler
 import cpw.mods.fml.common.event.{FMLInitializationEvent, FMLPostInitializationEvent, FMLPreInitializationEvent}
 import cpw.mods.fml.common.network.NetworkRegistry
 import cpw.mods.fml.common.{Mod, SidedProxy}
-import ic2.api.tile.ExplosionWhitelist
 import mffs.util.FortronUtility
 import net.minecraft.block.Block
 import net.minecraft.init.Blocks
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.config.Configuration
-import net.minecraftforge.fluids.{Fluid, FluidRegistry, FluidStack}
+import net.minecraftforge.fluids.FluidRegistry
 import org.modstats.{ModstatInfo, Modstats}
 import resonant.api.mffs.Blacklist
 import resonant.lib.mod.config.ConfigHandler
 import resonant.lib.mod.loadable.LoadableHandler
 import resonant.lib.network.netty.PacketManager
 import resonant.lib.prefab.damage.CustomDamageSource
-
-import scala.collection.convert.wrapAll._
 
 @Mod(modid = Reference.id, name = Reference.name, version = Reference.version, dependencies = "required-after:ResonantEngine", modLanguage = "scala", guiFactory = "mffs.MFFSGuiFactory")
 @ModstatInfo(prefix = "mffs")
@@ -99,7 +96,16 @@ object ModularForceFieldSystem
 
     Blacklist.mobilizerBlacklist.add(Blocks.bedrock)
     Blacklist.mobilizerBlacklist.add(Content.forceField)
-    ExplosionWhitelist.addWhitelistedBlock(Content.forceField)
+
+    try
+    {
+      val clazz = Class.forName("ic2.api.tile.ExplosionWhitelist")
+      clazz.getMethod("addWhitelistedBlock", classOf[Block]).invoke(null, Content.forceField)
+    }
+    catch
+      {
+        case _ => Reference.logger.info("IC2 Explosion white list API not found. Ignoring...")
+      }
 
     loadables.postInit()
 
