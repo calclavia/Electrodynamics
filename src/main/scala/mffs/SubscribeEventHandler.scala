@@ -120,31 +120,29 @@ object SubscribeEventHandler
   @SubscribeEvent
   def playerInteractEvent(evt: PlayerInteractEvent)
   {
-    if (evt.action == Action.RIGHT_CLICK_BLOCK || evt.action == Action.LEFT_CLICK_BLOCK)
+    // Cancel if we click on a force field.
+    if (evt.action == Action.LEFT_CLICK_BLOCK && evt.entityPlayer.worldObj.getBlock(evt.x, evt.y, evt.z) == Content.forceField)
     {
-      // Cancel if we click on a force field.
-      if (evt.action == Action.LEFT_CLICK_BLOCK && evt.entityPlayer.worldObj.getBlock(evt.x, evt.y, evt.z) == Content.forceField)
-      {
-        evt.setCanceled(true)
-        return
-      }
+      evt.setCanceled(true)
+      return
+    }
 
-      // Only check non-creative players
-      if (evt.entityPlayer.capabilities.isCreativeMode)
-      {
-        return
-      }
+    // Only check non-creative players
+    if (evt.entityPlayer.capabilities.isCreativeMode)
+    {
+      return
+    }
 
-      val position = new Vector3(evt.x, evt.y, evt.z)
+    val position = new Vector3(evt.x, evt.y, evt.z)
 
-      val relevantProjectors = MFFSUtility.getRelevantProjectors(evt.entityPlayer.worldObj, position)
+    val relevantProjectors = MFFSUtility.getRelevantProjectors(evt.entityPlayer.worldObj, position)
 
-      //Check if we can sync this block (activate). If not, we cancel the event.
-      if (!relevantProjectors.forall(x => x.isAccessGranted(evt.entityPlayer.worldObj, new Vector3(evt.x, evt.y, evt.z), evt.entityPlayer, evt.action) && x.hasPermission(evt.entityPlayer.getGameProfile, MFFSPermissions.configure)))
-      {
-        evt.entityPlayer.addChatMessage(new ChatComponentText("[" + Reference.name + "] You have no permission to do that!"))
-        evt.setCanceled(true)
-      }
+    //Check if we can sync this block (activate). If not, we cancel the event.
+    if (!relevantProjectors.forall(x => x.isAccessGranted(evt.entityPlayer.worldObj, new Vector3(evt.x, evt.y, evt.z), evt.entityPlayer, evt.action)))
+    {
+      //Check if player has permission
+      evt.entityPlayer.addChatMessage(new ChatComponentText("[" + Reference.name + "] You have no permission to do that!"))
+      evt.setCanceled(true)
     }
   }
 
@@ -159,12 +157,12 @@ object SubscribeEventHandler
       val vec = new Vector3(evt.x, evt.y, evt.z)
 
       FrequencyGridRegistry.instance.getNodes(classOf[TileElectromagneticProjector])
-        .view
-        .filter(_.getWorldObj == evt.world)
-        .filter(_.getCalculatedField != null)
-        .filter(_.getCalculatedField.contains(vec))
-        .force
-        .foreach(_.markFieldUpdate = true)
+      .view
+      .filter(_.getWorldObj == evt.world)
+      .filter(_.getCalculatedField != null)
+      .filter(_.getCalculatedField.contains(vec))
+      .force
+      .foreach(_.markFieldUpdate = true)
     }
   }
 

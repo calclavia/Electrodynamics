@@ -5,8 +5,8 @@ import resonant.lib.access.java.Permissions
 object MFFSPermissions
 {
   val mffs = Permissions.root.addChild("mffs")
-  /** Force Field Wrap - Allows a player to go through force fields. */
-  val forceFieldWrap = mffs.addChild("warp")
+  /** Force Field Warp - Allows a player to go through force fields. */
+  val forceFieldWarp = mffs.addChild("warp")
 
   /** Defense - Allows the bypassing of interdiction matrix defenses. */
   val defense = mffs.addChild("defense")
@@ -17,8 +17,8 @@ object MFFSPermissions
   /** Bypass Confiscation - Allows the bypassing of interdiction matrix confiscation. */
   val bypassConfiscation = defense.addChild("bypassConfiscation")
 
-  /** Configure - Allows to sync biometric identifiers. */
-  val configure = mffs.addChild("sync")
+  /** Configure - Allows to configure biometric identifiers. */
+  val configure = mffs.addChild("configure")
   /** Remote Control - Allows player to remotely control blocks with the remote. */
   val remoteControl = mffs.addChild("remoteControl")
 }

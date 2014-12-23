@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack
 import resonant.lib.access.java.Permissions
 import resonant.lib.network.discriminator.PacketPlayerItem
 import resonant.lib.render.EnumColor
+import resonant.lib.wrapper.StringWrapper._
 import resonant.lib.wrapper.WrapList._
 
 import scala.collection.convert.wrapAll._
@@ -22,7 +23,7 @@ abstract class GuiAccessCard(player: EntityPlayer, itemStack: ItemStack, contain
 {
   val itemAccess = itemStack.getItem.asInstanceOf[ItemCardAccess]
   val permissions = Permissions.root.getAllChildren.toList
-  val scroll = new GuiScroll(permissions.size)
+  val scroll = new GuiScroll(Math.max(permissions.size - 4, 0))
 
   override def initGui()
   {
@@ -44,7 +45,7 @@ abstract class GuiAccessCard(player: EntityPlayer, itemStack: ItemStack, contain
       if (button.id >= index && button.id <= maxIndex)
       {
         val perm = permissions(button.id)
-        button.displayString = (if (access != null && access.permissions.contains(perm)) EnumColor.BRIGHT_GREEN else EnumColor.RED) + perm.toString
+        button.displayString = (if (access != null && access.permissions.exists(_.toString.equals(perm.toString))) EnumColor.BRIGHT_GREEN else EnumColor.RED) + perm.toString.getLocal
         button.xPosition = width / 2 - 80
         button.yPosition = height / 2 - 60 + (button.id - index) * 20
         button.visible = true

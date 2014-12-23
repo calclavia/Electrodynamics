@@ -35,7 +35,7 @@ class ItemModuleRepulsion extends ItemModule
                   if (entity.isInstanceOf[EntityPlayer])
                   {
                     val entityPlayer = entity.asInstanceOf[EntityPlayer]
-                    return entityPlayer.capabilities.isCreativeMode || projector.hasPermission(entityPlayer.getGameProfile, MFFSPermissions.forceFieldWrap)
+                    return entityPlayer.capabilities.isCreativeMode || projector.hasPermission(entityPlayer.getGameProfile, MFFSPermissions.forceFieldWarp)
                   }
                   return true
                 }

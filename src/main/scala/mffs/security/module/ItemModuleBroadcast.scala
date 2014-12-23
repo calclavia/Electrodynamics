@@ -20,7 +20,7 @@ class ItemModuleBroadcast extends ItemModuleDefense
     entities.view
     .filter(_.isInstanceOf[EntityPlayer])
     .map(_.asInstanceOf[EntityPlayer])
-    .filter(p => projector.hasPermission(p.getGameProfile, MFFSPermissions.defense))
+    .filter(p => !projector.hasPermission(p.getGameProfile, MFFSPermissions.defense))
     .foreach(_.addChatMessage(new ChatComponentTranslation("message.moduleWarn.warn")))
     return false
   }

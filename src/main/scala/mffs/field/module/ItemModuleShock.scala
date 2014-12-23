@@ -20,7 +20,7 @@ class ItemModuleShock extends ItemModule
 
       if (tile.isInstanceOf[TileForceField])
       {
-        if (tile.asInstanceOf[TileForceField].getProjector.hasPermission(entityPlayer.getGameProfile, MFFSPermissions.forceFieldWrap))
+        if (tile.asInstanceOf[TileForceField].getProjector.hasPermission(entityPlayer.getGameProfile, MFFSPermissions.forceFieldWarp))
           return true
       }
 

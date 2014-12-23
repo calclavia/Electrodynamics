@@ -39,13 +39,6 @@ class ItemCardIdentification extends ItemCardAccess with TPacketReceiver
     if (access != null)
     {
       info.add(LanguageUtility.getLocal("info.cardIdentification.username") + " " + access.username)
-
-      /*
-      val permString = LanguageUtility.getLocal(access.permissions.map(_.id).mkString(", "))
-      val strings = LanguageUtility.splitStringPerWord(permString, 5)
-
-      if (strings.size > 0)
-        info.addAll(strings)*/
     }
     else
     {

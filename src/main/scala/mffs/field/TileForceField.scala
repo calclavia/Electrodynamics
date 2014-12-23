@@ -176,7 +176,6 @@ class TileForceField extends SpatialTile(Material.glass) with TPacketReceiver wi
     if (projector != null && entity.isInstanceOf[EntityPlayer])
     {
       val biometricIdentifier = projector.getBiometricIdentifier
-
       val entityPlayer = entity.asInstanceOf[EntityPlayer]
 
       if (entityPlayer.isSneaking)
@@ -187,7 +186,7 @@ class TileForceField extends SpatialTile(Material.glass) with TPacketReceiver wi
         }
         else if (biometricIdentifier != null)
         {
-          if (biometricIdentifier.hasPermission(entityPlayer.getGameProfile, MFFSPermissions.forceFieldWrap))
+          if (biometricIdentifier.hasPermission(entityPlayer.getGameProfile, MFFSPermissions.forceFieldWarp))
           {
             return null
           }
@@ -230,7 +229,7 @@ class TileForceField extends SpatialTile(Material.glass) with TPacketReceiver wi
               }
               else if (biometricIdentifier != null)
               {
-                if (biometricIdentifier.hasPermission(player.getGameProfile, MFFSPermissions.forceFieldWrap))
+                if (biometricIdentifier.hasPermission(player.getGameProfile, MFFSPermissions.forceFieldWarp))
                 {
                   return
                 }

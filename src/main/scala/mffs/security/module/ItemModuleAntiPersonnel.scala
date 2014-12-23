@@ -21,7 +21,7 @@ class ItemModuleAntiPersonnel extends ItemModuleDefense
     .filter(entity => entity.isInstanceOf[EntityPlayer])
     .map(_.asInstanceOf[EntityPlayer])
     .filter(player => !player.capabilities.isCreativeMode && !player.isEntityInvulnerable)
-    .filter(p => projector.hasPermission(p.getGameProfile, MFFSPermissions.defense))
+    .filter(p => !projector.hasPermission(p.getGameProfile, MFFSPermissions.defense))
     .foreach(
         player =>
         {

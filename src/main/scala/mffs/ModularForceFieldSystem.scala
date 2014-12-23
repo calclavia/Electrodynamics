@@ -7,6 +7,7 @@ import cpw.mods.fml.common.Mod.EventHandler
 import cpw.mods.fml.common.event.{FMLInitializationEvent, FMLPostInitializationEvent, FMLPreInitializationEvent}
 import cpw.mods.fml.common.network.NetworkRegistry
 import cpw.mods.fml.common.{Mod, SidedProxy}
+import mffs.security.MFFSPermissions
 import mffs.util.FortronUtility
 import net.minecraft.block.Block
 import net.minecraft.init.Blocks
@@ -106,6 +107,9 @@ object ModularForceFieldSystem
       {
         case _ => Reference.logger.info("IC2 Explosion white list API not found. Ignoring...")
       }
+
+    //Inititate MFFS Permissions
+    MFFSPermissions
 
     loadables.postInit()
 
