@@ -23,10 +23,10 @@ import net.minecraftforge.fluids.FluidContainerRegistry
 import resonant.api.mffs.card.ICoordLink
 import resonant.api.mffs.event.EventForceMobilize
 import resonant.api.mffs.fortron.{FrequencyGridRegistry, IFortronFrequency}
-import resonant.lib.utility.science.UnitDisplay
-import resonant.lib.utility.LanguageUtility
-import resonant.lib.wrapper.WrapList._
 import resonant.lib.transform.vector.{Vector3, VectorWorld}
+import resonant.lib.utility.LanguageUtility
+import resonant.lib.utility.science.UnitDisplay
+import resonant.lib.wrapper.WrapList._
 
 import scala.collection.JavaConversions._
 
@@ -39,6 +39,7 @@ class ItemRemoteController extends ItemCardFrequency with ICoordLink
   override def addInformation(itemstack: ItemStack, entityplayer: EntityPlayer, list: List[_], flag: Boolean)
   {
     super.addInformation(itemstack, entityplayer, list, flag)
+
     if (hasLink(itemstack))
     {
       val vec: VectorWorld = getLink(itemstack)
@@ -66,7 +67,7 @@ class ItemRemoteController extends ItemCardFrequency with ICoordLink
 
       if (block != null)
       {
-        player.addChatMessage(new ChatComponentText(LanguageUtility.getLocal("message.remoteController.linked").replaceAll("%p", x + ", " + y + ", " + z).replaceAll("%q", block.getLocalizedName)))
+        player.addChatMessage(new ChatComponentText(LanguageUtility.getLocal("message.remoteController.linked").replaceAll("#p", x + ", " + y + ", " + z).replaceAll("#q", block.getLocalizedName)))
       }
     }
     return true
@@ -146,12 +147,17 @@ class ItemRemoteController extends ItemCardFrequency with ICoordLink
             }
             if (!world.isRemote)
             {
-              entityPlayer.addChatMessage(new ChatComponentText(LanguageUtility.getLocal("message.remoteController.fail").replaceAll("%p", new UnitDisplay(UnitDisplay.Unit.JOULES, requiredEnergy).toString)))
+              entityPlayer.addChatMessage(new ChatComponentText(LanguageUtility.getLocal("message.remoteController.fail").replaceAll("#p", new UnitDisplay(UnitDisplay.Unit.JOULES, requiredEnergy).toString)))
             }
           }
         }
       }
     }
+    else
+    {
+      super.onItemRightClick(itemStack, world, entityPlayer)
+    }
+
     return itemStack
   }
 

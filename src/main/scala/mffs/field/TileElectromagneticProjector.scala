@@ -263,7 +263,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
             .take(constructionSpeed)
 
           //The collection containing the coordinates to actually place the field blocks.
-          val constructField = mutable.Set.empty[Vector3]
+          var constructField = Set.empty[Vector3]
 
           val result = evaluateField.forall(
             vector =>
@@ -278,7 +278,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
 
               if (flag != 1 && flag != 2)
               {
-                constructField.add(vector)
+                constructField += vector
               }
 
               flag != 2
