@@ -98,8 +98,6 @@ class TileForceField extends SpatialTile(Material.glass) with TPacketReceiver wi
             renderer.renderBlockLilyPad(block, xi, yi, zi)
           case 6 =>
             renderer.renderBlockCrops(block, xi, yi, zi)
-          case 8 =>
-            renderer.renderBlockLadder(block, xi, yi, zi)
           case 7 =>
             renderer.renderBlockDoor(block, xi, yi, zi)
           case 12 =>
