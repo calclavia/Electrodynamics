@@ -42,13 +42,13 @@ class ItemPipe extends TItemMultiPart
   {
     if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
     {
-      list.add(LanguageUtility.getLocal("tooltip.noShift").replace("%0", EnumColor.AQUA.toString).replace("%1", EnumColor.GREY.toString))
+      list.add(LanguageUtility.getLocal("tooltip.noShift").replace("#0", EnumColor.AQUA.toString).replace("#1", EnumColor.GREY.toString))
     }
     else
     {
       val material = PipeMaterials.apply(itemStack.getItemDamage).asInstanceOf[PipeMaterials.PipeMaterial]
-      list.add(EnumColor.AQUA + LanguageUtility.getLocal("tooltip.pipe.rate").replace("%v", "" + EnumColor.ORANGE + new UnitDisplay(UnitDisplay.Unit.LITER, material.maxFlow * 20) + "/s"))
-      list.add(EnumColor.AQUA + LanguageUtility.getLocal("tooltip.pipe.pressure").replace("%v", "" + EnumColor.ORANGE + material.maxPressure + " Pa"))
+      list.add(EnumColor.AQUA + LanguageUtility.getLocal("tooltip.pipe.rate").replace("#v", "" + EnumColor.ORANGE + new UnitDisplay(UnitDisplay.Unit.LITER, material.maxFlow * 20) + "/s"))
+      list.add(EnumColor.AQUA + LanguageUtility.getLocal("tooltip.pipe.pressure").replace("#v", "" + EnumColor.ORANGE + material.maxPressure + " Pa"))
     }
   }
 

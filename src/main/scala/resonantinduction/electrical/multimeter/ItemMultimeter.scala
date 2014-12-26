@@ -50,7 +50,7 @@ class ItemMultimeter extends JItemMultiPart with IHighlight
   {
     if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
     {
-      list.add(LanguageUtility.getLocal("tooltip.noShift").replace("%0", EnumColor.AQUA.toString).replace("%1", EnumColor.GREY.toString))
+      list.add(LanguageUtility.getLocal("tooltip.noShift").replace("#0", EnumColor.AQUA.toString).replace("#1", EnumColor.GREY.toString))
     }
     else
     {

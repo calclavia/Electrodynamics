@@ -61,13 +61,13 @@ class ItemWire extends TItemMultiPart
   {
     if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
     {
-      list.add(LanguageUtility.getLocal("tooltip.noShift").replace("%0", EnumColor.AQUA.toString).replace("%1", EnumColor.GREY.toString))
+      list.add(LanguageUtility.getLocal("tooltip.noShift").replace("#0", EnumColor.AQUA.toString).replace("#1", EnumColor.GREY.toString))
     }
     else
     {
-      list.add(EnumColor.AQUA + LanguageUtility.getLocal("tooltip.wire.resistance").replace("%v", "" + EnumColor.ORANGE + new UnitDisplay(UnitDisplay.Unit.RESISTANCE, WireMaterial.values()(itemStack.getItemDamage).resistance)))
-      list.add(EnumColor.AQUA + LanguageUtility.getLocal("tooltip.wire.current").replace("%v", "" + EnumColor.ORANGE + new UnitDisplay(UnitDisplay.Unit.AMPERE, WireMaterial.values()(itemStack.getItemDamage).maxCurrent)))
-      list.add(EnumColor.AQUA + LanguageUtility.getLocal("tooltip.wire.damage").replace("%v", "" + EnumColor.ORANGE + WireMaterial.values()(itemStack.getItemDamage).damage))
+      list.add(EnumColor.AQUA + LanguageUtility.getLocal("tooltip.wire.resistance").replace("#v", "" + EnumColor.ORANGE + new UnitDisplay(UnitDisplay.Unit.RESISTANCE, WireMaterial.values()(itemStack.getItemDamage).resistance)))
+      list.add(EnumColor.AQUA + LanguageUtility.getLocal("tooltip.wire.current").replace("#v", "" + EnumColor.ORANGE + new UnitDisplay(UnitDisplay.Unit.AMPERE, WireMaterial.values()(itemStack.getItemDamage).maxCurrent)))
+      list.add(EnumColor.AQUA + LanguageUtility.getLocal("tooltip.wire.damage").replace("#v", "" + EnumColor.ORANGE + WireMaterial.values()(itemStack.getItemDamage).damage))
       list.addAll(LanguageUtility.splitStringPerWord(LanguageUtility.getLocal("tooltip.wire.helpText"), 5))
     }
   }

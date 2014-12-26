@@ -314,7 +314,7 @@ item.resonantinduction:antimatter.1.name=Antimatter
 item.resonantinduction:antimatter.1.tooltip=1 Gram
 
 ## Uranium Related Items
-item.resonantinduction:yellowcake.name=Yellowcake
+item.resonantinduction:yellowCake.name=Yellowcake
 item.resonantinduction:uranium.0.name=Uranium-235
 item.resonantinduction:uranium.0.tooltip=Enriched Uranium
 item.resonantinduction:uranium.1.name=Uranium-238
