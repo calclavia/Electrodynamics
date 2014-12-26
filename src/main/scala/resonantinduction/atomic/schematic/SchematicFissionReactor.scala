@@ -42,7 +42,6 @@ class SchematicFissionReactor extends Schematic
         }
       }
 
-      returnMap.put(new Vector3(0, -1, 0), new Pair[Block, Integer](AtomicContent.blockThermometer, 0))
       returnMap.put(new Vector3(0, -3, 0), new Pair[Block, Integer](AtomicContent.blockSiren, 0))
       returnMap.put(new Vector3(0, -2, 0), new Pair[Block, Integer](Blocks.redstone_wire, 0))
       returnMap.put(new Vector3, new Pair[Block, Integer](AtomicContent.blockReactorCell, 0))

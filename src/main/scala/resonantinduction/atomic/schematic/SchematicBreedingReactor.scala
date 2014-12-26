@@ -42,7 +42,6 @@ class SchematicBreedingReactor extends Schematic
                     if (!((x == -r || x == r) && (z == -r || z == r)))
                     {
                         returnMap.put(new Vector3(x, 0, z), new Pair[Block, Integer](AtomicContent.blockReactorCell, 0))
-                        returnMap.put(new Vector3(x, -1, z), new Pair[Block, Integer](AtomicContent.blockThermometer, 0))
                         returnMap.put(new Vector3(x, -3, z), new Pair[Block, Integer](AtomicContent.blockSiren, 0))
                         returnMap.put(new Vector3(x, -2, z), new Pair[Block, Integer](Blocks.redstone_wire, 0))
                     }

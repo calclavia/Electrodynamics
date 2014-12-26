@@ -62,7 +62,6 @@ object AtomicContent extends ContentHolder
   var blockCentrifuge: Block = new TileCentrifuge
   var blockNuclearBoiler: Block = new TileNuclearBoiler
   var blockControlRod: Block = new TileControlRod
-  var blockThermometer: Block = new TileThermometer
   var blockFusionCore: Block = new TilePlasmaHeater
   var blockPlasma: Block = new TilePlasma
   var blockElectromagnet: Block = new TileElectromagnet
@@ -128,7 +127,6 @@ object AtomicContent extends ContentHolder
     super.preInit()
 
     //Annotation Packet Users
-    PacketAnnotationManager.INSTANCE.register(classOf[TileThermometer])
     PacketAnnotationManager.INSTANCE.register(classOf[TileReactorCell])
     PacketAnnotationManager.INSTANCE.register(classOf[TileChemicalExtractor])
     PacketAnnotationManager.INSTANCE.register(classOf[TileNuclearBoiler])
@@ -248,7 +246,6 @@ object AtomicContent extends ContentHolder
     recipes += shaped(blockReactorCell, "SCS", "MEM", "SCS", 'E', "cellEmpty", 'C', UniversalRecipe.CIRCUIT_T2.get, 'S', UniversalRecipe.PRIMARY_PLATE.get, 'M', UniversalRecipe.MOTOR.get)
     recipes += shaped(blockFusionCore, "CPC", "PFP", "CPC", 'P', UniversalRecipe.PRIMARY_PLATE.get, 'F', AtomicContent.blockReactorCell, 'C', UniversalRecipe.CIRCUIT_T3.get)
     recipes += shaped(new ItemStack(itemCell, 16), " T ", "TGT", " T ", 'T', "ingotTin", 'G', Blocks.glass)
-    recipes += shaped(blockThermometer, "SSS", "GCG", "GSG", 'S', UniversalRecipe.PRIMARY_METAL.get, 'G', Blocks.glass, 'C', UniversalRecipe.CIRCUIT_T1.get)
     recipes += shaped(blockControlRod, "I", "I", "I", 'I', Items.iron_ingot)
     recipes += shaped(itemFissileFuel, "CUC", "CUC", "CUC", 'U', "ingotUranium", 'C', "cellEmpty")
     recipes += shaped(itemBreedingRod, "CUC", "CUC", "CUC", 'U', "breederUranium", 'C', "cellEmpty")
