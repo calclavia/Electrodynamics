@@ -102,13 +102,13 @@ object ResourceFactory
     mixtureBucketMap += materialName -> mixtureBucket
 
     //Generate rubble, dust and refined dust
-    val rubble = new ItemStack(CoreContent.manager.newItem("rubble" + materialName.capitalizeFirst, new ItemRubble))
+    val rubble = new ItemStack(CoreContent.manager.newItem("rubble" + materialName.capitalizeFirst, new ItemRubble(materialName)))
     LanguageRegistry.instance.addStringLocalization(rubble.getUnlocalizedName + ".name", localizedName + " " + "tooltip.rubble".getLocal)
 
-    val dust = new ItemStack(CoreContent.manager.newItem("dust" + materialName.capitalizeFirst, new ItemDust))
+    val dust = new ItemStack(CoreContent.manager.newItem("dust" + materialName.capitalizeFirst, new ItemDust(materialName)))
     LanguageRegistry.instance.addStringLocalization(dust.getUnlocalizedName + ".name", localizedName + " " + "tooltip.dust".getLocal)
 
-    val refinedDust = new ItemStack(CoreContent.manager.newItem("refinedDust" + materialName.capitalizeFirst, new ItemRefinedDust))
+    val refinedDust = new ItemStack(CoreContent.manager.newItem("refinedDust" + materialName.capitalizeFirst, new ItemRefinedDust(materialName)))
     LanguageRegistry.instance.addStringLocalization(refinedDust.getUnlocalizedName + ".name", localizedName + " " + "tooltip.refinedDust".getLocal)
 
     //Register rubble, dust and refined dust to OreDictionary
