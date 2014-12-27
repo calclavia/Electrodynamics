@@ -4,7 +4,8 @@ import net.minecraft.block.Block
 import net.minecraft.init.{Blocks, Items}
 import net.minecraft.item.ItemStack
 import resonant.lib.mod.content.ContentHolder
-import resonantinduction.core.content.BlockDecoration
+import resonantinduction.core.resource.content.BlockDecoration
+import resonantinduction.core.resource.ResourceFactory
 
 /**
  * The core contents of Resonant Induction
@@ -22,7 +23,7 @@ object CoreContent extends ContentHolder
   override def postInit()
   {
     //Generate resources
-
+    ResourceFactory.generateAll()
 
     recipes += shaped(new ItemStack(decoration, 8, 3), "XXX", "XCX", "XXX", 'X', Blocks.cobblestone, 'C', new ItemStack(Items.coal, 1, 1))
     recipes +=(new ItemStack(decoration, 3), new ItemStack(decoration, 1, 5), 5)

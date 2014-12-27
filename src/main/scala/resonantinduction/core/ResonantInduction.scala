@@ -13,6 +13,7 @@ import resonant.lib.mod.loadable.LoadableHandler
 import resonantinduction.archaic.ArchaicContent
 import resonantinduction.atomic.AtomicContent
 import resonantinduction.core.handler.TextureHookHandler
+import resonantinduction.core.resource.ResourceFactory
 import resonantinduction.electrical.ElectricalContent
 import resonantinduction.mechanical.{MechanicalContent, MicroblockHighlightHandler}
 
@@ -43,6 +44,7 @@ final object ResonantInduction
 
     MinecraftForge.EVENT_BUS.register(TextureHookHandler)
     MinecraftForge.EVENT_BUS.register(MicroblockHighlightHandler)
+    MinecraftForge.EVENT_BUS.register(ResourceFactory)
 
     loadables.applyModule(proxy)
     loadables.applyModule(packetHandler)

@@ -18,11 +18,11 @@ import resonant.api.recipe.MachineRecipes
 import resonant.lib.factory.resources.RecipeType
 import resonant.engine.ResonantEngine
 import resonant.lib.`type`.Timer
-import resonant.lib.prefab.tile.BlockFluidMixture
 import resonant.lib.render.RenderUtility
 import resonant.lib.transform.rotation.Quaternion
 import resonant.lib.transform.vector.Vector3
 import resonantinduction.core.Reference
+import resonantinduction.core.resource.content.BlockFluidMixture
 import resonantinduction.mechanical.mech.TileMechanical
 
 import scala.collection.JavaConversions._

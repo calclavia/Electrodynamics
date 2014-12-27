@@ -1,4 +1,4 @@
-package resonantinduction.core.content
+package resonantinduction.core.resource.content
 
 import java.util.List
 
