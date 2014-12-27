@@ -228,6 +228,10 @@ item.resonantinduction:quantumGlyph.4.name=Tetragon Glyph
 ##	Tool-tips
 tooltip.mixture=Mixture
 tooltip.molten=Molten
+tooltip.ingot=Ingot
+tooltip.rubble=Rubble
+tooltip.dust=Dust
+tooltip.refinedDust=Refined Dust
 
 tooltip.pipe.rate=Flow Rate: %v
 tooltip.pipe.pressure=Max Pressure: %v

@@ -11,7 +11,7 @@ import cpw.mods.fml.common.registry.LanguageRegistry
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.block.Block
 import net.minecraft.client.Minecraft
-import net.minecraft.init.{Blocks, Items}
+import net.minecraft.init.Blocks
 import net.minecraft.item.crafting.FurnaceRecipes
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.util.{IIcon, ResourceLocation}
@@ -103,8 +103,13 @@ object ResourceFactory
 
     //Generate rubble, dust and refined dust
     val rubble = new ItemStack(CoreContent.manager.newItem("rubble" + materialName.capitalizeFirst, new ItemRubble))
+    LanguageRegistry.instance.addStringLocalization(rubble.getUnlocalizedName + ".name", localizedName + " " + "tooltip.rubble".getLocal)
+
     val dust = new ItemStack(CoreContent.manager.newItem("dust" + materialName.capitalizeFirst, new ItemDust))
+    LanguageRegistry.instance.addStringLocalization(dust.getUnlocalizedName + ".name", localizedName + " " + "tooltip.dust".getLocal)
+
     val refinedDust = new ItemStack(CoreContent.manager.newItem("refinedDust" + materialName.capitalizeFirst, new ItemRefinedDust))
+    LanguageRegistry.instance.addStringLocalization(refinedDust.getUnlocalizedName + ".name", localizedName + " " + "tooltip.refinedDust".getLocal)
 
     //Register rubble, dust and refined dust to OreDictionary
     OreDictionary.registerOre("rubble" + nameCaps, rubble)
@@ -122,27 +127,27 @@ object ResourceFactory
       MachineRecipes.INSTANCE.addRecipe(RecipeType.CRUSHER.name, "ore" + nameCaps, "rubble" + nameCaps)
   }
 
-  def generateAll()
+  def init()
   {
-    //Add vanilla ores into ore dictionary
-    OreDictionary.registerOre("ingotGold", Items.gold_ingot)
-    OreDictionary.registerOre("ingotIron", Items.iron_ingot)
-    OreDictionary.registerOre("oreGold", Blocks.gold_ore)
-    OreDictionary.registerOre("oreIron", Blocks.iron_ore)
-    OreDictionary.registerOre("oreLapis", Blocks.lapis_ore)
+    //Add vanilla ores
+    registerMaterial("gold")
+    registerMaterial("iron")
 
     //Add vanilla ore processing recipes
+    OreDictionary.initVanillaEntries()
     MachineRecipes.INSTANCE.addRecipe(RecipeType.SMELTER.name, new FluidStack(FluidRegistry.LAVA, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(Blocks.stone))
     MachineRecipes.INSTANCE.addRecipe(RecipeType.CRUSHER.name, Blocks.cobblestone, Blocks.gravel)
     MachineRecipes.INSTANCE.addRecipe(RecipeType.CRUSHER.name, Blocks.stone, Blocks.cobblestone)
     MachineRecipes.INSTANCE.addRecipe(RecipeType.SAWMILL.name, Blocks.log, new ItemStack(Blocks.planks, 7, 0))
     MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER.name, Blocks.gravel, Blocks.sand)
     MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER.name, Blocks.glass, Blocks.sand)
+  }
 
-    //Clean material set by removing invalid materials
-    materials --= materials.filter(m => OreDictionary.getOres("ore" + m.capitalizeFirst).size > 0)
+  def generateAll()
+  {
     //Call generate() on all materials
     materials.foreach(generate)
+    Reference.logger.fine("Resource Factory generated " + materials.size + " resources.")
   }
 
   @SideOnly(Side.CLIENT)
@@ -228,26 +233,30 @@ object ResourceFactory
     return 0xFFFFFF
   }
 
+  def registerMaterial(material: String)
+  {
+    if (!materials.contains(material) && OreDictionary.getOres("ore" + material.capitalizeFirst).size > 0)
+    {
+      Settings.config.load()
+      val allowMaterial = Settings.config.get("Resource-Generator", "Enable " + material, true).getBoolean(true)
+      Settings.config.save()
+
+      if (!allowMaterial && !blackList.contains(material))
+      {
+        return
+      }
+      materials += material
+    }
+  }
+
   @SubscribeEvent
   def oreRegisterEvent(evt: OreDictionary.OreRegisterEvent)
   {
     if (evt.Name.startsWith("ingot"))
     {
-      val oreDictName: String = evt.Name.replace("ingot", "")
-      val materialName: String = LanguageUtility.decapitalizeFirst(oreDictName)
-
-      if (!materials.contains(materialName))
-      {
-        Settings.config.load()
-        val allowMaterial = Settings.config.get("Resource-Generator", "Enable " + oreDictName, true).getBoolean(true)
-        Settings.config.save()
-
-        if (!allowMaterial && !blackList.contains(materialName))
-        {
-          return
-        }
-        materials += materialName
-      }
+      val oreDictName = evt.Name.replace("ingot", "")
+      val materialName = oreDictName.decapitalizeFirst
+      registerMaterial(materialName)
     }
   }
 

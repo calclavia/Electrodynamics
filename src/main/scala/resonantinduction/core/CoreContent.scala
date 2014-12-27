@@ -4,8 +4,8 @@ import net.minecraft.block.Block
 import net.minecraft.init.{Blocks, Items}
 import net.minecraft.item.ItemStack
 import resonant.lib.mod.content.ContentHolder
-import resonantinduction.core.resource.content.BlockDecoration
 import resonantinduction.core.resource.ResourceFactory
+import resonantinduction.core.resource.content.BlockDecoration
 
 /**
  * The core contents of Resonant Induction
@@ -17,9 +17,12 @@ object CoreContent extends ContentHolder
 
   manager.setTab(RICreativeTab).setPrefix(Reference.prefix)
 
-  /**
-   * Recipe registration
-   */
+  override def init()
+  {
+    super.init()
+    ResourceFactory.init()
+  }
+
   override def postInit()
   {
     //Generate resources

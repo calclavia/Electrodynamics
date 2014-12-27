@@ -1,9 +1,12 @@
 package resonantinduction.core.resource.content
 
-/**
-  * @author Calclavia
-  */
-class ItemRefinedDust extends ItemResource
- {
+import resonantinduction.core.Reference
 
- }
+/**
+ * @author Calclavia
+ */
+class ItemRefinedDust extends ItemResource
+{
+  setTextureName(Reference.prefix + "oreRefinedDust")
+
+}
