@@ -59,7 +59,6 @@ final object ResonantInduction
   def init(evt: FMLInitializationEvent)
   {
     ResonantPartFactory.init()
-    ResonantEngine.resourceFactory.generateAll()
     loadables.init()
   }
 

@@ -21,6 +21,9 @@ object CoreContent extends ContentHolder
    */
   override def postInit()
   {
+    //Generate resources
+
+
     recipes += shaped(new ItemStack(decoration, 8, 3), "XXX", "XCX", "XXX", 'X', Blocks.cobblestone, 'C', new ItemStack(Items.coal, 1, 1))
     recipes +=(new ItemStack(decoration, 3), new ItemStack(decoration, 1, 5), 5)
     recipes +=(decoration, new ItemStack(decoration, 1, 4), 5)
