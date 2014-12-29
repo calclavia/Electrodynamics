@@ -20,7 +20,6 @@ import net.minecraftforge.fluids.{FluidContainerRegistry, FluidRegistry, FluidSt
 import net.minecraftforge.oredict.OreDictionary
 import resonant.api.recipe.MachineRecipes
 import resonant.lib.factory.resources.RecipeType
-import resonant.lib.prefab.item.ItemFluidBucket
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.wrapper.StringWrapper._
 import resonantinduction.core.resource.content._
@@ -72,7 +71,7 @@ object ResourceFactory
       if (LanguageUtility.getLocal(localizedName) != null && LanguageUtility.getLocal(localizedName) != "")
         localizedName = LanguageUtility.getLocal(localizedName)
 
-      localizedName.replace(LanguageUtility.getLocal("misc.resonantinduction.ingot"), "").replaceAll("^ ", "").replaceAll(" $", "")
+      localizedName.replace("misc.resonantinduction.ingot".getLocal, "").replaceAll("^ ", "").replaceAll(" $", "")
     }
 
     //Generate molten fluid
@@ -84,7 +83,8 @@ object ResourceFactory
     moltenFluidMap += (materialName -> blockFluidMaterial)
 
     //Generate molten bucket
-    val moltenBucket = new ItemFluidBucket
+    val moltenBucket = CoreContent.manager.newItem("bucketMolten" + materialName.capitalizeFirst, new ItemMoltenBucket(materialName))
+    LanguageRegistry.instance.addStringLocalization(moltenBucket.getUnlocalizedName + ".name", "tooltip.molten".getLocal + " " + localizedName + " " + "tooltip.bucket".getLocal)
     FluidContainerRegistry.registerFluidContainer(fluidMolten, new ItemStack(moltenBucket))
     moltenBucketMap += materialName -> moltenBucket
 
@@ -97,7 +97,8 @@ object ResourceFactory
     mixtureFluidMap += materialName -> blockFluidMixture
 
     //Generate mixture bucket
-    val mixtureBucket = new ItemFluidBucket
+    val mixtureBucket = CoreContent.manager.newItem("bucketMixture" + materialName.capitalizeFirst, new ItemMixtureBucket(materialName))
+    LanguageRegistry.instance.addStringLocalization(mixtureBucket.getUnlocalizedName + ".name", "tooltip.mixture".getLocal + " " + localizedName + " " + "tooltip.bucket".getLocal)
     FluidContainerRegistry.registerFluidContainer(fluidMixture, new ItemStack(mixtureBucket))
     mixtureBucketMap += materialName -> mixtureBucket
 

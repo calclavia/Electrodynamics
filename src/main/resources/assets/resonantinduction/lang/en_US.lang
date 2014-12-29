@@ -232,6 +232,7 @@ tooltip.ingot=Ingot
 tooltip.rubble=Rubble
 tooltip.dust=Dust
 tooltip.refinedDust=Refined Dust
+tooltip.bucket=Bucket
 
 tooltip.pipe.rate=Flow Rate: %v
 tooltip.pipe.pressure=Max Pressure: %v
