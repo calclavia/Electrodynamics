@@ -35,8 +35,8 @@ class TileCastingMold extends TileInventory(Material.rock) with IFluidHandler wi
 
     //Constructor
     setTextureName(Reference.prefix + "material_metal_side")
-    normalRender(false)
-    isOpaqueCube(false)
+    normalRender = false
+    isOpaqueCube = false
 
     override def canUpdate: Boolean =
     {
