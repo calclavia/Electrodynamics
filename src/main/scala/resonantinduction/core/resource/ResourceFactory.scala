@@ -22,8 +22,9 @@ import resonant.api.recipe.MachineRecipes
 import resonant.lib.factory.resources.RecipeType
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.wrapper.StringWrapper._
+import resonantinduction.archaic.ArchaicContent
 import resonantinduction.core.resource.content._
-import resonantinduction.core.{CoreContent, Reference, Settings}
+import resonantinduction.core.{Reference, Settings}
 
 import scala.collection.convert.wrapAll._
 import scala.collection.mutable
@@ -79,11 +80,11 @@ object ResourceFactory
     FluidRegistry.registerFluid(fluidMolten)
     LanguageRegistry.instance.addStringLocalization(fluidMolten.getUnlocalizedName, LanguageUtility.getLocal("tooltip.molten") + " " + localizedName)
     val blockFluidMaterial = new BlockFluidMaterial(fluidMolten)
-    CoreContent.manager.newBlock("molten" + nameCaps, blockFluidMaterial)
+    ArchaicContent.manager.newBlock("molten" + nameCaps, blockFluidMaterial)
     moltenFluidMap += (materialName -> blockFluidMaterial)
 
     //Generate molten bucket
-    val moltenBucket = CoreContent.manager.newItem("bucketMolten" + materialName.capitalizeFirst, new ItemMoltenBucket(materialName))
+    val moltenBucket = ArchaicContent.manager.newItem("bucketMolten" + materialName.capitalizeFirst, new ItemMoltenBucket(materialName))
     LanguageRegistry.instance.addStringLocalization(moltenBucket.getUnlocalizedName + ".name", "tooltip.molten".getLocal + " " + localizedName + " " + "tooltip.bucket".getLocal)
     FluidContainerRegistry.registerFluidContainer(fluidMolten, new ItemStack(moltenBucket))
     moltenBucketMap += materialName -> moltenBucket
@@ -93,23 +94,23 @@ object ResourceFactory
     FluidRegistry.registerFluid(fluidMixture)
     val blockFluidMixture: BlockFluidMixture = new BlockFluidMixture(fluidMixture)
     LanguageRegistry.instance.addStringLocalization(fluidMixture.getUnlocalizedName, localizedName + " " + LanguageUtility.getLocal("tooltip.mixture"))
-    CoreContent.manager.newBlock("mixture" + nameCaps, blockFluidMixture)
+    ArchaicContent.manager.newBlock("mixture" + nameCaps, blockFluidMixture)
     mixtureFluidMap += materialName -> blockFluidMixture
 
     //Generate mixture bucket
-    val mixtureBucket = CoreContent.manager.newItem("bucketMixture" + materialName.capitalizeFirst, new ItemMixtureBucket(materialName))
+    val mixtureBucket = ArchaicContent.manager.newItem("bucketMixture" + materialName.capitalizeFirst, new ItemMixtureBucket(materialName))
     LanguageRegistry.instance.addStringLocalization(mixtureBucket.getUnlocalizedName + ".name", "tooltip.mixture".getLocal + " " + localizedName + " " + "tooltip.bucket".getLocal)
     FluidContainerRegistry.registerFluidContainer(fluidMixture, new ItemStack(mixtureBucket))
     mixtureBucketMap += materialName -> mixtureBucket
 
     //Generate rubble, dust and refined dust
-    val rubble = new ItemStack(CoreContent.manager.newItem("rubble" + materialName.capitalizeFirst, new ItemRubble(materialName)))
+    val rubble = new ItemStack(ArchaicContent.manager.newItem("rubble" + materialName.capitalizeFirst, new ItemRubble(materialName)))
     LanguageRegistry.instance.addStringLocalization(rubble.getUnlocalizedName + ".name", localizedName + " " + "tooltip.rubble".getLocal)
 
-    val dust = new ItemStack(CoreContent.manager.newItem("dust" + materialName.capitalizeFirst, new ItemDust(materialName)))
+    val dust = new ItemStack(ArchaicContent.manager.newItem("dust" + materialName.capitalizeFirst, new ItemDust(materialName)))
     LanguageRegistry.instance.addStringLocalization(dust.getUnlocalizedName + ".name", localizedName + " " + "tooltip.dust".getLocal)
 
-    val refinedDust = new ItemStack(CoreContent.manager.newItem("refinedDust" + materialName.capitalizeFirst, new ItemRefinedDust(materialName)))
+    val refinedDust = new ItemStack(ArchaicContent.manager.newItem("refinedDust" + materialName.capitalizeFirst, new ItemRefinedDust(materialName)))
     LanguageRegistry.instance.addStringLocalization(refinedDust.getUnlocalizedName + ".name", localizedName + " " + "tooltip.refinedDust".getLocal)
 
     //Register rubble, dust and refined dust to OreDictionary

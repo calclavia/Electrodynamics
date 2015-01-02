@@ -48,7 +48,6 @@ final object ResonantInduction
 
     loadables.applyModule(proxy)
     loadables.applyModule(packetHandler)
-    loadables.applyModule(CoreContent)
     loadables.applyModule(ArchaicContent)
     loadables.applyModule(ElectricalContent)
     loadables.applyModule(MechanicalContent)

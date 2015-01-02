@@ -44,8 +44,9 @@ class TileWorkbench extends TileInventory(Material.rock) with TPacketSender with
 
         if (inputStack != null)
         {
-          val oreName: String = OreDictionary.getOreName(OreDictionary.getOreID(inputStack))
-          if (oreName != null && !(oreName == "Unknown"))
+          val oreName = OreDictionary.getOreName(OreDictionary.getOreID(inputStack))
+
+          if (oreName != null && oreName != "Unknown")
           {
             val outputs: Array[RecipeResource] = MachineRecipes.INSTANCE.getOutput(RecipeType.CRUSHER.name, oreName)
             if (outputs != null && outputs.length > 0)
