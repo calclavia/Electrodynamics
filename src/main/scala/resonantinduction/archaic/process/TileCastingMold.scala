@@ -8,17 +8,15 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
-import resonant.api.recipe.MachineRecipes
-import resonant.api.recipe.RecipeResource
+import resonant.api.recipe.{MachineRecipes, RecipeResource}
 import resonant.lib.factory.resources.RecipeType
-import resonant.lib.network.discriminator.PacketTile
-import resonant.lib.network.discriminator.PacketType
+import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketReceiver
 import resonant.lib.prefab.tile.TileInventory
+import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.FluidUtility
 import resonant.lib.utility.inventory.InventoryUtility
 import resonantinduction.core.Reference
-import resonant.lib.transform.vector.Vector3
 
 /**
  * Turns molten fuilds into ingots.
@@ -50,6 +48,12 @@ class TileCastingMold extends TileInventory(Material.rock) with IFluidHandler wi
         return new PacketTile(this, nbt)
     }
 
+    override def writeToNBT(tag: NBTTagCompound)
+    {
+        super.writeToNBT(tag)
+        tank.readFromNBT(tag)
+    }
+
     def read(data: ByteBuf, player: EntityPlayer, `type`: PacketType)
     {
         try
@@ -65,46 +69,10 @@ class TileCastingMold extends TileInventory(Material.rock) with IFluidHandler wi
             }
     }
 
-    override def onInventoryChanged
-    {
-        if (worldObj != null)
-        {
-            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord)
-        }
-    }
-
-    override def update
-    {
-        val checkPos: Vector3 = toVector3.add(0, 1, 0)
-        val drainStack: FluidStack = FluidUtility.drainBlock(worldObj, checkPos, false)
-        if (MachineRecipes.INSTANCE.getOutput(RecipeType.SMELTER.name, drainStack).length > 0)
-        {
-            if (drainStack.amount == tank.fill(drainStack, false))
-            {
-                tank.fill(FluidUtility.drainBlock(worldObj, checkPos, true), true)
-            }
-        }
-        while (tank.getFluidAmount >= amountPerIngot && (getStackInSlot(0) == null || getStackInSlot(0).stackSize < getStackInSlot(0).getMaxStackSize))
-        {
-            val outputs: Array[RecipeResource] = MachineRecipes.INSTANCE.getOutput(RecipeType.SMELTER.name, tank.getFluid)
-            for (output <- outputs)
-            {
-                incrStackSize(0, output.getItemStack)
-            }
-            tank.drain(amountPerIngot, true)
-        }
-    }
-
     override def readFromNBT(tag: NBTTagCompound)
     {
         super.readFromNBT(tag)
         tank.writeToNBT(tag)
-    }
-
-    override def writeToNBT(tag: NBTTagCompound)
-    {
-        super.writeToNBT(tag)
-        tank.readFromNBT(tag)
     }
 
     def fill(from: ForgeDirection, resource: FluidStack, doFill: Boolean): Int =
@@ -153,6 +121,14 @@ class TileCastingMold extends TileInventory(Material.rock) with IFluidHandler wi
         }
     }
 
+    override def onInventoryChanged
+    {
+        if (worldObj != null)
+        {
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord)
+        }
+    }
+
     override def use(player: EntityPlayer, hitSide: Int, hit: Vector3): Boolean =
     {
         update
@@ -164,5 +140,27 @@ class TileCastingMold extends TileInventory(Material.rock) with IFluidHandler wi
             setInventorySlotContents(0, null)
         }
         return true
+    }
+
+    override def update
+    {
+        val checkPos: Vector3 = toVector3.add(0, 1, 0)
+        val drainStack: FluidStack = FluidUtility.drainBlock(worldObj, checkPos, false)
+        if (MachineRecipes.instance.getOutput(RecipeType.SMELTER.name, drainStack).length > 0)
+        {
+            if (drainStack.amount == tank.fill(drainStack, false))
+            {
+                tank.fill(FluidUtility.drainBlock(worldObj, checkPos, true), true)
+            }
+        }
+        while (tank.getFluidAmount >= amountPerIngot && (getStackInSlot(0) == null || getStackInSlot(0).stackSize < getStackInSlot(0).getMaxStackSize))
+        {
+            val outputs: Array[RecipeResource] = MachineRecipes.instance.getOutput(RecipeType.SMELTER.name, tank.getFluid)
+            for (output <- outputs)
+            {
+                incrStackSize(0, output.getItemStack)
+            }
+            tank.drain(amountPerIngot, true)
+        }
     }
 }

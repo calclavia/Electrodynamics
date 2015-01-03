@@ -15,9 +15,9 @@ import net.minecraftforge.fluids.IFluidBlock
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL11._
 import resonant.api.recipe.MachineRecipes
-import resonant.lib.factory.resources.RecipeType
 import resonant.engine.ResonantEngine
 import resonant.lib.`type`.Timer
+import resonant.lib.factory.resources.RecipeType
 import resonant.lib.render.RenderUtility
 import resonant.lib.transform.rotation.Quaternion
 import resonant.lib.transform.vector.Vector3
@@ -112,7 +112,7 @@ class TileMixer extends TileMechanical(Material.iron)
       entity.onGround = false
       if (entity.isInstanceOf[EntityItem])
       {
-        if (MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER.name, (entity.asInstanceOf[EntityItem]).getEntityItem).length > 0)
+        if (MachineRecipes.instance.getOutput(RecipeType.MIXER.name, (entity.asInstanceOf[EntityItem]).getEntityItem).length > 0)
         {
           processItems.add(entity.asInstanceOf[EntityItem])
         }

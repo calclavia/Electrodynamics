@@ -1,7 +1,6 @@
 package resonantinduction.mechanical.mech.process.crusher
 
 import java.lang.reflect.Method
-import java.util.List
 
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
@@ -10,14 +9,13 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
 import resonant.api.recipe.{MachineRecipes, RecipeResource}
-import resonant.api.tile.node.INode
 import resonant.lib.factory.resources.RecipeType
 import resonant.lib.mod.config.Config
+import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.MovementUtility
 import resonant.lib.utility.inventory.InventoryUtility
 import resonantinduction.core.ResonantInduction
 import resonantinduction.mechanical.mech.TileMechanical
-import resonant.lib.transform.vector.Vector3
 
 /**
  * Mechanical driven piston that can be used to move basic blocks and crush ores
@@ -67,7 +65,7 @@ class TileMechanicalPiston extends TileMechanical(Material.piston)
         if (block != null)
         {
             val blockStack: ItemStack = new ItemStack(block)
-            val resources: Array[RecipeResource] = MachineRecipes.INSTANCE.getOutput(RecipeType.CRUSHER.name, blockStack)
+            val resources: Array[RecipeResource] = MachineRecipes.instance.getOutput(RecipeType.CRUSHER.name, blockStack)
             if (resources.length > 0)
             {
                 if (!worldObj.isRemote)

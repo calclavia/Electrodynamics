@@ -24,22 +24,23 @@ import org.lwjgl.opengl.GL11
 import resonant.api.gui.ISlotPickResult
 import resonant.api.recipe.{MachineRecipes, RecipeResource}
 import resonant.api.tile.IRotatable
-import resonant.lib.factory.resources.RecipeType
-import resonant.lib.prefab.tile.item.ItemBlockSaved
 import resonant.engine.ResonantEngine
 import resonant.lib.`type`.Pair
-import resonant.lib.prefab.gui.ContainerDummy
+import resonant.lib.factory.resources.RecipeType
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketReceiver
+import resonant.lib.prefab.gui.ContainerDummy
 import resonant.lib.prefab.tile.TileInventory
+import resonant.lib.prefab.tile.item.ItemBlockSaved
 import resonant.lib.render.RenderItemOverlayUtility
+import resonant.lib.transform.region.Cuboid
+import resonant.lib.transform.vector.{Vector2, Vector3}
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.utility.inventory.AutoCraftingManager.IAutoCrafter
 import resonant.lib.utility.inventory.{AutoCraftingManager, InventoryUtility}
 import resonantinduction.archaic.blocks.ItemImprint
 import resonantinduction.core.{Reference, ResonantInduction}
-import resonant.lib.transform.region.Cuboid
-import resonant.lib.transform.vector.{Vector2, Vector3}
+
 import scala.collection.JavaConversions._
 
 /**
@@ -140,7 +141,7 @@ class TileEngineeringTable extends TileInventory(Material.wood) with IPacketRece
                     val oreName: String = OreDictionary.getOreName(OreDictionary.getOreID(inputStack))
                     if (oreName != null && !(oreName == "Unknown"))
                     {
-                        val outputs: Array[RecipeResource] = MachineRecipes.INSTANCE.getOutput(RecipeType.CRUSHER.name, oreName)
+                        val outputs: Array[RecipeResource] = MachineRecipes.instance.getOutput(RecipeType.CRUSHER.name, oreName)
                         if (outputs != null && outputs.length > 0)
                         {
                             if (!world.isRemote && world.rand.nextFloat < 0.2)
@@ -284,23 +285,33 @@ class TileEngineeringTable extends TileInventory(Material.wood) with IPacketRece
         return false
     }
 
-    /**
-     * Gets the AutoCraftingManager that does all the crafting results
-     */
-    def getCraftingManager: AutoCraftingManager =
-    {
-        if (craftManager == null)
-        {
-            craftManager = new AutoCraftingManager(this)
-        }
-        return craftManager
-    }
-
     override def getDescriptionPacket: Packet =
     {
         val nbt: NBTTagCompound = new NBTTagCompound
         this.writeToNBT(nbt)
         return ResonantEngine.instance.packetHandler.toMCPacket(new PacketTile(this, nbt))
+    }
+
+    /**
+     * Writes a tile entity to NBT.
+     */
+    override def writeToNBT(nbt: NBTTagCompound)
+    {
+        super.writeToNBT(nbt)
+        val nbtList: NBTTagList = new NBTTagList
+
+        for (i <- 0 to this.getSizeInventory)
+        {
+            if (this.getStackInSlot(i) != null)
+            {
+                val var4: NBTTagCompound = new NBTTagCompound
+                var4.setByte("Slot", i.asInstanceOf[Byte])
+                this.getStackInSlot(i).writeToNBT(var4)
+                nbtList.appendTag(var4)
+            }
+        }
+        nbt.setTag("Items", nbtList)
+        nbt.setBoolean("searchInventories", this.searchInventories)
     }
 
     def read(data: ByteBuf, player: EntityPlayer, `type`: PacketType)
@@ -318,74 +329,32 @@ class TileEngineeringTable extends TileInventory(Material.wood) with IPacketRece
             }
     }
 
+    /**
+     * NBT Data
+     */
+    override def readFromNBT(nbt: NBTTagCompound)
+    {
+        super.readFromNBT(nbt)
+        val nbtList: NBTTagList = nbt.getTagList("Items", 0)
+        this.craftingMatrix = new Array[ItemStack](9)
+        this.outputInventory = new Array[ItemStack](1)
+
+        for (i <- 0 to nbtList.tagCount)
+        {
+            val stackTag: NBTTagCompound = nbtList.getCompoundTagAt(i)
+            val id: Byte = stackTag.getByte("Slot")
+            if (id >= 0 && id < this.getSizeInventory)
+            {
+                this.setInventorySlotContents(id, ItemStack.loadItemStackFromNBT(stackTag))
+            }
+        }
+
+        this.searchInventories = nbt.getBoolean("searchInventories")
+    }
+
     override def getSizeInventory: Int =
     {
         return 10 + (if (this.invPlayer != null) this.invPlayer.getSizeInventory else 0)
-    }
-
-    /**
-     * DO NOT USE THIS INTERNALLY. FOR EXTERNAL USE ONLY!
-     */
-    override def getStackInSlot(slot: Int): ItemStack =
-    {
-        if (slot < TileEngineeringTable.CRAFTING_MATRIX_END)
-        {
-            return this.craftingMatrix(slot)
-        }
-        else if (slot < TileEngineeringTable.CRAFTING_OUTPUT_END)
-        {
-            return outputInventory(slot - TileEngineeringTable.CRAFTING_MATRIX_END)
-        }
-        else if (slot < TileEngineeringTable.PLAYER_OUTPUT_END && invPlayer != null)
-        {
-            return this.invPlayer.getStackInSlot(slot - TileEngineeringTable.CRAFTING_OUTPUT_END)
-        }
-        else if (searchInventories)
-        {
-            var idDisplacement: Int = TileEngineeringTable.PLAYER_OUTPUT_END
-            for (dir <- ForgeDirection.VALID_DIRECTIONS)
-            {
-                val tile: TileEntity = toVectorWorld.add(dir).getTileEntity
-                if (tile.isInstanceOf[IInventory])
-                {
-                    val inventory: IInventory = tile.asInstanceOf[IInventory]
-                    val slotID: Int = slot - idDisplacement
-                    if (slotID >= 0 && slotID < inventory.getSizeInventory)
-                    {
-                        return inventory.getStackInSlot(slotID)
-                    }
-                    idDisplacement += inventory.getSizeInventory
-                }
-            }
-        }
-        return null
-    }
-
-    override def decrStackSize(i: Int, amount: Int): ItemStack =
-    {
-        if (getStackInSlot(i) != null)
-        {
-            var stack: ItemStack = null
-            if (getStackInSlot(i).stackSize <= amount)
-            {
-                stack = getStackInSlot(i)
-                setInventorySlotContents(i, null)
-                return stack
-            }
-            else
-            {
-                stack = getStackInSlot(i).splitStack(amount)
-                if (getStackInSlot(i).stackSize == 0)
-                {
-                    setInventorySlotContents(i, null)
-                }
-                return stack
-            }
-        }
-        else
-        {
-            return null
-        }
     }
 
     override def setInventorySlotContents(slot: Int, itemStack: ItemStack)
@@ -426,40 +395,6 @@ class TileEngineeringTable extends TileInventory(Material.wood) with IPacketRece
             }
         }
         onInventoryChanged
-    }
-
-    /**
-     * When some containers are closed they call this on each slot, then drop whatever it returns as
-     * an EntityItem - like when you close a workbench GUI.
-     */
-    override def getStackInSlotOnClosing(slot: Int): ItemStack =
-    {
-        if (this.getStackInSlot(slot) != null)
-        {
-            val var2: ItemStack = this.getStackInSlot(slot)
-            this.setInventorySlotContents(slot, null)
-            return var2
-        }
-        else
-        {
-            return null
-        }
-    }
-
-    /**
-     * Construct an InventoryCrafting Matrix on the fly.
-     *
-     * @return
-     */
-    def getCraftingMatrix: InventoryCrafting =
-    {
-        val inventoryCrafting: InventoryCrafting = new InventoryCrafting(new ContainerDummy(this), 3, 3)
-
-        for (i <- 0 until this.craftingMatrix.length)
-        {
-            inventoryCrafting.setInventorySlotContents(i, this.craftingMatrix(i))
-        }
-        return inventoryCrafting
     }
 
     /**
@@ -512,6 +447,117 @@ class TileEngineeringTable extends TileInventory(Material.wood) with IPacketRece
         }
     }
 
+    /**
+     * Gets the AutoCraftingManager that does all the crafting results
+     */
+    def getCraftingManager: AutoCraftingManager =
+    {
+        if (craftManager == null)
+        {
+            craftManager = new AutoCraftingManager(this)
+        }
+        return craftManager
+    }
+
+    /**
+     * Construct an InventoryCrafting Matrix on the fly.
+     *
+     * @return
+     */
+    def getCraftingMatrix: InventoryCrafting =
+    {
+        val inventoryCrafting: InventoryCrafting = new InventoryCrafting(new ContainerDummy(this), 3, 3)
+
+        for (i <- 0 until this.craftingMatrix.length)
+        {
+            inventoryCrafting.setInventorySlotContents(i, this.craftingMatrix(i))
+        }
+        return inventoryCrafting
+    }
+
+    override def decrStackSize(i: Int, amount: Int): ItemStack =
+    {
+        if (getStackInSlot(i) != null)
+        {
+            var stack: ItemStack = null
+            if (getStackInSlot(i).stackSize <= amount)
+            {
+                stack = getStackInSlot(i)
+                setInventorySlotContents(i, null)
+                return stack
+            }
+            else
+            {
+                stack = getStackInSlot(i).splitStack(amount)
+                if (getStackInSlot(i).stackSize == 0)
+                {
+                    setInventorySlotContents(i, null)
+                }
+                return stack
+            }
+        }
+        else
+        {
+            return null
+        }
+    }
+
+    /**
+     * When some containers are closed they call this on each slot, then drop whatever it returns as
+     * an EntityItem - like when you close a workbench GUI.
+     */
+    override def getStackInSlotOnClosing(slot: Int): ItemStack =
+    {
+        if (this.getStackInSlot(slot) != null)
+        {
+            val var2: ItemStack = this.getStackInSlot(slot)
+            this.setInventorySlotContents(slot, null)
+            return var2
+        }
+        else
+        {
+            return null
+        }
+    }
+
+    /**
+     * DO NOT USE THIS INTERNALLY. FOR EXTERNAL USE ONLY!
+     */
+    override def getStackInSlot(slot: Int): ItemStack =
+    {
+        if (slot < TileEngineeringTable.CRAFTING_MATRIX_END)
+        {
+            return this.craftingMatrix(slot)
+        }
+        else if (slot < TileEngineeringTable.CRAFTING_OUTPUT_END)
+        {
+            return outputInventory(slot - TileEngineeringTable.CRAFTING_MATRIX_END)
+        }
+        else if (slot < TileEngineeringTable.PLAYER_OUTPUT_END && invPlayer != null)
+        {
+            return this.invPlayer.getStackInSlot(slot - TileEngineeringTable.CRAFTING_OUTPUT_END)
+        }
+        else if (searchInventories)
+        {
+            var idDisplacement: Int = TileEngineeringTable.PLAYER_OUTPUT_END
+            for (dir <- ForgeDirection.VALID_DIRECTIONS)
+            {
+                val tile: TileEntity = toVectorWorld.add(dir).getTileEntity
+                if (tile.isInstanceOf[IInventory])
+                {
+                    val inventory: IInventory = tile.asInstanceOf[IInventory]
+                    val slotID: Int = slot - idDisplacement
+                    if (slotID >= 0 && slotID < inventory.getSizeInventory)
+                    {
+                        return inventory.getStackInSlot(slotID)
+                    }
+                    idDisplacement += inventory.getSizeInventory
+                }
+            }
+        }
+        return null
+    }
+
     def onPickUpFromSlot(entityPlayer: EntityPlayer, slotID: Int, itemStack: ItemStack)
     {
         if (!worldObj.isRemote)
@@ -521,7 +567,7 @@ class TileEngineeringTable extends TileInventory(Material.wood) with IPacketRece
                 val idealRecipeItem: Pair[ItemStack, Array[ItemStack]] = getCraftingManager.getIdealRecipe(itemStack)
                 if (idealRecipeItem != null)
                 {
-                    getCraftingManager.consumeItems(idealRecipeItem.right.clone : _*)
+                    getCraftingManager.consumeItems(idealRecipeItem.right.clone: _*)
                 }
                 else
                 {
@@ -529,51 +575,6 @@ class TileEngineeringTable extends TileInventory(Material.wood) with IPacketRece
                 }
             }
         }
-    }
-
-    /**
-     * NBT Data
-     */
-    override def readFromNBT(nbt: NBTTagCompound)
-    {
-        super.readFromNBT(nbt)
-        val nbtList: NBTTagList = nbt.getTagList("Items", 0)
-        this.craftingMatrix = new Array[ItemStack](9)
-        this.outputInventory = new Array[ItemStack](1)
-
-        for (i <- 0 to nbtList.tagCount)
-        {
-            val stackTag: NBTTagCompound = nbtList.getCompoundTagAt(i)
-            val id: Byte = stackTag.getByte("Slot")
-            if (id >= 0 && id < this.getSizeInventory)
-            {
-                this.setInventorySlotContents(id, ItemStack.loadItemStackFromNBT(stackTag))
-            }
-        }
-
-        this.searchInventories = nbt.getBoolean("searchInventories")
-    }
-
-    /**
-     * Writes a tile entity to NBT.
-     */
-    override def writeToNBT(nbt: NBTTagCompound)
-    {
-        super.writeToNBT(nbt)
-        val nbtList: NBTTagList = new NBTTagList
-
-        for (i <- 0 to this.getSizeInventory)
-        {
-            if (this.getStackInSlot(i) != null)
-            {
-                val var4: NBTTagCompound = new NBTTagCompound
-                var4.setByte("Slot", i.asInstanceOf[Byte])
-                this.getStackInSlot(i).writeToNBT(var4)
-                nbtList.appendTag(var4)
-            }
-        }
-        nbt.setTag("Items", nbtList)
-        nbt.setBoolean("searchInventories", this.searchInventories)
     }
 
     override def isItemValidForSlot(i: Int, itemstack: ItemStack): Boolean =

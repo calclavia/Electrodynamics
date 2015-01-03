@@ -8,7 +8,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.util.IIcon
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.api.recipe.{MachineRecipes, RecipeResource}
+import resonant.api.recipe.MachineRecipes
 import resonant.lib.factory.resources.RecipeType
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
@@ -28,39 +28,9 @@ class TileMillstone extends TileInventory(Material.rock) with TPacketSender with
   maxSlots = 1
   setTextureName(Reference.prefix + "millstone_side")
 
-  override def onInventoryChanged
-  {
-    grindCount = 0
-    worldObj.markBlockForUpdate(xCoord, yCoord, zCoord)
-  }
-
-  def doGrind(spawnPos: Vector3)
-  {
-    val outputs = MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER.name, getStackInSlot(0))
-
-    if (outputs.length > 0)
-    {
-      grindCount += 1
-      if (grindCount > 20)
-      {
-        for (res <- outputs)
-        {
-          InventoryUtility.dropItemStack(worldObj, spawnPos, res.getItemStack.copy)
-        }
-        decrStackSize(0, 1)
-        onInventoryChanged
-      }
-    }
-  }
-
   override def canUpdate: Boolean =
   {
     return false
-  }
-
-  override def isItemValidForSlot(i: Int, itemStack: ItemStack): Boolean =
-  {
-    return MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER.name, itemStack).length > 0
   }
 
   override def canStore(stack: ItemStack, slot: Int, side: ForgeDirection): Boolean =
@@ -126,9 +96,40 @@ class TileMillstone extends TileInventory(Material.rock) with TPacketSender with
     return false
   }
 
+  def doGrind(spawnPos: Vector3)
+  {
+    val outputs = MachineRecipes.instance.getOutput(RecipeType.GRINDER.name, getStackInSlot(0))
+
+    if (outputs.length > 0)
+    {
+      grindCount += 1
+      if (grindCount > 20)
+      {
+        for (res <- outputs)
+        {
+          InventoryUtility.dropItemStack(worldObj, spawnPos, res.getItemStack.copy)
+        }
+        decrStackSize(0, 1)
+        onInventoryChanged
+      }
+    }
+  }
+
+  override def onInventoryChanged
+  {
+    grindCount = 0
+    worldObj.markBlockForUpdate(xCoord, yCoord, zCoord)
+  }
+
+  override def isItemValidForSlot(i: Int, itemStack: ItemStack): Boolean =
+  {
+    return MachineRecipes.instance.getOutput(RecipeType.GRINDER.name, itemStack).length > 0
+  }
+
   /**
    * Packets
    */
+
   /**
    * Override this method
    * Be sure to super this method or manually write the ID into the packet when sending

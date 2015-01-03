@@ -39,7 +39,7 @@ class BlockFluidMixture(fluid: Fluid) extends BlockFluidFinite(fluid, Material.w
 
   def mix(world: World, x: Int, y: Int, z: Int, stack: ItemStack): Boolean =
   {
-    if (MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER.name, stack).length > 0 && getQuantaValue(world, x, y, z) < quantaPerBlock)
+    if (MachineRecipes.instance.getOutput(RecipeType.MIXER.name, stack).length > 0 && getQuantaValue(world, x, y, z) < quantaPerBlock)
     {
       if (getQuantaValue(world, x, y, z) < quantaPerBlock)
       {

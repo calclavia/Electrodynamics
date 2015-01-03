@@ -2,11 +2,8 @@ package resonantinduction.atomic.machine.extractor
 
 import net.minecraft.block.material.Material
 import net.minecraft.item.ItemStack
-import net.minecraftforge.fluids.FluidContainerRegistry
-import net.minecraftforge.fluids.FluidStack
-import net.minecraftforge.fluids.FluidTank
-import resonant.api.recipe.MachineRecipes
-import resonant.api.recipe.RecipeResource
+import net.minecraftforge.fluids.{FluidContainerRegistry, FluidStack, FluidTank}
+import resonant.api.recipe.{MachineRecipes, RecipeResource}
 import resonant.lib.prefab.tile.TileElectricInventory
 
 /**
@@ -80,12 +77,12 @@ abstract class TileProcess(material: Material) extends TileElectricInventory(mat
     def getResults: Array[RecipeResource] =
     {
         val inputStack: ItemStack = getStackInSlot(inputSlot)
-        val mixedResult: Array[RecipeResource] = MachineRecipes.INSTANCE.getOutput(machineName, inputStack, getInputTank.getFluid)
+        val mixedResult: Array[RecipeResource] = MachineRecipes.instance.getOutput(machineName, inputStack, getInputTank.getFluid)
         if (mixedResult.length > 0)
         {
             return mixedResult
         }
-        return MachineRecipes.INSTANCE.getOutput(machineName, inputStack)
+        return MachineRecipes.instance.getOutput(machineName, inputStack)
     }
 
     def hasResult: Boolean =

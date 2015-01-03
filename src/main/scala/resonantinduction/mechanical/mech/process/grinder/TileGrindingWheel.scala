@@ -10,8 +10,8 @@ import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11._
 import resonant.api.recipe.MachineRecipes
-import resonant.lib.factory.resources.RecipeType
 import resonant.lib.`type`.Timer
+import resonant.lib.factory.resources.RecipeType
 import resonant.lib.prefab.damage.CustomDamageSource
 import resonant.lib.render.RenderUtility
 import resonant.lib.transform.region.Cuboid
@@ -38,8 +38,8 @@ object TileGrindingWheel
 
 class TileGrindingWheel extends TileMechanical(Material.rock)
 {
-  private var grindingItem: EntityItem = null
   private final val requiredTorque: Long = 250
+  private var grindingItem: EntityItem = null
   private var counter = 0d
 
   mechanicalNode = new NodeGrinder(this)
@@ -55,54 +55,6 @@ class TileGrindingWheel extends TileMechanical(Material.rock)
     counter = Math.max(counter + Math.abs(mechanicalNode.torque), 0)
     doWork()
   }
-
-  override def collide(entity: Entity)
-  {
-    if (entity.isInstanceOf[EntityItem])
-    {
-      entity.asInstanceOf[EntityItem].age -= 1
-    }
-
-    if (canWork)
-    {
-      if (entity.isInstanceOf[EntityItem])
-      {
-        if (canGrind(entity.asInstanceOf[EntityItem].getEntityItem))
-        {
-          if (grindingItem == null)
-          {
-            grindingItem = entity.asInstanceOf[EntityItem]
-          }
-          if (!TileGrindingWheel.grindingTimer.containsKey(entity.asInstanceOf[EntityItem]))
-          {
-            TileGrindingWheel.grindingTimer.put(entity.asInstanceOf[EntityItem], TileGrindingWheel.processTime)
-          }
-        }
-      }
-      else
-      {
-        entity.attackEntityFrom(new CustomDamageSource("grinder", this), 2)
-      }
-    }
-
-    if (mechanicalNode.angularVelocity != 0)
-    {
-      //The velocity added should be tangent to the circle
-      val deltaVector = new Vector3(entity) - center
-      val deltaAngle = Math.toDegrees(mechanicalNode.angularVelocity / 20)
-      var dir = getDirection
-      dir = ForgeDirection.getOrientation(if (dir.ordinal() % 2 != 0) dir.ordinal() - 1 else dir.ordinal()).getOpposite
-      val rotation = new AngleAxis(deltaAngle, new Vector3(dir))
-      val deltaPos = deltaVector.transform(rotation) - deltaVector
-      val velocity = deltaPos / 20
-      entity.addVelocity(velocity.x, velocity.y, velocity.z)
-    }
-  }
-
-  /**
-   * Can this machine work this tick?
-   */
-  def canWork: Boolean = counter >= requiredTorque
 
   def doWork()
   {
@@ -164,12 +116,15 @@ class TileGrindingWheel extends TileMechanical(Material.rock)
     }
   }
 
-  def canGrind(itemStack: ItemStack): Boolean = MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER.name, itemStack).length > 0
+  /**
+   * Can this machine work this tick?
+   */
+  def canWork: Boolean = counter >= requiredTorque
 
   private def doGrind(entity: EntityItem): Boolean =
   {
     val itemStack: ItemStack = entity.getEntityItem
-    val results = MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER.name, itemStack)
+    val results = MachineRecipes.instance.getOutput(RecipeType.GRINDER.name, itemStack)
 
     for (resource <- results)
     {
@@ -187,6 +142,51 @@ class TileGrindingWheel extends TileMechanical(Material.rock)
     }
     return results.length > 0
   }
+
+  override def collide(entity: Entity)
+  {
+    if (entity.isInstanceOf[EntityItem])
+    {
+      entity.asInstanceOf[EntityItem].age -= 1
+    }
+
+    if (canWork)
+    {
+      if (entity.isInstanceOf[EntityItem])
+      {
+        if (canGrind(entity.asInstanceOf[EntityItem].getEntityItem))
+        {
+          if (grindingItem == null)
+          {
+            grindingItem = entity.asInstanceOf[EntityItem]
+          }
+          if (!TileGrindingWheel.grindingTimer.containsKey(entity.asInstanceOf[EntityItem]))
+          {
+            TileGrindingWheel.grindingTimer.put(entity.asInstanceOf[EntityItem], TileGrindingWheel.processTime)
+          }
+        }
+      }
+      else
+      {
+        entity.attackEntityFrom(new CustomDamageSource("grinder", this), 2)
+      }
+    }
+
+    if (mechanicalNode.angularVelocity != 0)
+    {
+      //The velocity added should be tangent to the circle
+      val deltaVector = new Vector3(entity) - center
+      val deltaAngle = Math.toDegrees(mechanicalNode.angularVelocity / 20)
+      var dir = getDirection
+      dir = ForgeDirection.getOrientation(if (dir.ordinal() % 2 != 0) dir.ordinal() - 1 else dir.ordinal()).getOpposite
+      val rotation = new AngleAxis(deltaAngle, new Vector3(dir))
+      val deltaPos = deltaVector.transform(rotation) - deltaVector
+      val velocity = deltaPos / 20
+      entity.addVelocity(velocity.x, velocity.y, velocity.z)
+    }
+  }
+
+  def canGrind(itemStack: ItemStack): Boolean = MachineRecipes.instance.getOutput(RecipeType.GRINDER.name, itemStack).length > 0
 
   override def renderDynamic(pos: Vector3, frame: Float, pass: Int): Unit =
   {

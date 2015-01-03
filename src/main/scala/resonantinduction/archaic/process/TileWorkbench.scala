@@ -61,27 +61,30 @@ class TileWorkbench extends TileInventory(Material.rock) with TPacketSender with
 
           if (oreName != null && oreName != "Unknown")
           {
-            val outputs = MachineRecipes.INSTANCE.getOutput(RecipeType.CRUSHER.name, oreName)
-            if (outputs != null && outputs.length > 0)
+            if (!world.isRemote)
             {
-              if (!world.isRemote && world.rand.nextFloat < 0.2)
+              //Try output resource
+              def tryOutput(name: String): Boolean =
               {
-                for (resource <- outputs)
+                val outputs = MachineRecipes.instance.getOutput(name, oreName)
+                if (outputs != null && outputs.length > 0 && world.rand.nextFloat < 0.15)
                 {
-                  val outputStack = resource.getItemStack.copy
-                  if (outputStack != null)
-                  {
-                    InventoryUtility.dropItemStack(world, new Vector3(player), outputStack, 0)
-                    inputStack.stackSize -= 1
-                    setInventorySlotContents(0, if (inputStack.stackSize <= 0) null else inputStack)
-                  }
+                  outputs.map(_.getItemStack.copy()).foreach(s => InventoryUtility.dropItemStack(world, new Vector3(player), s, 0))
+                  inputStack.stackSize -= 1
+                  setInventorySlotContents(0, if (inputStack.stackSize <= 0) null else inputStack)
+                  return true
                 }
+                return false
               }
-              ResonantInduction.proxy.renderBlockParticle(world, new Vector3(x + 0.5, y + 0.5, z + 0.5), new Vector3((Math.random - 0.5f) * 3, (Math.random - 0.5f) * 3, (Math.random - 0.5f) * 3), Item.getIdFromItem(inputStack.getItem), 1)
-              world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, Reference.prefix + "hammer", 0.5f, 0.8f + (0.2f * world.rand.nextFloat))
-              player.addExhaustion(0.1f)
-              player.getCurrentEquippedItem.damageItem(1, player)
+
+              if (!tryOutput(RecipeType.CRUSHER.name))
+                tryOutput(RecipeType.GRINDER.name)
             }
+
+            ResonantInduction.proxy.renderBlockParticle(world, new Vector3(x + 0.5, y + 0.5, z + 0.5), new Vector3((Math.random - 0.5f) * 3, (Math.random - 0.5f) * 3, (Math.random - 0.5f) * 3), Item.getIdFromItem(inputStack.getItem), 1)
+            world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, Reference.prefix + "hammer", 0.5f, 0.8f + (0.2f * world.rand.nextFloat))
+            player.addExhaustion(0.1f)
+            player.getCurrentEquippedItem.damageItem(1, player)
           }
         }
 
@@ -95,11 +98,6 @@ class TileWorkbench extends TileInventory(Material.rock) with TPacketSender with
     return true
   }
 
-  override def isItemValidForSlot(i: Int, itemStack: ItemStack): Boolean =
-  {
-    return true
-  }
-
   /** Called each time the inventory changes */
   override def onInventoryChanged()
   {
@@ -107,6 +105,11 @@ class TileWorkbench extends TileInventory(Material.rock) with TPacketSender with
 
     if (!world.isRemote)
       sendDescPacket()
+  }
+
+  override def isItemValidForSlot(i: Int, itemStack: ItemStack): Boolean =
+  {
+    return true
   }
 
   override def read(buf: ByteBuf, id: Int, packetType: PacketType)

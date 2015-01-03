@@ -57,6 +57,29 @@ object ResourceFactory
   val dustMap = mutable.Map.empty[String, Item]
   val refinedDustMap = mutable.Map.empty[String, Item]
 
+  def init()
+  {
+    //Add vanilla ores
+    registerMaterial("gold")
+    registerMaterial("iron")
+
+    //Add vanilla ore processing recipes
+    OreDictionary.initVanillaEntries()
+    MachineRecipes.instance.addRecipe(RecipeType.SMELTER.name, new FluidStack(FluidRegistry.LAVA, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(Blocks.stone))
+    MachineRecipes.instance.addRecipe(RecipeType.CRUSHER.name, Blocks.cobblestone, Blocks.gravel)
+    MachineRecipes.instance.addRecipe(RecipeType.CRUSHER.name, Blocks.stone, Blocks.cobblestone)
+    MachineRecipes.instance.addRecipe(RecipeType.SAWMILL.name, Blocks.log, new ItemStack(Blocks.planks, 7, 0))
+    MachineRecipes.instance.addRecipe(RecipeType.GRINDER.name, Blocks.gravel, Blocks.sand)
+    MachineRecipes.instance.addRecipe(RecipeType.GRINDER.name, Blocks.glass, Blocks.sand)
+  }
+
+  def generateAll()
+  {
+    //Call generate() on all materials
+    materials.foreach(generate)
+    Reference.logger.fine("Resource Factory generated " + materials.size + " resources.")
+  }
+
   def generate(materialName: String)
   {
     val nameCaps: String = LanguageUtility.capitalizeFirst(materialName)
@@ -119,37 +142,63 @@ object ResourceFactory
     OreDictionary.registerOre("dust" + nameCaps, refinedDust)
 
     //Add recipes
-    MachineRecipes.INSTANCE.addRecipe(RecipeType.SMELTER.name, new FluidStack(fluidMolten, FluidContainerRegistry.BUCKET_VOLUME), "ingot" + nameCaps)
-    MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER.name, "rubble" + nameCaps, dust, dust)
-    MachineRecipes.INSTANCE.addRecipe(RecipeType.MIXER.name, "dirtyDust" + nameCaps, refinedDust)
+    MachineRecipes.instance.addRecipe(RecipeType.SMELTER.name, new FluidStack(fluidMolten, FluidContainerRegistry.BUCKET_VOLUME), "ingot" + nameCaps)
+    MachineRecipes.instance.addRecipe(RecipeType.GRINDER.name, "rubble" + nameCaps, dust, dust)
+    MachineRecipes.instance.addRecipe(RecipeType.MIXER.name, "dirtyDust" + nameCaps, refinedDust)
     FurnaceRecipes.smelting.func_151394_a(dust, OreDictionary.getOres("ingot" + nameCaps).get(0).copy, 0.7f)
     FurnaceRecipes.smelting.func_151394_a(refinedDust, OreDictionary.getOres("ingot" + nameCaps).get(0).copy, 0.7f)
 
     if (OreDictionary.getOres("ore" + nameCaps).size > 0)
-      MachineRecipes.INSTANCE.addRecipe(RecipeType.CRUSHER.name, "ore" + nameCaps, "rubble" + nameCaps)
+      MachineRecipes.instance.addRecipe(RecipeType.CRUSHER.name, "ore" + nameCaps, "rubble" + nameCaps)
   }
 
-  def init()
+  def materialNameToMolten(fluidName: String): String =
   {
-    //Add vanilla ores
-    registerMaterial("gold")
-    registerMaterial("iron")
-
-    //Add vanilla ore processing recipes
-    OreDictionary.initVanillaEntries()
-    MachineRecipes.INSTANCE.addRecipe(RecipeType.SMELTER.name, new FluidStack(FluidRegistry.LAVA, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(Blocks.stone))
-    MachineRecipes.INSTANCE.addRecipe(RecipeType.CRUSHER.name, Blocks.cobblestone, Blocks.gravel)
-    MachineRecipes.INSTANCE.addRecipe(RecipeType.CRUSHER.name, Blocks.stone, Blocks.cobblestone)
-    MachineRecipes.INSTANCE.addRecipe(RecipeType.SAWMILL.name, Blocks.log, new ItemStack(Blocks.planks, 7, 0))
-    MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER.name, Blocks.gravel, Blocks.sand)
-    MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER.name, Blocks.glass, Blocks.sand)
+    return materialNameToFluid(fluidName, "molten")
   }
 
-  def generateAll()
+  def materialNameToFluid(materialName: String, `type`: String): String =
   {
-    //Call generate() on all materials
-    materials.foreach(generate)
-    Reference.logger.fine("Resource Factory generated " + materials.size + " resources.")
+    return `type` + "_" + LanguageUtility.camelToLowerUnderscore(materialName)
+  }
+
+  def materialNameToMixture(fluidName: String): String =
+  {
+    return materialNameToFluid(fluidName, "mixture")
+  }
+
+  @SubscribeEvent
+  def oreRegisterEvent(evt: OreDictionary.OreRegisterEvent)
+  {
+    if (evt.Name.startsWith("ingot"))
+    {
+      val oreDictName = evt.Name.replace("ingot", "")
+      val materialName = oreDictName.decapitalizeFirst
+      registerMaterial(materialName)
+    }
+  }
+
+  def registerMaterial(material: String)
+  {
+    if (!materials.contains(material) && OreDictionary.getOres("ore" + material.capitalizeFirst).size > 0)
+    {
+      Settings.config.load()
+      val allowMaterial = Settings.config.get("Resource-Generator", "Enable " + material, true).getBoolean(true)
+      Settings.config.save()
+
+      if (!allowMaterial && !blackList.contains(material))
+      {
+        return
+      }
+      materials += material
+    }
+  }
+
+  @SubscribeEvent
+  @SideOnly(Side.CLIENT)
+  def reloadTextures(e: TextureStitchEvent.Post)
+  {
+    computeColors()
   }
 
   @SideOnly(Side.CLIENT)
@@ -235,58 +284,9 @@ object ResourceFactory
     return 0xFFFFFF
   }
 
-  def registerMaterial(material: String)
-  {
-    if (!materials.contains(material) && OreDictionary.getOres("ore" + material.capitalizeFirst).size > 0)
-    {
-      Settings.config.load()
-      val allowMaterial = Settings.config.get("Resource-Generator", "Enable " + material, true).getBoolean(true)
-      Settings.config.save()
-
-      if (!allowMaterial && !blackList.contains(material))
-      {
-        return
-      }
-      materials += material
-    }
-  }
-
-  @SubscribeEvent
-  def oreRegisterEvent(evt: OreDictionary.OreRegisterEvent)
-  {
-    if (evt.Name.startsWith("ingot"))
-    {
-      val oreDictName = evt.Name.replace("ingot", "")
-      val materialName = oreDictName.decapitalizeFirst
-      registerMaterial(materialName)
-    }
-  }
-
-  @SubscribeEvent
-  @SideOnly(Side.CLIENT)
-  def reloadTextures(e: TextureStitchEvent.Post)
-  {
-    computeColors()
-  }
-
   def moltenToMaterial(fluidName: String): String =
   {
     return fluidNameToMaterial(fluidName, "molten")
-  }
-
-  def materialNameToMolten(fluidName: String): String =
-  {
-    return materialNameToFluid(fluidName, "molten")
-  }
-
-  def mixtureToMaterial(fluidName: String): String =
-  {
-    return fluidNameToMaterial(fluidName, "mixture")
-  }
-
-  def materialNameToMixture(fluidName: String): String =
-  {
-    return materialNameToFluid(fluidName, "mixture")
   }
 
   def fluidNameToMaterial(fluidName: String, `type`: String): String =
@@ -294,9 +294,9 @@ object ResourceFactory
     return LanguageUtility.decapitalizeFirst(LanguageUtility.underscoreToCamel(fluidName).replace(`type`, ""))
   }
 
-  def materialNameToFluid(materialName: String, `type`: String): String =
+  def mixtureToMaterial(fluidName: String): String =
   {
-    return `type` + "_" + LanguageUtility.camelToLowerUnderscore(materialName)
+    return fluidNameToMaterial(fluidName, "mixture")
   }
 
   def getName(itemStack: ItemStack): String =
