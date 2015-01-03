@@ -64,10 +64,10 @@ class TileWorkbench extends TileInventory(Material.rock) with TPacketSender with
             if (!world.isRemote)
             {
               //Try output resource
-              def tryOutput(name: String): Boolean =
+              def tryOutput(name: String, probability: Float): Boolean =
               {
                 val outputs = MachineRecipes.instance.getOutput(name, oreName)
-                if (outputs != null && outputs.length > 0 && world.rand.nextFloat < 0.15)
+                if (outputs != null && outputs.length > 0 && world.rand.nextFloat < probability)
                 {
                   outputs.map(_.getItemStack.copy()).foreach(s => InventoryUtility.dropItemStack(world, new Vector3(player), s, 0))
                   inputStack.stackSize -= 1
@@ -77,8 +77,8 @@ class TileWorkbench extends TileInventory(Material.rock) with TPacketSender with
                 return false
               }
 
-              if (!tryOutput(RecipeType.CRUSHER.name))
-                tryOutput(RecipeType.GRINDER.name)
+              if (!tryOutput(RecipeType.CRUSHER.name, 0.1f))
+                tryOutput(RecipeType.GRINDER.name, 0.05f)
             }
 
             ResonantInduction.proxy.renderBlockParticle(world, new Vector3(x + 0.5, y + 0.5, z + 0.5), new Vector3((Math.random - 0.5f) * 3, (Math.random - 0.5f) * 3, (Math.random - 0.5f) * 3), Item.getIdFromItem(inputStack.getItem), 1)
