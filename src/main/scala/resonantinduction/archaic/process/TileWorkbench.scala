@@ -67,7 +67,8 @@ class TileWorkbench extends TileInventory(Material.rock) with TPacketSender with
               def tryOutput(name: String, probability: Float): Boolean =
               {
                 val outputs = MachineRecipes.instance.getOutput(name, oreName)
-                if (outputs != null && outputs.length > 0 && world.rand.nextFloat < probability)
+
+                if (outputs.length > 0 && world.rand.nextFloat < probability)
                 {
                   outputs.map(_.getItemStack.copy()).foreach(s => InventoryUtility.dropItemStack(world, new Vector3(player), s, 0))
                   inputStack.stackSize -= 1
