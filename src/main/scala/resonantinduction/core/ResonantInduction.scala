@@ -60,12 +60,14 @@ final object ResonantInduction
   def init(evt: FMLInitializationEvent)
   {
     ResonantPartFactory.init()
+    ResourceFactory.init()
     loadables.init()
   }
 
   @EventHandler
   def postInit(evt: FMLPostInitializationEvent)
   {
+    ResourceFactory.generateAll()
     loadables.postInit()
   }
 }

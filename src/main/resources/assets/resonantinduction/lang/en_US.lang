@@ -89,6 +89,8 @@ tile.resonantinduction:firebox.1.name=Electric Firebox
 
 tile.resonantinduction:hotPlate.name=Hot Plate
 
+tile.resonantinduction:workbench.name=Workbench
+tile.resonantinduction:workbench.tooltip=The workbench is used for hammering and sawing resources.
 tile.resonantinduction:engineeringTable.name=Engineering Table
 engineerTable.config.inventory.true=Engineering table is now connected to nearby inventories.
 engineerTable.config.inventory.false=Engineering table is now disconnected from nearby inventories.

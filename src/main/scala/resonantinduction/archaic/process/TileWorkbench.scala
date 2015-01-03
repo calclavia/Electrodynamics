@@ -16,11 +16,10 @@ import resonant.lib.prefab.tile.TileInventory
 import resonant.lib.render.{RenderItemOverlayUtility, RenderUtility}
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.inventory.InventoryUtility
+import resonant.lib.wrapper.ByteBufWrapper._
 import resonantinduction.archaic.engineering.ItemHammer
-import resonantinduction.core.resource.content.{ItemDust, ItemRubble}
 import resonantinduction.core.{Reference, ResonantInduction}
 
-import resonant.lib.wrapper.ByteBufWrapper._
 /**
  * The workbench is meant for manual ore and wood processing.
  * It is also the core block in Resonant Induction that leads the player to all aspect of the mod.
@@ -82,47 +81,44 @@ class TileWorkbench extends TileInventory(Material.rock) with TPacketSender with
               world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, Reference.prefix + "hammer", 0.5f, 0.8f + (0.2f * world.rand.nextFloat))
               player.addExhaustion(0.1f)
               player.getCurrentEquippedItem.damageItem(1, player)
-              return true
             }
           }
         }
-      }
-      else
-      {
-        interactCurrentItem(this, 0, player)
-        onInventoryChanged()
+
         return true
       }
     }
 
-    return false
+    //Try putting the current item in.
+    interactCurrentItem(this, 0, player)
+    onInventoryChanged()
+    return true
   }
 
   override def isItemValidForSlot(i: Int, itemStack: ItemStack): Boolean =
   {
-    if (i == 0)
-      return itemStack.getItem.isInstanceOf[ItemRubble] || itemStack.getItem.isInstanceOf[ItemDust]
-
-    return false
+    return true
   }
 
   /** Called each time the inventory changes */
   override def onInventoryChanged()
   {
     super.onInventoryChanged()
-    sendDescPacket()
+
+    if (!world.isRemote)
+      sendDescPacket()
   }
 
   override def read(buf: ByteBuf, id: Int, packetType: PacketType)
   {
     super.read(buf, id, packetType)
-    buf <<< getInventory
+    buf >>> getInventory
   }
 
   override def write(buf: ByteBuf, id: Int)
   {
     super.write(buf, id)
-    buf >>> getInventory
+    buf <<< getInventory
   }
 
   /**
