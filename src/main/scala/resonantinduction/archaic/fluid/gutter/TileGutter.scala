@@ -179,7 +179,7 @@ class TileGutter extends TileFluidProvider(Material.rock)
       {
         if (!world.isRemote)
         {
-          val drainAmount = 10 + world.rand.nextInt(20)
+          val drainAmount = 25
           val drain = fluidNode.drain(ForgeDirection.UP, drainAmount, false)
 
           if (drain != null && drain.amount > 0 && world.rand.nextFloat < 0.05)

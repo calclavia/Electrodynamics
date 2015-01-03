@@ -5,7 +5,8 @@ import resonantinduction.core.Reference
 /**
  * @author Calclavia
  */
-class ItemDust(material : String) extends ItemResource(material)
+class ItemDust(newMaterial: String) extends ItemResource
 {
   setTextureName(Reference.prefix + "oreDust")
+  material = newMaterial
 }

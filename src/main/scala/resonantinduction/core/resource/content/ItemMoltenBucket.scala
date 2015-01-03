@@ -5,7 +5,8 @@ import resonantinduction.core.Reference
 /**
  * @author Calclavia
  */
-class ItemMoltenBucket(material: String) extends ItemResource(material) with TBucket
+class ItemMoltenBucket(newMaterial: String) extends ItemResource with TBucket
 {
   setTextureName(Reference.prefix + "bucketMolten")
+  material = newMaterial
 }

@@ -5,7 +5,8 @@ import resonantinduction.core.Reference
 /**
  * @author Calclavia
  */
-class ItemRubble(material : String) extends ItemResource(material)
+class ItemRubble(newMaterial: String) extends ItemResource
 {
   setTextureName(Reference.prefix + "oreRubble")
+  material = newMaterial
 }

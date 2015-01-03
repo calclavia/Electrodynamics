@@ -12,13 +12,19 @@ import resonantinduction.archaic.firebox.{TileFirebox, TileHotPlate}
 import resonantinduction.archaic.fluid.grate.TileGrate
 import resonantinduction.archaic.fluid.gutter.TileGutter
 import resonantinduction.archaic.fluid.tank.TileTank
-import resonantinduction.archaic.process.{TileWorkbench, TileCastingMold, TileMillstone}
+import resonantinduction.archaic.process.{TileCastingMold, TileMillstone, TileWorkbench}
+import resonantinduction.core.resource.content.TileDust
 import resonantinduction.core.{RICreativeTab, Reference}
 import resonantinduction.mechanical.mech.gear.ItemHandCrank
 ;
 
 object ArchaicContent extends ContentHolder
 {
+  /**
+   * Resources
+   */
+  var blockDust: Block = new TileDust
+
   var itemImprint: Item = new ItemImprint
   var itemHammer: Item = new ItemHammer
   var itemHandCrank: Item = new ItemHandCrank
