@@ -50,11 +50,7 @@ class ItemGear extends JItemMultiPart with IHighlight
     {
       listToAddTo.add(new ItemStack(itemID, 1, i))
     }
-    listToAddTo.add(new ItemStack(itemID, 1, 10))
   }
 
-  def getHighlightType: Int =
-  {
-    return 0
-  }
+  def getHighlightType: Int = 0
 }

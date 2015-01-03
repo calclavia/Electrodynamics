@@ -3,7 +3,6 @@ package resonantinduction.core.resource
 import java.awt._
 import java.awt.image.BufferedImage
 import java.io.InputStream
-import java.util.List
 import javax.imageio.ImageIO
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent
@@ -73,6 +72,22 @@ object ResourceFactory
     MachineRecipes.instance.addRecipe(RecipeType.GRINDER.name, Blocks.glass, Blocks.sand)
   }
 
+  def registerMaterial(material: String)
+  {
+    if (!materials.contains(material) && OreDictionary.getOres("ore" + material.capitalizeFirst).size > 0)
+    {
+      Settings.config.load()
+      val allowMaterial = Settings.config.get("Resource-Generator", "Enable " + material, true).getBoolean(true)
+      Settings.config.save()
+
+      if (!allowMaterial && !blackList.contains(material))
+      {
+        return
+      }
+      materials += material
+    }
+  }
+
   def generateAll()
   {
     //Call generate() on all materials
@@ -84,31 +99,32 @@ object ResourceFactory
   {
     val nameCaps: String = LanguageUtility.capitalizeFirst(materialName)
     var localizedName: String = materialName
-    val list: List[ItemStack] = OreDictionary.getOres("ingot" + nameCaps)
 
     //Fix the material name
-    if (list.size > 0)
+    val ingotNames = OreDictionary.getOres("ingot" + nameCaps)
+
+    if (ingotNames.size > 0)
     {
-      val firstOreItemStack = list(0)
-      localizedName = firstOreItemStack.getDisplayName.trim
+      val firstIngotStack = ingotNames(0)
+      localizedName = firstIngotStack.getDisplayName.trim
 
-      if (LanguageUtility.getLocal(localizedName) != null && LanguageUtility.getLocal(localizedName) != "")
-        localizedName = LanguageUtility.getLocal(localizedName)
+      if (localizedName.getLocal != null && localizedName.getLocal != "")
+        localizedName = localizedName.getLocal
 
-      localizedName.replace("misc.resonantinduction.ingot".getLocal, "").replaceAll("^ ", "").replaceAll(" $", "")
+      localizedName = localizedName.replaceAll("misc.ingot".getLocal, "").trim
     }
 
     //Generate molten fluid
     val fluidMolten = new FluidColored(ResourceFactory.materialNameToMolten(materialName)).setDensity(7).setViscosity(5000).setTemperature(273 + 1538)
     FluidRegistry.registerFluid(fluidMolten)
-    LanguageRegistry.instance.addStringLocalization(fluidMolten.getUnlocalizedName, LanguageUtility.getLocal("tooltip.molten") + " " + localizedName)
+    LanguageRegistry.instance.addStringLocalization(fluidMolten.getUnlocalizedName, LanguageUtility.getLocal("misc.molten") + " " + localizedName)
     val blockFluidMaterial = new BlockFluidMaterial(fluidMolten)
     ArchaicContent.manager.newBlock("molten" + nameCaps, blockFluidMaterial)
     moltenFluidMap += (materialName -> blockFluidMaterial)
 
     //Generate molten bucket
     val moltenBucket = ArchaicContent.manager.newItem("bucketMolten" + materialName.capitalizeFirst, new ItemMoltenBucket(materialName))
-    LanguageRegistry.instance.addStringLocalization(moltenBucket.getUnlocalizedName + ".name", "tooltip.molten".getLocal + " " + localizedName + " " + "tooltip.bucket".getLocal)
+    LanguageRegistry.instance.addStringLocalization(moltenBucket.getUnlocalizedName + ".name", "misc.molten".getLocal + " " + localizedName + " " + "misc.bucket".getLocal)
     FluidContainerRegistry.registerFluidContainer(fluidMolten, new ItemStack(moltenBucket))
     moltenBucketMap += materialName -> moltenBucket
 
@@ -116,25 +132,25 @@ object ResourceFactory
     val fluidMixture = new FluidColored(ResourceFactory.materialNameToMixture(materialName))
     FluidRegistry.registerFluid(fluidMixture)
     val blockFluidMixture: BlockFluidMixture = new BlockFluidMixture(fluidMixture)
-    LanguageRegistry.instance.addStringLocalization(fluidMixture.getUnlocalizedName, localizedName + " " + LanguageUtility.getLocal("tooltip.mixture"))
+    LanguageRegistry.instance.addStringLocalization(fluidMixture.getUnlocalizedName, localizedName + " " + LanguageUtility.getLocal("misc.mixture"))
     ArchaicContent.manager.newBlock("mixture" + nameCaps, blockFluidMixture)
     mixtureFluidMap += materialName -> blockFluidMixture
 
     //Generate mixture bucket
     val mixtureBucket = ArchaicContent.manager.newItem("bucketMixture" + materialName.capitalizeFirst, new ItemMixtureBucket(materialName))
-    LanguageRegistry.instance.addStringLocalization(mixtureBucket.getUnlocalizedName + ".name", "tooltip.mixture".getLocal + " " + localizedName + " " + "tooltip.bucket".getLocal)
+    LanguageRegistry.instance.addStringLocalization(mixtureBucket.getUnlocalizedName + ".name", "misc.mixture".getLocal + " " + localizedName + " " + "misc.bucket".getLocal)
     FluidContainerRegistry.registerFluidContainer(fluidMixture, new ItemStack(mixtureBucket))
     mixtureBucketMap += materialName -> mixtureBucket
 
     //Generate rubble, dust and refined dust
     val rubble = new ItemStack(ArchaicContent.manager.newItem("rubble" + materialName.capitalizeFirst, new ItemRubble(materialName)))
-    LanguageRegistry.instance.addStringLocalization(rubble.getUnlocalizedName + ".name", localizedName + " " + "tooltip.rubble".getLocal)
+    LanguageRegistry.instance.addStringLocalization(rubble.getUnlocalizedName + ".name", localizedName + " " + "misc.rubble".getLocal)
 
     val dust = new ItemStack(ArchaicContent.manager.newItem("dust" + materialName.capitalizeFirst, new ItemDust(materialName)))
-    LanguageRegistry.instance.addStringLocalization(dust.getUnlocalizedName + ".name", localizedName + " " + "tooltip.dust".getLocal)
+    LanguageRegistry.instance.addStringLocalization(dust.getUnlocalizedName + ".name", localizedName + " " + "misc.dust".getLocal)
 
     val refinedDust = new ItemStack(ArchaicContent.manager.newItem("refinedDust" + materialName.capitalizeFirst, new ItemRefinedDust(materialName)))
-    LanguageRegistry.instance.addStringLocalization(refinedDust.getUnlocalizedName + ".name", localizedName + " " + "tooltip.refinedDust".getLocal)
+    LanguageRegistry.instance.addStringLocalization(refinedDust.getUnlocalizedName + ".name", localizedName + " " + "misc.refinedDust".getLocal)
 
     //Register rubble, dust and refined dust to OreDictionary
     OreDictionary.registerOre("rubble" + nameCaps, rubble)
@@ -157,14 +173,14 @@ object ResourceFactory
     return materialNameToFluid(fluidName, "molten")
   }
 
-  def materialNameToFluid(materialName: String, `type`: String): String =
-  {
-    return `type` + "_" + LanguageUtility.camelToLowerUnderscore(materialName)
-  }
-
   def materialNameToMixture(fluidName: String): String =
   {
     return materialNameToFluid(fluidName, "mixture")
+  }
+
+  def materialNameToFluid(materialName: String, `type`: String): String =
+  {
+    return `type` + "_" + LanguageUtility.camelToLowerUnderscore(materialName)
   }
 
   @SubscribeEvent
@@ -175,22 +191,6 @@ object ResourceFactory
       val oreDictName = evt.Name.replace("ingot", "")
       val materialName = oreDictName.decapitalizeFirst
       registerMaterial(materialName)
-    }
-  }
-
-  def registerMaterial(material: String)
-  {
-    if (!materials.contains(material) && OreDictionary.getOres("ore" + material.capitalizeFirst).size > 0)
-    {
-      Settings.config.load()
-      val allowMaterial = Settings.config.get("Resource-Generator", "Enable " + material, true).getBoolean(true)
-      Settings.config.save()
-
-      if (!allowMaterial && !blackList.contains(material))
-      {
-        return
-      }
-      materials += material
     }
   }
 
@@ -289,14 +289,14 @@ object ResourceFactory
     return fluidNameToMaterial(fluidName, "molten")
   }
 
-  def fluidNameToMaterial(fluidName: String, `type`: String): String =
-  {
-    return LanguageUtility.decapitalizeFirst(LanguageUtility.underscoreToCamel(fluidName).replace(`type`, ""))
-  }
-
   def mixtureToMaterial(fluidName: String): String =
   {
     return fluidNameToMaterial(fluidName, "mixture")
+  }
+
+  def fluidNameToMaterial(fluidName: String, `type`: String): String =
+  {
+    return LanguageUtility.decapitalizeFirst(LanguageUtility.underscoreToCamel(fluidName).replace(`type`, ""))
   }
 
   def getName(itemStack: ItemStack): String =

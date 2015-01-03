@@ -16,7 +16,6 @@ schematic.windTurbine.name=Wind Turbine
 schematic.waterTurbine.name=Water Turbine
 
 ### Core
-misc.resonantinduction.ingot=Ingot
 item.resonantinduction:ingot.name=%v Ingot
 item.resonantinduction:oreDust.name=%v Dust
 item.resonantinduction:oreDust.tooltip=Shift-right click on a cauldron to refine.
@@ -24,6 +23,16 @@ item.resonantinduction:oreRefinedDust.name=%v Refined Dust
 item.resonantinduction:oreRubble.name=%v Rubble
 item.resonantinduction:bucketMixture.name=%v Bucket
 item.resonantinduction:bucketMolten.name=%v Bucket
+
+#Misc
+misc.ingot=Ingot
+misc.mixture=Mixture
+misc.molten=Molten
+misc.ingot=Ingot
+misc.rubble=Rubble
+misc.dust=Dust
+misc.refinedDust=Refined Dust
+misc.bucket=Bucket
 
 # Blocks
 tile.resonantinduction:oreCopper.name=Copper Ore
@@ -125,7 +134,6 @@ info.waila.tank.empty=Empty
 item.resonantinduction:gear.0.name=Wooden Gear
 item.resonantinduction:gear.1.name=Stone Gear
 item.resonantinduction:gear.2.name=Metal Gear
-item.resonantinduction:gear.10.name=Pumpkin Gear
 
 item.resonantinduction:gearShaft.0.name=Wooden Gear Shaft
 item.resonantinduction:gearShaft.1.name=Stone Gear Shaft
@@ -228,14 +236,6 @@ item.resonantinduction:quantumGlyph.3.name=Trigon Glyph
 item.resonantinduction:quantumGlyph.4.name=Tetragon Glyph
 
 ##	Tool-tips
-tooltip.mixture=Mixture
-tooltip.molten=Molten
-tooltip.ingot=Ingot
-tooltip.rubble=Rubble
-tooltip.dust=Dust
-tooltip.refinedDust=Refined Dust
-tooltip.bucket=Bucket
-
 tooltip.pipe.rate=Flow Rate: %v
 tooltip.pipe.pressure=Max Pressure: %v
 
