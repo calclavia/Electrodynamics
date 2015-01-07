@@ -4,6 +4,7 @@ import net.minecraft.block.material.Material
 import net.minecraft.nbt.NBTTagCompound
 import resonant.lib.prefab.tile.spatial.SpatialTile
 import resonant.lib.transform.region.Cuboid
+import resonantinduction.core.Reference
 
 /**
  * A block for physical dust blocks
@@ -15,6 +16,7 @@ import resonant.lib.transform.region.Cuboid
 class TileDust extends SpatialTile(Material.sand)
 {
   var resMaterial = ""
+  textureName = Reference.prefix + ""
   isOpaqueCube = false
   creativeTab = null
 

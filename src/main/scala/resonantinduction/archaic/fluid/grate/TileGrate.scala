@@ -32,21 +32,6 @@ object TileGrate
 
   @SideOnly(Side.CLIENT)
   private var iconSide: IIcon = _
-
-  class ComparableVector(var position: Vector3, var iterations: Int) extends Comparable[Vector3]
-  {
-
-    override def compareTo(obj: Vector3): Int =
-    {
-      val wr = obj.asInstanceOf[ComparableVector]
-      if (this.position.y == wr.position.y)
-      {
-        return this.iterations - wr.iterations
-      }
-      this.position.yi - wr.position.yi
-    }
-  }
-
 }
 
 class TileGrate extends TileFluidProvider(Material.rock) with IRotatable
@@ -101,6 +86,7 @@ class TileGrate extends TileFluidProvider(Material.rock) with IRotatable
 
         if (pressure > 0)
         {
+          //Output fluid
           if (fluidNode.getFluidAmount >= FluidContainerRegistry.BUCKET_VOLUME)
           {
             if (gratePath == null)
@@ -114,6 +100,7 @@ class TileGrate extends TileFluidProvider(Material.rock) with IRotatable
         }
         else if (pressure < 0)
         {
+          //Input fluid
           val maxDrain = fluidNode.getCapacity - fluidNode.getFluidAmount
           if (maxDrain > 0)
           {
@@ -173,27 +160,23 @@ class TileGrate extends TileFluidProvider(Material.rock) with IRotatable
 
   class GratePathfinder(checkVertical: Boolean)
   {
-
     var fluidType: Fluid = _
-
     var start: Vector3 = _
-
     var navigationMap: HashMap[Vector3, Vector3] = new HashMap[Vector3, Vector3]()
 
     var workingNodes: PriorityQueue[ComparableVector] =
       if (checkVertical) new PriorityQueue[ComparableVector]()
       else new PriorityQueue[ComparableVector](1024, new Comparator[ComparableVector]()
       {
-
         override def compare(a: ComparableVector, b: ComparableVector): Int =
         {
-          val wa = a.asInstanceOf[TileGrate.ComparableVector]
-          val wb = b.asInstanceOf[TileGrate.ComparableVector]
+          val wa = a.asInstanceOf[ComparableVector]
+          val wb = b.asInstanceOf[ComparableVector]
           wa.iterations - wb.iterations
         }
       })
 
-    var drainNodes: PriorityQueue[ComparableVector] = new PriorityQueue[ComparableVector](1024, Collections.reverseOrder())
+    var drainNodes = new PriorityQueue[ComparableVector](1024, Collections.reverseOrder())
 
     def startFill(start: Vector3, fluidID: Int)
     {
@@ -206,7 +189,7 @@ class TileGrate extends TileFluidProvider(Material.rock) with IRotatable
         {
           val check = start.clone().add(dir)
           this.navigationMap.put(check, start)
-          this.workingNodes.add(new TileGrate.ComparableVector(check, 0))
+          this.workingNodes.add(new ComparableVector(check, 0))
         }
       }
     }
@@ -230,7 +213,7 @@ class TileGrate extends TileFluidProvider(Material.rock) with IRotatable
             return 0
           }
           val didFill = FluidUtility.fillBlock(TileGrate.this.worldObj, next.position, new FluidStack(fluidType,
-                                                                                                      amount), true)
+            amount), true)
           filled += didFill
           if (FluidUtility.getFluidAmountFromBlock(TileGrate.this.worldObj, next.position) >
               0 ||
@@ -245,15 +228,6 @@ class TileGrate extends TileFluidProvider(Material.rock) with IRotatable
         }
       }
       filled
-    }
-
-    def isConnected(check: Vector3): Boolean =
-    {
-      if (check == this.start)
-      {
-        return true
-      }
-      return false
     }
 
     def addNextFill(next: ComparableVector)
@@ -307,7 +281,8 @@ class TileGrate extends TileFluidProvider(Material.rock) with IRotatable
           }
         }
       }
-      drainNodes.size > 0
+      println("done")
+      return drainNodes.size > 0
     }
 
     def addNextDrain(next: ComparableVector)
@@ -321,7 +296,7 @@ class TileGrate extends TileFluidProvider(Material.rock) with IRotatable
           if (!navigationMap.containsKey(check))
           {
             navigationMap.put(check, next.position)
-            workingNodes.add(new TileGrate.ComparableVector(check, next.iterations + 1))
+            workingNodes.add(new ComparableVector(check, next.iterations + 1))
           }
         }
       }
@@ -330,7 +305,9 @@ class TileGrate extends TileFluidProvider(Material.rock) with IRotatable
     def tryDrain(targetAmount: Int, doDrain: Boolean): FluidStack =
     {
       var drainedAmount = 0
-      while (!drainNodes.isEmpty)
+      var break = false
+
+      while (!drainNodes.isEmpty && !break)
       {
         val fluidCoord = drainNodes.peek()
         if (!isConnected(fluidCoord.position))
@@ -338,37 +315,37 @@ class TileGrate extends TileFluidProvider(Material.rock) with IRotatable
           TileGrate.this.resetPath()
           return new FluidStack(fluidType, drainedAmount)
         }
-        if (FluidUtility.getFluidFromBlock(TileGrate.this.worldObj, fluidCoord.position) ==
-            null ||
-            this.fluidType.getID !=
-            FluidUtility.getFluidFromBlock(TileGrate.this.worldObj, fluidCoord.position)
-            .getID)
+        if (FluidUtility.getFluidFromBlock(TileGrate.this.worldObj, fluidCoord.position) == null || this.fluidType.getID != FluidUtility.getFluidFromBlock(TileGrate.this.worldObj, fluidCoord.position).getID)
         {
           this.drainNodes.poll()
         }
         else
         {
           val checkAmount = FluidUtility.getFluidAmountFromBlock(TileGrate.this.worldObj, fluidCoord.position)
-          if (drainedAmount + checkAmount > targetAmount)
+
+          if (drainedAmount + checkAmount <= targetAmount)
           {
-            //break
-          }
-          if (checkAmount == 0)
-          {
-            this.drainNodes.poll()
+            if (checkAmount == 0)
+            {
+              this.drainNodes.poll()
+            }
+            else
+            {
+              val fluidStack = FluidUtility.drainBlock(TileGrate.this.worldObj, fluidCoord.position, doDrain)
+              this.drainNodes.poll()
+              if (fluidStack != null)
+              {
+                drainedAmount += fluidStack.amount
+                if (drainedAmount >= targetAmount)
+                {
+                  break = true
+                }
+              }
+            }
           }
           else
           {
-            val fluidStack = FluidUtility.drainBlock(TileGrate.this.worldObj, fluidCoord.position, doDrain)
-            this.drainNodes.poll()
-            if (fluidStack != null)
-            {
-              drainedAmount += fluidStack.amount
-              if (drainedAmount >= targetAmount)
-              {
-                //break
-              }
-            }
+            break = true
           }
         }
       }
@@ -378,6 +355,28 @@ class TileGrate extends TileFluidProvider(Material.rock) with IRotatable
         return new FluidStack(fluidType, drainedAmount)
       }
       null
+    }
+
+    def isConnected(check: Vector3): Boolean =
+    {
+      if (check == this.start)
+      {
+        return true
+      }
+      return false
+    }
+  }
+
+  class ComparableVector(var position: Vector3, var iterations: Int) extends Comparable[ComparableVector]
+  {
+    override def compareTo(obj: ComparableVector): Int =
+    {
+      val wr = obj.asInstanceOf[ComparableVector]
+      if (this.position.y == wr.position.y)
+      {
+        return this.iterations - wr.iterations
+      }
+      this.position.yi - wr.position.yi
     }
   }
 
