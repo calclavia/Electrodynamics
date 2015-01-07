@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.{ChatComponentText, ResourceLocation}
 import net.minecraftforge.client.model.AdvancedModelLoader
+import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
 import resonant.api.tile.IRotatable
 import resonant.lib.content.prefab.TElectric
@@ -34,6 +35,13 @@ object TileMotor
 class TileMotor extends TileAdvanced(Material.iron) with TElectric with TSpatialNodeProvider with IRotatable
 {
   var mechNode = new NodeMechanical(this)
+  {
+    override def canConnect(from: ForgeDirection): Boolean =
+    {
+      connectionMask = 1 << getDirection.getOpposite.ordinal
+      return super.canConnect(from)
+    }
+  }
 
   private var gearRatio = 0
 
@@ -53,13 +61,15 @@ class TileMotor extends TileAdvanced(Material.iron) with TElectric with TSpatial
   override def onPlaced(entityLiving: EntityLivingBase, itemStack: ItemStack)
   {
     super.onPlaced(entityLiving, itemStack)
-    mechNode.connectionMask = 1 << getDirection.getOpposite.ordinal
+
+    if (!world.isRemote)
+      mechNode.reconstruct()
   }
 
   override def update()
   {
     //TODO: Debug with free energy
-    val deltaPower = 100d //Math.abs(mechNode.power - dcNode.power)
+    val deltaPower = 10000d //Math.abs(mechNode.power - dcNode.power)
 
     if (false && mechNode.power > dcNode.power)
     {
@@ -79,18 +89,6 @@ class TileMotor extends TileAdvanced(Material.iron) with TElectric with TSpatial
         //TODO: Resist DC energy
       }
     }
-  }
-
-  override protected def use(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
-  {
-    if (!world.isRemote)
-    {
-      gearRatio = (gearRatio + 1) % 3
-      player.addChatComponentMessage(new ChatComponentText("Toggled gear ratio: " + gearRatio))
-      return true
-    }
-
-    return false
   }
 
   @SideOnly(Side.CLIENT)
@@ -118,4 +116,15 @@ class TileMotor extends TileAdvanced(Material.iron) with TElectric with TSpatial
   }
 
   override def toString: String = "[TileMotor]" + x + "x " + y + "y " + z + "z "
+
+  override protected def configure(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
+  {
+    if (!world.isRemote)
+    {
+      gearRatio = (gearRatio + 1) % 3
+      player.addChatComponentMessage(new ChatComponentText("Toggled gear ratio: " + gearRatio))
+    }
+
+    return true
+  }
 }

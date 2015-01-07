@@ -13,49 +13,37 @@ trait TMultipartNode[A <: AnyRef] extends NodeConnector[A]
 {
   override def world: World =
   {
-    if (parent != null)
+    return parent match
     {
-      if (parent.isInstanceOf[TMultiPart])
-        return parent.asInstanceOf[TMultiPart].world
-      else if (parent.isInstanceOf[TileEntity])
-        return parent.asInstanceOf[TileEntity].getWorldObj
+      case p: TMultiPart => p.world
+      case p: TileEntity => p.getWorldObj
     }
-    return null
   }
 
   override def x: Double =
   {
-    if (parent != null)
+    return parent match
     {
-      if (parent.isInstanceOf[TMultiPart])
-        return (parent.asInstanceOf[TMultiPart]).x
-      else if (parent.isInstanceOf[TileEntity])
-        return (parent.asInstanceOf[TileEntity]).xCoord
+      case p: TMultiPart => p.x
+      case p: TileEntity => p.xCoord
     }
-    return 0
   }
 
   override def y: Double =
   {
-    if (parent != null)
+    return parent match
     {
-      if (parent.isInstanceOf[TMultiPart])
-        return (parent.asInstanceOf[TMultiPart]).y
-      else if (parent.isInstanceOf[TileEntity])
-        return (parent.asInstanceOf[TileEntity]).yCoord
+      case p: TMultiPart => p.y
+      case p: TileEntity => p.yCoord
     }
-    return 0
   }
 
   override def z: Double =
   {
-    if (parent != null)
+    return parent match
     {
-      if (parent.isInstanceOf[TMultiPart])
-        return (parent.asInstanceOf[TMultiPart]).z
-      else if (parent.isInstanceOf[TileEntity])
-        return (parent.asInstanceOf[TileEntity]).zCoord
+      case p: TMultiPart => p.z
+      case p: TileEntity => p.zCoord
     }
-    return 0
   }
 }

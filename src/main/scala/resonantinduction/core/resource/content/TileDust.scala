@@ -16,6 +16,7 @@ class TileDust extends SpatialTile(Material.sand)
 {
   var resMaterial = ""
   isOpaqueCube = false
+  creativeTab = null
 
   override def bounds: Cuboid = new Cuboid(0, 0, 0, 1, (metadata + 1) / 8f, 1)
 
