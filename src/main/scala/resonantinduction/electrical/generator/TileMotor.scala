@@ -39,6 +39,7 @@ class TileMotor extends TileAdvanced(Material.iron) with TElectric with TSpatial
     override def canConnect(from: ForgeDirection): Boolean =
     {
       connectionMask = 1 << getDirection.getOpposite.ordinal
+      println(super.canConnect(from))
       return super.canConnect(from)
     }
   }

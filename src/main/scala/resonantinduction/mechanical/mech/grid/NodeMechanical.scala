@@ -88,7 +88,7 @@ class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](par
 
   override def getDebugInfo = List(toString)
 
-  override def toString = "NodeMechanical [Connections: " + connections.size() + " Torque: " + torque + " Angular Velocity: " + angularVelocity + "]"
+  override def toString = "NodeMechanical [" + connections.size() + " Torque: " + BigDecimal(torque).setScale(2, BigDecimal.RoundingMode.HALF_UP) + " Velocity: " + BigDecimal(angularVelocity).setScale(2, BigDecimal.RoundingMode.HALF_UP) + "]"
 
   /**
    * Gets the angular velocity of the mechanical device from a specific side
