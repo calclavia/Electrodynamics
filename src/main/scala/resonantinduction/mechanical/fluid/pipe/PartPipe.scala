@@ -14,12 +14,12 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.MovingObjectPosition
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
-import resonant.lib.`type`.EvictingList
+import resonant.lib.collection.EvictingList
+import resonant.lib.wrapper.BitmaskWrapper._
 import resonantinduction.core.prefab.part.CuboidShapes
 import resonantinduction.core.prefab.part.connector.{PartFramedNode, TColorable, TMaterial}
 import resonantinduction.mechanical.MechanicalContent
 import resonantinduction.mechanical.fluid.pipe.PipeMaterials.PipeMaterial
-import resonant.lib.wrapper.BitmaskWrapper._
 
 import scala.collection.convert.wrapAll._
 import scala.collection.mutable
@@ -63,8 +63,6 @@ class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorab
   {
     material = PipeMaterials(i).asInstanceOf[PipeMaterial]
   }
-
-  def getMaterialID: Int = material.id
 
   override def update()
   {
@@ -151,6 +149,8 @@ class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorab
   }
 
   def getItem: ItemStack = new ItemStack(MechanicalContent.itemPipe, 1, getMaterialID)
+
+  def getMaterialID: Int = material.id
 
   override def fill(from: ForgeDirection, resource: FluidStack, doFill: Boolean): Int =
   {

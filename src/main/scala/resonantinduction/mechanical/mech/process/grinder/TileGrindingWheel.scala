@@ -10,7 +10,7 @@ import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11._
 import resonant.api.recipe.MachineRecipes
-import resonant.lib.`type`.Timer
+import resonant.lib.collection.Timer
 import resonant.lib.factory.resources.RecipeType
 import resonant.lib.prefab.damage.CustomDamageSource
 import resonant.lib.render.RenderUtility
@@ -116,11 +116,6 @@ class TileGrindingWheel extends TileMechanical(Material.rock)
     }
   }
 
-  /**
-   * Can this machine work this tick?
-   */
-  def canWork: Boolean = counter >= requiredTorque
-
   private def doGrind(entity: EntityItem): Boolean =
   {
     val itemStack: ItemStack = entity.getEntityItem
@@ -185,6 +180,11 @@ class TileGrindingWheel extends TileMechanical(Material.rock)
       entity.addVelocity(velocity.x, velocity.y, velocity.z)
     }
   }
+
+  /**
+   * Can this machine work this tick?
+   */
+  def canWork: Boolean = counter >= requiredTorque
 
   def canGrind(itemStack: ItemStack): Boolean = MachineRecipes.instance.getOutput(RecipeType.GRINDER.name, itemStack).length > 0
 

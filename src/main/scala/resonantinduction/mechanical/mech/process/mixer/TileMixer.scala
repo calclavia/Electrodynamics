@@ -16,7 +16,7 @@ import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL11._
 import resonant.api.recipe.MachineRecipes
 import resonant.engine.ResonantEngine
-import resonant.lib.`type`.Timer
+import resonant.lib.collection.Timer
 import resonant.lib.factory.resources.RecipeType
 import resonant.lib.render.RenderUtility
 import resonant.lib.transform.rotation.Quaternion

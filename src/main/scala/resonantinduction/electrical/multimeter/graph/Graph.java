@@ -1,7 +1,7 @@
 package resonantinduction.electrical.multimeter.graph;
 
 import net.minecraft.nbt.NBTTagCompound;
-import resonant.lib.type.EvictingList;
+import resonant.lib.collection.EvictingList;
 
 /**
  * Graph for the multimeter
@@ -12,19 +12,16 @@ import resonant.lib.type.EvictingList;
 public abstract class Graph<V extends Comparable<V>>
 {
 	public final String name;
-
-	private final int maxPoints;
-
 	/**
 	 * Each point represents a tick.
 	 */
 	protected final EvictingList<V> points;
-	private V peak = getDefault();
-
+	private final int maxPoints;
 	/**
 	 * Queue for the next update to insert into the graph.
 	 */
 	protected V queue = getDefault();
+	private V peak = getDefault();
 
 	public Graph(String name, int maxPoints)
 	{
