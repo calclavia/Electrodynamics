@@ -182,16 +182,10 @@ class TileGrate extends TileFluidProvider(Material.rock) with IRotatable
     {
       this.fluidType = FluidRegistry.getFluid(fluidID)
       this.start = start
-      for (i <- 0 until 6)
-      {
-        val dir = ForgeDirection.getOrientation(i)
-        if (dir == TileGrate.this.getDirection)
-        {
-          val check = start.clone().add(dir)
-          this.navigationMap.put(check, start)
-          this.workingNodes.add(new ComparableVector(check, 0))
-        }
-      }
+
+      val check = start + TileGrate.this.getDirection
+      navigationMap.put(check, start)
+      workingNodes.add(new ComparableVector(check, 0))
     }
 
     def tryFill(amount: Int, tries: Int): Int =
@@ -241,32 +235,15 @@ class TileGrate extends TileFluidProvider(Material.rock) with IRotatable
       }
     }
 
-    def isConnected(check: Vector3): Boolean =
-    {
-      return true
-      /*
-      if (check == this.start)
-      {
-        return true
-      }
-      return false*/
-    }
-
     def startDrain(start: Vector3): Boolean =
     {
       fluidType = null
       this.start = start
-      for (i <- 0 until 6)
-      {
-        val dir = ForgeDirection.getOrientation(i)
-        if (dir == TileGrate.this.getDirection)
-        {
-          val check = start.clone().add(dir)
-          this.navigationMap.put(check, start)
-          this.workingNodes.add(new ComparableVector(check, 0))
-          fluidType = FluidUtility.getFluidFromBlock(TileGrate.this.worldObj, check)
-        }
-      }
+      val check = start + TileGrate.this.getDirection
+      navigationMap.put(check, start)
+      workingNodes.add(new ComparableVector(check, 0))
+      fluidType = FluidUtility.getFluidFromBlock(TileGrate.this.worldObj, check)
+
       fluidType != null
     }
 
@@ -368,6 +345,29 @@ class TileGrate extends TileFluidProvider(Material.rock) with IRotatable
         return new FluidStack(fluidType, drainedAmount)
       }
       null
+    }
+
+    def isConnected(nCheck: Vector3): Boolean =
+    {
+      var check = nCheck
+
+      if (check.equals(start))
+        return true
+
+      //Trace back in the navigation map to see if it reaches the starting point
+      do
+      {
+        check = navigationMap.get(check)
+
+        if (check.equals(null))
+          return false
+
+        if (check.equals(start))
+          return true
+      }
+      while (FluidUtility.getFluidFromBlock(TileGrate.this.worldObj, check) != null && fluidType.getID == FluidUtility.getFluidFromBlock(TileGrate.this.worldObj, check).getID)
+
+      return false
     }
   }
 
