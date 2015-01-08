@@ -236,12 +236,12 @@ item.resonantinduction:quantumGlyph.3.name=Trigon Glyph
 item.resonantinduction:quantumGlyph.4.name=Tetragon Glyph
 
 ##	Tool-tips
-tooltip.pipe.rate=Flow Rate: %v
-tooltip.pipe.pressure=Max Pressure: %v
+tooltip.pipe.rate=Flow Rate: #v
+tooltip.pipe.pressure=Max Pressure: #v
 
-tooltip.wire.resistance=Resistance: %v
-tooltip.wire.current=Current: %v
-tooltip.wire.damage=Damage: %v
+tooltip.wire.resistance=Resistance: #v
+tooltip.wire.current=Current: #v
+tooltip.wire.damage=Damage: #v
 tooltip.wire.helpText=Higher voltages will increase transfer rate and decrease energy loss. Shift right click to place a framed wire.
 # %0 is the color for the charge level, %1 is grey to reset it back to normal (optional), %v0 is the current charge, %v1 is the max charge
 tooltip.battery.energy=Energy: %0%v0 / %v1
