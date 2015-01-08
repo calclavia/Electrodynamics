@@ -6,7 +6,7 @@ import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.tileentity.TileEntity
 import org.lwjgl.opengl.GL11
 import resonant.api.mffs.machine.{IFieldMatrix, IProjector}
-import resonant.lib.render.block.ModelCube
+import resonant.lib.render.model.ModelCube
 import resonant.lib.transform.rotation.EulerAngle
 import resonant.lib.transform.vector.Vector3
 
