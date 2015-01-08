@@ -12,6 +12,7 @@ import net.minecraft.util.MovingObjectPosition
 import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.tile.node.INode
+import resonant.lib.grid.UpdateTicker
 import resonant.lib.prefab.tile.multiblock.reference.IMultiBlockStructure
 import resonant.lib.utility.WrenchUtility
 import resonantinduction.core.Reference

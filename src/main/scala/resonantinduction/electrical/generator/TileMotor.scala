@@ -39,7 +39,6 @@ class TileMotor extends TileAdvanced(Material.iron) with TElectric with TSpatial
     override def canConnect(from: ForgeDirection): Boolean =
     {
       connectionMask = 1 << getDirection.getOpposite.ordinal
-      println(super.canConnect(from))
       return super.canConnect(from)
     }
   }
@@ -69,8 +68,10 @@ class TileMotor extends TileAdvanced(Material.iron) with TElectric with TSpatial
 
   override def update()
   {
+    super.update()
+
     //TODO: Debug with free energy
-    val deltaPower = 10000d //Math.abs(mechNode.power - dcNode.power)
+    val deltaPower = 500d //Math.abs(mechNode.power - dcNode.power)
 
     if (false && mechNode.power > dcNode.power)
     {
@@ -82,14 +83,22 @@ class TileMotor extends TileAdvanced(Material.iron) with TElectric with TSpatial
     else
     {
       //Produce mechanical energy
-      val mechRatio = Math.pow(gearRatio + 1, 3) * 400
+      val mechRatio = Math.pow(6, gearRatio) * 10
 
-      if (mechRatio > 0)
-      {
-        mechNode.rotate(deltaPower, deltaPower / mechRatio)
-        //TODO: Resist DC energy
-      }
+      mechNode.rotate(deltaPower * mechRatio, deltaPower / mechRatio)
+      //TODO: Resist DC energy
     }
+  }
+
+  override protected def configure(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
+  {
+    if (!world.isRemote)
+    {
+      gearRatio = (gearRatio + 1) % 3
+      player.addChatComponentMessage(new ChatComponentText("Toggled gear ratio: " + gearRatio))
+    }
+
+    return true
   }
 
   @SideOnly(Side.CLIENT)
@@ -118,14 +127,4 @@ class TileMotor extends TileAdvanced(Material.iron) with TElectric with TSpatial
 
   override def toString: String = "[TileMotor]" + x + "x " + y + "y " + z + "z "
 
-  override protected def configure(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
-  {
-    if (!world.isRemote)
-    {
-      gearRatio = (gearRatio + 1) % 3
-      player.addChatComponentMessage(new ChatComponentText("Toggled gear ratio: " + gearRatio))
-    }
-
-    return true
-  }
 }
