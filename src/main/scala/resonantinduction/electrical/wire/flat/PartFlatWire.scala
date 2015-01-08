@@ -17,7 +17,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
 import resonant.api.tile.INodeProvider
 import resonant.lib.grid.UpdateTicker
-import resonant.lib.grid.electric.DCNode
+import resonant.lib.grid.electric.NodeDirectCurrent
 import resonantinduction.core.prefab.node.TMultipartNode
 import resonantinduction.core.prefab.part.ChickenBonesWrapper._
 import resonantinduction.core.prefab.part.connector.{PartAbstract, TColorable}
@@ -57,11 +57,11 @@ object PartFlatWire
 
 class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOcclusion
 {
+  private val node = new FlatWireNode(this)
   /**
    * The current side the wire is placed on
    */
   var side: Byte = 0
-
   /**
    * A map of the corners.
    * <p/>
@@ -76,14 +76,18 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
    */
   var connectionMask = 0x00
 
-  private val node = new FlatWireNode(this)
-
   nodes.add(node)
 
   def preparePlacement(side: Int, meta: Int)
   {
     this.side = (side ^ 1).toByte
     setMaterial(meta)
+  }
+
+  override def setMaterial(i: Int)
+  {
+    super.setMaterial(i)
+    node.resistance = material.resistance
   }
 
   override def update()
@@ -94,12 +98,6 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
       println("Current is flowing: " + node)
   }
 
-  override def setMaterial(i: Int)
-  {
-    super.setMaterial(i)
-    node.resistance = material.resistance
-  }
-
   override def activate(player: EntityPlayer, hit: MovingObjectPosition, item: ItemStack): Boolean =
   {
     if (!world.isRemote)
@@ -108,28 +106,6 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
     }
 
     return true
-  }
-
-  def canStay: Boolean =
-  {
-    val pos: BlockCoord = new BlockCoord(tile).offset(side)
-    return MultipartUtil.canPlaceWireOnSide(world, pos.x, pos.y, pos.z, ForgeDirection.getOrientation(side ^ 1), false)
-  }
-
-  def dropIfCantStay: Boolean =
-  {
-    if (!canStay)
-    {
-      drop
-      return true
-    }
-    return false
-  }
-
-  def drop
-  {
-    TileMultipart.dropItem(getItem, world, Vector3.fromTileEntityCenter(tile))
-    tile.remPart(this)
   }
 
   def renderThisCorner(part: PartFlatWire): Boolean =
@@ -214,6 +190,25 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
     }
   }
 
+  def notifyCornerChange(r: Int)
+  {
+    val absDir = Rotation.rotateSide(side, r)
+    val pos = new BlockCoord(tile).offset(absDir).offset(side)
+    world.notifyBlockOfNeighborChange(pos.x, pos.y, pos.z, tile.getBlockType)
+  }
+
+  def notifyStraightChange(r: Int)
+  {
+    val absDir = Rotation.rotateSide(side, r)
+    val pos = new BlockCoord(tile).offset(absDir)
+    world.notifyBlockOfNeighborChange(pos.x, pos.y, pos.z, tile.getBlockType)
+  }
+
+  def maskConnects(r: Int): Boolean =
+  {
+    return (connectionMask & 0x111 << r) != 0
+  }
+
   override def onChunkLoad()
   {
     if ((connectionMask & 0x80000000) != 0)
@@ -226,6 +221,28 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
     }
 
     super.onChunkLoad()
+  }
+
+  def dropIfCantStay: Boolean =
+  {
+    if (!canStay)
+    {
+      drop
+      return true
+    }
+    return false
+  }
+
+  def canStay: Boolean =
+  {
+    val pos: BlockCoord = new BlockCoord(tile).offset(side)
+    return MultipartUtil.canPlaceWireOnSide(world, pos.x, pos.y, pos.z, ForgeDirection.getOrientation(side ^ 1), false)
+  }
+
+  def drop
+  {
+    TileMultipart.dropItem(getItem, world, Vector3.fromTileEntityCenter(tile))
+    tile.remPart(this)
   }
 
   override def onAdded()
@@ -256,25 +273,6 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
       sendPacket(3)
   }
 
-  def notifyCornerChange(r: Int)
-  {
-    val absDir = Rotation.rotateSide(side, r)
-    val pos = new BlockCoord(tile).offset(absDir).offset(side)
-    world.notifyBlockOfNeighborChange(pos.x, pos.y, pos.z, tile.getBlockType)
-  }
-
-  def notifyStraightChange(r: Int)
-  {
-    val absDir = Rotation.rotateSide(side, r)
-    val pos = new BlockCoord(tile).offset(absDir)
-    world.notifyBlockOfNeighborChange(pos.x, pos.y, pos.z, tile.getBlockType)
-  }
-
-  def maskConnects(r: Int): Boolean =
-  {
-    return (connectionMask & 0x111 << r) != 0
-  }
-
   def maskOpen(r: Int): Boolean =
   {
     return (connectionMask & 0x1000 << r) != 0
@@ -301,8 +299,6 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
   @SideOnly(Side.CLIENT)
   def getIcon: IIcon = RenderFlatWire.wireIcon
 
-  def useStaticRenderer: Boolean = true
-
   @SideOnly(Side.CLIENT)
   override def renderStatic(pos: Vector3, pass: Int): Boolean =
   {
@@ -315,6 +311,8 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
     }
     return false
   }
+
+  def useStaticRenderer: Boolean = true
 
   @SideOnly(Side.CLIENT)
   override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
@@ -343,7 +341,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
    * TODO: ForgeDirection may NOT be suitable. Integers are better.
    * @param provider
    */
-  class FlatWireNode(provider: INodeProvider) extends DCNode(provider) with TMultipartNode[DCNode]
+  class FlatWireNode(provider: INodeProvider) extends NodeDirectCurrent(provider) with TMultipartNode[NodeDirectCurrent]
   {
     override def reconstruct()
     {
@@ -395,7 +393,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
 
             if (part != null)
             {
-              val node = part.asInstanceOf[INodeProvider].getNode(classOf[DCNode], from)
+              val node = part.asInstanceOf[INodeProvider].getNode(classOf[NodeDirectCurrent], from)
 
               if (canConnect(node, to))
               {
@@ -494,7 +492,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
           val part = tpCorner.partMap(absDir ^ 1)
           val absToDir = ForgeDirection.getOrientation(absDir)
           val absFromDir = ForgeDirection.getOrientation(absDir).getOpposite
-          val node = part.asInstanceOf[INodeProvider].getNode(classOf[DCNode], absFromDir)
+          val node = part.asInstanceOf[INodeProvider].getNode(classOf[NodeDirectCurrent], absFromDir)
 
           if (canConnect(node, absFromDir))
           {
@@ -507,138 +505,13 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
       return false
     }
 
-    private def disconnect(i: Int)
-    {
-      if (!world.isRemote)
-      {
-        //TODO: Refine this. It's very hacky and may cause errors when the wire connects to a block both ways
-        val inverseCon = directionMap.map(_.swap)
-        val forgeDir = ForgeDirection.getOrientation(i)
-
-        if (inverseCon.contains(forgeDir))
-        {
-          val connected = inverseCon(forgeDir)
-
-          if (connected != null)
-          {
-            disconnect(connected)
-          }
-        }
-      }
-    }
-
-    /**
-     * Recalculates connections to blocks outside this space
-     *
-     * @return true if a new connection was added or one was removed
-     */
-    protected def updateExternalConnections(): Boolean =
-    {
-      var newConn: Int = 0
-
-      for (r <- 0 until 4)
-      {
-        if (maskOpen(r))
-        {
-          if (connectStraight(r))
-          {
-            newConn |= 0x10 << r
-          }
-          else
-          {
-            val cnrMode: Int = connectCorner(r)
-            if (cnrMode != 0)
-            {
-              newConn |= 1 << r
-              if (cnrMode == 2)
-              {
-                newConn |= 0x100000 << r
-              }
-            }
-          }
-        }
-      }
-
-      if (newConn != (PartFlatWire.this.connectionMask & 0xF000FF))
-      {
-        val diff: Int = PartFlatWire.this.connectionMask ^ newConn
-        PartFlatWire.this.connectionMask = PartFlatWire.this.connectionMask & ~0xF000FF | newConn
-
-        for (r <- 0 until 4)
-        {
-          if ((diff & 1 << r) != 0)
-          {
-            notifyCornerChange(r)
-          }
-        }
-
-        return true
-      }
-      return false
-    }
-
-    /**
-     * Recalculates connections to other parts within this space
-     *
-     * @return true if a new connection was added or one was removed
-     */
-    protected def updateInternalConnections(): Boolean =
-    {
-      var newConn: Int = 0
-
-      for (r <- 0 until 4)
-      {
-        if (connectInternal(r))
-        {
-          newConn |= 0x100 << r
-        }
-      }
-
-      if (connectCenter)
-      {
-        newConn |= 0x10000
-      }
-      if (newConn != (PartFlatWire.this.connectionMask & 0x10F00))
-      {
-        PartFlatWire.this.connectionMask = PartFlatWire.this.connectionMask & ~0x10F00 | newConn
-        return true
-      }
-      return false
-    }
-
-    /**
-     * Recalculates connections that can be made to other parts outside of this space
-     *
-     * @return true if external connections should be recalculated
-     */
-    protected def updateOpenConnections(): Boolean =
-    {
-      var newConn: Int = 0
-
-      for (r <- 0 until 4)
-      {
-        if (connectionOpen(r))
-        {
-          newConn |= 0x1000 << r
-        }
-      }
-
-      if (newConn != (PartFlatWire.this.connectionMask & 0xF000))
-      {
-        PartFlatWire.this.connectionMask = PartFlatWire.this.connectionMask & ~0xF000 | newConn
-        return true
-      }
-
-      return false
-    }
-
     def connectionOpen(r: Int): Boolean =
     {
       val absDir = Rotation.rotateSide(side, r)
       val facePart = tile.partMap(absDir)
       val toDir = ForgeDirection.getOrientation(absDir)
 
-      if (facePart != null && (!facePart.isInstanceOf[PartFlatWire] || !canConnect(facePart.asInstanceOf[INodeProvider].getNode(classOf[DCNode], toDir.getOpposite), toDir.getOpposite)))
+      if (facePart != null && (!facePart.isInstanceOf[PartFlatWire] || !canConnect(facePart.asInstanceOf[INodeProvider].getNode(classOf[NodeDirectCurrent], toDir.getOpposite), toDir.getOpposite)))
       {
         return false
       }
@@ -845,18 +718,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
       return false
     }
 
-    /**
-     * Gets a potential DCNode from an object.
-     */
-    private def getComponent(obj: AnyRef, from: ForgeDirection): DCNode =
-    {
-      if (obj.isInstanceOf[INodeProvider])
-        return obj.asInstanceOf[INodeProvider].getNode(classOf[DCNode], from)
-
-      return null
-    }
-
-    override def canConnect[B <: DCNode](node: B, from: ForgeDirection): Boolean =
+    override def canConnect[B <: NodeDirectCurrent](node: B, from: ForgeDirection): Boolean =
     {
       if (node.isInstanceOf[FlatWireNode])
       {
@@ -872,6 +734,142 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
       }
 
       return super.canConnect(node, from)
+    }
+
+    /**
+     * Recalculates connections to blocks outside this space
+     *
+     * @return true if a new connection was added or one was removed
+     */
+    protected def updateExternalConnections(): Boolean =
+    {
+      var newConn: Int = 0
+
+      for (r <- 0 until 4)
+      {
+        if (maskOpen(r))
+        {
+          if (connectStraight(r))
+          {
+            newConn |= 0x10 << r
+          }
+          else
+          {
+            val cnrMode: Int = connectCorner(r)
+            if (cnrMode != 0)
+            {
+              newConn |= 1 << r
+              if (cnrMode == 2)
+              {
+                newConn |= 0x100000 << r
+              }
+            }
+          }
+        }
+      }
+
+      if (newConn != (PartFlatWire.this.connectionMask & 0xF000FF))
+      {
+        val diff: Int = PartFlatWire.this.connectionMask ^ newConn
+        PartFlatWire.this.connectionMask = PartFlatWire.this.connectionMask & ~0xF000FF | newConn
+
+        for (r <- 0 until 4)
+        {
+          if ((diff & 1 << r) != 0)
+          {
+            notifyCornerChange(r)
+          }
+        }
+
+        return true
+      }
+      return false
+    }
+
+    /**
+     * Recalculates connections to other parts within this space
+     *
+     * @return true if a new connection was added or one was removed
+     */
+    protected def updateInternalConnections(): Boolean =
+    {
+      var newConn: Int = 0
+
+      for (r <- 0 until 4)
+      {
+        if (connectInternal(r))
+        {
+          newConn |= 0x100 << r
+        }
+      }
+
+      if (connectCenter)
+      {
+        newConn |= 0x10000
+      }
+      if (newConn != (PartFlatWire.this.connectionMask & 0x10F00))
+      {
+        PartFlatWire.this.connectionMask = PartFlatWire.this.connectionMask & ~0x10F00 | newConn
+        return true
+      }
+      return false
+    }
+
+    /**
+     * Recalculates connections that can be made to other parts outside of this space
+     *
+     * @return true if external connections should be recalculated
+     */
+    protected def updateOpenConnections(): Boolean =
+    {
+      var newConn: Int = 0
+
+      for (r <- 0 until 4)
+      {
+        if (connectionOpen(r))
+        {
+          newConn |= 0x1000 << r
+        }
+      }
+
+      if (newConn != (PartFlatWire.this.connectionMask & 0xF000))
+      {
+        PartFlatWire.this.connectionMask = PartFlatWire.this.connectionMask & ~0xF000 | newConn
+        return true
+      }
+
+      return false
+    }
+
+    private def disconnect(i: Int)
+    {
+      if (!world.isRemote)
+      {
+        //TODO: Refine this. It's very hacky and may cause errors when the wire connects to a block both ways
+        val inverseCon = directionMap.map(_.swap)
+        val forgeDir = ForgeDirection.getOrientation(i)
+
+        if (inverseCon.contains(forgeDir))
+        {
+          val connected = inverseCon(forgeDir)
+
+          if (connected != null)
+          {
+            disconnect(connected)
+          }
+        }
+      }
+    }
+
+    /**
+     * Gets a potential DCNode from an object.
+     */
+    private def getComponent(obj: AnyRef, from: ForgeDirection): NodeDirectCurrent =
+    {
+      if (obj.isInstanceOf[INodeProvider])
+        return obj.asInstanceOf[INodeProvider].getNode(classOf[NodeDirectCurrent], from)
+
+      return null
     }
   }
 

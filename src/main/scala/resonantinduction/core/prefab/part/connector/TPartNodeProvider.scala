@@ -8,6 +8,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.ISave
 import resonant.api.tile.INodeProvider
 import resonant.api.tile.node.INode
+import resonant.lib.debug.DebugInfo
 import resonant.lib.grid.node.Node
 
 import scala.collection.convert.wrapAll._
@@ -16,7 +17,7 @@ import scala.collection.convert.wrapAll._
  * A node trait that can be mixed into any multipart nodes. Mixing this trait will cause nodes to reconstruct/deconstruct when needed.
  * @author Calclavia
  */
-trait TPartNodeProvider extends PartAbstract with INodeProvider
+trait TPartNodeProvider extends PartAbstract with INodeProvider with DebugInfo
 {
   protected val nodes = new util.HashSet[Node]
 
@@ -67,5 +68,16 @@ trait TPartNodeProvider extends PartAbstract with INodeProvider
   override def getNode[N <: INode](nodeType: Class[_ <: N], from: ForgeDirection): N =
   {
     return nodes.filter(node => nodeType.isAssignableFrom(node.getClass)).headOption.getOrElse(null).asInstanceOf[N]
+  }
+
+  override def getDebugInfo: List[String] =
+  {
+    val debugs = nodes.toList.filter(_.isInstanceOf[DebugInfo])
+
+    if (debugs.size > 0)
+    {
+      return debugs.map(_.asInstanceOf[DebugInfo].getDebugInfo).reduceLeft(_ ::: _)
+    }
+    return List[String]()
   }
 }

@@ -1,6 +1,7 @@
 package resonantinduction.mechanical.mech.grid
 
 import resonant.api.tile.INodeProvider
+import resonant.lib.debug.DebugInfo
 import resonant.lib.grid.GridNode
 import resonant.lib.grid.node.{NodeGrid, TTileConnector}
 import resonant.lib.transform.vector.IVectorWorld
@@ -15,44 +16,13 @@ import scala.collection.convert.wrapAll._
  *
  * @author Calclavia, Darkguardsman
  */
-class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](parent) with TTileConnector[NodeMechanical] with TMultipartNode[NodeMechanical] with TNodeMechanical with IVectorWorld
+class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](parent) with TTileConnector[NodeMechanical] with TMultipartNode[NodeMechanical] with TNodeMechanical with IVectorWorld with DebugInfo
 {
-  private var _torque = 0D
-  private var _angularVelocity = 0D
-
-  protected[grid] var prevTorque = 0D
-  protected[grid] var prevAngularVelocity = 0D
-
-  /**
-   * Gets the angular velocity of the mechanical device from a specific side
-   *
-   * @return Angular velocity in meters per second
-   */
-  override def angularVelocity = _angularVelocity
-
-  def angularVelocity_=(newVel: Double) = _angularVelocity = newVel
-
-  /**
-   * Gets the torque of the mechanical device from a specific side
-   *
-   * @return force
-   */
-  override def torque = _torque
-
-  def torque_=(newTorque: Double) = _torque = newTorque
-
-  /**
-   * Buffer values used by the grid to transfer mechanical energy.
-   */
-  protected[grid] var bufferTorque = 0D
-  protected[grid] var bufferAngularVelocity = 0D
-
   /**
    * Angle calculations
    */
   var prevTime = System.currentTimeMillis()
   var prevAngle = 0D
-
   /**
    * Events
    */
@@ -60,11 +30,15 @@ class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](par
   var onTorqueChanged: () => Unit = () => ()
   @BeanProperty
   var onVelocityChanged: () => Unit = () => ()
-
+  protected[grid] var prevTorque = 0D
+  protected[grid] var prevAngularVelocity = 0D
   /**
-   * The amount of angle in radians displaced. This is used to align the gear teeth.
+   * Buffer values used by the grid to transfer mechanical energy.
    */
-  def angleDisplacement = 0D
+  protected[grid] var bufferTorque = 0D
+  protected[grid] var bufferAngularVelocity = 0D
+  private var _torque = 0D
+  private var _angularVelocity = 0D
 
   /**
    * An arbitrary angle value computed based on velocity
@@ -93,6 +67,11 @@ class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](par
     prevTime = System.currentTimeMillis()
   }
 
+  /**
+   * The amount of angle in radians displaced. This is used to align the gear teeth.
+   */
+  def angleDisplacement = 0D
+
   override def rotate(torque: Double, angularVelocity: Double)
   {
     bufferTorque += torque
@@ -107,10 +86,30 @@ class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](par
 
   override def isValidConnection(other: AnyRef): Boolean = other.isInstanceOf[NodeMechanical]
 
+  override def getDebugInfo = List(toString)
+
+  override def toString = "NodeMechanical [Connections: " + connections.size() + " Torque: " + torque + " Angular Velocity: " + angularVelocity + "]"
+
+  /**
+   * Gets the angular velocity of the mechanical device from a specific side
+   *
+   * @return Angular velocity in meters per second
+   */
+  override def angularVelocity = _angularVelocity
+
+  def angularVelocity_=(newVel: Double) = _angularVelocity = newVel
+
+  /**
+   * Gets the torque of the mechanical device from a specific side
+   *
+   * @return force
+   */
+  override def torque = _torque
+
+  def torque_=(newTorque: Double) = _torque = newTorque
+
   /**
    * The class used to compare when making connections
    */
   override protected def getCompareClass = classOf[NodeMechanical]
-
-  override def toString = "NodeMechanical[Connections: " + connections.size() + " Torque: " + torque + " Angular Velocity: " + angularVelocity + "]"
 }

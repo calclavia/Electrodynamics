@@ -7,7 +7,7 @@ import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.client.renderer.RenderBlocks
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.lib.grid.electric.DCNode
+import resonant.lib.grid.electric.NodeDirectCurrent
 import resonant.lib.wrapper.BitmaskWrapper._
 import resonantinduction.core.prefab.node.TMultipartNode
 import resonantinduction.core.prefab.part.connector.PartFramedNode
@@ -20,7 +20,7 @@ import resonantinduction.electrical.wire.base.TWire
  */
 class PartFramedWire extends PartFramedNode with TWire
 {
-  override lazy val node = new DCNode(this) with TMultipartNode[DCNode]
+  override lazy val node = new NodeDirectCurrent(this) with TMultipartNode[NodeDirectCurrent]
   {
     override def reconstruct()
     {
@@ -33,7 +33,7 @@ class PartFramedWire extends PartFramedNode with TWire
         sendPacket(0)
     }
 
-    override def connect[B <: DCNode](obj: B, dir: ForgeDirection) =
+    override def connect[B <: NodeDirectCurrent](obj: B, dir: ForgeDirection) =
     {
       super.connect(obj, dir)
       connectionMask = connectionMask.openMask(dir)
