@@ -212,12 +212,10 @@ class TileGrate extends TileFluidProvider(Material.rock) with IRotatable
             TileGrate.this.resetPath()
             return 0
           }
-          val didFill = FluidUtility.fillBlock(TileGrate.this.worldObj, next.position, new FluidStack(fluidType,
-            amount), true)
+
+          val didFill = FluidUtility.fillBlock(TileGrate.this.worldObj, next.position, new FluidStack(fluidType, amount), true)
           filled += didFill
-          if (FluidUtility.getFluidAmountFromBlock(TileGrate.this.worldObj, next.position) >
-              0 ||
-              didFill > 0)
+          if (FluidUtility.getFluidAmountFromBlock(TileGrate.this.worldObj, next.position) > 0 || didFill > 0)
           {
             addNextFill(next)
           }
@@ -241,6 +239,17 @@ class TileGrate extends TileFluidProvider(Material.rock) with IRotatable
           this.workingNodes.add(new ComparableVector(newPosition, next.iterations + 1))
         }
       }
+    }
+
+    def isConnected(check: Vector3): Boolean =
+    {
+      return true
+      /*
+      if (check == this.start)
+      {
+        return true
+      }
+      return false*/
     }
 
     def startDrain(start: Vector3): Boolean =
@@ -281,7 +290,6 @@ class TileGrate extends TileFluidProvider(Material.rock) with IRotatable
           }
         }
       }
-      println("done")
       return drainNodes.size > 0
     }
 
@@ -307,17 +315,21 @@ class TileGrate extends TileFluidProvider(Material.rock) with IRotatable
       var drainedAmount = 0
       var break = false
 
+      //Check all the potential drain coordinates
       while (!drainNodes.isEmpty && !break)
       {
         val fluidCoord = drainNodes.peek()
+
         if (!isConnected(fluidCoord.position))
         {
+          //The coordinate is not connected with the starting coordinate, therefore, we will not drain this.
           TileGrate.this.resetPath()
           return new FluidStack(fluidType, drainedAmount)
         }
+
         if (FluidUtility.getFluidFromBlock(TileGrate.this.worldObj, fluidCoord.position) == null || this.fluidType.getID != FluidUtility.getFluidFromBlock(TileGrate.this.worldObj, fluidCoord.position).getID)
         {
-          this.drainNodes.poll()
+          drainNodes.poll()
         }
         else
         {
@@ -327,12 +339,13 @@ class TileGrate extends TileFluidProvider(Material.rock) with IRotatable
           {
             if (checkAmount == 0)
             {
-              this.drainNodes.poll()
+              drainNodes.poll()
             }
             else
             {
-              val fluidStack = FluidUtility.drainBlock(TileGrate.this.worldObj, fluidCoord.position, doDrain)
-              this.drainNodes.poll()
+              val fluidStack = FluidUtility.drainBlock(TileGrate.this.worldObj, fluidCoord.position, doDrain, 2)
+              //TODO: Do a delayed block update!
+              drainNodes.poll()
               if (fluidStack != null)
               {
                 drainedAmount += fluidStack.amount
@@ -355,15 +368,6 @@ class TileGrate extends TileFluidProvider(Material.rock) with IRotatable
         return new FluidStack(fluidType, drainedAmount)
       }
       null
-    }
-
-    def isConnected(check: Vector3): Boolean =
-    {
-      if (check == this.start)
-      {
-        return true
-      }
-      return false
     }
   }
 
