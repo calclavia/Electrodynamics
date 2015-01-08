@@ -6,6 +6,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.model.AdvancedModelLoader
+import net.minecraftforge.client.model.obj.WavefrontObject
 import net.minecraftforge.oredict.OreDictionary
 import org.lwjgl.opengl.GL11
 import resonant.api.recipe.MachineRecipes
@@ -35,14 +36,14 @@ import resonantinduction.core.{Reference, ResonantInduction}
  */
 object TileWorkbench
 {
-  val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "workbench.obj"))
+  val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "workbench.obj")).asInstanceOf[WavefrontObject]
 }
 
 class TileWorkbench extends TileInventory(Material.rock) with TPacketSender with TPacketReceiver
 {
   //Constructor
   maxSlots = 1
-  setTextureName(Reference.prefix + "material_wood_side")
+  setTextureName(Reference.prefix + "material_wood_surface")
   normalRender = false
   isOpaqueCube = false
 
@@ -132,10 +133,11 @@ class TileWorkbench extends TileInventory(Material.rock) with TPacketSender with
   override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
   {
     GL11.glPushMatrix()
-    RenderItemOverlayUtility.renderTopOverlay(this, Array[ItemStack](getStackInSlot(0)), getDirection, 1, 1, pos.x, pos.y - 0.1, pos.z, 0.7f)
-
+    RenderItemOverlayUtility.renderTopOverlay(this, Array[ItemStack](getStackInSlot(0)), getDirection, 1, 1, pos.x, pos.y - 0.2, pos.z, 0.7f)
+    GL11.glColor4f(1, 1, 1, 1)
+    GL11.glTranslated(pos.x, pos.y, pos.z)
     RenderUtility.bind(Reference.domain, Reference.modelPath + "workbench.png")
-    //    TileWorkbench.model.renderAll()
+    TileWorkbench.model.renderAll()
     GL11.glPopMatrix()
   }
 }
