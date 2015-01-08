@@ -1,20 +1,16 @@
 package resonantinduction.mechanical.mech
 
-import codechicken.multipart.ControlKeyModifer
 import io.netty.buffer.ByteBuf
 import net.minecraft.block.material.Material
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.init.Items
-import net.minecraft.item.ItemStack
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.lib.prefab.tile.traits.TRotatable
-import resonant.engine.ResonantEngine
 import resonant.lib.grid.node.TSpatialNodeProvider
-import resonant.lib.wrapper.ByteBufWrapper._
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
 import resonant.lib.prefab.tile.spatial.SpatialTile
+import resonant.lib.prefab.tile.traits.TRotatable
 import resonant.lib.transform.vector.Vector3
+import resonant.lib.wrapper.ByteBufWrapper._
 import resonantinduction.mechanical.mech.grid.NodeMechanical
 
 import scala.collection.convert.wrapAll._
@@ -27,37 +23,6 @@ abstract class TileMechanical(material: Material) extends SpatialTile(material: 
   /** Node that handles most mechanical actions */
   private var _mechanicalNode: NodeMechanical = null
 
-  def mechanicalNode = _mechanicalNode
-
-  def mechanicalNode_=(newNode: NodeMechanical)
-  {
-    _mechanicalNode = newNode
-    mechanicalNode.onVelocityChanged = () => sendPacket(1)
-    nodes.removeAll(nodes.filter(_.isInstanceOf[NodeMechanical]))
-    nodes.add(mechanicalNode)
-  }
-
-  /** External debug GUI */
-  var frame: DebugFrameMechanical = null
-
-  mechanicalNode = new NodeMechanical(this)
-
-  override def update()
-  {
-    super.update()
-
-    if (frame != null)
-    {
-      frame.update()
-
-      if (!frame.isVisible)
-      {
-        frame.dispose()
-        frame = null
-      }
-    }
-  }
-
   override def setDirection(direction: ForgeDirection): Unit =
   {
     super.setDirection(direction)
@@ -65,6 +30,8 @@ abstract class TileMechanical(material: Material) extends SpatialTile(material: 
     if (!world.isRemote)
       nodes.foreach(_.reconstruct())
   }
+
+  def mechanicalNode = _mechanicalNode
 
   override def use(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
   {
@@ -74,33 +41,18 @@ abstract class TileMechanical(material: Material) extends SpatialTile(material: 
       mechanicalNode.reconstruct()
     }
 
-    //Debugging
-    val itemStack: ItemStack = player.getHeldItem
-
-    if (ResonantEngine.runningAsDev)
-    {
-      if (itemStack != null && !world.isRemote)
-      {
-        if (itemStack.getItem == Items.stick)
-        {
-          if (ControlKeyModifer.isControlDown(player))
-          {
-            if (frame == null)
-            {
-              frame = new DebugFrameMechanical(this)
-              frame.showDebugFrame()
-            }
-            else
-            {
-              frame.closeDebugFrame()
-              frame = null
-            }
-          }
-        }
-      }
-    }
     return false
   }
+
+  def mechanicalNode_=(newNode: NodeMechanical)
+  {
+    _mechanicalNode = newNode
+    mechanicalNode.onVelocityChanged = () => sendPacket(1)
+    nodes.removeAll(nodes.filter(_.isInstanceOf[NodeMechanical]))
+    nodes.add(mechanicalNode)
+  }
+
+  mechanicalNode = new NodeMechanical(this)
 
   override def write(buf: ByteBuf, id: Int)
   {
@@ -123,4 +75,5 @@ abstract class TileMechanical(material: Material) extends SpatialTile(material: 
       case 1 => mechanicalNode.angularVelocity = buf.readFloat()
     }
   }
+
 }
