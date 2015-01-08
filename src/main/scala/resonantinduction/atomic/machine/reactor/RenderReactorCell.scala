@@ -7,7 +7,7 @@ import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.model.{AdvancedModelLoader, IModelCustom}
 import org.lwjgl.opengl.GL11
 import resonant.lib.render.RenderUtility
-import resonant.lib.render.block.ModelCube
+import resonant.lib.render.model.ModelCube
 import resonantinduction.core.Reference
 
 @SideOnly(Side.CLIENT) object RenderReactorCell
