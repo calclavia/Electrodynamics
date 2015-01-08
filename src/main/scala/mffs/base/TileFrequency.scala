@@ -9,10 +9,10 @@ import mffs.security.{MFFSPermissions, TileBiometricIdentifier}
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.util.ChatComponentText
-import resonant.api.tile.IBlockFrequency
 import resonant.api.mffs.card.ICoordLink
 import resonant.api.mffs.fortron.FrequencyGridRegistry
-import resonant.lib.access.java.Permission
+import resonant.api.tile.IBlockFrequency
+import resonant.lib.access.Permission
 import resonant.lib.transform.vector.Vector3
 
 import scala.collection.convert.wrapAll._
@@ -31,6 +31,26 @@ abstract class TileFrequency extends TileMFFSInventory with IBlockFrequency
   {
     FrequencyGridRegistry.instance.remove(this)
     super.invalidate()
+  }
+
+  def hasPermission(profile: GameProfile, permissions: Permission*): Boolean = permissions.forall(hasPermission(profile, _))
+
+  def hasPermission(profile: GameProfile, permission: Permission): Boolean = !isActive || getBiometricIdentifiers.forall(_.hasPermission(profile, permission))
+
+  def getBiometricIdentifiers: JSet[TileBiometricIdentifier] =
+  {
+    val cardLinks = (getCards.view
+      .filter(itemStack => itemStack != null && itemStack.getItem.isInstanceOf[ICoordLink])
+      .map(itemStack => itemStack.getItem.asInstanceOf[ICoordLink].getLink(itemStack))
+      .filter(_ != null)
+      .map(_.getTileEntity)
+      .filter(_.isInstanceOf[TileBiometricIdentifier])
+      .map(_.asInstanceOf[TileBiometricIdentifier]))
+      .force.toSet
+
+    val frequencyLinks = FrequencyGridRegistry.instance.getNodes(classOf[TileBiometricIdentifier], getFrequency).toSet
+
+    return frequencyLinks ++ cardLinks
   }
 
   override def getFrequency: Int =
@@ -61,6 +81,11 @@ abstract class TileFrequency extends TileMFFSInventory with IBlockFrequency
   }
 
   /**
+   * Gets the first linked biometric identifier, based on the card slots and frequency.
+   */
+  def getBiometricIdentifier: TileBiometricIdentifier = if (getBiometricIdentifiers.size > 0) getBiometricIdentifiers.head else null
+
+  /**
    * Permissions
    */
   override protected def configure(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
@@ -72,30 +97,5 @@ abstract class TileFrequency extends TileMFFSInventory with IBlockFrequency
     }
 
     return super.configure(player, side, hit)
-  }
-
-  def hasPermission(profile: GameProfile, permission: Permission): Boolean = !isActive || getBiometricIdentifiers.forall(_.hasPermission(profile, permission))
-
-  def hasPermission(profile: GameProfile, permissions: Permission*): Boolean = permissions.forall(hasPermission(profile, _))
-
-  /**
-   * Gets the first linked biometric identifier, based on the card slots and frequency.
-   */
-  def getBiometricIdentifier: TileBiometricIdentifier = if (getBiometricIdentifiers.size > 0) getBiometricIdentifiers.head else null
-
-  def getBiometricIdentifiers: JSet[TileBiometricIdentifier] =
-  {
-    val cardLinks = (getCards.view
-            .filter(itemStack => itemStack != null && itemStack.getItem.isInstanceOf[ICoordLink])
-            .map(itemStack => itemStack.getItem.asInstanceOf[ICoordLink].getLink(itemStack))
-            .filter(_ != null)
-            .map(_.getTileEntity)
-            .filter(_.isInstanceOf[TileBiometricIdentifier])
-            .map(_.asInstanceOf[TileBiometricIdentifier]))
-            .force.toSet
-
-    val frequencyLinks = FrequencyGridRegistry.instance.getNodes(classOf[TileBiometricIdentifier], getFrequency).toSet
-
-    return frequencyLinks ++ cardLinks
   }
 }

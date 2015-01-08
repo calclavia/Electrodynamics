@@ -11,8 +11,8 @@ import mffs.{ModularForceFieldSystem, Settings}
 import net.minecraft.client.renderer.RenderBlocks
 import net.minecraft.item.ItemStack
 import resonant.api.mffs.card.IAccessCard
+import resonant.lib.access.Permission
 import resonant.lib.prefab.tile.traits.TRotatable
-import resonant.lib.access.java.Permission
 import resonant.lib.transform.vector.Vector3
 
 object TileBiometricIdentifier
@@ -48,6 +48,8 @@ class TileBiometricIdentifier extends TileFrequency with TRotatable
     return getCards map (stack => stack.getItem.asInstanceOf[IAccessCard].getAccess(stack)) filter (_ != null) exists (_.hasPermission(profile.getName, permission))
   }
 
+  override def getCards: Set[ItemStack] = (getInventory().getContainedItems filter (_ != null) filter (_.getItem.isInstanceOf[IAccessCard])).toSet
+
   override def isItemValidForSlot(slotID: Int, itemStack: ItemStack): Boolean =
   {
     if (slotID == 0)
@@ -55,8 +57,6 @@ class TileBiometricIdentifier extends TileFrequency with TRotatable
 
     return itemStack.getItem.isInstanceOf[IAccessCard]
   }
-
-  override def getCards: Set[ItemStack] = (getInventory().getContainedItems filter (_ != null) filter (_.getItem.isInstanceOf[IAccessCard])).toSet
 
   override def getInventoryStackLimit: Int = 1
 

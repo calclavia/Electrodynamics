@@ -14,8 +14,8 @@ import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import resonant.api.mffs.fortron.FrequencyGridRegistry
 import resonant.api.mffs.machine.IProjector
+import resonant.lib.access.Permission
 import resonant.lib.grid.frequency.FrequencyGrid
-import resonant.lib.access.java.Permission
 import resonant.lib.transform.rotation.EulerAngle
 import resonant.lib.transform.vector.Vector3
 
@@ -95,26 +95,6 @@ object MFFSUtility
     return null
   }
 
-  def getFilterBlock(itemStack: ItemStack): Block =
-  {
-    if (itemStack != null)
-    {
-      return getFilterBlock(itemStack.getItem)
-
-    }
-    return null
-  }
-
-  def getFilterBlock(item: Item): Block =
-  {
-    if (item.isInstanceOf[ItemBlock])
-    {
-      return item.asInstanceOf[ItemBlock].field_150939_a
-    }
-
-    return null
-  }
-
   def getCamoBlock(proj: IProjector, position: Vector3): ItemStack =
   {
     val projector = proj.asInstanceOf[TileElectromagneticProjector]
@@ -157,12 +137,24 @@ object MFFSUtility
     return null
   }
 
-  /**
-   * Gets the set of projectors that have an effect in this position.
-   */
-  def getRelevantProjectors(world: World, position: Vector3): mutable.Set[TileElectromagneticProjector] =
+  def getFilterBlock(itemStack: ItemStack): Block =
   {
-    return FrequencyGridRegistry.instance.asInstanceOf[FrequencyGrid].getNodes(classOf[TileElectromagneticProjector]) filter (_.isInField(position))
+    if (itemStack != null)
+    {
+      return getFilterBlock(itemStack.getItem)
+
+    }
+    return null
+  }
+
+  def getFilterBlock(item: Item): Block =
+  {
+    if (item.isInstanceOf[ItemBlock])
+    {
+      return item.asInstanceOf[ItemBlock].field_150939_a
+    }
+
+    return null
   }
 
   def hasPermission(world: World, position: Vector3, permission: Permission, player: EntityPlayer): Boolean =
@@ -178,5 +170,13 @@ object MFFSUtility
   def hasPermission(world: World, position: Vector3, action: PlayerInteractEvent.Action, player: EntityPlayer): Boolean =
   {
     return getRelevantProjectors(world, position) forall (_.isAccessGranted(world, position, player, action))
+  }
+
+  /**
+   * Gets the set of projectors that have an effect in this position.
+   */
+  def getRelevantProjectors(world: World, position: Vector3): mutable.Set[TileElectromagneticProjector] =
+  {
+    return FrequencyGridRegistry.instance.asInstanceOf[FrequencyGrid].getNodes(classOf[TileElectromagneticProjector]) filter (_.isInField(position))
   }
 }

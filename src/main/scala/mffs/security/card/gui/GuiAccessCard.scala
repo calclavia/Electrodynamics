@@ -7,7 +7,7 @@ import net.minecraft.client.gui.GuiButton
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.Container
 import net.minecraft.item.ItemStack
-import resonant.lib.access.java.Permissions
+import resonant.lib.access.Permissions
 import resonant.lib.network.discriminator.PacketPlayerItem
 import resonant.lib.render.EnumColor
 import resonant.lib.wrapper.StringWrapper._
@@ -29,6 +29,12 @@ abstract class GuiAccessCard(player: EntityPlayer, itemStack: ItemStack, contain
   {
     super.initGui()
     (0 until permissions.size) foreach (i => buttonList.add(new GuiButton(i, 0, 0, 160, 20, permissions(i).toString)))
+  }
+
+  override def handleMouseInput()
+  {
+    super.handleMouseInput()
+    scroll.handleMouseInput()
   }
 
   /**
@@ -55,12 +61,6 @@ abstract class GuiAccessCard(player: EntityPlayer, itemStack: ItemStack, contain
         button.visible = false
       }
     })
-  }
-
-  override def handleMouseInput()
-  {
-    super.handleMouseInput()
-    scroll.handleMouseInput()
   }
 
   protected override def actionPerformed(guiButton: GuiButton)

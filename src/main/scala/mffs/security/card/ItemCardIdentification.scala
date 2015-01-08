@@ -9,13 +9,12 @@ import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.world.World
-import resonant.lib.access.java.Permissions
-import resonant.lib.access.scala.AccessUser
-import resonant.lib.wrapper.ByteBufWrapper._
+import resonant.lib.access.{AccessUser, Permissions}
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.TPacketReceiver
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.utility.nbt.NBTUtility
+import resonant.lib.wrapper.ByteBufWrapper._
 import resonant.lib.wrapper.WrapList._
 
 class ItemCardIdentification extends ItemCardAccess with TPacketReceiver
