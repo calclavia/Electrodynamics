@@ -60,6 +60,14 @@ object AutoResourceFactory
     ResourceFactory.registerResourceItem("refinedDust", classOf[ItemRefinedDust])
     ResourceFactory.registerResourceItem("bucketMolten", classOf[ItemMoltenBucket])
 
+    //Create copper and tin
+    ResourceFactory.registerMaterial("copper")
+    ResourceFactory.requestItem("ingot", "copper")
+    ResourceFactory.registerMaterialColor("copper", 0xB5634E)
+    ResourceFactory.registerMaterial("tin")
+    ResourceFactory.requestItem("ingot", "tin")
+    ResourceFactory.registerMaterialColor("tin", 0xAFBFB2)
+
     //Add vanilla ore processing recipes
     OreDictionary.initVanillaEntries()
     MachineRecipes.instance.addRecipe(RecipeType.SMELTER.name, new FluidStack(FluidRegistry.LAVA, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(Blocks.stone))
@@ -68,6 +76,21 @@ object AutoResourceFactory
     MachineRecipes.instance.addRecipe(RecipeType.SAWMILL.name, Blocks.log, new ItemStack(Blocks.planks, 7, 0))
     MachineRecipes.instance.addRecipe(RecipeType.GRINDER.name, Blocks.gravel, Blocks.sand)
     MachineRecipes.instance.addRecipe(RecipeType.GRINDER.name, Blocks.glass, Blocks.sand)
+  }
+
+  def registerMaterial(material: String)
+  {
+    if (!materials.contains(material) && OreDictionary.getOres("ore" + material.capitalizeFirst).size > 0)
+    {
+      Settings.config.load()
+      val allowMaterial = Settings.config.get("Resource-Generator", "Enable " + material, true).getBoolean(true)
+      Settings.config.save()
+
+      if (allowMaterial && !blackList.contains(material))
+      {
+        materials += material
+      }
+    }
   }
 
   def postInit()
@@ -135,21 +158,6 @@ object AutoResourceFactory
       val oreDictName = evt.Name.replace("ingot", "")
       val materialName = oreDictName.decapitalizeFirst
       registerMaterial(materialName)
-    }
-  }
-
-  def registerMaterial(material: String)
-  {
-    if (!materials.contains(material) && OreDictionary.getOres("ore" + material.capitalizeFirst).size > 0)
-    {
-      Settings.config.load()
-      val allowMaterial = Settings.config.get("Resource-Generator", "Enable " + material, true).getBoolean(true)
-      Settings.config.save()
-
-      if (allowMaterial && !blackList.contains(material))
-      {
-        materials += material
-      }
     }
   }
 
