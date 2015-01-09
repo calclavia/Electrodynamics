@@ -120,7 +120,7 @@ abstract class TileMFFS extends SpatialTile(Material.iron) with ICamouflageMater
     return ModularForceFieldSystem.packetHandler.toMCPacket(getDescPacket)
   }
 
-  def getDescPacket: PacketType = PacketManager.request(this, TilePacketType.description.id)
+  override def getDescPacket: PacketType = PacketManager.request(this, TilePacketType.description.id)
 
   override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType): Boolean =
   {
