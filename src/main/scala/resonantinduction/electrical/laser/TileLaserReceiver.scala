@@ -11,10 +11,11 @@ import net.minecraft.world.IBlockAccess
 import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11._
-import resonant.lib.prefab.tile.TileAdvanced
+import resonant.lib.prefab.tile.spatial.SpatialTile
+import resonant.lib.prefab.tile.traits.TRotatable
 import resonant.lib.render.RenderUtility
-import resonantinduction.core.Reference
 import resonant.lib.transform.vector.Vector3
+import resonantinduction.core.Reference
 
 /**
  * A block that receives laser light and generates a voltage.
@@ -26,7 +27,7 @@ object TileLaserReceiver
   @SideOnly(Side.CLIENT) val texture = new ResourceLocation(Reference.domain, Reference.modelPath + "laserReceiver.png")
 }
 
-class TileLaserReceiver extends TileAdvanced(Material.rock) with ILaserHandler
+class TileLaserReceiver extends SpatialTile(Material.rock) with ILaserHandler with TRotatable
 {
   var redstoneValue = 0
   private var energy = 0D
@@ -80,7 +81,8 @@ class TileLaserReceiver extends TileAdvanced(Material.rock) with ILaserHandler
     val l = BlockPistonBase.determineOrientation(world, xi, yi, zi, entityLiving)
     world.setBlockMetadataWithNotify(xi, yi, zi, l, 2)
   }
-  override def getLightValue(access: IBlockAccess): Int =redstoneValue
+
+  override def getLightValue(access: IBlockAccess): Int = redstoneValue
 
   override def getWeakRedstonePower(access: IBlockAccess, side: Int): Int = getStrongRedstonePower(access, side)
 

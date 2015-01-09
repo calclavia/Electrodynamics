@@ -1,7 +1,9 @@
 package resonantinduction.mechanical.machine.edit
 
 import java.util.ArrayList
+
 import cpw.mods.fml.common.network.ByteBufUtils
+import cpw.mods.fml.relauncher.{Side, SideOnly}
 import io.netty.buffer.ByteBuf
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
@@ -12,17 +14,13 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.IIcon
 import net.minecraft.world.IBlockAccess
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.api.tile.IRotatable
-import resonant.lib.network.discriminator.PacketTile
-import resonant.lib.network.discriminator.PacketType
+import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketReceiver
-import resonant.lib.prefab.tile.TileAdvanced
+import resonant.lib.prefab.tile.spatial.SpatialTile
+import resonant.lib.prefab.tile.traits.TRotatable
+import resonant.lib.transform.vector.{Vector3, VectorWorld}
 import resonant.lib.utility.inventory.InternalInventoryHandler
 import resonantinduction.core.ResonantInduction
-import resonant.lib.transform.vector.Vector3
-import cpw.mods.fml.relauncher.Side
-import cpw.mods.fml.relauncher.SideOnly
-import resonant.lib.transform.vector.VectorWorld
 
 /**
  * @author tgame14
@@ -34,20 +32,11 @@ object TileBreaker
     @SideOnly(Side.CLIENT) private var iconBack: IIcon = null
 }
 
-class TileBreaker extends TileAdvanced(Material.iron) with IRotatable with IPacketReceiver
+class TileBreaker extends SpatialTile(Material.iron) with TRotatable with IPacketReceiver
 {
     private var _doWork : Boolean = false
     private var invHandler: InternalInventoryHandler = null
     private var place_delay: Int = 0
-
-    def getInvHandler: InternalInventoryHandler =
-    {
-        if (invHandler == null)
-        {
-            invHandler = new InternalInventoryHandler(this)
-        }
-        return invHandler
-    }
 
     override def onAdded
     {
@@ -57,6 +46,15 @@ class TileBreaker extends TileAdvanced(Material.iron) with IRotatable with IPack
     override def onNeighborChanged(block: Block)
     {
         work
+    }
+
+    def work
+    {
+        if (isIndirectlyPowered)
+        {
+            _doWork = true
+            place_delay = 0
+        }
     }
 
     override def update
@@ -72,15 +70,6 @@ class TileBreaker extends TileAdvanced(Material.iron) with IRotatable with IPack
                 _doWork = false
                 place_delay = 0
             }
-        }
-    }
-
-    def work
-    {
-        if (isIndirectlyPowered)
-        {
-            _doWork = true
-            place_delay = 0
         }
     }
 
@@ -112,6 +101,15 @@ class TileBreaker extends TileAdvanced(Material.iron) with IRotatable with IPack
                 getWorldObj.playAuxSFX(1012, check.xi, check.yi, check.zi, 0)
             }
         }
+    }
+
+    def getInvHandler: InternalInventoryHandler =
+    {
+        if (invHandler == null)
+        {
+            invHandler = new InternalInventoryHandler(this)
+        }
+        return invHandler
     }
 
     override def getDescPacket: PacketTile =

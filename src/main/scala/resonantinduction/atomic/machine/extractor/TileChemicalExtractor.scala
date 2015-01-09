@@ -9,10 +9,11 @@ import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import resonant.engine.ResonantEngine
 import resonant.lib.content.prefab.TEnergyStorage
-import resonant.lib.network.Synced
-import resonant.lib.network.discriminator.PacketAnnotation
 import resonant.lib.grid.energy.EnergyStorage
 import resonant.lib.mod.compat.energy.Compatibility
+import resonant.lib.network.Synced
+import resonant.lib.network.discriminator.PacketAnnotation
+import resonant.lib.prefab.tile.traits.TRotatable
 import resonant.lib.transform.vector.Vector3
 import resonantinduction.atomic.AtomicContent
 import resonantinduction.core.Settings
@@ -27,7 +28,7 @@ object TileChemicalExtractor
   final val ENERGY: Long = 5000
 }
 
-class TileChemicalExtractor extends TileProcess(Material.iron) with IFluidHandler with TEnergyStorage
+class TileChemicalExtractor extends TileProcess(Material.iron) with IFluidHandler with TEnergyStorage with TRotatable
 {
   //TODO: Dummy
   energy = new EnergyStorage(0)
@@ -41,6 +42,11 @@ class TileChemicalExtractor extends TileProcess(Material.iron) with IFluidHandle
   tankInputDrainSlot = 4
   tankOutputFillSlot = 5
   tankOutputDrainSlot = 6
+
+  @Synced final val inputTank: FluidTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 10)
+  @Synced final val outputTank: FluidTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 10)
+  @Synced var time: Int = 0
+  var rotation: Float = 0
 
   override def update
   {
@@ -234,6 +240,11 @@ class TileChemicalExtractor extends TileProcess(Material.iron) with IFluidHandle
     return 0
   }
 
+  def canFill(from: ForgeDirection, fluid: Fluid): Boolean =
+  {
+    return FluidRegistry.WATER.getID == fluid.getID || AtomicContent.FLUID_DEUTERIUM.getID == fluid.getID
+  }
+
   def drain(from: ForgeDirection, resource: FluidStack, doDrain: Boolean): FluidStack =
   {
     return drain(from, resource.amount, doDrain)
@@ -244,11 +255,6 @@ class TileChemicalExtractor extends TileProcess(Material.iron) with IFluidHandle
     return outputTank.drain(maxDrain, doDrain)
   }
 
-  def canFill(from: ForgeDirection, fluid: Fluid): Boolean =
-  {
-    return FluidRegistry.WATER.getID == fluid.getID || AtomicContent.FLUID_DEUTERIUM.getID == fluid.getID
-  }
-
   def canDrain(from: ForgeDirection, fluid: Fluid): Boolean =
   {
     return outputTank.getFluid != null && outputTank.getFluid.getFluid.getID == fluid.getID
@@ -257,6 +263,16 @@ class TileChemicalExtractor extends TileProcess(Material.iron) with IFluidHandle
   def getTankInfo(from: ForgeDirection): Array[FluidTankInfo] =
   {
     return Array[FluidTankInfo](this.inputTank.getInfo, this.outputTank.getInfo)
+  }
+
+  override def getAccessibleSlotsFromSide(side: Int): Array[Int] =
+  {
+    return Array[Int](1, 2, 3)
+  }
+
+  override def canInsertItem(slotID: Int, itemStack: ItemStack, side: Int): Boolean =
+  {
+    return this.isItemValidForSlot(slotID, itemStack)
   }
 
   override def isItemValidForSlot(slotID: Int, itemStack: ItemStack): Boolean =
@@ -280,16 +296,6 @@ class TileChemicalExtractor extends TileProcess(Material.iron) with IFluidHandle
     return false
   }
 
-  override def getAccessibleSlotsFromSide(side: Int): Array[Int] =
-  {
-    return Array[Int](1, 2, 3)
-  }
-
-  override def canInsertItem(slotID: Int, itemStack: ItemStack, side: Int): Boolean =
-  {
-    return this.isItemValidForSlot(slotID, itemStack)
-  }
-
   override def canExtractItem(slotID: Int, itemstack: ItemStack, side: Int): Boolean =
   {
     return slotID == 2
@@ -304,9 +310,4 @@ class TileChemicalExtractor extends TileProcess(Material.iron) with IFluidHandle
   {
     return outputTank
   }
-
-  @Synced final val inputTank: FluidTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 10)
-  @Synced final val outputTank: FluidTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 10)
-  @Synced var time: Int = 0
-  var rotation: Float = 0
 }

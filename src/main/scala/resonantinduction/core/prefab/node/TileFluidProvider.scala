@@ -5,43 +5,29 @@ import net.minecraft.block.material.Material
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
-import resonant.lib.wrapper.ByteBufWrapper._
+import resonant.lib.grid.node.TSpatialNodeProvider
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
-import resonant.lib.grid.node.TSpatialNodeProvider
 import resonant.lib.prefab.fluid.NodeFluid
-import resonant.lib.prefab.tile.TileAdvanced
+import resonant.lib.prefab.tile.spatial.SpatialTile
+import resonant.lib.wrapper.ByteBufWrapper._
 
 /**
  * A prefab class for tiles that use the fluid network.
  *
  * @author DarkGuardsman, Calclavia
  */
-abstract class TileFluidProvider(material: Material) extends TileAdvanced(material) with TSpatialNodeProvider with IFluidHandler with TPacketReceiver with TPacketSender
+abstract class TileFluidProvider(material: Material) extends SpatialTile(material) with TSpatialNodeProvider with IFluidHandler with TPacketReceiver with TPacketSender
 {
-  private var _fluidNode: NodeFluid = null
   protected var colorID: Int = 0
   protected var clientRenderMask = 0x3F
-
-  def fluidNode = _fluidNode
-
-  def fluidNode_=(newNode: NodeFluid)
-  {
-    _fluidNode = newNode
-    fluidNode.onConnectionChanged = () =>
-    {
-      clientRenderMask = fluidNode.connectedMask
-      sendPacket(0)
-    }
-    fluidNode.onFluidChanged = () => if (!world.isRemote) sendPacket(1)
-    nodes.add(fluidNode)
-  }
+  private var _fluidNode: NodeFluid = null
 
   override def start()
   {
     super.start()
 
-    if(!world.isRemote)
+    if (!world.isRemote)
     {
       fluidNode.onConnectionChanged()
     }
@@ -107,6 +93,20 @@ abstract class TileFluidProvider(material: Material) extends TileAdvanced(materi
   override def drain(from: ForgeDirection, resource: FluidStack, doDrain: Boolean): FluidStack = fluidNode.drain(from, resource, doDrain)
 
   override def drain(from: ForgeDirection, maxDrain: Int, doDrain: Boolean): FluidStack = fluidNode.drain(from, maxDrain, doDrain)
+
+  def fluidNode = _fluidNode
+
+  def fluidNode_=(newNode: NodeFluid)
+  {
+    _fluidNode = newNode
+    fluidNode.onConnectionChanged = () =>
+    {
+      clientRenderMask = fluidNode.connectedMask
+      sendPacket(0)
+    }
+    fluidNode.onFluidChanged = () => if (!world.isRemote) sendPacket(1)
+    nodes.add(fluidNode)
+  }
 
   override def canFill(from: ForgeDirection, fluid: Fluid): Boolean = fluidNode.canFill(from, fluid)
 

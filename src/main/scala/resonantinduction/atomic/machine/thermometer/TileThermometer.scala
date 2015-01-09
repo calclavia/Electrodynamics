@@ -14,11 +14,11 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.IIcon
 import net.minecraft.world.IBlockAccess
-import resonant.lib.prefab.tile.item.ItemBlockSaved
 import resonant.lib.grid.thermal.ThermalGrid
 import resonant.lib.network.Synced
 import resonant.lib.network.discriminator.PacketAnnotation
-import resonant.lib.prefab.tile.TileAdvanced
+import resonant.lib.prefab.tile.item.ItemBlockSaved
+import resonant.lib.prefab.tile.spatial.SpatialTile
 import resonant.lib.transform.vector.{Vector3, VectorWorld}
 import resonant.lib.utility.inventory.InventoryUtility
 import resonantinduction.core.Reference
@@ -33,7 +33,7 @@ object TileThermometer
 }
 
 @Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "OpenComputers")
-class TileThermometer extends TileAdvanced(Material.piston) with SimpleComponent
+class TileThermometer extends SpatialTile(Material.piston) with SimpleComponent
 {
   @Synced var detectedTemperature: Float = 295
   @Synced var previousDetectedTemperature: Float = 295
@@ -83,16 +83,6 @@ class TileThermometer extends TileAdvanced(Material.piston) with SimpleComponent
       setThreshold(getThershold + 10)
     }
     return true
-  }
-
-  def setThreshold(newThreshold: Int)
-  {
-    threshold = newThreshold % TileThermometer.MAX_THRESHOLD
-    if (threshold <= 0)
-    {
-      threshold = TileThermometer.MAX_THRESHOLD
-    }
-    markUpdate
   }
 
   override def getStrongRedstonePower(access: IBlockAccess, side: Int): Int =
@@ -191,11 +181,6 @@ class TileThermometer extends TileAdvanced(Material.piston) with SimpleComponent
     return Array[Any](this.getThershold)
   }
 
-  def getThershold: Int =
-  {
-    return threshold
-  }
-
   @Callback
   @Optional.Method(modid = "OpenComputers")
   def isAboveWarningTemperature(context: Context, args: Arguments): Array[Any] =
@@ -206,6 +191,11 @@ class TileThermometer extends TileAdvanced(Material.piston) with SimpleComponent
   def isOverThreshold: Boolean =
   {
     return detectedTemperature >= getThershold
+  }
+
+  def getThershold: Int =
+  {
+    return threshold
   }
 
   @Callback
@@ -229,6 +219,16 @@ class TileThermometer extends TileAdvanced(Material.piston) with SimpleComponent
       this.setThreshold(args.checkInteger(0))
     }
     return Array[Any](this.threshold == args.checkInteger(0))
+  }
+
+  def setThreshold(newThreshold: Int)
+  {
+    threshold = newThreshold % TileThermometer.MAX_THRESHOLD
+    if (threshold <= 0)
+    {
+      threshold = TileThermometer.MAX_THRESHOLD
+    }
+    markUpdate
   }
 
   def getComponentName: String =

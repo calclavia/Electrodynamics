@@ -3,17 +3,18 @@ package resonantinduction.archaic.process
 import io.netty.buffer.ByteBuf
 import net.minecraft.block.material.Material
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.item.{Item, ItemStack}
+import net.minecraft.init.Blocks
+import net.minecraft.item.{Item, ItemBlock, ItemStack}
 import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.model.AdvancedModelLoader
-import net.minecraftforge.client.model.obj.WavefrontObject
 import net.minecraftforge.oredict.OreDictionary
 import org.lwjgl.opengl.GL11
 import resonant.api.recipe.MachineRecipes
+import resonant.lib.content.prefab.TInventory
 import resonant.lib.factory.resources.RecipeType
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
-import resonant.lib.prefab.tile.TileInventory
+import resonant.lib.prefab.tile.spatial.SpatialTile
 import resonant.lib.render.{RenderItemOverlayUtility, RenderUtility}
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.inventory.InventoryUtility
@@ -24,6 +25,8 @@ import resonantinduction.core.{Reference, ResonantInduction}
 /**
  * The workbench is meant for manual ore and wood processing.
  * It is also the core block in Resonant Induction that leads the player to all aspect of the mod.
+ *
+ * There are two states: 0 - wooden, 1 - stone
  *
  * Functions:
  * Crush ores -> rubble
@@ -36,61 +39,80 @@ import resonantinduction.core.{Reference, ResonantInduction}
  */
 object TileWorkbench
 {
-  val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "workbench.obj")).asInstanceOf[WavefrontObject]
+  val model = Array(AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "workbench_0.obj")), AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "workbench_1.obj")))
 }
 
-class TileWorkbench extends TileInventory(Material.rock) with TPacketSender with TPacketReceiver
+class TileWorkbench extends SpatialTile(Material.rock) with TInventory with TPacketSender with TPacketReceiver
 {
   //Constructor
-  maxSlots = 1
   setTextureName(Reference.prefix + "material_wood_surface")
   normalRender = false
   isOpaqueCube = false
 
+  override def getSizeInventory = 1
+
   override def use(player: EntityPlayer, hitSide: Int, hit: Vector3): Boolean =
   {
-    //The player is holding a hammer. Attempt to crush the item on the bench
     if (player.getCurrentEquippedItem != null)
     {
-      if (player.getCurrentEquippedItem.getItem.isInstanceOf[ItemHammer])
+      if (metadata == 1)
       {
-        val inputStack = getStackInSlot(0)
-
-        if (inputStack != null)
+        //The player is holding a hammer. Attempt to crush the item on the bench
+        if (player.getCurrentEquippedItem.getItem.isInstanceOf[ItemHammer])
         {
-          val oreName = OreDictionary.getOreName(OreDictionary.getOreID(inputStack))
+          val inputStack = getStackInSlot(0)
 
-          if (oreName != null && oreName != "Unknown")
+          if (inputStack != null)
           {
-            if (!world.isRemote)
-            {
-              //Try output resource
-              def tryOutput(name: String, probability: Float): Boolean =
-              {
-                val outputs = MachineRecipes.instance.getOutput(name, oreName)
+            val oreName = OreDictionary.getOreName(OreDictionary.getOreID(inputStack))
 
-                if (outputs.length > 0 && world.rand.nextFloat < probability)
+            if (oreName != null && oreName != "Unknown")
+            {
+              if (!world.isRemote)
+              {
+                //Try output resource
+                def tryOutput(name: String, probability: Float): Boolean =
                 {
-                  outputs.map(_.getItemStack.copy()).foreach(s => InventoryUtility.dropItemStack(world, new Vector3(player), s, 0))
-                  inputStack.stackSize -= 1
-                  setInventorySlotContents(0, if (inputStack.stackSize <= 0) null else inputStack)
-                  return true
+                  val outputs = MachineRecipes.instance.getOutput(name, oreName)
+
+                  if (outputs.length > 0 && world.rand.nextFloat < probability)
+                  {
+                    outputs.map(_.getItemStack.copy()).foreach(s => InventoryUtility.dropItemStack(world, new Vector3(player), s, 0))
+                    inputStack.stackSize -= 1
+                    setInventorySlotContents(0, if (inputStack.stackSize <= 0) null else inputStack)
+                    world.spawnParticle("crit", x + 0.5, y + 0.5, z + 0.5, 0, 0, 0)
+                    return true
+                  }
+                  return false
                 }
-                return false
+
+                if (!tryOutput(RecipeType.CRUSHER.name, 0.1f))
+                  tryOutput(RecipeType.GRINDER.name, 0.05f)
               }
 
-              if (!tryOutput(RecipeType.CRUSHER.name, 0.1f))
-                tryOutput(RecipeType.GRINDER.name, 0.05f)
+              ResonantInduction.proxy.renderBlockParticle(world, new Vector3(x + 0.5, y + 0.5, z + 0.5), new Vector3((Math.random - 0.5f) * 3, (Math.random - 0.5f) * 3, (Math.random - 0.5f) * 3), Item.getIdFromItem(inputStack.getItem), 1)
+              world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, Reference.prefix + "hammer", 0.5f, 0.8f + (0.2f * world.rand.nextFloat))
+              player.addExhaustion(0.1f)
+              player.getCurrentEquippedItem.damageItem(1, player)
             }
+          }
 
-            ResonantInduction.proxy.renderBlockParticle(world, new Vector3(x + 0.5, y + 0.5, z + 0.5), new Vector3((Math.random - 0.5f) * 3, (Math.random - 0.5f) * 3, (Math.random - 0.5f) * 3), Item.getIdFromItem(inputStack.getItem), 1)
-            world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, Reference.prefix + "hammer", 0.5f, 0.8f + (0.2f * world.rand.nextFloat))
-            player.addExhaustion(0.1f)
-            player.getCurrentEquippedItem.damageItem(1, player)
+          return true
+        }
+      }
+      else
+      {
+        if (player.getCurrentEquippedItem.getItem.isInstanceOf[ItemBlock])
+        {
+          if (player.getCurrentEquippedItem.getItem.asInstanceOf[ItemBlock].field_150939_a == Blocks.stone)
+          {
+            setMeta(1)
+            player.getCurrentEquippedItem.stackSize -= 1
+            if (player.getCurrentEquippedItem.stackSize <= 0)
+              player.inventory.setInventorySlotContents(player.inventory.currentItem, null)
+            return true
           }
         }
-
-        return true
       }
     }
 
@@ -133,11 +155,11 @@ class TileWorkbench extends TileInventory(Material.rock) with TPacketSender with
   override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
   {
     GL11.glPushMatrix()
-    RenderItemOverlayUtility.renderTopOverlay(this, Array[ItemStack](getStackInSlot(0)), getDirection, 1, 1, pos.x, pos.y - 0.2, pos.z, 0.7f)
+    RenderItemOverlayUtility.renderTopOverlay(this, Array[ItemStack](getStackInSlot(0)), null, 1, 1, pos.x, pos.y - (if (metadata == 1) 0.2 else 0.5), pos.z, 1.8f)
     GL11.glColor4f(1, 1, 1, 1)
     GL11.glTranslated(pos.x, pos.y, pos.z)
-    RenderUtility.bind(Reference.domain, Reference.modelPath + "workbench.png")
-    TileWorkbench.model.renderAll()
+    RenderUtility.bind(Reference.domain, Reference.modelPath + "workbench_" + metadata + ".png")
+    TileWorkbench.model(metadata).renderAll()
     GL11.glPopMatrix()
   }
 }

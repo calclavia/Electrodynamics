@@ -1,6 +1,5 @@
 package resonantinduction.electrical.laser.focus
 
-import cpw.mods.fml.client.FMLClientHandler
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.block.material.Material
 import net.minecraft.item.ItemStack
@@ -12,10 +11,10 @@ import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11._
 import resonant.lib.render.RenderUtility
-import resonantinduction.core.{Reference, ResonantInduction}
-import resonantinduction.electrical.laser.{ILaserHandler, Laser, TileLaserReceiver}
 import resonant.lib.transform.rotation.Quaternion
 import resonant.lib.transform.vector.Vector3
+import resonantinduction.core.{Reference, ResonantInduction}
+import resonantinduction.electrical.laser.{ILaserHandler, Laser}
 
 /**
  * Redirects lasers to one point
@@ -142,8 +141,8 @@ class TileFocusCrystal extends TileFocus(Material.rock) with ILaserHandler with 
   override def renderInventory(itemStack: ItemStack)
   {
     glPushMatrix()
-      glRotated(180, 0, 1, 0)
-      RenderUtility.enableBlending()
+    glRotated(180, 0, 1, 0)
+    RenderUtility.enableBlending()
 
     glScaled(2.2, 2.2, 2.2)
     RenderUtility.bind(TileFocusCrystal.texture)

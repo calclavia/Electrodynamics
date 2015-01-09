@@ -10,10 +10,10 @@ import net.minecraft.util.{ChatComponentText, ResourceLocation}
 import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
-import resonant.api.tile.IRotatable
 import resonant.lib.content.prefab.TElectric
 import resonant.lib.grid.node.TSpatialNodeProvider
-import resonant.lib.prefab.tile.TileAdvanced
+import resonant.lib.prefab.tile.spatial.SpatialTile
+import resonant.lib.prefab.tile.traits.TRotatable
 import resonant.lib.render.RenderUtility
 import resonant.lib.transform.vector.Vector3
 import resonantinduction.core.Reference
@@ -32,7 +32,7 @@ object TileMotor
   val texture = new ResourceLocation(Reference.domain, Reference.modelPath + "motor.png")
 }
 
-class TileMotor extends TileAdvanced(Material.iron) with TElectric with TSpatialNodeProvider with IRotatable
+class TileMotor extends SpatialTile(Material.iron) with TElectric with TSpatialNodeProvider with TRotatable
 {
   var mechNode = new NodeMechanical(this)
   {
@@ -90,17 +90,6 @@ class TileMotor extends TileAdvanced(Material.iron) with TElectric with TSpatial
     }
   }
 
-  override protected def configure(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
-  {
-    if (!world.isRemote)
-    {
-      gearRatio = (gearRatio + 1) % 3
-      player.addChatComponentMessage(new ChatComponentText("Toggled gear ratio: " + gearRatio))
-    }
-
-    return true
-  }
-
   @SideOnly(Side.CLIENT)
   override def renderDynamic(pos: Vector3, frame: Float, pass: Int): Unit =
   {
@@ -126,5 +115,16 @@ class TileMotor extends TileAdvanced(Material.iron) with TElectric with TSpatial
   }
 
   override def toString: String = "[TileMotor]" + x + "x " + y + "y " + z + "z "
+
+  override protected def configure(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
+  {
+    if (!world.isRemote)
+    {
+      gearRatio = (gearRatio + 1) % 3
+      player.addChatComponentMessage(new ChatComponentText("Toggled gear ratio: " + gearRatio))
+    }
+
+    return true
+  }
 
 }

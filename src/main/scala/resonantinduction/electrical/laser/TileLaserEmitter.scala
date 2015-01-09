@@ -12,10 +12,11 @@ import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL11._
-import resonant.lib.prefab.tile.TileAdvanced
+import resonant.lib.prefab.tile.spatial.SpatialTile
+import resonant.lib.prefab.tile.traits.TRotatable
 import resonant.lib.render.RenderUtility
-import resonantinduction.core.Reference
 import resonant.lib.transform.vector.Vector3
+import resonantinduction.core.Reference
 
 /**
  * An emitter that shoots out lasers.
@@ -30,7 +31,7 @@ object TileLaserEmitter
   @SideOnly(Side.CLIENT) val texture = new ResourceLocation(Reference.domain, Reference.modelPath + "laserEmitter.png")
 }
 
-class TileLaserEmitter extends TileAdvanced(Material.iron) with ILaserHandler
+class TileLaserEmitter extends SpatialTile(Material.iron) with ILaserHandler with TRotatable
 {
   var energy = 0D
 

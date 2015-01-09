@@ -14,11 +14,11 @@ import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL11._
 import resonant.lib.content.prefab.{TElectric, TEnergyStorage}
+import resonant.lib.grid.energy.EnergyStorage
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketReceiver
 import resonant.lib.network.netty.AbstractPacket
-import resonant.lib.grid.energy.EnergyStorage
-import resonant.lib.prefab.tile.TileAdvanced
+import resonant.lib.prefab.tile.spatial.SpatialTile
 import resonant.lib.render.RenderUtility
 import resonant.lib.transform.vector.Vector3
 import resonantinduction.core.Reference
@@ -29,6 +29,13 @@ import resonantinduction.core.Reference
   */
 object TileBattery
 {
+  /** Tiers: 0, 1, 2 */
+  final val maxTier = 2
+  /** The transfer rate **/
+  final val defaultPower = getEnergyForTier(0)
+  @SideOnly(Side.CLIENT)
+  val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "battery/battery.tcn"))
+
   /**
    * @param tier - 0, 1, 2
    * @return
@@ -37,21 +44,13 @@ object TileBattery
   {
     return Math.round(Math.pow(500000000, (tier / (maxTier + 0.7f)) + 1) / 500000000) * 500000000
   }
-
-  /** Tiers: 0, 1, 2 */
-  final val maxTier = 2
-  /** The transfer rate **/
-  final val defaultPower = getEnergyForTier(0)
-
-  @SideOnly(Side.CLIENT)
-  val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "battery/battery.tcn"))
 }
 
-class TileBattery extends TileAdvanced(Material.iron) with TElectric with IPacketReceiver with TEnergyStorage
+class TileBattery extends SpatialTile(Material.iron) with TElectric with IPacketReceiver with TEnergyStorage
 {
-  private var markClientUpdate: Boolean = false
-  private var markDistributionUpdate: Boolean = false
   var renderEnergyAmount: Double = 0
+  var doCharge = false
+  private var markClientUpdate: Boolean = false
 
   energy = new EnergyStorage
   textureName = "material_metal_side"
@@ -60,8 +59,7 @@ class TileBattery extends TileAdvanced(Material.iron) with TElectric with IPacke
   normalRender = false
   isOpaqueCube = false
   itemBlock = classOf[ItemBlockBattery]
-
-  var doCharge = false
+  private var markDistributionUpdate: Boolean = false
 
   override def update()
   {

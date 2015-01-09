@@ -11,8 +11,8 @@ import net.minecraft.util.{ChatComponentText, IIcon}
 import net.minecraft.world.IBlockAccess
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.{Fluid, FluidContainerRegistry, FluidRegistry, FluidStack}
-import resonant.api.tile.IRotatable
 import resonant.lib.mod.config.Config
+import resonant.lib.prefab.tile.traits.TRotatable
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.FluidUtility
 import resonantinduction.archaic.fluid.grate.TileGrate._
@@ -34,7 +34,7 @@ object TileGrate
   private var iconSide: IIcon = _
 }
 
-class TileGrate extends TileFluidProvider(Material.rock) with IRotatable
+class TileGrate extends TileFluidProvider(Material.rock) with TRotatable
 {
   fluidNode = new NodeFluidPressure(this)
   private var gratePath: GratePathfinder = _

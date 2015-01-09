@@ -3,7 +3,6 @@ package resonantinduction.mechanical.machine.edit
 import java.util.EnumSet
 
 import cpw.mods.fml.relauncher.{Side, SideOnly}
-import io.netty.buffer.ByteBuf
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.client.renderer.texture.IIconRegister
@@ -14,10 +13,11 @@ import net.minecraft.util.{ChatComponentText, IIcon}
 import net.minecraft.world.IBlockAccess
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
-import resonant.api.tile.IRotatable
-import resonant.lib.network.discriminator.{PacketType, PacketTile}
-import resonant.lib.network.handle.{TPacketSender, TPacketReceiver}
-import resonant.lib.prefab.tile.TileInventory
+import resonant.lib.content.prefab.TInventory
+import resonant.lib.network.discriminator.PacketTile
+import resonant.lib.network.handle.TPacketSender
+import resonant.lib.prefab.tile.spatial.SpatialTile
+import resonant.lib.prefab.tile.traits.TRotatable
 import resonant.lib.render.RenderItemOverlayUtility
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.LanguageUtility
@@ -33,7 +33,7 @@ object TilePlacer
   @SideOnly(Side.CLIENT) private var iconBack: IIcon = null
 }
 
-class TilePlacer extends TileInventory(Material.rock) with IRotatable with TPacketSender
+class TilePlacer extends SpatialTile(Material.rock) with TInventory with TRotatable with TPacketSender
 {
   private var _doWork: Boolean = false
   private var autoPullItems: Boolean = false
@@ -41,20 +41,12 @@ class TilePlacer extends TileInventory(Material.rock) with IRotatable with TPack
   private var invHandler: InternalInventoryHandler = null
 
   //Constructor
-  setSizeInventory(1)
   normalRender = false
   forceItemToRenderAsBlock = true
   renderStaticBlock = true
   this.rotationMask = 63
 
-  def getInvHandler: InternalInventoryHandler =
-  {
-    if (invHandler == null)
-    {
-      invHandler = new InternalInventoryHandler(this)
-    }
-    return invHandler
-  }
+  override def getSizeInventory = 1
 
   override def onAdded
   {
@@ -64,6 +56,15 @@ class TilePlacer extends TileInventory(Material.rock) with IRotatable with TPack
   override def onNeighborChanged(block: Block)
   {
     work
+  }
+
+  def work
+  {
+    if (isIndirectlyPowered)
+    {
+      _doWork = true
+      placeDelay = 0
+    }
   }
 
   override def start
@@ -95,13 +96,13 @@ class TilePlacer extends TileInventory(Material.rock) with IRotatable with TPack
     }
   }
 
-  def work
+  def getInvHandler: InternalInventoryHandler =
   {
-    if (isIndirectlyPowered)
+    if (invHandler == null)
     {
-      _doWork = true
-      placeDelay = 0
+      invHandler = new InternalInventoryHandler(this)
     }
+    return invHandler
   }
 
   def doWork
@@ -144,6 +145,15 @@ class TilePlacer extends TileInventory(Material.rock) with IRotatable with TPack
     return new PacketTile(this, nbt)
   }
 
+  /**
+   * Writes a tile entity to NBT.
+   */
+  override def writeToNBT(nbt: NBTTagCompound)
+  {
+    super.writeToNBT(nbt)
+    nbt.setBoolean("autoPull", this.autoPullItems)
+  }
+
   override def onInventoryChanged
   {
     sendDescPacket()
@@ -153,15 +163,6 @@ class TilePlacer extends TileInventory(Material.rock) with IRotatable with TPack
   {
     super.readFromNBT(nbt)
     this.autoPullItems = nbt.getBoolean("autoPull")
-  }
-
-  /**
-   * Writes a tile entity to NBT.
-   */
-  override def writeToNBT(nbt: NBTTagCompound)
-  {
-    super.writeToNBT(nbt)
-    nbt.setBoolean("autoPull", this.autoPullItems)
   }
 
   override def canStore(stack: ItemStack, slot: Int, side: ForgeDirection): Boolean =

@@ -8,14 +8,14 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.network.Packet
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
-import resonant.api.tile.IRotatable
 import resonant.engine.ResonantEngine
 import resonant.lib.content.prefab.TEnergyStorage
+import resonant.lib.grid.energy.EnergyStorage
 import resonant.lib.network.Synced
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketReceiver
-import resonant.lib.grid.energy.EnergyStorage
 import resonant.lib.prefab.tile.TileElectricInventory
+import resonant.lib.prefab.tile.traits.TRotatable
 import resonant.lib.transform.vector.Vector3
 import resonantinduction.atomic.AtomicContent
 import resonantinduction.core.Settings
@@ -28,7 +28,7 @@ object TileNuclearBoiler
   final val DIAN: Long = 50000
 }
 
-class TileNuclearBoiler extends TileElectricInventory(Material.iron) with IPacketReceiver with IFluidHandler with IRotatable with TEnergyStorage
+class TileNuclearBoiler extends TileElectricInventory(Material.iron) with IPacketReceiver with IFluidHandler with TRotatable with TEnergyStorage
 {
   final val SHI_JIAN: Int = 20 * 15
 
@@ -119,23 +119,6 @@ class TileNuclearBoiler extends TileElectricInventory(Material.iron) with IPacke
     }
   }
 
-  def read(data: ByteBuf, player: EntityPlayer, `type`: PacketType)
-  {
-    this.waterTank.setFluid(new FluidStack(AtomicContent.FLUIDSTACK_WATER.fluidID, data.readInt))
-    this.gasTank.setFluid(new FluidStack(AtomicContent.FLUIDSTACK_URANIUM_HEXAFLOURIDE.fluidID, data.readInt))
-    this.timer = data.readInt
-  }
-
-  override def getDescriptionPacket: Packet =
-  {
-    return ResonantEngine.instance.packetHandler.toMCPacket(getDescPacket)
-  }
-
-  override def getDescPacket: PacketTile =
-  {
-    return new PacketTile(xi, yi, zi, Array[Any](this.timer, AtomicContent.getFluidAmount(this.waterTank.getFluid), AtomicContent.getFluidAmount(this.gasTank.getFluid)))
-  }
-
   def sendDescPack
   {
     if (!this.worldObj.isRemote)
@@ -143,10 +126,19 @@ class TileNuclearBoiler extends TileElectricInventory(Material.iron) with IPacke
     }
   }
 
-  override def use(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
+  /**
+   * Turn one item from the furnace source stack into the appropriate smelted item in the furnace result stack.
+   */
+  def yong
   {
-    openGui(player, AtomicContent)
-    return true
+    if (this.nengYong)
+    {
+      this.waterTank.drain(FluidContainerRegistry.BUCKET_VOLUME, true)
+      val liquid: FluidStack = AtomicContent.FLUIDSTACK_URANIUM_HEXAFLOURIDE.copy
+      liquid.amount = Settings.uraniumHexaflourideRatio * 2
+      this.gasTank.fill(liquid, true)
+      this.decrStackSize(3, 1)
+    }
   }
 
   def nengYong: Boolean =
@@ -171,18 +163,38 @@ class TileNuclearBoiler extends TileElectricInventory(Material.iron) with IPacke
   }
 
   /**
-   * Turn one item from the furnace source stack into the appropriate smelted item in the furnace result stack.
+   * Tank Methods
    */
-  def yong
+  def fill(from: ForgeDirection, resource: FluidStack, doFill: Boolean): Int =
   {
-    if (this.nengYong)
+    if (AtomicContent.FLUIDSTACK_WATER.isFluidEqual(resource))
     {
-      this.waterTank.drain(FluidContainerRegistry.BUCKET_VOLUME, true)
-      val liquid: FluidStack = AtomicContent.FLUIDSTACK_URANIUM_HEXAFLOURIDE.copy
-      liquid.amount = Settings.uraniumHexaflourideRatio * 2
-      this.gasTank.fill(liquid, true)
-      this.decrStackSize(3, 1)
+      return this.waterTank.fill(resource, doFill)
     }
+    return 0
+  }
+
+  def read(data: ByteBuf, player: EntityPlayer, `type`: PacketType)
+  {
+    this.waterTank.setFluid(new FluidStack(AtomicContent.FLUIDSTACK_WATER.fluidID, data.readInt))
+    this.gasTank.setFluid(new FluidStack(AtomicContent.FLUIDSTACK_URANIUM_HEXAFLOURIDE.fluidID, data.readInt))
+    this.timer = data.readInt
+  }
+
+  override def getDescriptionPacket: Packet =
+  {
+    return ResonantEngine.instance.packetHandler.toMCPacket(getDescPacket)
+  }
+
+  override def getDescPacket: PacketTile =
+  {
+    return new PacketTile(xi, yi, zi, Array[Any](this.timer, AtomicContent.getFluidAmount(this.waterTank.getFluid), AtomicContent.getFluidAmount(this.gasTank.getFluid)))
+  }
+
+  override def use(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
+  {
+    openGui(player, AtomicContent)
+    return true
   }
 
   /**
@@ -219,18 +231,6 @@ class TileNuclearBoiler extends TileElectricInventory(Material.iron) with IPacke
     }
   }
 
-  /**
-   * Tank Methods
-   */
-  def fill(from: ForgeDirection, resource: FluidStack, doFill: Boolean): Int =
-  {
-    if (AtomicContent.FLUIDSTACK_WATER.isFluidEqual(resource))
-    {
-      return this.waterTank.fill(resource, doFill)
-    }
-    return 0
-  }
-
   def drain(from: ForgeDirection, resource: FluidStack, doDrain: Boolean): FluidStack =
   {
     if (AtomicContent.FLUIDSTACK_URANIUM_HEXAFLOURIDE.isFluidEqual(resource))
@@ -260,6 +260,16 @@ class TileNuclearBoiler extends TileElectricInventory(Material.iron) with IPacke
     return Array[FluidTankInfo](this.waterTank.getInfo, this.gasTank.getInfo)
   }
 
+  override def getAccessibleSlotsFromSide(side: Int): Array[Int] =
+  {
+    return if (side == 0) Array[Int](2) else Array[Int](1, 3)
+  }
+
+  override def canInsertItem(slotID: Int, itemStack: ItemStack, side: Int): Boolean =
+  {
+    return this.isItemValidForSlot(slotID, itemStack)
+  }
+
   /**
    * Inventory
    */
@@ -274,16 +284,6 @@ class TileNuclearBoiler extends TileElectricInventory(Material.iron) with IPacke
       return itemStack.getItem eq AtomicContent.itemYellowCake
     }
     return false
-  }
-
-  override def getAccessibleSlotsFromSide(side: Int): Array[Int] =
-  {
-    return if (side == 0) Array[Int](2) else Array[Int](1, 3)
-  }
-
-  override def canInsertItem(slotID: Int, itemStack: ItemStack, side: Int): Boolean =
-  {
-    return this.isItemValidForSlot(slotID, itemStack)
   }
 
   override def canExtractItem(slotID: Int, itemstack: ItemStack, j: Int): Boolean =
