@@ -15,8 +15,7 @@ import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import org.lwjgl.opengl.GL11
-import resonant.api.recipe.MachineRecipes
-import resonant.lib.factory.resources.RecipeType
+import resonant.api.recipe.{MachineRecipes, RecipeType}
 import resonant.lib.prefab.fluid.NodeFluid
 import resonant.lib.render.{FluidRenderUtility, RenderUtility}
 import resonant.lib.transform.region.Cuboid

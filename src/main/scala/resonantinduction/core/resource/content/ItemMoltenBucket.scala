@@ -1,12 +1,14 @@
 package resonantinduction.core.resource.content
 
+import net.minecraft.creativetab.CreativeTabs
+import resonant.lib.factory.resources.item.TItemResource
 import resonantinduction.core.Reference
 
 /**
  * @author Calclavia
  */
-class ItemMoltenBucket(newMaterial: String) extends ItemResource with TBucket
+class ItemMoltenBucket extends TItemResource with TBucket
 {
   setTextureName(Reference.prefix + "bucketMolten")
-  material = newMaterial
+  setCreativeTab(CreativeTabs.tabMaterials)
 }

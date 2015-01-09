@@ -9,9 +9,8 @@ import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11._
-import resonant.api.recipe.MachineRecipes
+import resonant.api.recipe.{MachineRecipes, RecipeType}
 import resonant.lib.collection.Timer
-import resonant.lib.factory.resources.RecipeType
 import resonant.lib.prefab.damage.CustomDamageSource
 import resonant.lib.render.RenderUtility
 import resonant.lib.transform.region.Cuboid

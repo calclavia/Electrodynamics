@@ -3,21 +3,19 @@ package resonantinduction.core
 import cpw.mods.fml.common.Mod.EventHandler
 import cpw.mods.fml.common.event.{FMLInitializationEvent, FMLPostInitializationEvent, FMLPreInitializationEvent}
 import cpw.mods.fml.common.network.NetworkRegistry
-import cpw.mods.fml.common.{Mod, ModMetadata, SidedProxy}
+import cpw.mods.fml.common.{Mod, SidedProxy}
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.config.Configuration
 import org.modstats.{ModstatInfo, Modstats}
-import resonant.engine.{References, ResonantEngine}
+import resonant.engine.ResonantEngine
 import resonant.lib.mod.config.ConfigHandler
 import resonant.lib.mod.loadable.LoadableHandler
 import resonantinduction.archaic.ArchaicContent
 import resonantinduction.atomic.AtomicContent
 import resonantinduction.core.handler.TextureHookHandler
-import resonantinduction.core.resource.ResourceFactory
+import resonantinduction.core.resource.AutoResourceFactory
 import resonantinduction.electrical.ElectricalContent
 import resonantinduction.mechanical.{MechanicalContent, MicroblockHighlightHandler}
-
-import scala.collection.convert.wrapAll._
 
 /** The core module of Resonant Induction
   *
@@ -44,7 +42,7 @@ final object ResonantInduction
 
     MinecraftForge.EVENT_BUS.register(TextureHookHandler)
     MinecraftForge.EVENT_BUS.register(MicroblockHighlightHandler)
-    MinecraftForge.EVENT_BUS.register(ResourceFactory)
+    MinecraftForge.EVENT_BUS.register(AutoResourceFactory)
 
     loadables.applyModule(proxy)
     loadables.applyModule(packetHandler)
@@ -60,14 +58,14 @@ final object ResonantInduction
   def init(evt: FMLInitializationEvent)
   {
     ResonantPartFactory.init()
-    ResourceFactory.init()
+    AutoResourceFactory.init()
     loadables.init()
   }
 
   @EventHandler
   def postInit(evt: FMLPostInitializationEvent)
   {
-    ResourceFactory.generateAll()
+    AutoResourceFactory.postInit()
     loadables.postInit()
   }
 }

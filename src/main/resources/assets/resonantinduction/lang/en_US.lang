@@ -26,13 +26,11 @@ item.resonantinduction:bucketMolten.name=%v Bucket
 
 #Misc
 misc.ingot=Ingot
-misc.mixture=Mixture
-misc.molten=Molten
 misc.ingot=Ingot
 misc.rubble=Rubble
 misc.dust=Dust
 misc.refinedDust=Refined Dust
-misc.bucket=Bucket
+misc.bucketMolten=Molten Bucket
 
 # Blocks
 tile.resonantinduction:oreCopper.name=Copper Ore

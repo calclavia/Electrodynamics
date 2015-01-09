@@ -8,8 +8,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.util.IIcon
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.api.recipe.MachineRecipes
-import resonant.lib.factory.resources.RecipeType
+import resonant.api.recipe.{MachineRecipes, RecipeType}
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
 import resonant.lib.prefab.tile.TileInventory
@@ -69,6 +68,12 @@ class TileMillstone extends TileInventory(Material.rock) with TPacketSender with
     }
   }
 
+  override def onInventoryChanged
+  {
+    grindCount = 0
+    worldObj.markBlockForUpdate(xCoord, yCoord, zCoord)
+  }
+
   override def use(player: EntityPlayer, hitSide: Int, hit: Vector3): Boolean =
   {
     val current: ItemStack = player.inventory.getCurrentItem
@@ -113,12 +118,6 @@ class TileMillstone extends TileInventory(Material.rock) with TPacketSender with
         onInventoryChanged
       }
     }
-  }
-
-  override def onInventoryChanged
-  {
-    grindCount = 0
-    worldObj.markBlockForUpdate(xCoord, yCoord, zCoord)
   }
 
   override def isItemValidForSlot(i: Int, itemStack: ItemStack): Boolean =

@@ -9,9 +9,8 @@ import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.oredict.OreDictionary
 import org.lwjgl.opengl.GL11
-import resonant.api.recipe.MachineRecipes
+import resonant.api.recipe.{MachineRecipes, RecipeType}
 import resonant.lib.content.prefab.TInventory
-import resonant.lib.factory.resources.RecipeType
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
 import resonant.lib.prefab.tile.spatial.SpatialTile

@@ -19,16 +19,16 @@ import net.minecraftforge.common.{ForgeChunkManager, MinecraftForge}
 import net.minecraftforge.event.entity.player.FillBucketEvent
 import net.minecraftforge.fluids.{Fluid, FluidContainerRegistry, FluidRegistry, FluidStack}
 import net.minecraftforge.oredict.{OreDictionary, ShapelessOreRecipe}
-import resonant.api.tile.IElectromagnet
 import resonant.api.event.PlasmaEvent
 import resonant.api.recipe.QuantumAssemblerRecipes
+import resonant.api.tile.IElectromagnet
+import resonant.lib.factory.resources.block.OreGenerator
 import resonant.lib.grid.thermal.EventThermal
-import resonant.lib.network.discriminator.PacketAnnotationManager
 import resonant.lib.mod.content.{ContentHolder, ExplicitContentName}
-import resonant.lib.prefab.ore.OreGenerator
+import resonant.lib.network.discriminator.PacketAnnotationManager
+import resonant.lib.transform.vector.VectorWorld
 import resonant.lib.utility.recipe.UniversalRecipe
 import resonant.lib.world.schematic.SchematicRegistry
-import resonant.lib.transform.vector.VectorWorld
 import resonantinduction.atomic.blocks._
 import resonantinduction.atomic.items._
 import resonantinduction.atomic.machine.TileFunnel
@@ -40,7 +40,6 @@ import resonantinduction.atomic.machine.fulmination.{FulminationHandler, TileFul
 import resonantinduction.atomic.machine.plasma.{TilePlasma, TilePlasmaHeater}
 import resonantinduction.atomic.machine.quantum.TileQuantumAssembler
 import resonantinduction.atomic.machine.reactor.{TileControlRod, TileReactorCell}
-import resonantinduction.atomic.machine.thermometer.TileThermometer
 import resonantinduction.atomic.schematic.{SchematicAccelerator, SchematicBreedingReactor, SchematicFissionReactor, SchematicFusionReactor}
 import resonantinduction.core.{RICreativeTab, Reference, ResonantInduction, Settings}
 
@@ -192,6 +191,42 @@ object AtomicContent extends ContentHolder
 
   }
 
+  def FLUID_PLASMA: Fluid = new Fluid("plasma").setGaseous(true)
+
+  def FLUID_STEAM: Fluid =
+  {
+    var fluid: Fluid = FluidRegistry.getFluid("steam");
+    if (fluid == null)
+    {
+      fluid = new Fluid("steam").setGaseous(true)
+      FluidRegistry.registerFluid(fluid)
+    }
+    return fluid
+  }
+
+  def FLUID_DEUTERIUM: Fluid =
+  {
+    var fluid: Fluid = FluidRegistry.getFluid("deuterium");
+    if (fluid == null)
+    {
+      fluid = new Fluid("deuterium").setGaseous(true)
+      FluidRegistry.registerFluid(fluid)
+    }
+    return fluid
+  }
+
+  /** Gets the Fluid instance of Toxic Waste */
+  def getFluidToxicWaste: Fluid =
+  {
+    var fluid: Fluid = FluidRegistry.getFluid("toxicwaste");
+    if (fluid == null)
+    {
+      fluid = new Fluid("toxicwaste").setGaseous(true)
+      FluidRegistry.registerFluid(fluid)
+    }
+    return fluid
+  }
+
   override def postInit()
   {
     super.postInit()
@@ -324,6 +359,11 @@ object AtomicContent extends ContentHolder
     return isItemStackOreDictionaryCompatible(itemStack, "cellEmpty")
   }
 
+  def isItemStackWaterCell(itemStack: ItemStack): Boolean =
+  {
+    return isItemStackOreDictionaryCompatible(itemStack, "cellWater")
+  }
+
   /** Compare to Ore Dict
     *
     * @param itemStack
@@ -343,11 +383,6 @@ object AtomicContent extends ContentHolder
       }
     }
     return false
-  }
-
-  def isItemStackWaterCell(itemStack: ItemStack): Boolean =
-  {
-    return isItemStackOreDictionaryCompatible(itemStack, "cellWater")
   }
 
   def isItemStackUraniumOre(itemStack: ItemStack): Boolean =
@@ -374,8 +409,6 @@ object AtomicContent extends ContentHolder
     return 0
   }
 
-  def FLUID_PLASMA: Fluid = new Fluid("plasma").setGaseous(true)
-
   def FLUIDSTACK_WATER: FluidStack = new FluidStack(FluidRegistry.WATER, 0)
 
   def FLUIDSTACK_URANIUM_HEXAFLOURIDE: FluidStack = new FluidStack(AtomicContent.FLUID_URANIUM_HEXAFLOURIDE, 0)
@@ -393,29 +426,7 @@ object AtomicContent extends ContentHolder
 
   def FLUIDSTACK_STEAM: FluidStack = new FluidStack(FLUID_STEAM, 0)
 
-  def FLUID_STEAM: Fluid =
-  {
-    var fluid: Fluid = FluidRegistry.getFluid("steam");
-    if (fluid == null)
-    {
-      fluid = new Fluid("steam").setGaseous(true)
-      FluidRegistry.registerFluid(fluid)
-    }
-    return fluid
-  }
-
   def FLUIDSTACK_DEUTERIUM: FluidStack = new FluidStack(FLUID_DEUTERIUM, 0)
-
-  def FLUID_DEUTERIUM: Fluid =
-  {
-    var fluid: Fluid = FluidRegistry.getFluid("deuterium");
-    if (fluid == null)
-    {
-      fluid = new Fluid("deuterium").setGaseous(true)
-      FluidRegistry.registerFluid(fluid)
-    }
-    return fluid
-  }
 
   def getFluidStackTritium: FluidStack = new FluidStack(getFluidTritium, 0)
 
@@ -433,16 +444,4 @@ object AtomicContent extends ContentHolder
 
   /** Gets a FluidStack of Toxic Waste */
   def getStackToxicWaste: FluidStack = new FluidStack(getFluidToxicWaste, 0)
-
-  /** Gets the Fluid instance of Toxic Waste */
-  def getFluidToxicWaste: Fluid =
-  {
-    var fluid: Fluid = FluidRegistry.getFluid("toxicwaste");
-    if (fluid == null)
-    {
-      fluid = new Fluid("toxicwaste").setGaseous(true)
-      FluidRegistry.registerFluid(fluid)
-    }
-    return fluid
-  }
 }

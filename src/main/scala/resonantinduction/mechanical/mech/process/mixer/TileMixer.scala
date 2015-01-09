@@ -7,22 +7,18 @@ import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.entity.Entity
 import net.minecraft.entity.item.EntityItem
-import net.minecraft.init.Blocks
 import net.minecraft.item.ItemStack
 import net.minecraft.util.{AxisAlignedBB, ResourceLocation}
 import net.minecraftforge.client.model.{AdvancedModelLoader, IModelCustom}
 import net.minecraftforge.fluids.IFluidBlock
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL11._
-import resonant.api.recipe.MachineRecipes
-import resonant.engine.ResonantEngine
+import resonant.api.recipe.{MachineRecipes, RecipeType}
 import resonant.lib.collection.Timer
-import resonant.lib.factory.resources.RecipeType
 import resonant.lib.render.RenderUtility
 import resonant.lib.transform.rotation.Quaternion
 import resonant.lib.transform.vector.Vector3
 import resonantinduction.core.Reference
-import resonantinduction.core.resource.content.BlockFluidMixture
 import resonantinduction.mechanical.mech.TileMechanical
 
 import scala.collection.JavaConversions._
@@ -173,10 +169,10 @@ class TileMixer extends TileMechanical(Material.iron)
     if (mixPosition.getBlock(world) ne getBlockType)
     {
       val block: Block = mixPosition.getBlock(worldObj)
-      val blockFluidFinite: Block = ResonantEngine.resourceFactory.getMixture(ResonantEngine.resourceFactory.getName(entity.getEntityItem))
+      val blockFluidFinite: Block = null //RIResourceFactory.getMixture(ResonantEngine.resourceFactory.getName(entity.getEntityItem))
       if (blockFluidFinite != null)
       {
-        if (block.isInstanceOf[BlockFluidMixture])
+        /*if (block.isInstanceOf[BlockFluidMixture])
         {
           val itemStack: ItemStack = entity.getEntityItem.copy
           if (block.asInstanceOf[BlockFluidMixture].mix(worldObj, mixPosition.xi, mixPosition.yi, mixPosition.zi, itemStack))
@@ -188,7 +184,7 @@ class TileMixer extends TileMechanical(Material.iron)
         else if (block != null && (block == Blocks.water || block == Blocks.flowing_water))
         {
           mixPosition.setBlock(worldObj, blockFluidFinite)
-        }
+        }*/
       }
     }
     return false

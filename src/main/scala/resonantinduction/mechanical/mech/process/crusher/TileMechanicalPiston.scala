@@ -8,8 +8,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
-import resonant.api.recipe.{MachineRecipes, RecipeResource}
-import resonant.lib.factory.resources.RecipeType
+import resonant.api.recipe.{MachineRecipes, RecipeResource, RecipeType}
 import resonant.lib.mod.config.Config
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.MovementUtility

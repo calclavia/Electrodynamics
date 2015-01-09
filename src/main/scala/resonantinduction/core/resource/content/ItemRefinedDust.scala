@@ -1,9 +1,11 @@
 package resonantinduction.core.resource.content
 
+import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Blocks
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.world.World
+import resonant.lib.factory.resources.item.TItemResource
 import resonant.lib.transform.vector.Vector3
 import resonantinduction.archaic.ArchaicContent
 import resonantinduction.core.Reference
@@ -11,10 +13,10 @@ import resonantinduction.core.Reference
 /**
  * @author Calclavia
  */
-class ItemRefinedDust(newMaterial: String) extends Item with ItemResource
+class ItemRefinedDust extends Item with TItemResource
 {
   setTextureName(Reference.prefix + "oreRefinedDust")
-  material = newMaterial
+  setCreativeTab(CreativeTabs.tabMaterials)
 
   override def onItemUse(itemStack: ItemStack, player: EntityPlayer, world: World, x: Int, y: Int, z: Int, side: Int, hitX: Float, hitY: Float, hitZ: Float): Boolean =
   {
