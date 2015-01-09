@@ -156,10 +156,13 @@ class TileWorkbench extends SpatialTile(Material.rock) with TInventory with TPac
   {
     GL11.glPushMatrix()
     RenderItemOverlayUtility.renderTopOverlay(this, Array[ItemStack](getStackInSlot(0)), null, 1, 1, pos.x, pos.y - (if (metadata == 1) 0.2 else 0.5), pos.z, 1.8f)
+    GL11.glPopMatrix()
+    GL11.glPushMatrix()
     GL11.glColor4f(1, 1, 1, 1)
     GL11.glTranslated(pos.x, pos.y, pos.z)
     RenderUtility.bind(Reference.domain, Reference.modelPath + "workbench_" + metadata + ".png")
     TileWorkbench.model(metadata).renderAll()
     GL11.glPopMatrix()
+
   }
 }

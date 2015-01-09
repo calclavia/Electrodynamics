@@ -10,13 +10,13 @@ import net.minecraft.item.crafting.FurnaceRecipes
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.IIcon
 import net.minecraft.world.IBlockAccess
-import resonant.lib.wrapper.ByteBufWrapper._
+import resonant.lib.content.prefab.TInventory
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
-import resonant.lib.prefab.tile.TileInventory
-import resonant.lib.prefab.tile.spatial.SpatialBlock
+import resonant.lib.prefab.tile.spatial.{SpatialBlock, SpatialTile}
 import resonant.lib.transform.region.Cuboid
 import resonant.lib.transform.vector.{Vector2, Vector3}
+import resonant.lib.wrapper.ByteBufWrapper._
 import resonant.lib.wrapper.RandomWrapper._
 import resonantinduction.core.Reference
 
@@ -30,14 +30,13 @@ object TileHotPlate
   final val maxSmeltTime: Int = 200
 }
 
-class TileHotPlate extends TileInventory(Material.iron) with TPacketSender with TPacketReceiver
+class TileHotPlate extends SpatialTile(Material.iron) with TInventory with TPacketSender with TPacketReceiver
 {
   /** Amount of smelt time left */
   final val smeltTime = Array[Int](0, 0, 0, 0)
   final val stackSizeCache = Array[Int](0, 0, 0, 0)
 
   //Constructor
-  setSizeInventory(4)
   bounds = new Cuboid(0, 0, 0, 1, 0.2f, 1)
   forceItemToRenderAsBlock = true
   isOpaqueCube = false
@@ -86,6 +85,20 @@ class TileHotPlate extends TileInventory(Material.iron) with TPacketSender with 
     }
   }
 
+  def canRun: Boolean =
+  {
+    val tileEntity = worldObj.getTileEntity(xCoord, yCoord - 1, zCoord)
+
+    if (tileEntity.isInstanceOf[TileFirebox])
+    {
+      if ((tileEntity.asInstanceOf[TileFirebox]).isBurning)
+      {
+        return true
+      }
+    }
+    return false
+  }
+
   override def randomDisplayTick()
   {
     val height = 0.2
@@ -111,48 +124,6 @@ class TileHotPlate extends TileInventory(Material.iron) with TPacketSender with 
     )
   }
 
-  override def onInventoryChanged()
-  {
-    for (i <- 0 until getSizeInventory)
-    {
-      if (getStackInSlot(i) != null)
-      {
-        if (stackSizeCache(i) != getStackInSlot(i).stackSize)
-        {
-          if (smeltTime(i) > 0)
-          {
-            smeltTime(i) += (getStackInSlot(i).stackSize - stackSizeCache(i)) * TileHotPlate.maxSmeltTime
-          }
-          stackSizeCache(i) = getStackInSlot(i).stackSize
-        }
-      }
-      else
-      {
-        stackSizeCache(i) = 0
-      }
-    }
-    if (worldObj != null)
-    {
-      worldObj.markBlockForUpdate(xCoord, yCoord, zCoord)
-    }
-  }
-
-  def canRun: Boolean =
-  {
-    val tileEntity = worldObj.getTileEntity(xCoord, yCoord - 1, zCoord)
-
-    if (tileEntity.isInstanceOf[TileFirebox])
-    {
-      if ((tileEntity.asInstanceOf[TileFirebox]).isBurning)
-      {
-        return true
-      }
-    }
-    return false
-  }
-
-  def canSmelt(stack: ItemStack): Boolean = stack != null && FurnaceRecipes.smelting.getSmeltingResult(stack) != null
-
   def isSmelting: Boolean = (0 until getSizeInventory).exists(getSmeltTime(_) > 0)
 
   def getSmeltTime(i: Int): Int =
@@ -165,6 +136,8 @@ class TileHotPlate extends TileInventory(Material.iron) with TPacketSender with 
     return i < getSizeInventory && canSmelt(itemStack)
   }
 
+  def canSmelt(stack: ItemStack): Boolean = stack != null && FurnaceRecipes.smelting.getSmeltingResult(stack) != null
+
   override def write(buf: ByteBuf, id: Int)
   {
     super.write(buf, id)
@@ -172,6 +145,16 @@ class TileHotPlate extends TileInventory(Material.iron) with TPacketSender with 
     writeToNBT(nbt)
     buf <<< nbt
   }
+
+  override def writeToNBT(nbt: NBTTagCompound)
+  {
+    super.writeToNBT(nbt)
+
+    (0 until stackSizeCache.size).foreach(i => nbt.setInteger("stackSizeCache" + i, stackSizeCache(i)))
+    (0 until getSizeInventory).foreach(i => nbt.setInteger("smeltTime" + i, smeltTime(i)))
+  }
+
+  override def getSizeInventory: Int = 4
 
   override def read(buf: ByteBuf, id: Int, packetType: PacketType)
   {
@@ -188,14 +171,6 @@ class TileHotPlate extends TileInventory(Material.iron) with TPacketSender with 
     (0 until stackSizeCache.size).foreach(i => stackSizeCache(i) = nbt.getInteger("stackSizeCache" + i))
     (0 until getSizeInventory).foreach(i => smeltTime(i) = nbt.getInteger("smeltTime" + i))
 
-  }
-
-  override def writeToNBT(nbt: NBTTagCompound)
-  {
-    super.writeToNBT(nbt)
-    
-    (0 until stackSizeCache.size).foreach(i => nbt.setInteger("stackSizeCache" + i, stackSizeCache(i)))
-    (0 until getSizeInventory).foreach(i => nbt.setInteger("smeltTime" + i, smeltTime(i)))
   }
 
   @SideOnly(Side.CLIENT)
@@ -252,6 +227,32 @@ class TileHotPlate extends TileInventory(Material.iron) with TPacketSender with 
       return false
     }
     return true
+  }
+
+  override def onInventoryChanged()
+  {
+    for (i <- 0 until getSizeInventory)
+    {
+      if (getStackInSlot(i) != null)
+      {
+        if (stackSizeCache(i) != getStackInSlot(i).stackSize)
+        {
+          if (smeltTime(i) > 0)
+          {
+            smeltTime(i) += (getStackInSlot(i).stackSize - stackSizeCache(i)) * TileHotPlate.maxSmeltTime
+          }
+          stackSizeCache(i) = getStackInSlot(i).stackSize
+        }
+      }
+      else
+      {
+        stackSizeCache(i) = 0
+      }
+    }
+    if (worldObj != null)
+    {
+      worldObj.markBlockForUpdate(xCoord, yCoord, zCoord)
+    }
   }
 
 }
