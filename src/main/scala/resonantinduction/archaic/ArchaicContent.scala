@@ -12,6 +12,7 @@ import resonantinduction.archaic.firebox.{TileFirebox, TileHotPlate}
 import resonantinduction.archaic.fluid.grate.TileGrate
 import resonantinduction.archaic.fluid.gutter.TileGutter
 import resonantinduction.archaic.fluid.tank.TileTank
+import resonantinduction.archaic.process.mixing.TileGlassJar
 import resonantinduction.archaic.process.{TileCastingMold, TileMillstone, TileWorkbench}
 import resonantinduction.core.resource.content.TileDust
 import resonantinduction.core.{RICreativeTab, Reference}
@@ -43,6 +44,7 @@ object ArchaicContent extends ContentHolder
   var blockGutter: Block = new TileGutter
   var blockTank: Block = new TileTank
   var blockWorkbench: Block = new TileWorkbench
+  var blockJar: Block = new TileGlassJar
 
   //Constructor
   manager.setTab(RICreativeTab)

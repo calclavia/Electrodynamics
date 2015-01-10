@@ -35,6 +35,7 @@ misc.bucketMolten=Molten Bucket
 # Blocks
 tile.resonantinduction:oreCopper.name=Copper Ore
 tile.resonantinduction:oreTin.name=Tin Ore
+tile.resonantinduction:glassJar.name=Glass Jar
 
 # Items
 item.resonantinduction:circuitBasic.name=Basic Circuit
