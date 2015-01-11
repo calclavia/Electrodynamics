@@ -50,9 +50,6 @@ object AutoResourceFactory
 
   def init()
   {
-    //Add vanilla ores
-    registerMaterial("gold")
-    registerMaterial("iron")
 
     //Register resource types
     ResourceFactory.registerResourceItem("rubble", classOf[ItemRubble])
@@ -68,35 +65,28 @@ object AutoResourceFactory
     ResourceFactory.requestItem("ingot", "tin")
     ResourceFactory.registerMaterialColor("tin", 0xAFBFB2)
 
-    //Add vanilla ore processing recipes
     OreDictionary.initVanillaEntries()
+
+    //Add vanilla ingots to auto generate
+    registerAutoMaterial("gold")
+    registerAutoMaterial("iron")
+    registerAutoMaterial("copper")
+    registerAutoMaterial("tin")
+  }
+
+  def postInit()
+  {
+    //Add vanilla ore processing recipes
     MachineRecipes.instance.addRecipe(RecipeType.SMELTER.name, new FluidStack(FluidRegistry.LAVA, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(Blocks.stone))
     MachineRecipes.instance.addRecipe(RecipeType.CRUSHER.name, Blocks.cobblestone, Blocks.gravel)
     MachineRecipes.instance.addRecipe(RecipeType.CRUSHER.name, Blocks.stone, Blocks.cobblestone)
     MachineRecipes.instance.addRecipe(RecipeType.SAWMILL.name, Blocks.log, new ItemStack(Blocks.planks, 7, 0))
     MachineRecipes.instance.addRecipe(RecipeType.GRINDER.name, Blocks.gravel, Blocks.sand)
     MachineRecipes.instance.addRecipe(RecipeType.GRINDER.name, Blocks.glass, Blocks.sand)
-  }
 
-  def registerMaterial(material: String)
-  {
-    if (!materials.contains(material) && OreDictionary.getOres("ore" + material.capitalizeFirst).size > 0)
-    {
-      Settings.config.load()
-      val allowMaterial = Settings.config.get("Resource-Generator", "Enable " + material, true).getBoolean(true)
-      Settings.config.save()
-
-      if (allowMaterial && !blackList.contains(material))
-      {
-        materials += material
-      }
-    }
-  }
-
-  def postInit()
-  {
     //Call generate() on all materials
     materials.foreach(generate)
+
     Reference.logger.fine("Resource Factory generated " + materials.size + " resources.")
   }
 
@@ -157,7 +147,22 @@ object AutoResourceFactory
     {
       val oreDictName = evt.Name.replace("ingot", "")
       val materialName = oreDictName.decapitalizeFirst
-      registerMaterial(materialName)
+      registerAutoMaterial(materialName)
+    }
+  }
+
+  def registerAutoMaterial(material: String)
+  {
+    if (!materials.contains(material) && OreDictionary.getOres("ore" + material.capitalizeFirst).size > 0)
+    {
+      Settings.config.load()
+      val allowMaterial = Settings.config.get("Resource-Generator", "Enable " + material, true).getBoolean(true)
+      Settings.config.save()
+
+      if (allowMaterial && !blackList.contains(material))
+      {
+        materials += material
+      }
     }
   }
 
