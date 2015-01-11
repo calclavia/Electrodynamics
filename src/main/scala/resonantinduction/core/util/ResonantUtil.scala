@@ -18,7 +18,7 @@ object ResonantUtil
   }
 
   /**
-   * Gets the color hex code from the color's ID
+   * Gets the color hex code from the color's id
    */
   def getColorHex(id: Int): Int = dyeColors(id)
 

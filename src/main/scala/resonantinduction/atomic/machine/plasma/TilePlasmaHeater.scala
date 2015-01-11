@@ -12,14 +12,14 @@ import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import resonant.api.tile.ITagRender
 import resonant.engine.ResonantEngine
+import resonant.lib.content.prefab.TEnergyStorage
 import resonant.lib.grid.energy.EnergyStorage
 import resonant.lib.mod.config.Config
-import resonant.lib.content.prefab.TEnergyStorage
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketReceiver
 import resonant.lib.prefab.tile.TileElectric
-import resonant.lib.utility.science.UnitDisplay
 import resonant.lib.transform.vector.Vector3
+import resonant.lib.utility.science.UnitDisplay
 import resonant.lib.utility.{FluidUtility, LanguageUtility}
 import resonantinduction.atomic.AtomicContent
 
@@ -72,7 +72,33 @@ class TilePlasmaHeater extends TileElectric(Material.iron) with IPacketReceiver 
   {
     val nbt: NBTTagCompound = new NBTTagCompound
     writeToNBT(nbt)
-    return ResonantEngine.instance.packetHandler.toMCPacket(new PacketTile(this, nbt))
+    return ResonantEngine.packetHandler.toMCPacket(new PacketTile(this, nbt))
+  }
+
+  /**
+   * Writes a tile entity to NBT.
+   */
+  override def writeToNBT(nbt: NBTTagCompound)
+  {
+    super.writeToNBT(nbt)
+    if (tankInputDeuterium.getFluid != null)
+    {
+      val compound: NBTTagCompound = new NBTTagCompound
+      tankInputDeuterium.getFluid.writeToNBT(compound)
+      nbt.setTag("tankInputDeuterium", compound)
+    }
+    if (tankInputTritium.getFluid != null)
+    {
+      val compound: NBTTagCompound = new NBTTagCompound
+      tankInputTritium.getFluid.writeToNBT(compound)
+      nbt.setTag("tankInputTritium", compound)
+    }
+    if (tankOutput.getFluid != null)
+    {
+      val compound: NBTTagCompound = new NBTTagCompound
+      tankOutput.getFluid.writeToNBT(compound)
+      nbt.setTag("tankOutput", compound)
+    }
   }
 
   def read(data: ByteBuf, player: EntityPlayer, `type`: PacketType)
@@ -102,32 +128,6 @@ class TilePlasmaHeater extends TileElectric(Material.iron) with IPacketReceiver 
     tankInputTritium.setFluid(FluidStack.loadFluidStackFromNBT(tritium))
     val output: NBTTagCompound = nbt.getCompoundTag("tankOutput")
     tankOutput.setFluid(FluidStack.loadFluidStackFromNBT(output))
-  }
-
-  /**
-   * Writes a tile entity to NBT.
-   */
-  override def writeToNBT(nbt: NBTTagCompound)
-  {
-    super.writeToNBT(nbt)
-    if (tankInputDeuterium.getFluid != null)
-    {
-      val compound: NBTTagCompound = new NBTTagCompound
-      tankInputDeuterium.getFluid.writeToNBT(compound)
-      nbt.setTag("tankInputDeuterium", compound)
-    }
-    if (tankInputTritium.getFluid != null)
-    {
-      val compound: NBTTagCompound = new NBTTagCompound
-      tankInputTritium.getFluid.writeToNBT(compound)
-      nbt.setTag("tankInputTritium", compound)
-    }
-    if (tankOutput.getFluid != null)
-    {
-      val compound: NBTTagCompound = new NBTTagCompound
-      tankOutput.getFluid.writeToNBT(compound)
-      nbt.setTag("tankOutput", compound)
-    }
   }
 
   def addInformation(map: HashMap[String, Integer], player: EntityPlayer): Float =

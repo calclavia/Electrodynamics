@@ -77,6 +77,23 @@ class TileCrate extends TileInventory(Material.rock) with TPacketReceiver with T
     }
   }
 
+  override def writeToNBT(nbt: NBTTagCompound)
+  {
+    super.writeToNBT(nbt)
+    this.buildSampleStack(false)
+    val stack: ItemStack = this.getSampleStack
+    if (stack != null)
+    {
+      nbt.setInteger("Count", stack.stackSize)
+      nbt.setTag("stack", stack.writeToNBT(new NBTTagCompound))
+    }
+    nbt.setBoolean("oreFilter", this.oreFilterEnabled)
+    if (this.filterStack != null)
+    {
+      nbt.setTag("filter", filterStack.writeToNBT(new NBTTagCompound))
+    }
+  }
+
   def addStackToStorage(stack: ItemStack): ItemStack =
   {
     return BlockCrate.addStackToCrate(this, stack)
@@ -142,6 +159,11 @@ class TileCrate extends TileInventory(Material.rock) with TPacketReceiver with T
     }
   }
 
+  override def onInventoryChanged
+  {
+    if (worldObj != null && !worldObj.isRemote) doUpdate = true
+  }
+
   override def canStore(stack: ItemStack, slot: Int, side: ForgeDirection): Boolean =
   {
     return getSampleStack == null || stack != null && (stack.isItemEqual(getSampleStack) || (this.oreFilterEnabled && OreDictionary.getOreID(getSampleStack) == OreDictionary.getOreID(stack)))
@@ -175,7 +197,7 @@ class TileCrate extends TileInventory(Material.rock) with TPacketReceiver with T
 
   /**
    * Override this method
-   * Be sure to super this method or manually write the ID into the packet when sending
+   * Be sure to super this method or manually write the id into the packet when sending
    */
   override def write(buf: ByteBuf, id: Int)
   {
@@ -221,23 +243,6 @@ class TileCrate extends TileInventory(Material.rock) with TPacketReceiver with T
     if (nbt.hasKey("filter"))
     {
       filterStack = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("filter"))
-    }
-  }
-
-  override def writeToNBT(nbt: NBTTagCompound)
-  {
-    super.writeToNBT(nbt)
-    this.buildSampleStack(false)
-    val stack: ItemStack = this.getSampleStack
-    if (stack != null)
-    {
-      nbt.setInteger("Count", stack.stackSize)
-      nbt.setTag("stack", stack.writeToNBT(new NBTTagCompound))
-    }
-    nbt.setBoolean("oreFilter", this.oreFilterEnabled)
-    if (this.filterStack != null)
-    {
-      nbt.setTag("filter", filterStack.writeToNBT(new NBTTagCompound))
     }
   }
 
@@ -326,10 +331,5 @@ class TileCrate extends TileInventory(Material.rock) with TPacketReceiver with T
   {
     this.filterStack = filter
     this.onInventoryChanged
-  }
-
-  override def onInventoryChanged
-  {
-    if (worldObj != null && !worldObj.isRemote) doUpdate = true
   }
 }

@@ -37,7 +37,7 @@ class TileImprinter extends SpatialTile(Material.circuits) with ISidedInventory 
   {
     val nbt: NBTTagCompound = new NBTTagCompound
     this.writeToNBT(nbt)
-    return ResonantEngine.instance.packetHandler.toMCPacket(new PacketTile(this, nbt))
+    return ResonantEngine.packetHandler.toMCPacket(new PacketTile(this, nbt))
   }
 
   /**
@@ -59,6 +59,16 @@ class TileImprinter extends SpatialTile(Material.circuits) with ISidedInventory 
       }
     }
     nbt.setTag("Items", var2)
+  }
+
+  def getSizeInventory: Int =
+  {
+    return this.inventory.length
+  }
+
+  def getStackInSlot(slot: Int): ItemStack =
+  {
+    return this.inventory(slot)
   }
 
   def read(data: ByteBuf, player: EntityPlayer, `type`: PacketType)
@@ -95,6 +105,18 @@ class TileImprinter extends SpatialTile(Material.circuits) with ISidedInventory 
       }
     }
 
+  }
+
+  /**
+   * Sets the given item stack to the specified slot in the inventory (can be crafting or armor
+   * sections).
+   */
+  def setInventorySlotContents(slot: Int, itemStack: ItemStack)
+  {
+    if (slot < this.getSizeInventory)
+    {
+      inventory(slot) = itemStack
+    }
   }
 
   /**
@@ -143,28 +165,6 @@ class TileImprinter extends SpatialTile(Material.circuits) with ISidedInventory 
   }
 
   /**
-   * Sets the given item stack to the specified slot in the inventory (can be crafting or armor
-   * sections).
-   */
-  def setInventorySlotContents(slot: Int, itemStack: ItemStack)
-  {
-    if (slot < this.getSizeInventory)
-    {
-      inventory(slot) = itemStack
-    }
-  }
-
-  def getSizeInventory: Int =
-  {
-    return this.inventory.length
-  }
-
-  def getStackInSlot(slot: Int): ItemStack =
-  {
-    return this.inventory(slot)
-  }
-
-  /**
    * When some containers are closed they call this on each slot, then drop whatever it returns as
    * an EntityItem - like when you close a workbench GUI.
    */
@@ -183,11 +183,6 @@ class TileImprinter extends SpatialTile(Material.circuits) with ISidedInventory 
   }
 
   def openInventory
-  {
-    this.onInventoryChanged
-  }
-
-  def closeInventory
   {
     this.onInventoryChanged
   }
@@ -248,6 +243,11 @@ class TileImprinter extends SpatialTile(Material.circuits) with ISidedInventory 
         this.inventory(9) = outputStack
       }
     }
+  }
+
+  def closeInventory
+  {
+    this.onInventoryChanged
   }
 
   def getInventoryStackLimit: Int =

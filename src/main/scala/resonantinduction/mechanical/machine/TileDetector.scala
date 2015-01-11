@@ -84,7 +84,7 @@ class TileDetector extends TileFilterable with IPacketIDReceiver
                         this.worldObj.notifyBlocksOfNeighborChange(x, this.yCoord + 1, z, MechanicalContent.blockDetector)
                     }
                 }
-                ResonantEngine.instance.packetHandler.sendToAllAround(new PacketTile(xi, yi, zi, Array[Any](0, this.isInverted)), this)
+                ResonantEngine.packetHandler.sendToAllAround(new PacketTile(xi, yi, zi, Array[Any](0, this.isInverted)), this)
             }
         }
     }
@@ -110,7 +110,7 @@ class TileDetector extends TileFilterable with IPacketIDReceiver
 
     override def getDescriptionPacket: Packet =
     {
-        return ResonantEngine.instance.packetHandler.toMCPacket(new PacketTile(xi, yi, zi, Array[Any](0, this.isInverted)))
+        return ResonantEngine.packetHandler.toMCPacket(new PacketTile(xi, yi, zi, Array[Any](0, this.isInverted)))
     }
 
     override def read(data: ByteBuf, id: Int, player: EntityPlayer, `type`: PacketType): Boolean =

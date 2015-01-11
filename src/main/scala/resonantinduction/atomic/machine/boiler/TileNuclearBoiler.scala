@@ -183,7 +183,7 @@ class TileNuclearBoiler extends TileElectricInventory(Material.iron) with IPacke
 
   override def getDescriptionPacket: Packet =
   {
-    return ResonantEngine.instance.packetHandler.toMCPacket(getDescPacket)
+    return ResonantEngine.packetHandler.toMCPacket(getDescPacket)
   }
 
   override def getDescPacket: PacketTile =

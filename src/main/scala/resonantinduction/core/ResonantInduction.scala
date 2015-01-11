@@ -25,7 +25,7 @@ import resonantinduction.mechanical.{MechanicalContent, MicroblockHighlightHandl
 final object ResonantInduction
 {
   /** Packets */
-  val packetHandler = ResonantEngine.instance.packetHandler
+  val packetHandler = ResonantEngine.packetHandler
   val loadables = new LoadableHandler
 
   @SidedProxy(clientSide = "resonantinduction.core.ClientProxy", serverSide = "resonantinduction.core.CommonProxy")

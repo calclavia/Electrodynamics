@@ -307,7 +307,7 @@ class TileEngineeringTable extends TileInventory(Material.wood) with IPacketRece
     {
         val nbt: NBTTagCompound = new NBTTagCompound
         this.writeToNBT(nbt)
-        return ResonantEngine.instance.packetHandler.toMCPacket(new PacketTile(this, nbt))
+        return ResonantEngine.packetHandler.toMCPacket(new PacketTile(this, nbt))
     }
 
     /**
@@ -370,6 +370,11 @@ class TileEngineeringTable extends TileInventory(Material.wood) with IPacketRece
         return null
     }
 
+    override def getSizeInventory: Int =
+    {
+        return 10 + (if (this.invPlayer != null) this.invPlayer.getSizeInventory else 0)
+    }
+
     def read(data: ByteBuf, player: EntityPlayer, `type`: PacketType)
     {
         try
@@ -408,9 +413,31 @@ class TileEngineeringTable extends TileInventory(Material.wood) with IPacketRece
         this.searchInventories = nbt.getBoolean("searchInventories")
     }
 
-    override def getSizeInventory: Int =
+    override def decrStackSize(i: Int, amount: Int): ItemStack =
     {
-        return 10 + (if (this.invPlayer != null) this.invPlayer.getSizeInventory else 0)
+        if (getStackInSlot(i) != null)
+        {
+            var stack: ItemStack = null
+            if (getStackInSlot(i).stackSize <= amount)
+            {
+                stack = getStackInSlot(i)
+                setInventorySlotContents(i, null)
+                return stack
+            }
+            else
+            {
+                stack = getStackInSlot(i).splitStack(amount)
+                if (getStackInSlot(i).stackSize == 0)
+                {
+                    setInventorySlotContents(i, null)
+                }
+                return stack
+            }
+        }
+        else
+        {
+            return null
+        }
     }
 
     override def setInventorySlotContents(slot: Int, itemStack: ItemStack)
@@ -529,33 +556,6 @@ class TileEngineeringTable extends TileInventory(Material.wood) with IPacketRece
             inventoryCrafting.setInventorySlotContents(i, this.craftingMatrix(i))
         }
         return inventoryCrafting
-    }
-
-    override def decrStackSize(i: Int, amount: Int): ItemStack =
-    {
-        if (getStackInSlot(i) != null)
-        {
-            var stack: ItemStack = null
-            if (getStackInSlot(i).stackSize <= amount)
-            {
-                stack = getStackInSlot(i)
-                setInventorySlotContents(i, null)
-                return stack
-            }
-            else
-            {
-                stack = getStackInSlot(i).splitStack(amount)
-                if (getStackInSlot(i).stackSize == 0)
-                {
-                    setInventorySlotContents(i, null)
-                }
-                return stack
-            }
-        }
-        else
-        {
-            return null
-        }
     }
 
     /**

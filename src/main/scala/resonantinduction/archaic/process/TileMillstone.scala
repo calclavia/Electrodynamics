@@ -68,12 +68,6 @@ class TileMillstone extends TileInventory(Material.rock) with TPacketSender with
     }
   }
 
-  override def onInventoryChanged
-  {
-    grindCount = 0
-    worldObj.markBlockForUpdate(xCoord, yCoord, zCoord)
-  }
-
   override def use(player: EntityPlayer, hitSide: Int, hit: Vector3): Boolean =
   {
     val current: ItemStack = player.inventory.getCurrentItem
@@ -120,6 +114,12 @@ class TileMillstone extends TileInventory(Material.rock) with TPacketSender with
     }
   }
 
+  override def onInventoryChanged
+  {
+    grindCount = 0
+    worldObj.markBlockForUpdate(xCoord, yCoord, zCoord)
+  }
+
   override def isItemValidForSlot(i: Int, itemStack: ItemStack): Boolean =
   {
     return MachineRecipes.instance.getOutput(RecipeType.GRINDER.name, itemStack).length > 0
@@ -131,7 +131,7 @@ class TileMillstone extends TileInventory(Material.rock) with TPacketSender with
 
   /**
    * Override this method
-   * Be sure to super this method or manually write the ID into the packet when sending
+   * Be sure to super this method or manually write the id into the packet when sending
    */
   override def write(buf: ByteBuf, id: Int)
   {

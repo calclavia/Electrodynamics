@@ -159,11 +159,6 @@ class TileFirebox extends SpatialTile(Material.rock) with IFluidHandler with TIn
     return this.getBlockMetadata == 1
   }
 
-  def canBurn(stack: ItemStack): Boolean =
-  {
-    return TileEntityFurnace.getItemBurnTime(stack) > 0
-  }
-
   override def randomDisplayTick(): Unit =
   {
     if (isBurning)
@@ -189,8 +184,6 @@ class TileFirebox extends SpatialTile(Material.rock) with IFluidHandler with TIn
     }
   }
 
-  def isBurning: Boolean = burnTime > 0
-
   override def getSizeInventory = 1
 
   def getMeltIronEnergy(volume: Float): Long =
@@ -205,9 +198,14 @@ class TileFirebox extends SpatialTile(Material.rock) with IFluidHandler with TIn
     return i == 0 && canBurn(itemStack)
   }
 
+  def canBurn(stack: ItemStack): Boolean =
+  {
+    return TileEntityFurnace.getItemBurnTime(stack) > 0
+  }
+
   /**
    * Override this method
-   * Be sure to super this method or manually write the ID into the packet when sending
+   * Be sure to super this method or manually write the id into the packet when sending
    */
   override def write(buf: ByteBuf, id: Int)
   {
@@ -294,6 +292,8 @@ class TileFirebox extends SpatialTile(Material.rock) with IFluidHandler with TIn
 
     return if (isBurning) (if (isElectric) SpatialBlock.icon.get("firebox_electric_side_on") else SpatialBlock.icon.get("firebox_side_on")) else (if (isElectric) SpatialBlock.icon.get("firebox_electric_side_off") else SpatialBlock.icon.get("firebox_side_off"))
   }
+
+  def isBurning: Boolean = burnTime > 0
 
   override def click(player: EntityPlayer)
   {

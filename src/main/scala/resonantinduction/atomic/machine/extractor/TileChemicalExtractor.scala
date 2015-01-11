@@ -100,7 +100,7 @@ class TileChemicalExtractor extends TileProcess(Material.iron) with IFluidHandle
 
   override def getDescriptionPacket: Packet =
   {
-    return ResonantEngine.instance.packetHandler.toMCPacket(new PacketAnnotation(this))
+    return ResonantEngine.packetHandler.toMCPacket(new PacketAnnotation(this))
   }
 
   override def use(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
