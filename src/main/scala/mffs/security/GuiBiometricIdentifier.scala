@@ -14,7 +14,7 @@ class GuiBiometricIdentifier(player: EntityPlayer, tile: TileBiometricIdentifier
   protected override def drawGuiContainerForegroundLayer(x: Int, y: Int)
   {
     drawStringCentered(tile.getInventoryName)
-    drawStringCentered(EnumColor.AQUA + "ID and Group Cards", 20)
+    drawStringCentered(EnumColor.AQUA + "id and Group Cards", 20)
     drawString("Frequency", 40, 118)
     drawFortronText(x, y)
     super.drawGuiContainerForegroundLayer(x, y)

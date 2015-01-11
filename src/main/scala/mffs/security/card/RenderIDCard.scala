@@ -16,7 +16,7 @@ import org.lwjgl.opengl.GL12
 import resonant.lib.transform.vector.Vector2
 
 /**
- * All thanks to Briman for the ID card face rendering! Check out the mod MineForver!
+ * All thanks to Briman for the id card face rendering! Check out the mod MineForver!
  *
  * @author Briman, Calclavia
  */
@@ -146,6 +146,16 @@ class RenderIDCard extends IItemRenderer
     glEnd
   }
 
+  def handleRenderType(item: ItemStack, `type`: IItemRenderer.ItemRenderType): Boolean =
+  {
+    return true
+  }
+
+  def shouldUseRenderHelper(`type`: IItemRenderer.ItemRenderType, item: ItemStack, helper: IItemRenderer.ItemRendererHelper): Boolean =
+  {
+    return false
+  }
+
   private def renderItem3D(par1EntityLiving: EntityLiving, par2ItemStack: ItemStack, par3: Int)
   {
     val icon: IIcon = par1EntityLiving.getItemIcon(par2ItemStack, par3)
@@ -171,15 +181,5 @@ class RenderIDCard extends IItemRenderer
     glTranslatef(-0.9375F, -0.0625F, 0.0F)
     ItemRenderer.renderItemIn2D(tessellator, f1, f2, f, f3, icon.getIconWidth, icon.getIconHeight, 0.0625F)
     glDisable(GL12.GL_RESCALE_NORMAL)
-  }
-
-  def handleRenderType(item: ItemStack, `type`: IItemRenderer.ItemRenderType): Boolean =
-  {
-    return true
-  }
-
-  def shouldUseRenderHelper(`type`: IItemRenderer.ItemRenderType, item: ItemStack, helper: IItemRenderer.ItemRendererHelper): Boolean =
-  {
-    return false
   }
 }

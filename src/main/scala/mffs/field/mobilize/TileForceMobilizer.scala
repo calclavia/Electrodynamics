@@ -22,10 +22,10 @@ import resonant.api.mffs.Blacklist
 import resonant.api.mffs.card.ICoordLink
 import resonant.api.mffs.event.EventForceMobilize
 import resonant.api.mffs.modules.{IModule, IProjectorMode}
-import resonant.lib.wrapper.ByteBufWrapper._
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.transform.region.Cuboid
 import resonant.lib.transform.vector.{Vector3, VectorWorld}
+import resonant.lib.wrapper.ByteBufWrapper._
 
 import scala.collection.convert.wrapAll._
 import scala.collection.mutable
@@ -45,21 +45,18 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
   var previewMode = 1
   var doAnchor = true
   var clientMoveTime = 0
-
+  var performingMove = false
   /**
    * Marking failures
    */
   private var failedMove = false
-
-  def markFailMove() = failedMove = true
-
-  var performingMove = false
-
   /**
    * Used ONLY for teleporting.
    */
   private var moveTime = 0
   private var canRenderMove = true
+
+  def markFailMove() = failedMove = true
 
   rotationMask = 63
 
@@ -144,7 +141,7 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
         /**
          * If we have more than one block that is visible that was moved, we will tell the client to render it.
          *
-         * Packet Params: ID, Type1, Type2, Size, the coordinate
+         * Packet Params: id, Type1, Type2, Size, the coordinate
          */
         val coordPacketData = renderBlocks.toSeq flatMap (_.toIntList)
 
@@ -311,6 +308,113 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
     return moveField
   }
 
+  /**
+   * Scan target field area to see if we can move this block. Called on a separate thread.
+   */
+  def canMove: Boolean =
+  {
+    val mobilizationPoints = getInteriorPoints
+    val targetCenterPosition = getTargetPosition
+
+    for (position <- mobilizationPoints)
+    {
+      if (world.isAirBlock(position.xi, position.yi, position.zi))
+      {
+        val relativePosition = position - getAbsoluteAnchor
+        val targetPosition = (targetCenterPosition + relativePosition)
+
+        if (!canMove(new VectorWorld(this.worldObj, position), targetPosition))
+        {
+          failedPositions.add(position)
+          return false
+        }
+      }
+    }
+    return true
+  }
+
+  /**
+   * Checks if a specific block can be moved from its position to a target
+   * @param position - The position of the block to be moved.
+   * @param target - The target position
+   * @return True if the block can be moved.
+   */
+  def canMove(position: VectorWorld, target: VectorWorld): Boolean =
+  {
+    if (Blacklist.mobilizerBlacklist.contains(position.getBlock))
+    {
+      return false
+    }
+    val evt = new EventForceMobilize.EventCheckForceManipulate(position.world, position.xi, position.yi, position.zi, target.xi, target.yi, target.zi)
+    MinecraftForge.EVENT_BUS.post(evt)
+
+    if (evt.isCanceled)
+    {
+      return false
+    }
+
+    if (!MFFSUtility.hasPermission(worldObj, position, MFFSPermissions.blockAlter, ModularForceFieldSystem.fakeProfile) && !MFFSUtility.hasPermission(target.world, target, MFFSPermissions.blockAlter, ModularForceFieldSystem.fakeProfile))
+    {
+      return false
+    }
+
+    if (target.getTileEntity == this)
+    {
+      return false
+    }
+    for (checkPos <- this.getInteriorPoints)
+    {
+      if (checkPos == target)
+      {
+        return true
+      }
+    }
+
+    val targetBlock = target.getBlock
+    return target.world.isAirBlock(target.xi, target.yi, target.zi) || (targetBlock.isReplaceable(target.world, target.xi, target.yi, target.zi))
+  }
+
+  /**
+   * Gets the position in which the manipulator will try to translate the field into.
+   *
+   * @return A vector of the target position.
+   */
+  def getTargetPosition: VectorWorld =
+  {
+    if (isTeleport)
+    {
+      val cardStack = getLinkCard
+
+      if (cardStack != null)
+        return cardStack.getItem.asInstanceOf[ICoordLink].getLink(cardStack)
+    }
+
+    return new VectorWorld(worldObj, getAbsoluteAnchor + getDirection)
+  }
+
+  private def isTeleport: Boolean =
+  {
+    if (Settings.allowForceManipulatorTeleport)
+    {
+      val cardStack = getLinkCard
+
+      if (cardStack != null)
+        return cardStack.getItem.asInstanceOf[ICoordLink].getLink(cardStack) != null
+    }
+    return false
+  }
+
+  def getLinkCard: ItemStack =
+  {
+    getInventory().getContainedItems filter (_ != null) find (_.getItem.isInstanceOf[ICoordLink]) match
+    {
+      case Some(itemStack) => return itemStack
+      case _ => return null
+    }
+  }
+
+  def getAbsoluteAnchor: Vector3 = toVector3.add(this.anchor)
+
   def isVisibleToPlayer(position: Vector3): Boolean =
   {
     return (ForgeDirection.VALID_DIRECTIONS count ((dir: ForgeDirection) => (position + dir).getBlock(world).isOpaqueCube)) < 6
@@ -344,7 +448,7 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
             /**
              * If we have more than one block that is visible that was moved, we will tell the client to render it.
              *
-             * Params: ID, Type1, Type2, Size, the coordinate
+             * Params: id, Type1, Type2, Size, the coordinate
              */
             val isTeleportPacket = buf.readInt()
             val vecSize = buf.readInt()
@@ -437,8 +541,6 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
     return false
   }
 
-  override def doGetFortronCost: Int = round(super.doGetFortronCost + (if (this.anchor != null) this.anchor.magnitude * 1000 else 0)).toInt
-
   override def markDirty()
   {
     super.markDirty()
@@ -449,179 +551,6 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
       calculateField()
     }
   }
-
-  override def isItemValidForSlot(slotID: Int, itemStack: ItemStack): Boolean =
-  {
-    if (slotID == 0)
-    {
-      return itemStack.getItem.isInstanceOf[ItemCard]
-    }
-    else if (slotID == modeSlotID)
-    {
-      return itemStack.getItem.isInstanceOf[IProjectorMode]
-    }
-
-    return itemStack.getItem.isInstanceOf[IModule] || itemStack.getItem.isInstanceOf[ICoordLink]
-  }
-
-  /**
-   * Scan target field area to see if we can move this block. Called on a separate thread.
-   */
-  def canMove: Boolean =
-  {
-    val mobilizationPoints = getInteriorPoints
-    val targetCenterPosition = getTargetPosition
-
-    for (position <- mobilizationPoints)
-    {
-      if (world.isAirBlock(position.xi, position.yi, position.zi))
-      {
-        val relativePosition = position - getAbsoluteAnchor
-        val targetPosition = (targetCenterPosition + relativePosition)
-
-        if (!canMove(new VectorWorld(this.worldObj, position), targetPosition))
-        {
-          failedPositions.add(position)
-          return false
-        }
-      }
-    }
-    return true
-  }
-
-  /**
-   * Checks if a specific block can be moved from its position to a target
-   * @param position - The position of the block to be moved.
-   * @param target - The target position
-   * @return True if the block can be moved.
-   */
-  def canMove(position: VectorWorld, target: VectorWorld): Boolean =
-  {
-    if (Blacklist.mobilizerBlacklist.contains(position.getBlock))
-    {
-      return false
-    }
-    val evt = new EventForceMobilize.EventCheckForceManipulate(position.world, position.xi, position.yi, position.zi, target.xi, target.yi, target.zi)
-    MinecraftForge.EVENT_BUS.post(evt)
-
-    if (evt.isCanceled)
-    {
-      return false
-    }
-
-    if (!MFFSUtility.hasPermission(worldObj, position, MFFSPermissions.blockAlter, ModularForceFieldSystem.fakeProfile) && !MFFSUtility.hasPermission(target.world, target, MFFSPermissions.blockAlter, ModularForceFieldSystem.fakeProfile))
-    {
-      return false
-    }
-
-    if (target.getTileEntity == this)
-    {
-      return false
-    }
-    for (checkPos <- this.getInteriorPoints)
-    {
-      if (checkPos == target)
-      {
-        return true
-      }
-    }
-
-    val targetBlock = target.getBlock
-    return target.world.isAirBlock(target.xi, target.yi, target.zi) || (targetBlock.isReplaceable(target.world, target.xi, target.yi, target.zi))
-  }
-
-  /**
-   * Called to queue a block move from its position to a target.
-   * @param position - The position of the block to be moved.
-   * @return True if move is successful.
-   */
-  protected def moveBlock(position: Vector3): Boolean =
-  {
-    if (!world.isRemote)
-    {
-      val relativePosition = position - getAbsoluteAnchor
-      val newPosition = getTargetPosition + relativePosition
-      val tileEntity = position.getTileEntity(world)
-
-      if (!world.isAirBlock(position.xi, position.yi, position.zi) && tileEntity != this)
-      {
-        queueEvent(new BlockPreMoveDelayedEvent(this, getMoveTime, new VectorWorld(world, position), newPosition))
-        return true
-      }
-    }
-
-    return false
-  }
-
-  def getSearchBounds: AxisAlignedBB =
-  {
-    val positiveScale = toVector3 + getTranslation + getPositiveScale + 1
-    val negativeScale = toVector3 + getTranslation - getNegativeScale
-    val minScale = positiveScale.min(negativeScale)
-    val maxScale = positiveScale.max(negativeScale)
-    return new Cuboid(minScale, maxScale).toAABB
-  }
-
-  /**
-   * Gets the position in which the manipulator will try to translate the field into.
-   *
-   * @return A vector of the target position.
-   */
-  def getTargetPosition: VectorWorld =
-  {
-    if (isTeleport)
-    {
-      val cardStack = getLinkCard
-
-      if (cardStack != null)
-        return cardStack.getItem.asInstanceOf[ICoordLink].getLink(cardStack)
-    }
-
-    return new VectorWorld(worldObj, getAbsoluteAnchor + getDirection)
-  }
-
-  def getLinkCard: ItemStack =
-  {
-    getInventory().getContainedItems filter (_ != null) find (_.getItem.isInstanceOf[ICoordLink]) match
-    {
-      case Some(itemStack) => return itemStack
-      case _ => return null
-    }
-  }
-
-  /**
-   * Gets the movement time required in TICKS.
-   *
-   * @return The time it takes to teleport (using a link card) to another coordinate OR
-   *         ANIMATION_TIME for default move.
-   */
-  def getMoveTime: Int =
-  {
-    if (isTeleport)
-    {
-      var time = (20 * this.getTargetPosition.distance(this.getAbsoluteAnchor)).toInt
-      if (this.getTargetPosition.world ne this.worldObj)
-      {
-        time += 20 * 60
-      }
-      return time
-    }
-    return animationTime
-  }
-
-  private def isTeleport: Boolean =
-  {
-    if (Settings.allowForceManipulatorTeleport)
-    {
-      val cardStack = getLinkCard
-
-      if (cardStack != null)
-        return cardStack.getItem.asInstanceOf[ICoordLink].getLink(cardStack) != null
-    }
-    return false
-  }
-
-  def getAbsoluteAnchor: Vector3 = toVector3.add(this.anchor)
 
   protected def moveEntities
   {
@@ -634,6 +563,17 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
       entities map (_.asInstanceOf[Entity]) foreach (entity => moveEntity(entity, targetLocation + 0.5 + new Vector3(entity) - (getAbsoluteAnchor + 0.5)))
     }
   }
+
+  def getSearchBounds: AxisAlignedBB =
+  {
+    val positiveScale = toVector3 + getTranslation + getPositiveScale + 1
+    val negativeScale = toVector3 + getTranslation - getNegativeScale
+    val minScale = positiveScale.min(negativeScale)
+    val maxScale = positiveScale.max(negativeScale)
+    return new Cuboid(minScale, maxScale).toAABB
+  }
+
+  override def getTranslation: Vector3 = super.getTranslation + anchor
 
   protected def moveEntity(entity: Entity, location: VectorWorld)
   {
@@ -656,6 +596,42 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
         entity.setPositionAndRotation(location.x, location.y, location.z, entity.rotationYaw, entity.rotationPitch)
       }
     }
+  }
+
+  override def doGetFortronCost: Int = round(super.doGetFortronCost + (if (this.anchor != null) this.anchor.magnitude * 1000 else 0)).toInt
+
+  override def isItemValidForSlot(slotID: Int, itemStack: ItemStack): Boolean =
+  {
+    if (slotID == 0)
+    {
+      return itemStack.getItem.isInstanceOf[ItemCard]
+    }
+    else if (slotID == modeSlotID)
+    {
+      return itemStack.getItem.isInstanceOf[IProjectorMode]
+    }
+
+    return itemStack.getItem.isInstanceOf[IModule] || itemStack.getItem.isInstanceOf[ICoordLink]
+  }
+
+  /**
+   * Gets the movement time required in TICKS.
+   *
+   * @return The time it takes to teleport (using a link card) to another coordinate OR
+   *         ANIMATION_TIME for default move.
+   */
+  def getMoveTime: Int =
+  {
+    if (isTeleport)
+    {
+      var time = (20 * this.getTargetPosition.distance(this.getAbsoluteAnchor)).toInt
+      if (this.getTargetPosition.world ne this.worldObj)
+      {
+        time += 20 * 60
+      }
+      return time
+    }
+    return animationTime
   }
 
   /**
@@ -682,9 +658,13 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
     nbt.setBoolean("doAnchor", doAnchor)
   }
 
-  override def getTranslation: Vector3 = super.getTranslation + anchor
-
   def canContinueEffect = canRenderMove
+
+  @SideOnly(Side.CLIENT)
+  override def renderStatic(renderer: RenderBlocks, pos: Vector3, pass: Int): Boolean =
+  {
+    return false
+  }
 
   /*
    def getMethodNames: Array[String] =
@@ -721,12 +701,6 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
 */
 
   @SideOnly(Side.CLIENT)
-  override def renderStatic(renderer: RenderBlocks, pos: Vector3, pass: Int): Boolean =
-  {
-    return false
-  }
-
-  @SideOnly(Side.CLIENT)
   override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
   {
     RenderForceMobilizer.render(this, pos.x, pos.y, pos.z, frame, isActive, false)
@@ -736,5 +710,28 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
   override def renderInventory(itemStack: ItemStack)
   {
     RenderForceMobilizer.render(this, -0.5, -0.5, -0.5, 0, true, true)
+  }
+
+  /**
+   * Called to queue a block move from its position to a target.
+   * @param position - The position of the block to be moved.
+   * @return True if move is successful.
+   */
+  protected def moveBlock(position: Vector3): Boolean =
+  {
+    if (!world.isRemote)
+    {
+      val relativePosition = position - getAbsoluteAnchor
+      val newPosition = getTargetPosition + relativePosition
+      val tileEntity = position.getTileEntity(world)
+
+      if (!world.isAirBlock(position.xi, position.yi, position.zi) && tileEntity != this)
+      {
+        queueEvent(new BlockPreMoveDelayedEvent(this, getMoveTime, new VectorWorld(world, position), newPosition))
+        return true
+      }
+    }
+
+    return false
   }
 }
