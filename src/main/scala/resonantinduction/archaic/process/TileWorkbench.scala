@@ -154,7 +154,8 @@ class TileWorkbench extends SpatialTile(Material.rock) with TInventory with TPac
   override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
   {
     GL11.glPushMatrix()
-    RenderItemOverlayUtility.renderTopOverlay(this, Array[ItemStack](getStackInSlot(0)), null, 1, 1, pos.x, pos.y - (if (metadata == 1) 0.2 else 0.5), pos.z, 1.8f)
+    if (getStackInSlot(0) != null)
+      RenderItemOverlayUtility.renderTopOverlay(this, Array[ItemStack](getStackInSlot(0)), null, 1, 1, pos.x, pos.y - (if (metadata == 1) 0.2 else 0.5), pos.z, if (getStackInSlot(0).getItem.isInstanceOf[ItemBlock]) 1.8f else 1f)
     GL11.glPopMatrix()
     GL11.glPushMatrix()
     GL11.glColor4f(1, 1, 1, 1)

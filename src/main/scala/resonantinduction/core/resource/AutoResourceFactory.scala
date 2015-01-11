@@ -57,12 +57,15 @@ object AutoResourceFactory
     ResourceFactory.registerResourceItem("refinedDust", classOf[ItemRefinedDust])
     ResourceFactory.registerResourceItem("bucketMolten", classOf[ItemMoltenBucket])
 
-    //Create copper and tin
+    //Create copper and tin ingots and ores
     ResourceFactory.registerMaterial("copper")
     ResourceFactory.requestItem("ingot", "copper")
+    ResourceFactory.requestBlock("ore", "copper")
     ResourceFactory.registerMaterialColor("copper", 0xB5634E)
+
     ResourceFactory.registerMaterial("tin")
     ResourceFactory.requestItem("ingot", "tin")
+    ResourceFactory.requestBlock("ore", "tin")
     ResourceFactory.registerMaterialColor("tin", 0xAFBFB2)
 
     OreDictionary.initVanillaEntries()
