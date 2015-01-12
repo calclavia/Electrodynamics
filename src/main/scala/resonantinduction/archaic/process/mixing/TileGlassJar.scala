@@ -14,7 +14,6 @@ import org.lwjgl.opengl.GL11
 import resonant.lib.factory.resources.item.TItemResource
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
-import resonant.lib.prefab.tile.item.ItemBlockSaved
 import resonant.lib.prefab.tile.spatial.SpatialTile
 import resonant.lib.render.RenderUtility
 import resonant.lib.render.model.ModelCube
@@ -45,7 +44,7 @@ class TileGlassJar extends SpatialTile(Material.wood) with TPacketReceiver with 
   bounds = new Cuboid(0.2, 0, 0.2, 0.8, 1, 0.8)
   normalRender = false
   isOpaqueCube = false
-  itemBlock = classOf[ItemBlockSaved]
+  itemBlock = classOf[ItemGlassJar]
 
   def percentage(material: String): Float = mixture(material) / mixtureSize.toFloat
 
