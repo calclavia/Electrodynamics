@@ -38,6 +38,7 @@ object TileGlassJar
 class TileGlassJar extends SpatialTile(Material.wood) with TPacketReceiver with TPacketSender
 {
   val jarCapacity = 64
+  var mixed = false
   var mixture = Map.empty[String, Int]
 
   setTextureName("glass")
@@ -55,24 +56,28 @@ class TileGlassJar extends SpatialTile(Material.wood) with TPacketReceiver with 
   override def write(buf: ByteBuf, id: Int)
   {
     super.write(buf, id)
+    buf <<< mixed
     buf <<<< writeToNBT
   }
 
   override def writeToNBT(nbt: NBTTagCompound)
   {
     super.writeToNBT(nbt)
+    nbt.setBoolean("mixed", mixed)
     nbt.setMap("mixture", mixture)
   }
 
   override def read(buf: ByteBuf, id: Int, packetType: PacketType)
   {
     super.read(buf, id, packetType)
+    mixed = buf.readBoolean()
     buf >>>> readFromNBT
   }
 
   override def readFromNBT(nbt: NBTTagCompound)
   {
     super.readFromNBT(nbt)
+    mixed = nbt.getBoolean("mixed")
     mixture = nbt.getMap("mixture")
   }
 
