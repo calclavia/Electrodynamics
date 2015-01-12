@@ -61,7 +61,7 @@ object AutoResourceFactory
     ResourceFactory.registerMaterial("copper")
     ResourceFactory.requestItem("ingot", "copper")
     ResourceFactory.requestBlock("ore", "copper")
-    ResourceFactory.registerMaterialColor("copper", 0xB5634E)
+    ResourceFactory.registerMaterialColor("copper", 0xC27A48)
 
     ResourceFactory.registerMaterial("tin")
     ResourceFactory.requestItem("ingot", "tin")
