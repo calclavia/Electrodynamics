@@ -20,9 +20,8 @@ import resonant.lib.render.model.ModelCube
 import resonant.lib.transform.region.Cuboid
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.wrapper.ByteBufWrapper._
-import resonant.lib.wrapper.NBTWrapper._
 import resonantinduction.core.Reference
-import resonantinduction.core.resource.AlloyUtility
+import resonantinduction.core.resource.Alloy
 import resonantinduction.core.resource.content.{ItemDust, ItemRefinedDust}
 
 /**
@@ -37,17 +36,14 @@ object TileGlassJar
 
 class TileGlassJar extends SpatialTile(Material.wood) with TPacketReceiver with TPacketSender
 {
-  val jarCapacity = 64
+  var alloy = new Alloy(8)
   var mixed = false
-  var mixture = Map.empty[String, Int]
 
   setTextureName("glass")
   bounds = new Cuboid(0.2, 0, 0.2, 0.8, 1, 0.8)
   normalRender = false
   isOpaqueCube = false
   itemBlock = classOf[ItemGlassJar]
-
-  def percentage(material: String): Float = mixture(material) / mixtureSize.toFloat
 
   /**
    * Override this method
@@ -56,7 +52,6 @@ class TileGlassJar extends SpatialTile(Material.wood) with TPacketReceiver with 
   override def write(buf: ByteBuf, id: Int)
   {
     super.write(buf, id)
-    buf <<< mixed
     buf <<<< writeToNBT
   }
 
@@ -64,13 +59,12 @@ class TileGlassJar extends SpatialTile(Material.wood) with TPacketReceiver with 
   {
     super.writeToNBT(nbt)
     nbt.setBoolean("mixed", mixed)
-    nbt.setMap("mixture", mixture)
+    alloy.save(nbt)
   }
 
   override def read(buf: ByteBuf, id: Int, packetType: PacketType)
   {
     super.read(buf, id, packetType)
-    mixed = buf.readBoolean()
     buf >>>> readFromNBT
   }
 
@@ -78,7 +72,7 @@ class TileGlassJar extends SpatialTile(Material.wood) with TPacketReceiver with 
   {
     super.readFromNBT(nbt)
     mixed = nbt.getBoolean("mixed")
-    mixture = nbt.getMap("mixture")
+    alloy.load(nbt)
   }
 
   @SideOnly(Side.CLIENT)
@@ -92,6 +86,40 @@ class TileGlassJar extends SpatialTile(Material.wood) with TPacketReceiver with 
     GL11.glTranslated(0, 0.3, 0)
     renderJar()
     GL11.glPopMatrix()
+  }
+
+  def renderMixture(itemStack: ItemStack = null)
+  {
+    val alloy: Alloy =
+      if (itemStack != null)
+        if (itemStack.getTagCompound != null)
+          new Alloy(itemStack.getTagCompound)
+        else
+          null
+      else
+        this.alloy
+
+    if (alloy != null && alloy.size > 0)
+    {
+      GL11.glPushMatrix()
+      val color = new Color(alloy.color)
+      GL11.glTranslated(0, -0.5 + 0.75f / 2 * alloy.percentage, 0)
+      GL11.glScalef(0.4f, 0.75f * alloy.percentage, 0.4f)
+      GL11.glColor4f(color.getRed / 255f, color.getGreen / 255f, color.getBlue / 255f, 1)
+      RenderUtility.bind(TileGlassJar.dustMaterialTexture)
+      ModelCube.INSTNACE.render()
+      GL11.glPopMatrix()
+    }
+  }
+
+  def renderJar()
+  {
+    RenderUtility.enableBlending()
+    GL11.glScalef(1.6f, 1.6f, 1.6f)
+    GL11.glColor4f(1, 1, 1, 1)
+    RenderUtility.bind(Reference.domain, Reference.modelPath + "glassJar.png")
+    TileGlassJar.model.renderAll()
+    RenderUtility.disableBlending()
   }
 
   @SideOnly(Side.CLIENT)
@@ -108,46 +136,6 @@ class TileGlassJar extends SpatialTile(Material.wood) with TPacketReceiver with 
     GL11.glPopMatrix()
   }
 
-  def renderMixture(itemStack: ItemStack = null)
-  {
-    val mixture: Map[String, Int] =
-      if (itemStack != null)
-        if (itemStack.getTagCompound != null)
-          itemStack.getTagCompound.getMap("mixture")
-        else
-          null
-      else
-        this.mixture
-
-    if (mixture != null && mixture.size > 0)
-    {
-      GL11.glPushMatrix()
-      val total = mixture.values.foldLeft(0)(_ + _)
-      val res = AlloyUtility.mixedColor(mixture.map(keyVal => (keyVal._1, keyVal._2 / total.toFloat)))
-      val color = new Color(res)
-      GL11.glTranslated(0, -0.5 + 0.75f / 2 * percentage, 0)
-      GL11.glScalef(0.4f, 0.75f * percentage, 0.4f)
-      GL11.glColor4f(color.getRed / 255f, color.getGreen / 255f, color.getBlue / 255f, 1)
-      RenderUtility.bind(TileGlassJar.dustMaterialTexture)
-      ModelCube.INSTNACE.render()
-      GL11.glPopMatrix()
-    }
-  }
-
-  def percentage: Float = mixtureSize.toFloat / jarCapacity
-
-  def mixtureSize = mixture.values.foldLeft(0)(_ + _)
-
-  def renderJar()
-  {
-    RenderUtility.enableBlending()
-    GL11.glScalef(1.6f, 1.6f, 1.6f)
-    GL11.glColor4f(1, 1, 1, 1)
-    RenderUtility.bind(Reference.domain, Reference.modelPath + "glassJar.png")
-    TileGlassJar.model.renderAll()
-    RenderUtility.disableBlending()
-  }
-
   override protected def use(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
   {
     if (player.getCurrentEquippedItem != null)
@@ -156,7 +144,7 @@ class TileGlassJar extends SpatialTile(Material.wood) with TPacketReceiver with 
 
       if (item.isInstanceOf[ItemDust] || item.isInstanceOf[ItemRefinedDust])
       {
-        if (mix(item.asInstanceOf[TItemResource].material))
+        if (alloy.mix(item.asInstanceOf[TItemResource].material))
         {
           player.getCurrentEquippedItem.splitStack(1)
           return true
@@ -167,16 +155,4 @@ class TileGlassJar extends SpatialTile(Material.wood) with TPacketReceiver with 
     return true
   }
 
-  /**
-   * Mixes a dust material into this jar
-   */
-  def mix(material: String): Boolean =
-  {
-    if (mixtureSize < jarCapacity)
-    {
-      mixture += material -> (mixture.getOrElse(material, 0) + 1)
-      return true
-    }
-    return false
-  }
 }
