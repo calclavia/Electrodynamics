@@ -11,8 +11,10 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.ResourceLocation
+import net.minecraftforge.client.IItemRenderer.ItemRenderType
 import net.minecraftforge.client.model.AdvancedModelLoader
 import org.lwjgl.opengl.GL11
+import resonant.api.items.ISimpleItemRenderer
 import resonant.lib.factory.resources.item.TItemResource
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
@@ -23,6 +25,7 @@ import resonant.lib.render.model.ModelCube
 import resonant.lib.transform.region.Cuboid
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.inventory.InventoryUtility
+import resonant.lib.utility.nbt.NBTUtility
 import resonant.lib.wrapper.ByteBufWrapper._
 import resonantinduction.core.Reference
 import resonantinduction.core.resource.Alloy
@@ -38,7 +41,7 @@ object TileGlassJar
   val dustMaterialTexture = new ResourceLocation(Reference.domain, Reference.blockTextureDirectory + "material_sand.png")
 }
 
-class TileGlassJar extends SpatialTile(Material.wood) with TPacketReceiver with TPacketSender
+class TileGlassJar extends SpatialTile(Material.wood) with TPacketReceiver with TPacketSender with ISimpleItemRenderer
 {
   var alloy = new Alloy(8)
   var mixed = false
@@ -87,6 +90,11 @@ class TileGlassJar extends SpatialTile(Material.wood) with TPacketReceiver with 
     InventoryUtility.dropItemStack(world, center, stack)
   }
 
+  override def renderInventoryItem(`type`: ItemRenderType, itemStack: ItemStack, data: AnyRef*): Unit =
+  {
+    renderInventory(itemStack)
+  }
+
   @SideOnly(Side.CLIENT)
   override def renderInventory(itemStack: ItemStack): Unit =
   {
@@ -118,10 +126,7 @@ class TileGlassJar extends SpatialTile(Material.wood) with TPacketReceiver with 
   {
     val alloy: Alloy =
       if (itemStack != null)
-        if (itemStack.getTagCompound != null)
-          new Alloy(itemStack.getTagCompound)
-        else
-          null
+        new Alloy(NBTUtility.getNBTTagCompound(itemStack))
       else
         this.alloy
 

@@ -13,10 +13,12 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.Item
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
-import resonant.lib.render.wrapper.ItemRenderHandler
 import resonant.lib.render.fx.FXElectricBolt2
+import resonant.lib.render.wrapper.ItemRenderHandler
 import resonant.lib.transform.vector.Vector3
+import resonantinduction.archaic.ArchaicContent
 import resonantinduction.archaic.firebox.{RenderHotPlate, TileHotPlate}
+import resonantinduction.archaic.process.mixing.TileGlassJar
 import resonantinduction.archaic.process.{RenderCastingMold, RenderMillstone, TileCastingMold, TileMillstone}
 import resonantinduction.atomic.gate.RenderQuantumGlyph
 import resonantinduction.atomic.machine.accelerator.{EntityParticle, GuiAccelerator, RenderParticle, TileAccelerator}
@@ -50,6 +52,7 @@ import resonantinduction.mechanical.mech.turbine._
   override def init()
   {
     //Mech content TODO no-load if mech content is not loaded
+    ItemRenderHandler.register(Item.getItemFromBlock(ArchaicContent.blockJar), new TileGlassJar)
     ItemRenderHandler.register(MechanicalContent.itemGear, RenderGear)
     ItemRenderHandler.register(MechanicalContent.itemGearShaft, RenderGearShaft)
     ItemRenderHandler.register(MechanicalContent.itemPipe, RenderPipe)
