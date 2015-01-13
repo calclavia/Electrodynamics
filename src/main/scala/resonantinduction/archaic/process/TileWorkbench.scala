@@ -1,6 +1,7 @@
 package resonantinduction.archaic.process
 
 import io.netty.buffer.ByteBuf
+import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Blocks
@@ -44,7 +45,7 @@ object TileWorkbench
 class TileWorkbench extends SpatialTile(Material.wood) with TInventory with TPacketSender with TPacketReceiver
 {
   //Constructor
-  setTextureName(Reference.prefix + "material_wood_surface")
+  setTextureName("material_wood_surface")
   normalRender = false
   isOpaqueCube = false
 
@@ -128,6 +129,14 @@ class TileWorkbench extends SpatialTile(Material.wood) with TInventory with TPac
 
     if (!world.isRemote)
       sendDescPacket()
+  }
+
+  override def onRemove(block: Block, metadata: Int)
+  {
+    if (metadata == 1)
+      InventoryUtility.dropItemStack(world, center, new ItemStack(Blocks.stone))
+
+    super.onRemove(block, metadata)
   }
 
   override def isItemValidForSlot(i: Int, itemStack: ItemStack): Boolean =

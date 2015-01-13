@@ -153,6 +153,9 @@ class TileGlassJar extends SpatialTile(Material.wood) with TPacketReceiver with 
     RenderUtility.disableBlending()
   }
 
+  @SideOnly(Side.CLIENT)
+  override protected def getTextureName: String = textureName
+
   override protected def use(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
   {
     if (player.getCurrentEquippedItem != null)
