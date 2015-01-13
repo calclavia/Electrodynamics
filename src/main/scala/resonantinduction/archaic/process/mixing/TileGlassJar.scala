@@ -1,9 +1,11 @@
 package resonantinduction.archaic.process.mixing
 
 import java.awt.Color
+import java.util.ArrayList
 
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import io.netty.buffer.ByteBuf
+import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
@@ -14,11 +16,13 @@ import org.lwjgl.opengl.GL11
 import resonant.lib.factory.resources.item.TItemResource
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
+import resonant.lib.prefab.tile.item.ItemBlockSaved
 import resonant.lib.prefab.tile.spatial.SpatialTile
 import resonant.lib.render.RenderUtility
 import resonant.lib.render.model.ModelCube
 import resonant.lib.transform.region.Cuboid
 import resonant.lib.transform.vector.Vector3
+import resonant.lib.utility.inventory.InventoryUtility
 import resonant.lib.wrapper.ByteBufWrapper._
 import resonantinduction.core.Reference
 import resonantinduction.core.resource.Alloy
@@ -75,6 +79,14 @@ class TileGlassJar extends SpatialTile(Material.wood) with TPacketReceiver with 
     alloy.load(nbt)
   }
 
+  override def getDrops(metadata: Int, fortune: Int): ArrayList[ItemStack] = new ArrayList[ItemStack]
+
+  override def onRemove(block: Block, par6: Int)
+  {
+    val stack: ItemStack = ItemBlockSaved.getItemStackWithNBT(block, world, xi, yi, zi)
+    InventoryUtility.dropItemStack(world, center, stack)
+  }
+
   @SideOnly(Side.CLIENT)
   override def renderInventory(itemStack: ItemStack): Unit =
   {
@@ -84,6 +96,20 @@ class TileGlassJar extends SpatialTile(Material.wood) with TPacketReceiver with 
 
     GL11.glPushMatrix()
     GL11.glTranslated(0, 0.3, 0)
+    renderJar()
+    GL11.glPopMatrix()
+  }
+
+  @SideOnly(Side.CLIENT)
+  override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
+  {
+    GL11.glPushMatrix()
+    GL11.glTranslated(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5)
+    renderMixture()
+    GL11.glPopMatrix()
+
+    GL11.glPushMatrix()
+    GL11.glTranslated(pos.x + 0.5, pos.y + 0.8, pos.z + 0.5)
     renderJar()
     GL11.glPopMatrix()
   }
@@ -120,20 +146,6 @@ class TileGlassJar extends SpatialTile(Material.wood) with TPacketReceiver with 
     RenderUtility.bind(Reference.domain, Reference.modelPath + "glassJar.png")
     TileGlassJar.model.renderAll()
     RenderUtility.disableBlending()
-  }
-
-  @SideOnly(Side.CLIENT)
-  override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
-  {
-    GL11.glPushMatrix()
-    GL11.glTranslated(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5)
-    renderMixture()
-    GL11.glPopMatrix()
-
-    GL11.glPushMatrix()
-    GL11.glTranslated(pos.x + 0.5, pos.y + 0.8, pos.z + 0.5)
-    renderJar()
-    GL11.glPopMatrix()
   }
 
   override protected def use(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
