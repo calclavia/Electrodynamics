@@ -14,7 +14,7 @@ import resonantinduction.archaic.fluid.gutter.TileGutter
 import resonantinduction.archaic.fluid.tank.TileTank
 import resonantinduction.archaic.process.mixing.TileGlassJar
 import resonantinduction.archaic.process.{TileCastingMold, TileMillstone, TileWorkbench}
-import resonantinduction.core.resource.content.TileDust
+import resonantinduction.core.resource.content.{ItemAlloyDust, TileDust}
 import resonantinduction.core.{RICreativeTab, Reference}
 import resonantinduction.mechanical.mech.gear.ItemHandCrank
 ;
@@ -24,6 +24,7 @@ object ArchaicContent extends ContentHolder
   /**
    * Resources
    */
+  var itemAlloyDust: Item = new ItemAlloyDust
   var blockDust: Block = new TileDust
 
   var itemImprint: Item = new ItemImprint

@@ -5,6 +5,7 @@ import resonant.lib.factory.resources.item.TItemResource
 import resonantinduction.core.Reference
 
 /**
+ * Item for ore dusts
  * @author Calclavia
  */
 class ItemDust extends TItemResource

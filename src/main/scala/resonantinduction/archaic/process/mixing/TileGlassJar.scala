@@ -23,12 +23,13 @@ import resonant.lib.prefab.tile.spatial.SpatialTile
 import resonant.lib.render.RenderUtility
 import resonant.lib.render.model.ModelCube
 import resonant.lib.transform.region.Cuboid
-import resonant.lib.transform.vector.Vector3
+import resonant.lib.transform.vector.{Vector3, VectorWorld}
 import resonant.lib.utility.inventory.InventoryUtility
 import resonant.lib.utility.nbt.NBTUtility
 import resonant.lib.wrapper.ByteBufWrapper._
+import resonantinduction.archaic.ArchaicContent
 import resonantinduction.core.Reference
-import resonantinduction.core.resource.Alloy
+import resonantinduction.core.resource.alloy.{Alloy, AlloyUtility}
 import resonantinduction.core.resource.content.{ItemDust, ItemRefinedDust}
 
 /**
@@ -108,20 +109,6 @@ class TileGlassJar extends SpatialTile(Material.wood) with TPacketReceiver with 
     GL11.glPopMatrix()
   }
 
-  @SideOnly(Side.CLIENT)
-  override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
-  {
-    GL11.glPushMatrix()
-    GL11.glTranslated(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5)
-    renderMixture()
-    GL11.glPopMatrix()
-
-    GL11.glPushMatrix()
-    GL11.glTranslated(pos.x + 0.5, pos.y + 0.8, pos.z + 0.5)
-    renderJar()
-    GL11.glPopMatrix()
-  }
-
   def renderMixture(itemStack: ItemStack = null)
   {
     val alloy: Alloy =
@@ -154,21 +141,46 @@ class TileGlassJar extends SpatialTile(Material.wood) with TPacketReceiver with 
   }
 
   @SideOnly(Side.CLIENT)
+  override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
+  {
+    GL11.glPushMatrix()
+    GL11.glTranslated(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5)
+    renderMixture()
+    GL11.glPopMatrix()
+
+    GL11.glPushMatrix()
+    GL11.glTranslated(pos.x + 0.5, pos.y + 0.8, pos.z + 0.5)
+    renderJar()
+    GL11.glPopMatrix()
+  }
+
+  @SideOnly(Side.CLIENT)
   override protected def getTextureName: String = textureName
 
   override protected def use(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
   {
-    if (player.getCurrentEquippedItem != null)
+    if (!world.isRemote)
     {
-      val item = player.getCurrentEquippedItem.getItem
-
-      if (item.isInstanceOf[ItemDust] || item.isInstanceOf[ItemRefinedDust])
+      if (player.getCurrentEquippedItem != null)
       {
-        if (alloy.mix(item.asInstanceOf[TItemResource].material))
+        val item = player.getCurrentEquippedItem.getItem
+
+        if (item.isInstanceOf[ItemDust] || item.isInstanceOf[ItemRefinedDust])
         {
-          player.getCurrentEquippedItem.splitStack(1)
-          return true
+          if (alloy.mix(item.asInstanceOf[TItemResource].material))
+          {
+            player.getCurrentEquippedItem.splitStack(1)
+            return true
+          }
         }
+      }
+      else if (mixed)
+      {
+        //Eject dust
+        InventoryUtility.dropItemStack(new VectorWorld(player), AlloyUtility.setAlloy(new ItemStack(ArchaicContent.itemAlloyDust, alloy.size), alloy))
+        alloy = new Alloy(8)
+        mixed = false
+        sendDescPacket()
       }
     }
 

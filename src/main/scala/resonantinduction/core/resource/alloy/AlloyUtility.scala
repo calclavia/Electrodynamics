@@ -1,8 +1,10 @@
-package resonantinduction.core.resource
+package resonantinduction.core.resource.alloy
 
 import java.awt.Color
 
+import net.minecraft.item.ItemStack
 import resonant.lib.factory.resources.ResourceFactory
+import resonant.lib.utility.nbt.NBTUtility
 
 /**
  * Manages alloys and metal mixtures
@@ -32,4 +34,11 @@ object AlloyUtility
     return new Color(averageRGB._1.toInt, averageRGB._2.toInt, averageRGB._3.toInt).getRGB()
   }
 
+  def setAlloy(itemStack: ItemStack, alloy: Alloy): ItemStack =
+  {
+    alloy.save(NBTUtility.getNBTTagCompound(itemStack))
+    itemStack
+  }
+
+  def getAlloy(itemStack: ItemStack) = new Alloy(NBTUtility.getNBTTagCompound(itemStack))
 }

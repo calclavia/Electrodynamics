@@ -1,4 +1,4 @@
-package resonantinduction.core.resource
+package resonantinduction.core.resource.alloy
 
 import net.minecraft.nbt.NBTTagCompound
 import resonant.lib.utility.nbt.ISaveObj
@@ -25,9 +25,9 @@ class Alloy(val max: Int) extends ISaveObj
 
   def percentage(material: String): Float = content(material) / size.toFloat
 
-  def size = content.values.foldLeft(0)(_ + _)
-
   def percentage = size / max.toFloat
+
+  def size = content.values.foldLeft(0)(_ + _)
 
   /**
    * Mixes a dust material into this jar

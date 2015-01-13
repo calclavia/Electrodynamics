@@ -18,6 +18,7 @@ schematic.waterTurbine.name=Water Turbine
 ### Core
 item.resonantinduction:ingot.name=%v Ingot
 item.resonantinduction:oreDust.name=%v Dust
+item.resonantinduction:alloyDust.name=Alloy Dust
 item.resonantinduction:oreDust.tooltip=Shift-right click on a cauldron to refine.
 item.resonantinduction:oreRefinedDust.name=%v Refined Dust
 item.resonantinduction:oreRubble.name=%v Rubble
