@@ -41,7 +41,7 @@ object TileWorkbench
   val model = Array(AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "workbench_0.obj")), AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "workbench_1.obj")))
 }
 
-class TileWorkbench extends SpatialTile(Material.rock) with TInventory with TPacketSender with TPacketReceiver
+class TileWorkbench extends SpatialTile(Material.wood) with TInventory with TPacketSender with TPacketReceiver
 {
   //Constructor
   setTextureName(Reference.prefix + "material_wood_surface")

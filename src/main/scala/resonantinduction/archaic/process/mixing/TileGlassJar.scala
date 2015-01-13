@@ -102,7 +102,7 @@ class TileGlassJar extends SpatialTile(Material.wood) with TPacketReceiver with 
     if (alloy != null && alloy.size > 0)
     {
       GL11.glPushMatrix()
-      val color = new Color(alloy.color)
+      val color = new Color(alloy.color).darker.darker.darker
       GL11.glTranslated(0, -0.5 + 0.75f / 2 * alloy.percentage, 0)
       GL11.glScalef(0.4f, 0.75f * alloy.percentage, 0.4f)
       GL11.glColor4f(color.getRed / 255f, color.getGreen / 255f, color.getBlue / 255f, 1)
