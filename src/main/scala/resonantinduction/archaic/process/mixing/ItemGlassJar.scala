@@ -38,7 +38,7 @@ class ItemGlassJar(block: Block) extends ItemBlockSaved(block) with TAlloyItem
       {
         if (lastLook.distance(currLook) > 1)
         {
-          if (world.rand.nextFloat() < 0.01)
+          if (world.rand.nextFloat() < 0.05)
           {
             //Set mixed
             nbt.setBoolean("mixed", true)

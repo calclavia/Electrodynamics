@@ -15,6 +15,7 @@ import net.minecraftforge.client.IItemRenderer.ItemRenderType
 import net.minecraftforge.client.model.AdvancedModelLoader
 import org.lwjgl.opengl.GL11
 import resonant.api.items.ISimpleItemRenderer
+import resonant.lib.factory.resources.ResourceFactory
 import resonant.lib.factory.resources.item.TItemResource
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
@@ -109,37 +110,6 @@ class TileGlassJar extends SpatialTile(Material.wood) with TPacketReceiver with 
     GL11.glPopMatrix()
   }
 
-  def renderMixture(itemStack: ItemStack = null)
-  {
-    val alloy: Alloy =
-      if (itemStack != null)
-        new Alloy(NBTUtility.getNBTTagCompound(itemStack))
-      else
-        this.alloy
-
-    if (alloy != null && alloy.size > 0)
-    {
-      GL11.glPushMatrix()
-      val color = new Color(alloy.color).darker.darker.darker
-      GL11.glTranslated(0, -0.5 + 0.75f / 2 * alloy.percentage, 0)
-      GL11.glScalef(0.4f, 0.75f * alloy.percentage, 0.4f)
-      GL11.glColor4f(color.getRed / 255f, color.getGreen / 255f, color.getBlue / 255f, 1)
-      RenderUtility.bind(TileGlassJar.dustMaterialTexture)
-      ModelCube.INSTNACE.render()
-      GL11.glPopMatrix()
-    }
-  }
-
-  def renderJar()
-  {
-    RenderUtility.enableBlending()
-    GL11.glScalef(1.6f, 1.6f, 1.6f)
-    GL11.glColor4f(1, 1, 1, 1)
-    RenderUtility.bind(Reference.domain, Reference.modelPath + "glassJar.png")
-    TileGlassJar.model.renderAll()
-    RenderUtility.disableBlending()
-  }
-
   @SideOnly(Side.CLIENT)
   override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
   {
@@ -152,6 +122,73 @@ class TileGlassJar extends SpatialTile(Material.wood) with TPacketReceiver with 
     GL11.glTranslated(pos.x + 0.5, pos.y + 0.8, pos.z + 0.5)
     renderJar()
     GL11.glPopMatrix()
+  }
+
+  def renderMixture(itemStack: ItemStack = null)
+  {
+    val alloy: Alloy =
+      if (itemStack != null)
+        new Alloy(NBTUtility.getNBTTagCompound(itemStack))
+      else
+        this.alloy
+
+    val mixed =
+      if (itemStack != null)
+        NBTUtility.getNBTTagCompound(itemStack).getBoolean("mixed")
+      else
+        this.mixed
+
+    if (alloy != null && alloy.size > 0)
+    {
+      GL11.glPushMatrix()
+      RenderUtility.bind(TileGlassJar.dustMaterialTexture)
+
+      if (mixed)
+      {
+        val color = new Color(alloy.color).darker.darker.darker
+        GL11.glTranslated(0, -0.5 + 0.75f / 2 * alloy.percentage, 0)
+        GL11.glScalef(0.4f, 0.75f * alloy.percentage, 0.4f)
+        GL11.glColor4f(color.getRed / 255f, color.getGreen / 255f, color.getBlue / 255f, 1)
+        ModelCube.INSTNACE.render()
+      }
+      else
+      {
+        val size = alloy.size
+        val height = 0.72f / 8f
+
+        //Translate to bottom of the jar
+        GL11.glTranslatef(0, -0.45f, 0)
+
+        alloy.content.foreach
+        {
+          case (material, materialCount) =>
+          {
+            val color = new Color(ResourceFactory.getColor(material)).darker.darker.darker
+            GL11.glPushMatrix()
+            GL11.glTranslated(0, (height * materialCount) / 2, 0)
+            GL11.glScalef(0.4f, height * materialCount, 0.4f)
+            GL11.glColor4f(color.getRed / 255f, color.getGreen / 255f, color.getBlue / 255f, 1)
+            ModelCube.INSTNACE.render()
+            GL11.glPopMatrix()
+
+            //Translate each section of the jar upwards
+            GL11.glTranslatef(0, height * materialCount, 0)
+          }
+        }
+      }
+
+      GL11.glPopMatrix()
+    }
+  }
+
+  def renderJar()
+  {
+    RenderUtility.enableBlending()
+    GL11.glScalef(1.6f, 1.6f, 1.6f)
+    GL11.glColor4f(1, 1, 1, 1)
+    RenderUtility.bind(Reference.domain, Reference.modelPath + "glassJar.png")
+    TileGlassJar.model.renderAll()
+    RenderUtility.disableBlending()
   }
 
   @SideOnly(Side.CLIENT)
@@ -170,6 +207,7 @@ class TileGlassJar extends SpatialTile(Material.wood) with TPacketReceiver with 
           if (alloy.mix(item.asInstanceOf[TItemResource].material))
           {
             player.getCurrentEquippedItem.splitStack(1)
+            sendDescPacket()
             return true
           }
         }
