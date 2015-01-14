@@ -1,5 +1,6 @@
-package edx.basic.process
+package edx.basic.process.sifting
 
+import cpw.mods.fml.relauncher.{Side, SideOnly}
 import edx.core.Reference
 import edx.core.resource.content.ItemRubble
 import io.netty.buffer.ByteBuf
@@ -13,6 +14,7 @@ import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
 import resonant.lib.prefab.tile.spatial.SpatialTile
 import resonant.lib.render.RenderUtility
+import resonant.lib.transform.region.Cuboid
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.wrapper.ByteBufWrapper._
 
@@ -25,6 +27,9 @@ class TileSieve extends SpatialTile(Material.wood) with TInventory with TPacketS
 {
   //Constructor
   setTextureName("material_wood_top")
+  bounds = new Cuboid(0.1, 0, 0.1, 0.9, 0.3, 0.9)
+  normalRender = false
+  isOpaqueCube = false
 
   override def canUpdate: Boolean = false
 
@@ -46,10 +51,13 @@ class TileSieve extends SpatialTile(Material.wood) with TInventory with TPacketS
     return true
   }
 
-  override def renderDynamic(pos: Vector3, frame: Float, pass: Int): Unit =
+  @SideOnly(Side.CLIENT)
+  override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
   {
     GL11.glPushMatrix()
     GL11.glTranslated(pos.x, pos.y, pos.z)
+    GL11.glTranslatef(0.5f, 1.2f, 0.5f)
+    GL11.glScalef(1.8f, 1.8f, 1.8f)
     RenderUtility.bind(Reference.domain, Reference.modelPath + "sieve.png")
     TileSieve.model.renderAll()
     GL11.glPopMatrix()

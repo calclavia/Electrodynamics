@@ -3,9 +3,8 @@
 # The %v may be followed by a number if there are multiple pieces of calculated data, but it will be explained in a comment.
 # A % followed by a number is used for colors. The exact usage will be outlined in the comment above the localization.
 
-itemGroup.edx=Resonant Induction
-itemGroup.edx.core=Resonant Induction Core
-meta.edx.description=Resonant Induction is a Minecraft mod focusing on the manipulation of electricity and wireless technology. Ever wanted blazing electrical shocks flying off your evil lairs? You've came to the right place!
+itemGroup.edx=Electrodynamics
+meta.edx.description=Electrodynamics is a Minecraft mod focusing on the manipulation of electricity and wireless technology. Ever wanted blazing electrical shocks flying off your evil lairs? You've came to the right place!
 meta.edx.credits=Visit website for credits.
 
 fluid.mixture=Mixture
@@ -38,6 +37,7 @@ misc.bucketMolten=Molten Bucket
 tile.edx:oreCopper.name=Copper Ore
 tile.edx:oreTin.name=Tin Ore
 tile.edx:glassJar.name=Glass Jar
+tile.edx:sieve.name=Sieve
 
 # Items
 item.edx:circuitBasic.name=Basic Circuit

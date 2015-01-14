@@ -1,4 +1,4 @@
-package edx.basic.process
+package edx.basic.process.smelting
 
 import cpw.mods.fml.common.network.ByteBufUtils
 import edx.core.Reference

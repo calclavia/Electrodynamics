@@ -1,4 +1,4 @@
-package edx.basic.process
+package edx.basic.process.smelting
 
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import edx.core.Reference

@@ -1,13 +1,14 @@
 package edx.basic
 
 import edx.basic.blocks.{ItemImprint, TileImprinter, TileTurntable}
-import edx.basic.engineering.ItemHammer
-import edx.basic.firebox.{TileFirebox, TileHotPlate}
 import edx.basic.fluid.grate.TileGrate
 import edx.basic.fluid.gutter.TileGutter
 import edx.basic.fluid.tank.TileTank
+import edx.basic.process.grinding.{ItemHammer, TileWorkbench}
 import edx.basic.process.mixing.TileGlassJar
-import edx.basic.process.{TileCastingMold, TileSieve, TileWorkbench}
+import edx.basic.process.sifting.TileSieve
+import edx.basic.process.smelting.TileCastingMold
+import edx.basic.process.smelting.firebox.{TileFirebox, TileHotPlate}
 import edx.core.resource.content.{ItemAlloyDust, TileDust}
 import edx.core.{EDXCreativeTab, Reference}
 import edx.mechanical.mech.gear.ItemHandCrank

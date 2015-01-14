@@ -1,6 +1,5 @@
-package edx.basic.process
+package edx.basic.process.grinding
 
-import edx.basic.engineering.ItemHammer
 import edx.core.{Electrodynamics, Reference}
 import io.netty.buffer.ByteBuf
 import net.minecraft.block.Block

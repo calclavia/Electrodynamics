@@ -18,6 +18,7 @@ import resonant.lib.transform.vector.Vector3
 
 /**
  * Redirects lasers to one point
+ *
  * @author Calclavia
  */
 object TileFocusCrystal
@@ -28,6 +29,7 @@ object TileFocusCrystal
 
 class TileFocusCrystal extends TileFocus(Material.rock) with ILaserHandler with IFocus
 {
+  //TODO: FIX ITEM RENDERING BY USING ISIMPLEITEMRENDERER
   private var normal = new Vector3(0, 1, 0)
   private var energy = 0D
   private var color = new Vector3(1, 1, 1)

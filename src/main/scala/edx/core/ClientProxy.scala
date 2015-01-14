@@ -7,9 +7,10 @@ import cpw.mods.fml.client.FMLClientHandler
 import cpw.mods.fml.client.registry.{ClientRegistry, RenderingRegistry}
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import edx.basic.BasicContent
-import edx.basic.firebox.{RenderHotPlate, TileHotPlate}
 import edx.basic.process.mixing.TileGlassJar
-import edx.basic.process.{RenderCastingMold, RenderMillstone, TileCastingMold, TileSieve}
+import edx.basic.process.sifting.TileSieve
+import edx.basic.process.smelting.firebox.{RenderHotPlate, TileHotPlate}
+import edx.basic.process.smelting.{RenderCastingMold, TileCastingMold}
 import edx.electrical.ElectricalContent
 import edx.electrical.multimeter.{GuiMultimeter, PartMultimeter, RenderMultimeter}
 import edx.electrical.tesla.{RenderTesla, TileTesla}

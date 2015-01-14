@@ -1,4 +1,4 @@
-package edx.basic.firebox
+package edx.basic.process.smelting.firebox
 
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import edx.core.Reference
@@ -87,6 +87,22 @@ class TileHotPlate extends SpatialTile(Material.iron) with TInventory with TPack
 
   def canSmelt(stack: ItemStack): Boolean = stack != null && FurnaceRecipes.smelting.getSmeltingResult(stack) != null
 
+  override def getSizeInventory: Int = 4
+
+  def canRun: Boolean =
+  {
+    val tileEntity = worldObj.getTileEntity(xCoord, yCoord - 1, zCoord)
+
+    if (tileEntity.isInstanceOf[TileFirebox])
+    {
+      if ((tileEntity.asInstanceOf[TileFirebox]).isBurning)
+      {
+        return true
+      }
+    }
+    return false
+  }
+
   override def randomDisplayTick()
   {
     val height = 0.2
@@ -118,8 +134,6 @@ class TileHotPlate extends SpatialTile(Material.iron) with TInventory with TPack
   {
     return smeltTime(i)
   }
-
-  override def getSizeInventory: Int = 4
 
   override def isItemValidForSlot(i: Int, itemStack: ItemStack): Boolean =
   {
@@ -173,20 +187,6 @@ class TileHotPlate extends SpatialTile(Material.iron) with TInventory with TPack
   override def getIcon(access: IBlockAccess, side: Int): IIcon =
   {
     return if (access.getBlockMetadata(xi, yi, zi) == 1) SpatialBlock.icon.get("electricHotPlate") else (if (canRun) SpatialBlock.icon.get("hotPlate_on") else SpatialBlock.icon.get(getTextureName))
-  }
-
-  def canRun: Boolean =
-  {
-    val tileEntity = worldObj.getTileEntity(xCoord, yCoord - 1, zCoord)
-
-    if (tileEntity.isInstanceOf[TileFirebox])
-    {
-      if ((tileEntity.asInstanceOf[TileFirebox]).isBurning)
-      {
-        return true
-      }
-    }
-    return false
   }
 
   @SideOnly(Side.CLIENT)
