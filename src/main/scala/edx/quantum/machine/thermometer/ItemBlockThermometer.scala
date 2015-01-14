@@ -12,7 +12,7 @@ import resonant.lib.prefab.tile.item.ItemBlockSaved
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.utility.nbt.NBTUtility
-import resonant.lib.wrapper.WrapList._
+import resonant.lib.wrapper.CollectionWrapper._
 
 class ItemBlockThermometer(block: Block) extends ItemBlockSaved(block: Block)
 {

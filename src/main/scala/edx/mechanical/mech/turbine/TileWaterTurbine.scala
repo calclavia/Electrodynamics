@@ -16,7 +16,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.tile.INodeProvider
 import resonant.lib.prefab.tile.item.ItemBlockMetadata
 import resonant.lib.transform.vector.Vector3
-import resonant.lib.wrapper.WrapList._
+import resonant.lib.wrapper.CollectionWrapper._
 
 /**
  * The vertical water turbine collects flowing water flowing on X axis.

@@ -6,8 +6,8 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.{Item, ItemStack}
 import resonant.lib.render.EnumColor
 import resonant.lib.utility.nbt.NBTUtility
+import resonant.lib.wrapper.CollectionWrapper._
 import resonant.lib.wrapper.StringWrapper._
-import resonant.lib.wrapper.WrapList._
 
 /**
  * A trait applied to all items that can store alloys within them

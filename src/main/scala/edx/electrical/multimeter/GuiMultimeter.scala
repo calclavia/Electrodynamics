@@ -9,7 +9,7 @@ import net.minecraft.entity.player.InventoryPlayer
 import resonant.lib.prefab.gui.GuiContainerBase
 import resonant.lib.render.EnumColor
 import resonant.lib.utility.LanguageUtility
-import resonant.lib.wrapper.WrapList._
+import resonant.lib.wrapper.CollectionWrapper._
 
 /**
  * Multimeter GUI

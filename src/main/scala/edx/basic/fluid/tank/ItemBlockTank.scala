@@ -12,7 +12,7 @@ import net.minecraftforge.fluids.{FluidContainerRegistry, FluidStack, IFluidCont
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.utility.science.UnitDisplay
 import resonant.lib.utility.science.UnitDisplay.Unit
-import resonant.lib.wrapper.WrapList._
+import resonant.lib.wrapper.CollectionWrapper._
 
 /**
  * @author Darkguardsman
@@ -39,6 +39,15 @@ class ItemBlockTank(block: Block) extends ItemBlock(block: Block) with IFluidCon
         list.add("Volume: " + new UnitDisplay(Unit.LITER, fluid.amount))
       }
     }
+  }
+
+  def getFluid(container: ItemStack): FluidStack =
+  {
+    if (container.stackTagCompound == null || !container.stackTagCompound.hasKey("fluid"))
+    {
+      return null
+    }
+    return FluidStack.loadFluidStackFromNBT(container.stackTagCompound.getCompoundTag("fluid"))
   }
 
   override def getItemStackLimit(stack: ItemStack): Int =
@@ -72,15 +81,6 @@ class ItemBlockTank(block: Block) extends ItemBlock(block: Block) with IFluidCon
       return true
     }
     return false
-  }
-
-  def getFluid(container: ItemStack): FluidStack =
-  {
-    if (container.stackTagCompound == null || !container.stackTagCompound.hasKey("fluid"))
-    {
-      return null
-    }
-    return FluidStack.loadFluidStackFromNBT(container.stackTagCompound.getCompoundTag("fluid"))
   }
 
   def fill(container: ItemStack, resource: FluidStack, doFill: Boolean): Int =

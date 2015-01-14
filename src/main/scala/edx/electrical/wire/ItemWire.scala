@@ -20,7 +20,7 @@ import org.lwjgl.input.Keyboard
 import resonant.lib.render.EnumColor
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.utility.science.UnitDisplay
-import resonant.lib.wrapper.WrapList._
+import resonant.lib.wrapper.CollectionWrapper._
 
 class ItemWire extends TItemMultiPart
 {

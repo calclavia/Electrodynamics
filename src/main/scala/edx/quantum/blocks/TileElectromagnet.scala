@@ -17,7 +17,7 @@ import resonant.lib.prefab.tile.spatial.SpatialBlock
 import resonant.lib.render.{RenderBlockUtility, RenderUtility}
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.world.WorldUtility
-import resonant.lib.wrapper.WrapList._
+import resonant.lib.wrapper.CollectionWrapper._
 
 /**
  * Electromagnet block

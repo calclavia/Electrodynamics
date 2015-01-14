@@ -27,7 +27,7 @@ import resonant.lib.prefab.tile.spatial.{SpatialBlock, SpatialTile}
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.FluidUtility
 import resonant.lib.wrapper.ByteBufWrapper._
-import resonant.lib.wrapper.WrapList._
+import resonant.lib.wrapper.CollectionWrapper._
 
 /**
  * Meant to replace the furnace class.
@@ -189,8 +189,6 @@ class TileFirebox extends SpatialTile(Material.rock) with IFluidHandler with TIn
     }
   }
 
-  def isBurning: Boolean = burnTime > 0
-
   override def getSizeInventory = 1
 
   def getMeltIronEnergy(volume: Float): Long =
@@ -294,6 +292,8 @@ class TileFirebox extends SpatialTile(Material.rock) with IFluidHandler with TIn
 
     return if (isBurning) (if (isElectric) SpatialBlock.icon.get("firebox_electric_side_on") else SpatialBlock.icon.get("firebox_side_on")) else (if (isElectric) SpatialBlock.icon.get("firebox_electric_side_off") else SpatialBlock.icon.get("firebox_side_off"))
   }
+
+  def isBurning: Boolean = burnTime > 0
 
   override def click(player: EntityPlayer)
   {

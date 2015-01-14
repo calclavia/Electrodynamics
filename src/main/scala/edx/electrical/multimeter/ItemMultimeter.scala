@@ -16,7 +16,7 @@ import net.minecraft.world.World
 import org.lwjgl.input.Keyboard
 import resonant.lib.render.EnumColor
 import resonant.lib.utility.LanguageUtility
-import resonant.lib.wrapper.WrapList._
+import resonant.lib.wrapper.CollectionWrapper._
 
 class ItemMultimeter extends JItemMultiPart with IHighlight
 {

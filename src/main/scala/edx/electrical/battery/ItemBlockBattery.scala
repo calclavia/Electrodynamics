@@ -13,7 +13,7 @@ import resonant.lib.mod.compat.energy.Compatibility
 import resonant.lib.render.EnumColor
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.utility.science.UnitDisplay
-import resonant.lib.wrapper.WrapList._
+import resonant.lib.wrapper.CollectionWrapper._
 
 object ItemBlockBattery
 {
@@ -84,16 +84,6 @@ class ItemBlockBattery(block: Block) extends ItemBlock(block) with IEnergyItem
     return energyToReceive
   }
 
-  def discharge(itemStack: ItemStack, energy: Double, doTransfer: Boolean): Double =
-  {
-    val energyToExtract: Double = Math.min(Math.min(this.getEnergy(itemStack), energy), getTransferRate(itemStack))
-    if (doTransfer)
-    {
-      this.setEnergy(itemStack, this.getEnergy(itemStack) - energyToExtract)
-    }
-    return energyToExtract
-  }
-
   def setEnergy(itemStack: ItemStack, joules: Double)
   {
     if (itemStack.getTagCompound == null)
@@ -107,6 +97,16 @@ class ItemBlockBattery(block: Block) extends ItemBlock(block) with IEnergyItem
   def getTransferRate(itemStack: ItemStack): Double =
   {
     return this.getEnergyCapacity(itemStack) / 100
+  }
+
+  def discharge(itemStack: ItemStack, energy: Double, doTransfer: Boolean): Double =
+  {
+    val energyToExtract: Double = Math.min(Math.min(this.getEnergy(itemStack), energy), getTransferRate(itemStack))
+    if (doTransfer)
+    {
+      this.setEnergy(itemStack, this.getEnergy(itemStack) - energyToExtract)
+    }
+    return energyToExtract
   }
 
   def getVoltage(itemStack: ItemStack): Double =

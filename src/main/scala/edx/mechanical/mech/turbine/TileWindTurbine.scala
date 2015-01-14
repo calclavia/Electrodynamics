@@ -20,8 +20,8 @@ import resonant.lib.render.RenderUtility
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.MathUtility
 import resonant.lib.utility.inventory.InventoryUtility
+import resonant.lib.wrapper.CollectionWrapper._
 import resonant.lib.wrapper.NBTWrapper._
-import resonant.lib.wrapper.WrapList._
 
 /**
  * The vertical wind turbine collects airflow.

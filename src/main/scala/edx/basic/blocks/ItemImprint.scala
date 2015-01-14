@@ -10,7 +10,7 @@ import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.{NBTTagCompound, NBTTagList}
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.utility.nbt.NBTUtility
-import resonant.lib.wrapper.WrapList._
+import resonant.lib.wrapper.CollectionWrapper._
 
 import scala.collection.JavaConversions._
 

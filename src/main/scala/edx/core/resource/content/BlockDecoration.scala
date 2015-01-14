@@ -11,7 +11,7 @@ import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.util.IIcon
 import resonant.lib.prefab.tile.item.ItemBlockMetadata
 import resonant.lib.prefab.tile.spatial.SpatialBlock
-import resonant.lib.wrapper.WrapList._
+import resonant.lib.wrapper.CollectionWrapper._
 
 /**
  * A block used to build machines or decoration.

@@ -8,7 +8,7 @@ import net.minecraft.item.{Item, ItemStack}
 import org.lwjgl.input.Keyboard
 import resonant.lib.render.EnumColor
 import resonant.lib.utility.LanguageUtility
-import resonant.lib.wrapper.WrapList._
+import resonant.lib.wrapper.CollectionWrapper._
 
 /**
  * Uranium

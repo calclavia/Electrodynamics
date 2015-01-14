@@ -14,7 +14,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.FluidStack
 import resonant.api.tile.{IReactor, IReactorComponent}
 import resonant.lib.transform.vector.Vector3
-import resonant.lib.wrapper.WrapList._
+import resonant.lib.wrapper.CollectionWrapper._
 
 /**
  * Fissile fuel rod
