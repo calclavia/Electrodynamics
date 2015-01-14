@@ -6,7 +6,7 @@ import mffs.base.ItemModule
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import resonant.lib.utility.LanguageUtility
-import resonant.lib.wrapper.WrapList._
+import resonant.lib.wrapper.CollectionWrapper._
 
 class ItemModuleDefense extends ItemModule
 {

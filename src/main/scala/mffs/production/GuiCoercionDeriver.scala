@@ -5,12 +5,12 @@ import mffs.base.{GuiMFFS, TilePacketType}
 import net.minecraft.client.gui.GuiButton
 import net.minecraft.entity.player.EntityPlayer
 import org.lwjgl.opengl.GL11
-import resonant.lib.prefab.gui.GuiContainerBase.SlotType
 import resonant.lib.network.discriminator.PacketTile
+import resonant.lib.prefab.gui.GuiContainerBase.SlotType
 import resonant.lib.render.EnumColor
-import resonant.lib.utility.science.UnitDisplay
 import resonant.lib.utility.LanguageUtility
-import resonant.lib.wrapper.WrapList._
+import resonant.lib.utility.science.UnitDisplay
+import resonant.lib.wrapper.CollectionWrapper._
 
 class GuiCoercionDeriver(player: EntityPlayer, tile: TileCoercionDeriver) extends GuiMFFS(new ContainerCoercionDeriver(player, tile), tile)
 {

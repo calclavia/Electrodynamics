@@ -14,7 +14,7 @@ import resonant.api.items.IItemFrequency
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.TPacketReceiver
 import resonant.lib.utility.LanguageUtility
-import resonant.lib.wrapper.WrapList._
+import resonant.lib.wrapper.CollectionWrapper._
 
 class ItemCardFrequency extends ItemCard with IItemFrequency with TPacketReceiver
 {
@@ -23,27 +23,9 @@ class ItemCardFrequency extends ItemCard with IItemFrequency with TPacketReceive
     list.add(LanguageUtility.getLocal("info.cardFrequency.freq") + " " + getEncodedFrequency(itemStack))
   }
 
-  override def onItemRightClick(itemStack: ItemStack, world: World, player: EntityPlayer): ItemStack =
-  {
-    if (!world.isRemote)
-    {
-      /**
-       * Open item GUI
-       */
-      player.openGui(ModularForceFieldSystem, EnumGui.frequency.id, world, 0, 0, 0)
-    }
-
-    return itemStack
-  }
-
   def getEncodedFrequency(itemStack: ItemStack): String =
   {
     return Hashing.md5().hashInt(getFrequency(itemStack)).toString.take(12)
-  }
-
-  override def read(data: ByteBuf, player: EntityPlayer, packet: PacketType)
-  {
-    setFrequency(data.readInt(), player.getCurrentEquippedItem)
   }
 
   /**
@@ -60,6 +42,24 @@ class ItemCardFrequency extends ItemCard with IItemFrequency with TPacketReceive
       return itemStack.getTagCompound.getInteger("frequency")
     }
     return 0
+  }
+
+  override def onItemRightClick(itemStack: ItemStack, world: World, player: EntityPlayer): ItemStack =
+  {
+    if (!world.isRemote)
+    {
+      /**
+       * Open item GUI
+       */
+      player.openGui(ModularForceFieldSystem, EnumGui.frequency.id, world, 0, 0, 0)
+    }
+
+    return itemStack
+  }
+
+  override def read(data: ByteBuf, player: EntityPlayer, packet: PacketType)
+  {
+    setFrequency(data.readInt(), player.getCurrentEquippedItem)
   }
 
   override def setFrequency(frequency: Int, itemStack: ItemStack)

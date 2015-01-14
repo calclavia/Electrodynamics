@@ -6,11 +6,11 @@ import net.minecraft.client.gui.GuiButton
 import net.minecraft.init.Blocks
 import net.minecraft.inventory.Container
 import net.minecraft.item.ItemStack
-import resonant.lib.prefab.gui.GuiContainerBase
 import resonant.lib.network.discriminator.PacketTile
+import resonant.lib.prefab.gui.GuiContainerBase
 import resonant.lib.render.EnumColor
 import resonant.lib.utility.science.UnitDisplay
-import resonant.lib.wrapper.WrapList._
+import resonant.lib.wrapper.CollectionWrapper._
 
 class GuiMFFS(container: Container, tile: TileMFFS) extends GuiContainerBase(container)
 {
@@ -27,16 +27,6 @@ class GuiMFFS(container: Container, tile: TileMFFS) extends GuiContainerBase(con
     buttonList.add(new GuiIcon(0, width / 2 - 110, height / 2 - 104, new ItemStack(Blocks.torch), new ItemStack(Blocks.redstone_torch)))
   }
 
-  protected override def actionPerformed(guiButton: GuiButton)
-  {
-    super.actionPerformed(guiButton)
-
-    if (tile != null && guiButton.id == 0)
-    {
-      ModularForceFieldSystem.packetHandler.sendToServer(new PacketTile(tile, TilePacketType.toggleActivation.id: Integer))
-    }
-  }
-
   override def updateScreen()
   {
     super.updateScreen()
@@ -47,6 +37,16 @@ class GuiMFFS(container: Container, tile: TileMFFS) extends GuiContainerBase(con
       {
         buttonList.get(0).asInstanceOf[GuiIcon].setIndex(if (tile.isRedstoneActive) 1 else 0)
       }
+    }
+  }
+
+  protected override def actionPerformed(guiButton: GuiButton)
+  {
+    super.actionPerformed(guiButton)
+
+    if (tile != null && guiButton.id == 0)
+    {
+      ModularForceFieldSystem.packetHandler.sendToServer(new PacketTile(tile, TilePacketType.toggleActivation.id: Integer))
     }
   }
 

@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL11
 import resonant.lib.network.discriminator.PacketTile
 import resonant.lib.render.EnumColor
 import resonant.lib.utility.science.UnitDisplay
-import resonant.lib.wrapper.WrapList._
+import resonant.lib.wrapper.CollectionWrapper._
 
 class GuiFortronCapacitor(player: EntityPlayer, tile: TileFortronCapacitor) extends GuiMFFS(new ContainerFortronCapacitor(player, tile), tile)
 {

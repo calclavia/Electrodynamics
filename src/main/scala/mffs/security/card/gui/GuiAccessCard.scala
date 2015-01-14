@@ -10,8 +10,8 @@ import net.minecraft.item.ItemStack
 import resonant.lib.access.Permissions
 import resonant.lib.network.discriminator.PacketPlayerItem
 import resonant.lib.render.EnumColor
+import resonant.lib.wrapper.CollectionWrapper._
 import resonant.lib.wrapper.StringWrapper._
-import resonant.lib.wrapper.WrapList._
 
 import scala.collection.convert.wrapAll._
 

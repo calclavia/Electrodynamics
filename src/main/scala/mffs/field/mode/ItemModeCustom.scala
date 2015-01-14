@@ -19,10 +19,10 @@ import net.minecraft.util.ChatComponentText
 import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.mffs.machine.{IFieldMatrix, IProjector}
+import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.utility.nbt.NBTUtility
-import resonant.lib.wrapper.WrapList._
-import resonant.lib.transform.vector.Vector3
+import resonant.lib.wrapper.CollectionWrapper._
 
 import scala.collection.JavaConversions._
 import scala.collection.mutable
@@ -185,48 +185,6 @@ class ItemModeCustom extends ItemMode with TCache
     return true
   }
 
-  def getModeID(itemStack: ItemStack): Int =
-  {
-    val nbt = NBTUtility.getNBTTagCompound(itemStack)
-    var id: Int = nbt.getInteger(NBT_ID)
-    if (id <= 0)
-    {
-      nbt.setInteger(NBT_ID, getNextAvaliableID)
-      id = nbt.getInteger(NBT_ID)
-    }
-    return id
-  }
-
-  def getNextAvaliableID: Int =
-  {
-    var i: Int = 1
-    for (fileEntry <- this.getSaveDirectory.listFiles)
-    {
-      i += 1
-    }
-    return i
-  }
-
-  def getSaveDirectory: File =
-  {
-    val saveDirectory: File = NBTUtility.getSaveDirectory(MinecraftServer.getServer.getFolderName)
-    if (!saveDirectory.exists)
-    {
-      saveDirectory.mkdir
-    }
-    val file: File = new File(saveDirectory, "mffs")
-    if (!file.exists)
-    {
-      file.mkdir
-    }
-    return file
-  }
-
-  def getFieldBlocks(projector: IFieldMatrix, itemStack: ItemStack): Set[Vector3] =
-  {
-    return getFieldBlockMapClean(projector, itemStack).keySet.toSet
-  }
-
   def getFieldBlockMap(projector: IFieldMatrix, itemStack: ItemStack): mutable.Map[Vector3, (Block, Int)] =
   {
     val cacheID = "itemStack_" + itemStack.hashCode
@@ -262,6 +220,21 @@ class ItemModeCustom extends ItemMode with TCache
     return fieldMap
   }
 
+  override def getInteriorPoints(projector: IFieldMatrix): JSet[Vector3] =
+  {
+    return this.getExteriorPoints(projector)
+  }
+
+  override def getExteriorPoints(projector: IFieldMatrix): JSet[Vector3] =
+  {
+    return this.getFieldBlocks(projector, projector.getModeStack)
+  }
+
+  def getFieldBlocks(projector: IFieldMatrix, itemStack: ItemStack): Set[Vector3] =
+  {
+    return getFieldBlockMapClean(projector, itemStack).keySet.toSet
+  }
+
   def getFieldBlockMapClean(projector: IFieldMatrix, itemStack: ItemStack): mutable.Map[Vector3, (Block, Int)] =
   {
     val scale = (projector.getModuleCount(Content.moduleScale) / 3f + 1)
@@ -283,14 +256,41 @@ class ItemModeCustom extends ItemMode with TCache
     return fieldBlocks
   }
 
-  override def getExteriorPoints(projector: IFieldMatrix): JSet[Vector3] =
+  def getModeID(itemStack: ItemStack): Int =
   {
-    return this.getFieldBlocks(projector, projector.getModeStack)
+    val nbt = NBTUtility.getNBTTagCompound(itemStack)
+    var id: Int = nbt.getInteger(NBT_ID)
+    if (id <= 0)
+    {
+      nbt.setInteger(NBT_ID, getNextAvaliableID)
+      id = nbt.getInteger(NBT_ID)
+    }
+    return id
   }
 
-  override def getInteriorPoints(projector: IFieldMatrix): JSet[Vector3] =
+  def getNextAvaliableID: Int =
   {
-    return this.getExteriorPoints(projector)
+    var i: Int = 1
+    for (fileEntry <- this.getSaveDirectory.listFiles)
+    {
+      i += 1
+    }
+    return i
+  }
+
+  def getSaveDirectory: File =
+  {
+    val saveDirectory: File = NBTUtility.getSaveDirectory(MinecraftServer.getServer.getFolderName)
+    if (!saveDirectory.exists)
+    {
+      saveDirectory.mkdir
+    }
+    val file: File = new File(saveDirectory, "mffs")
+    if (!file.exists)
+    {
+      file.mkdir
+    }
+    return file
   }
 
   override def isInField(projector: IFieldMatrix, position: Vector3): Boolean =

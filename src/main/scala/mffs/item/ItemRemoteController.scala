@@ -26,7 +26,7 @@ import resonant.api.mffs.fortron.{FrequencyGridRegistry, IFortronFrequency}
 import resonant.lib.transform.vector.{Vector3, VectorWorld}
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.utility.science.UnitDisplay
-import resonant.lib.wrapper.WrapList._
+import resonant.lib.wrapper.CollectionWrapper._
 
 import scala.collection.JavaConversions._
 
@@ -57,6 +57,11 @@ class ItemRemoteController extends ItemCardFrequency with ICoordLink
     }
   }
 
+  def hasLink(itemStack: ItemStack): Boolean =
+  {
+    return getLink(itemStack) != null
+  }
+
   override def onItemUse(itemStack: ItemStack, player: EntityPlayer, world: World, x: Int, y: Int, z: Int, par7: Int, par8: Float, par9: Float, par10: Float): Boolean =
   {
     if (!world.isRemote && player.isSneaking)
@@ -71,29 +76,6 @@ class ItemRemoteController extends ItemCardFrequency with ICoordLink
       }
     }
     return true
-  }
-
-  def hasLink(itemStack: ItemStack): Boolean =
-  {
-    return getLink(itemStack) != null
-  }
-
-  def getLink(itemStack: ItemStack): VectorWorld =
-  {
-    if (itemStack.stackTagCompound == null || !itemStack.getTagCompound.hasKey("link"))
-    {
-      return null
-    }
-    return new VectorWorld(itemStack.getTagCompound.getCompoundTag("link"))
-  }
-
-  def setLink(itemStack: ItemStack, vec: VectorWorld)
-  {
-    if (itemStack.getTagCompound == null)
-    {
-      itemStack.setTagCompound(new NBTTagCompound)
-    }
-    itemStack.getTagCompound.setTag("link", vec.toNBT)
   }
 
   def clearLink(itemStack: ItemStack)
@@ -161,6 +143,15 @@ class ItemRemoteController extends ItemCardFrequency with ICoordLink
     return itemStack
   }
 
+  def getLink(itemStack: ItemStack): VectorWorld =
+  {
+    if (itemStack.stackTagCompound == null || !itemStack.getTagCompound.hasKey("link"))
+    {
+      return null
+    }
+    return new VectorWorld(itemStack.getTagCompound.getCompoundTag("link"))
+  }
+
   @SubscribeEvent def preMove(evt: EventForceMobilize.EventPreForceManipulate)
   {
     this.temporaryRemoteBlacklist.clear
@@ -186,6 +177,15 @@ class ItemRemoteController extends ItemCardFrequency with ICoordLink
         }
       }
     }
+  }
+
+  def setLink(itemStack: ItemStack, vec: VectorWorld)
+  {
+    if (itemStack.getTagCompound == null)
+    {
+      itemStack.setTagCompound(new NBTTagCompound)
+    }
+    itemStack.getTagCompound.setTag("link", vec.toNBT)
   }
 
 }

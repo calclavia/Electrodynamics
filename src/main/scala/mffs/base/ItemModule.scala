@@ -9,13 +9,13 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
 import resonant.api.mffs.machine.{IFieldMatrix, IProjector}
 import resonant.api.mffs.modules.IModule
-import resonant.lib.utility.science.UnitDisplay
-import resonant.lib.utility.LanguageUtility
 import resonant.lib.transform.region.Cuboid
 import resonant.lib.transform.vector.Vector3
+import resonant.lib.utility.LanguageUtility
+import resonant.lib.utility.science.UnitDisplay
+import resonant.lib.wrapper.CollectionWrapper._
 
 import scala.collection.convert.wrapAll._
-import resonant.lib.wrapper.WrapList._
 class ItemModule extends ItemMFFS with IModule
 {
   private var fortronCost = 0.5f
@@ -24,6 +24,11 @@ class ItemModule extends ItemMFFS with IModule
   {
     info.add(LanguageUtility.getLocal("info.item.fortron") + " " + new UnitDisplay(UnitDisplay.Unit.LITER, getFortronCost(1) * 20) + "/s")
     super.addInformation(itemStack, player, info, b)
+  }
+
+  override def getFortronCost(amplifier: Float): Float =
+  {
+    return this.fortronCost
   }
 
   override def onPreCalculate(projector: IFieldMatrix, position: JSet[Vector3])
@@ -59,11 +64,6 @@ class ItemModule extends ItemMFFS with IModule
   {
     super.setMaxStackSize(par1)
     return this
-  }
-
-  override def getFortronCost(amplifier: Float): Float =
-  {
-    return this.fortronCost
   }
 
   override def onDestroy(projector: IProjector, field: JSet[Vector3]): Boolean =

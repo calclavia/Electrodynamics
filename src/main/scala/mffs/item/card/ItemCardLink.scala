@@ -9,9 +9,9 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.ChatComponentTranslation
 import net.minecraft.world.World
 import resonant.api.mffs.card.ICoordLink
-import resonant.lib.wrapper.StringWrapper._
-import resonant.lib.wrapper.WrapList._
 import resonant.lib.transform.vector.VectorWorld
+import resonant.lib.wrapper.CollectionWrapper._
+import resonant.lib.wrapper.StringWrapper._
 
 /**
  * A linking card used to link machines in specific positions.
@@ -44,6 +44,17 @@ class ItemCardLink extends ItemCard with ICoordLink
     }
   }
 
+  def hasLink(itemStack: ItemStack): Boolean = getLink(itemStack) != null
+
+  def getLink(itemStack: ItemStack): VectorWorld =
+  {
+    if (itemStack.stackTagCompound == null || !itemStack.getTagCompound.hasKey("link"))
+    {
+      return null
+    }
+    return new VectorWorld(itemStack.getTagCompound.getCompoundTag("link"))
+  }
+
   override def onItemUse(itemStack: ItemStack, player: EntityPlayer, world: World, x: Int, y: Int, z: Int, par7: Int, par8: Float, par9: Float, par10: Float): Boolean =
   {
     if (!world.isRemote)
@@ -57,17 +68,6 @@ class ItemCardLink extends ItemCard with ICoordLink
       }
     }
     return true
-  }
-
-  def hasLink(itemStack: ItemStack): Boolean = getLink(itemStack) != null
-
-  def getLink(itemStack: ItemStack): VectorWorld =
-  {
-    if (itemStack.stackTagCompound == null || !itemStack.getTagCompound.hasKey("link"))
-    {
-      return null
-    }
-    return new VectorWorld(itemStack.getTagCompound.getCompoundTag("link"))
   }
 
   def setLink(itemStack: ItemStack, vec: VectorWorld)

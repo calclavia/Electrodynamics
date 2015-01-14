@@ -15,7 +15,7 @@ import resonant.lib.network.handle.TPacketReceiver
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.utility.nbt.NBTUtility
 import resonant.lib.wrapper.ByteBufWrapper._
-import resonant.lib.wrapper.WrapList._
+import resonant.lib.wrapper.CollectionWrapper._
 
 class ItemCardIdentification extends ItemCardAccess with TPacketReceiver
 {
@@ -73,19 +73,6 @@ class ItemCardIdentification extends ItemCardAccess with TPacketReceiver
     return itemStack
   }
 
-  override def getAccess(itemStack: ItemStack): AccessUser =
-  {
-    val nbt = NBTUtility.getNBTTagCompound(itemStack)
-
-    if (nbt != null)
-    {
-      val user = new AccessUser(nbt)
-      return user
-    }
-
-    return null
-  }
-
   /**
    * Reads a packet
    * @param buf   - data encoded into the packet
@@ -136,5 +123,18 @@ class ItemCardIdentification extends ItemCardAccess with TPacketReceiver
     }
 
     setAccess(itemStack, access)
+  }
+
+  override def getAccess(itemStack: ItemStack): AccessUser =
+  {
+    val nbt = NBTUtility.getNBTTagCompound(itemStack)
+
+    if (nbt != null)
+    {
+      val user = new AccessUser(nbt)
+      return user
+    }
+
+    return null
   }
 }
