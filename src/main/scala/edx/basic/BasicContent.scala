@@ -7,7 +7,7 @@ import edx.basic.fluid.grate.TileGrate
 import edx.basic.fluid.gutter.TileGutter
 import edx.basic.fluid.tank.TileTank
 import edx.basic.process.mixing.TileGlassJar
-import edx.basic.process.{TileCastingMold, TileMillstone, TileWorkbench}
+import edx.basic.process.{TileCastingMold, TileSieve, TileWorkbench}
 import edx.core.resource.content.{ItemAlloyDust, TileDust}
 import edx.core.{EDXCreativeTab, Reference}
 import edx.mechanical.mech.gear.ItemHandCrank
@@ -31,20 +31,20 @@ object BasicContent extends ContentHolder
   var itemHandCrank: Item = new ItemHandCrank
 
   //  var blockEngineeringTable: Block = new TileEngineeringTable
-  var blockCrate: Block = null
   //manager.newBlock(classOf[BlockCrate])
   var blockImprinter: Block = new TileImprinter
   var blockTurntable: Block = new TileTurntable
   var blockFirebox: Block = new TileFirebox
   var blockHotPlate: Block = new TileHotPlate
-  var blockMillstone: Block = new TileMillstone
+  var blockSieve: Block = new TileSieve
   var blockCast: Block = new TileCastingMold
-  //var blockFilter: Block = contentRegistry.newBlock( classOf[ TileFilter ] )
-  var blockGrate: Block = new TileGrate
   var blockGutter: Block = new TileGutter
   var blockTank: Block = new TileTank
   var blockWorkbench: Block = new TileWorkbench
-  var blockJar: Block = new TileGlassJar
+  var blockGlassJar: Block = new TileGlassJar
+
+  //var blockFilter: Block = contentRegistry.newBlock( classOf[ TileFilter ] )
+  var blockGrate: Block = new TileGrate
 
   //Constructor
   manager.setTab(EDXCreativeTab)
@@ -67,7 +67,7 @@ object BasicContent extends ContentHolder
     recipes += shaped(BasicContent.blockGutter, "S S", "I I", "III", 'S', Items.stick, 'I', "cobblestone")
     recipes += shaped(BasicContent.blockGrate, "WBW", "B B", "WBW", 'B', Blocks.iron_bars, 'W', "plankWood")
     recipes += shaped(BasicContent.blockHotPlate, "SSS", "III", 'I', Items.iron_ingot, 'S', Blocks.stone)
-    recipes += shaped(BasicContent.blockMillstone, "SPS", "SAS", "SSS", 'P', Blocks.piston, 'A', Items.stone_pickaxe, 'S', Blocks.stone)
+    recipes += shaped(BasicContent.blockSieve, "SPS", "SAS", "SSS", 'P', Blocks.piston, 'A', Items.stone_pickaxe, 'S', Blocks.stone)
     recipes += shaped(BasicContent.blockTank, "GGG", "GSG", "GGG", 'G', Blocks.glass, 'S', Items.iron_ingot)
 
     recipes += shaped(itemHandCrank, "S  ", "SSS", "  S", 'S', "stickWood")

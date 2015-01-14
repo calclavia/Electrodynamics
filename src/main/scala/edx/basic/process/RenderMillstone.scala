@@ -13,9 +13,9 @@ class RenderMillstone extends TileEntitySpecialRenderer
 
   def renderTileEntityAt(tileEntity: TileEntity, x: Double, y: Double, z: Double, var8: Float)
   {
-    if (tileEntity.isInstanceOf[TileMillstone])
+    if (tileEntity.isInstanceOf[TileSieve])
     {
-      val tile: TileMillstone = tileEntity.asInstanceOf[TileMillstone]
+      val tile: TileSieve = tileEntity.asInstanceOf[TileSieve]
       RenderItemOverlayUtility.renderItemOnSides(tileEntity, tile.getStackInSlot(0), x, y, z, "")
     }
   }

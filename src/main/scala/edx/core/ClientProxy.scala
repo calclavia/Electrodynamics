@@ -9,7 +9,7 @@ import cpw.mods.fml.relauncher.{Side, SideOnly}
 import edx.basic.BasicContent
 import edx.basic.firebox.{RenderHotPlate, TileHotPlate}
 import edx.basic.process.mixing.TileGlassJar
-import edx.basic.process.{RenderCastingMold, RenderMillstone, TileCastingMold, TileMillstone}
+import edx.basic.process.{RenderCastingMold, RenderMillstone, TileCastingMold, TileSieve}
 import edx.electrical.ElectricalContent
 import edx.electrical.multimeter.{GuiMultimeter, PartMultimeter, RenderMultimeter}
 import edx.electrical.tesla.{RenderTesla, TileTesla}
@@ -52,7 +52,7 @@ import resonant.lib.transform.vector.Vector3
   override def init()
   {
     //Mech content TODO no-load if mech content is not loaded
-    ItemRenderHandler.register(Item.getItemFromBlock(BasicContent.blockJar), new TileGlassJar)
+    ItemRenderHandler.register(Item.getItemFromBlock(BasicContent.blockGlassJar), new TileGlassJar)
     ItemRenderHandler.register(MechanicalContent.itemGear, RenderGear)
     ItemRenderHandler.register(MechanicalContent.itemGearShaft, RenderGearShaft)
     ItemRenderHandler.register(MechanicalContent.itemPipe, RenderPipe)
@@ -79,7 +79,7 @@ import resonant.lib.transform.vector.Vector3
 
     //Archaic
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileCastingMold], new RenderCastingMold)
-    ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileMillstone], new RenderMillstone)
+    ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileSieve], new RenderMillstone)
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileHotPlate], new RenderHotPlate)
   }
 

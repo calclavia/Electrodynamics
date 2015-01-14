@@ -54,6 +54,8 @@ class TileGlassJar extends SpatialTile(Material.wood) with TPacketReceiver with 
   isOpaqueCube = false
   itemBlock = classOf[ItemGlassJar]
 
+  override def canUpdate: Boolean = false
+
   /**
    * Override this method
    * Be sure to super this method or manually write the id into the packet when sending

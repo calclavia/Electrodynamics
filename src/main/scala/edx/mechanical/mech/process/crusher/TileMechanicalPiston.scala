@@ -64,7 +64,7 @@ class TileMechanicalPiston extends TileMechanical(Material.piston)
     if (block != null)
     {
       val blockStack: ItemStack = new ItemStack(block)
-      val resources: Array[RecipeResource] = MachineRecipes.instance.getOutput(RecipeType.CRUSHER.name, blockStack)
+      val resources: Array[RecipeResource] = MachineRecipes.instance.getOutput(RecipeType.GRINDER.name, blockStack)
       if (resources.length > 0)
       {
         if (!worldObj.isRemote)

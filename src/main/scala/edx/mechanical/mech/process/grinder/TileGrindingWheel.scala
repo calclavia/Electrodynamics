@@ -118,7 +118,7 @@ class TileGrindingWheel extends TileMechanical(Material.rock)
   private def doGrind(entity: EntityItem): Boolean =
   {
     val itemStack: ItemStack = entity.getEntityItem
-    val results = MachineRecipes.instance.getOutput(RecipeType.GRINDER.name, itemStack)
+    val results = MachineRecipes.instance.getOutput(RecipeType.SIFTER.name, itemStack)
 
     for (resource <- results)
     {
@@ -185,7 +185,7 @@ class TileGrindingWheel extends TileMechanical(Material.rock)
     }
   }
 
-  def canGrind(itemStack: ItemStack): Boolean = MachineRecipes.instance.getOutput(RecipeType.GRINDER.name, itemStack).length > 0
+  def canGrind(itemStack: ItemStack): Boolean = MachineRecipes.instance.getOutput(RecipeType.SIFTER.name, itemStack).length > 0
 
   override def renderDynamic(pos: Vector3, frame: Float, pass: Int): Unit =
   {

@@ -86,8 +86,8 @@ class TileWorkbench extends SpatialTile(Material.wood) with TInventory with TPac
                   return false
                 }
 
-                if (!tryOutput(RecipeType.CRUSHER.name, 0.1f))
-                  tryOutput(RecipeType.GRINDER.name, 0.05f)
+                if (!tryOutput(RecipeType.GRINDER.name, 0.1f))
+                  tryOutput(RecipeType.SIFTER.name, 0.05f)
               }
 
               Electrodynamics.proxy.renderBlockParticle(world, new Vector3(x + 0.5, y + 0.5, z + 0.5), new Vector3((Math.random - 0.5f) * 3, (Math.random - 0.5f) * 3, (Math.random - 0.5f) * 3), Item.getIdFromItem(inputStack.getItem), 1)

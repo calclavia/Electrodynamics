@@ -11,6 +11,7 @@ import net.minecraft.item.{Item, ItemStack}
  */
 class ItemAlloyDust extends Item with TAlloyItem
 {
+  //TODO: Check creative tab correctness
   setCreativeTab(null)
   setTextureName(Reference.prefix + "oreDust")
   setUnlocalizedName(Reference.prefix + "alloyDust")
