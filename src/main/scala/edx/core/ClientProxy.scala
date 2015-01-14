@@ -52,8 +52,11 @@ import resonant.lib.transform.vector.Vector3
 
   override def init()
   {
-    //Mech content TODO no-load if mech content is not loaded
+    //Basic
     ItemRenderHandler.register(Item.getItemFromBlock(BasicContent.blockGlassJar), new TileGlassJar)
+    ItemRenderHandler.register(Item.getItemFromBlock(BasicContent.blockSieve), new TileSieve)
+
+    //Mechanical
     ItemRenderHandler.register(MechanicalContent.itemGear, RenderGear)
     ItemRenderHandler.register(MechanicalContent.itemGearShaft, RenderGearShaft)
     ItemRenderHandler.register(MechanicalContent.itemPipe, RenderPipe)
@@ -61,14 +64,14 @@ import resonant.lib.transform.vector.Vector3
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileMechanicalPiston], new RenderMechanicalPiston)
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileWaterTurbine], new RenderWaterTurbine)
 
-    //Electrical content
+    //Electrical
     ItemRenderHandler.register(ElectricalContent.itemTransformer, RenderTransformer)
     ItemRenderHandler.register(ElectricalContent.itemMultimeter, RenderMultimeter)
     ItemRenderHandler.register(ElectricalContent.itemQuantumGlyph, RenderQuantumGlyph)
 
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileTesla], new RenderTesla)
 
-    //Atomic content
+    //Quantum
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileCentrifuge], new RenderCentrifuge)
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TilePlasmaHeater], new RenderPlasmaHeater)
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileNuclearBoiler], new RenderNuclearBoiler)
@@ -80,7 +83,6 @@ import resonant.lib.transform.vector.Vector3
 
     //Archaic
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileCastingMold], new RenderCastingMold)
-    ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileSieve], new RenderMillstone)
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileHotPlate], new RenderHotPlate)
   }
 

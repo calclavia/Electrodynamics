@@ -1,21 +1,29 @@
 package edx.basic.process.sifting
 
+import java.util.ArrayList
+
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import edx.core.Reference
 import edx.core.resource.content.ItemRubble
 import io.netty.buffer.ByteBuf
+import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.item.ItemStack
 import net.minecraft.util.ResourceLocation
+import net.minecraftforge.client.IItemRenderer.ItemRenderType
 import net.minecraftforge.client.model.AdvancedModelLoader
 import org.lwjgl.opengl.GL11
+import resonant.api.items.ISimpleItemRenderer
 import resonant.lib.content.prefab.TInventory
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
+import resonant.lib.prefab.tile.item.ItemBlockSaved
 import resonant.lib.prefab.tile.spatial.SpatialTile
-import resonant.lib.render.RenderUtility
+import resonant.lib.render.{RenderItemOverlayUtility, RenderUtility}
 import resonant.lib.transform.region.Cuboid
 import resonant.lib.transform.vector.Vector3
+import resonant.lib.utility.inventory.InventoryUtility
 import resonant.lib.wrapper.ByteBufWrapper._
 
 object TileSieve
@@ -23,13 +31,14 @@ object TileSieve
   val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "sieve.tcn"))
 }
 
-class TileSieve extends SpatialTile(Material.wood) with TInventory with TPacketSender with TPacketReceiver
+class TileSieve extends SpatialTile(Material.wood) with TInventory with TPacketSender with TPacketReceiver with ISimpleItemRenderer
 {
   //Constructor
   setTextureName("material_wood_top")
-  bounds = new Cuboid(0.1, 0, 0.1, 0.9, 0.3, 0.9)
+  bounds = new Cuboid(0, 0, 0, 1, 0.25, 1)
   normalRender = false
   isOpaqueCube = false
+  itemBlock = classOf[ItemSieve]
 
   override def canUpdate: Boolean = false
 
@@ -51,16 +60,55 @@ class TileSieve extends SpatialTile(Material.wood) with TInventory with TPacketS
     return true
   }
 
+  override def isItemValidForSlot(i: Int, itemStack: ItemStack): Boolean = itemStack.getItem.isInstanceOf[ItemRubble]
+
+  override def renderInventoryItem(renderType: ItemRenderType, itemStack: ItemStack, data: AnyRef*): Unit =
+  {
+    /*
+    GL11.glPushMatrix()
+
+    val nbt = NBTUtility.getNBTTagCompound(itemStack)
+    val inv = new ExternalInventory(null, 1)
+    inv.load(nbt)
+
+    if (inv.getStackInSlot(0) != null)
+      RenderItemOverlayUtility.renderTopOverlay(this, Array[ItemStack](inv.getStackInSlot(0)), null, 1, 1, 0,  - 1, 0, 1f)
+    GL11.glPopMatrix()
+*/
+
+    GL11.glPushMatrix()
+    GL11.glTranslatef(0.5f, 1f, 0.5f)
+    GL11.glScalef(1.4f, 1.4f, 1.4f)
+    RenderUtility.bind(Reference.domain, Reference.modelPath + "sieve.png")
+    TileSieve.model.renderAll()
+    GL11.glPopMatrix()
+  }
+
   @SideOnly(Side.CLIENT)
   override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
   {
     GL11.glPushMatrix()
+
+    if (getStackInSlot(0) != null)
+      RenderItemOverlayUtility.renderTopOverlay(this, Array[ItemStack](getStackInSlot(0)), null, 1, 1, pos.x, pos.y - 1, pos.z, 1f)
+    GL11.glPopMatrix()
+
+    GL11.glPushMatrix()
     GL11.glTranslated(pos.x, pos.y, pos.z)
-    GL11.glTranslatef(0.5f, 1.2f, 0.5f)
-    GL11.glScalef(1.8f, 1.8f, 1.8f)
+
+    GL11.glTranslatef(0.5f, 0.65f, 0.5f)
+    GL11.glScalef(1.4f, 1.4f, 1.4f)
     RenderUtility.bind(Reference.domain, Reference.modelPath + "sieve.png")
     TileSieve.model.renderAll()
     GL11.glPopMatrix()
+  }
+
+  override def getDrops(metadata: Int, fortune: Int): ArrayList[ItemStack] = new ArrayList[ItemStack]
+
+  override def onRemove(block: Block, par6: Int)
+  {
+    val stack: ItemStack = ItemBlockSaved.getItemStackWithNBT(block, world, xi, yi, zi)
+    InventoryUtility.dropItemStack(world, center, stack)
   }
 
   /**

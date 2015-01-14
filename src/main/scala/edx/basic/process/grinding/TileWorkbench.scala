@@ -85,8 +85,7 @@ class TileWorkbench extends SpatialTile(Material.wood) with TInventory with TPac
                   return false
                 }
 
-                if (!tryOutput(RecipeType.GRINDER.name, 0.1f))
-                  tryOutput(RecipeType.SIFTER.name, 0.05f)
+                tryOutput(RecipeType.GRINDER.name, 0.1f)
               }
 
               Electrodynamics.proxy.renderBlockParticle(world, new Vector3(x + 0.5, y + 0.5, z + 0.5), new Vector3((Math.random - 0.5f) * 3, (Math.random - 0.5f) * 3, (Math.random - 0.5f) * 3), Item.getIdFromItem(inputStack.getItem), 1)
@@ -158,7 +157,6 @@ class TileWorkbench extends SpatialTile(Material.wood) with TInventory with TPac
   /**
    * Packets
    */
-
   override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
   {
     GL11.glPushMatrix()
