@@ -21,7 +21,6 @@ import net.minecraft.util.{IIcon, MovingObjectPosition}
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
 import resonant.api.tile.INodeProvider
-import resonant.lib.grid.UpdateTicker
 import resonant.lib.grid.electric.NodeDC
 
 import scala.collection.convert.wrapAll._
@@ -287,9 +286,9 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
 
   override def getSubParts: JIterable[IndexedCuboid6] = Seq(new IndexedCuboid6(0, PartFlatWire.selectionBounds(getThickness)(side)))
 
-  def getThickness: Int = if (insulated) 2 else 1
-
   def getOcclusionBoxes: JIterable[Cuboid6] = Seq(PartFlatWire.occlusionBounds(getThickness)(side))
+
+  def getThickness: Int = if (insulated) 2 else 1
 
   override def solid(arg0: Int) = false
 
@@ -312,6 +311,8 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
     return false
   }
 
+  def useStaticRenderer: Boolean = true
+
   @SideOnly(Side.CLIENT)
   override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
   {
@@ -326,8 +327,6 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
       GL11.glEnable(GL11.GL_LIGHTING)
     }
   }
-
-  def useStaticRenderer: Boolean = true
 
   @SideOnly(Side.CLIENT)
   override def drawBreaking(renderBlocks: RenderBlocks)
@@ -345,8 +344,6 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
   {
     override def reconstruct()
     {
-      UpdateTicker.threaded.addUpdater(this)
-
       if (!world.isRemote)
       {
         directionMap.clear()
