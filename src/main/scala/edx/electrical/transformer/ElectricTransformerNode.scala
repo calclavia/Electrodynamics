@@ -2,12 +2,12 @@ package edx.electrical.transformer
 
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.tile.INodeProvider
-import resonant.lib.grid.electric.NodeDirectCurrent
+import resonant.lib.grid.electric.NodeDC
 
 /**
  * Created by robert on 8/11/2014.
  */
-class ElectricTransformerNode(parent: INodeProvider) extends NodeDirectCurrent(parent: INodeProvider)
+class ElectricTransformerNode(parent: INodeProvider) extends NodeDC(parent: INodeProvider)
 {
   var connectionDirection: ForgeDirection = ForgeDirection.NORTH
   var input = true
@@ -30,7 +30,7 @@ class ElectricTransformerNode(parent: INodeProvider) extends NodeDirectCurrent(p
     return 120
   }
 
-  override def canConnect[B <: NodeDirectCurrent](obj: B, from: ForgeDirection): Boolean =
+  override def canConnect[B <: NodeDC](obj: B, from: ForgeDirection): Boolean =
   {
     return obj.isInstanceOf[INodeProvider] && from == connectionDirection
   }

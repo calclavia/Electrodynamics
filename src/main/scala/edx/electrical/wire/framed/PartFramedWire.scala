@@ -10,7 +10,7 @@ import edx.electrical.wire.base.TWire
 import net.minecraft.client.renderer.RenderBlocks
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.lib.grid.electric.NodeDirectCurrent
+import resonant.lib.grid.electric.NodeDC
 import resonant.lib.wrapper.BitmaskWrapper._
 
 /**
@@ -20,7 +20,7 @@ import resonant.lib.wrapper.BitmaskWrapper._
  */
 class PartFramedWire extends PartFramedNode with TWire
 {
-  override lazy val node = new NodeDirectCurrent(this) with TMultipartNode[NodeDirectCurrent]
+  override lazy val node = new NodeDC(this) with TMultipartNode[NodeDC]
   {
     override def reconstruct()
     {
@@ -33,7 +33,7 @@ class PartFramedWire extends PartFramedNode with TWire
         sendPacket(0)
     }
 
-    override def connect[B <: NodeDirectCurrent](obj: B, dir: ForgeDirection) =
+    override def connect[B <: NodeDC](obj: B, dir: ForgeDirection) =
     {
       super.connect(obj, dir)
       connectionMask = connectionMask.openMask(dir)

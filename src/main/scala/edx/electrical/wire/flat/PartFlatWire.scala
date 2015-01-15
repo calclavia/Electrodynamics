@@ -22,7 +22,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
 import resonant.api.tile.INodeProvider
 import resonant.lib.grid.UpdateTicker
-import resonant.lib.grid.electric.NodeDirectCurrent
+import resonant.lib.grid.electric.NodeDC
 
 import scala.collection.convert.wrapAll._
 
@@ -223,6 +223,28 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
     super.onChunkLoad()
   }
 
+  def dropIfCantStay: Boolean =
+  {
+    if (!canStay)
+    {
+      drop
+      return true
+    }
+    return false
+  }
+
+  def canStay: Boolean =
+  {
+    val pos: BlockCoord = new BlockCoord(tile).offset(side)
+    return MultipartUtil.canPlaceWireOnSide(world, pos.x, pos.y, pos.z, ForgeDirection.getOrientation(side ^ 1), false)
+  }
+
+  def drop
+  {
+    TileMultipart.dropItem(getItem, world, Vector3.fromTileEntityCenter(tile))
+    tile.remPart(this)
+  }
+
   override def onAdded()
   {
     super.onAdded()
@@ -249,28 +271,6 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
 
     if (!world.isRemote)
       sendPacket(3)
-  }
-
-  def dropIfCantStay: Boolean =
-  {
-    if (!canStay)
-    {
-      drop
-      return true
-    }
-    return false
-  }
-
-  def canStay: Boolean =
-  {
-    val pos: BlockCoord = new BlockCoord(tile).offset(side)
-    return MultipartUtil.canPlaceWireOnSide(world, pos.x, pos.y, pos.z, ForgeDirection.getOrientation(side ^ 1), false)
-  }
-
-  def drop
-  {
-    TileMultipart.dropItem(getItem, world, Vector3.fromTileEntityCenter(tile))
-    tile.remPart(this)
   }
 
   def maskOpen(r: Int): Boolean =
@@ -341,7 +341,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
    * TODO: ForgeDirection may NOT be suitable. Integers are better.
    * @param provider
    */
-  class FlatWireNode(provider: INodeProvider) extends NodeDirectCurrent(provider) with TMultipartNode[NodeDirectCurrent]
+  class FlatWireNode(provider: INodeProvider) extends NodeDC(provider) with TMultipartNode[NodeDC]
   {
     override def reconstruct()
     {
@@ -393,7 +393,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
 
             if (part != null)
             {
-              val node = part.asInstanceOf[INodeProvider].getNode(classOf[NodeDirectCurrent], from)
+              val node = part.asInstanceOf[INodeProvider].getNode(classOf[NodeDC], from)
 
               if (canConnect(node, to))
               {
@@ -492,7 +492,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
           val part = tpCorner.partMap(absDir ^ 1)
           val absToDir = ForgeDirection.getOrientation(absDir)
           val absFromDir = ForgeDirection.getOrientation(absDir).getOpposite
-          val node = part.asInstanceOf[INodeProvider].getNode(classOf[NodeDirectCurrent], absFromDir)
+          val node = part.asInstanceOf[INodeProvider].getNode(classOf[NodeDC], absFromDir)
 
           if (canConnect(node, absFromDir))
           {
@@ -511,7 +511,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
       val facePart = tile.partMap(absDir)
       val toDir = ForgeDirection.getOrientation(absDir)
 
-      if (facePart != null && (!facePart.isInstanceOf[PartFlatWire] || !canConnect(facePart.asInstanceOf[INodeProvider].getNode(classOf[NodeDirectCurrent], toDir.getOpposite), toDir.getOpposite)))
+      if (facePart != null && (!facePart.isInstanceOf[PartFlatWire] || !canConnect(facePart.asInstanceOf[INodeProvider].getNode(classOf[NodeDC], toDir.getOpposite), toDir.getOpposite)))
       {
         return false
       }
@@ -718,7 +718,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
       return false
     }
 
-    override def canConnect[B <: NodeDirectCurrent](node: B, from: ForgeDirection): Boolean =
+    override def canConnect[B <: NodeDC](node: B, from: ForgeDirection): Boolean =
     {
       if (node.isInstanceOf[FlatWireNode])
       {
@@ -864,10 +864,10 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
     /**
      * Gets a potential DCNode from an object.
      */
-    private def getComponent(obj: AnyRef, from: ForgeDirection): NodeDirectCurrent =
+    private def getComponent(obj: AnyRef, from: ForgeDirection): NodeDC =
     {
       if (obj.isInstanceOf[INodeProvider])
-        return obj.asInstanceOf[INodeProvider].getNode(classOf[NodeDirectCurrent], from)
+        return obj.asInstanceOf[INodeProvider].getNode(classOf[NodeDC], from)
 
       return null
     }
