@@ -10,7 +10,7 @@ import net.minecraft.network.Packet
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import resonant.engine.ResonantEngine
-import resonant.lib.content.prefab.TEnergyStorage
+import resonant.lib.content.prefab.{TEnergyStorage, TIO}
 import resonant.lib.grid.energy.EnergyStorage
 import resonant.lib.mod.compat.energy.Compatibility
 import resonant.lib.network.Synced
@@ -28,7 +28,7 @@ object TileChemicalExtractor
   final val ENERGY: Long = 5000
 }
 
-class TileChemicalExtractor extends TileProcess(Material.iron) with IFluidHandler with TEnergyStorage with TRotatable
+class TileChemicalExtractor extends TileProcess(Material.iron) with IFluidHandler with TEnergyStorage with TRotatable with TIO
 {
   //TODO: Dummy
   energy = new EnergyStorage(0)
@@ -59,7 +59,7 @@ class TileChemicalExtractor extends TileProcess(Material.iron) with IFluidHandle
     {
       if (canUse)
       {
-        discharge(getStackInSlot(0))
+        //discharge(getStackInSlot(0))
         if (energy.checkExtract(TileChemicalExtractor.ENERGY))
         {
           if (time == 0)

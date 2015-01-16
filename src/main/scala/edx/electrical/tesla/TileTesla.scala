@@ -20,7 +20,7 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.ChatComponentText
 import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.lib.content.prefab.TEnergyStorage
+import resonant.lib.content.prefab.{TEnergyStorage, TIO}
 import resonant.lib.grid.energy.EnergyStorage
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.{TPacketIDReceiver, TPacketSender}
@@ -45,7 +45,7 @@ object TileTesla
   final val DEFAULT_COLOR: Int = 12
 }
 
-class TileTesla extends TileElectric(Material.iron) with IMultiBlockStructure[TileTesla] with ITesla with TPacketIDReceiver with TPacketSender with TEnergyStorage
+class TileTesla extends TileElectric(Material.iron) with IMultiBlockStructure[TileTesla] with ITesla with TPacketIDReceiver with TPacketSender with TEnergyStorage with TIO
 {
 
   final val TRANSFER_CAP: Double = 10000D
@@ -272,12 +272,6 @@ class TileTesla extends TileElectric(Material.iron) with IMultiBlockStructure[Ti
     return false
   }
 
-  def getMultiBlock: MultiBlockHandler[TileTesla] =
-  {
-    if (multiBlock == null) multiBlock = new MultiBlockHandler[TileTesla](this)
-    return multiBlock
-  }
-
   def teslaTransfer(e: Double, doTransfer: Boolean): Double =
   {
     var transferEnergy = e
@@ -392,6 +386,12 @@ class TileTesla extends TileElectric(Material.iron) with IMultiBlockStructure[Ti
       this.linkDim = nbt.getInteger("linkDim")
     }
     getMultiBlock.load(nbt)
+  }
+
+  def getMultiBlock: MultiBlockHandler[TileTesla] =
+  {
+    if (multiBlock == null) multiBlock = new MultiBlockHandler[TileTesla](this)
+    return multiBlock
   }
 
   /**

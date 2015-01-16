@@ -51,7 +51,7 @@ object MechanicalContent extends ContentHolder
   {
     super.preInit()
 
-    EDXCreativeTab.itemStack = new ItemStack(itemGear)
+    EDXCreativeTab.itemStack = new ItemStack(blockPump)
 
     SchematicRegistry.register("resonantinduction.mechanical.waterTurbine", new SchematicPlate("schematic.waterTurbine.name", MechanicalContent.blockWaterTurbine))
     SchematicRegistry.register("resonantinduction.mechanical.windTurbine", new SchematicPlate("schematic.windTurbine.name", MechanicalContent.blockWindTurbine))

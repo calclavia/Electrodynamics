@@ -19,6 +19,7 @@ import resonant.lib.prefab.tile.traits.TRotatable
 import resonant.lib.render.RenderUtility
 import resonant.lib.transform.vector.Vector3
 
+import scala.collection.convert.wrapAll._
 /**
  * A kinetic energy to electrical energy converter.
  *
@@ -50,6 +51,9 @@ class TileMotor extends SpatialTile(Material.iron) with TElectric with TSpatialN
   isOpaqueCube = false
   nodes.add(dcNode)
   nodes.add(mechNode)
+
+  dcNode.positiveTerminals.addAll(Seq(ForgeDirection.UP, ForgeDirection.SOUTH, ForgeDirection.EAST))
+  dcNode.negativeTerminals.addAll(Seq(ForgeDirection.DOWN, ForgeDirection.NORTH, ForgeDirection.WEST))
 
   def toggleGearRatio() = (gearRatio + 1) % 3
 

@@ -8,14 +8,15 @@ import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.init.Blocks
 import net.minecraft.util.IIcon
 import net.minecraftforge.common.util.ForgeDirection
+import resonant.lib.content.prefab.TIO
 import resonant.lib.prefab.tile.TileElectric
 import resonant.lib.prefab.tile.spatial.SpatialBlock
 import resonant.lib.transform.vector.Vector3
 
-class TileThermopile extends TileElectric(Material.rock)
+class TileThermopile extends TileElectric(Material.rock) with TIO
 {
 
-  this.ioMap = 728.asInstanceOf[Short]
+  ioMap = 728.asInstanceOf[Short]
 
   private final val MAX_USE_TICKS: Int = 120 * 20
   /**

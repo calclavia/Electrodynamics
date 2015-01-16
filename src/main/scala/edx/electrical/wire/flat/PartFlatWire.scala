@@ -21,7 +21,7 @@ import net.minecraft.util.{IIcon, MovingObjectPosition}
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
 import resonant.api.tile.INodeProvider
-import resonant.lib.grid.electric.NodeDC
+import resonant.lib.grid.electric.{NodeDC, NodeDCWire}
 
 import scala.collection.convert.wrapAll._
 
@@ -56,7 +56,7 @@ object PartFlatWire
 
 class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOcclusion
 {
-  private val dcNode = new FlatWireNode(this)
+  private val dcNode = new NodeFlatWire(this)
   /**
    * The current side the wire is placed on
    */
@@ -75,9 +75,6 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
   var connectionMask = 0x00
 
   nodes.add(dcNode)
-  //TODO: Create DC wire nodes to allow omni directional connections
-  dcNode.positiveTerminals.addAll(Seq(ForgeDirection.UP, ForgeDirection.NORTH, ForgeDirection.EAST))
-  dcNode.negativeTerminals.addAll(Seq(ForgeDirection.DOWN, ForgeDirection.SOUTH, ForgeDirection.WEST))
 
   def preparePlacement(side: Int, meta: Int)
   {
@@ -223,6 +220,28 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
     super.onChunkLoad()
   }
 
+  def dropIfCantStay: Boolean =
+  {
+    if (!canStay)
+    {
+      drop
+      return true
+    }
+    return false
+  }
+
+  def canStay: Boolean =
+  {
+    val pos: BlockCoord = new BlockCoord(tile).offset(side)
+    return MultipartUtil.canPlaceWireOnSide(world, pos.x, pos.y, pos.z, ForgeDirection.getOrientation(side ^ 1), false)
+  }
+
+  def drop
+  {
+    TileMultipart.dropItem(getItem, world, Vector3.fromTileEntityCenter(tile))
+    tile.remPart(this)
+  }
+
   override def onAdded()
   {
     super.onAdded()
@@ -251,28 +270,6 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
       sendPacket(3)
   }
 
-  def dropIfCantStay: Boolean =
-  {
-    if (!canStay)
-    {
-      drop
-      return true
-    }
-    return false
-  }
-
-  def canStay: Boolean =
-  {
-    val pos: BlockCoord = new BlockCoord(tile).offset(side)
-    return MultipartUtil.canPlaceWireOnSide(world, pos.x, pos.y, pos.z, ForgeDirection.getOrientation(side ^ 1), false)
-  }
-
-  def drop
-  {
-    TileMultipart.dropItem(getItem, world, Vector3.fromTileEntityCenter(tile))
-    tile.remPart(this)
-  }
-
   def maskOpen(r: Int): Boolean =
   {
     return (connectionMask & 0x1000 << r) != 0
@@ -289,7 +286,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
 
   def getOcclusionBoxes: JIterable[Cuboid6] = Seq(PartFlatWire.occlusionBounds(getThickness)(side))
 
-  def getThickness: Int = if (insulated) 2 else 1
+  def getThickness: Int = if (insulated) 1 else 0
 
   override def solid(arg0: Int) = false
 
@@ -341,7 +338,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
    * TODO: ForgeDirection may NOT be suitable. Integers are better.
    * @param provider
    */
-  class FlatWireNode(provider: INodeProvider) extends NodeDC(provider) with TMultipartNode[NodeDC]
+  class NodeFlatWire(provider: INodeProvider) extends NodeDCWire(provider) with TMultipartNode[NodeDC]
   {
     override def reconstruct()
     {
@@ -549,9 +546,9 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
 
         if (canConnect(dcNode, ForgeDirection.getOrientation(absDir)))
         {
-          if (dcNode.isInstanceOf[FlatWireNode])
+          if (dcNode.isInstanceOf[NodeFlatWire])
           {
-            if (dcNode.asInstanceOf[FlatWireNode].connectCorner(PartFlatWire.this, Rotation.rotationTo(absDir ^ 1, side ^ 1)))
+            if (dcNode.asInstanceOf[NodeFlatWire].connectCorner(PartFlatWire.this, Rotation.rotationTo(absDir ^ 1, side ^ 1)))
             {
               if (!renderThisCorner(part.asInstanceOf[PartFlatWire]))
               {
@@ -595,9 +592,9 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
 
         if (canConnect(dcNode, ForgeDirection.getOrientation(absDir)))
         {
-          if (dcNode.isInstanceOf[FlatWireNode])
+          if (dcNode.isInstanceOf[NodeFlatWire])
           {
-            return dcNode.asInstanceOf[FlatWireNode].connectStraight(PartFlatWire.this, (r + 2) % 4)
+            return dcNode.asInstanceOf[NodeFlatWire].connectStraight(PartFlatWire.this, (r + 2) % 4)
           }
 
           return true
@@ -630,8 +627,8 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
 
       if (canConnect(dcNode, toDir))
       {
-        if (dcNode.isInstanceOf[FlatWireNode])
-          return dcNode.asInstanceOf[FlatWireNode].connectInternal(PartFlatWire.this, Rotation.rotationTo(absDir, side))
+        if (dcNode.isInstanceOf[NodeFlatWire])
+          return dcNode.asInstanceOf[NodeFlatWire].connectInternal(PartFlatWire.this, Rotation.rotationTo(absDir, side))
       }
 
       return false
@@ -644,7 +641,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
       //TODO: Check other appliances that may connect to center but are not wires?
       if (tp.isInstanceOf[PartFlatWire])
       {
-        val dcNode = tp.asInstanceOf[PartFlatWire].getNode(classOf[FlatWireNode], null)
+        val dcNode = tp.asInstanceOf[PartFlatWire].getNode(classOf[NodeFlatWire], null)
 
         if (canConnect(dcNode, null))
         {
@@ -721,9 +718,9 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
 
     override def canConnect[B <: NodeDC](node: B, from: ForgeDirection): Boolean =
     {
-      if (node.isInstanceOf[FlatWireNode])
+      if (node.isInstanceOf[NodeFlatWire])
       {
-        val wire = node.asInstanceOf[FlatWireNode].getParent.asInstanceOf[TWire]
+        val wire = node.asInstanceOf[NodeFlatWire].getParent.asInstanceOf[TWire]
 
         if (material == wire.material)
         {

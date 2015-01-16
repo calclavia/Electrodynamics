@@ -13,14 +13,14 @@ import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11._
-import resonant.lib.content.prefab.{TElectric, TEnergyStorage}
+import resonant.lib.content.prefab.{TElectric, TEnergyStorage, TIO}
 import resonant.lib.grid.energy.EnergyStorage
-import resonant.lib.network.discriminator.{PacketTile, PacketType}
-import resonant.lib.network.handle.IPacketReceiver
-import resonant.lib.network.netty.AbstractPacket
+import resonant.lib.network.discriminator.PacketType
+import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
 import resonant.lib.prefab.tile.spatial.SpatialTile
 import resonant.lib.render.RenderUtility
 import resonant.lib.transform.vector.Vector3
+import resonant.lib.wrapper.ByteBufWrapper._
 
 /** A modular battery box that allows shared connections with boxes next to it.
   *
@@ -38,13 +38,10 @@ object TileBattery
    * @param tier - 0, 1, 2
    * @return
    */
-  def getEnergyForTier(tier: Int): Long =
-  {
-    return Math.round(Math.pow(500000000, (tier / (maxTier + 0.7f)) + 1) / 500000000) * 500000000
-  }
+  def getEnergyForTier(tier: Int) = Math.round(Math.pow(500000000, (tier / (maxTier + 0.7f)) + 1) / 500000000) * 500000000
 }
 
-class TileBattery extends SpatialTile(Material.iron) with TElectric with IPacketReceiver with TEnergyStorage
+class TileBattery extends SpatialTile(Material.iron) with TIO with TElectric with TPacketSender with TPacketReceiver with TEnergyStorage
 {
   var renderEnergyAmount = 0d
   var doCharge = false
@@ -108,18 +105,23 @@ class TileBattery extends SpatialTile(Material.iron) with TElectric with IPacket
         doCharge = !doCharge
         println("Charge: " + doCharge)
       }
-
     }
 
     return true
   }
 
-  override def getDescPacket: AbstractPacket = new PacketTile(this) <<< renderEnergyAmount <<< ioMap
-
-  override def read(buf: ByteBuf, player: EntityPlayer, packet: PacketType)
+  override def write(buf: ByteBuf, id: Int)
   {
-    energy.setEnergy(buf.readLong)
-    ioMap == buf.readShort
+    super.write(buf, id)
+    buf <<< renderEnergyAmount
+    buf <<< ioMap
+  }
+
+  override def read(buf: ByteBuf, id: Int, packetType: PacketType)
+  {
+    super.read(buf, id, packetType)
+    energy.setEnergy(buf.readDouble())
+    ioMap == buf.readShort()
   }
 
   override def setIO(dir: ForgeDirection, packet: Int)
@@ -142,7 +144,7 @@ class TileBattery extends SpatialTile(Material.iron) with TElectric with IPacket
 
   override def getDrops(metadata: Int, fortune: Int): ArrayList[ItemStack] =
   {
-    val ret: ArrayList[ItemStack] = new ArrayList[ItemStack]
+    val ret = new ArrayList[ItemStack]
     val itemStack: ItemStack = new ItemStack(getBlockType, 1)
     val itemBlock: ItemBlockBattery = itemStack.getItem.asInstanceOf[ItemBlockBattery]
     ItemBlockBattery.setTier(itemStack, world.getBlockMetadata(xi, yi, zi).asInstanceOf[Byte])
@@ -253,8 +255,5 @@ class TileBattery extends SpatialTile(Material.iron) with TElectric with IPacket
     glPopMatrix()
   }
 
-  override def toString: String =
-  {
-    return "[TileBattery]" + x + "x " + y + "y " + z + "z "
-  }
+  override def toString: String = "[TileBattery]" + x + "x " + y + "y " + z + "z "
 }

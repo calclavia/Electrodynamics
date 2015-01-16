@@ -18,7 +18,7 @@ import net.minecraft.util.IIcon
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
-import resonant.lib.content.prefab.{TElectric, TInventory}
+import resonant.lib.content.prefab.{TElectric, TIO, TInventory}
 import resonant.lib.grid.energy.EnergyStorage
 import resonant.lib.grid.thermal.{BoilEvent, ThermalPhysics}
 import resonant.lib.network.discriminator.PacketType
@@ -34,7 +34,7 @@ import resonant.lib.wrapper.CollectionWrapper._
  *
  * @author Calclavia
  */
-class TileFirebox extends SpatialTile(Material.rock) with IFluidHandler with TInventory with TElectric with TPacketSender with TPacketReceiver
+class TileFirebox extends SpatialTile(Material.rock) with IFluidHandler with TInventory with TElectric with TIO with TPacketSender with TPacketReceiver
 {
   /**
    * 1KG of coal ~= 24MJ
@@ -159,11 +159,6 @@ class TileFirebox extends SpatialTile(Material.rock) with IFluidHandler with TIn
     return this.getBlockMetadata == 1
   }
 
-  def canBurn(stack: ItemStack): Boolean =
-  {
-    return TileEntityFurnace.getItemBurnTime(stack) > 0
-  }
-
   override def randomDisplayTick(): Unit =
   {
     if (isBurning)
@@ -189,6 +184,8 @@ class TileFirebox extends SpatialTile(Material.rock) with IFluidHandler with TIn
     }
   }
 
+  def isBurning: Boolean = burnTime > 0
+
   override def getSizeInventory = 1
 
   def getMeltIronEnergy(volume: Float): Long =
@@ -201,6 +198,11 @@ class TileFirebox extends SpatialTile(Material.rock) with IFluidHandler with TIn
   override def isItemValidForSlot(i: Int, itemStack: ItemStack): Boolean =
   {
     return i == 0 && canBurn(itemStack)
+  }
+
+  def canBurn(stack: ItemStack): Boolean =
+  {
+    return TileEntityFurnace.getItemBurnTime(stack) > 0
   }
 
   /**
@@ -292,8 +294,6 @@ class TileFirebox extends SpatialTile(Material.rock) with IFluidHandler with TIn
 
     return if (isBurning) (if (isElectric) SpatialBlock.icon.get("firebox_electric_side_on") else SpatialBlock.icon.get("firebox_side_on")) else (if (isElectric) SpatialBlock.icon.get("firebox_electric_side_off") else SpatialBlock.icon.get("firebox_side_off"))
   }
-
-  def isBurning: Boolean = burnTime > 0
 
   override def click(player: EntityPlayer)
   {

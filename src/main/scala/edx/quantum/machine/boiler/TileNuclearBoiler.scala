@@ -11,7 +11,7 @@ import net.minecraft.network.Packet
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import resonant.engine.ResonantEngine
-import resonant.lib.content.prefab.TEnergyStorage
+import resonant.lib.content.prefab.{TEnergyStorage, TIO}
 import resonant.lib.grid.energy.EnergyStorage
 import resonant.lib.network.Synced
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
@@ -28,7 +28,7 @@ object TileNuclearBoiler
   final val DIAN: Long = 50000
 }
 
-class TileNuclearBoiler extends TileElectricInventory(Material.iron) with IPacketReceiver with IFluidHandler with TRotatable with TEnergyStorage
+class TileNuclearBoiler extends TileElectricInventory(Material.iron) with IPacketReceiver with IFluidHandler with TRotatable with TEnergyStorage with TIO
 {
   final val SHI_JIAN: Int = 20 * 15
 
@@ -85,7 +85,7 @@ class TileNuclearBoiler extends TileElectricInventory(Material.iron) with IPacke
       }
       if (this.nengYong)
       {
-        this.discharge(getStackInSlot(0))
+        //discharge(getStackInSlot(0))
         if (energy.extractEnergy(TileNuclearBoiler.DIAN, false) >= TileNuclearBoiler.DIAN)
         {
           if (this.timer == 0)
