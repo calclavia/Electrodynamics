@@ -79,7 +79,7 @@ class TileBattery extends SpatialTile(Material.iron) with TIO with TElectric wit
       //TODO: Test, remove this
       if (doCharge)
       {
-        dcNode.generateVoltage(100)
+        dcNode.setVoltage(100)
       }
 
       if (markDistributionUpdate && ticks % 5 == 0)
