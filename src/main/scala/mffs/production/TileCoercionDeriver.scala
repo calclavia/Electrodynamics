@@ -12,10 +12,10 @@ import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import resonant.api.mffs.modules.IModule
-import resonant.lib.wrapper.ByteBufWrapper._
-import resonant.lib.network.discriminator.PacketType
 import resonant.lib.mod.compat.energy.Compatibility
+import resonant.lib.network.discriminator.PacketType
 import resonant.lib.transform.vector.Vector3
+import resonant.lib.wrapper.ByteBufWrapper._
 
 /**
  * A TileEntity that extract energy into Fortron.
@@ -69,13 +69,13 @@ class TileCoercionDeriver extends TileModuleAcceptor with TTEBridge
           val withdrawnElectricity = requestFortron(productionRate / 20, true) / TileCoercionDeriver.ueToFortronRatio
           energyStorage.receiveEnergy(withdrawnElectricity * TileCoercionDeriver.energyConversionPercentage, true)
 
-          recharge(getStackInSlot(TileCoercionDeriver.slotBattery))
+          //          recharge(getStackInSlot(TileCoercionDeriver.slotBattery))
         }
         else
         {
           if (getFortronEnergy < getFortronCapacity)
           {
-            discharge(getStackInSlot(TileCoercionDeriver.slotBattery))
+            //            discharge(getStackInSlot(TileCoercionDeriver.slotBattery))
             val energy = energyStorage.getEnergy
             energyStorage.setMaxTransfer(getPower)
             energyStorage.setCapacity(getPower)
@@ -148,6 +148,27 @@ class TileCoercionDeriver extends TileModuleAcceptor with TTEBridge
     return 0
   }
 
+  override def isItemValidForSlot(slotID: Int, itemStack: ItemStack): Boolean =
+  {
+    if (itemStack != null)
+    {
+      if (slotID >= startModuleIndex)
+      {
+        return itemStack.getItem.isInstanceOf[IModule]
+      }
+      slotID match
+      {
+        case TileCoercionDeriver.slotFrequency =>
+          return itemStack.getItem.isInstanceOf[ItemCardFrequency]
+        case TileCoercionDeriver.slotBattery =>
+          return Compatibility.isHandler(itemStack.getItem, null)
+        case TileCoercionDeriver.slotFuel =>
+          return itemStack.isItemEqual(new ItemStack(Items.dye, 1, 4)) || itemStack.isItemEqual(new ItemStack(Items.quartz))
+      }
+    }
+    return false
+  }
+
   def canConsume: Boolean =
   {
     if (this.isActive && !this.isInversed)
@@ -205,27 +226,6 @@ class TileCoercionDeriver extends TileModuleAcceptor with TTEBridge
     super.writeToNBT(nbt)
     nbt.setInteger("processTime", processTime)
     nbt.setBoolean("isInversed", isInversed)
-  }
-
-  override def isItemValidForSlot(slotID: Int, itemStack: ItemStack): Boolean =
-  {
-    if (itemStack != null)
-    {
-      if (slotID >= startModuleIndex)
-      {
-        return itemStack.getItem.isInstanceOf[IModule]
-      }
-      slotID match
-      {
-        case TileCoercionDeriver.slotFrequency =>
-          return itemStack.getItem.isInstanceOf[ItemCardFrequency]
-        case TileCoercionDeriver.slotBattery =>
-          return Compatibility.isHandler(itemStack.getItem, null)
-        case TileCoercionDeriver.slotFuel =>
-          return itemStack.isItemEqual(new ItemStack(Items.dye, 1, 4)) || itemStack.isItemEqual(new ItemStack(Items.quartz))
-      }
-    }
-    return false
   }
 
   @SideOnly(Side.CLIENT)
