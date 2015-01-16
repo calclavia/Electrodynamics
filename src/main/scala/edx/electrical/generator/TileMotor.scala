@@ -74,22 +74,21 @@ class TileMotor extends SpatialTile(Material.iron) with TElectric with TSpatialN
   {
     super.update()
 
+    /*
     //TODO: Debug with free energy
-    val deltaPower = 500d //Math.abs(mechNode.power - dcNode.power)
-
-    if (false && mechNode.power > dcNode.power)
+    if (mechNode.power > dcNode.power)
     {
       //Produce electricity
-      dcNode.setVoltage(deltaPower)
+      dcNode.setVoltage(mechNode.power)
       //TODO: Resist mech energy
     }
     //    else if (dcNode.power > mechNode.power)
-    else
+    else*/
     {
       //Produce mechanical energy
-      val mechRatio = Math.pow(6, gearRatio) * 10
-
-      mechNode.rotate(deltaPower * mechRatio, deltaPower / mechRatio)
+      val mechRatio = Math.pow(7, gearRatio) * 100 + 400
+      val power = dcNode.power
+      mechNode.rotate(power * mechRatio, power / mechRatio)
       //TODO: Resist DC energy
     }
   }
