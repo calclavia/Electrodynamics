@@ -1,6 +1,6 @@
 package edx.electrical.battery
 
-import java.util.{ArrayList, Arrays, List}
+import java.util.ArrayList
 
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import edx.core.Reference
@@ -12,7 +12,6 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
-import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL11._
 import resonant.lib.content.prefab.{TElectric, TEnergyStorage}
 import resonant.lib.grid.energy.EnergyStorage
@@ -31,8 +30,7 @@ object TileBattery
 {
   /** Tiers: 0, 1, 2 */
   final val maxTier = 2
-  /** The transfer rate **/
-  final val defaultPower = getEnergyForTier(0)
+
   @SideOnly(Side.CLIENT)
   val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "battery/battery.tcn"))
 
@@ -48,9 +46,10 @@ object TileBattery
 
 class TileBattery extends SpatialTile(Material.iron) with TElectric with IPacketReceiver with TEnergyStorage
 {
-  var renderEnergyAmount: Double = 0
+  var renderEnergyAmount = 0d
   var doCharge = false
-  private var markClientUpdate: Boolean = false
+  private var markClientUpdate = false
+  private var markDistributionUpdate = false
 
   energy = new EnergyStorage
   textureName = "material_metal_side"
@@ -59,7 +58,20 @@ class TileBattery extends SpatialTile(Material.iron) with TElectric with IPacket
   normalRender = false
   isOpaqueCube = false
   itemBlock = classOf[ItemBlockBattery]
-  private var markDistributionUpdate: Boolean = false
+
+  override def start()
+  {
+    super.start()
+    updateConnectionMask()
+  }
+
+  def updateConnectionMask()
+  {
+    dcNode.connectionMask = ForgeDirection.VALID_DIRECTIONS.filter(getIO(_) > 0).map(d => 1 << d.ordinal()).foldLeft(0)(_ | _)
+    dcNode.positiveTerminals.addAll(getInputDirections())
+    dcNode.negativeTerminals.addAll(getOutputDirections())
+    notifyChange()
+  }
 
   override def update()
   {
@@ -94,9 +106,9 @@ class TileBattery extends SpatialTile(Material.iron) with TElectric with IPacket
       if (player.isSneaking)
       {
         doCharge = !doCharge
+        println("Charge: " + doCharge)
       }
 
-      println(dcNode)
     }
 
     return true
@@ -113,19 +125,12 @@ class TileBattery extends SpatialTile(Material.iron) with TElectric with IPacket
   override def setIO(dir: ForgeDirection, packet: Int)
   {
     super.setIO(dir, packet)
-
-    //TODO: Not set during init
-    dcNode.connectionMask = ForgeDirection.VALID_DIRECTIONS.filter(getIO(_) > 0).map(d => 1 << d.ordinal()).foldLeft(0)(_ | _)
-    //TODO: Connection logic having an issue
-    dcNode.positiveTerminals.clear()
-    dcNode.positiveTerminals.addAll(getOutputDirections())
-    notifyChange()
+    updateConnectionMask()
     dcNode.reconstruct()
-
     markUpdate()
   }
 
-  override def onPlaced(entityliving: EntityLivingBase, itemStack: ItemStack)
+  override def onPlaced(entityLiving: EntityLivingBase, itemStack: ItemStack)
   {
     if (!world.isRemote && itemStack.getItem.isInstanceOf[ItemBlockBattery])
     {
@@ -152,19 +157,21 @@ class TileBattery extends SpatialTile(Material.iron) with TElectric with IPacket
     glPushMatrix()
     val energyLevel = ((itemStack.getItem.asInstanceOf[ItemBlockBattery].getEnergy(itemStack) / itemStack.getItem.asInstanceOf[ItemBlockBattery].getEnergyCapacity(itemStack)) * 8).toInt
     RenderUtility.bind(Reference.domain, Reference.modelPath + "battery/battery.png")
-    val disabledParts: List[String] = new ArrayList[String]
-    disabledParts.addAll(Arrays.asList(Array[String]("connector", "connectorIn", "connectorOut"): _*))
-    disabledParts.addAll(Arrays.asList(Array[String]("coil1", "coil2", "coil3", "coil4", "coil5", "coil6", "coil7", "coil8"): _*))
-    disabledParts.addAll(Arrays.asList(Array[String]("coil1lit", "coil2lit", "coil3lit", "coil4lit", "coil5lit", "coil6lit", "coil7lit", "coil8lit"): _*))
-    disabledParts.addAll(Arrays.asList(Array[String]("frame1con", "frame2con", "frame3con", "frame4con"): _*))
-    TileBattery.model.renderAllExcept(disabledParts.toArray(new Array[String](0)): _*)
+    var disabledParts = Set.empty[String]
+    disabledParts ++= Set("connector", "connectorIn", "connectorOut")
+    disabledParts ++= Set("coil1", "coil2", "coil3", "coil4", "coil5", "coil6", "coil7", "coil8")
+    disabledParts ++= Set("coil1lit", "coil2lit", "coil3lit", "coil4lit", "coil5lit", "coil6lit", "coil7lit", "coil8lit")
+    disabledParts ++= Set("frame1con", "frame2con", "frame3con", "frame4con")
+    TileBattery.model.renderAllExcept(disabledParts.toList: _*)
 
     for (i <- 1 until 8)
     {
       if (i != 1 || !disabledParts.contains("coil1"))
       {
-        if ((8 - i) <= energyLevel) TileBattery.model.renderOnly("coil" + i + "lit")
-        else TileBattery.model.renderOnly("coil" + i)
+        if ((8 - i) <= energyLevel)
+          TileBattery.model.renderOnly("coil" + i + "lit")
+        else
+          TileBattery.model.renderOnly("coil" + i)
       }
     }
     glPopMatrix()
@@ -173,98 +180,77 @@ class TileBattery extends SpatialTile(Material.iron) with TElectric with IPacket
   @SideOnly(Side.CLIENT)
   override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
   {
-    val partToDisable: Array[Array[String]] = Array[Array[String]](Array[String]("bottom"), Array[String]("top"), Array[String]("frame1", "frame2"), Array[String]("frame3", "frame4"), Array[String]("frame4", "frame1"), Array[String]("frame2", "frame3"))
-    val connectionPartToEnable: Array[Array[String]] = Array[Array[String]](null, null, Array[String]("frame1con", "frame2con"), Array[String]("frame3con", "frame4con"), Array[String]("frame4con", "frame1con"), Array[String]("frame2con", "frame3con"))
+    val partToDisable = Array[Array[String]](Array[String]("bottom"), Array[String]("top"), Array[String]("frame1", "frame2"), Array[String]("frame3", "frame4"), Array[String]("frame4", "frame1"), Array[String]("frame2", "frame3"))
+    val connectionPartToEnable = Array[Array[String]](null, null, Array[String]("frame1con", "frame2con"), Array[String]("frame3con", "frame4con"), Array[String]("frame4con", "frame1con"), Array[String]("frame2con", "frame3con"))
     glPushMatrix()
     glTranslated(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5)
-    val energyLevel: Int = Math.round((energy.getEnergy / TileBattery.getEnergyForTier(getBlockMetadata).asInstanceOf[Double]) * 8).asInstanceOf[Int]
+    val energyLevel = Math.round((energy.getEnergy / TileBattery.getEnergyForTier(getBlockMetadata).asInstanceOf[Double]) * 8).toInt
+
     RenderUtility.bind(Reference.domain, Reference.modelPath + "battery/battery.png")
 
-    val disabledParts = new ArrayList[String]
-    val enabledParts = new ArrayList[String]
+    var disabledParts = Set.empty[String]
+    var enabledParts = Set.empty[String]
 
     for (check <- ForgeDirection.VALID_DIRECTIONS)
     {
-      if (center.add(check).getTileEntity.isInstanceOf[TileBattery])
+      if ((toVectorWorld + check).getTileEntity.isInstanceOf[TileBattery])
       {
-        disabledParts.addAll(Arrays.asList(partToDisable(check.ordinal): _*))
-        if (check eq ForgeDirection.UP)
+        disabledParts ++= partToDisable(check.ordinal)
+        if (check == ForgeDirection.UP)
         {
-          enabledParts.addAll(Arrays.asList(partToDisable(check.ordinal): _*))
-          enabledParts.add("coil1")
+          enabledParts ++= partToDisable(check.ordinal)
+          enabledParts += "coil1"
         }
-        else if (check eq ForgeDirection.DOWN)
+        else if (check == ForgeDirection.DOWN)
         {
-          val connectionParts = new ArrayList[String]
-          for (sideCheck <- ForgeDirection.VALID_DIRECTIONS) if (sideCheck.offsetY == 0) connectionParts.addAll(Arrays.asList(connectionPartToEnable(sideCheck.ordinal): _*))
-          for (sideCheck <- ForgeDirection.VALID_DIRECTIONS)
-          {
-            if (sideCheck.offsetY == 0)
-            {
-              if (center.add(sideCheck).getTileEntity.isInstanceOf[TileBattery])
-              {
-                connectionParts.removeAll(Arrays.asList(connectionPartToEnable(sideCheck.ordinal)))
-              }
-            }
-          }
-          enabledParts.addAll(connectionParts)
+          var connectionParts = Set.empty[String]
+          val downDirs = ForgeDirection.VALID_DIRECTIONS.filter(_.offsetY == 0)
+          downDirs.foreach(s => connectionParts ++= connectionPartToEnable(s.ordinal))
+          downDirs.filter(s => (toVectorWorld + s).getTileEntity.isInstanceOf[TileBattery]).foreach(s => connectionParts --= connectionPartToEnable(s.ordinal))
+          enabledParts ++= connectionParts
         }
       }
 
+      //Render connectors
       if (check.offsetY == 0)
       {
-        GL11.glPushMatrix()
+        glPushMatrix()
         RenderUtility.rotateBlockBasedOnDirection(check)
 
-        if (check == ForgeDirection.NORTH)
+        glRotatef(-90, 0, 1, 0)
+
+        getIO(check) match
         {
-          glRotatef(0, 0, 1, 0)
+          case 1 => TileBattery.model.renderOnly("connectorIn")
+          case 2 => TileBattery.model.renderOnly("connectorOut")
+          case _ =>
         }
-        if (check == ForgeDirection.SOUTH)
-        {
-          glRotatef(0, 0, 1, 0)
-        }
-        else if (check == ForgeDirection.WEST)
-        {
-          glRotatef(-180, 0, 1, 0)
-        }
-        else if (check == ForgeDirection.EAST)
-        {
-          glRotatef(180, 0, 1, 0)
-        }
-        GL11.glRotatef(-90, 0, 1, 0)
-        val io: Int = getIO(check)
-        if (io == 1)
-        {
-          TileBattery.model.renderOnly("connectorIn")
-        }
-        else if (io == 2)
-        {
-          TileBattery.model.renderOnly("connectorOut")
-        }
-        GL11.glPopMatrix()
+
+        glPopMatrix()
       }
     }
 
-    enabledParts.removeAll(disabledParts)
+    enabledParts --= disabledParts
 
     for (i <- 1 to 8)
     {
       if (i != 1 || enabledParts.contains("coil1"))
       {
-        if ((8 - i) < energyLevel) TileBattery.model.renderOnly("coil" + i + "lit")
-        else TileBattery.model.renderOnly("coil" + i)
+        if ((8 - i) < energyLevel)
+          TileBattery.model.renderOnly("coil" + i + "lit")
+        else
+          TileBattery.model.renderOnly("coil" + i)
       }
     }
 
-    disabledParts.addAll(Arrays.asList(Array[String]("connector", "connectorIn", "connectorOut"): _*))
-    disabledParts.addAll(Arrays.asList(Array[String]("coil1", "coil2", "coil3", "coil4", "coil5", "coil6", "coil7", "coil8"): _*))
-    disabledParts.addAll(Arrays.asList(Array[String]("coil1lit", "coil2lit", "coil3lit", "coil4lit", "coil5lit", "coil6lit", "coil7lit", "coil8lit"): _*))
-    disabledParts.addAll(Arrays.asList(Array[String]("frame1con", "frame2con", "frame3con", "frame4con"): _*))
-    enabledParts.removeAll(Arrays.asList(Array[String]("coil1", "coil2", "coil3", "coil4", "coil5", "coil6", "coil7", "coil8")))
-    TileBattery.model.renderAllExcept(disabledParts.toArray(new Array[String](0)): _*)
-    TileBattery.model.renderOnly(enabledParts.toArray(new Array[String](0)): _*)
-    GL11.glPopMatrix()
+    disabledParts ++= Set("connector", "connectorIn", "connectorOut")
+    disabledParts ++= Set("coil1", "coil2", "coil3", "coil4", "coil5", "coil6", "coil7", "coil8")
+    disabledParts ++= Set("coil1lit", "coil2lit", "coil3lit", "coil4lit", "coil5lit", "coil6lit", "coil7lit", "coil8lit")
+    disabledParts ++= Set("frame1con", "frame2con", "frame3con", "frame4con")
+    enabledParts --= Set("coil1", "coil2", "coil3", "coil4", "coil5", "coil6", "coil7", "coil8")
+    TileBattery.model.renderAllExcept(disabledParts.toList: _*)
+    TileBattery.model.renderOnly(enabledParts.toList: _*)
+    glPopMatrix()
   }
 
   override def toString: String =

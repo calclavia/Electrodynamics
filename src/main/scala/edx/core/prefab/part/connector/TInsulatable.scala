@@ -63,28 +63,6 @@ trait TInsulatable extends PartAbstract
     return false
   }
 
-  override def write(packet: MCDataOutput, id: Int)
-  {
-    super.write(packet, id)
-
-    if (id <= 1)
-      packet.writeBoolean(insulated)
-  }
-
-  override def read(packet: MCDataInput, packetID: Int)
-  {
-    super.read(packet, packetID)
-
-    if (packetID <= 1)
-      _insulated = packet.readBoolean
-  }
-
-  override def save(nbt: NBTTagCompound)
-  {
-    super.save(nbt)
-    nbt.setBoolean("isInsulated", insulated)
-  }
-
   def insulated: Boolean = _insulated
 
   /**
@@ -106,6 +84,24 @@ trait TInsulatable extends PartAbstract
   def sendInsulationUpdate()
   {
     tile.getWriteStream(this).writeByte(1).writeBoolean(this._insulated)
+  }
+
+  override def write(packet: MCDataOutput, id: Int)
+  {
+    if (id <= 1)
+      packet.writeBoolean(insulated)
+  }
+
+  override def read(packet: MCDataInput, packetID: Int)
+  {
+    if (packetID <= 1)
+      _insulated = packet.readBoolean
+  }
+
+  override def save(nbt: NBTTagCompound)
+  {
+    super.save(nbt)
+    nbt.setBoolean("isInsulated", insulated)
   }
 
   override def load(nbt: NBTTagCompound)

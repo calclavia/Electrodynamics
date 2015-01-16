@@ -56,15 +56,14 @@ object PartFlatWire
 
 class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOcclusion
 {
-  private val node = new FlatWireNode(this)
+  private val dcNode = new FlatWireNode(this)
   /**
    * The current side the wire is placed on
    */
   var side: Byte = 0
   /**
    * A map of the corners.
-   * <p/>
-   * <p/>
+   *
    * Currently split into 4 nybbles (from lowest) 0 = Corner connections (this wire should connect
    * around a corner to something external) 1 = Straight connections (this wire should connect to
    * something external) 2 = Internal connections (this wire should connect to something internal)
@@ -75,7 +74,10 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
    */
   var connectionMask = 0x00
 
-  nodes.add(node)
+  nodes.add(dcNode)
+  //TODO: Create DC wire nodes to allow omni directional connections
+  dcNode.positiveTerminals.addAll(Seq(ForgeDirection.UP, ForgeDirection.NORTH, ForgeDirection.EAST))
+  dcNode.negativeTerminals.addAll(Seq(ForgeDirection.DOWN, ForgeDirection.SOUTH, ForgeDirection.WEST))
 
   def preparePlacement(side: Int, meta: Int)
   {
@@ -86,22 +88,19 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
   override def setMaterial(i: Int)
   {
     super.setMaterial(i)
-    node.resistance = material.resistance
+    dcNode.resistance = material.resistance
   }
 
   override def update()
   {
     super.update()
-
-    if (node.current > 0)
-      println("Current is flowing: " + node)
   }
 
   override def activate(player: EntityPlayer, hit: MovingObjectPosition, item: ItemStack): Boolean =
   {
     if (!world.isRemote)
     {
-      println(node)
+      println(dcNode)
     }
 
     return true
@@ -140,6 +139,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
 
   override def write(packet: MCDataOutput, id: Int)
   {
+    super[PartAbstract].write(packet, id)
     super.write(packet, id)
 
     id match
@@ -154,15 +154,16 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
 
   override def read(packet: MCDataInput, id: Int)
   {
+    super[PartAbstract].read(packet, id)
     super.read(packet, id)
 
     id match
     {
       case 0 =>
-        side = packet.readByte
-        connectionMask = packet.readInt
+        side = packet.readByte()
+        connectionMask = packet.readInt()
       case 3 =>
-        connectionMask = packet.readInt
+        connectionMask = packet.readInt()
         tile.markRender()
     }
   }
@@ -412,6 +413,9 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
 
         updateExternalConnections()
         updateInternalConnections()
+
+        //Reconstruct the grid
+        grid.reconstruct(this)
       }
     }
 
