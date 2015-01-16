@@ -76,7 +76,7 @@ class TileMotor extends SpatialTile(Material.iron) with TElectric with TSpatialN
     if (false && mechNode.power > dcNode.power)
     {
       //Produce electricity
-      dcNode.buffer(deltaPower)
+      dcNode.generateVoltage(deltaPower)
       //TODO: Resist mech energy
     }
     //    else if (dcNode.power > mechNode.power)

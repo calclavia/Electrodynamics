@@ -51,7 +51,7 @@ class TileSolarPanel extends TileElectric(Material.iron) with RenderConnectedTex
           if (!(world.isThundering || world.isRaining))
           {
             println(dcNode)
-            dcNode.buffer(Settings.solarPower / 20)
+            dcNode.generateVoltage(Settings.solarPower / 20)
           }
         }
       }

@@ -70,7 +70,7 @@ class TileBattery extends SpatialTile(Material.iron) with TElectric with IPacket
       //TODO: Test, remove this
       if (doCharge)
       {
-        dcNode.buffer(100)
+        dcNode.generateVoltage(100)
       }
 
       if (markDistributionUpdate && ticks % 5 == 0)
