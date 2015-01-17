@@ -32,8 +32,8 @@ import resonant.lib.collection.Pair
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketReceiver
 import resonant.lib.prefab.gui.ContainerDummy
-import resonant.lib.prefab.tile.TileInventory
 import resonant.lib.prefab.tile.item.ItemBlockSaved
+import resonant.lib.prefab.tile.mixed.TileInventory
 import resonant.lib.render.RenderItemOverlayUtility
 import resonant.lib.transform.region.Cuboid
 import resonant.lib.transform.vector.{Vector2, Vector3}
@@ -129,9 +129,97 @@ class TileEngineeringTable extends TileInventory(Material.wood) with IPacketRece
     }
   }
 
-  override def getSizeInventory: Int =
+  override def use(player: EntityPlayer, hitSide: Int, hit: Vector3): Boolean =
   {
-    return 10 + (if (this.invPlayer != null) this.invPlayer.getSizeInventory else 0)
+    if (player.getCurrentEquippedItem != null && player.getCurrentEquippedItem.getItem.isInstanceOf[ItemHammer])
+    {
+      for (slot <- 0 to TileEngineeringTable.CRAFTING_OUTPUT_END)
+      {
+        val inputStack: ItemStack = getStackInSlot(slot)
+        if (inputStack != null)
+        {
+          val oreName: String = OreDictionary.getOreName(OreDictionary.getOreID(inputStack))
+          if (oreName != null && !(oreName == "Unknown"))
+          {
+            val outputs: Array[RecipeResource] = MachineRecipes.instance.getOutput(RecipeType.GRINDER.name, oreName)
+            if (outputs != null && outputs.length > 0)
+            {
+              if (!world.isRemote && world.rand.nextFloat < 0.2)
+              {
+                for (resource <- outputs)
+                {
+                  val outputStack: ItemStack = resource.getItemStack.copy
+                  if (outputStack != null)
+                  {
+                    InventoryUtility.dropItemStack(world, new Vector3(player), outputStack, 0)
+                    setInventorySlotContents(slot, if (({
+                      inputStack.stackSize -= 1;
+                      inputStack.stackSize
+                    }) <= 0) null
+                    else inputStack)
+                  }
+                }
+              }
+              Electrodynamics.proxy.renderBlockParticle(world, new Vector3(x + 0.5, y + 0.5, z + 0.5), new Vector3((Math.random - 0.5f) * 3, (Math.random - 0.5f) * 3, (Math.random - 0.5f) * 3), Item.getIdFromItem(inputStack.getItem), 1)
+              world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, Reference.prefix + "hammer", 0.5f, 0.8f + (0.2f * world.rand.nextFloat))
+              player.addExhaustion(0.1f)
+              player.getCurrentEquippedItem.damageItem(1, player)
+              return true
+            }
+          }
+        }
+      }
+      return true
+    }
+    if (hitSide == 1)
+    {
+      if (!world.isRemote)
+      {
+        val hitVector: Vector3 = new Vector3(hit.x, 0, hit.z)
+        val regionLength: Double = 1d / 3d
+
+        for (j <- 0 to 3)
+        {
+          for (k <- 0 to 3)
+          {
+            val check: Vector2 = new Vector2(j, k).multiply(regionLength)
+            if (check.distance(hitVector.toVector2) < regionLength)
+            {
+              val slotID: Int = j * 3 + k
+              interactCurrentItem(this, slotID, player)
+              onInventoryChanged
+              return true
+            }
+          }
+        }
+        onInventoryChanged
+      }
+      return true
+    }
+    else if (hitSide != 0)
+    {
+      if (!world.isRemote)
+      {
+        setPlayerInventory(player.inventory)
+        var output: ItemStack = getStackInSlot(9)
+        var firstLoop: Boolean = true
+        while (output != null && (firstLoop || ControlKeyModifer.isControlDown(player)))
+        {
+          onPickUpFromSlot(player, 9, output)
+          if (output.stackSize > 0)
+          {
+            InventoryUtility.dropItemStack(world, new Vector3(player), output, 0)
+          }
+          setInventorySlotContents(9, null)
+          onInventoryChanged
+          output = getStackInSlot(9)
+          firstLoop = false
+        }
+        setPlayerInventory(null)
+      }
+      return true
+    }
+    return false
   }
 
   override def setInventorySlotContents(slot: Int, itemStack: ItemStack)
@@ -253,137 +341,6 @@ class TileEngineeringTable extends TileInventory(Material.wood) with IPacketRece
   }
 
   /**
-   * DO NOT USE THIS INTERNALLY. FOR EXTERNAL USE ONLY!
-   */
-  override def getStackInSlot(slot: Int): ItemStack =
-  {
-    if (slot < TileEngineeringTable.CRAFTING_MATRIX_END)
-    {
-      return this.craftingMatrix(slot)
-    }
-    else if (slot < TileEngineeringTable.CRAFTING_OUTPUT_END)
-    {
-      return outputInventory(slot - TileEngineeringTable.CRAFTING_MATRIX_END)
-    }
-    else if (slot < TileEngineeringTable.PLAYER_OUTPUT_END && invPlayer != null)
-    {
-      return this.invPlayer.getStackInSlot(slot - TileEngineeringTable.CRAFTING_OUTPUT_END)
-    }
-    else if (searchInventories)
-    {
-      var idDisplacement: Int = TileEngineeringTable.PLAYER_OUTPUT_END
-      for (dir <- ForgeDirection.VALID_DIRECTIONS)
-      {
-        val tile: TileEntity = toVectorWorld.add(dir).getTileEntity
-        if (tile.isInstanceOf[IInventory])
-        {
-          val inventory: IInventory = tile.asInstanceOf[IInventory]
-          val slotID: Int = slot - idDisplacement
-          if (slotID >= 0 && slotID < inventory.getSizeInventory)
-          {
-            return inventory.getStackInSlot(slotID)
-          }
-          idDisplacement += inventory.getSizeInventory
-        }
-      }
-    }
-    return null
-  }
-
-  override def use(player: EntityPlayer, hitSide: Int, hit: Vector3): Boolean =
-  {
-    if (player.getCurrentEquippedItem != null && player.getCurrentEquippedItem.getItem.isInstanceOf[ItemHammer])
-    {
-      for (slot <- 0 to TileEngineeringTable.CRAFTING_OUTPUT_END)
-      {
-        val inputStack: ItemStack = getStackInSlot(slot)
-        if (inputStack != null)
-        {
-          val oreName: String = OreDictionary.getOreName(OreDictionary.getOreID(inputStack))
-          if (oreName != null && !(oreName == "Unknown"))
-          {
-            val outputs: Array[RecipeResource] = MachineRecipes.instance.getOutput(RecipeType.GRINDER.name, oreName)
-            if (outputs != null && outputs.length > 0)
-            {
-              if (!world.isRemote && world.rand.nextFloat < 0.2)
-              {
-                for (resource <- outputs)
-                {
-                  val outputStack: ItemStack = resource.getItemStack.copy
-                  if (outputStack != null)
-                  {
-                    InventoryUtility.dropItemStack(world, new Vector3(player), outputStack, 0)
-                    setInventorySlotContents(slot, if (({
-                      inputStack.stackSize -= 1;
-                      inputStack.stackSize
-                    }) <= 0) null
-                    else inputStack)
-                  }
-                }
-              }
-              Electrodynamics.proxy.renderBlockParticle(world, new Vector3(x + 0.5, y + 0.5, z + 0.5), new Vector3((Math.random - 0.5f) * 3, (Math.random - 0.5f) * 3, (Math.random - 0.5f) * 3), Item.getIdFromItem(inputStack.getItem), 1)
-              world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, Reference.prefix + "hammer", 0.5f, 0.8f + (0.2f * world.rand.nextFloat))
-              player.addExhaustion(0.1f)
-              player.getCurrentEquippedItem.damageItem(1, player)
-              return true
-            }
-          }
-        }
-      }
-      return true
-    }
-    if (hitSide == 1)
-    {
-      if (!world.isRemote)
-      {
-        val hitVector: Vector3 = new Vector3(hit.x, 0, hit.z)
-        val regionLength: Double = 1d / 3d
-
-        for (j <- 0 to 3)
-        {
-          for (k <- 0 to 3)
-          {
-            val check: Vector2 = new Vector2(j, k).multiply(regionLength)
-            if (check.distance(hitVector.toVector2) < regionLength)
-            {
-              val slotID: Int = j * 3 + k
-              interactCurrentItem(this, slotID, player)
-              onInventoryChanged
-              return true
-            }
-          }
-        }
-        onInventoryChanged
-      }
-      return true
-    }
-    else if (hitSide != 0)
-    {
-      if (!world.isRemote)
-      {
-        setPlayerInventory(player.inventory)
-        var output: ItemStack = getStackInSlot(9)
-        var firstLoop: Boolean = true
-        while (output != null && (firstLoop || ControlKeyModifer.isControlDown(player)))
-        {
-          onPickUpFromSlot(player, 9, output)
-          if (output.stackSize > 0)
-          {
-            InventoryUtility.dropItemStack(world, new Vector3(player), output, 0)
-          }
-          setInventorySlotContents(9, null)
-          onInventoryChanged
-          output = getStackInSlot(9)
-          firstLoop = false
-        }
-        setPlayerInventory(null)
-      }
-      return true
-    }
-    return false
-  }
-
-  /**
    * Creates a "fake inventory" and hook the player up to the crafter to use the player's items.
    */
   def setPlayerInventory(invPlayer: InventoryPlayer)
@@ -489,6 +446,11 @@ class TileEngineeringTable extends TileInventory(Material.wood) with IPacketRece
     }
     nbt.setTag("Items", nbtList)
     nbt.setBoolean("searchInventories", this.searchInventories)
+  }
+
+  override def getSizeInventory: Int =
+  {
+    return 10 + (if (this.invPlayer != null) this.invPlayer.getSizeInventory else 0)
   }
 
   def read(data: ByteBuf, player: EntityPlayer, `type`: PacketType)
@@ -673,6 +635,44 @@ class TileEngineeringTable extends TileInventory(Material.wood) with IPacketRece
     RenderItemOverlayUtility.renderItemOnSides(TileEngineeringTable.this, getStackInSlot(9), position.x, position.y, position.z)
     RenderItemOverlayUtility.renderTopOverlay(TileEngineeringTable.this, craftingMatrix, getDirection, position.x, position.y - 0.1, position.z)
     GL11.glPopMatrix
+  }
+
+  /**
+   * DO NOT USE THIS INTERNALLY. FOR EXTERNAL USE ONLY!
+   */
+  override def getStackInSlot(slot: Int): ItemStack =
+  {
+    if (slot < TileEngineeringTable.CRAFTING_MATRIX_END)
+    {
+      return this.craftingMatrix(slot)
+    }
+    else if (slot < TileEngineeringTable.CRAFTING_OUTPUT_END)
+    {
+      return outputInventory(slot - TileEngineeringTable.CRAFTING_MATRIX_END)
+    }
+    else if (slot < TileEngineeringTable.PLAYER_OUTPUT_END && invPlayer != null)
+    {
+      return this.invPlayer.getStackInSlot(slot - TileEngineeringTable.CRAFTING_OUTPUT_END)
+    }
+    else if (searchInventories)
+    {
+      var idDisplacement: Int = TileEngineeringTable.PLAYER_OUTPUT_END
+      for (dir <- ForgeDirection.VALID_DIRECTIONS)
+      {
+        val tile: TileEntity = toVectorWorld.add(dir).getTileEntity
+        if (tile.isInstanceOf[IInventory])
+        {
+          val inventory: IInventory = tile.asInstanceOf[IInventory]
+          val slotID: Int = slot - idDisplacement
+          if (slotID >= 0 && slotID < inventory.getSizeInventory)
+          {
+            return inventory.getStackInSlot(slotID)
+          }
+          idDisplacement += inventory.getSizeInventory
+        }
+      }
+    }
+    return null
   }
 
   override def getDirection: ForgeDirection =

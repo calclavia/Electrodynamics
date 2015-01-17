@@ -1,7 +1,6 @@
 package edx.basic.process.smelting
 
 import cpw.mods.fml.common.network.ByteBufUtils
-import edx.core.Reference
 import io.netty.buffer.ByteBuf
 import net.minecraft.block.material.Material
 import net.minecraft.entity.player.EntityPlayer
@@ -12,7 +11,7 @@ import net.minecraftforge.fluids._
 import resonant.api.recipe.{MachineRecipes, RecipeResource, RecipeType}
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketReceiver
-import resonant.lib.prefab.tile.TileInventory
+import resonant.lib.prefab.tile.mixed.TileInventory
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.FluidUtility
 import resonant.lib.utility.inventory.InventoryUtility
@@ -31,9 +30,11 @@ class TileCastingMold extends TileInventory(Material.rock) with IFluidHandler wi
   protected var tank: FluidTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME)
 
   //Constructor
-  setTextureName(Reference.prefix + "material_metal_side")
+  textureName = "material_metal_side"
   normalRender = false
   isOpaqueCube = false
+
+  override def getSizeInventory: Int = 1
 
   override def canUpdate: Boolean =
   {

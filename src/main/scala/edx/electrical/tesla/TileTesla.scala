@@ -24,7 +24,7 @@ import resonant.lib.content.prefab.{TEnergyStorage, TIO}
 import resonant.lib.grid.energy.EnergyStorage
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.{TPacketIDReceiver, TPacketSender}
-import resonant.lib.prefab.tile.TileElectric
+import resonant.lib.prefab.tile.mixed.TileElectric
 import resonant.lib.prefab.tile.multiblock.reference.{IMultiBlockStructure, MultiBlockHandler}
 import resonant.lib.render.EnumColor
 import resonant.lib.transform.vector.{Vector3, VectorWorld}
@@ -80,8 +80,8 @@ class TileTesla extends TileElectric(Material.iron) with IMultiBlockStructure[Ti
   energy.setCapacity(TRANSFER_CAP * 2)
   energy.setMaxTransfer(TRANSFER_CAP)
   setTextureName(Reference.prefix + "material_metal_side")
-  normalRender(false)
-  isOpaqueCube(false)
+  normalRender = false
+  isOpaqueCube = false
 
   override def start
   {
@@ -388,12 +388,6 @@ class TileTesla extends TileElectric(Material.iron) with IMultiBlockStructure[Ti
     getMultiBlock.load(nbt)
   }
 
-  def getMultiBlock: MultiBlockHandler[TileTesla] =
-  {
-    if (multiBlock == null) multiBlock = new MultiBlockHandler[TileTesla](this)
-    return multiBlock
-  }
-
   /**
    * Writes a tile entity to NBT.
    */
@@ -411,6 +405,12 @@ class TileTesla extends TileElectric(Material.iron) with IMultiBlockStructure[Ti
       nbt.setInteger("linkDim", this.linkDim)
     }
     getMultiBlock.save(nbt)
+  }
+
+  def getMultiBlock: MultiBlockHandler[TileTesla] =
+  {
+    if (multiBlock == null) multiBlock = new MultiBlockHandler[TileTesla](this)
+    return multiBlock
   }
 
   def setLink(vector3: Vector3, dimID: Int, setOpponent: Boolean)

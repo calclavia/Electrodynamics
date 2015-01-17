@@ -29,7 +29,6 @@ class GuiCentrifuge(par1InventoryPlayer: InventoryPlayer, tileEntity: TileCentri
     }
     this.fontRendererObj.drawString("Status: " + displayText, 70, 50, 4210752)
     this.renderUniversalDisplay(8, 112, TileCentrifuge.DIAN * 20, mouseX, mouseY, UnitDisplay.Unit.WATT)
-    this.renderUniversalDisplay(100, 112, this.tileEntity.getVoltage, mouseX, mouseY, UnitDisplay.Unit.VOLTAGE)
     this.fontRendererObj.drawString("The centrifuge spins", 8, 75, 4210752)
     this.fontRendererObj.drawString("uranium hexafluoride gas into", 8, 85, 4210752)
     this.fontRendererObj.drawString("enriched uranium for fission.", 8, 95, 4210752)

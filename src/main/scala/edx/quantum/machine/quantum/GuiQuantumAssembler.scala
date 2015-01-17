@@ -1,5 +1,6 @@
 package edx.quantum.machine.quantum
 
+import cpw.mods.fml.relauncher.{Side, SideOnly}
 import edx.core.Reference
 import net.minecraft.entity.player.InventoryPlayer
 import net.minecraft.util.ResourceLocation
@@ -9,7 +10,8 @@ import resonant.lib.utility.science.UnitDisplay
 
 object GuiQuantumAssembler
 {
-  final val TEXTURE: ResourceLocation = new ResourceLocation(Reference.domain, Reference.guiDirectory + "gui_atomic_assembler.png")
+  @SideOnly(Side.CLIENT)
+  final val texture = new ResourceLocation(Reference.domain, Reference.guiDirectory + "gui_atomic_assembler.png")
 }
 
 class GuiQuantumAssembler(par1InventoryPlayer: InventoryPlayer, tileEntity: TileQuantumAssembler) extends GuiContainerBase(new ContainerQuantumAssembler(par1InventoryPlayer, tileEntity))
@@ -37,7 +39,6 @@ class GuiQuantumAssembler(par1InventoryPlayer: InventoryPlayer, tileEntity: Tile
       displayText = "Idle"
     }
     this.fontRendererObj.drawString(displayText, 9, this.ySize - 106, 4210752)
-    this.renderUniversalDisplay(100, this.ySize - 94, this.tileEntity.getVoltage, mouseX, mouseY, UnitDisplay.Unit.VOLTAGE)
     this.renderUniversalDisplay(8, this.ySize - 95, tileEntity.MAX_TIME, mouseX, mouseY, UnitDisplay.Unit.WATT)
   }
 
@@ -46,7 +47,7 @@ class GuiQuantumAssembler(par1InventoryPlayer: InventoryPlayer, tileEntity: Tile
    */
   protected override def drawGuiContainerBackgroundLayer(par1: Float, par2: Int, par3: Int)
   {
-    this.mc.renderEngine.bindTexture(GuiQuantumAssembler.TEXTURE)
+    this.mc.renderEngine.bindTexture(GuiQuantumAssembler.texture)
     GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F)
     this.containerWidth = (this.width - this.xSize) / 2
     this.containerHeight = (this.height - this.ySize) / 2

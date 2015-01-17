@@ -5,16 +5,16 @@ import codechicken.multipart.{IRedstonePart, TMultiPart}
 import edx.core.ResonantPartFactory
 import net.minecraft.item.ItemStack
 import net.minecraft.util.MovingObjectPosition
-import resonant.lib.prefab.TraitTicker
+import resonant.lib.prefab.tile.traits.TTicker
 
 import scala.collection.convert.wrapAll._
 import scala.collection.mutable
 
-abstract class PartAbstract extends TMultiPart with TraitTicker
+abstract class PartAbstract extends TMultiPart with TTicker
 {
   override def update()
   {
-    super[TraitTicker].update()
+    super[TTicker].update()
   }
 
   protected def getItem: ItemStack

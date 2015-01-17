@@ -18,7 +18,7 @@ import resonant.lib.grid.energy.EnergyStorage
 import resonant.lib.mod.config.Config
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketReceiver
-import resonant.lib.prefab.tile.TileElectric
+import resonant.lib.prefab.tile.mixed.TileElectric
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.science.UnitDisplay
 import resonant.lib.utility.{FluidUtility, LanguageUtility}
@@ -42,8 +42,8 @@ class TilePlasmaHeater extends TileElectric(Material.iron) with IPacketReceiver 
   energy = new EnergyStorage(0)
   energy.setCapacity(TilePlasmaHeater.joules)
   energy.setMaxTransfer(TilePlasmaHeater.joules / 20)
-  normalRender(false)
-  isOpaqueCube(false)
+  normalRender = false
+  isOpaqueCube = false
 
   override def update()
   {

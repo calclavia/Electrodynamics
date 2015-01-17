@@ -4,7 +4,7 @@ import net.minecraft.block.material.Material
 import net.minecraft.item.ItemStack
 import net.minecraftforge.fluids.{FluidContainerRegistry, FluidStack, FluidTank}
 import resonant.api.recipe.{MachineRecipes, RecipeResource}
-import resonant.lib.prefab.tile.TileElectricInventory
+import resonant.lib.prefab.tile.mixed.TileElectricInventory
 
 /**
  * General class for all machines that do traditional recipe processing

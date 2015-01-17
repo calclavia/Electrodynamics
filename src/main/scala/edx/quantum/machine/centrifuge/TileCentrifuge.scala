@@ -16,7 +16,7 @@ import resonant.lib.grid.energy.EnergyStorage
 import resonant.lib.mod.compat.energy.Compatibility
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketReceiver
-import resonant.lib.prefab.tile.TileElectricInventory
+import resonant.lib.prefab.tile.mixed.TileElectricInventory
 import resonant.lib.prefab.tile.traits.TRotatable
 import resonant.lib.transform.vector.Vector3
 
@@ -37,10 +37,11 @@ class TileCentrifuge extends TileElectricInventory(Material.iron) with IPacketRe
 
   //TODO: Dummy
   energy = new EnergyStorage(0)
-  isOpaqueCube(false)
-  normalRender(false)
+  isOpaqueCube = false
+  normalRender = false
   energy.setCapacity(TileCentrifuge.DIAN * 2)
-  setSizeInventory(4)
+
+  override def getSizeInventory: Int = 4
 
   override def update
   {

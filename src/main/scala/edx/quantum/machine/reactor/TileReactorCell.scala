@@ -26,7 +26,7 @@ import resonant.lib.network.Synced
 import resonant.lib.network.Synced.{SyncedInput, SyncedOutput}
 import resonant.lib.network.discriminator.PacketAnnotation
 import resonant.lib.prefab.poison.PoisonRadiation
-import resonant.lib.prefab.tile.TileInventory
+import resonant.lib.prefab.tile.mixed.TileInventory
 import resonant.lib.prefab.tile.multiblock.reference.{IMultiBlockStructure, MultiBlockHandler}
 import resonant.lib.transform.vector.{Vector3, VectorWorld}
 import resonant.lib.utility.inventory.InventoryUtility
@@ -61,9 +61,15 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
   textureName = "machine"
   isOpaqueCube = false
   normalRender = false
-  maxSlots = 1
+
+  override def getSizeInventory: Int = 1
 
   override def onWorldJoin
+  {
+    updatePositionStatus
+  }
+
+  override def onNeighborChanged(block: Block)
   {
     updatePositionStatus
   }
@@ -110,9 +116,13 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
     return lowest
   }
 
-  override def onNeighborChanged(block: Block)
+  override def getMultiBlock: MultiBlockHandler[TileReactorCell] =
   {
-    updatePositionStatus
+    if (multiBlock == null)
+    {
+      multiBlock = new MultiBlockHandler[TileReactorCell](this)
+    }
+    return multiBlock
   }
 
   override def update
@@ -395,15 +405,6 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
   override def fill(from: ForgeDirection, resource: FluidStack, doFill: Boolean): Int =
   {
     return getMultiBlock.get.tank.fill(resource, doFill)
-  }
-
-  override def getMultiBlock: MultiBlockHandler[TileReactorCell] =
-  {
-    if (multiBlock == null)
-    {
-      multiBlock = new MultiBlockHandler[TileReactorCell](this)
-    }
-    return multiBlock
   }
 
   override def drain(from: ForgeDirection, maxDrain: Int, doDrain: Boolean): FluidStack =

@@ -16,7 +16,7 @@ import resonant.lib.grid.energy.EnergyStorage
 import resonant.lib.network.Synced
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketReceiver
-import resonant.lib.prefab.tile.TileElectricInventory
+import resonant.lib.prefab.tile.mixed.TileElectricInventory
 import resonant.lib.prefab.tile.traits.TRotatable
 import resonant.lib.transform.vector.Vector3
 
@@ -47,9 +47,10 @@ class TileNuclearBoiler extends TileElectricInventory(Material.iron) with IPacke
   //TODO: Dummy
   energy = new EnergyStorage(0)
   energy.setCapacity(TileNuclearBoiler.DIAN * 2)
-  this.setSizeInventory(4)
-  normalRender(false)
-  isOpaqueCube(false)
+  normalRender = false
+  isOpaqueCube = false
+
+  override def getSizeInventory: Int = 4
 
   override def update
   {

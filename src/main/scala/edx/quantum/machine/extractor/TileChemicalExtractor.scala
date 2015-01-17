@@ -33,9 +33,8 @@ class TileChemicalExtractor extends TileProcess(Material.iron) with IFluidHandle
   //TODO: Dummy
   energy = new EnergyStorage(0)
   energy.setCapacity(TileChemicalExtractor.ENERGY * 2)
-  this.setSizeInventory(7)
-  this.isOpaqueCube(false)
-  this.normalRender(false)
+  isOpaqueCube = false
+  normalRender = false
   inputSlot = 1
   outputSlot = 2
   tankInputFillSlot = 3
@@ -47,6 +46,8 @@ class TileChemicalExtractor extends TileProcess(Material.iron) with IFluidHandle
   @Synced final val outputTank: FluidTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 10)
   @Synced var time: Int = 0
   var rotation: Float = 0
+
+  override def getSizeInventory: Int = 7
 
   override def update
   {

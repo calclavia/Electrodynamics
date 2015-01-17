@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.tile.{IFilterable, IRotatable}
-import resonant.lib.prefab.tile.TileInventory
+import resonant.lib.prefab.tile.mixed.TileInventory
 import resonant.lib.transform.vector.Vector3
 
 object TileFilterable
@@ -16,16 +16,12 @@ object TileFilterable
   final val BATERY_DRAIN_SLOT: Int = 1
 }
 
-abstract class TileFilterable(material: Material) extends TileInventory(material: Material) with IRotatable with IFilterable
+abstract class TileFilterable extends TileInventory(Material.wood) with IRotatable with IFilterable
 {
   private var filterItem: ItemStack = null
   private var inverted: Boolean = false
 
-  def this()
-  {
-    this(Material.wood)
-    this.setSizeInventory(2)
-  }
+  override def getSizeInventory: Int = 2
 
   /**
    * Allows filters to be placed inside of this block.
@@ -63,6 +59,11 @@ abstract class TileFilterable(material: Material) extends TileInventory(material
   {
     this.filterItem = filter
     this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord)
+  }
+
+  def getFilter: ItemStack =
+  {
+    return this.filterItem
   }
 
   override def configure(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
@@ -112,11 +113,6 @@ abstract class TileFilterable(material: Material) extends TileInventory(material
       }
     }
     return inverted
-  }
-
-  def getFilter: ItemStack =
-  {
-    return this.filterItem
   }
 
   override def getDirection: ForgeDirection =

@@ -40,10 +40,10 @@ class TileMixer extends TileMechanical(Material.iron)
 
   //Constructor
   mechanicalNode = new MixerNode(this)
-  isOpaqueCube(false)
-  normalRender(false)
-  customItemRender(true)
-  setTextureName("material_metal_top")
+  isOpaqueCube = false
+  normalRender = false
+  customItemRender = true
+  textureName = "material_metal_top"
 
   override def update
   {

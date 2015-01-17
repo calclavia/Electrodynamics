@@ -13,7 +13,7 @@ import resonant.lib.content.prefab.TEnergyStorage
 import resonant.lib.grid.energy.EnergyStorage
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketReceiver
-import resonant.lib.prefab.tile.TileElectricInventory
+import resonant.lib.prefab.tile.mixed.TileElectricInventory
 import resonant.lib.transform.vector.Vector3
 
 /**
@@ -36,16 +36,17 @@ class TileQuantumAssembler extends TileElectricInventory(Material.iron) with IPa
   private[quantum] var entityItem: EntityItem = null
 
   //Constructor
-  setSizeInventory(7)
 
   //TODO: Dummy
   energy = new EnergyStorage(0)
   energy.setCapacity(ENERGY)
   energy.setMaxTransfer(ENERGY / 10)
-  isOpaqueCube(false)
-  normalRender(false)
-  customItemRender(true)
-  setTextureName("machine")
+  isOpaqueCube = false
+  normalRender = false
+  customItemRender = true
+  textureName = "machine"
+
+  override def getSizeInventory: Int = 7
 
   /**
    * Called when the block is right clicked by the player
