@@ -39,7 +39,6 @@ class GuiCoercionDeriver(player: EntityPlayer, tile: TileCoercionDeriver) extend
 
     drawString(EnumColor.AQUA + "Energy Requirement:", 8, 20)
     renderUniversalDisplay(8, 30, tile.getPower, x, y, UnitDisplay.Unit.WATT)
-    drawString(new UnitDisplay(UnitDisplay.Unit.VOLTAGE, tile.getVoltage).simple().toString, 8, 40)
 
     drawTextWithTooltip("progress", "%1: " + (if (this.tile.isActive) LanguageUtility.getLocal("gui.deriver.running") else LanguageUtility.getLocal("gui.deriver.idle")), 8, 60, x, y)
     drawString("Production: " + (if (this.tile.isInversed) EnumColor.DARK_RED else EnumColor.DARK_GREEN) + new UnitDisplay(UnitDisplay.Unit.LITER, tile.productionRate * 20) + "/s", 8, 100)

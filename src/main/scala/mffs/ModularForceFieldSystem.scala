@@ -25,17 +25,15 @@ import resonant.lib.prefab.damage.CustomDamageSource
 @ModstatInfo(prefix = "mffs")
 object ModularForceFieldSystem
 {
-  @SidedProxy(clientSide = "mffs.ClientProxy", serverSide = "mffs.CommonProxy")
-  var proxy: CommonProxy = _
-
   /**
    * Damages
    */
   val damageFieldShock = new CustomDamageSource("fieldShock").setDamageBypassesArmor
   val fakeProfile = new GameProfile(UUID.randomUUID, "mffs")
-
   val packetHandler = new PacketManager(Reference.channel)
   val loadables = new LoadableHandler
+  @SidedProxy(clientSide = "mffs.ClientProxy", serverSide = "mffs.CommonProxy")
+  var proxy: CommonProxy = _
 
   @EventHandler
   def preInit(event: FMLPreInitializationEvent)
@@ -105,7 +103,7 @@ object ModularForceFieldSystem
     }
     catch
       {
-        case _ => Reference.logger.info("IC2 Explosion white list API not found. Ignoring...")
+        case _: Throwable => Reference.logger.info("IC2 Explosion white list API not found. Ignoring...")
       }
 
     //Inititate MFFS Permissions
