@@ -82,7 +82,7 @@ class TileBattery extends SpatialTile(Material.iron) with TIO with TElectric wit
       //TODO: Voltage of battery should decrease over time.
       //TODO: Test, remove this
       if (doCharge)
-        dcNode.setVoltage(500)
+        dcNode.generateVoltage(500)
     }
   }
 

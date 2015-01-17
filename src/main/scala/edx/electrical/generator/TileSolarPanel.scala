@@ -39,7 +39,7 @@ class TileSolarPanel extends TileElectric(Material.iron) with TIO with RenderCon
     return SpatialBlock.icon.get("solarPanel_side")
   }
 
-  override def update
+  override def update()
   {
     super.update()
 
@@ -51,8 +51,7 @@ class TileSolarPanel extends TileElectric(Material.iron) with TIO with RenderCon
         {
           if (!(world.isThundering || world.isRaining))
           {
-            println(dcNode)
-            dcNode.setVoltage(Settings.solarPower / 20)
+            dcNode.generateVoltage(Settings.solarPower / 20)
           }
         }
       }
