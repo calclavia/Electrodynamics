@@ -3,7 +3,7 @@ package edx.mechanical.mech.grid
 import edx.core.interfaces.TNodeMechanical
 import edx.core.prefab.node.TMultipartNode
 import resonant.api.tile.INodeProvider
-import resonant.lib.debug.DebugInfo
+import resonant.lib.debug.IDebugInfo
 import resonant.lib.grid.core.{GridNode, NodeGrid, TTileConnector}
 import resonant.lib.transform.vector.IVectorWorld
 
@@ -15,7 +15,7 @@ import scala.collection.convert.wrapAll._
  *
  * @author Calclavia, Darkguardsman
  */
-class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](parent) with TTileConnector[NodeMechanical] with TMultipartNode[NodeMechanical] with TNodeMechanical with IVectorWorld with DebugInfo
+class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](parent) with TTileConnector[NodeMechanical] with TMultipartNode[NodeMechanical] with TNodeMechanical with IVectorWorld with IDebugInfo
 {
   /**
    * Angle calculations
@@ -50,15 +50,6 @@ class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](par
     prevAngle = (prevAngle + deltaTime * angularVelocity) % (2 * Math.PI)
     return prevAngle
   }
-
-  /**
-   * Gets the angular velocity of the mechanical device from a specific side
-   *
-   * @return Angular velocity in meters per second
-   */
-  override def angularVelocity = _angularVelocity
-
-  def angularVelocity_=(newVel: Double) = _angularVelocity = newVel
 
   /**
    * Sets the mechanical node's angle based on its connections
@@ -97,6 +88,15 @@ class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](par
   override def getDebugInfo = List(toString)
 
   override def toString = "NodeMechanical [" + connections.size() + " Torque: " + BigDecimal(torque).setScale(2, BigDecimal.RoundingMode.HALF_UP) + " Velocity: " + BigDecimal(angularVelocity).setScale(2, BigDecimal.RoundingMode.HALF_UP) + "]"
+
+  /**
+   * Gets the angular velocity of the mechanical device from a specific side
+   *
+   * @return Angular velocity in meters per second
+   */
+  override def angularVelocity = _angularVelocity
+
+  def angularVelocity_=(newVel: Double) = _angularVelocity = newVel
 
   /**
    * Gets the torque of the mechanical device from a specific side

@@ -14,6 +14,7 @@ import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11._
 import resonant.lib.content.prefab.{TElectric, TEnergyStorage, TIO}
+import resonant.lib.grid.core.TSpatialNodeProvider
 import resonant.lib.grid.energy.EnergyStorage
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
@@ -41,13 +42,14 @@ object TileBattery
   def getEnergyForTier(tier: Int) = Math.round(Math.pow(500000000, (tier / (maxTier + 0.7f)) + 1) / 500000000) * 500000000
 }
 
-class TileBattery extends SpatialTile(Material.iron) with TIO with TElectric with TPacketSender with TPacketReceiver with TEnergyStorage
+class TileBattery extends SpatialTile(Material.iron) with TIO with TElectric with TSpatialNodeProvider with TPacketSender with TPacketReceiver with TEnergyStorage
 {
   var renderEnergyAmount = 0d
   var doCharge = false
   private var markClientUpdate = false
   private var markDistributionUpdate = false
 
+  nodes.add(dcNode)
   energy = new EnergyStorage
   textureName = "material_metal_side"
   ioMap = 0
