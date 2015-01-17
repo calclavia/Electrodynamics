@@ -10,7 +10,7 @@ import edx.electrical.wire.base.TWire
 import net.minecraft.client.renderer.RenderBlocks
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.lib.grid.electric.NodeDC
+import resonant.lib.grid.energy.electric.NodeDC
 import resonant.lib.wrapper.BitmaskWrapper._
 
 /**

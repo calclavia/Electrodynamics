@@ -21,7 +21,7 @@ import net.minecraft.util.{IIcon, MovingObjectPosition}
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
 import resonant.api.tile.INodeProvider
-import resonant.lib.grid.electric.{NodeDC, NodeDCWire}
+import resonant.lib.grid.energy.electric.{NodeDC, NodeDCWire}
 
 import scala.collection.convert.wrapAll._
 
@@ -222,6 +222,28 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
     super.onChunkLoad()
   }
 
+  def dropIfCantStay: Boolean =
+  {
+    if (!canStay)
+    {
+      drop
+      return true
+    }
+    return false
+  }
+
+  def canStay: Boolean =
+  {
+    val pos: BlockCoord = new BlockCoord(tile).offset(side)
+    return MultipartUtil.canPlaceWireOnSide(world, pos.x, pos.y, pos.z, ForgeDirection.getOrientation(side ^ 1), false)
+  }
+
+  def drop
+  {
+    TileMultipart.dropItem(getItem, world, Vector3.fromTileEntityCenter(tile))
+    tile.remPart(this)
+  }
+
   override def onAdded()
   {
     super.onAdded()
@@ -248,28 +270,6 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
 
     if (!world.isRemote)
       sendPacket(3)
-  }
-
-  def dropIfCantStay: Boolean =
-  {
-    if (!canStay)
-    {
-      drop
-      return true
-    }
-    return false
-  }
-
-  def canStay: Boolean =
-  {
-    val pos: BlockCoord = new BlockCoord(tile).offset(side)
-    return MultipartUtil.canPlaceWireOnSide(world, pos.x, pos.y, pos.z, ForgeDirection.getOrientation(side ^ 1), false)
-  }
-
-  def drop
-  {
-    TileMultipart.dropItem(getItem, world, Vector3.fromTileEntityCenter(tile))
-    tile.remPart(this)
   }
 
   def maskOpen(r: Int): Boolean =
