@@ -139,8 +139,6 @@ class NodeFluidPressure(parent: INodeProvider, volume: Int = FluidContainerRegis
     }
   }
 
-  def pressure(direction: ForgeDirection): Int = _pressure
-
   protected def updatePressure()
   {
     var totalPressure = 0
@@ -178,6 +176,8 @@ class NodeFluidPressure(parent: INodeProvider, volume: Int = FluidContainerRegis
     }
   }
 
+  def pressure(direction: ForgeDirection): Int = _pressure
+
   def pressure: Int = _pressure
 
   def pressure_=(pressure: Int)
@@ -185,7 +185,6 @@ class NodeFluidPressure(parent: INodeProvider, volume: Int = FluidContainerRegis
     this._pressure = pressure
   }
 
-  def canUpdate = !isInvalid && world != null
+  override def updateRate: Int = if (!isInvalid) 20 else 0
 
-  def continueUpdate = !isInvalid
 }

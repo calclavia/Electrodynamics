@@ -90,7 +90,7 @@ class TileMotor extends SpatialTile(Material.iron) with TElectric with TSpatialN
       //Produce mechanical energy
       val mechRatio = Math.pow(10, gearRatio)
       val power = dcNode.power
-      val negate = if (dcNode.potentialDifference > 0) 1 else -1
+      val negate = if (dcNode.voltage > 0) 1 else -1
       mechNode.rotate(negate * power * mechRatio, negate * power / mechRatio)
       //TODO: Resist DC energy
     }

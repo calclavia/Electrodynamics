@@ -148,7 +148,5 @@ class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) w
     }
   }
 
-  override def continueUpdate = getNodes.size > 0 && !dead
-
-  override def canUpdate = getNodes.size > 0
+  override def updateRate: Int = if (getNodes.size > 0 && !dead) 20 else 0
 }

@@ -89,8 +89,11 @@ class MultimeterGrid extends Grid[PartMultimeter](classOf[PartMultimeter]) with 
 
   def update(delta: Double)
   {
-    graphs.foreach(_.doneQueue())
-    doUpdate = false
+    if (doUpdate)
+    {
+      graphs.foreach(_.doneQueue())
+      doUpdate = false
+    }
   }
 
   def markUpdate
@@ -98,15 +101,7 @@ class MultimeterGrid extends Grid[PartMultimeter](classOf[PartMultimeter]) with 
     doUpdate = true
   }
 
-  def canUpdate: Boolean =
-  {
-    return doUpdate && continueUpdate
-  }
-
-  def continueUpdate: Boolean =
-  {
-    return getNodes.size > 0
-  }
+  override def updateRate: Int = if (getNodes.size > 0) 20 else 0
 
   override def isValidNode(node: AnyRef): Boolean =
   {
