@@ -15,7 +15,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import resonant.api.mffs.fortron.FrequencyGridRegistry
 import resonant.api.mffs.machine.IProjector
 import resonant.lib.access.Permission
-import resonant.lib.grid.frequency.FrequencyGrid
+import resonant.lib.grid.frequency.GridFrequency
 import resonant.lib.transform.rotation.EulerAngle
 import resonant.lib.transform.vector.Vector3
 
@@ -177,6 +177,6 @@ object MFFSUtility
    */
   def getRelevantProjectors(world: World, position: Vector3): mutable.Set[TileElectromagneticProjector] =
   {
-    return FrequencyGridRegistry.instance.asInstanceOf[FrequencyGrid].getNodes(classOf[TileElectromagneticProjector]) filter (_.isInField(position))
+    return FrequencyGridRegistry.instance.asInstanceOf[GridFrequency].getNodes(classOf[TileElectromagneticProjector]) filter (_.isInField(position))
   }
 }
