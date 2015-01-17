@@ -117,6 +117,8 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
     return wire.getThickness > getThickness
   }
 
+  def getThickness: Int = if (insulated) 1 else 0
+
   /**
    * Packet Methods
    */
@@ -220,28 +222,6 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
     super.onChunkLoad()
   }
 
-  def dropIfCantStay: Boolean =
-  {
-    if (!canStay)
-    {
-      drop
-      return true
-    }
-    return false
-  }
-
-  def canStay: Boolean =
-  {
-    val pos: BlockCoord = new BlockCoord(tile).offset(side)
-    return MultipartUtil.canPlaceWireOnSide(world, pos.x, pos.y, pos.z, ForgeDirection.getOrientation(side ^ 1), false)
-  }
-
-  def drop
-  {
-    TileMultipart.dropItem(getItem, world, Vector3.fromTileEntityCenter(tile))
-    tile.remPart(this)
-  }
-
   override def onAdded()
   {
     super.onAdded()
@@ -270,6 +250,28 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
       sendPacket(3)
   }
 
+  def dropIfCantStay: Boolean =
+  {
+    if (!canStay)
+    {
+      drop
+      return true
+    }
+    return false
+  }
+
+  def canStay: Boolean =
+  {
+    val pos: BlockCoord = new BlockCoord(tile).offset(side)
+    return MultipartUtil.canPlaceWireOnSide(world, pos.x, pos.y, pos.z, ForgeDirection.getOrientation(side ^ 1), false)
+  }
+
+  def drop
+  {
+    TileMultipart.dropItem(getItem, world, Vector3.fromTileEntityCenter(tile))
+    tile.remPart(this)
+  }
+
   def maskOpen(r: Int): Boolean =
   {
     return (connectionMask & 0x1000 << r) != 0
@@ -285,8 +287,6 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
   override def getSubParts: JIterable[IndexedCuboid6] = Seq(new IndexedCuboid6(0, PartFlatWire.selectionBounds(getThickness)(side)))
 
   def getOcclusionBoxes: JIterable[Cuboid6] = Seq(PartFlatWire.occlusionBounds(getThickness)(side))
-
-  def getThickness: Int = if (insulated) 1 else 0
 
   override def solid(arg0: Int) = false
 
@@ -320,7 +320,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
       TextureUtils.bindAtlas(0)
       CCRenderState.startDrawing(7)
       RenderFlatWire.render(this, pos)
-      CCRenderState.draw
+      CCRenderState.draw()
       CCRenderState.setColour(-1)
       GL11.glEnable(GL11.GL_LIGHTING)
     }

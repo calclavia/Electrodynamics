@@ -20,6 +20,7 @@ import resonant.lib.render.RenderUtility
 import resonant.lib.transform.vector.Vector3
 
 import scala.collection.convert.wrapAll._
+
 /**
  * A kinetic energy to electrical energy converter.
  *
@@ -52,6 +53,7 @@ class TileMotor extends SpatialTile(Material.iron) with TElectric with TSpatialN
   nodes.add(dcNode)
   nodes.add(mechNode)
 
+  dcNode.resistance = 100
   dcNode.positiveTerminals.addAll(Seq(ForgeDirection.UP, ForgeDirection.SOUTH, ForgeDirection.EAST))
   dcNode.negativeTerminals.addAll(Seq(ForgeDirection.DOWN, ForgeDirection.NORTH, ForgeDirection.WEST))
 
@@ -86,9 +88,10 @@ class TileMotor extends SpatialTile(Material.iron) with TElectric with TSpatialN
     else*/
     {
       //Produce mechanical energy
-      val mechRatio = Math.pow(7, gearRatio) * 100 + 400
+      val mechRatio = Math.pow(10, gearRatio)
       val power = dcNode.power
-      mechNode.rotate(power * mechRatio, power / mechRatio)
+      val negate = if (dcNode.potentialDifference > 0) 1 else -1
+      mechNode.rotate(negate * power * mechRatio, negate * power / mechRatio)
       //TODO: Resist DC energy
     }
   }

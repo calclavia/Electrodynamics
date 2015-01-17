@@ -55,6 +55,7 @@ class TileBattery extends SpatialTile(Material.iron) with TIO with TElectric wit
   normalRender = false
   isOpaqueCube = false
   itemBlock = classOf[ItemBlockBattery]
+  dcNode.resistance = 10
 
   override def start()
   {
@@ -76,38 +77,11 @@ class TileBattery extends SpatialTile(Material.iron) with TIO with TElectric wit
 
     if (!world.isRemote)
     {
+      //TODO: Voltage of battery should decrease over time.
       //TODO: Test, remove this
       if (doCharge)
-      {
-        dcNode.setVoltage(100)
-      }
-
-      if (markDistributionUpdate && ticks % 5 == 0)
-      {
-        markDistributionUpdate = false
-      }
-      if (markClientUpdate && ticks % 5 == 0)
-      {
-        markClientUpdate = false
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord)
-      }
+        dcNode.setVoltage(500)
     }
-  }
-
-  override def activate(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
-  {
-    super.activate(player, side, hit)
-
-    if (!world.isRemote)
-    {
-      if (player.isSneaking)
-      {
-        doCharge = !doCharge
-        println("Charge: " + doCharge)
-      }
-    }
-
-    return true
   }
 
   override def write(buf: ByteBuf, id: Int)
@@ -121,7 +95,7 @@ class TileBattery extends SpatialTile(Material.iron) with TIO with TElectric wit
   {
     super.read(buf, id, packetType)
     energy.setEnergy(buf.readDouble())
-    ioMap == buf.readShort()
+    ioMap = buf.readInt()
   }
 
   override def setIO(dir: ForgeDirection, packet: Int)
@@ -256,4 +230,20 @@ class TileBattery extends SpatialTile(Material.iron) with TIO with TElectric wit
   }
 
   override def toString: String = "[TileBattery]" + x + "x " + y + "y " + z + "z "
+
+  override protected def use(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
+  {
+    super.use(player, side, hit)
+
+    if (!world.isRemote)
+    {
+      if (player.isSneaking)
+      {
+        doCharge = !doCharge
+        println("Charge: " + doCharge)
+      }
+    }
+
+    return true
+  }
 }
