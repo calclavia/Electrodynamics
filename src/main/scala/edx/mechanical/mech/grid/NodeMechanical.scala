@@ -4,8 +4,7 @@ import edx.core.interfaces.TNodeMechanical
 import edx.core.prefab.node.TMultipartNode
 import resonant.api.tile.INodeProvider
 import resonant.lib.debug.DebugInfo
-import resonant.lib.grid.GridNode
-import resonant.lib.grid.node.{NodeGrid, TTileConnector}
+import resonant.lib.grid.core.{GridNode, NodeGrid, TTileConnector}
 import resonant.lib.transform.vector.IVectorWorld
 
 import scala.beans.BeanProperty
@@ -53,6 +52,15 @@ class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](par
   }
 
   /**
+   * Gets the angular velocity of the mechanical device from a specific side
+   *
+   * @return Angular velocity in meters per second
+   */
+  override def angularVelocity = _angularVelocity
+
+  def angularVelocity_=(newVel: Double) = _angularVelocity = newVel
+
+  /**
    * Sets the mechanical node's angle based on its connections
    */
   def resetAngle()
@@ -80,24 +88,6 @@ class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](par
 
   def power: Double = torque * angularVelocity
 
-  /**
-   * Gets the angular velocity of the mechanical device from a specific side
-   *
-   * @return Angular velocity in meters per second
-   */
-  override def angularVelocity = _angularVelocity
-
-  def angularVelocity_=(newVel: Double) = _angularVelocity = newVel
-
-  /**
-   * Gets the torque of the mechanical device from a specific side
-   *
-   * @return force
-   */
-  override def torque = _torque
-
-  def torque_=(newTorque: Double) = _torque = newTorque
-
   def getMechanicalGrid: MechanicalGrid = super.grid.asInstanceOf[MechanicalGrid]
 
   override def newGrid: GridNode[NodeMechanical] = new MechanicalGrid
@@ -107,6 +97,15 @@ class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](par
   override def getDebugInfo = List(toString)
 
   override def toString = "NodeMechanical [" + connections.size() + " Torque: " + BigDecimal(torque).setScale(2, BigDecimal.RoundingMode.HALF_UP) + " Velocity: " + BigDecimal(angularVelocity).setScale(2, BigDecimal.RoundingMode.HALF_UP) + "]"
+
+  /**
+   * Gets the torque of the mechanical device from a specific side
+   *
+   * @return force
+   */
+  override def torque = _torque
+
+  def torque_=(newTorque: Double) = _torque = newTorque
 
   /**
    * The class used to compare when making connections

@@ -3,7 +3,7 @@ package edx.electrical.multimeter
 import edx.electrical.multimeter.graph._
 import net.minecraft.nbt.{NBTTagCompound, NBTTagList}
 import resonant.api.IUpdate
-import resonant.lib.grid.{Grid, UpdateTicker}
+import resonant.lib.grid.core.{Grid, UpdateTicker}
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.utility.science.UnitDisplay

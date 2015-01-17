@@ -5,7 +5,7 @@ import net.minecraft.block.material.Material
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
-import resonant.lib.grid.node.TSpatialNodeProvider
+import resonant.lib.grid.core.TSpatialNodeProvider
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
 import resonant.lib.prefab.fluid.NodeFluid
@@ -94,10 +94,6 @@ abstract class TileFluidProvider(material: Material) extends SpatialTile(materia
 
   override def drain(from: ForgeDirection, maxDrain: Int, doDrain: Boolean): FluidStack = fluidNode.drain(from, maxDrain, doDrain)
 
-  override def canFill(from: ForgeDirection, fluid: Fluid): Boolean = fluidNode.canFill(from, fluid)
-
-  override def canDrain(from: ForgeDirection, fluid: Fluid): Boolean = fluidNode.canDrain(from, fluid)
-
   def fluidNode = _fluidNode
 
   def fluidNode_=(newNode: NodeFluid)
@@ -111,6 +107,10 @@ abstract class TileFluidProvider(material: Material) extends SpatialTile(materia
     fluidNode.onFluidChanged = () => if (!world.isRemote) sendPacket(1)
     nodes.add(fluidNode)
   }
+
+  override def canFill(from: ForgeDirection, fluid: Fluid): Boolean = fluidNode.canFill(from, fluid)
+
+  override def canDrain(from: ForgeDirection, fluid: Fluid): Boolean = fluidNode.canDrain(from, fluid)
 
   override def fill(from: ForgeDirection, resource: FluidStack, doFill: Boolean): Int = fluidNode.fill(from, resource, doFill)
 

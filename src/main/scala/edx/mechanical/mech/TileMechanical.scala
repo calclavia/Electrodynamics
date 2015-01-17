@@ -5,7 +5,7 @@ import io.netty.buffer.ByteBuf
 import net.minecraft.block.material.Material
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.lib.grid.node.TSpatialNodeProvider
+import resonant.lib.grid.core.TSpatialNodeProvider
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
 import resonant.lib.prefab.tile.spatial.SpatialTile
@@ -42,6 +42,18 @@ abstract class TileMechanical(material: Material) extends SpatialTile(material: 
     return false
   }
 
+  def mechanicalNode = _mechanicalNode
+
+  def mechanicalNode_=(newNode: NodeMechanical)
+  {
+    _mechanicalNode = newNode
+    mechanicalNode.onVelocityChanged = () => sendPacket(1)
+    nodes.removeAll(nodes.filter(_.isInstanceOf[NodeMechanical]))
+    nodes.add(mechanicalNode)
+  }
+
+  mechanicalNode = new NodeMechanical(this)
+
   override def write(buf: ByteBuf, id: Int)
   {
     super.write(buf, id)
@@ -62,18 +74,6 @@ abstract class TileMechanical(material: Material) extends SpatialTile(material: 
       case 0 =>
       case 1 => mechanicalNode.angularVelocity = buf.readFloat()
     }
-  }
-
-  mechanicalNode = new NodeMechanical(this)
-
-  def mechanicalNode = _mechanicalNode
-
-  def mechanicalNode_=(newNode: NodeMechanical)
-  {
-    _mechanicalNode = newNode
-    mechanicalNode.onVelocityChanged = () => sendPacket(1)
-    nodes.removeAll(nodes.filter(_.isInstanceOf[NodeMechanical]))
-    nodes.add(mechanicalNode)
   }
 
 }

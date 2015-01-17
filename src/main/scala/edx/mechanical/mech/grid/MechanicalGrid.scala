@@ -1,7 +1,7 @@
 package edx.mechanical.mech.grid
 
 import resonant.api.IUpdate
-import resonant.lib.grid.{GridNode, UpdateTicker}
+import resonant.lib.grid.core.{GridNode, UpdateTicker}
 
 import scala.collection.convert.wrapAll._
 

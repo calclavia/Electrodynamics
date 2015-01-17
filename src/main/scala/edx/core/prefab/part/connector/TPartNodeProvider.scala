@@ -9,7 +9,7 @@ import resonant.api.ISave
 import resonant.api.tile.INodeProvider
 import resonant.api.tile.node.INode
 import resonant.lib.debug.DebugInfo
-import resonant.lib.grid.node.Node
+import resonant.lib.grid.core.Node
 
 import scala.collection.convert.wrapAll._
 

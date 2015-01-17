@@ -12,7 +12,7 @@ import edx.core.prefab.part.CuboidShapes
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.{IIcon, MovingObjectPosition}
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.lib.grid.node.NodeConnector
+import resonant.lib.grid.core.NodeConnector
 import resonant.lib.wrapper.BitmaskWrapper._
 
 import scala.collection.convert.wrapAll._

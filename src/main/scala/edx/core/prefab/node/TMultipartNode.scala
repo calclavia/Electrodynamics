@@ -3,7 +3,7 @@ package edx.core.prefab.node
 import codechicken.multipart.TMultiPart
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
-import resonant.lib.grid.node.NodeConnector
+import resonant.lib.grid.core.NodeConnector
 
 /**
  * A trait that allows nodes to works with Forge Multipart. This trait MUST be mixed in.

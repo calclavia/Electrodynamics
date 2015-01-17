@@ -4,7 +4,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.{FluidContainerRegistry, IFluidHandler}
 import resonant.api.IUpdate
 import resonant.api.tile.INodeProvider
-import resonant.lib.grid.UpdateTicker
+import resonant.lib.grid.core.UpdateTicker
 import resonant.lib.prefab.fluid.NodeFluid
 
 import scala.collection.convert.wrapAll._

@@ -13,7 +13,7 @@ import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
 import resonant.lib.content.prefab.TElectric
-import resonant.lib.grid.node.TSpatialNodeProvider
+import resonant.lib.grid.core.TSpatialNodeProvider
 import resonant.lib.prefab.tile.spatial.SpatialTile
 import resonant.lib.prefab.tile.traits.TRotatable
 import resonant.lib.render.RenderUtility
