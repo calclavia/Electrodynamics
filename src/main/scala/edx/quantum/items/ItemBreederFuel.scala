@@ -9,13 +9,13 @@ import resonant.api.tile.{IReactor, IReactorComponent}
 class ItemBreederFuel extends ItemRadioactive with IReactorComponent
 {
   //Constructor
-  this.setMaxDamage(ItemFissileFuel.DECAY)
+  this.setMaxDamage(ItemFuelRod.decay)
   this.setMaxStackSize(1)
   this.setNoRepair
 
   override def onReact(itemStack: ItemStack, reactor: IReactor)
   {
-    reactor.heat(ItemFissileFuel.ENERGY_PER_TICK / 2)
+    reactor.heat(ItemFuelRod.energyPerTick / 2)
     if (reactor.world.getWorldTime % 20 == 0)
     {
       itemStack.setItemDamage(Math.min(itemStack.getItemDamage + 1, itemStack.getMaxDamage))

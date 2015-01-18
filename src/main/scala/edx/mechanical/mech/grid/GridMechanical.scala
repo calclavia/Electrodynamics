@@ -34,23 +34,23 @@ class GridMechanical extends GridNode[NodeMechanical] with IUpdate
   override def reconstruct(first: NodeMechanical)
   {
     super.reconstruct(first)
-    UpdateTicker.threaded.addUpdater(this)
+    UpdateTicker.world.addUpdater(this)
     isLocked = false
   }
 
   override def deconstruct(first: NodeMechanical)
   {
     super.deconstruct(first)
-    UpdateTicker.threaded.removeUpdater(this)
+    UpdateTicker.world.removeUpdater(this)
   }
 
   override def update(deltaTime: Double)
   {
-    getNodes synchronized
+    nodes synchronized
     {
       load = 0
 
-      getNodes.foreach(
+      nodes.foreach(
         n =>
         {
           n.torque = 0
@@ -72,7 +72,6 @@ class GridMechanical extends GridNode[NodeMechanical] with IUpdate
 
       allPassed = Seq.empty[NodeMechanical]
 
-      //      UpdateTicker.world.enqueue(resetNodes)
       resetNodes()
     }
   }

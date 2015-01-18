@@ -27,8 +27,8 @@ class TilePlasma extends SpatialTile(Material.lava)
   private var temperature: Double = TilePlasma.plasmaMaxTemperature
 
   //Constructor
-  textureName_$eq("plasma")
-  isOpaqueCube(false)
+  textureName = "plasma"
+  isOpaqueCube = false
 
   override def getLightValue(access: IBlockAccess): Int =
   {
@@ -58,7 +58,7 @@ class TilePlasma extends SpatialTile(Material.lava)
   override def update
   {
     super.update
-    ThermalGrid.addTemperature(toVectorWorld, ((temperature - ThermalGrid.getTemperature(toVectorWorld)) * 0.1f).asInstanceOf[Float])
+    ThermalGrid.addHeat(toVectorWorld, ((temperature - ThermalGrid.getTemperature(toVectorWorld)) * 0.1f).asInstanceOf[Float])
     if (ticks % 20 == 0)
     {
       temperature /= 1.5

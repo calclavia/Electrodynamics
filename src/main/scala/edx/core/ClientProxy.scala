@@ -2,7 +2,7 @@ package edx.core
 
 import java.awt.Color
 
-import codechicken.multipart.{TMultiPart, TileMultipart}
+import codechicken.multipart.TileMultipart
 import cpw.mods.fml.client.FMLClientHandler
 import cpw.mods.fml.client.registry.{ClientRegistry, RenderingRegistry}
 import cpw.mods.fml.relauncher.{Side, SideOnly}
@@ -23,20 +23,19 @@ import edx.mechanical.mech.process.crusher.{RenderMechanicalPiston, TileMechanic
 import edx.mechanical.mech.turbine._
 import edx.quantum.gate.RenderQuantumGlyph
 import edx.quantum.laser.fx.{EntityBlockParticleFX, EntityLaserFX, EntityScorchFX}
-import edx.quantum.machine.accelerator.{EntityParticle, GuiAccelerator, RenderParticle, TileAccelerator}
+import edx.quantum.machine.accelerator.{EntityParticle, RenderParticle}
 import edx.quantum.machine.boiler.{GuiNuclearBoiler, RenderNuclearBoiler, TileNuclearBoiler}
 import edx.quantum.machine.centrifuge.{GuiCentrifuge, RenderCentrifuge, TileCentrifuge}
 import edx.quantum.machine.extractor.{GuiChemicalExtractor, RenderChemicalExtractor, TileChemicalExtractor}
 import edx.quantum.machine.plasma.{RenderPlasmaHeater, TilePlasmaHeater}
-import edx.quantum.machine.quantum.{GuiQuantumAssembler, RenderQuantumAssembler, TileQuantumAssembler}
-import edx.quantum.machine.reactor.{GuiReactorCell, RenderReactorCell, TileReactorCell}
+import edx.quantum.machine.quantum.{RenderQuantumAssembler, TileQuantumAssembler}
 import edx.quantum.machine.thermometer.{RenderThermometer, TileThermometer}
+import edx.quantum.reactor.{GuiReactorCell, TileReactorCell}
 import net.minecraft.block.Block
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.client.particle.{EntityDiggingFX, EntityFX}
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.Item
-import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
 import resonant.lib.render.fx.FXElectricBolt2
 import resonant.lib.render.wrapper.ItemRenderHandler
@@ -77,7 +76,6 @@ import resonant.lib.transform.vector.Vector3
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileNuclearBoiler], new RenderNuclearBoiler)
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileThermometer], new RenderThermometer)
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileChemicalExtractor], new RenderChemicalExtractor)
-    ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileReactorCell], new RenderReactorCell)
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileQuantumAssembler], new RenderQuantumAssembler)
     RenderingRegistry.registerEntityRenderingHandler(classOf[EntityParticle], new RenderParticle)
 
@@ -88,40 +86,23 @@ import resonant.lib.transform.vector.Vector3
 
   override def getClientGuiElement(id: Int, player: EntityPlayer, world: World, x: Int, y: Int, z: Int): AnyRef =
   {
-    val tileEntity: TileEntity = world.getTileEntity(x, y, z)
-    if (tileEntity.isInstanceOf[TileMultipart])
+    world.getTileEntity(x, y, z) match
     {
-      val part: TMultiPart = (tileEntity.asInstanceOf[TileMultipart]).partMap(id)
-      if (part.isInstanceOf[PartMultimeter])
-      {
-        return new GuiMultimeter(player.inventory, part.asInstanceOf[PartMultimeter])
-      }
+      case tile: TileMultipart =>
+        val part = tile.partMap(id)
+        if (part.isInstanceOf[PartMultimeter])
+          new GuiMultimeter(player.inventory, part.asInstanceOf[PartMultimeter])
+        null
+      case tile: TileCentrifuge =>
+        new GuiCentrifuge(player.inventory, tile)
+      case tile: TileChemicalExtractor =>
+        new GuiChemicalExtractor(player.inventory, tile)
+      case tile: TileNuclearBoiler =>
+        new GuiNuclearBoiler(player, tile)
+      case tile: TileReactorCell =>
+        new GuiReactorCell(player.inventory, tile)
+      case _ => null
     }
-    else if (tileEntity.isInstanceOf[TileCentrifuge])
-    {
-      return new GuiCentrifuge(player.inventory, (tileEntity.asInstanceOf[TileCentrifuge]))
-    }
-    else if (tileEntity.isInstanceOf[TileChemicalExtractor])
-    {
-      return new GuiChemicalExtractor(player.inventory, (tileEntity.asInstanceOf[TileChemicalExtractor]))
-    }
-    else if (tileEntity.isInstanceOf[TileAccelerator])
-    {
-      return new GuiAccelerator(player, (tileEntity.asInstanceOf[TileAccelerator]))
-    }
-    else if (tileEntity.isInstanceOf[TileQuantumAssembler])
-    {
-      return new GuiQuantumAssembler(player.inventory, (tileEntity.asInstanceOf[TileQuantumAssembler]))
-    }
-    else if (tileEntity.isInstanceOf[TileNuclearBoiler])
-    {
-      return new GuiNuclearBoiler(player, (tileEntity.asInstanceOf[TileNuclearBoiler]))
-    }
-    else if (tileEntity.isInstanceOf[TileReactorCell])
-    {
-      return new GuiReactorCell(player.inventory, tileEntity.asInstanceOf[TileReactorCell])
-    }
-    return null
   }
 
   override def isPaused: Boolean =

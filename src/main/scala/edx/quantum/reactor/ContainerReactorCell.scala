@@ -1,6 +1,6 @@
-package edx.quantum.machine.reactor
+package edx.quantum.reactor
 
-import edx.quantum.items.{ItemBreederFuel, ItemFissileFuel}
+import edx.quantum.items.{ItemBreederFuel, ItemFuelRod}
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.Slot
 import net.minecraft.item.ItemStack
@@ -10,8 +10,8 @@ import resonant.lib.prefab.gui.slot.SlotSpecific
 class ContainerReactorCell(player: EntityPlayer, tileEntity: TileReactorCell) extends ContainerBase(tileEntity)
 {
   //Constructor
-  this.addSlotToContainer(new SlotSpecific(tileEntity, 0, 79, 17, classOf[ItemFissileFuel], classOf[ItemBreederFuel]))
-  this.addPlayerInventory(player)
+  addSlotToContainer(new SlotSpecific(tileEntity, 0, 79, 17, classOf[ItemFuelRod], classOf[ItemBreederFuel]))
+  addPlayerInventory(player)
 
   /**
    * Called to transfer a stack from one inventory to the other eg. when shift clicking.

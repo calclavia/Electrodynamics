@@ -9,7 +9,7 @@ import edx.quantum.machine.boiler.{ContainerNuclearBoiler, TileNuclearBoiler}
 import edx.quantum.machine.centrifuge.{ContainerCentrifuge, TileCentrifuge}
 import edx.quantum.machine.extractor.{ContainerChemicalExtractor, TileChemicalExtractor}
 import edx.quantum.machine.quantum.{ContainerQuantumAssembler, TileQuantumAssembler}
-import edx.quantum.machine.reactor.{ContainerReactorCell, TileReactorCell}
+import edx.quantum.reactor.{ContainerReactorCell, TileReactorCell}
 import net.minecraft.block.Block
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.tileentity.TileEntity
@@ -101,13 +101,13 @@ class CommonProxy extends AbstractProxy
     this.renderElectricShock(world, start, target, r, g, b, true)
   }
 
+  def renderElectricShock(world: World, start: Vector3, target: Vector3, r: Float, g: Float, b: Float, split: Boolean)
+  {
+  }
+
   def renderElectricShock(world: World, start: Vector3, target: Vector3, color: Color, split: Boolean)
   {
     this.renderElectricShock(world, start, target, color.getRed / 255f, color.getGreen / 255f, color.getBlue / 255f, split)
-  }
-
-  def renderElectricShock(world: World, start: Vector3, target: Vector3, r: Float, g: Float, b: Float, split: Boolean)
-  {
   }
 
   def renderElectricShock(world: World, start: Vector3, target: Vector3)

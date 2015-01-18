@@ -184,13 +184,11 @@ class TileFirebox extends SpatialTile(Material.rock) with IFluidHandler with TIn
     }
   }
 
-  def isBurning: Boolean = burnTime > 0
-
   override def getSizeInventory = 1
 
   def getMeltIronEnergy(volume: Float): Long =
   {
-    val temperatureChange: Float = 1811 - ThermalPhysics.getTemperatureForCoordinate(worldObj, xCoord, zCoord)
+    val temperatureChange: Float = 1811 - ThermalPhysics.getDefaultTemperature(worldObj, xCoord, zCoord)
     val mass: Float = ThermalPhysics.getMass(volume, 7.9f)
     return (ThermalPhysics.getEnergyForTemperatureChange(mass, 450, temperatureChange) + ThermalPhysics.getEnergyForStateChange(mass, 272000)).asInstanceOf[Long]
   }
@@ -294,6 +292,8 @@ class TileFirebox extends SpatialTile(Material.rock) with IFluidHandler with TIn
 
     return if (isBurning) (if (isElectric) SpatialBlock.icon.get("firebox_electric_side_on") else SpatialBlock.icon.get("firebox_side_on")) else (if (isElectric) SpatialBlock.icon.get("firebox_electric_side_off") else SpatialBlock.icon.get("firebox_side_off"))
   }
+
+  def isBurning: Boolean = burnTime > 0
 
   override def click(player: EntityPlayer)
   {
