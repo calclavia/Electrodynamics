@@ -243,8 +243,6 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
     }
   }
 
-  override def getMultiBlock: MultiBlockHandler[TileReactorCell] = multiBlock
-
   override def getWorld: World =
   {
     return worldObj
@@ -296,6 +294,8 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
     getMultiBlock.load(nbt)
   }
 
+  override def getMultiBlock: MultiBlockHandler[TileReactorCell] = multiBlock
+
   override def writeToNBT(nbt: NBTTagCompound)
   {
     super.writeToNBT(nbt)
@@ -345,10 +345,10 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
     internalEnergy = Math.max(internalEnergy + energy, 0)
   }
 
-  override def renderDynamic(pos: Vector3, frame: Float, pass: Int): Unit =
+  override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
   {
     GL11.glPushMatrix()
-    GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5)
+    GL11.glTranslated(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5)
     val meta = if (frame != 0) metadata else 2
 
     val hasBelow = if (frame != 0) world.getTileEntity(xi, yi - 1, zi).isInstanceOf[TileReactorCell] else false
@@ -356,14 +356,14 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
     if (meta == 0)
     {
       RenderUtility.bind(TileReactorCell.textureBottom)
-      TileReactorCell.modelBottom.renderAll
+      TileReactorCell.modelBottom.renderAll()
     }
     else if (meta == 1)
     {
       RenderUtility.bind(TileReactorCell.textureMiddle)
       GL11.glTranslatef(0, 0.075f, 0)
       GL11.glScalef(1f, 1.15f, 1f)
-      TileReactorCell.modelMiddle.renderAll
+      TileReactorCell.modelMiddle.renderAll()
     }
     else
     {
@@ -394,7 +394,7 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
     {
       val height = getHeight * ((getStackInSlot(0).getMaxDamage - getStackInSlot(0).getItemDamage).toFloat / getStackInSlot(0).getMaxDamage.toFloat)
       GL11.glPushMatrix()
-      GL11.glTranslated(x + 0.5, y + 0.5 * height, z + 0.5)
+      GL11.glTranslated(pos.x + 0.5, pos.y + 0.5 * height, pos.z + 0.5)
       GL11.glScalef(0.4f, 0.9f * height, 0.4f)
       RenderUtility.bind(TileReactorCell.textureFuel)
       RenderUtility.disableLighting()
