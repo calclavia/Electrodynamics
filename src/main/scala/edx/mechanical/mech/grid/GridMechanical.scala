@@ -9,7 +9,7 @@ import scala.collection.convert.wrapAll._
  * A grid that manages the mechanical objects
  * @author Calclavia
  */
-class MechanicalGrid extends GridNode[NodeMechanical] with IUpdate
+class GridMechanical extends GridNode[NodeMechanical] with IUpdate
 {
   /**
    * The energy loss of this grid
@@ -34,7 +34,7 @@ class MechanicalGrid extends GridNode[NodeMechanical] with IUpdate
   override def reconstruct(first: NodeMechanical)
   {
     super.reconstruct(first)
-    UpdateTicker.world.addUpdater(this)
+    UpdateTicker.threaded.addUpdater(this)
     isLocked = false
   }
 
