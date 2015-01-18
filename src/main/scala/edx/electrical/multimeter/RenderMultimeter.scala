@@ -85,11 +85,11 @@ object RenderMultimeter extends ISimpleItemRenderer
     }
 
     GL11.glPopMatrix()
-    if (part.getNetwork.isEnabled && part.isPrimary)
+    if (part.getGrid.isEnabled && part.isPrimary)
     {
       GL11.glPushMatrix()
       GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5)
-      val centerTranslation: Vector3 = part.getNetwork.center - new Vector3(part.x, part.y, part.z) - 0.5
+      val centerTranslation: Vector3 = part.getGrid.center - new Vector3(part.x, part.y, part.z) - 0.5
       GL11.glTranslated(centerTranslation.x, centerTranslation.y, centerTranslation.z)
       RenderUtility.rotateFaceBlockToSideOutwards(part.getDirection.getOpposite)
       if (part.getDirection.offsetY != 0)
@@ -101,18 +101,18 @@ object RenderMultimeter extends ISimpleItemRenderer
 
       var information = Seq.empty[String]
 
-      for (i <- 0 until part.getNetwork.graphs.size)
+      for (i <- 0 until part.getGrid.graphs.size)
       {
-        if (part.getNetwork.graphs(i).get != null && !(part.getNetwork.graphs(i).get == part.getNetwork.graphs(i).getDefault))
+        if (part.getGrid.graphs(i).get != null && !(part.getGrid.graphs(i).get == part.getGrid.graphs(i).getDefault))
         {
-          information :+= part.getNetwork.getDisplay(i)
+          information :+= part.getGrid.getDisplay(i)
         }
       }
 
       if (information.size <= 0) information :+= LanguageUtility.getLocal("tooltip.noInformation")
 
       val displacement = 0.72f / information.size
-      val maxScale = (part.getNetwork.size.x + part.getNetwork.size.z).asInstanceOf[Float] * 0.004f
+      val maxScale = (part.getGrid.size.x + part.getGrid.size.z).asInstanceOf[Float] * 0.004f
 
       GL11.glTranslatef(0, 0, -displacement * (information.size / 2f))
 
@@ -121,9 +121,9 @@ object RenderMultimeter extends ISimpleItemRenderer
         val info = information(i)
         GL11.glPushMatrix()
         GL11.glTranslatef(0, 0, displacement * i)
-        if (dir.offsetX != 0) RenderUtility.renderText(info, (part.getNetwork.size.z * 0.9f).asInstanceOf[Float], maxScale)
-        else if (dir.offsetY != 0) RenderUtility.renderText(info, (Math.min(part.getNetwork.size.x, part.getNetwork.size.z) * 0.9f).asInstanceOf[Float], maxScale)
-        else if (dir.offsetZ != 0) RenderUtility.renderText(info, (part.getNetwork.size.x * 0.9f).asInstanceOf[Float], maxScale)
+        if (dir.offsetX != 0) RenderUtility.renderText(info, (part.getGrid.size.z * 0.9f).asInstanceOf[Float], maxScale)
+        else if (dir.offsetY != 0) RenderUtility.renderText(info, (Math.min(part.getGrid.size.x, part.getGrid.size.z) * 0.9f).asInstanceOf[Float], maxScale)
+        else if (dir.offsetZ != 0) RenderUtility.renderText(info, (part.getGrid.size.x * 0.9f).asInstanceOf[Float], maxScale)
         GL11.glPopMatrix()
       }
       GL11.glPopMatrix()

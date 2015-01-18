@@ -45,15 +45,15 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
   var isPrimary: Boolean = false
   private var detectMode = DetectModes.NONE
   private var doDetect: Boolean = true
-  private var network: MultimeterGrid = null
+  private var grid: MultimeterGrid = null
 
-  override def preRemove
+  override def preRemove()
   {
     if (!world.isRemote)
-      getNetwork.remove(this)
+      getGrid.remove(this)
   }
 
-  def updateDesc
+  def updateDesc()
   {
     writeDesc(getWriteStream)
   }
@@ -81,7 +81,7 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
     if (!world.isRemote)
     {
       if (doDetect) updateDetections
-      val detectedValue = getNetwork.graphs(detectType).getDouble
+      val detectedValue = getGrid.graphs(detectType).getDouble
       var outputRedstone = false
 
       detectMode match
@@ -99,7 +99,7 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
         case _ =>
       }
 
-      getNetwork.markUpdate
+      getGrid.markUpdate
       if (ticks % 20 == 0)
       {
         if (outputRedstone != redstoneOn)
@@ -137,9 +137,9 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
 
       if (instance != null)
       {
-        getNetwork.torqueGraph.queue(instance.torque)
-        getNetwork.angularVelocityGraph.queue(instance.angularVelocity)
-        getNetwork.powerGraph.queue(instance.torque * instance.angularVelocity)
+        getGrid.torqueGraph.queue(instance.torque)
+        getGrid.angularVelocityGraph.queue(instance.angularVelocity)
+        getGrid.powerGraph.queue(instance.torque * instance.angularVelocity)
       }
     }
     if (tileEntity.isInstanceOf[IFluidHandler])
@@ -148,11 +148,11 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
 
       if (fluidInfo != null)
       {
-        fluidInfo.filter(info => info != null && info.fluid != null).foreach(info => getNetwork.fluidGraph.queue(info.fluid.amount))
+        fluidInfo.filter(info => info != null && info.fluid != null).foreach(info => getGrid.fluidGraph.queue(info.fluid.amount))
       }
     }
-    getNetwork.energyGraph.queue(Compatibility.getEnergy(tileEntity, receivingSide))
-    getNetwork.energyCapacityGraph.queue(Compatibility.getMaxEnergy(tileEntity, receivingSide))
+    getGrid.energyGraph.queue(Compatibility.getEnergy(tileEntity, receivingSide))
+    getGrid.energyCapacityGraph.queue(Compatibility.getMaxEnergy(tileEntity, receivingSide))
   }
 
   def getDetectedTile: TileEntity =
@@ -179,17 +179,17 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
         packet.writeByte(detectMode.id)
         packet.writeByte(detectType)
         packet.writeByte(graphType)
-        packet.writeNBTTagCompound(getNetwork.center.writeNBT(new NBTTagCompound))
-        packet.writeNBTTagCompound(getNetwork.size.writeNBT(new NBTTagCompound))
-        packet.writeBoolean(getNetwork.isEnabled)
+        packet.writeNBTTagCompound(getGrid.center.writeNBT(new NBTTagCompound))
+        packet.writeNBTTagCompound(getGrid.size.writeNBT(new NBTTagCompound))
+        packet.writeBoolean(getGrid.isEnabled)
       }
       case 2 =>
       {
         //Graph
         packet.writeByte(2)
-        isPrimary = getNetwork.isPrimary(this)
+        isPrimary = getGrid.isPrimary(this)
         packet.writeBoolean(isPrimary)
-        if (isPrimary) packet.writeNBTTagCompound(getNetwork.save)
+        if (isPrimary) packet.writeNBTTagCompound(getGrid.save)
       }
     }
   }
@@ -205,9 +205,9 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
         detectMode = DetectModes(packet.readByte).asInstanceOf[DetectModes.DetectMode]
         detectType = packet.readByte
         graphType = packet.readByte
-        getNetwork.center = new Vector3(packet.readNBTTagCompound)
-        getNetwork.size = new Vector3(packet.readNBTTagCompound)
-        getNetwork.isEnabled = packet.readBoolean
+        getGrid.center = new Vector3(packet.readNBTTagCompound)
+        getGrid.size = new Vector3(packet.readNBTTagCompound)
+        getGrid.isEnabled = packet.readBoolean
       }
       case 1 =>
       {
@@ -216,7 +216,7 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
       case 2 =>
       {
         isPrimary = packet.readBoolean
-        if (isPrimary) getNetwork.load(packet.readNBTTagCompound)
+        if (isPrimary) getGrid.load(packet.readNBTTagCompound)
       }
     }
   }
@@ -238,12 +238,8 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
 
   def toggleGraphType
   {
-    graphType = ((graphType + 1) % getNetwork.graphs.size).asInstanceOf[Byte]
+    graphType = ((graphType + 1) % getGrid.graphs.size).asInstanceOf[Byte]
     updateServer
-  }
-
-  def updateServer
-  {
   }
 
   def toggleMode
@@ -254,8 +250,12 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
 
   def toggleDetectionValue
   {
-    detectType = ((detectType + 1) % getNetwork.graphs.size).asInstanceOf[Byte]
+    detectType = ((detectType + 1) % getGrid.graphs.size).asInstanceOf[Byte]
     updateServer
+  }
+
+  def updateServer
+  {
   }
 
   override def load(nbt: NBTTagCompound)
@@ -368,23 +368,23 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
   @SideOnly(Side.CLIENT)
   override def getRenderBounds: Cuboid6 =
   {
-    if (isPrimary) return Cuboid6.full.copy.expand(new Vector3(getNetwork.size.x, getNetwork.size.y, getNetwork.size.z))
+    if (isPrimary) return Cuboid6.full.copy.expand(new Vector3(getGrid.size.x, getGrid.size.y, getGrid.size.z))
     return Cuboid6.full
   }
 
-  def getNetwork: MultimeterGrid =
+  def getGrid: MultimeterGrid =
   {
-    if (network == null)
+    if (grid == null)
     {
-      network = new MultimeterGrid
-      network.add(this)
+      grid = new MultimeterGrid
+      grid.add(this)
     }
-    return network
+    return grid
   }
 
-  def setNetwork(network: MultimeterGrid)
+  def setGrid(network: MultimeterGrid)
   {
-    this.network = network
+    grid = network
   }
 
   override def toString: String = "[PartMultimeter]" + x + "x " + y + "y " + z + "z " + getSlotMask + "s "

@@ -9,7 +9,7 @@ import scala.collection.convert.wrapAll._
  * A grid that manages the mechanical objects
  * @author Calclavia
  */
-class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) with IUpdate
+class MechanicalGrid extends GridNode[NodeMechanical] with IUpdate
 {
   /**
    * The energy loss of this grid
@@ -26,6 +26,8 @@ class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) w
    */
   private var allPassed = Seq.empty[NodeMechanical]
 
+  nodeClass = classOf[NodeMechanical]
+
   /**
    * Rebuild the node list starting from the first node and recursively iterating through its connections.
    */
@@ -34,6 +36,12 @@ class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) w
     super.reconstruct(first)
     UpdateTicker.world.addUpdater(this)
     isLocked = false
+  }
+
+  override def deconstruct(first: NodeMechanical)
+  {
+    super.deconstruct(first)
+    UpdateTicker.threaded.removeUpdater(this)
   }
 
   override def update(deltaTime: Double)
@@ -148,5 +156,5 @@ class MechanicalGrid extends GridNode[NodeMechanical](classOf[NodeMechanical]) w
     }
   }
 
-  override def updateRate: Int = if (getNodes.size > 0 && !dead) 20 else 0
+  override def updateRate: Int = if (getNodes.size > 0) 20 else 0
 }

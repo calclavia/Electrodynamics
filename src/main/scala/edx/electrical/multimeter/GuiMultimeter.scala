@@ -73,12 +73,12 @@ class GuiMultimeter(inventoryPlayer: InventoryPlayer, multimeter: PartMultimeter
 
   protected override def drawGuiContainerForegroundLayer(mouseX: Int, mouseY: Int)
   {
-    val graphName: String = multimeter.getNetwork.getLocalized(multimeter.getNetwork.graphs(multimeter.graphType))
+    val graphName: String = multimeter.getGrid.getLocalized(multimeter.getGrid.graphs(multimeter.graphType))
     super.drawGuiContainerForegroundLayer(mouseX, mouseY)
     val s: String = LanguageUtility.getLocal("item.resonantinduction:multimeter.name")
     this.fontRendererObj.drawString(s, this.xSize / 2 - this.fontRendererObj.getStringWidth(s) / 2, 6, 4210752)
     this.fontRendererObj.drawString(EnumColor.INDIGO + "Detection Type", 9, 20, 4210752)
-    this.fontRendererObj.drawString(multimeter.getNetwork.getDisplay(multimeter.detectType), 9, 60, 4210752)
+    this.fontRendererObj.drawString(multimeter.getGrid.getDisplay(multimeter.detectType), 9, 60, 4210752)
     this.fontRendererObj.drawString(LanguageUtility.getLocal("gui.resonantinduction.multimeter.logic") + " " + EnumColor.RED + LanguageUtility.getLocal("gui.resonantinduction.multimeter." + this.multimeter.getMode.display), 9, 75, 4210752)
     this.fontRendererObj.drawString(graphName, 95, 115, 4210752)
     this.textFieldLimit.drawTextBox()

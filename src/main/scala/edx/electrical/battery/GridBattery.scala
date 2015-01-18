@@ -9,10 +9,12 @@ import scala.collection.JavaConversions._
 /** Basic grid designed to be used for creating a level look for batteries connected together
   * @author robert(Darkguardsman)
   */
-class GridBattery extends Grid[TileBattery](classOf[TileBattery])
+class GridBattery extends Grid[TileBattery]
 {
-  var totalEnergy: Double = 0
-  var totalCapacity: Double = 0
+  var totalEnergy = 0d
+  var totalCapacity = 0d
+
+  nodeClass = classOf[TileBattery]
 
   /**
    * Causes the energy shared by all batteries to be distributed out to all linked batteries
@@ -66,13 +68,13 @@ class GridBattery extends Grid[TileBattery](classOf[TileBattery])
     if (totalEnergy > 0 && amountOfNodes > 0)
     {
       var remainingEnergy: Double = totalEnergy
-      val firstNode: TileBattery = this.getFirstNode
+      val firstNode: TileBattery = nodes.head
 
       for (node <- this.getNodes)
       {
         if (node != firstNode && !Arrays.asList(exclusion).contains(node))
         {
-          val percentage: Double = (node.energy.getEnergyCapacity / totalCapacity)
+          val percentage: Double = node.energy.getEnergyCapacity / totalCapacity
           val energyForBattery: Double = Math.max(totalEnergy * percentage, 0)
           node.energy.setEnergy(energyForBattery)
           remainingEnergy -= energyForBattery

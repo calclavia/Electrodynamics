@@ -11,7 +11,7 @@ import resonant.lib.utility.science.UnitDisplay
 import scala.collection.convert.wrapAll._
 import scala.collection.mutable.ArrayBuffer
 
-class MultimeterGrid extends Grid[PartMultimeter](classOf[PartMultimeter]) with IUpdate
+class MultimeterGrid extends Grid[PartMultimeter] with IUpdate
 {
   final val displayInformation = new ArrayBuffer[String]
   /**
@@ -50,6 +50,8 @@ class MultimeterGrid extends Grid[PartMultimeter](classOf[PartMultimeter]) with 
   var isEnabled: Boolean = true
   var primaryMultimeter: PartMultimeter = null
   private var doUpdate: Boolean = false
+
+  nodeClass = classOf[PartMultimeter]
 
   graphs += energyGraph
   graphs += powerGraph
@@ -108,14 +110,30 @@ class MultimeterGrid extends Grid[PartMultimeter](classOf[PartMultimeter]) with 
     return node.isInstanceOf[PartMultimeter] && node.asInstanceOf[PartMultimeter].world != null && node.asInstanceOf[PartMultimeter].tile != null
   }
 
-  override def reconstruct
+  override def reconstruct()
   {
     if (getNodes.size > 0)
     {
       primaryMultimeter = null
       upperBound = null
       lowerBound = null
-      super.reconstruct
+
+      nodes.foreach(node =>
+      {
+        node.setGrid(this)
+        if (primaryMultimeter == null) primaryMultimeter = node
+        if (upperBound == null)
+        {
+          upperBound = node.getPosition.add(1)
+        }
+        if (lowerBound == null)
+        {
+          lowerBound = node.getPosition
+        }
+        upperBound = upperBound.max(node.getPosition.add(1))
+        lowerBound = lowerBound.min(node.getPosition)
+      })
+
       center = upperBound.midPoint(lowerBound)
       upperBound -= center
       lowerBound -= center
@@ -126,8 +144,8 @@ class MultimeterGrid extends Grid[PartMultimeter](classOf[PartMultimeter]) with 
 
       getNodes foreach (c =>
       {
-        c.updateDesc
-        c.updateGraph
+        c.updateDesc()
+        c.updateGraph()
       })
 
       doUpdate = true
@@ -153,21 +171,4 @@ class MultimeterGrid extends Grid[PartMultimeter](classOf[PartMultimeter]) with 
     nbt.setTag("graphs", data)
     return nbt
   }
-
-  protected override def reconstructNode(node: PartMultimeter)
-  {
-    node.setNetwork(this)
-    if (primaryMultimeter == null) primaryMultimeter = node
-    if (upperBound == null)
-    {
-      upperBound = node.getPosition.add(1)
-    }
-    if (lowerBound == null)
-    {
-      lowerBound = node.getPosition
-    }
-    upperBound = upperBound.max(node.getPosition.add(1))
-    lowerBound = lowerBound.min(node.getPosition)
-  }
-
 }
