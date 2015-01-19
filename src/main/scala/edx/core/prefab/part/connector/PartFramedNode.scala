@@ -7,10 +7,9 @@ import codechicken.lib.data.{MCDataInput, MCDataOutput}
 import codechicken.lib.raytracer.IndexedCuboid6
 import codechicken.lib.vec.Cuboid6
 import codechicken.multipart._
-import cpw.mods.fml.relauncher.{Side, SideOnly}
 import edx.core.prefab.part.CuboidShapes
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.util.{IIcon, MovingObjectPosition}
+import net.minecraft.util.MovingObjectPosition
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.lib.grid.core.NodeConnector
 import resonant.lib.wrapper.BitmaskWrapper._
@@ -18,13 +17,12 @@ import resonant.lib.wrapper.BitmaskWrapper._
 import scala.collection.convert.wrapAll._
 import scala.collection.mutable
 
-abstract class PartFramedNode extends PartAbstract with TPartNodeProvider with TSlottedPart with TNormalOcclusion with TIconHitEffects
+abstract class PartFramedNode extends PartAbstract with TPartNodeProvider with TSlottedPart with TNormalOcclusion
 {
   protected val node: NodeConnector[_]
   /** Bitmask connections */
   var clientRenderMask = 0x00
-  @SideOnly(Side.CLIENT)
-  protected var breakIcon: IIcon = null
+
   /** Client Side */
   protected var testingSide: ForgeDirection = null
 
@@ -32,10 +30,6 @@ abstract class PartFramedNode extends PartAbstract with TPartNodeProvider with T
   nodes.add(node)
 
   override def getStrength(hit: MovingObjectPosition, player: EntityPlayer): Float = 10f
-
-  override def getBounds: Cuboid6 = CuboidShapes.center
-
-  override def getBrokenIcon(side: Int): IIcon = breakIcon
 
   def getOcclusionBoxes: Set[Cuboid6] = getCollisionBoxes
 

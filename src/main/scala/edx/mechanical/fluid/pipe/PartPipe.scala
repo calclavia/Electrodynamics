@@ -5,7 +5,7 @@ import java.lang.{Iterable => JIterable}
 import codechicken.lib.data.{MCDataInput, MCDataOutput}
 import codechicken.lib.raytracer.IndexedCuboid6
 import codechicken.lib.render.CCRenderState
-import codechicken.lib.vec.{Cuboid6, Vector3}
+import codechicken.lib.vec.Vector3
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import edx.core.prefab.part.CuboidShapes
 import edx.core.prefab.part.connector.{PartFramedNode, TColorable, TMaterial}
@@ -42,8 +42,6 @@ class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorab
   material = PipeMaterials.ceramic
   node.onConnectionChanged = () => sendPacket(0)
   node.onFluidChanged = () => markPacket = true
-
-  override def getBounds: Cuboid6 = CuboidShapes.thickCenter
 
   override def getSubParts: JIterable[IndexedCuboid6] =
   {
