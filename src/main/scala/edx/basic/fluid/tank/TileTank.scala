@@ -47,6 +47,24 @@ class TileTank extends TileFluidProvider(Material.iron) with ISneakPickup with R
       if (obj.isInstanceOf[INode] && !obj.asInstanceOf[Node].parent.isInstanceOf[TileTank])
         _connectedMask = _connectedMask.closeMask(dir)
     }
+
+    override def fill(from: ForgeDirection, resource: FluidStack, doFill: Boolean): Int =
+    {
+      //Try to fill the current tank. If it fails, try to fill the tank above it.
+      val result = super.fill(from, resource, doFill)
+
+      if (result == 0)
+      {
+        val tile = (toVectorWorld + new Vector3(0, 1, 0)).getTileEntity
+
+        if (tile.isInstanceOf[TileTank])
+        {
+          return tile.asInstanceOf[TileTank].fill(from, resource, doFill)
+        }
+      }
+
+      return result
+    }
   }
 
   fluidNode.asInstanceOf[NodeFluidGravity].maxFlowRate = FluidContainerRegistry.BUCKET_VOLUME
@@ -134,6 +152,7 @@ class TileTank extends TileFluidProvider(Material.iron) with ISneakPickup with R
     GL11.glPopMatrix()
   }
 
+  @SideOnly(Side.CLIENT)
   def renderInventoryFluid(x: Double, y: Double, z: Double, fluid: FluidStack, capacity: Int)
   {
     val tank = new FluidTank(fluid, capacity)

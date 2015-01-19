@@ -17,7 +17,7 @@ class NodeFluidGravity(parent: TileFluidProvider, volume: Int = FluidContainerRe
     val pressureA = nodeA.pressure(dir)
     val pressureB = nodeB.pressure(dir.getOpposite)
     val amountA = tankA.getFluidAmount
-    val amountB = tankB.getFluidAmount
+    val amountB = nodeB.fill(dir, drain(dir.getOpposite, amountA, false), false)
 
     var quantity = 0
 

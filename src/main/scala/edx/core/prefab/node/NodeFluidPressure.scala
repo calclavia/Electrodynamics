@@ -30,6 +30,12 @@ class NodeFluidPressure(parent: INodeProvider, volume: Int = FluidContainerRegis
     UpdateTicker.threaded.addUpdater(this)
   }
 
+  override def deconstruct()
+  {
+    super.deconstruct()
+    UpdateTicker.threaded.removeUpdater(this)
+  }
+
   def update(deltaTime: Double)
   {
     if (!world.isRemote)
@@ -124,7 +130,7 @@ class NodeFluidPressure(parent: INodeProvider, volume: Int = FluidContainerRegis
     val pressureA = nodeA.pressure(dir)
     val pressureB = nodeB.pressure(dir.getOpposite)
     val amountA = tankA.getFluidAmount
-    val amountB = tankB.getFluidAmount
+    val amountB = nodeB.fill(dir, drain(dir.getOpposite, amountA, false), false)
 
     var quantity = if (pressureA > pressureB) (pressureA - pressureB) * flowRate else 0
     quantity = Math.min(Math.min(quantity, tankB.getCapacity - amountB), amountA)
@@ -138,6 +144,8 @@ class NodeFluidPressure(parent: INodeProvider, volume: Int = FluidContainerRegis
       }
     }
   }
+
+  def pressure(direction: ForgeDirection): Int = _pressure
 
   protected def updatePressure()
   {
@@ -176,8 +184,6 @@ class NodeFluidPressure(parent: INodeProvider, volume: Int = FluidContainerRegis
     }
   }
 
-  def pressure(direction: ForgeDirection): Int = _pressure
-
   def pressure: Int = _pressure
 
   def pressure_=(pressure: Int)
@@ -185,6 +191,6 @@ class NodeFluidPressure(parent: INodeProvider, volume: Int = FluidContainerRegis
     this._pressure = pressure
   }
 
-  override def updateRate: Int = if (!isInvalid) 20 else 0
+  override def updateRate: Int = 20
 
 }

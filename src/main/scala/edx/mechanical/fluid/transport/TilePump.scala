@@ -3,7 +3,6 @@ package edx.mechanical.fluid.transport
 import edx.core.Reference
 import edx.mechanical.mech.TileMechanical
 import net.minecraft.block.material.Material
-import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
@@ -55,8 +54,9 @@ class TilePump extends TileMechanical(Material.iron) with IRotatable with IFluid
   {
     if (from == getDirection.getOpposite)
     {
-      val tileOut: TileEntity = toVector3.add(from.getOpposite).getTileEntity(this.worldObj)
-      if (tileOut.isInstanceOf[IFluidHandler]) return (tileOut.asInstanceOf[IFluidHandler]).fill(from, resource, doFill)
+      val tileOut = (toVectorWorld + from.getOpposite).getTileEntity
+      if (tileOut.isInstanceOf[IFluidHandler])
+        return (tileOut.asInstanceOf[IFluidHandler]).fill(from, resource, doFill)
     }
     return 0
   }

@@ -12,10 +12,8 @@ import edx.core.prefab.part.connector.{PartFramedNode, TColorable, TMaterial}
 import edx.mechanical.MechanicalContent
 import edx.mechanical.fluid.pipe.PipeMaterials.PipeMaterial
 import net.minecraft.client.renderer.RenderBlocks
-import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.util.MovingObjectPosition
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import resonant.lib.collection.EvictingList
@@ -73,17 +71,6 @@ class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorab
       sendPacket(3)
       markPacket = false
     }
-  }
-
-  /**
-   * Changes the wire's color.
-   */
-  override def activate(player: EntityPlayer, part: MovingObjectPosition, itemStack: ItemStack): Boolean =
-  {
-    if (!world.isRemote)
-      println(node.pressure + " : " + node.getFluidAmount)
-
-    return super.activate(player, part, itemStack)
   }
 
   /**
