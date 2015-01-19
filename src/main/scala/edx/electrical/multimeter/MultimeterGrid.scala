@@ -103,7 +103,7 @@ class MultimeterGrid extends Grid[PartMultimeter] with IUpdate
     doUpdate = true
   }
 
-  override def updateRate: Int = if (getNodes.size > 0) 20 else 0
+  override def updatePeriod: Int = if (getNodes.size > 0) 50 else 0
 
   override def isValidNode(node: AnyRef): Boolean =
   {

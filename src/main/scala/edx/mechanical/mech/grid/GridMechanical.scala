@@ -155,5 +155,5 @@ class GridMechanical extends GridNode[NodeMechanical] with IUpdate
     }
   }
 
-  override def updateRate: Int = if (getNodes.size > 0) 20 else 0
+  override def updatePeriod: Int = if (getNodes.size > 0) 50 else 0
 }
