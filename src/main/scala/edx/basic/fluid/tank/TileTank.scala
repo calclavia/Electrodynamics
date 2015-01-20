@@ -77,7 +77,6 @@ class TileTank extends TileFluidProvider(Material.iron) with ISneakPickup with R
   {
     if (!world.isRemote)
     {
-      println(fluidNode.asInstanceOf[NodeFluidGravity].pressure)
       return FluidUtility.playerActivatedFluidItem(world, xi, yi, zi, player, side)
     }
 

@@ -10,14 +10,15 @@ import net.minecraftforge.fluids.FluidContainerRegistry
  */
 class NodeFluidGravity(parent: TileFluidProvider, volume: Int = FluidContainerRegistry.BUCKET_VOLUME) extends NodeFluidPressure(parent, volume)
 {
-  override protected def doDistribute(dir: ForgeDirection, nodeA: NodeFluidPressure, nodeB: NodeFluidPressure, flowRate: Int)
+  override protected def doDistribute(deltaTime: Double, dir: ForgeDirection, nodeA: NodeFluidPressure, nodeB: NodeFluidPressure, flowRate: Int)
   {
     val tankA = nodeA.getPrimaryTank
     val tankB = nodeB.getPrimaryTank
     val pressureA = nodeA.pressure(dir)
     val pressureB = nodeB.pressure(dir.getOpposite)
     val amountA = tankA.getFluidAmount
-    val amountB = tankB.getFluidAmount - nodeB.fill(dir, drain(dir.getOpposite, amountA, false), false)
+    val testDrain = drain(dir.getOpposite, amountA, false)
+    val amountB = tankB.getFluidAmount - nodeB.fill(dir, testDrain, false)
 
     var quantity = 0
 
@@ -33,8 +34,20 @@ class NodeFluidGravity(parent: TileFluidProvider, volume: Int = FluidContainerRe
         quantity = if (pressureA > pressureB) (pressureA - pressureB) * flowRate else 0
     }
 
-    //TODO: There's a slight pressure backflow
-    quantity = Math.min(Math.min(quantity, tankB.getCapacity - amountB), amountA)
+    /**
+     * Take account of viscosity. Fluid in Minecraft is measured in liters.
+     * 1L = 0.001 m^3
+     * Viscosity (m/s^2)
+     * Viscosity/1000 (convert to L/s^2)
+     */
+    if (testDrain != null && testDrain.getFluid != null)
+    {
+      quantity = Math.max(quantity, (Math.pow(testDrain.getFluid.getViscosity(testDrain) / 1000, 3) * deltaTime).toInt)
+    }
+    else
+    {
+      quantity = Math.min(Math.min(quantity, tankB.getCapacity - amountB), amountA)
+    }
 
     if (quantity > 0)
     {

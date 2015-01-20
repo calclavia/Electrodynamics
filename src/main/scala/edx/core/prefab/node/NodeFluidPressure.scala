@@ -83,7 +83,7 @@ class NodeFluidPressure(parent: INodeProvider, volume: Int = FluidContainerRegis
 
                     if (tankB != null)
                     {
-                      doDistribute(dir, this, otherNode, flowRate)
+                      doDistribute(deltaTime, dir, this, otherNode, flowRate)
                     }
                   }
                 }
@@ -123,7 +123,7 @@ class NodeFluidPressure(parent: INodeProvider, volume: Int = FluidContainerRegis
     }
   }
 
-  protected def doDistribute(dir: ForgeDirection, nodeA: NodeFluidPressure, nodeB: NodeFluidPressure, flowRate: Int)
+  protected def doDistribute(deltaTime: Double, dir: ForgeDirection, nodeA: NodeFluidPressure, nodeB: NodeFluidPressure, flowRate: Int)
   {
     val tankA = nodeA.getPrimaryTank
     val tankB = nodeB.getPrimaryTank
