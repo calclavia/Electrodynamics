@@ -9,7 +9,6 @@ import net.minecraft.item.{Item, ItemBlock, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.World
 import resonant.api.items.IEnergyItem
-import resonant.lib.mod.compat.energy.Compatibility
 import resonant.lib.render.EnumColor
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.utility.science.UnitDisplay
@@ -61,7 +60,7 @@ class ItemBlockBattery(block: Block) extends ItemBlock(block) with IEnergyItem
       color = "\u00a76"
     }
     itemStack.getItemDamageForDisplay
-    list.add(LanguageUtility.getLocal("tooltip.battery.energy").replace("%0", color).replace("%1", EnumColor.GREY.toString).replace("%v0", new UnitDisplay(UnitDisplay.Unit.JOULES, joules).toString).replace("%v1", new UnitDisplay(UnitDisplay.Unit.JOULES, this.getEnergyCapacity(itemStack), true).toString))
+    list.add(LanguageUtility.getLocal("tooltip.battery.energy").replace("%0", color).replace("%1", EnumColor.GREY.toString).replace("%v0", new UnitDisplay(UnitDisplay.Unit.JOULES, joules).symbol.toString).replace("%v1", new UnitDisplay(UnitDisplay.Unit.JOULES, this.getEnergyCapacity(itemStack), true).symbol.toString))
   }
 
   /**
@@ -84,14 +83,25 @@ class ItemBlockBattery(block: Block) extends ItemBlock(block) with IEnergyItem
     return energyToReceive
   }
 
-  def setEnergy(itemStack: ItemStack, joules: Double)
+  def discharge(itemStack: ItemStack, energy: Double, doTransfer: Boolean): Double =
+  {
+    val energyToExtract: Double = Math.min(Math.min(this.getEnergy(itemStack), energy), getTransferRate(itemStack))
+    if (doTransfer)
+    {
+      setEnergy(itemStack, this.getEnergy(itemStack) - energyToExtract)
+    }
+    return energyToExtract
+  }
+
+  def setEnergy(itemStack: ItemStack, joules: Double): ItemStack =
   {
     if (itemStack.getTagCompound == null)
     {
       itemStack.setTagCompound(new NBTTagCompound)
     }
-    val electricityStored: Double = Math.max(Math.min(joules, this.getEnergyCapacity(itemStack)), 0)
-    itemStack.getTagCompound.setDouble("electricity", electricityStored)
+    val energy: Double = Math.max(Math.min(joules, this.getEnergyCapacity(itemStack)), 0)
+    itemStack.getTagCompound.setDouble("energy", energy)
+    return itemStack
   }
 
   def getTransferRate(itemStack: ItemStack): Double =
@@ -99,29 +109,9 @@ class ItemBlockBattery(block: Block) extends ItemBlock(block) with IEnergyItem
     return this.getEnergyCapacity(itemStack) / 100
   }
 
-  def discharge(itemStack: ItemStack, energy: Double, doTransfer: Boolean): Double =
+  def getEnergyCapacity(theItem: ItemStack): Double =
   {
-    val energyToExtract: Double = Math.min(Math.min(this.getEnergy(itemStack), energy), getTransferRate(itemStack))
-    if (doTransfer)
-    {
-      this.setEnergy(itemStack, this.getEnergy(itemStack) - energyToExtract)
-    }
-    return energyToExtract
-  }
-
-  def getVoltage(itemStack: ItemStack): Double =
-  {
-    return 240
-  }
-
-  def getTransfer(itemStack: ItemStack): Double =
-  {
-    return this.getEnergyCapacity(itemStack) - this.getEnergy(itemStack)
-  }
-
-  override def getDisplayDamage(stack: ItemStack): Int =
-  {
-    return (100 - (this.getEnergy(stack).asInstanceOf[Double] / getEnergyCapacity(stack).asInstanceOf[Double]) * 100).asInstanceOf[Int]
+    return TileBattery.getEnergyForTier(ItemBlockBattery.getTier(theItem))
   }
 
   /** Gets the energy stored in the item. Energy is stored using item NBT */
@@ -131,23 +121,28 @@ class ItemBlockBattery(block: Block) extends ItemBlock(block) with IEnergyItem
     {
       itemStack.setTagCompound(new NBTTagCompound)
     }
-    val energyStored: Long = itemStack.getTagCompound.getLong("electricity")
+    val energyStored = itemStack.getTagCompound.getDouble("energy")
     return energyStored
   }
 
-  def getEnergyCapacity(theItem: ItemStack): Double =
+  def getTransfer(itemStack: ItemStack): Double =
   {
-    return TileBattery.getEnergyForTier(ItemBlockBattery.getTier(theItem))
+    return this.getEnergyCapacity(itemStack) - this.getEnergy(itemStack)
+  }
+
+  override def getDisplayDamage(stack: ItemStack): Int =
+  {
+    return (100 - (getEnergy(stack) / getEnergyCapacity(stack)) * 100).toInt
   }
 
   @SuppressWarnings(Array("unchecked"))
-  override def getSubItems(par1: Item, par2CreativeTabs: CreativeTabs, par3List: List[_])
+  override def getSubItems(par1: Item, par2CreativeTabs: CreativeTabs, list: List[_])
   {
     for (tier <- 0 to TileBattery.maxTier)
     {
-      par3List.add(Compatibility.getItemWithCharge(ItemBlockBattery.setTier(new ItemStack(this), tier.asInstanceOf[Byte]), 0))
-      par3List.add(Compatibility.getItemWithCharge(ItemBlockBattery.setTier(new ItemStack(this), tier.asInstanceOf[Byte]), TileBattery.getEnergyForTier(tier)))
-
+      //TODO: Make traits for this
+      list.add(setEnergy(ItemBlockBattery.setTier(new ItemStack(this), tier), 0))
+      list.add(setEnergy(ItemBlockBattery.setTier(new ItemStack(this), tier), TileBattery.getEnergyForTier(tier)))
     }
   }
 }

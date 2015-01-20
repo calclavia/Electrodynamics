@@ -12,6 +12,7 @@ import edx.basic.process.sifting.TileSieve
 import edx.basic.process.smelting.firebox.{RenderHotPlate, TileHotPlate}
 import edx.basic.process.smelting.{RenderCastingMold, TileCastingMold}
 import edx.electrical.ElectricalContent
+import edx.electrical.battery.TileBattery
 import edx.electrical.multimeter.{GuiMultimeter, PartMultimeter, RenderMultimeter}
 import edx.electrical.tesla.{RenderTesla, TileTesla}
 import edx.electrical.transformer.RenderTransformer
@@ -67,6 +68,7 @@ import resonant.lib.transform.vector.Vector3
     ItemRenderHandler.register(ElectricalContent.itemTransformer, RenderTransformer)
     ItemRenderHandler.register(ElectricalContent.itemMultimeter, RenderMultimeter)
     ItemRenderHandler.register(ElectricalContent.itemQuantumGlyph, RenderQuantumGlyph)
+    ItemRenderHandler.register(Item.getItemFromBlock(ElectricalContent.blockBattery), new TileBattery)
 
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileTesla], new RenderTesla)
 

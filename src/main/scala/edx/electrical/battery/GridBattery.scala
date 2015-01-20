@@ -32,7 +32,7 @@ class GridBattery extends Grid[TileBattery]
       totalCapacity += connector.energy.getEnergyCapacity
       lowestY = Math.min(connector.yCoord, lowestY)
       highestY = Math.max(connector.yCoord, highestY)
-      connector.renderEnergyAmount = 0
+      //TODO: Update energy render
     }
 
     var remainingRenderEnergy: Double = totalEnergy
@@ -54,7 +54,7 @@ class GridBattery extends Grid[TileBattery]
       for (connector <- connectorsInlevel)
       {
         val tryInject: Double = Math.min(remainingRenderEnergy / levelSize, connector.energy.getEnergyCapacity)
-        connector.renderEnergyAmount_$eq(tryInject)
+        //TODO: Update energy render
         used += tryInject
       }
       remainingRenderEnergy -= used
