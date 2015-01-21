@@ -28,7 +28,6 @@ import edx.quantum.machine.accelerator.{EntityParticle, RenderParticle}
 import edx.quantum.machine.boiler.{GuiNuclearBoiler, RenderNuclearBoiler, TileNuclearBoiler}
 import edx.quantum.machine.centrifuge.{GuiCentrifuge, RenderCentrifuge, TileCentrifuge}
 import edx.quantum.machine.extractor.{GuiChemicalExtractor, RenderChemicalExtractor, TileChemicalExtractor}
-import edx.quantum.machine.plasma.{RenderPlasmaHeater, TilePlasmaHeater}
 import edx.quantum.machine.quantum.{RenderQuantumAssembler, TileQuantumAssembler}
 import edx.quantum.machine.thermometer.{RenderThermometer, TileThermometer}
 import edx.quantum.reactor.{GuiReactorCell, TileReactorCell}
@@ -74,7 +73,6 @@ import resonant.lib.transform.vector.Vector3
 
     //Quantum
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileCentrifuge], new RenderCentrifuge)
-    ClientRegistry.bindTileEntitySpecialRenderer(classOf[TilePlasmaHeater], new RenderPlasmaHeater)
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileNuclearBoiler], new RenderNuclearBoiler)
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileThermometer], new RenderThermometer)
     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileChemicalExtractor], new RenderChemicalExtractor)

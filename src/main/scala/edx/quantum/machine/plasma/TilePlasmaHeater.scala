@@ -11,7 +11,6 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.network.Packet
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
-import resonant.api.tile.ITagRender
 import resonant.engine.ResonantEngine
 import resonant.lib.grid.energy.EnergyStorage
 import resonant.lib.mod.config.Config
@@ -29,7 +28,7 @@ object TilePlasmaHeater
   @Config var plasmaHeatAmount: Int = 100
 }
 
-class TilePlasmaHeater extends TileElectric(Material.iron) with IPacketReceiver with ITagRender with IFluidHandler with TEnergyProvider
+class TilePlasmaHeater extends TileElectric(Material.iron) with IPacketReceiver with IFluidHandler with TEnergyProvider
 {
   final val tankInputDeuterium: FluidTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 10)
   final val tankInputTritium: FluidTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 10)

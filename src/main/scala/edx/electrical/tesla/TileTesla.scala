@@ -1,6 +1,3 @@
-/**
- *
- */
 package edx.electrical.tesla
 
 import java.util.{ArrayList, Comparator, HashSet, List, PriorityQueue, Set}
@@ -265,12 +262,6 @@ class TileTesla extends TileElectric(Material.iron) with IMultiBlockStructure[Ti
     {
       this.doTransfer = true
     }
-  }
-
-  def getMultiBlock: MultiBlockHandler[TileTesla] =
-  {
-    if (multiBlock == null) multiBlock = new MultiBlockHandler[TileTesla](this)
-    return multiBlock
   }
 
   def teslaTransfer(e: Double, doTransfer: Boolean): Double =
@@ -609,6 +600,12 @@ class TileTesla extends TileElectric(Material.iron) with IMultiBlockStructure[Ti
     {
       this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, 0, 3)
     }
+  }
+
+  def getMultiBlock: MultiBlockHandler[TileTesla] =
+  {
+    if (multiBlock == null) multiBlock = new MultiBlockHandler[TileTesla](this)
+    return multiBlock
   }
 
   def getLowestTesla: TileTesla =
