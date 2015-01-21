@@ -85,9 +85,8 @@ class TileBattery extends SpatialTile(Material.iron) with TIO with TElectric wit
       {
         if (energy > 0)
         {
-          //TODO: Voltage of battery should decrease over time.
-          dcNode.generateVoltage(500)
-
+          //TODO: Allow player to set the power output
+          dcNode.generatePower(100000)
           val dissipatedEnergy = dcNode.power / 20
           energy -= dissipatedEnergy
           markUpdate()
