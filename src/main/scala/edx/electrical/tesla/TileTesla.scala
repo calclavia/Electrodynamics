@@ -20,12 +20,13 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.ChatComponentText
 import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.lib.content.prefab.{TEnergyStorage, TIO}
+import resonant.lib.content.prefab.TIO
 import resonant.lib.grid.energy.EnergyStorage
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
-import resonant.lib.network.handle.{TPacketIDReceiver, TPacketSender}
+import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
 import resonant.lib.prefab.tile.mixed.TileElectric
 import resonant.lib.prefab.tile.multiblock.reference.{IMultiBlockStructure, MultiBlockHandler}
+import resonant.lib.prefab.tile.traits.TEnergyProvider
 import resonant.lib.render.EnumColor
 import resonant.lib.transform.vector.{Vector3, VectorWorld}
 import resonant.lib.utility.{LanguageUtility, LinkUtility}
@@ -45,7 +46,7 @@ object TileTesla
   final val DEFAULT_COLOR: Int = 12
 }
 
-class TileTesla extends TileElectric(Material.iron) with IMultiBlockStructure[TileTesla] with ITesla with TPacketIDReceiver with TPacketSender with TEnergyStorage with TIO
+class TileTesla extends TileElectric(Material.iron) with IMultiBlockStructure[TileTesla] with ITesla with TPacketReceiver with TPacketSender with TEnergyProvider with TIO
 {
 
   final val TRANSFER_CAP: Double = 10000D
@@ -76,10 +77,8 @@ class TileTesla extends TileElectric(Material.iron) with IMultiBlockStructure[Ti
 
   //Constructor
   //TODO: Dummy
-  energy = new EnergyStorage(0)
-  energy.setCapacity(TRANSFER_CAP * 2)
-  energy.setMaxTransfer(TRANSFER_CAP)
-  setTextureName(Reference.prefix + "material_metal_side")
+  energy = new EnergyStorage
+  textureName = "material_metal_side"
   normalRender = false
   isOpaqueCube = false
 
@@ -94,7 +93,7 @@ class TileTesla extends TileElectric(Material.iron) with IMultiBlockStructure[Ti
     super.update
     if (this.getMultiBlock.isPrimary)
     {
-      if (this.ticks % (4 + this.worldObj.rand.nextInt(2)) == 0 && ((this.worldObj.isRemote && isTransfering) || (!this.energy.isEmpty && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))))
+      if (this.ticks % (4 + this.worldObj.rand.nextInt(2)) == 0 && ((this.worldObj.isRemote && isTransfering) || (this.energy.value != 0 && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))))
       {
         val topTesla: TileTesla = this.getTopTelsa
         val topTeslaVector: Vector3 = toVector3
@@ -108,10 +107,10 @@ class TileTesla extends TileElectric(Material.iron) with IMultiBlockStructure[Ti
               val transferTile: TileEntity = this.linked.getTileEntity(dimWorld)
               if (transferTile.isInstanceOf[TileTesla] && !transferTile.isInvalid)
               {
-                this.transfer((transferTile.asInstanceOf[TileTesla]), Math.min(energy.getEnergy, TRANSFER_CAP))
+                this.transfer((transferTile.asInstanceOf[TileTesla]), Math.min(energy.value, TRANSFER_CAP))
                 if (this.zapCounter % 5 == 0 && Settings.SOUND_FXS)
                 {
-                  this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, Reference.prefix + "electricshock", this.energy.getEnergy.asInstanceOf[Float] / TRANSFER_CAP.asInstanceOf[Float], 1.3f - 0.5f * (this.dyeID / 16f))
+                  this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, Reference.prefix + "electricshock", energy.value.toFloat / TRANSFER_CAP.asInstanceOf[Float], 1.3f - 0.5f * (this.dyeID / 16f))
                 }
               }
             }
@@ -158,7 +157,7 @@ class TileTesla extends TileElectric(Material.iron) with IMultiBlockStructure[Ti
           }
           if (teslaToTransfer.size > 0)
           {
-            val transferEnergy: Double = this.energy.getEnergy / teslaToTransfer.size
+            val transferEnergy: Double = this.energy.value / teslaToTransfer.size
             val sentPacket: Boolean = false
 
             for (count <- 0 to 10)
@@ -168,7 +167,7 @@ class TileTesla extends TileElectric(Material.iron) with IMultiBlockStructure[Ti
                 val tesla: ITesla = teslaToTransfer.poll
                 if (this.zapCounter % 5 == 0 && Settings.SOUND_FXS)
                 {
-                  this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, Reference.prefix + "electricshock", this.energy.getEnergy.asInstanceOf[Float] / TRANSFER_CAP.asInstanceOf[Float], 1.3f - 0.5f * (this.dyeID / 16f))
+                  this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, Reference.prefix + "electricshock", this.energy.value.asInstanceOf[Float] / TRANSFER_CAP.asInstanceOf[Float], 1.3f - 0.5f * (this.dyeID / 16f))
                 }
                 var targetVector: Vector3 = new Vector3(tesla.asInstanceOf[TileEntity])
                 var heightRange: Int = 1
@@ -194,7 +193,7 @@ class TileTesla extends TileElectric(Material.iron) with IMultiBlockStructure[Ti
         this.outputBlacklist.clear
         this.doTransfer = false
       }
-      if (!this.worldObj.isRemote && this.energy.didEnergyStateChange)
+      if (!this.worldObj.isRemote && this.energy.isLastEmpty)
       {
         this.sendPacket(2)
       }
@@ -241,35 +240,37 @@ class TileTesla extends TileElectric(Material.iron) with IMultiBlockStructure[Ti
     }
     if (`type` == 2)
     {
-      data.add(this.energy.getEnergy > 0)
+      data.add(this.energy.value > 0)
     }
     return data
   }
 
-  override def read(data: ByteBuf, id: Int, player: EntityPlayer, `type`: PacketType): Boolean =
+  override def read(buf: ByteBuf, id: Int, packetType: PacketType)
   {
+    super.read(buf, id, packetType)
+
     if (id == 1)
     {
-      this.dyeID = data.readInt
-      this.canReceive = data.readBoolean
-      this.attackEntities = data.readBoolean
-      this.isLinkedClient = data.readBoolean
-      getMultiBlock.load(ByteBufUtils.readTag(data))
-      return true
+      this.dyeID = buf.readInt
+      this.canReceive = buf.readBoolean
+      this.attackEntities = buf.readBoolean
+      this.isLinkedClient = buf.readBoolean
+      getMultiBlock.load(ByteBufUtils.readTag(buf))
     }
-    else
-    if (id == 2)
+    else if (id == 2)
     {
-      this.isTransfering = data.readBoolean
-      return true
+      this.isTransfering = buf.readBoolean
     }
-    else
-    if (id == 3)
+    else if (id == 3)
     {
       this.doTransfer = true
-      return true
     }
-    return false
+  }
+
+  def getMultiBlock: MultiBlockHandler[TileTesla] =
+  {
+    if (multiBlock == null) multiBlock = new MultiBlockHandler[TileTesla](this)
+    return multiBlock
   }
 
   def teslaTransfer(e: Double, doTransfer: Boolean): Double =
@@ -279,8 +280,8 @@ class TileTesla extends TileElectric(Material.iron) with IMultiBlockStructure[Ti
     {
       if (doTransfer)
       {
-        this.energy.receiveEnergy(transferEnergy, true)
-        if (this.energy.didEnergyStateChange)
+        this.energy += transferEnergy
+        if (this.energy.isLastEmpty)
         {
           this.sendPacket(2)
         }
@@ -289,10 +290,10 @@ class TileTesla extends TileElectric(Material.iron) with IMultiBlockStructure[Ti
     }
     else
     {
-      if (this.energy.getEnergy > 0)
+      if (energy.value > 0)
       {
-        transferEnergy += this.energy.getEnergy
-        this.energy.setEnergy(0)
+        transferEnergy += energy.value
+        energy.value = 0
       }
       return getMultiBlock.get.teslaTransfer(transferEnergy, doTransfer)
     }
@@ -405,12 +406,6 @@ class TileTesla extends TileElectric(Material.iron) with IMultiBlockStructure[Ti
       nbt.setInteger("linkDim", this.linkDim)
     }
     getMultiBlock.save(nbt)
-  }
-
-  def getMultiBlock: MultiBlockHandler[TileTesla] =
-  {
-    if (multiBlock == null) multiBlock = new MultiBlockHandler[TileTesla](this)
-    return multiBlock
   }
 
   def setLink(vector3: Vector3, dimID: Int, setOpponent: Boolean)

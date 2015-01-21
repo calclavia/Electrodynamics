@@ -28,8 +28,8 @@ class GridBattery extends Grid[TileBattery]
     totalCapacity = 0
     for (connector <- this.getNodes)
     {
-      totalEnergy += connector.energy.getEnergy
-      totalCapacity += connector.energy.getEnergyCapacity
+      totalEnergy += connector.energy.value
+      totalCapacity += connector.energy.max
       lowestY = Math.min(connector.yCoord, lowestY)
       highestY = Math.max(connector.yCoord, highestY)
       //TODO: Update energy render
@@ -53,7 +53,7 @@ class GridBattery extends Grid[TileBattery]
 
       for (connector <- connectorsInlevel)
       {
-        val tryInject: Double = Math.min(remainingRenderEnergy / levelSize, connector.energy.getEnergyCapacity)
+        val tryInject: Double = Math.min(remainingRenderEnergy / levelSize, connector.energy.max)
         //TODO: Update energy render
         used += tryInject
       }
@@ -74,13 +74,13 @@ class GridBattery extends Grid[TileBattery]
       {
         if (node != firstNode && !Arrays.asList(exclusion).contains(node))
         {
-          val percentage: Double = node.energy.getEnergyCapacity / totalCapacity
+          val percentage: Double = node.energy.max / totalCapacity
           val energyForBattery: Double = Math.max(totalEnergy * percentage, 0)
-          node.energy.setEnergy(energyForBattery)
+          node.energy.value = energyForBattery
           remainingEnergy -= energyForBattery
         }
       }
-      firstNode.energy.setEnergy(Math.max(remainingEnergy, 0))
+      firstNode.energy.value = Math.max(remainingEnergy, 0)
     }
   }
 }

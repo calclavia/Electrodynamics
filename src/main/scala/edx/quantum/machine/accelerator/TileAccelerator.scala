@@ -13,17 +13,17 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.IIcon
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.tile.{IElectromagnet, IRotatable}
-import resonant.lib.content.prefab.TEnergyStorage
 import resonant.lib.grid.energy.EnergyStorage
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.{TPacketIDReceiver, TPacketSender}
 import resonant.lib.prefab.tile.mixed.TileElectricInventory
+import resonant.lib.prefab.tile.traits.TEnergyProvider
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.BlockUtility
 
 import scala.collection.JavaConversions._
 
-class TileAccelerator extends TileElectricInventory(Material.iron) with IElectromagnet with IRotatable with TPacketIDReceiver with TPacketSender with TEnergyStorage
+class TileAccelerator extends TileElectricInventory(Material.iron) with IElectromagnet with IRotatable with TPacketIDReceiver with TPacketSender with TEnergyProvider
 {
   final val DESC_PACKET_ID = 2
   /**
@@ -45,9 +45,7 @@ class TileAccelerator extends TileElectricInventory(Material.iron) with IElectro
 
   //Constructor
   //TODO: Dummy
-  energy = new EnergyStorage(0)
-  energy.setCapacity(Settings.ACCELERATOR_ENERGY_COST_PER_TICK * 20)
-  energy.setMaxTransfer(Settings.ACCELERATOR_ENERGY_COST_PER_TICK)
+  energy = new EnergyStorage
 
   override def getSizeInventory: Int = 4
 
@@ -56,13 +54,13 @@ class TileAccelerator extends TileElectricInventory(Material.iron) with IElectro
     super.update
     if (!worldObj.isRemote)
     {
-      clientEnergy = energy.getEnergy
+      clientEnergy = energy.value
       velocity = getParticleVel()
       outputAntimatter()
 
       if (worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord))
       {
-        if (energy.checkExtract)
+        if (energy >= Settings.ACCELERATOR_ENERGY_COST_PER_TICK)
         {
           if (entityParticle == null)
           {
@@ -114,7 +112,7 @@ class TileAccelerator extends TileElectricInventory(Material.iron) with IElectro
               worldObj.playSoundEffect(xCoord, yCoord, zCoord, Reference.prefix + "accelerator", 1.5f, (0.6f + (0.4 * (entityParticle.getParticleVelocity) / EntityParticle.ANITMATTER_CREATION_SPEED)).asInstanceOf[Float])
             }
           }
-          energy.extractEnergy
+          energy -= Settings.ACCELERATOR_ENERGY_COST_PER_TICK
         }
         else
         {
@@ -206,7 +204,7 @@ class TileAccelerator extends TileElectricInventory(Material.iron) with IElectro
 
   override def getDescPacket: PacketTile =
   {
-    return new PacketTile(xi, yi, zi, Array[Any](DESC_PACKET_ID, velocity, totalEnergyConsumed, antimatter, energy.getEnergy))
+    return new PacketTile(xi, yi, zi, Array[Any](DESC_PACKET_ID, velocity, totalEnergyConsumed, antimatter, energy.value))
   }
 
   /////////////////////////////////////////
@@ -222,6 +220,20 @@ class TileAccelerator extends TileElectricInventory(Material.iron) with IElectro
       return 0
   }
 
+  override def getDirection: ForgeDirection =
+  {
+    return ForgeDirection.getOrientation(getBlockMetadata)
+  }
+
+  /////////////////////////////////////////
+  ///         Save handling             ///
+  ////////////////////////////////////////
+
+  override def setDirection(direction: ForgeDirection)
+  {
+    world.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, direction.ordinal, 3)
+  }
+
   override def activate(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
   {
     player.openGui(Electrodynamics, 0, world, xi, yi, zi)
@@ -229,7 +241,7 @@ class TileAccelerator extends TileElectricInventory(Material.iron) with IElectro
   }
 
   /////////////////////////////////////////
-  ///         Save handling             ///
+  ///         Inventory Overrides      ///
   ////////////////////////////////////////
 
   override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType): Boolean =
@@ -242,7 +254,7 @@ class TileAccelerator extends TileElectricInventory(Material.iron) with IElectro
         this.velocity = buf.readFloat()
         this.totalEnergyConsumed = buf.readDouble()
         this.antimatter = buf.readInt()
-        this.energy.setEnergy(buf.readDouble())
+        this.energy.value = buf.readDouble()
         return true
       }
     }
@@ -257,16 +269,16 @@ class TileAccelerator extends TileElectricInventory(Material.iron) with IElectro
     antimatter = par1NBTTagCompound.getInteger("antimatter")
   }
 
-  /////////////////////////////////////////
-  ///         Inventory Overrides      ///
-  ////////////////////////////////////////
-
   override def writeToNBT(par1NBTTagCompound: NBTTagCompound)
   {
     super.writeToNBT(par1NBTTagCompound)
     par1NBTTagCompound.setDouble("energyUsed", totalEnergyConsumed)
     par1NBTTagCompound.setInteger("antimatter", antimatter)
   }
+
+  /////////////////////////////////////////
+  ///      Field Getters & Setters      ///
+  ////////////////////////////////////////
 
   override def canInsertItem(slotID: Int, itemStack: ItemStack, j: Int): Boolean =
   {
@@ -289,10 +301,6 @@ class TileAccelerator extends TileElectricInventory(Material.iron) with IElectro
     return false
   }
 
-  /////////////////////////////////////////
-  ///      Field Getters & Setters      ///
-  ////////////////////////////////////////
-
   override def canExtractItem(slotID: Int, itemstack: ItemStack, j: Int): Boolean =
   {
     return slotID == 2 || slotID == 3
@@ -311,15 +319,5 @@ class TileAccelerator extends TileElectricInventory(Material.iron) with IElectro
       return QuantumContent.blockElectromagnet.getIcon(side, meta)
     }
     return getIcon
-  }
-
-  override def getDirection: ForgeDirection =
-  {
-    return ForgeDirection.getOrientation(getBlockMetadata)
-  }
-
-  override def setDirection(direction: ForgeDirection)
-  {
-    world.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, direction.ordinal, 3)
   }
 }

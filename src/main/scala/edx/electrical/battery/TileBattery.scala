@@ -16,12 +16,13 @@ import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11._
 import resonant.api.items.ISimpleItemRenderer
-import resonant.lib.content.prefab.{TElectric, TEnergyStorage, TIO}
+import resonant.lib.content.prefab.{TElectric, TIO}
 import resonant.lib.grid.core.TSpatialNodeProvider
 import resonant.lib.grid.energy.EnergyStorage
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
 import resonant.lib.prefab.tile.spatial.SpatialTile
+import resonant.lib.prefab.tile.traits.TEnergyProvider
 import resonant.lib.render.RenderUtility
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.science.UnitDisplay
@@ -46,7 +47,7 @@ object TileBattery
   def getEnergyForTier(tier: Int) = Math.round(Math.pow(500000000, (tier / (maxTier + 0.7f)) + 1) / 500000000) * 500000000
 }
 
-class TileBattery extends SpatialTile(Material.iron) with TIO with TElectric with TSpatialNodeProvider with TPacketSender with TPacketReceiver with TEnergyStorage with ISimpleItemRenderer
+class TileBattery extends SpatialTile(Material.iron) with TIO with TElectric with TSpatialNodeProvider with TPacketSender with TPacketReceiver with TEnergyProvider with ISimpleItemRenderer
 {
   var energyRenderLevel = 0
 
@@ -66,6 +67,14 @@ class TileBattery extends SpatialTile(Material.iron) with TIO with TElectric wit
     updateConnectionMask()
   }
 
+  def updateConnectionMask()
+  {
+    dcNode.connectionMask = ForgeDirection.VALID_DIRECTIONS.filter(getIO(_) > 0).map(d => 1 << d.ordinal()).foldLeft(0)(_ | _)
+    dcNode.positiveTerminals.addAll(getInputDirections())
+    dcNode.negativeTerminals.addAll(getOutputDirections())
+    notifyChange()
+  }
+
   override def update()
   {
     super.update()
@@ -74,7 +83,7 @@ class TileBattery extends SpatialTile(Material.iron) with TIO with TElectric wit
     {
       if (isIndirectlyPowered)
       {
-        if (energy.getEnergy > 0)
+        if (energy > 0)
         {
           //TODO: Voltage of battery should decrease over time.
           dcNode.generateVoltage(500)
@@ -89,7 +98,7 @@ class TileBattery extends SpatialTile(Material.iron) with TIO with TElectric wit
        * Update packet when energy level changes.
        */
       val prevEnergyLevel = energyRenderLevel
-      energyRenderLevel = Math.round((energy.getEnergy / TileBattery.getEnergyForTier(getBlockMetadata).toDouble) * 8).toInt
+      energyRenderLevel = Math.round((energy.value / TileBattery.getEnergyForTier(getBlockMetadata).toDouble) * 8).toInt
 
       if (prevEnergyLevel != energyRenderLevel)
       {
@@ -101,7 +110,7 @@ class TileBattery extends SpatialTile(Material.iron) with TIO with TElectric wit
   override def write(buf: ByteBuf, id: Int)
   {
     super.write(buf, id)
-    buf <<< energy.getEnergy
+    buf <<< energy.value
     buf <<< energyRenderLevel.toByte
     buf <<< ioMap
   }
@@ -109,8 +118,8 @@ class TileBattery extends SpatialTile(Material.iron) with TIO with TElectric wit
   override def read(buf: ByteBuf, id: Int, packetType: PacketType)
   {
     super.read(buf, id, packetType)
-    energy.setCapacity(TileBattery.getEnergyForTier(metadata)).setMaxTransfer(energy.getEnergyCapacity)
-    energy.setEnergy(buf.readDouble())
+    energy.max = TileBattery.getEnergyForTier(metadata)
+    energy.value = buf.readDouble()
     energyRenderLevel = buf.readByte()
     ioMap = buf.readInt()
   }
@@ -123,20 +132,12 @@ class TileBattery extends SpatialTile(Material.iron) with TIO with TElectric wit
     markUpdate()
   }
 
-  def updateConnectionMask()
-  {
-    dcNode.connectionMask = ForgeDirection.VALID_DIRECTIONS.filter(getIO(_) > 0).map(d => 1 << d.ordinal()).foldLeft(0)(_ | _)
-    dcNode.positiveTerminals.addAll(getInputDirections())
-    dcNode.negativeTerminals.addAll(getOutputDirections())
-    notifyChange()
-  }
-
   override def onPlaced(entityLiving: EntityLivingBase, itemStack: ItemStack)
   {
     if (!world.isRemote && itemStack.getItem.isInstanceOf[ItemBlockBattery])
     {
-      energy.setCapacity(TileBattery.getEnergyForTier(ItemBlockBattery.getTier(itemStack))).setMaxTransfer(energy.getEnergyCapacity)
-      energy.setEnergy(itemStack.getItem.asInstanceOf[ItemBlockBattery].getEnergy(itemStack))
+      energy.max = (TileBattery.getEnergyForTier(ItemBlockBattery.getTier(itemStack)))
+      energy.value = itemStack.getItem.asInstanceOf[ItemBlockBattery].getEnergy(itemStack)
       world.setBlockMetadataWithNotify(xi, yi, zi, ItemBlockBattery.getTier(itemStack), 3)
     }
   }
@@ -147,7 +148,7 @@ class TileBattery extends SpatialTile(Material.iron) with TIO with TElectric wit
     val itemStack: ItemStack = new ItemStack(getBlockType, 1)
     val itemBlock: ItemBlockBattery = itemStack.getItem.asInstanceOf[ItemBlockBattery]
     ItemBlockBattery.setTier(itemStack, world.getBlockMetadata(xi, yi, zi).asInstanceOf[Byte])
-    itemBlock.setEnergy(itemStack, energy.getEnergy)
+    itemBlock.setEnergy(itemStack, energy.value)
     ret.add(itemStack)
     return ret
   }
@@ -254,19 +255,19 @@ class TileBattery extends SpatialTile(Material.iron) with TIO with TElectric wit
      * Render energy tooltip
      */
     if (isPlayerLooking(Minecraft.getMinecraft.thePlayer))
-      RenderUtility.renderFloatingText(new UnitDisplay(UnitDisplay.Unit.JOULES, energy.getEnergy).symbol + " / " + new UnitDisplay(UnitDisplay.Unit.JOULES, energy.getEnergyCapacity).symbol, new Vector3(0, 0.9, 0))
+      RenderUtility.renderFloatingText(new UnitDisplay(UnitDisplay.Unit.JOULES, energy.value).symbol + " / " + new UnitDisplay(UnitDisplay.Unit.JOULES, energy.max).symbol, new Vector3(0, 0.9, 0))
     glPopMatrix()
   }
 
   override def readFromNBT(nbt: NBTTagCompound)
   {
     super.readFromNBT(nbt)
-    energy.readFromNBT(nbt)
+    energy.load(nbt)
   }
 
   override def writeToNBT(nbt: NBTTagCompound)
   {
     super.writeToNBT(nbt)
-    energy.writeToNBT(nbt)
+    energy.save(nbt)
   }
 }

@@ -13,23 +13,23 @@ import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import resonant.api.tile.ITagRender
 import resonant.engine.ResonantEngine
-import resonant.lib.content.prefab.TEnergyStorage
 import resonant.lib.grid.energy.EnergyStorage
 import resonant.lib.mod.config.Config
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketReceiver
 import resonant.lib.prefab.tile.mixed.TileElectric
+import resonant.lib.prefab.tile.traits.TEnergyProvider
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.science.UnitDisplay
 import resonant.lib.utility.{FluidUtility, LanguageUtility}
 
 object TilePlasmaHeater
 {
-  var joules: Long = 10000000000L
+  var power: Long = 10000000000L
   @Config var plasmaHeatAmount: Int = 100
 }
 
-class TilePlasmaHeater extends TileElectric(Material.iron) with IPacketReceiver with ITagRender with IFluidHandler with TEnergyStorage
+class TilePlasmaHeater extends TileElectric(Material.iron) with IPacketReceiver with ITagRender with IFluidHandler with TEnergyProvider
 {
   final val tankInputDeuterium: FluidTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 10)
   final val tankInputTritium: FluidTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 10)
@@ -39,26 +39,25 @@ class TilePlasmaHeater extends TileElectric(Material.iron) with IPacketReceiver 
   //Constructor
 
   //TODO: Dummy
-  energy = new EnergyStorage(0)
-  energy.setCapacity(TilePlasmaHeater.joules)
-  energy.setMaxTransfer(TilePlasmaHeater.joules / 20)
+  energy = new EnergyStorage
+  energy.max = TilePlasmaHeater.power
   normalRender = false
   isOpaqueCube = false
 
   override def update()
   {
     super.update()
-    rotation = (rotation + energy.getEnergy / 10000f).asInstanceOf[Float]
+    rotation = (rotation + energy.value / 10000f).asInstanceOf[Float]
     if (!worldObj.isRemote)
     {
-      if (energy.checkExtract)
+      if (energy >= TilePlasmaHeater.power / 20)
       {
         if (tankInputDeuterium.getFluidAmount >= TilePlasmaHeater.plasmaHeatAmount && tankInputTritium.getFluidAmount >= TilePlasmaHeater.plasmaHeatAmount && tankOutput.getFluidAmount < tankOutput.getCapacity)
         {
           tankInputDeuterium.drain(TilePlasmaHeater.plasmaHeatAmount, true)
           tankInputTritium.drain(TilePlasmaHeater.plasmaHeatAmount, true)
           tankOutput.fill(new FluidStack(QuantumContent.FLUID_PLASMA, tankOutput.getCapacity), true)
-          energy.extractEnergy
+          energy -= TilePlasmaHeater.power / 20
         }
       }
     }
@@ -134,7 +133,7 @@ class TilePlasmaHeater extends TileElectric(Material.iron) with IPacketReceiver 
   {
     if (energy != null)
     {
-      map.put(LanguageUtility.getLocal("tooltip.energy") + ": " + new UnitDisplay(UnitDisplay.Unit.JOULES, energy.getEnergy), 0xFFFFFF)
+      map.put(LanguageUtility.getLocal("tooltip.energy") + ": " + new UnitDisplay(UnitDisplay.Unit.JOULES, energy.value), 0xFFFFFF)
     }
     if (tankInputDeuterium.getFluidAmount > 0)
     {
