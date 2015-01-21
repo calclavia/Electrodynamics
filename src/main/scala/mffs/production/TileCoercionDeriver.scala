@@ -12,6 +12,7 @@ import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import resonant.api.mffs.modules.IModule
+import resonant.lib.grid.energy.TTEBridge
 import resonant.lib.mod.compat.energy.Compatibility
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.transform.vector.Vector3
@@ -67,7 +68,7 @@ class TileCoercionDeriver extends TileModuleAcceptor with TTEBridge
         if (isInversed && Settings.enableElectricity)
         {
           val withdrawnElectricity = requestFortron(productionRate / 20, true) / TileCoercionDeriver.ueToFortronRatio
-          energyStorage.receiveEnergy(withdrawnElectricity * TileCoercionDeriver.energyConversionPercentage, true)
+          energy += withdrawnElectricity * TileCoercionDeriver.energyConversionPercentage
 
           //          recharge(getStackInSlot(TileCoercionDeriver.slotBattery))
         }
@@ -76,14 +77,12 @@ class TileCoercionDeriver extends TileModuleAcceptor with TTEBridge
           if (getFortronEnergy < getFortronCapacity)
           {
             //            discharge(getStackInSlot(TileCoercionDeriver.slotBattery))
-            val energy = energyStorage.getEnergy
-            energyStorage.setMaxTransfer(getPower)
-            energyStorage.setCapacity(getPower)
+            energy.max = getPower
 
             if (energy >= getPower || (!Settings.enableElectricity && isItemValidForSlot(TileCoercionDeriver.slotFuel, getStackInSlot(TileCoercionDeriver.slotFuel))))
             {
               fortronTank.fill(FortronUtility.getFortron(productionRate), true)
-              energyStorage.extractEnergy(getPower, true)
+              energy -= getPower
 
               if (processTime == 0 && isItemValidForSlot(TileCoercionDeriver.slotFuel, getStackInSlot(TileCoercionDeriver.slotFuel)))
               {
