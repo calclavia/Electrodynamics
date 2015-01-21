@@ -4,21 +4,18 @@ import cpw.mods.fml.relauncher.{Side, SideOnly}
 import edx.core.Reference
 import edx.mechanical.mech.grid.NodeMechanical
 import net.minecraft.block.material.Material
-import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.{ChatComponentText, ResourceLocation}
 import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
+import resonant.lib.content.prefab.TIO
 import resonant.lib.grid.core.TSpatialNodeProvider
 import resonant.lib.prefab.tile.spatial.SpatialTile
 import resonant.lib.prefab.tile.traits.{TElectric, TRotatable}
 import resonant.lib.render.RenderUtility
 import resonant.lib.transform.vector.Vector3
-
-import scala.collection.convert.wrapAll._
 
 /**
  * A kinetic energy to electrical energy converter.
@@ -33,7 +30,7 @@ object TileMotor
   val texture = new ResourceLocation(Reference.domain, Reference.modelPath + "motor.png")
 }
 
-class TileMotor extends SpatialTile(Material.iron) with TElectric with TSpatialNodeProvider with TRotatable
+class TileMotor extends SpatialTile(Material.iron) with TIO with TElectric with TSpatialNodeProvider with TRotatable
 {
   var mechNode = new NodeMechanical(this)
   {
@@ -49,26 +46,30 @@ class TileMotor extends SpatialTile(Material.iron) with TElectric with TSpatialN
   textureName = "material_wood_surface"
   normalRender = false
   isOpaqueCube = false
+  ioMap = 0
   nodes.add(electricNode)
   nodes.add(mechNode)
 
   electricNode.resistance = 100
-  electricNode.positiveTerminals.addAll(Seq(ForgeDirection.UP, ForgeDirection.SOUTH, ForgeDirection.EAST))
-  electricNode.negativeTerminals.addAll(Seq(ForgeDirection.DOWN, ForgeDirection.NORTH, ForgeDirection.WEST))
 
   def toggleGearRatio() = (gearRatio + 1) % 3
 
-  /**
-   * Called when the block is placed by a living entity
-   * @param entityLiving - entity who placed the block
-   * @param itemStack - ItemStack the entity used to place the block
-   */
-  override def onPlaced(entityLiving: EntityLivingBase, itemStack: ItemStack)
+  override def start()
   {
-    super.onPlaced(entityLiving, itemStack)
+    super.start()
+    updateConnectionMask()
+  }
 
-    if (!world.isRemote)
-      mechNode.reconstruct()
+  def updateConnectionMask()
+  {
+    electricNode.connectionMask = ForgeDirection.VALID_DIRECTIONS.filter(getIO(_) > 0).map(d => 1 << d.ordinal()).foldLeft(0)(_ | _)
+    electricNode.positiveTerminals.clear()
+    electricNode.negativeTerminals.clear()
+    electricNode.positiveTerminals.addAll(getInputDirections())
+    electricNode.negativeTerminals.addAll(getOutputDirections())
+    electricNode.reconstruct()
+    notifyChange()
+    markUpdate()
   }
 
   override def update()
@@ -92,6 +93,19 @@ class TileMotor extends SpatialTile(Material.iron) with TElectric with TSpatialN
       val negate = if (electricNode.voltage > 0) 1 else -1
       mechNode.rotate(negate * power * mechRatio, negate * power / mechRatio)
       //TODO: Resist DC energy
+    }
+  }
+
+  override def setIO(dir: ForgeDirection, ioType: Int)
+  {
+    if (dir != getDirection || dir != getDirection.getOpposite)
+    {
+      super.setIO(dir, ioType)
+
+      //Auto-set opposite side for unreachable sides
+      if (ioType != 0)
+        super.setIO(dir.getOpposite, (ioType % 2) + 1)
+      updateConnectionMask()
     }
   }
 
@@ -123,13 +137,17 @@ class TileMotor extends SpatialTile(Material.iron) with TElectric with TSpatialN
 
   override protected def configure(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
   {
-    if (!world.isRemote)
+    if (player.isSneaking)
     {
-      gearRatio = (gearRatio + 1) % 3
-      player.addChatComponentMessage(new ChatComponentText("Toggled gear ratio: " + gearRatio))
+      if (!world.isRemote)
+      {
+        gearRatio = (gearRatio + 1) % 3
+        player.addChatComponentMessage(new ChatComponentText("Toggled gear ratio: " + gearRatio))
+      }
+      return true
     }
 
-    return true
+    return super.configure(player, side, hit)
   }
 
 }

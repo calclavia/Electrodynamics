@@ -56,7 +56,7 @@ object PartFlatWire
 
 class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOcclusion
 {
-  private val dcNode = new NodeFlatWire(this)
+  private val electricNode = new NodeFlatWire(this)
   /**
    * The current side the wire is placed on
    */
@@ -73,8 +73,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
    * render to us not us to them)
    */
   var connectionMask = 0x00
-
-  nodes.add(dcNode)
+  nodes.add(electricNode)
 
   def preparePlacement(side: Int, meta: Int)
   {
@@ -85,7 +84,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
   override def setMaterial(i: Int)
   {
     super.setMaterial(i)
-    dcNode.resistance = material.resistance
+    electricNode.resistance = material.resistance
   }
 
   override def update()
@@ -97,7 +96,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
   {
     if (!world.isRemote)
     {
-      println(dcNode)
+      println(electricNode)
     }
 
     return true
