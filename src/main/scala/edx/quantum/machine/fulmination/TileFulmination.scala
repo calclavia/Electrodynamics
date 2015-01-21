@@ -1,9 +1,9 @@
 package edx.quantum.machine.fulmination
 
 import net.minecraft.block.material.Material
-import resonant.lib.content.prefab.TEnergyStorage
 import resonant.lib.grid.energy.EnergyStorage
 import resonant.lib.prefab.tile.mixed.TileElectric
+import resonant.lib.prefab.tile.traits.TEnergyProvider
 
 /**
  * Fulmination TileEntity
@@ -13,11 +13,11 @@ object TileFulmination
   private final val maxEnergy: Long = 10000000000000L
 }
 
-class TileFulmination extends TileElectric(Material.iron) with TEnergyStorage
+class TileFulmination extends TileElectric(Material.iron) with TEnergyProvider
 {
   //TODO: Dummy
-  energy = new EnergyStorage(0)
-  energy.setCapacity(TileFulmination.maxEnergy * 2)
+  energy = new EnergyStorage
+  energy.max = TileFulmination.maxEnergy * 2
   blockHardness = 10
   blockResistance = 25000
 
@@ -30,7 +30,7 @@ class TileFulmination extends TileElectric(Material.iron) with TEnergyStorage
   override def update
   {
     super.update
-    energy.extractEnergy(10, true)
+    energy -= 10
   }
 
   override def invalidate

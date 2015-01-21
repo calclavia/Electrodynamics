@@ -15,7 +15,7 @@ class GuiNuclearBoiler(player: EntityPlayer, tileEntity: TileNuclearBoiler) exte
   override def drawGuiContainerForegroundLayer(mouseX: Int, mouseY: Int)
   {
     this.fontRendererObj.drawString("Boiler", 52, 6, 4210752)
-    this.renderUniversalDisplay(8, 112, TileNuclearBoiler.DIAN * 20, mouseX, mouseY, UnitDisplay.Unit.WATT)
+    this.renderUniversalDisplay(8, 112, TileNuclearBoiler.power * 20, mouseX, mouseY, UnitDisplay.Unit.WATT)
     //this.renderUniversalDisplay(110, 112, tileEntity.getVoltage, mouseX, mouseY, UnitDisplay.Unit.VOLTAGE)
     this.fontRendererObj.drawString("The nuclear boiler can boil", 8, 75, 4210752)
     this.fontRendererObj.drawString("yellow cake into uranium", 8, 85, 4210752)
@@ -40,7 +40,7 @@ class GuiNuclearBoiler(player: EntityPlayer, tileEntity: TileNuclearBoiler) exte
     super.drawGuiContainerBackgroundLayer(par1, x, y)
     this.drawSlot(55, 25, SlotType.BATTERY)
     this.drawSlot(80, 25)
-    this.drawBar(110, 26, this.tileEntity.timer.asInstanceOf[Float] / this.tileEntity.SHI_JIAN.asInstanceOf[Float])
+    this.drawBar(110, 26, this.tileEntity.timer.asInstanceOf[Float] / this.tileEntity.totalTime.asInstanceOf[Float])
     this.drawMeter(8, 18, this.tileEntity.waterTank.getFluidAmount.asInstanceOf[Float] / this.tileEntity.waterTank.getCapacity.asInstanceOf[Float], this.tileEntity.waterTank.getFluid)
     this.drawSlot(24, 49, SlotType.LIQUID)
     this.drawMeter(155, 18, this.tileEntity.gasTank.getFluidAmount.asInstanceOf[Float] / this.tileEntity.gasTank.getCapacity.asInstanceOf[Float], this.tileEntity.gasTank.getFluid)

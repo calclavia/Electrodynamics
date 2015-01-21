@@ -11,13 +11,13 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
-import resonant.lib.content.prefab.{TEnergyStorage, TIO}
+import resonant.lib.content.prefab.TIO
 import resonant.lib.grid.energy.EnergyStorage
 import resonant.lib.mod.compat.energy.Compatibility
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketReceiver
 import resonant.lib.prefab.tile.mixed.TileElectricInventory
-import resonant.lib.prefab.tile.traits.TRotatable
+import resonant.lib.prefab.tile.traits.{TEnergyProvider, TRotatable}
 import resonant.lib.transform.vector.Vector3
 
 /**
@@ -29,17 +29,16 @@ object TileCentrifuge
   final val DIAN: Long = 500000
 }
 
-class TileCentrifuge extends TileElectricInventory(Material.iron) with IPacketReceiver with IFluidHandler with IInventory with TEnergyStorage with TRotatable with TIO
+class TileCentrifuge extends TileElectricInventory(Material.iron) with IPacketReceiver with IFluidHandler with IInventory with TEnergyProvider with TRotatable with TIO
 {
   val gasTank: FluidTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 5)
   var timer: Int = 0
   var rotation: Float = 0
 
-  //TODO: Dummy
-  energy = new EnergyStorage(0)
+  energy = new EnergyStorage
   isOpaqueCube = false
   normalRender = false
-  energy.setCapacity(TileCentrifuge.DIAN * 2)
+  energy.max = TileCentrifuge.DIAN * 2
 
   override def getSizeInventory: Int = 4
 
@@ -83,7 +82,7 @@ class TileCentrifuge extends TileElectricInventory(Material.iron) with IPacketRe
       if (this.nengYong)
       {
         //discharge(getStackInSlot(0))
-        if (energy.extractEnergy(TileCentrifuge.DIAN, false) >= TileCentrifuge.DIAN)
+        if (energy >= TileCentrifuge.DIAN)
         {
           if (this.timer == 0)
           {
@@ -102,7 +101,7 @@ class TileCentrifuge extends TileElectricInventory(Material.iron) with IPacketRe
           {
             this.timer = 0
           }
-          energy.extractEnergy(TileCentrifuge.DIAN, true)
+          energy -= TileCentrifuge.DIAN
         }
       }
       else

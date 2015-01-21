@@ -11,13 +11,12 @@ import net.minecraft.network.Packet
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import resonant.engine.ResonantEngine
-import resonant.lib.content.prefab.{TEnergyStorage, TIO}
+import resonant.lib.content.prefab.TIO
 import resonant.lib.grid.energy.EnergyStorage
-import resonant.lib.network.Synced
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketReceiver
 import resonant.lib.prefab.tile.mixed.TileElectricInventory
-import resonant.lib.prefab.tile.traits.TRotatable
+import resonant.lib.prefab.tile.traits.{TEnergyProvider, TRotatable}
 import resonant.lib.transform.vector.Vector3
 
 /**
@@ -25,28 +24,24 @@ import resonant.lib.transform.vector.Vector3
  */
 object TileNuclearBoiler
 {
-  final val DIAN: Long = 50000
+  final val power: Long = 50000
 }
 
-class TileNuclearBoiler extends TileElectricInventory(Material.iron) with IPacketReceiver with IFluidHandler with TRotatable with TEnergyStorage with TIO
+class TileNuclearBoiler extends TileElectricInventory(Material.iron) with IPacketReceiver with IFluidHandler with TRotatable with TEnergyProvider with TIO
 {
-  final val SHI_JIAN: Int = 20 * 15
+  final val totalTime: Int = 20 * 15
 
-  @Synced
   final val waterTank: FluidTank = new FluidTank(QuantumContent.FLUIDSTACK_WATER.copy, FluidContainerRegistry.BUCKET_VOLUME * 5)
 
-  @Synced
   final val gasTank: FluidTank = new FluidTank(QuantumContent.FLUIDSTACK_URANIUM_HEXAFLOURIDE.copy, FluidContainerRegistry.BUCKET_VOLUME * 5)
 
-  @Synced
   var timer: Int = 0
 
   var rotation: Float = 0
 
   //Constructor
   //TODO: Dummy
-  energy = new EnergyStorage(0)
-  energy.setCapacity(TileNuclearBoiler.DIAN * 2)
+  energy = new EnergyStorage
   normalRender = false
   isOpaqueCube = false
 
@@ -87,18 +82,18 @@ class TileNuclearBoiler extends TileElectricInventory(Material.iron) with IPacke
       if (this.nengYong)
       {
         //discharge(getStackInSlot(0))
-        if (energy.extractEnergy(TileNuclearBoiler.DIAN, false) >= TileNuclearBoiler.DIAN)
+        if (energy >= TileNuclearBoiler.power)
         {
           if (this.timer == 0)
           {
-            this.timer = SHI_JIAN
+            this.timer = totalTime
           }
           if (this.timer > 0)
           {
             this.timer -= 1
             if (this.timer < 1)
             {
-              this.yong
+              this.use
               this.timer = 0
             }
           }
@@ -106,7 +101,7 @@ class TileNuclearBoiler extends TileElectricInventory(Material.iron) with IPacke
           {
             this.timer = 0
           }
-          energy.extractEnergy(TileNuclearBoiler.DIAN, true)
+          energy -= TileNuclearBoiler.power
         }
       }
       else
@@ -130,7 +125,7 @@ class TileNuclearBoiler extends TileElectricInventory(Material.iron) with IPacke
   /**
    * Turn one item from the furnace source stack into the appropriate smelted item in the furnace result stack.
    */
-  def yong
+  def use
   {
     if (this.nengYong)
     {

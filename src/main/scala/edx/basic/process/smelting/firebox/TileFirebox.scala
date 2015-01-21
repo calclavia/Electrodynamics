@@ -44,15 +44,14 @@ class TileFirebox extends SpatialTile(Material.rock) with IFluidHandler with TIn
    * into fluids to increase their internal energy.
    */
   private final val power = 100000
-  val energy = new EnergyStorage(0)
+  val energy = new EnergyStorage
   protected val tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME)
   private var burnTime = 0
   private var heatEnergy = 0d
 
   tickRandomly = true
   private var boiledVolume = 0
-  energy.setCapacity(power)
-  energy.setMaxTransfer((power * 2) / 20)
+  energy.max = power
   setIO(ForgeDirection.UP, 0)
 
   override def update()
@@ -72,9 +71,9 @@ class TileFirebox extends SpatialTile(Material.rock) with IFluidHandler with TIn
           sendPacket(0)
         }
       }
-      else if (isElectrical && energy.checkExtract)
+      else if (isElectrical && energy >= power / 20)
       {
-        energy.extractEnergy
+        energy -= power / 20
         if (burnTime == 0)
         {
           sendPacket(0)

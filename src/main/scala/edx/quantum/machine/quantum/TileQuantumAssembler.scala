@@ -9,11 +9,11 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import resonant.api.recipe.QuantumAssemblerRecipes
-import resonant.lib.content.prefab.TEnergyStorage
 import resonant.lib.grid.energy.EnergyStorage
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketReceiver
 import resonant.lib.prefab.tile.mixed.TileElectricInventory
+import resonant.lib.prefab.tile.traits.TEnergyProvider
 import resonant.lib.transform.vector.Vector3
 
 /**
@@ -21,9 +21,9 @@ import resonant.lib.transform.vector.Vector3
  *
  * @author Calclavia, Darkguardsman
  */
-class TileQuantumAssembler extends TileElectricInventory(Material.iron) with IPacketReceiver with TEnergyStorage
+class TileQuantumAssembler extends TileElectricInventory(Material.iron) with IPacketReceiver with TEnergyProvider
 {
-  private[quantum] var ENERGY: Long = 1000000000L
+  private[quantum] var power: Long = 1000000000L
   private[quantum] var MAX_TIME: Int = 20 * 120
   private[quantum] var time: Int = 0
   /**
@@ -38,9 +38,8 @@ class TileQuantumAssembler extends TileElectricInventory(Material.iron) with IPa
   //Constructor
 
   //TODO: Dummy
-  energy = new EnergyStorage(0)
-  energy.setCapacity(ENERGY)
-  energy.setMaxTransfer(ENERGY / 10)
+  energy = new EnergyStorage
+  energy.max = power
   isOpaqueCube = false
   normalRender = false
   customItemRender = true
@@ -67,7 +66,7 @@ class TileQuantumAssembler extends TileElectricInventory(Material.iron) with IPa
     {
       if (this.canProcess)
       {
-        if (energy.checkExtract)
+        if (energy >= power / 20)
         {
           if (this.time == 0)
           {
@@ -86,7 +85,7 @@ class TileQuantumAssembler extends TileElectricInventory(Material.iron) with IPa
           {
             this.time = 0
           }
-          energy.extractEnergy(ENERGY, true)
+          energy -= power / 20
         }
       }
       else

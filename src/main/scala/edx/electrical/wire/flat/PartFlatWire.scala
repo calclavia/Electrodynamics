@@ -21,7 +21,7 @@ import net.minecraft.util.{IIcon, MovingObjectPosition}
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
 import resonant.api.tile.INodeProvider
-import resonant.lib.grid.energy.electric.{NodeDC, NodeDCWire}
+import resonant.lib.grid.energy.electric.{NodeDC, NodeDCJunction}
 
 import scala.collection.convert.wrapAll._
 
@@ -338,7 +338,7 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
    * TODO: ForgeDirection may NOT be suitable. Integers are better.
    * @param provider
    */
-  class NodeFlatWire(provider: INodeProvider) extends NodeDCWire(provider) with TMultipartNode[NodeDC]
+  class NodeFlatWire(provider: INodeProvider) extends NodeDCJunction(provider) with TMultipartNode[NodeDC]
   {
     override def reconstruct()
     {

@@ -10,12 +10,12 @@ import net.minecraft.network.Packet
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import resonant.engine.ResonantEngine
-import resonant.lib.content.prefab.{TEnergyStorage, TIO}
+import resonant.lib.content.prefab.TIO
 import resonant.lib.grid.energy.EnergyStorage
 import resonant.lib.mod.compat.energy.Compatibility
 import resonant.lib.network.Synced
 import resonant.lib.network.discriminator.PacketAnnotation
-import resonant.lib.prefab.tile.traits.TRotatable
+import resonant.lib.prefab.tile.traits.{TEnergyProvider, TRotatable}
 import resonant.lib.transform.vector.Vector3
 
 /**
@@ -28,11 +28,11 @@ object TileChemicalExtractor
   final val ENERGY: Long = 5000
 }
 
-class TileChemicalExtractor extends TileProcess(Material.iron) with IFluidHandler with TEnergyStorage with TRotatable with TIO
+class TileChemicalExtractor extends TileProcess(Material.iron) with IFluidHandler with TEnergyProvider with TRotatable with TIO
 {
   //TODO: Dummy
-  energy = new EnergyStorage(0)
-  energy.setCapacity(TileChemicalExtractor.ENERGY * 2)
+  energy = new EnergyStorage
+  energy.max = TileChemicalExtractor.ENERGY * 2
   isOpaqueCube = false
   normalRender = false
   inputSlot = 1
@@ -61,7 +61,7 @@ class TileChemicalExtractor extends TileProcess(Material.iron) with IFluidHandle
       if (canUse)
       {
         //discharge(getStackInSlot(0))
-        if (energy.checkExtract(TileChemicalExtractor.ENERGY))
+        if (energy >= TileChemicalExtractor.ENERGY)
         {
           if (time == 0)
           {
@@ -87,7 +87,7 @@ class TileChemicalExtractor extends TileProcess(Material.iron) with IFluidHandle
             time = 0
           }
         }
-        energy.extractEnergy(TileChemicalExtractor.ENERGY, true)
+        energy -= TileChemicalExtractor.ENERGY
       }
       else
       {
