@@ -17,7 +17,7 @@ import resonant.lib.render.RenderUtility
     for (side <- 2 to 6)
     {
       RenderUtility.renderText((if (tile.isOverThreshold) "\u00a74" else "") + Math.round(tile.detectedTemperature) + " K", side, 0.8f, x, y + 0.1, z)
-      RenderUtility.renderText((if (tile.isOverThreshold) "\u00a74" else "\u00a71") + "Threshold: " + (tile.getThershold) + " K", side, 1, x, y - 0.1, z)
+      RenderUtility.renderText((if (tile.isOverThreshold) "\u00a74" else "\u00a71") + "Threshold: " + (tile.getThreshold) + " K", side, 1, x, y - 0.1, z)
       if (tile.trackCoordinate != null)
       {
         RenderUtility.renderText(tile.trackCoordinate.xi + ", " + tile.trackCoordinate.yi + ", " + tile.trackCoordinate.zi, side, 0.5f, x, y - 0.3, z)

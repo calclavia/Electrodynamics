@@ -6,15 +6,11 @@ import net.minecraft.block.material.Material
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.network.Packet
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
-import resonant.engine.ResonantEngine
 import resonant.lib.content.prefab.TIO
 import resonant.lib.grid.energy.EnergyStorage
 import resonant.lib.mod.compat.energy.Compatibility
-import resonant.lib.network.Synced
-import resonant.lib.network.discriminator.PacketAnnotation
 import resonant.lib.prefab.tile.traits.{TEnergyProvider, TRotatable}
 import resonant.lib.transform.vector.Vector3
 
@@ -42,9 +38,9 @@ class TileChemicalExtractor extends TileProcess(Material.iron) with IFluidHandle
   tankOutputFillSlot = 5
   tankOutputDrainSlot = 6
 
-  @Synced final val inputTank: FluidTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 10)
-  @Synced final val outputTank: FluidTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 10)
-  @Synced var time: Int = 0
+  final val inputTank: FluidTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 10)
+  final val outputTank: FluidTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 10)
+  var time: Int = 0
   var rotation: Float = 0
 
   override def getSizeInventory: Int = 7
@@ -97,11 +93,6 @@ class TileChemicalExtractor extends TileProcess(Material.iron) with IFluidHandle
       {
       }
     }
-  }
-
-  override def getDescriptionPacket: Packet =
-  {
-    return ResonantEngine.packetHandler.toMCPacket(new PacketAnnotation(this))
   }
 
   override def use(player: EntityPlayer, side: Int, hit: Vector3): Boolean =

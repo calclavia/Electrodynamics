@@ -16,8 +16,6 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.IIcon
 import net.minecraft.world.IBlockAccess
 import resonant.lib.grid.thermal.ThermalGrid
-import resonant.lib.network.Synced
-import resonant.lib.network.discriminator.PacketAnnotation
 import resonant.lib.prefab.tile.item.ItemBlockSaved
 import resonant.lib.prefab.tile.spatial.SpatialTile
 import resonant.lib.transform.vector.{Vector3, VectorWorld}
@@ -33,13 +31,14 @@ object TileThermometer
 }
 
 @Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "OpenComputers")
+@deprecated
 class TileThermometer extends SpatialTile(Material.piston) with SimpleComponent
 {
-  @Synced var detectedTemperature: Float = 295
-  @Synced var previousDetectedTemperature: Float = 295
-  @Synced var trackCoordinate: Vector3 = null
-  @Synced private var threshold: Int = 1000
-  @Synced private var isProvidingPower: Boolean = false
+  var detectedTemperature: Float = 295
+  var previousDetectedTemperature: Float = 295
+  var trackCoordinate: Vector3 = null
+  private var threshold: Int = 1000
+  private var isProvidingPower: Boolean = false
 
   //Constructor
   providePower = true
@@ -63,11 +62,11 @@ class TileThermometer extends SpatialTile(Material.piston) with SimpleComponent
   {
     if (player.isSneaking)
     {
-      setThreshold(getThershold + 100)
+      setThreshold(getThreshold + 100)
     }
     else
     {
-      setThreshold(getThershold - 100)
+      setThreshold(getThreshold - 100)
     }
     return true
   }
@@ -86,11 +85,11 @@ class TileThermometer extends SpatialTile(Material.piston) with SimpleComponent
   {
     if (player.isSneaking)
     {
-      setThreshold(getThershold - 10)
+      setThreshold(getThreshold - 10)
     }
     else
     {
-      setThreshold(getThershold + 10)
+      setThreshold(getThreshold + 10)
     }
     return true
   }
@@ -139,17 +138,12 @@ class TileThermometer extends SpatialTile(Material.piston) with SimpleComponent
 
   def isOverThreshold: Boolean =
   {
-    return detectedTemperature >= getThershold
+    return detectedTemperature >= getThreshold
   }
 
-  def getThershold: Int =
+  def getThreshold: Int =
   {
     return threshold
-  }
-
-  override def getDescPacket: PacketAnnotation =
-  {
-    return new PacketAnnotation(this)
   }
 
   def setTrack(track: Vector3)
@@ -198,7 +192,7 @@ class TileThermometer extends SpatialTile(Material.piston) with SimpleComponent
   @Optional.Method(modid = "OpenComputers")
   def getWarningTemperature(context: Context, args: Arguments): Array[Any] =
   {
-    return Array[Any](this.getThershold)
+    return Array[Any](this.getThreshold)
   }
 
   @Callback
