@@ -47,6 +47,7 @@ class TileMotor extends SpatialTile(Material.iron) with TIO with TElectric with 
   normalRender = false
   isOpaqueCube = false
   ioMap = 0
+  saveIOMap = true
   nodes.add(electricNode)
   nodes.add(mechNode)
 
@@ -123,12 +124,14 @@ class TileMotor extends SpatialTile(Material.iron) with TIO with TElectric with 
 
   override def readFromNBT(nbt: NBTTagCompound)
   {
+    super[TIO].readFromNBT(nbt)
     super.readFromNBT(nbt)
     gearRatio = nbt.getByte("gear")
   }
 
   override def writeToNBT(nbt: NBTTagCompound)
   {
+    super[TIO].writeToNBT(nbt)
     super.writeToNBT(nbt)
     nbt.setByte("gear", gearRatio.toByte)
   }

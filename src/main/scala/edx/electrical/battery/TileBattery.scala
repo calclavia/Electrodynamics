@@ -8,6 +8,7 @@ import io.netty.buffer.ByteBuf
 import net.minecraft.block.material.Material
 import net.minecraft.client.Minecraft
 import net.minecraft.entity.EntityLivingBase
+import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.ResourceLocation
@@ -90,7 +91,7 @@ class TileBattery extends SpatialTile(Material.iron) with TIO with TElectric wit
         if (energy > 0)
         {
           //TODO: Allow player to set the power output
-          electricNode.generatePower(100000)
+          electricNode.generatePower(10000)
           val dissipatedEnergy = electricNode.power / 20
           energy -= dissipatedEnergy
           markUpdate()
@@ -270,5 +271,16 @@ class TileBattery extends SpatialTile(Material.iron) with TIO with TElectric wit
   {
     super.writeToNBT(nbt)
     energy.save(nbt)
+  }
+
+  override protected def use(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
+  {
+    if (player.isSneaking)
+    {
+      electricNode.frequency = (electricNode.frequency + 10) % 60
+      return true
+    }
+
+    return super.use(player, side, hit)
   }
 }
