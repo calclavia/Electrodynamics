@@ -12,7 +12,7 @@ import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import resonant.api.mffs.modules.IModule
-import resonant.lib.grid.energy.TTEBridge
+import resonant.lib.grid.energy.electric.TTEBridge
 import resonant.lib.mod.compat.energy.Compatibility
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.transform.vector.Vector3
@@ -126,8 +126,6 @@ class TileCoercionDeriver extends TileModuleAcceptor with TTEBridge
     }
   }
 
-  def getPower: Double = TileCoercionDeriver.power + (TileCoercionDeriver.power * (getModuleCount(Content.moduleSpeed) / 8d))
-
   /**
    * @return The Fortron production rate per tick!
    */
@@ -146,6 +144,8 @@ class TileCoercionDeriver extends TileModuleAcceptor with TTEBridge
     }
     return 0
   }
+
+  def getPower: Double = TileCoercionDeriver.power + (TileCoercionDeriver.power * (getModuleCount(Content.moduleSpeed) / 8d))
 
   override def isItemValidForSlot(slotID: Int, itemStack: ItemStack): Boolean =
   {
