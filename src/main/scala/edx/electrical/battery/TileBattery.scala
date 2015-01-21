@@ -16,13 +16,13 @@ import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11._
 import resonant.api.items.ISimpleItemRenderer
-import resonant.lib.content.prefab.{TElectric, TIO}
+import resonant.lib.content.prefab.TIO
 import resonant.lib.grid.core.TSpatialNodeProvider
 import resonant.lib.grid.energy.EnergyStorage
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
 import resonant.lib.prefab.tile.spatial.SpatialTile
-import resonant.lib.prefab.tile.traits.TEnergyProvider
+import resonant.lib.prefab.tile.traits.{TElectric, TEnergyProvider}
 import resonant.lib.render.RenderUtility
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.science.UnitDisplay
@@ -51,7 +51,7 @@ class TileBattery extends SpatialTile(Material.iron) with TIO with TElectric wit
 {
   var energyRenderLevel = 0
 
-  nodes.add(dcNode)
+  nodes.add(electricNode)
   energy = new EnergyStorage
   textureName = "material_metal_side"
   ioMap = 0
@@ -59,7 +59,7 @@ class TileBattery extends SpatialTile(Material.iron) with TIO with TElectric wit
   normalRender = false
   isOpaqueCube = false
   itemBlock = classOf[ItemBlockBattery]
-  dcNode.resistance = 10
+  electricNode.resistance = 10
 
   override def start()
   {
@@ -69,9 +69,9 @@ class TileBattery extends SpatialTile(Material.iron) with TIO with TElectric wit
 
   def updateConnectionMask()
   {
-    dcNode.connectionMask = ForgeDirection.VALID_DIRECTIONS.filter(getIO(_) > 0).map(d => 1 << d.ordinal()).foldLeft(0)(_ | _)
-    dcNode.positiveTerminals.addAll(getInputDirections())
-    dcNode.negativeTerminals.addAll(getOutputDirections())
+    electricNode.connectionMask = ForgeDirection.VALID_DIRECTIONS.filter(getIO(_) > 0).map(d => 1 << d.ordinal()).foldLeft(0)(_ | _)
+    electricNode.positiveTerminals.addAll(getInputDirections())
+    electricNode.negativeTerminals.addAll(getOutputDirections())
     notifyChange()
   }
 
@@ -86,8 +86,8 @@ class TileBattery extends SpatialTile(Material.iron) with TIO with TElectric wit
         if (energy > 0)
         {
           //TODO: Allow player to set the power output
-          dcNode.generatePower(100000)
-          val dissipatedEnergy = dcNode.power / 20
+          electricNode.generatePower(100000)
+          val dissipatedEnergy = electricNode.power / 20
           energy -= dissipatedEnergy
           markUpdate()
         }
@@ -127,7 +127,7 @@ class TileBattery extends SpatialTile(Material.iron) with TIO with TElectric wit
   {
     super.setIO(dir, packet)
     updateConnectionMask()
-    dcNode.reconstruct()
+    electricNode.reconstruct()
     markUpdate()
   }
 

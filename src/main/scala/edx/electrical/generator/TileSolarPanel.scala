@@ -51,7 +51,7 @@ class TileSolarPanel extends TileElectric(Material.iron) with TIO with RenderCon
         {
           if (!(world.isThundering || world.isRaining))
           {
-            dcNode.generateVoltage(Settings.solarPower / 20)
+            electricNode.generateVoltage(Settings.solarPower / 20)
           }
         }
       }

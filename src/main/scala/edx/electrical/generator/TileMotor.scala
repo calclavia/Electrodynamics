@@ -12,10 +12,9 @@ import net.minecraft.util.{ChatComponentText, ResourceLocation}
 import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
-import resonant.lib.content.prefab.TElectric
 import resonant.lib.grid.core.TSpatialNodeProvider
 import resonant.lib.prefab.tile.spatial.SpatialTile
-import resonant.lib.prefab.tile.traits.TRotatable
+import resonant.lib.prefab.tile.traits.{TElectric, TRotatable}
 import resonant.lib.render.RenderUtility
 import resonant.lib.transform.vector.Vector3
 
@@ -50,12 +49,12 @@ class TileMotor extends SpatialTile(Material.iron) with TElectric with TSpatialN
   textureName = "material_wood_surface"
   normalRender = false
   isOpaqueCube = false
-  nodes.add(dcNode)
+  nodes.add(electricNode)
   nodes.add(mechNode)
 
-  dcNode.resistance = 100
-  dcNode.positiveTerminals.addAll(Seq(ForgeDirection.UP, ForgeDirection.SOUTH, ForgeDirection.EAST))
-  dcNode.negativeTerminals.addAll(Seq(ForgeDirection.DOWN, ForgeDirection.NORTH, ForgeDirection.WEST))
+  electricNode.resistance = 100
+  electricNode.positiveTerminals.addAll(Seq(ForgeDirection.UP, ForgeDirection.SOUTH, ForgeDirection.EAST))
+  electricNode.negativeTerminals.addAll(Seq(ForgeDirection.DOWN, ForgeDirection.NORTH, ForgeDirection.WEST))
 
   def toggleGearRatio() = (gearRatio + 1) % 3
 
@@ -89,8 +88,8 @@ class TileMotor extends SpatialTile(Material.iron) with TElectric with TSpatialN
     {
       //Produce mechanical energy
       val mechRatio = Math.pow(10, gearRatio)
-      val power = dcNode.power
-      val negate = if (dcNode.voltage > 0) 1 else -1
+      val power = electricNode.power
+      val negate = if (electricNode.voltage > 0) 1 else -1
       mechNode.rotate(negate * power * mechRatio, negate * power / mechRatio)
       //TODO: Resist DC energy
     }
