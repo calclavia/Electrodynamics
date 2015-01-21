@@ -277,6 +277,7 @@ class TileBattery extends SpatialTile(Material.iron) with TIO with TElectric wit
   {
     if (player.isSneaking)
     {
+      //Temporary AC frequency testing feature
       electricNode.frequency = (electricNode.frequency + 10) % 60
       return true
     }
