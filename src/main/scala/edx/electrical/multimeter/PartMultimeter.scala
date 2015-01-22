@@ -45,7 +45,7 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
   var isPrimary: Boolean = false
   private var detectMode = DetectModes.NONE
   private var doDetect: Boolean = true
-  private var grid: MultimeterGrid = null
+  private var grid: GridMultimeter = null
 
   override def preRemove()
   {
@@ -161,11 +161,6 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
     return world.getTileEntity(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ)
   }
 
-  def getDirection: ForgeDirection =
-  {
-    return ForgeDirection.getOrientation(this.placementSide.ordinal)
-  }
-
   override def write(packet: MCDataOutput, id: Int)
   {
     super.write(packet, id)
@@ -258,6 +253,21 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
   {
   }
 
+  def getGrid: GridMultimeter =
+  {
+    if (grid == null)
+    {
+      grid = new GridMultimeter
+      grid.add(this)
+    }
+    return grid
+  }
+
+  def setGrid(network: GridMultimeter)
+  {
+    grid = network
+  }
+
   override def load(nbt: NBTTagCompound)
   {
     super.load(nbt)
@@ -338,6 +348,11 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
     return connections
   }
 
+  def getDirection: ForgeDirection =
+  {
+    return ForgeDirection.getOrientation(this.placementSide.ordinal)
+  }
+
   def hasMultimeter(x: Int, y: Int, z: Int): Boolean =
   {
     return getMultimeter(x, y, z) != null
@@ -370,21 +385,6 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
   {
     if (isPrimary) return Cuboid6.full.copy.expand(new Vector3(getGrid.size.x, getGrid.size.y, getGrid.size.z))
     return Cuboid6.full
-  }
-
-  def getGrid: MultimeterGrid =
-  {
-    if (grid == null)
-    {
-      grid = new MultimeterGrid
-      grid.add(this)
-    }
-    return grid
-  }
-
-  def setGrid(network: MultimeterGrid)
-  {
-    grid = network
   }
 
   override def toString: String = "[PartMultimeter]" + x + "x " + y + "y " + z + "z " + getSlotMask + "s "

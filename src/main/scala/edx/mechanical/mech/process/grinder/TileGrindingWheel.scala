@@ -12,7 +12,7 @@ import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11._
 import resonant.api.recipe.{MachineRecipes, RecipeType}
-import resonant.lib.collection.Timer
+import resonant.lib.prefab.Timer
 import resonant.lib.prefab.damage.CustomDamageSource
 import resonant.lib.render.RenderUtility
 import resonant.lib.transform.region.Cuboid
@@ -137,11 +137,6 @@ class TileGrindingWheel extends TileMechanical(Material.rock)
     return results.length > 0
   }
 
-  /**
-   * Can this machine work this tick?
-   */
-  def canWork: Boolean = counter >= requiredTorque
-
   override def collide(entity: Entity)
   {
     if (entity.isInstanceOf[EntityItem])
@@ -184,6 +179,11 @@ class TileGrindingWheel extends TileMechanical(Material.rock)
       entity.addVelocity(velocity.x, velocity.y, velocity.z)
     }
   }
+
+  /**
+   * Can this machine work this tick?
+   */
+  def canWork: Boolean = counter >= requiredTorque
 
   def canGrind(itemStack: ItemStack): Boolean = MachineRecipes.instance.getOutput(RecipeType.SIFTER.name, itemStack).length > 0
 

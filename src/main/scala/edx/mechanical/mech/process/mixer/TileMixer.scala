@@ -16,7 +16,7 @@ import net.minecraftforge.fluids.IFluidBlock
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL11._
 import resonant.api.recipe.{MachineRecipes, RecipeType}
-import resonant.lib.collection.Timer
+import resonant.lib.prefab.Timer
 import resonant.lib.render.RenderUtility
 import resonant.lib.transform.rotation.Quaternion
 import resonant.lib.transform.vector.Vector3

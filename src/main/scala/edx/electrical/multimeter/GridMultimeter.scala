@@ -1,6 +1,5 @@
 package edx.electrical.multimeter
 
-import edx.electrical.multimeter.graph._
 import net.minecraft.nbt.{NBTTagCompound, NBTTagList}
 import resonant.api.IUpdate
 import resonant.lib.grid.core.{Grid, UpdateTicker}
@@ -11,22 +10,21 @@ import resonant.lib.utility.science.UnitDisplay
 import scala.collection.convert.wrapAll._
 import scala.collection.mutable.ArrayBuffer
 
-class MultimeterGrid extends Grid[PartMultimeter] with IUpdate
+class GridMultimeter extends Grid[PartMultimeter] with IUpdate
 {
   final val displayInformation = new ArrayBuffer[String]
   /**
    * The available graphs to be handled.
    */
   final val graphs = new ArrayBuffer[Graph[_]]
-  final val energyGraph: GraphL = new GraphL("energy", maxData)
-  final val powerGraph: GraphL = new GraphL("power", maxData)
-  final val energyCapacityGraph: GraphL = new GraphL("capacity", 1)
-  final val voltageGraph: GraphL = new GraphL("voltage", maxData)
-  final val torqueGraph: GraphD = new GraphD("torque", maxData)
-  final val angularVelocityGraph: GraphD = new GraphD("speed", maxData)
-  final val fluidGraph: GraphI = new GraphI("fluid", maxData)
-  final val thermalGraph: GraphF = new GraphF("temperature", maxData)
-  final val pressureGraph: GraphI = new GraphI("pressure", maxData)
+  final val energyGraph = new Graph[Double]("energy", maxData)
+  final val powerGraph = new Graph[Double]("power", maxData)
+  final val voltageGraph = new Graph[Double]("voltage", maxData)
+  final val torqueGraph = new Graph[Double]("torque", maxData)
+  final val angularVelocityGraph = new Graph[Double]("speed", maxData)
+  final val fluidGraph = new Graph[Int]("fluid", maxData)
+  final val thermalGraph = new Graph[Int]("temperature", maxData)
+  final val pressureGraph = new Graph[Int]("pressure", maxData)
   /**
    * Maximum data points a graph can store.
    */
