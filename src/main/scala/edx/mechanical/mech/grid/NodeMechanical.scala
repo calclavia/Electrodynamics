@@ -35,7 +35,6 @@ class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](par
    * Buffer values used by the grid to transfer mechanical energy.
    */
   protected[grid] var bufferTorque = 0D
-  protected[grid] var bufferAngularVelocity = 0D
   private var _torque = 0D
   private var _angularVelocity = 0D
 
@@ -80,22 +79,14 @@ class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](par
    */
   def angleDisplacement = 0D
 
-  override def rotate(torque: Double, angularVelocity: Double)
+  override def accelerate(torque: Double)
   {
     bufferTorque += torque
-    bufferAngularVelocity += angularVelocity
   }
 
   def power: Double = torque * angularVelocity
 
-  /**
-   * Gets the torque of the mechanical device from a specific side
-   *
-   * @return force
-   */
-  override def torque = _torque
-
-  def torque_=(newTorque: Double) = _torque = newTorque
+  override def radius(other: TNodeMechanical) = 0.5
 
   def getMechanicalGrid: GridMechanical = super.grid.asInstanceOf[GridMechanical]
 
@@ -106,6 +97,15 @@ class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](par
   override def getDebugInfo = List(toString)
 
   override def toString = "NodeMechanical [" + connections.size() + " Torque: " + BigDecimal(torque).setScale(2, BigDecimal.RoundingMode.HALF_UP) + " Velocity: " + BigDecimal(angularVelocity).setScale(2, BigDecimal.RoundingMode.HALF_UP) + "]"
+
+  /**
+   * Gets the torque of the mechanical device from a specific side
+   *
+   * @return force
+   */
+  override def torque = _torque
+
+  def torque_=(newTorque: Double) = _torque = newTorque
 
   /**
    * The class used to compare when making connections

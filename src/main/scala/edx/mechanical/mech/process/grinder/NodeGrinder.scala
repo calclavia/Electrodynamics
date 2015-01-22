@@ -10,7 +10,7 @@ import net.minecraftforge.common.util.ForgeDirection
  */
 class NodeGrinder(parent: TileGrindingWheel) extends NodeMechanical(parent: TileGrindingWheel)
 {
-  override def getLoad = 1000d * Math.abs(angularVelocity)
+  override def inertia = 1000d * Math.abs(angularVelocity)
 
   override def canConnect[B <: NodeMechanical](other: B, from: ForgeDirection): Boolean = parent.getDirection == from || parent.getDirection.getOpposite == from
 

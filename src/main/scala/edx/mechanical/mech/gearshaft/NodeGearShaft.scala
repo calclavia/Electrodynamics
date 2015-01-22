@@ -10,7 +10,7 @@ import resonant.lib.wrapper.ForgeDirectionWrapper._
 
 class NodeGearShaft(parent: PartGearShaft) extends NodeMechanical(parent)
 {
-  override def getLoad: Double =
+  override def inertia: Double =
   {
     return shaft.tier match
     {

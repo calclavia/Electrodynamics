@@ -12,11 +12,6 @@ import scala.collection.convert.wrapAll._
 class GridMechanical extends GridNode[NodeMechanical] with IUpdate
 {
   /**
-   * The energy loss of this grid
-   */
-  private var load = 0D
-
-  /**
    * Determines if this grid is locked (invalid opposite gear connections)
    */
   private var isLocked = false
@@ -48,24 +43,26 @@ class GridMechanical extends GridNode[NodeMechanical] with IUpdate
   {
     nodes synchronized
     {
-      load = 0
-
+      /**
+       * Consider this as the moment of inertia: how difficult it is to spin this object.
+       */
       nodes.foreach(
         n =>
         {
           n.torque = 0
-          n.angularVelocity = 0
-          load += n.getLoad
+          // n.angularVelocity = 0
         }
       )
 
+      //TODO: Add deceleration
+
       if (!isLocked)
       {
-        getNodes.filter(n => n.bufferTorque != 0 && n.bufferAngularVelocity != 0).foreach(
+        getNodes.filter(n => n.bufferTorque != 0).foreach(
           n =>
           {
             allPassed = Seq(n)
-            recurse(Seq(n), deltaTime, n.bufferTorque, n.bufferAngularVelocity)
+            recurse(Seq(n), deltaTime, n.bufferTorque, 0)
           }
         )
       }
@@ -94,9 +91,20 @@ class GridMechanical extends GridNode[NodeMechanical] with IUpdate
         }
 
         n.bufferTorque = 0
-        n.bufferAngularVelocity = 0
       }
     )
+  }
+
+  def calculateEquivalentInertia(passed: Seq[NodeMechanical]): Double =
+  {
+    val curr = passed.last
+    /**
+     * I1 + n^2 * I
+     * where n is the acceleration ratio
+     */
+    var inertia = curr.inertia
+    inertia += curr.connections.map(c => c.radius(curr) / curr.radius(c) * calculateEquivalentInertia(passed :+ c)).foldLeft(0d)(_ + _)
+    return inertia
   }
 
   def recurse(passed: Seq[NodeMechanical], deltaTime: Double, torque: Double, angularVelocity: Double)
@@ -138,19 +146,24 @@ class GridMechanical extends GridNode[NodeMechanical] with IUpdate
     }
     else
     {
-      //This is the first node.
-      //Calculate energy loss
-      val power = torque * angularVelocity
-      val netEnergy = Math.max(power - load * deltaTime, 0)
-      val netTorque = netEnergy * (torque / power)
-      val netVelocity = netEnergy * (angularVelocity / power)
+      /**
+       * This is the first node.
+       * 1. Calculate equivalent moment of inertia of the mechanical system.
+       * 2. Determine the angular acceleration:
+       * T = I * a
+       * a = T/I
+       * where I = inertia and a = angular acceleration
+       */
+      val inertia = calculateEquivalentInertia(passed)
+      val netTorque = torque
+      val netAcceleration = torque / inertia
 
       curr.torque += netTorque
-      curr.angularVelocity += netVelocity * deltaTime
+      curr.angularVelocity += netAcceleration * deltaTime
       curr.connections.foreach(c =>
       {
         allPassed :+= c
-        recurse(passed :+ c, deltaTime, netTorque, netVelocity)
+        recurse(passed :+ c, deltaTime, netTorque, netAcceleration)
       })
     }
   }

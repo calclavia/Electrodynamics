@@ -25,10 +25,16 @@ trait TNodeMechanical extends INode with IVectorWorld
   def torque: Double
 
   /**
-   * The mechanical load energy loss per second.
+   * The mechanical resistance of this node.
+   * Consider the moment of inertia, which equals mass * radius ^ 2
+   *
+   * Torque = Moment of Intertia * angular velocity
+   *
+   * A higher resistance or moment of inertia means that it is more difficult for this mechanical node to accelerate.
+   *
    * @return Power loss in Watts.
    */
-  def getLoad = 10D
+  def inertia = 10D
 
   /**
    * The radius of rotation
@@ -55,5 +61,5 @@ trait TNodeMechanical extends INode with IVectorWorld
    *
    * @param torque          - force at an angle
    */
-  def rotate(torque: Double, angularVelocity: Double)
+  def accelerate(torque: Double)
 }

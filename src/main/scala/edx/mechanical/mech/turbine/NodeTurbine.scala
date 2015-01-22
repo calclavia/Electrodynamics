@@ -17,7 +17,7 @@ class NodeTurbine(parent: TileTurbine) extends NodeMechanical(parent)
    * The mechanical load
    * @return Torque in Newton meters per second
    */
-  override def getLoad = 100 * parent.multiBlockRadius * parent.multiBlockRadius
+  override def inertia = 100 * parent.multiBlockRadius * parent.multiBlockRadius
 
   /**
    * Moment of inertia = m * r * r

@@ -20,7 +20,7 @@ class NodeGear(parent: PartGear) extends NodeMechanical(parent: PartGear)
 {
   override def angleDisplacement = if (gear.getMultiBlock.isConstructed) Math.PI / 36 else Math.PI / 12
 
-  override def getLoad: Double =
+  override def inertia: Double =
   {
     return gear.tier match
     {
