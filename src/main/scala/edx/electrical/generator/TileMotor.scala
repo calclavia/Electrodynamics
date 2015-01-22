@@ -28,6 +28,11 @@ object TileMotor
   val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "motor.tcn"))
   @SideOnly(Side.CLIENT)
   val texture = new ResourceLocation(Reference.domain, Reference.modelPath + "motor.png")
+
+  val fieldStrength = 1
+  val coils = 10
+  val area = 1
+  val motorConstant = fieldStrength * area * coils
 }
 
 class TileMotor extends SpatialTile(Material.iron) with TIO with TElectric with TSpatialNodeProvider with TRotatable
@@ -51,7 +56,7 @@ class TileMotor extends SpatialTile(Material.iron) with TIO with TElectric with 
   nodes.add(electricNode)
   nodes.add(mechNode)
 
-  electricNode.resistance = 100
+  electricNode.resistance = 10
 
   def toggleGearRatio() = (gearRatio + 1) % 3
 
@@ -61,40 +66,27 @@ class TileMotor extends SpatialTile(Material.iron) with TIO with TElectric with 
     updateConnectionMask()
   }
 
-  def updateConnectionMask()
-  {
-    electricNode.connectionMask = ForgeDirection.VALID_DIRECTIONS.filter(getIO(_) > 0).map(d => 1 << d.ordinal()).foldLeft(0)(_ | _)
-    electricNode.positiveTerminals.clear()
-    electricNode.negativeTerminals.clear()
-    electricNode.positiveTerminals.addAll(getInputDirections())
-    electricNode.negativeTerminals.addAll(getOutputDirections())
-    electricNode.reconstruct()
-    notifyChange()
-    markUpdate()
-  }
-
   override def update()
   {
     super.update()
 
-    /*
-    //TODO: Debug with free energy
-    if (mechNode.power > dcNode.power)
-    {
-      //Produce electricity
-      dcNode.setVoltage(mechNode.power)
-      //TODO: Resist mech energy
-    }
-    //    else if (dcNode.power > mechNode.power)
-    else*/
-    {
-      //Produce mechanical energy
-      val mechRatio = Math.pow(10, gearRatio)
-      val power = electricNode.power
-      val negate = if (electricNode.voltage > 0) 1 else -1
-      mechNode.rotate(negate * power * mechRatio, negate * power / mechRatio)
-      //TODO: Resist DC energy
-    }
+    /**
+     * Produce torque based on current.
+     */
+    val power = electricNode.power
+    val torque = TileMotor.motorConstant * electricNode.current
+
+    //TODO: Check if angular velocity should be generated based on torque
+    if (torque != 0)
+      mechNode.rotate(torque, power / torque)
+
+    /**
+     * Motors produce emf or counter-emf by Lenz's law based on angular velocity
+     * emf = change of flux/time
+     * = (NBCos(x))/time
+     */
+    val inducedEmf = TileMotor.motorConstant * mechNode.angularVelocity // * Math.sin(mechNode.angularVelocity * System.currentTimeMillis() / 1000d)
+    electricNode.generateVoltage(inducedEmf * -1)
   }
 
   override def setIO(dir: ForgeDirection, ioType: Int)
@@ -108,6 +100,18 @@ class TileMotor extends SpatialTile(Material.iron) with TIO with TElectric with 
         super.setIO(dir.getOpposite, (ioType % 2) + 1)
       updateConnectionMask()
     }
+  }
+
+  def updateConnectionMask()
+  {
+    electricNode.connectionMask = ForgeDirection.VALID_DIRECTIONS.filter(getIO(_) > 0).map(d => 1 << d.ordinal()).foldLeft(0)(_ | _)
+    electricNode.positiveTerminals.clear()
+    electricNode.negativeTerminals.clear()
+    electricNode.positiveTerminals.addAll(getInputDirections())
+    electricNode.negativeTerminals.addAll(getOutputDirections())
+    electricNode.reconstruct()
+    notifyChange()
+    markUpdate()
   }
 
   @SideOnly(Side.CLIENT)
