@@ -13,7 +13,7 @@ import edx.quantum.QuantumContent
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.config.Configuration
 import org.modstats.{ModstatInfo, Modstats}
-import resonant.engine.ResonantEngine
+import resonant.core.ResonantEngine
 import resonant.lib.mod.config.ConfigHandler
 import resonant.lib.mod.loadable.LoadableHandler
 

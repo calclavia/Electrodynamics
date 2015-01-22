@@ -11,7 +11,7 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.network.Packet
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
-import resonant.engine.ResonantEngine
+import resonant.core.ResonantEngine
 import resonant.lib.grid.energy.EnergyStorage
 import resonant.lib.mod.config.Config
 import resonant.lib.network.discriminator.{PacketTile, PacketType}

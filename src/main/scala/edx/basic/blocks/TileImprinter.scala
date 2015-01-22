@@ -19,7 +19,7 @@ import net.minecraft.network.Packet
 import net.minecraft.util.IIcon
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
-import resonant.engine.ResonantEngine
+import resonant.core.ResonantEngine
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketReceiver
 import resonant.lib.prefab.tile.spatial.{SpatialBlock, SpatialTile}
@@ -98,23 +98,6 @@ class TileImprinter extends SpatialTile(Material.circuits) with ISidedInventory 
   }
 
   /**
-   * Sets the given item stack to the specified slot in the inventory (can be crafting or armor
-   * sections).
-   */
-  def setInventorySlotContents(slot: Int, itemStack: ItemStack)
-  {
-    if (slot < this.getSizeInventory)
-    {
-      inventory(slot) = itemStack
-    }
-  }
-
-  def getSizeInventory: Int =
-  {
-    return this.inventory.length
-  }
-
-  /**
    * Inventory methods.
    */
   override def canUpdate: Boolean =
@@ -177,6 +160,28 @@ class TileImprinter extends SpatialTile(Material.circuits) with ISidedInventory 
     }
   }
 
+  /**
+   * Sets the given item stack to the specified slot in the inventory (can be crafting or armor
+   * sections).
+   */
+  def setInventorySlotContents(slot: Int, itemStack: ItemStack)
+  {
+    if (slot < this.getSizeInventory)
+    {
+      inventory(slot) = itemStack
+    }
+  }
+
+  def getSizeInventory: Int =
+  {
+    return this.inventory.length
+  }
+
+  def getStackInSlot(slot: Int): ItemStack =
+  {
+    return this.inventory(slot)
+  }
+
   def openInventory
   {
     this.onInventoryChanged
@@ -185,6 +190,64 @@ class TileImprinter extends SpatialTile(Material.circuits) with ISidedInventory 
   def closeInventory
   {
     this.onInventoryChanged
+  }
+
+  /**
+   * Updates all the output slots. Call this to update the Imprinter.
+   */
+  def onInventoryChanged
+  {
+    if (!this.worldObj.isRemote)
+    {
+      val fitlerStack: ItemStack = this.inventory(9)
+      if (fitlerStack != null && fitlerStack.getItem.isInstanceOf[ItemImprint])
+      {
+        val outputStack: ItemStack = fitlerStack.copy
+        val filters: java.util.List[ItemStack] = ItemImprint.getFilters(outputStack)
+        val toAdd: Set[ItemStack] = new HashSet[ItemStack]
+        val toBeImprinted: Set[ItemStack] = new HashSet[ItemStack]
+
+        var i: Int = 0
+        while (i < 9)
+        {
+          val stackInInventory: ItemStack = inventory(i)
+          if (stackInInventory != null)
+          {
+            for (check <- toBeImprinted)
+            {
+              if (check.isItemEqual(stackInInventory))
+              {
+                i = 10
+              }
+            }
+            toBeImprinted.add(stackInInventory)
+          }
+          i += 1;
+        }
+
+        for (stackInInventory <- toBeImprinted)
+        {
+          val it: Iterator[ItemStack] = filters.iterator
+          var removed: Boolean = false
+          while (it.hasNext)
+          {
+            val filteredStack: ItemStack = it.next
+            if (filteredStack.isItemEqual(stackInInventory))
+            {
+              it.remove
+              removed = true
+            }
+          }
+          if (!removed)
+          {
+            toAdd.add(stackInInventory)
+          }
+        }
+        filters.addAll(toAdd)
+        ItemImprint.setFilters(outputStack, filters)
+        this.inventory(9) = outputStack
+      }
+    }
   }
 
   def getInventoryStackLimit: Int =
@@ -223,11 +286,6 @@ class TileImprinter extends SpatialTile(Material.circuits) with ISidedInventory 
     RenderItemOverlayUtility.renderTopOverlay(this, inventory, ForgeDirection.EAST, x, y, z)
     RenderItemOverlayUtility.renderItemOnSides(this, getStackInSlot(9), x, y, z)
     GL11.glPopMatrix
-  }
-
-  def getStackInSlot(slot: Int): ItemStack =
-  {
-    return this.inventory(slot)
   }
 
   @SideOnly(Side.CLIENT) override def registerIcons(iconReg: IIconRegister)
@@ -344,64 +402,6 @@ class TileImprinter extends SpatialTile(Material.circuits) with ISidedInventory 
     if (Blocks.piston_head eq b)
     {
       onInventoryChanged
-    }
-  }
-
-  /**
-   * Updates all the output slots. Call this to update the Imprinter.
-   */
-  def onInventoryChanged
-  {
-    if (!this.worldObj.isRemote)
-    {
-      val fitlerStack: ItemStack = this.inventory(9)
-      if (fitlerStack != null && fitlerStack.getItem.isInstanceOf[ItemImprint])
-      {
-        val outputStack: ItemStack = fitlerStack.copy
-        val filters: java.util.List[ItemStack] = ItemImprint.getFilters(outputStack)
-        val toAdd: Set[ItemStack] = new HashSet[ItemStack]
-        val toBeImprinted: Set[ItemStack] = new HashSet[ItemStack]
-
-        var i: Int = 0
-        while (i < 9)
-        {
-          val stackInInventory: ItemStack = inventory(i)
-          if (stackInInventory != null)
-          {
-            for (check <- toBeImprinted)
-            {
-              if (check.isItemEqual(stackInInventory))
-              {
-                i = 10
-              }
-            }
-            toBeImprinted.add(stackInInventory)
-          }
-          i += 1;
-        }
-
-        for (stackInInventory <- toBeImprinted)
-        {
-          val it: Iterator[ItemStack] = filters.iterator
-          var removed: Boolean = false
-          while (it.hasNext)
-          {
-            val filteredStack: ItemStack = it.next
-            if (filteredStack.isItemEqual(stackInInventory))
-            {
-              it.remove
-              removed = true
-            }
-          }
-          if (!removed)
-          {
-            toAdd.add(stackInInventory)
-          }
-        }
-        filters.addAll(toAdd)
-        ItemImprint.setFilters(outputStack, filters)
-        this.inventory(9) = outputStack
-      }
     }
   }
 }
