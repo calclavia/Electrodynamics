@@ -88,16 +88,6 @@ class TileMotor extends SpatialTile(Material.iron) with TIO with TElectric with 
     super.update()
 
     /**
-     * Produce torque based on current.
-     * T = NBA * I / (2pi)
-     */
-    val torque = TileMotor.motorConstant * electricNode.current / (2 * Math.PI)
-
-    //TODO: Check if angular velocity should be generated based on torque
-    if (torque != 0)
-      mechNode.accelerate(torque)
-
-    /**
      * Motors produce emf or counter-emf by Lenz's law based on angular velocity
      * emf = change of flux/time
      *
@@ -107,7 +97,15 @@ class TileMotor extends SpatialTile(Material.iron) with TIO with TElectric with 
      * where w = angular velocity
      */
     val inducedEmf = TileMotor.motorConstant * mechNode.angularVelocity // * Math.sin(mechNode.angularVelocity * System.currentTimeMillis() / 1000d)
-    electricNode.generateVoltage(inducedEmf * -1)
+
+    /**
+     * Produce torque based on current.
+     * T = NBA * I / (2pi)
+     */
+    //TODO: Torque should be based on the current, as a result of counter-emf
+    val torque = TileMotor.motorConstant * ((electricNode.voltage - inducedEmf) / electricNode.resistance) / (2 * Math.PI)
+    mechNode.accelerate(torque)
+    //    electricNode.generateVoltage(inducedEmf * -1)
   }
 
   override def setIO(dir: ForgeDirection, ioType: Int)

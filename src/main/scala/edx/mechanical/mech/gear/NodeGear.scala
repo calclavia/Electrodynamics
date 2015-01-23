@@ -22,11 +22,23 @@ class NodeGear(parent: PartGear) extends NodeMechanical(parent: PartGear)
 
   override def inertia: Double =
   {
-    return gear.tier match
+    gear.tier match
     {
-      case 0 => 60
+      case 0 => 50
       case 1 => 80
-      case 2 => 50
+      case 2 => 75
+    }
+  }
+
+  protected def gear = getParent.asInstanceOf[PartGear]
+
+  override def friction: Double =
+  {
+    gear.tier match
+    {
+      case 0 => 2
+      case 1 => 3
+      case 2 => 1
     }
   }
 
@@ -101,8 +113,6 @@ class NodeGear(parent: PartGear) extends NodeMechanical(parent: PartGear)
       }
     }
   }
-
-  protected def gear = getParent.asInstanceOf[PartGear]
 
   /**
    * Can this gear be connected BY the source?

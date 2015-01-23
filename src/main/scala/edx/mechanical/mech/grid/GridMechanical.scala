@@ -19,7 +19,8 @@ class GridMechanical extends GridNode[NodeMechanical] with IUpdate
   /**
    * The nodes that the grid is currently recusing through
    */
-  private var allPassed = Seq.empty[NodeMechanical]
+  private var allRecursed = Seq.empty[NodeMechanical]
+  private var allDistributed = Seq.empty[NodeMechanical]
 
   nodeClass = classOf[NodeMechanical]
 
@@ -50,7 +51,7 @@ class GridMechanical extends GridNode[NodeMechanical] with IUpdate
         n =>
         {
           n.torque = 0
-          // n.angularVelocity = 0
+          n.angularVelocity -= n.angularVelocity * deltaTime * n.friction
         }
       )
 
@@ -61,13 +62,13 @@ class GridMechanical extends GridNode[NodeMechanical] with IUpdate
         getNodes.filter(n => n.bufferTorque != 0).foreach(
           n =>
           {
-            allPassed = Seq(n)
+            allDistributed = Seq(n)
             recurse(Seq(n), deltaTime, n.bufferTorque, 0)
           }
         )
       }
 
-      allPassed = Seq.empty[NodeMechanical]
+      allDistributed = Seq.empty[NodeMechanical]
 
       resetNodes()
     }
@@ -98,12 +99,14 @@ class GridMechanical extends GridNode[NodeMechanical] with IUpdate
   def calculateEquivalentInertia(passed: Seq[NodeMechanical]): Double =
   {
     val curr = passed.last
+    allRecursed :+= curr
+
     /**
      * I1 + n^2 * I
      * where n is the acceleration ratio
      */
     var inertia = curr.inertia
-    inertia += curr.connections.map(c => c.radius(curr) / curr.radius(c) * calculateEquivalentInertia(passed :+ c)).foldLeft(0d)(_ + _)
+    inertia += curr.connections.filterNot(allRecursed.contains).map(c => c.radius(curr) / curr.radius(c) * calculateEquivalentInertia(passed :+ c)).foldLeft(0d)(_ + _)
     return inertia
   }
 
@@ -126,9 +129,9 @@ class GridMechanical extends GridNode[NodeMechanical] with IUpdate
       {
         if (c != prev)
         {
-          if (!allPassed.contains(c))
+          if (!allDistributed.contains(c))
           {
-            allPassed :+= c
+            allDistributed :+= c
             recurse(passed :+ c, deltaTime, addTorque, addVel)
           }
           else
@@ -162,7 +165,7 @@ class GridMechanical extends GridNode[NodeMechanical] with IUpdate
       curr.angularVelocity += netAcceleration * deltaTime
       curr.connections.foreach(c =>
       {
-        allPassed :+= c
+        allDistributed :+= c
         recurse(passed :+ c, deltaTime, netTorque, netAcceleration)
       })
     }

@@ -27,8 +27,6 @@ import resonant.lib.utility.WrenchUtility
 class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
 {
   val multiBlock = new GearMultiBlockHandler(this)
-  var isClockwiseCrank = true
-  var manualCrankTime = 0
   var multiBlockRadius = 1
 
   //Constructor
@@ -56,32 +54,16 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
   override def update()
   {
     super.update()
-
-    if (!world.isRemote)
-    {
-      if (manualCrankTime > 0)
-      {
-        //A punch has around 5000 Newtons
-        mechanicalNode.accelerate((if (isClockwiseCrank) 2 else -2) * manualCrankTime)
-        manualCrankTime -= 1
-      }
-    }
-
     getMultiBlock.update()
   }
 
   override def activate(player: EntityPlayer, hit: MovingObjectPosition, itemStack: ItemStack): Boolean =
   {
-    if (!world.isRemote)
-      println(mechanicalNode + " in " + mechanicalNode.grid)
-
     if (itemStack != null && itemStack.getItem.isInstanceOf[ItemHandCrank])
     {
-      isClockwiseCrank = player.isSneaking
-      getMultiBlock.get.manualCrankTime = 40
-
+      mechanicalNode.accelerate((if (player.isSneaking) 1 else -1) * 4000)
       world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, Reference.prefix + "gearCrank", 0.5f, 0.9f + world.rand.nextFloat * 0.2f)
-      player.addExhaustion(0.01f)
+      player.addExhaustion(0.02f)
       return true
     }
 

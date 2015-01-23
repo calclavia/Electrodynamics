@@ -32,9 +32,14 @@ trait TNodeMechanical extends INode with IVectorWorld
    *
    * A higher resistance or moment of inertia means that it is more difficult for this mechanical node to accelerate.
    *
-   * @return Power loss in Watts.
+   * @return Moment of intertia
    */
   def inertia = 10D
+
+  /**
+   * Friction is a factor that decelerates the mechanical system based on angular velocity.
+   */
+  def friction = 1D
 
   /**
    * The radius of rotation
