@@ -8,7 +8,6 @@ import io.netty.buffer.ByteBuf
 import net.minecraft.block.material.Material
 import net.minecraft.client.Minecraft
 import net.minecraft.entity.EntityLivingBase
-import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.ResourceLocation
@@ -271,17 +270,5 @@ class TileBattery extends SpatialTile(Material.iron) with TIO with TElectric wit
   {
     super.writeToNBT(nbt)
     energy.save(nbt)
-  }
-
-  override protected def use(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
-  {
-    if (player.isSneaking)
-    {
-      //Temporary AC frequency testing feature
-      electricNode.frequency = (electricNode.frequency + 10) % 60
-      return true
-    }
-
-    return super.use(player, side, hit)
   }
 }

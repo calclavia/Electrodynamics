@@ -61,7 +61,7 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
   {
     if (itemStack != null && itemStack.getItem.isInstanceOf[ItemHandCrank])
     {
-      mechanicalNode.accelerate((if (player.isSneaking) 1 else -1) * 4000)
+      mechanicalNode.accelerate((if (player.isSneaking) 1 else -1) * 1000)
       world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, Reference.prefix + "gearCrank", 0.5f, 0.9f + world.rand.nextFloat * 0.2f)
       player.addExhaustion(0.02f)
       return true
@@ -81,8 +81,6 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
     super.preRemove()
     getMultiBlock.deconstruct()
   }
-
-  override def getMultiBlock: GearMultiBlockHandler = multiBlock
 
   /**
    * Is this gear block the one in the center-edge of the multiblock that can interact with other gears?
@@ -116,6 +114,8 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
     super.save(nbt)
     getMultiBlock.save(nbt)
   }
+
+  override def getMultiBlock: GearMultiBlockHandler = multiBlock
 
   override def getMultiBlockVectors: java.util.List[resonant.lib.transform.vector.Vector3] = new resonant.lib.transform.vector.Vector3().getAround(this.world, placementSide, 1)
 
