@@ -20,9 +20,13 @@ class TileSolarPanel extends SpatialTile(Material.iron) with TElectric with TSpa
   ioMap = 728
   textureName = "solarPanel_top"
   bounds = new Cuboid(0, 0, 0, 1, 0.3f, 1)
+
   isOpaqueCube = false
+  normalRender = false
+  renderStaticBlock = true
+
   edgeTexture = Reference.prefix + "tankEdge"
-  electricNode.dynamicTerminals
+  electricNode.dynamicTerminals = true
   electricNode.positiveTerminals.addAll(Seq(ForgeDirection.NORTH, ForgeDirection.EAST))
   electricNode.negativeTerminals.addAll(Seq(ForgeDirection.SOUTH, ForgeDirection.WEST))
   nodes.add(electricNode)

@@ -2,109 +2,122 @@ package edx.electrical.generator
 
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import edx.core.Reference
-import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.init.Blocks
 import net.minecraft.util.IIcon
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.lib.content.prefab.TIO
-import resonant.lib.prefab.tile.mixed.TileElectric
-import resonant.lib.prefab.tile.spatial.SpatialBlock
-import resonant.lib.transform.vector.Vector3
+import resonant.lib.grid.core.TSpatialNodeProvider
+import resonant.lib.prefab.tile.spatial.{SpatialBlock, SpatialTile}
+import resonant.lib.prefab.tile.traits.TElectric
 
-class TileThermopile extends TileElectric(Material.rock) with TIO
+import scala.collection.convert.wrapAll._
+
+class TileThermopile extends SpatialTile(Material.rock) with TElectric with TSpatialNodeProvider with TIO
 {
-
-  ioMap = 728.asInstanceOf[Short]
-
-  private final val MAX_USE_TICKS: Int = 120 * 20
   /**
    * The amount of ticks the thermopile will use the temperature differences before turning all
    * adjacent sides to thermal equilibrium.
    */
-  private var usingTicks: Int = 0
+  private val maxTicks = 120 * 20
 
-  override def update
+  private var ticksUsed = 0
+
+  ioMap = 728
+  nodes.add(electricNode)
+
+  electricNode.dynamicTerminals = true
+  electricNode.positiveTerminals.addAll(Seq(ForgeDirection.NORTH, ForgeDirection.EAST))
+  electricNode.negativeTerminals.addAll(Seq(ForgeDirection.SOUTH, ForgeDirection.WEST))
+
+  override def update()
   {
-    super.update
-    if (!this.worldObj.isRemote)
+    super.update()
+
+    if (!world.isRemote)
     {
-      var heatSources: Int = 0
-      var coolingSources: Int = 0
+      var heatSources = 0
+      var coolingSources = 0
+
       for (dir <- ForgeDirection.VALID_DIRECTIONS)
       {
-        val checkPos: Vector3 = toVector3.add(dir)
-        val block: Block = checkPos.getBlock(worldObj)
-        if (block eq Blocks.water)
+        val checkPos = toVectorWorld + dir
+        val block = checkPos.getBlock
+
+        if (block == Blocks.water || block == Blocks.flowing_water)
         {
           coolingSources += 1
         }
-        else if (block eq Blocks.snow)
+        else if (block == Blocks.snow)
         {
           coolingSources += 2
         }
-        else if (block eq Blocks.ice)
+        else if (block == Blocks.ice)
         {
           coolingSources += 2
         }
-        else if (block eq Blocks.fire)
+        else if (block == Blocks.fire)
         {
           heatSources += 1
         }
-        else if (block eq Blocks.lava)
+        else if (block == Blocks.lava || block == Blocks.flowing_lava)
         {
           heatSources += 2
         }
       }
-      val multiplier: Int = (3 - Math.abs(heatSources - coolingSources))
+      val multiplier = 3 - Math.abs(heatSources - coolingSources)
+
       if (multiplier > 0 && coolingSources > 0 && heatSources > 0)
       {
-        //        electricNode.addEnergy(ForgeDirection.UNKNOWN, 15 * multiplier, true)
-        if (({
-          usingTicks += 1;
-          usingTicks
-        }) >= MAX_USE_TICKS)
+        electricNode.generateVoltage(0.1 * multiplier)
+        ticksUsed += 1
+
+        if (ticksUsed >= maxTicks)
         {
           for (dir <- ForgeDirection.VALID_DIRECTIONS)
           {
-            val checkPos: Vector3 = toVector3.add(dir)
-            val blockID: Block = checkPos.getBlock(worldObj)
-            if (blockID eq Blocks.water)
+            val checkPos = toVector3.add(dir)
+            val block = checkPos.getBlock(worldObj)
+
+            if (block == Blocks.water || block == Blocks.flowing_water)
             {
               checkPos.setBlockToAir(worldObj)
             }
-            else if (blockID eq Blocks.ice)
+            else if (block == Blocks.ice)
             {
               checkPos.setBlock(worldObj, Blocks.water)
             }
-            else if (blockID eq Blocks.fire)
+            else if (block == Blocks.fire)
             {
               checkPos.setBlockToAir(worldObj)
             }
-            else if (blockID eq Blocks.lava)
+            else if (block == Blocks.lava || block == Blocks.flowing_lava)
             {
               checkPos.setBlock(worldObj, Blocks.stone)
             }
           }
-          usingTicks = 0
+          ticksUsed = 0
         }
       }
     }
   }
 
-  @SideOnly(Side.CLIENT) override def registerIcons(iconReg: IIconRegister)
+  @SideOnly(Side.CLIENT)
+  override def registerIcons(iconReg: IIconRegister)
   {
     SpatialBlock.icon.put("thermopile_top", iconReg.registerIcon(Reference.prefix + "thermopile_top"))
     super.registerIcons(iconReg)
   }
 
-  @SideOnly(Side.CLIENT) override def getIcon(side: Int, meta: Int): IIcon =
+  @SideOnly(Side.CLIENT)
+  override def getIcon(side: Int, meta: Int): IIcon =
   {
     if (side == 1)
     {
       return SpatialBlock.icon.get("thermopile_top")
     }
+
     return super.getIcon(side, meta)
   }
 }
