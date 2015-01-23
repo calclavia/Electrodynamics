@@ -61,7 +61,7 @@ class TileMotor extends SpatialTile(Material.iron) with TIO with TElectric with 
   nodes.add(electricNode)
   nodes.add(mechNode)
 
-  electricNode.resistance = 10
+  electricNode.resistance = 1
 
   def toggleGearRatio() = (gearRatio + 1) % 3
 
@@ -88,6 +88,13 @@ class TileMotor extends SpatialTile(Material.iron) with TIO with TElectric with 
     super.update()
 
     /**
+     * Produce torque based on current.
+     * T = NBA * I / (2pi)
+     */
+    val torque = TileMotor.motorConstant * electricNode.current / (2 * Math.PI)
+    mechNode.accelerate(torque)
+
+    /**
      * Motors produce emf or counter-emf by Lenz's law based on angular velocity
      * emf = change of flux/time
      *
@@ -97,14 +104,7 @@ class TileMotor extends SpatialTile(Material.iron) with TIO with TElectric with 
      * where w = angular velocity
      */
     val inducedEmf = TileMotor.motorConstant * mechNode.angularVelocity // * Math.sin(mechNode.angularVelocity * System.currentTimeMillis() / 1000d)
-
-    /**
-     * Produce torque based on current.
-     * T = NBA * I / (2pi)
-     */
-    val torque = TileMotor.motorConstant * electricNode.current / (2 * Math.PI)
-    mechNode.accelerate(torque)
-    electricNode.generateVoltage(inducedEmf)
+    electricNode.generateVoltage(inducedEmf * -1)
   }
 
   override def setIO(dir: ForgeDirection, ioType: Int)

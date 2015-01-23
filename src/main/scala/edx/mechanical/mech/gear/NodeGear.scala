@@ -24,9 +24,9 @@ class NodeGear(parent: PartGear) extends NodeMechanical(parent: PartGear)
   {
     gear.tier match
     {
-      case 0 => 50
-      case 1 => 80
-      case 2 => 75
+      case 0 => 8
+      case 1 => 20
+      case 2 => 15
     }
   }
 

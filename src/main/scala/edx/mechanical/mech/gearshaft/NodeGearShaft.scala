@@ -14,9 +14,9 @@ class NodeGearShaft(parent: PartGearShaft) extends NodeMechanical(parent)
   {
     return shaft.tier match
     {
-      case 0 => 15
-      case 1 => 10
-      case 2 => 5
+      case 0 => 3
+      case 1 => 5
+      case 2 => 4
     }
   }
 

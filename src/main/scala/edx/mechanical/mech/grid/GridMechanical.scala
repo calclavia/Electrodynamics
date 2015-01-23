@@ -158,15 +158,14 @@ class GridMechanical extends GridNode[NodeMechanical] with IUpdate
        * where I = inertia and a = angular acceleration
        */
       val inertia = calculateEquivalentInertia(passed)
-      val netTorque = torque
       val netAcceleration = torque / inertia
 
-      curr.torque += netTorque
+      curr.torque += torque
       curr.angularVelocity += netAcceleration * deltaTime
       curr.connections.foreach(c =>
       {
         allDistributed :+= c
-        recurse(passed :+ c, deltaTime, netTorque, netAcceleration)
+        recurse(passed :+ c, deltaTime, torque, netAcceleration)
       })
     }
   }
