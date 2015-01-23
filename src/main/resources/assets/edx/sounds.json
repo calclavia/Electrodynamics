@@ -4,5 +4,11 @@
     "sounds": [
       "hammer"
     ]
+  },
+  "gearCrank": {
+    "category": "ambient",
+    "sounds": [
+      "gearCrank"
+    ]
   }
 }

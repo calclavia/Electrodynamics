@@ -20,25 +20,25 @@ class NodeGear(parent: PartGear) extends NodeMechanical(parent: PartGear)
 {
   override def angleDisplacement = if (gear.getMultiBlock.isConstructed) Math.PI / 36 else Math.PI / 12
 
+  protected def gear = getParent.asInstanceOf[PartGear]
+
   override def inertia: Double =
   {
     gear.tier match
     {
-      case 0 => 8
+      case 0 => 50
       case 1 => 20
       case 2 => 15
     }
   }
 
-  protected def gear = getParent.asInstanceOf[PartGear]
-
   override def friction: Double =
   {
     gear.tier match
     {
-      case 0 => 2
-      case 1 => 3
-      case 2 => 1
+      case 0 => 1
+      case 1 => 1.5
+      case 2 => 1.3
     }
   }
 

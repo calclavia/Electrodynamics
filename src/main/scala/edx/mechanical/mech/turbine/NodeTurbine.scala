@@ -20,6 +20,11 @@ class NodeTurbine(parent: TileTurbine) extends NodeMechanical(parent)
   override def inertia = 100 * parent.multiBlockRadius * parent.multiBlockRadius
 
   /**
+   * Friction is a factor that decelerates the mechanical system based on angular velocity.
+   */
+  override def friction: Double = 3
+
+  /**
    * Moment of inertia = m * r * r
    * Where "m" is the mass and "r" is the radius of the object.
    */

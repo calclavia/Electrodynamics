@@ -51,15 +51,6 @@ class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](par
   }
 
   /**
-   * Gets the angular velocity of the mechanical device from a specific side
-   *
-   * @return Angular velocity in meters per second
-   */
-  override def angularVelocity = _angularVelocity
-
-  def angularVelocity_=(newVel: Double) = _angularVelocity = newVel
-
-  /**
    * Sets the mechanical node's angle based on its connections
    */
   def resetAngle()
@@ -67,7 +58,6 @@ class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](par
     connections.foreach(
       n =>
       {
-        val diff = Math.round((n.prevAngle - prevAngle) * angleDisplacement)
         n.prevAngle = (prevAngle + angleDisplacement) % (Math.PI * 2)
       }
     )
@@ -97,6 +87,15 @@ class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](par
   override def getDebugInfo = List(toString)
 
   override def toString = "NodeMechanical [" + connections.size() + " Torque: " + BigDecimal(torque).setScale(2, BigDecimal.RoundingMode.HALF_UP) + " Velocity: " + BigDecimal(angularVelocity).setScale(2, BigDecimal.RoundingMode.HALF_UP) + "]"
+
+  /**
+   * Gets the angular velocity of the mechanical device from a specific side
+   *
+   * @return Angular velocity in meters per second
+   */
+  override def angularVelocity = _angularVelocity
+
+  def angularVelocity_=(newVel: Double) = _angularVelocity = newVel
 
   /**
    * Gets the torque of the mechanical device from a specific side

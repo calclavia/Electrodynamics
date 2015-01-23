@@ -51,7 +51,7 @@ class GridMechanical extends GridNode[NodeMechanical] with IUpdate
         n =>
         {
           n.torque = 0
-          n.angularVelocity -= n.angularVelocity * deltaTime * n.friction
+          n.angularVelocity -= Math.min(Math.abs(n.angularVelocity) * deltaTime * n.friction, Math.abs(n.angularVelocity)) * Math.signum(n.angularVelocity)
         }
       )
 

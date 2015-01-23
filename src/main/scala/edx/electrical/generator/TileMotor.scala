@@ -61,7 +61,7 @@ class TileMotor extends SpatialTile(Material.iron) with TIO with TElectric with 
   nodes.add(electricNode)
   nodes.add(mechNode)
 
-  electricNode.resistance = 1
+  electricNode.resistance = 10
 
   def toggleGearRatio() = (gearRatio + 1) % 3
 
@@ -69,18 +69,6 @@ class TileMotor extends SpatialTile(Material.iron) with TIO with TElectric with 
   {
     super.start()
     updateConnections()
-  }
-
-  def updateConnections()
-  {
-    electricNode.connectionMask = ForgeDirection.VALID_DIRECTIONS.filter(getIO(_) > 0).map(d => 1 << d.ordinal()).foldLeft(0)(_ | _)
-    electricNode.positiveTerminals.clear()
-    electricNode.negativeTerminals.clear()
-    electricNode.positiveTerminals.addAll(getInputDirections())
-    electricNode.negativeTerminals.addAll(getOutputDirections())
-    electricNode.reconstruct()
-    notifyChange()
-    markUpdate()
   }
 
   override def update()
@@ -103,8 +91,8 @@ class TileMotor extends SpatialTile(Material.iron) with TIO with TElectric with 
      * emfMax = NBAw for direct current
      * where w = angular velocity
      */
-    val inducedEmf = TileMotor.motorConstant * mechNode.angularVelocity // * Math.sin(mechNode.angularVelocity * System.currentTimeMillis() / 1000d)
-    electricNode.generateVoltage(inducedEmf * -1)
+    val inducedEmf = TileMotor.motorConstant * mechNode.angularVelocity
+    electricNode.generateVoltage(inducedEmf)
   }
 
   override def setIO(dir: ForgeDirection, ioType: Int)
@@ -118,6 +106,18 @@ class TileMotor extends SpatialTile(Material.iron) with TIO with TElectric with 
         super.setIO(dir.getOpposite, (ioType % 2) + 1)
       updateConnections()
     }
+  }
+
+  def updateConnections()
+  {
+    electricNode.connectionMask = ForgeDirection.VALID_DIRECTIONS.filter(getIO(_) > 0).map(d => 1 << d.ordinal()).foldLeft(0)(_ | _)
+    electricNode.positiveTerminals.clear()
+    electricNode.negativeTerminals.clear()
+    electricNode.positiveTerminals.addAll(getInputDirections())
+    electricNode.negativeTerminals.addAll(getOutputDirections())
+    electricNode.reconstruct()
+    notifyChange()
+    markUpdate()
   }
 
   @SideOnly(Side.CLIENT)
