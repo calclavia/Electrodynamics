@@ -103,7 +103,7 @@ object RenderMultimeter extends ISimpleItemRenderer
 
       for (i <- 0 until part.getGrid.graphs.size)
       {
-        if (part.getGrid.graphs(i).head != null && !(part.getGrid.graphs(i).head == part.getGrid.graphs(i).getDefault))
+        if (part.getGrid.graphs(i).head != null /*&& !(part.getGrid.graphs(i).head == part.getGrid.graphs(i))*/ )
         {
           information :+= part.getGrid.getDisplay(i)
         }

@@ -62,7 +62,7 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
       if (manualCrankTime > 0)
       {
         //A punch has around 5000 Newtons
-        mechanicalNode.rotate((if (isClockwiseCrank) 2 else -2) * manualCrankTime, (if (isClockwiseCrank) 0.5 else -0.5) * manualCrankTime)
+        mechanicalNode.accelerate((if (isClockwiseCrank) 2 else -2) * manualCrankTime)
         manualCrankTime -= 1
       }
     }

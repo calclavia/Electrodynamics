@@ -77,12 +77,12 @@ class TileWindTurbine extends TileTurbine with IBoilHandler
             computePower()
 
           windPower = MathUtility.lerp(windPower, nextWindPower, ticks % 20 / 20d)
-          getMultiBlock.get.mechanicalNode.rotate(windPower * multiBlockRadius / 20, windPower / multiBlockRadius / 20)
+          getMultiBlock.get.mechanicalNode.accelerate(windPower * multiBlockRadius / 20)
         }
 
         //Generate from steam
         val steamPower = if (gasTank.getFluid != null) gasTank.drain(gasTank.getFluidAmount, true).amount else 0 * 1000 * Settings.steamMultiplier
-        getMultiBlock.get.mechanicalNode.rotate(steamPower * multiBlockRadius / 20, steamPower / multiBlockRadius / 20)
+        getMultiBlock.get.mechanicalNode.accelerate(steamPower * multiBlockRadius / 20)
       }
     }
   }

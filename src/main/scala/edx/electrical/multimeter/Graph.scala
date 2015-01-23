@@ -28,11 +28,16 @@ class Graph[V](val name: String, val maxPoints: Int = 0)(implicit n: Numeric[V])
 
   def head: V = apply(0)
 
-  def apply(x: Int): V = if (points.size > x) points.get(x) else default
+  def apply(x: Int = 0): V = if (points.size > x) points.get(x) else default
 
   def default: V = n.zero
 
-  def queue(value: V) = queue = value
+  def getDouble(x: Int = 0) = n.toDouble(this(x))
+
+  def queue(value: V)
+  {
+    queue = value
+  }
 
   def doneQueue = this += queue
 
@@ -46,12 +51,13 @@ class Graph[V](val name: String, val maxPoints: Int = 0)(implicit n: Numeric[V])
   def load(nbt: NBTTagCompound)
   {
     points.clear()
-    points.addAll(nbt.getArray("DataPoints").toList)
+    val array = nbt.getArray[Double]("DataPoints")
+    points.addAll(array.map(_.asInstanceOf[V]).toList)
   }
 
   def save(nbt: NBTTagCompound)
   {
-    nbt.setArray("DataPoints", points.toArray)
+    nbt.setArray("DataPoints", points.map(n.toDouble).toArray)
   }
 
   def getAverage: Double = if (points.size > 0) n.toDouble(points.foldLeft(n.zero)((b, a) => n.plus(b, a))) / points.size else 0

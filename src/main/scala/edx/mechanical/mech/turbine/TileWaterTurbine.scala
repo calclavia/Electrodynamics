@@ -58,7 +58,7 @@ class TileWaterTurbine extends TileTurbine
     {
       if (powerTicks > 0)
       {
-        getMultiBlock.get.mechanicalNode.rotate(getWaterPower, getWaterPower / 100)
+        getMultiBlock.get.mechanicalNode.accelerate(getWaterPower)
         powerTicks -= 1
       }
 
@@ -74,7 +74,7 @@ class TileWaterTurbine extends TileTurbine
           powerTicks = 20
           worldObj.setBlockToAir(xCoord, yCoord + 1, zCoord)
           worldObj.setBlock(xCoord, yCoord - 1, zCoord, Blocks.flowing_water)
-          getMultiBlock.get.mechanicalNode.rotate(10000, 10)
+          getMultiBlock.get.mechanicalNode.accelerate(10000)
         }
       }
     }
@@ -98,12 +98,12 @@ class TileWaterTurbine extends TileTurbine
 
             if (getDirection.offsetX != 0)
             {
-              getMultiBlock.get.mechanicalNode.rotate(if (invert) -1 else 1 * Math.abs(getWaterPower * vector.z * (7 - metadata) / 7f), 10)
+              getMultiBlock.get.mechanicalNode.accelerate(if (invert) -1 else 1 * Math.abs(getWaterPower * vector.z * (7 - metadata) / 7f))
               powerTicks = 20
             }
             if (getDirection.offsetZ != 0)
             {
-              getMultiBlock.get.mechanicalNode.rotate(if (invert) -1 else 1 * Math.abs(getWaterPower * vector.x * (7 - metadata) / 7f), 10)
+              getMultiBlock.get.mechanicalNode.accelerate(if (invert) -1 else 1 * Math.abs(getWaterPower * vector.x * (7 - metadata) / 7f))
               powerTicks = 20
             }
           }

@@ -81,7 +81,7 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
     if (!world.isRemote)
     {
       if (doDetect) updateDetections
-      val detectedValue = getGrid.graphs(detectType).getDouble
+      val detectedValue = getGrid.graphs(detectType).getDouble()
       var outputRedstone = false
 
       detectMode match
@@ -152,7 +152,6 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
       }
     }
     getGrid.energyGraph.queue(Compatibility.getEnergy(tileEntity, receivingSide))
-    getGrid.energyCapacityGraph.queue(Compatibility.getMaxEnergy(tileEntity, receivingSide))
   }
 
   def getDetectedTile: TileEntity =
@@ -243,14 +242,14 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
     updateServer
   }
 
+  def updateServer
+  {
+  }
+
   def toggleDetectionValue
   {
     detectType = ((detectType + 1) % getGrid.graphs.size).asInstanceOf[Byte]
     updateServer
-  }
-
-  def updateServer
-  {
   }
 
   def getGrid: GridMultimeter =

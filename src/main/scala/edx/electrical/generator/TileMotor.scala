@@ -91,12 +91,11 @@ class TileMotor extends SpatialTile(Material.iron) with TIO with TElectric with 
      * Produce torque based on current.
      * T = NBA * I / (2pi)
      */
-    val power = electricNode.power
     val torque = TileMotor.motorConstant * electricNode.current / (2 * Math.PI)
 
     //TODO: Check if angular velocity should be generated based on torque
     if (torque != 0)
-      mechNode.rotate(torque, power / torque)
+      mechNode.accelerate(torque)
 
     /**
      * Motors produce emf or counter-emf by Lenz's law based on angular velocity
