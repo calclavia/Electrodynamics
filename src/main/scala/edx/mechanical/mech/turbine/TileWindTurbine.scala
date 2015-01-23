@@ -48,8 +48,8 @@ class TileWindTurbine extends TileTurbine with IBoilHandler
   private var openBlockCache = new Array[Byte](224)
   private var checkCount = 0
   private var efficiency = 0f
-  private var windPower = 0d
-  private var nextWindPower = 0d
+  private var windTorque = 0d
+  private var nextWindTorque = 0d
 
   //Constructor
   this.itemBlock = classOf[ItemBlockMetadata]
@@ -76,13 +76,13 @@ class TileWindTurbine extends TileTurbine with IBoilHandler
           if (ticks % 20 == 0)
             computePower()
 
-          windPower = MathUtility.lerp(windPower, nextWindPower, ticks % 20 / 20d)
-          getMultiBlock.get.mechanicalNode.accelerate(windPower * multiBlockRadius / 20)
+          windTorque = MathUtility.lerp(windTorque, nextWindTorque, ticks % 20 / 20d)
+          getMultiBlock.get.mechanicalNode.accelerate(windTorque * multiBlockRadius)
         }
 
         //Generate from steam
         val steamPower = if (gasTank.getFluid != null) gasTank.drain(gasTank.getFluidAmount, true).amount else 0 * 1000 * Settings.steamMultiplier
-        getMultiBlock.get.mechanicalNode.accelerate(steamPower * multiBlockRadius / 20)
+        getMultiBlock.get.mechanicalNode.accelerate(steamPower * multiBlockRadius)
       }
     }
   }
@@ -136,7 +136,7 @@ class TileWindTurbine extends TileTurbine with IBoilHandler
     val hasBonus = biome.isInstanceOf[BiomeGenOcean] || biome.isInstanceOf[BiomeGenPlains] || biome == BiomeGenBase.river
     val windSpeed = (worldObj.rand.nextFloat / 5) + (yCoord / 256f) * (if (hasBonus) 1.2f else 1) + worldObj.getRainStrength(0.5f)
 
-    nextWindPower = 10 * materialMultiplier * multiblockMultiplier * windSpeed * efficiency * Settings.WIND_POWER_RATIO / 20
+    nextWindTorque = 5 * materialMultiplier * multiblockMultiplier * windSpeed * efficiency * Settings.WIND_POWER_RATIO / 20
   }
 
   override def getSubBlocks(par1: Item, par2CreativeTabs: CreativeTabs, par3List: List[_])
@@ -196,6 +196,15 @@ class TileWindTurbine extends TileTurbine with IBoilHandler
   }
 
   @SideOnly(Side.CLIENT)
+  override def renderInventory(itemStack: ItemStack)
+  {
+    GL11.glPushMatrix()
+    GL11.glTranslatef(0.5f, 0.5f, 0.5f)
+    render(itemStack.getItemDamage, 1, false)
+    GL11.glPopMatrix()
+  }
+
+  @SideOnly(Side.CLIENT)
   def render(tier: Int, size: Int, isConstructed: Boolean)
   {
     if (tier == 0)
@@ -237,14 +246,5 @@ class TileWindTurbine extends TileTurbine with IBoilHandler
       RenderUtility.bind(Reference.blockTextureDirectory + "log_oak.png")
       TileWindTurbine.model.renderOnly("SmallHub")
     }
-  }
-
-  @SideOnly(Side.CLIENT)
-  override def renderInventory(itemStack: ItemStack)
-  {
-    GL11.glPushMatrix()
-    GL11.glTranslatef(0.5f, 0.5f, 0.5f)
-    render(itemStack.getItemDamage, 1, false)
-    GL11.glPopMatrix()
   }
 }

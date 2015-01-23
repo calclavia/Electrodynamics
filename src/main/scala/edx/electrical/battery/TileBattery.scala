@@ -87,26 +87,34 @@ class TileBattery extends SpatialTile(Material.iron) with TIO with TElectric wit
     {
       if (isIndirectlyPowered)
       {
-        if (energy > 0)
+        if (electricNode.voltage >= 0)
         {
+          //Discharge battery when current is flowing positive direction
           //TODO: Allow player to set the power output
-          electricNode.generatePower(10000)
+          electricNode.generatePower(Math.min(10000, energy.value))
           val dissipatedEnergy = electricNode.power / 20
           energy -= dissipatedEnergy
-          markUpdate()
         }
+        else
+        {
+          //Recharge battery when current is flowing negative direction
+          energy += electricNode.power / 20
+        }
+
+        if (energy.prev != energy.value)
+          markUpdate()
       }
 
       /**
        * Update packet when energy level changes.
-       */
+
       val prevEnergyLevel = energyRenderLevel
       energyRenderLevel = Math.round((energy.value / TileBattery.getEnergyForTier(getBlockMetadata).toDouble) * 8).toInt
 
       if (prevEnergyLevel != energyRenderLevel)
       {
         markUpdate()
-      }
+      }*/
     }
   }
 
