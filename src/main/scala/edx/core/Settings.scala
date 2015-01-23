@@ -25,8 +25,6 @@ object Settings
   var SHINY_SILVER = true
   @Config var allowTurbineStacking: Boolean = true
   // Power Settings
-  @Config(category = "Power", key = "SolorPanel")
-  var solarPower: Int = 50
   @Config(category = "Power")
   var fulminationOutputMultiplier: Double = 1
   @Config(category = "Power", key = "WindTubineRatio")

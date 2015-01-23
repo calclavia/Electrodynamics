@@ -67,18 +67,6 @@ class TileBattery extends SpatialTile(Material.iron) with TIO with TElectric wit
     updateConnectionMask()
   }
 
-  def updateConnectionMask()
-  {
-    electricNode.connectionMask = ForgeDirection.VALID_DIRECTIONS.filter(getIO(_) > 0).map(d => 1 << d.ordinal()).foldLeft(0)(_ | _)
-    electricNode.positiveTerminals.clear()
-    electricNode.negativeTerminals.clear()
-    electricNode.positiveTerminals.addAll(getInputDirections())
-    electricNode.negativeTerminals.addAll(getOutputDirections())
-    electricNode.reconstruct()
-    markUpdate()
-    notifyChange()
-  }
-
   override def update()
   {
     super.update()
@@ -95,15 +83,16 @@ class TileBattery extends SpatialTile(Material.iron) with TIO with TElectric wit
           val dissipatedEnergy = electricNode.power / 20
           energy -= dissipatedEnergy
         }
-        else
-        {
-          //Recharge battery when current is flowing negative direction
-          energy += electricNode.power / 20
-        }
-
-        if (energy.prev != energy.value)
-          markUpdate()
       }
+      else
+      {
+        //Recharge battery when current is flowing negative direction
+        energy += electricNode.power / 20
+      }
+
+
+      if (energy.prev != energy.value)
+        markUpdate()
 
       /**
        * Update packet when energy level changes.
@@ -139,6 +128,18 @@ class TileBattery extends SpatialTile(Material.iron) with TIO with TElectric wit
   {
     super.setIO(dir, packet)
     updateConnectionMask()
+  }
+
+  def updateConnectionMask()
+  {
+    electricNode.connectionMask = ForgeDirection.VALID_DIRECTIONS.filter(getIO(_) > 0).map(d => 1 << d.ordinal()).foldLeft(0)(_ | _)
+    electricNode.positiveTerminals.clear()
+    electricNode.negativeTerminals.clear()
+    electricNode.positiveTerminals.addAll(getInputDirections())
+    electricNode.negativeTerminals.addAll(getOutputDirections())
+    electricNode.reconstruct()
+    markUpdate()
+    notifyChange()
   }
 
   override def onPlaced(entityLiving: EntityLivingBase, itemStack: ItemStack)
