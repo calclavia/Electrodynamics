@@ -27,8 +27,8 @@ class TileSolarPanel extends SpatialTile(Material.iron) with TElectric with TSpa
 
   edgeTexture = Reference.prefix + "tankEdge"
   electricNode.dynamicTerminals = true
-  electricNode.positiveTerminals.addAll(Seq(ForgeDirection.NORTH, ForgeDirection.EAST))
-  electricNode.negativeTerminals.addAll(Seq(ForgeDirection.SOUTH, ForgeDirection.WEST))
+  electricNode.setPositives(Set(ForgeDirection.NORTH, ForgeDirection.EAST))
+  electricNode.setNegatives(Set(ForgeDirection.SOUTH, ForgeDirection.WEST))
   nodes.add(electricNode)
 
   @SideOnly(Side.CLIENT)

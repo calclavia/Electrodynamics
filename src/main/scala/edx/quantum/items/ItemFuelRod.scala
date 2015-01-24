@@ -18,7 +18,7 @@ import resonant.lib.wrapper.CollectionWrapper._
  */
 object ItemFuelRod
 {
-  final val decay: Int = 2500
+  final val decay = 2500
   /**
    * Temperature at which the fuel rod will begin to re-enrich itself.
    */
@@ -31,7 +31,7 @@ object ItemFuelRod
   /**
    * Approximately 20,000,000J per tick. 400 MW.
    */
-  final val energyPerTick = energyDensity / 50000
+  final val energyPerTick = (energyDensity / 100000) / decay
 }
 
 class ItemFuelRod extends ItemRadioactive with IReactorComponent

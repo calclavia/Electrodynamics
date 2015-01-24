@@ -42,8 +42,8 @@ object TextureHookHandler
   @SideOnly(Side.CLIENT)
   def postTextureHook(event: TextureStitchEvent.Post)
   {
-    QuantumContent.FLUID_URANIUM_HEXAFLOURIDE.setIcons(RenderUtility.loadedIconMap.get(Reference.prefix + "uraniumHexafluoride"))
-    QuantumContent.FLUID_STEAM.setIcons(RenderUtility.loadedIconMap.get(Reference.prefix + "steam"))
+    QuantumContent.fluidUraniumHexaflouride.setIcons(RenderUtility.loadedIconMap.get(Reference.prefix + "uraniumHexafluoride"))
+    QuantumContent.fluidSteam.setIcons(RenderUtility.loadedIconMap.get(Reference.prefix + "steam"))
     QuantumContent.FLUID_DEUTERIUM.setIcons(RenderUtility.loadedIconMap.get(Reference.prefix + "deuterium"))
     QuantumContent.getFluidTritium.setIcons(RenderUtility.loadedIconMap.get(Reference.prefix + "tritium"))
     QuantumContent.getFluidToxicWaste.setIcons(QuantumContent.blockToxicWaste.getIcon(0, 0))

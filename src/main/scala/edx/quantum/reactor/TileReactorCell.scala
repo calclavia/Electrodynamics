@@ -120,6 +120,8 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
     return lowest
   }
 
+  override def getMultiBlock: MultiBlockHandler[TileReactorCell] = multiBlock
+
   override def update()
   {
     super.update()
@@ -202,8 +204,9 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
        */
       val controlRodCount = ForgeDirection.VALID_DIRECTIONS.map(toVectorWorld + _).count(_.getBlock == QuantumContent.blockControlRod)
       ThermalGrid.addHeat(toVectorWorld, internalEnergy / ((controlRodCount + 1) * 0.3))
-
       val temperature = ThermalGrid.getTemperature(toVectorWorld)
+
+      internalEnergy = 0
 
       /**
        * Play sound effects
@@ -227,9 +230,8 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
 
       if (temperature > TileReactorCell.meltingPoint)
       {
-        meltDown()
+        //        meltDown()
       }
-      internalEnergy = 0
     }
     else
     {
@@ -246,17 +248,6 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
   override def getWorld: World =
   {
     return worldObj
-  }
-
-  private def meltDown()
-  {
-    if (!worldObj.isRemote)
-    {
-      this.worldObj.setBlock(this.xCoord, this.yCoord, this.zCoord, Blocks.lava)
-      //val reactorExplosion: ReactorExplosion = new ReactorExplosion(worldObj, null, xCoord, yCoord, zCoord, 9f)
-      //reactorExplosion.doExplosionA
-      //reactorExplosion.doExplosionB(true)
-    }
   }
 
   def onMultiBlockChanged()
@@ -293,8 +284,6 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
     super.readFromNBT(nbt)
     getMultiBlock.load(nbt)
   }
-
-  override def getMultiBlock: MultiBlockHandler[TileReactorCell] = multiBlock
 
   override def writeToNBT(nbt: NBTTagCompound)
   {
@@ -451,5 +440,14 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
     }
 
     return false
+  }
+
+  private def meltDown()
+  {
+    if (!world.isRemote)
+    {
+      world.setBlock(this.xCoord, this.yCoord, this.zCoord, Blocks.lava)
+      world.createExplosion(null, x + 0.5, y + 0.5, z + 0.5, 3, false)
+    }
   }
 }

@@ -50,7 +50,7 @@ class ContainerNuclearBoiler(player: EntityPlayer, tileEntity: TileNuclearBoiler
             return null
           }
         }
-        else if (QuantumContent.FLUIDSTACK_WATER.isFluidEqual(FluidContainerRegistry.getFluidForFilledItem(itemStack)))
+        else if (QuantumContent.fluidStackWater.isFluidEqual(FluidContainerRegistry.getFluidForFilledItem(itemStack)))
         {
           if (!this.mergeItemStack(itemStack, 1, 2, false))
           {

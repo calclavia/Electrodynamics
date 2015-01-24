@@ -62,7 +62,7 @@ class TileCentrifuge extends TileElectricInventory(Material.iron) with IPacketRe
             val fluidHandler: IFluidHandler = (tileEntity.asInstanceOf[IFluidHandler])
             if (fluidHandler != null)
             {
-              val requestFluid: FluidStack = QuantumContent.FLUIDSTACK_URANIUM_HEXAFLOURIDE
+              val requestFluid: FluidStack = QuantumContent.fluidStackUraniumHexaflouride
               requestFluid.amount = this.gasTank.getCapacity - QuantumContent.getFluidAmount(this.gasTank.getFluid)
               val receiveFluid: FluidStack = fluidHandler.drain(direction.getOpposite, requestFluid, true)
               if (receiveFluid != null)
@@ -148,6 +148,22 @@ class TileCentrifuge extends TileElectricInventory(Material.iron) with IPacketRe
     return false
   }
 
+  override def isItemValidForSlot(i: Int, itemStack: ItemStack): Boolean =
+  {
+    i match
+    {
+      case 0 =>
+        return Compatibility.isHandler(itemStack.getItem, null)
+      case 1 =>
+        return true
+      case 2 =>
+        return itemStack.getItem eq QuantumContent.itemUranium
+      case 3 =>
+        return itemStack.getItem eq QuantumContent.itemUranium
+    }
+    return false
+  }
+
   override def use(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
   {
     openGui(player, QuantumContent)
@@ -157,7 +173,7 @@ class TileCentrifuge extends TileElectricInventory(Material.iron) with IPacketRe
   def read(data: ByteBuf, player: EntityPlayer, `type`: PacketType)
   {
     this.timer = data.readInt
-    this.gasTank.setFluid(new FluidStack(QuantumContent.FLUIDSTACK_URANIUM_HEXAFLOURIDE.fluidID, data.readInt))
+    this.gasTank.setFluid(new FluidStack(QuantumContent.fluidStackUraniumHexaflouride.fluidID, data.readInt))
 
   }
 
@@ -197,7 +213,7 @@ class TileCentrifuge extends TileElectricInventory(Material.iron) with IPacketRe
    */
   def fill(from: ForgeDirection, resource: FluidStack, doFill: Boolean): Int =
   {
-    if (QuantumContent.FLUIDSTACK_URANIUM_HEXAFLOURIDE.isFluidEqual(resource))
+    if (QuantumContent.fluidStackUraniumHexaflouride.isFluidEqual(resource))
     {
       return this.gasTank.fill(resource, doFill)
     }
@@ -216,7 +232,7 @@ class TileCentrifuge extends TileElectricInventory(Material.iron) with IPacketRe
 
   def canFill(from: ForgeDirection, fluid: Fluid): Boolean =
   {
-    return QuantumContent.FLUIDSTACK_URANIUM_HEXAFLOURIDE.fluidID == fluid.getID
+    return QuantumContent.fluidStackUraniumHexaflouride.fluidID == fluid.getID
   }
 
   def canDrain(from: ForgeDirection, fluid: Fluid): Boolean =
@@ -240,22 +256,6 @@ class TileCentrifuge extends TileElectricInventory(Material.iron) with IPacketRe
   override def canInsertItem(slotID: Int, itemStack: ItemStack, side: Int): Boolean =
   {
     return slotID == 1 && this.isItemValidForSlot(slotID, itemStack)
-  }
-
-  override def isItemValidForSlot(i: Int, itemStack: ItemStack): Boolean =
-  {
-    i match
-    {
-      case 0 =>
-        return Compatibility.isHandler(itemStack.getItem, null)
-      case 1 =>
-        return true
-      case 2 =>
-        return itemStack.getItem eq QuantumContent.itemUranium
-      case 3 =>
-        return itemStack.getItem eq QuantumContent.itemUranium
-    }
-    return false
   }
 
   override def canExtractItem(slotID: Int, itemstack: ItemStack, j: Int): Boolean =

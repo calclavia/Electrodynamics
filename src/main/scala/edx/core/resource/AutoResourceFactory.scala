@@ -18,7 +18,7 @@ import net.minecraft.item.crafting.FurnaceRecipes
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.util.{IIcon, ResourceLocation}
 import net.minecraftforge.client.event.TextureStitchEvent
-import net.minecraftforge.fluids.{FluidContainerRegistry, FluidRegistry, FluidStack}
+import net.minecraftforge.fluids.{Fluid, FluidContainerRegistry, FluidRegistry, FluidStack}
 import net.minecraftforge.oredict.OreDictionary
 import resonant.api.recipe.{MachineRecipes, RecipeType}
 import resonant.lib.factory.resources.ResourceFactory
@@ -77,6 +77,21 @@ object AutoResourceFactory
     registerAutoMaterial("tin")
   }
 
+  def registerAutoMaterial(material: String)
+  {
+    if (!materials.contains(material) && OreDictionary.getOres("ore" + material.capitalizeFirst).size > 0)
+    {
+      Settings.config.load()
+      val allowMaterial = Settings.config.get("Resource-Generator", "Enable " + material, true).getBoolean(true)
+      Settings.config.save()
+
+      if (allowMaterial && !blackList.contains(material))
+      {
+        materials += material
+      }
+    }
+  }
+
   def postInit()
   {
     //Add vanilla ore processing recipes
@@ -115,7 +130,7 @@ object AutoResourceFactory
     }
 
     //Generate molten fluid
-    val fluidMolten = new FluidColored("molten" + nameCaps).setDensity(7).setViscosity(5000).setTemperature(273 + 1538)
+    val fluidMolten = new Fluid("molten" + nameCaps).setDensity(7).setViscosity(5000).setTemperature(273 + 1538)
     FluidRegistry.registerFluid(fluidMolten)
     LanguageRegistry.instance.addStringLocalization(fluidMolten.getUnlocalizedName, LanguageUtility.getLocal("misc.molten") + " " + localizedName)
     val blockFluidMaterial = new BlockFluidMaterial(fluidMolten)
@@ -151,21 +166,6 @@ object AutoResourceFactory
       val oreDictName = evt.Name.replace("ingot", "")
       val materialName = oreDictName.decapitalizeFirst
       registerAutoMaterial(materialName)
-    }
-  }
-
-  def registerAutoMaterial(material: String)
-  {
-    if (!materials.contains(material) && OreDictionary.getOres("ore" + material.capitalizeFirst).size > 0)
-    {
-      Settings.config.load()
-      val allowMaterial = Settings.config.get("Resource-Generator", "Enable " + material, true).getBoolean(true)
-      Settings.config.save()
-
-      if (allowMaterial && !blackList.contains(material))
-      {
-        materials += material
-      }
     }
   }
 

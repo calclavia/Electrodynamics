@@ -186,11 +186,11 @@ class TileFirebox extends SpatialTile(Material.rock) with IFluidHandler with TIn
 
   override def getSizeInventory = 1
 
-  def getMeltIronEnergy(volume: Float): Long =
+  def getMeltIronEnergy(volume: Float): Double =
   {
-    val temperatureChange: Float = 1811 - ThermalPhysics.getDefaultTemperature(worldObj, xCoord, zCoord)
+    val temperatureChange: Float = 1811 - ThermalPhysics.getDefaultTemperature(toVectorWorld)
     val mass: Float = ThermalPhysics.getMass(volume, 7.9f)
-    return (ThermalPhysics.getEnergyForTemperatureChange(mass, 450, temperatureChange) + ThermalPhysics.getEnergyForStateChange(mass, 272000)).asInstanceOf[Long]
+    return ThermalPhysics.getEnergyForTemperatureChange(mass, 450, temperatureChange) + ThermalPhysics.getEnergyForStateChange(mass, 272000)
   }
 
   override def isItemValidForSlot(i: Int, itemStack: ItemStack): Boolean =

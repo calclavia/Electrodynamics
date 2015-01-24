@@ -28,8 +28,8 @@ class TileThermopile extends SpatialTile(Material.rock) with TElectric with TSpa
   nodes.add(electricNode)
 
   electricNode.dynamicTerminals = true
-  electricNode.positiveTerminals.addAll(Seq(ForgeDirection.NORTH, ForgeDirection.EAST))
-  electricNode.negativeTerminals.addAll(Seq(ForgeDirection.SOUTH, ForgeDirection.WEST))
+  electricNode.setPositives(Set(ForgeDirection.NORTH, ForgeDirection.EAST))
+  electricNode.setNegatives(Set(ForgeDirection.SOUTH, ForgeDirection.WEST))
 
   override def update()
   {

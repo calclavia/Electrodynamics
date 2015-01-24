@@ -71,6 +71,15 @@ class TileMotor extends SpatialTile(Material.iron) with TIO with TElectric with 
     updateConnections()
   }
 
+  def updateConnections()
+  {
+    electricNode.setPositives(getInputDirections())
+    electricNode.setNegatives(getOutputDirections())
+    electricNode.reconstruct()
+    notifyChange()
+    markUpdate()
+  }
+
   override def update()
   {
     super.update()
@@ -106,18 +115,6 @@ class TileMotor extends SpatialTile(Material.iron) with TIO with TElectric with 
         super.setIO(dir.getOpposite, (ioType % 2) + 1)
       updateConnections()
     }
-  }
-
-  def updateConnections()
-  {
-    electricNode.connectionMask = ForgeDirection.VALID_DIRECTIONS.filter(getIO(_) > 0).map(d => 1 << d.ordinal()).foldLeft(0)(_ | _)
-    electricNode.positiveTerminals.clear()
-    electricNode.negativeTerminals.clear()
-    electricNode.positiveTerminals.addAll(getInputDirections())
-    electricNode.negativeTerminals.addAll(getOutputDirections())
-    electricNode.reconstruct()
-    notifyChange()
-    markUpdate()
   }
 
   @SideOnly(Side.CLIENT)

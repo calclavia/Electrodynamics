@@ -5,6 +5,8 @@ import java.util.List
 import cpw.mods.fml.common.Loader
 import cpw.mods.fml.common.eventhandler.{Event, SubscribeEvent}
 import cpw.mods.fml.common.registry.{EntityRegistry, GameRegistry}
+import edx.basic.fluid.tank.TileTank
+import edx.core.wrapper.FluidStackWrapper._
 import edx.core.{EDXCreativeTab, Electrodynamics, Reference, Settings}
 import edx.quantum.blocks._
 import edx.quantum.items._
@@ -30,13 +32,13 @@ import net.minecraft.world.World
 import net.minecraftforge.common.ForgeChunkManager.Type
 import net.minecraftforge.common.{ForgeChunkManager, MinecraftForge}
 import net.minecraftforge.event.entity.player.FillBucketEvent
-import net.minecraftforge.fluids.{Fluid, FluidContainerRegistry, FluidRegistry, FluidStack}
+import net.minecraftforge.fluids._
 import net.minecraftforge.oredict.{OreDictionary, ShapelessOreRecipe}
 import resonant.api.event.PlasmaEvent
 import resonant.api.recipe.QuantumAssemblerRecipes
 import resonant.api.tile.IElectromagnet
 import resonant.lib.factory.resources.block.OreGenerator
-import resonant.lib.grid.thermal.EventThermal
+import resonant.lib.grid.thermal.ThermalEvent
 import resonant.lib.mod.content.{ContentHolder, ExplicitContentName}
 import resonant.lib.transform.vector.VectorWorld
 import resonant.lib.utility.recipe.UniversalRecipe
@@ -44,9 +46,6 @@ import resonant.lib.world.schematic.SchematicRegistry
 
 import scala.collection.JavaConversions._
 
-/**
- * Created by robert on 8/10/2014.
- */
 object QuantumContent extends ContentHolder
 {
   //Constructor
@@ -108,19 +107,18 @@ object QuantumContent extends ContentHolder
 
   override def preInit()
   {
-
     MinecraftForge.EVENT_BUS.register(this)
     MinecraftForge.EVENT_BUS.register(FulminationHandler.INSTANCE)
 
     //Register Fluids
-    FluidRegistry.registerFluid(QuantumContent.FLUID_URANIUM_HEXAFLOURIDE)
-    FluidRegistry.registerFluid(QuantumContent.FLUID_STEAM)
+    FluidRegistry.registerFluid(QuantumContent.fluidUraniumHexaflouride)
+    FluidRegistry.registerFluid(QuantumContent.fluidSteam)
     FluidRegistry.registerFluid(QuantumContent.getFluidTritium)
     FluidRegistry.registerFluid(QuantumContent.FLUID_DEUTERIUM)
     FluidRegistry.registerFluid(QuantumContent.getFluidToxicWaste)
     FluidRegistry.registerFluid(QuantumContent.FLUID_PLASMA)
 
-    Settings.config.load
+    Settings.config.load()
 
     super.preInit()
 
@@ -167,7 +165,7 @@ object QuantumContent extends ContentHolder
       {
         for (ticket <- tickets)
         {
-          if (ticket.getType eq Type.ENTITY)
+          if (ticket.getType == Type.ENTITY)
           {
             if (ticket.getEntity != null)
             {
@@ -185,6 +183,65 @@ object QuantumContent extends ContentHolder
   }
 
   def FLUID_PLASMA: Fluid = new Fluid("plasma").setGaseous(true)
+
+  def fluidUraniumHexaflouride: Fluid =
+  {
+    var fluid: Fluid = FluidRegistry.getFluid("uraniumhexafluoride")
+    if (fluid == null)
+    {
+      fluid = new Fluid("uraniumhexafluoride").setGaseous(true)
+      FluidRegistry.registerFluid(fluid)
+    }
+    return fluid
+  }
+
+  def fluidSteam: Fluid =
+  {
+    var fluid = FluidRegistry.getFluid("steam")
+
+    if (fluid == null)
+    {
+      fluid = new Fluid("steam").setGaseous(true)
+      FluidRegistry.registerFluid(fluid)
+    }
+
+    return fluid
+  }
+
+  def FLUID_DEUTERIUM: Fluid =
+  {
+    var fluid: Fluid = FluidRegistry.getFluid("deuterium")
+    if (fluid == null)
+    {
+      fluid = new Fluid("deuterium").setGaseous(true)
+      FluidRegistry.registerFluid(fluid)
+    }
+    return fluid
+  }
+
+  /** Gets the Fluid instance of Tritium */
+  def getFluidTritium: Fluid =
+  {
+    var fluid: Fluid = FluidRegistry.getFluid("tritium")
+    if (fluid == null)
+    {
+      fluid = new Fluid("tritium").setGaseous(true)
+      FluidRegistry.registerFluid(fluid)
+    }
+    return fluid
+  }
+
+  /** Gets the Fluid instance of Toxic Waste */
+  def getFluidToxicWaste: Fluid =
+  {
+    var fluid: Fluid = FluidRegistry.getFluid("toxicwaste")
+    if (fluid == null)
+    {
+      fluid = new Fluid("toxicwaste").setGaseous(true)
+      FluidRegistry.registerFluid(fluid)
+    }
+    return fluid
+  }
 
   override def postInit()
   {
@@ -274,13 +331,21 @@ object QuantumContent extends ContentHolder
   }
 
   @SubscribeEvent
-  def thermalEventHandler(evt: EventThermal.EventThermalUpdate)
+  def thermalEventHandler(evt: ThermalEvent.EventThermalUpdate)
   {
-    val pos: VectorWorld = evt.position
-    val block: Block = pos.getBlock
-    if (block == QuantumContent.blockElectromagnet)
+    val pos = evt.position
+
+    val tile = pos.getTileEntity
+
+    /**
+     * Heat up fluid in containers
+     */
+    if (tile.isInstanceOf[TileTank])
     {
-      evt.heatLoss = evt.deltaTemperature * 0.6f
+      val fluidStack = tile.asInstanceOf[TileTank].fluidNode.getPrimaryTank.getFluid
+
+      if (fluidStack != null)
+        fluidStack.setTemperature(evt.temperature)
     }
   }
 
@@ -328,6 +393,11 @@ object QuantumContent extends ContentHolder
     return isItemStackOreDictionaryCompatible(itemStack, "dropUranium", "oreUranium")
   }
 
+  def isItemStackDeuteriumCell(itemStack: ItemStack): Boolean =
+  {
+    return isItemStackOreDictionaryCompatible(itemStack, "molecule_1d", "molecule_1h2", "cellDeuterium")
+  }
+
   /** Compare to Ore Dict
     *
     * @param itemStack
@@ -349,11 +419,6 @@ object QuantumContent extends ContentHolder
     return false
   }
 
-  def isItemStackDeuteriumCell(itemStack: ItemStack): Boolean =
-  {
-    return isItemStackOreDictionaryCompatible(itemStack, "molecule_1d", "molecule_1h2", "cellDeuterium")
-  }
-
   def isItemStackTritiumCell(itemStack: ItemStack): Boolean =
   {
     return isItemStackOreDictionaryCompatible(itemStack, "molecule_h3", "cellTritium")
@@ -368,73 +433,16 @@ object QuantumContent extends ContentHolder
     return 0
   }
 
-  def FLUIDSTACK_WATER: FluidStack = new FluidStack(FluidRegistry.WATER, 0)
+  def fluidStackWater: FluidStack = new FluidStack(FluidRegistry.WATER, 0)
 
-  def FLUIDSTACK_URANIUM_HEXAFLOURIDE: FluidStack = new FluidStack(QuantumContent.FLUID_URANIUM_HEXAFLOURIDE, 0)
+  def fluidStackUraniumHexaflouride: FluidStack = new FluidStack(QuantumContent.fluidUraniumHexaflouride, 0)
 
-  def FLUID_URANIUM_HEXAFLOURIDE: Fluid =
-  {
-    var fluid: Fluid = FluidRegistry.getFluid("uraniumhexafluoride");
-    if (fluid == null)
-    {
-      fluid = new Fluid("uraniumhexafluoride").setGaseous(true)
-      FluidRegistry.registerFluid(fluid)
-    }
-    return fluid
-  }
-
-  def FLUIDSTACK_STEAM: FluidStack = new FluidStack(FLUID_STEAM, 0)
-
-  def FLUID_STEAM: Fluid =
-  {
-    var fluid: Fluid = FluidRegistry.getFluid("steam");
-    if (fluid == null)
-    {
-      fluid = new Fluid("steam").setGaseous(true)
-      FluidRegistry.registerFluid(fluid)
-    }
-    return fluid
-  }
+  def fluidStackSteam: FluidStack = new FluidStack(fluidSteam, 0)
 
   def FLUIDSTACK_DEUTERIUM: FluidStack = new FluidStack(FLUID_DEUTERIUM, 0)
 
-  def FLUID_DEUTERIUM: Fluid =
-  {
-    var fluid: Fluid = FluidRegistry.getFluid("deuterium");
-    if (fluid == null)
-    {
-      fluid = new Fluid("deuterium").setGaseous(true)
-      FluidRegistry.registerFluid(fluid)
-    }
-    return fluid
-  }
-
   def getFluidStackTritium: FluidStack = new FluidStack(getFluidTritium, 0)
-
-  /** Gets the Fluid instance of Tritium */
-  def getFluidTritium: Fluid =
-  {
-    var fluid: Fluid = FluidRegistry.getFluid("tritium");
-    if (fluid == null)
-    {
-      fluid = new Fluid("tritium").setGaseous(true)
-      FluidRegistry.registerFluid(fluid)
-    }
-    return fluid
-  }
 
   /** Gets a FluidStack of Toxic Waste */
   def getStackToxicWaste: FluidStack = new FluidStack(getFluidToxicWaste, 0)
-
-  /** Gets the Fluid instance of Toxic Waste */
-  def getFluidToxicWaste: Fluid =
-  {
-    var fluid: Fluid = FluidRegistry.getFluid("toxicwaste");
-    if (fluid == null)
-    {
-      fluid = new Fluid("toxicwaste").setGaseous(true)
-      FluidRegistry.registerFluid(fluid)
-    }
-    return fluid
-  }
 }

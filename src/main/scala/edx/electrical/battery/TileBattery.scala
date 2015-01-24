@@ -132,11 +132,8 @@ class TileBattery extends SpatialTile(Material.iron) with TIO with TElectric wit
 
   def updateConnectionMask()
   {
-    electricNode.connectionMask = ForgeDirection.VALID_DIRECTIONS.filter(getIO(_) > 0).map(d => 1 << d.ordinal()).foldLeft(0)(_ | _)
-    electricNode.positiveTerminals.clear()
-    electricNode.negativeTerminals.clear()
-    electricNode.positiveTerminals.addAll(getInputDirections())
-    electricNode.negativeTerminals.addAll(getOutputDirections())
+    electricNode.setPositives(getInputDirections())
+    electricNode.setNegatives(getOutputDirections())
     electricNode.reconstruct()
     markUpdate()
     notifyChange()

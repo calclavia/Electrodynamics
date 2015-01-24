@@ -31,9 +31,9 @@ class TileNuclearBoiler extends TileElectricInventory(Material.iron) with IPacke
 {
   final val totalTime: Int = 20 * 15
 
-  final val waterTank: FluidTank = new FluidTank(QuantumContent.FLUIDSTACK_WATER.copy, FluidContainerRegistry.BUCKET_VOLUME * 5)
+  final val waterTank: FluidTank = new FluidTank(QuantumContent.fluidStackWater.copy, FluidContainerRegistry.BUCKET_VOLUME * 5)
 
-  final val gasTank: FluidTank = new FluidTank(QuantumContent.FLUIDSTACK_URANIUM_HEXAFLOURIDE.copy, FluidContainerRegistry.BUCKET_VOLUME * 5)
+  final val gasTank: FluidTank = new FluidTank(QuantumContent.fluidStackUraniumHexaflouride.copy, FluidContainerRegistry.BUCKET_VOLUME * 5)
 
   var timer: Int = 0
 
@@ -61,7 +61,7 @@ class TileNuclearBoiler extends TileElectricInventory(Material.iron) with IPacke
         if (FluidContainerRegistry.isFilledContainer(getStackInSlot(1)))
         {
           val liquid: FluidStack = FluidContainerRegistry.getFluidForFilledItem(getStackInSlot(1))
-          if (liquid.isFluidEqual(QuantumContent.FLUIDSTACK_WATER))
+          if (liquid.isFluidEqual(QuantumContent.fluidStackWater))
           {
             if (this.fill(ForgeDirection.UNKNOWN, liquid, false) > 0)
             {
@@ -130,7 +130,7 @@ class TileNuclearBoiler extends TileElectricInventory(Material.iron) with IPacke
     if (this.nengYong)
     {
       this.waterTank.drain(FluidContainerRegistry.BUCKET_VOLUME, true)
-      val liquid: FluidStack = QuantumContent.FLUIDSTACK_URANIUM_HEXAFLOURIDE.copy
+      val liquid: FluidStack = QuantumContent.fluidStackUraniumHexaflouride.copy
       liquid.amount = Settings.uraniumHexaflourideRatio * 2
       this.gasTank.fill(liquid, true)
       this.decrStackSize(3, 1)
@@ -163,7 +163,7 @@ class TileNuclearBoiler extends TileElectricInventory(Material.iron) with IPacke
    */
   def fill(from: ForgeDirection, resource: FluidStack, doFill: Boolean): Int =
   {
-    if (QuantumContent.FLUIDSTACK_WATER.isFluidEqual(resource))
+    if (QuantumContent.fluidStackWater.isFluidEqual(resource))
     {
       return this.waterTank.fill(resource, doFill)
     }
@@ -172,8 +172,8 @@ class TileNuclearBoiler extends TileElectricInventory(Material.iron) with IPacke
 
   def read(data: ByteBuf, player: EntityPlayer, `type`: PacketType)
   {
-    this.waterTank.setFluid(new FluidStack(QuantumContent.FLUIDSTACK_WATER.fluidID, data.readInt))
-    this.gasTank.setFluid(new FluidStack(QuantumContent.FLUIDSTACK_URANIUM_HEXAFLOURIDE.fluidID, data.readInt))
+    this.waterTank.setFluid(new FluidStack(QuantumContent.fluidStackWater.fluidID, data.readInt))
+    this.gasTank.setFluid(new FluidStack(QuantumContent.fluidStackUraniumHexaflouride.fluidID, data.readInt))
     this.timer = data.readInt
   }
 
@@ -229,7 +229,7 @@ class TileNuclearBoiler extends TileElectricInventory(Material.iron) with IPacke
 
   def drain(from: ForgeDirection, resource: FluidStack, doDrain: Boolean): FluidStack =
   {
-    if (QuantumContent.FLUIDSTACK_URANIUM_HEXAFLOURIDE.isFluidEqual(resource))
+    if (QuantumContent.fluidStackUraniumHexaflouride.isFluidEqual(resource))
     {
       return this.gasTank.drain(resource.amount, doDrain)
     }
@@ -243,12 +243,12 @@ class TileNuclearBoiler extends TileElectricInventory(Material.iron) with IPacke
 
   def canFill(from: ForgeDirection, fluid: Fluid): Boolean =
   {
-    return QuantumContent.FLUIDSTACK_WATER.fluidID == fluid.getID
+    return QuantumContent.fluidStackWater.fluidID == fluid.getID
   }
 
   def canDrain(from: ForgeDirection, fluid: Fluid): Boolean =
   {
-    return QuantumContent.FLUIDSTACK_URANIUM_HEXAFLOURIDE.fluidID == fluid.getID
+    return QuantumContent.fluidStackUraniumHexaflouride.fluidID == fluid.getID
   }
 
   def getTankInfo(from: ForgeDirection): Array[FluidTankInfo] =
