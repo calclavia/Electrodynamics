@@ -15,7 +15,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.IIcon
 import net.minecraft.world.IBlockAccess
-import resonant.lib.grid.thermal.ThermalGrid
+import resonant.lib.grid.thermal.GridThermal
 import resonant.lib.prefab.tile.item.ItemBlockSaved
 import resonant.lib.prefab.tile.spatial.SpatialTile
 import resonant.lib.transform.vector.{Vector3, VectorWorld}
@@ -119,11 +119,11 @@ class TileThermometer extends SpatialTile(Material.piston) with SimpleComponent
       {
         if (trackCoordinate != null)
         {
-          detectedTemperature = ThermalGrid.getTemperature(new VectorWorld(world, trackCoordinate))
+          detectedTemperature = GridThermal.getTemperature(new VectorWorld(world, trackCoordinate))
         }
         else
         {
-          detectedTemperature = ThermalGrid.getTemperature(toVectorWorld)
+          detectedTemperature = GridThermal.getTemperature(toVectorWorld)
         }
         if (detectedTemperature != previousDetectedTemperature || isProvidingPower != this.isOverThreshold)
         {

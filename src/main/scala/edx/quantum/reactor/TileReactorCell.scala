@@ -20,7 +20,7 @@ import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
 import resonant.api.tile.{IReactor, IReactorComponent}
-import resonant.lib.grid.thermal.{ThermalGrid, ThermalPhysics}
+import resonant.lib.grid.thermal.{GridThermal, ThermalPhysics}
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
 import resonant.lib.prefab.poison.PoisonRadiation
 import resonant.lib.prefab.tile.mixed.TileInventory
@@ -64,11 +64,6 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
   override def getSizeInventory = 1
 
   override def onWorldJoin()
-  {
-    updatePositionStatus()
-  }
-
-  override def onNeighborChanged(block: Block)
   {
     updatePositionStatus()
   }
@@ -121,6 +116,11 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
   }
 
   override def getMultiBlock: MultiBlockHandler[TileReactorCell] = multiBlock
+
+  override def onNeighborChanged(block: Block)
+  {
+    updatePositionStatus()
+  }
 
   override def update()
   {
@@ -203,8 +203,8 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
        * Heats up the surroundings. Control rods absorbs neutrons, reducing the heat produced.
        */
       val controlRodCount = ForgeDirection.VALID_DIRECTIONS.map(toVectorWorld + _).count(_.getBlock == QuantumContent.blockControlRod)
-      ThermalGrid.addHeat(toVectorWorld, internalEnergy / ((controlRodCount + 1) * 0.3))
-      val temperature = ThermalGrid.getTemperature(toVectorWorld)
+      GridThermal.addHeat(toVectorWorld, internalEnergy / ((controlRodCount + 1) * 0.3))
+      val temperature = GridThermal.getTemperature(toVectorWorld)
 
       internalEnergy = 0
 
@@ -235,7 +235,7 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
     }
     else
     {
-      val temperature = ThermalGrid.getTemperature(toVectorWorld)
+      val temperature = GridThermal.getTemperature(toVectorWorld)
 
       if (world.rand.nextInt(5) == 0 && temperature >= 373)
       {

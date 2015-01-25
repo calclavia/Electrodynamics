@@ -12,7 +12,7 @@ import net.minecraft.world.IBlockAccess
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.event.PlasmaEvent
-import resonant.lib.grid.thermal.ThermalGrid
+import resonant.lib.grid.thermal.GridThermal
 import resonant.lib.mod.config.Config
 import resonant.lib.prefab.tile.spatial.SpatialTile
 import resonant.lib.transform.vector.Vector3
@@ -58,7 +58,7 @@ class TilePlasma extends SpatialTile(Material.lava)
   override def update
   {
     super.update
-    ThermalGrid.addHeat(toVectorWorld, ((temperature - ThermalGrid.getTemperature(toVectorWorld)) * 0.1f).asInstanceOf[Float])
+    GridThermal.addHeat(toVectorWorld, ((temperature - GridThermal.getTemperature(toVectorWorld)) * 0.1f).asInstanceOf[Float])
     if (ticks % 20 == 0)
     {
       temperature /= 1.5

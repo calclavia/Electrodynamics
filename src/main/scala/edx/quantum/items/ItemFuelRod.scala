@@ -9,7 +9,7 @@ import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.tile.{IReactor, IReactorComponent}
-import resonant.lib.grid.thermal.ThermalGrid
+import resonant.lib.grid.thermal.GridThermal
 import resonant.lib.transform.vector.VectorWorld
 import resonant.lib.wrapper.CollectionWrapper._
 
@@ -52,14 +52,14 @@ class ItemFuelRod extends ItemRadioactive with IReactorComponent
       ForgeDirection.VALID_DIRECTIONS
         .map(d => (new VectorWorld(tile) + d).getTileEntity)
         .filter(_.isInstanceOf[IReactor])
-        .count(t => ThermalGrid.getTemperature(new VectorWorld(t)) > ItemFuelRod.breedingTemp)
+        .count(t => GridThermal.getTemperature(new VectorWorld(t)) > ItemFuelRod.breedingTemp)
 
     if (reactors >= 2)
     {
       /**
        * Do fuel breeding
        */
-      if (world.rand.nextInt(1000) <= 100 && ThermalGrid.getTemperature(new VectorWorld(tile)) > (ItemFuelRod.breedingTemp / 2))
+      if (world.rand.nextInt(1000) <= 100 && GridThermal.getTemperature(new VectorWorld(tile)) > (ItemFuelRod.breedingTemp / 2))
       {
         val breedAmount = world.rand.nextInt(5)
         itemStack.setItemDamage(Math.max(itemStack.getItemDamage - breedAmount, 0))

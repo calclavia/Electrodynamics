@@ -13,10 +13,14 @@ import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL11._
+import resonant.lib.grid.core.TSpatialNodeProvider
+import resonant.lib.grid.energy.electric.NodeElectricComponent
 import resonant.lib.prefab.tile.spatial.SpatialTile
 import resonant.lib.prefab.tile.traits.TRotatable
 import resonant.lib.render.RenderUtility
 import resonant.lib.transform.vector.Vector3
+
+import scala.collection.convert.wrapAll._
 
 /**
  * An emitter that shoots out lasers.
@@ -27,18 +31,25 @@ import resonant.lib.transform.vector.Vector3
  */
 object TileLaserEmitter
 {
-  @SideOnly(Side.CLIENT) val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "laserEmitter.tcn"))
-  @SideOnly(Side.CLIENT) val texture = new ResourceLocation(Reference.domain, Reference.modelPath + "laserEmitter.png")
+  @SideOnly(Side.CLIENT)
+  val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "laserEmitter.tcn"))
+
+  @SideOnly(Side.CLIENT)
+  val texture = new ResourceLocation(Reference.domain, Reference.modelPath + "laserEmitter.png")
 }
 
-class TileLaserEmitter extends SpatialTile(Material.iron) with ILaserHandler with TRotatable
+class TileLaserEmitter extends SpatialTile(Material.iron) with ILaserHandler with TSpatialNodeProvider with TRotatable
 {
-  var energy = 0D
+  val electricNode = new NodeElectricComponent(this)
 
   domain = ""
   textureName = "stone"
   normalRender = false
   isOpaqueCube = false
+  electricNode.dynamicTerminals = true
+  electricNode.setPositives(Set(ForgeDirection.NORTH, ForgeDirection.EAST, ForgeDirection.UP))
+  electricNode.setNegatives(Set(ForgeDirection.SOUTH, ForgeDirection.WEST, ForgeDirection.DOWN))
+  nodes.add(electricNode)
 
   /**
    * Called when the block is placed by a living entity
@@ -51,21 +62,17 @@ class TileLaserEmitter extends SpatialTile(Material.iron) with ILaserHandler wit
     world.setBlockMetadataWithNotify(xi, yi, zi, l, 2)
   }
 
-  override def getLightValue(access: IBlockAccess): Int = ((energy / Laser.maxEnergy) * 15).toInt
+  override def getLightValue(access: IBlockAccess): Int = ((electricNode.power / Laser.maxEnergy) * 15).toInt
 
   override def onLaserHit(renderStart: Vector3, incidentDirection: Vector3, hit: MovingObjectPosition, color: Vector3, energy: Double) = false
 
   override def update()
   {
-    if (isIndirectlyPowered)
-    {
-      energy += world.getStrongestIndirectPower(xi, yi, zi) * (Laser.maxEnergy / 15)
-    }
+    super.update()
 
-    if (energy > 0)
+    if (electricNode.power > 0)
     {
-      Laser.spawn(worldObj, toVector3 + 0.5 + new Vector3(getDirection) * 0.51, toVector3 + new Vector3(getDirection) * 0.6 + 0.5, new Vector3(getDirection), energy)
-      energy = 0
+      Laser.spawn(worldObj, toVector3 + 0.5 + new Vector3(getDirection) * 0.51, toVector3 + new Vector3(getDirection) * 0.6 + 0.5, new Vector3(getDirection), electricNode.power / 20)
     }
   }
 

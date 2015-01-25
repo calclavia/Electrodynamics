@@ -67,6 +67,15 @@ class TileBattery extends SpatialTile(Material.iron) with TIO with TElectric wit
     updateConnectionMask()
   }
 
+  def updateConnectionMask()
+  {
+    electricNode.setPositives(getInputDirections())
+    electricNode.setNegatives(getOutputDirections())
+    electricNode.reconstruct()
+    markUpdate()
+    notifyChange()
+  }
+
   override def update()
   {
     super.update()
@@ -75,14 +84,11 @@ class TileBattery extends SpatialTile(Material.iron) with TIO with TElectric wit
     {
       if (isIndirectlyPowered)
       {
-        if (electricNode.voltage >= 0)
-        {
-          //Discharge battery when current is flowing positive direction
-          //TODO: Allow player to set the power output
-          electricNode.generatePower(Math.min(10000, energy.value))
-          val dissipatedEnergy = electricNode.power / 20
-          energy -= dissipatedEnergy
-        }
+        //Discharge battery when current is flowing positive direction
+        //TODO: Allow player to set the power output
+        electricNode.generatePower(Math.min(energy.max * 0.0001, energy.value))
+        val dissipatedEnergy = electricNode.power / 20
+        energy -= dissipatedEnergy
       }
       else
       {
@@ -92,8 +98,10 @@ class TileBattery extends SpatialTile(Material.iron) with TIO with TElectric wit
 
 
       if (energy.prev != energy.value)
-        markUpdate()
-
+      {
+        energyRenderLevel = Math.round((energy.value / TileBattery.getEnergyForTier(getBlockMetadata).toDouble) * 8).toInt
+        sendDescPacket()
+      }
       /**
        * Update packet when energy level changes.
 
@@ -128,15 +136,6 @@ class TileBattery extends SpatialTile(Material.iron) with TIO with TElectric wit
   {
     super.setIO(dir, packet)
     updateConnectionMask()
-  }
-
-  def updateConnectionMask()
-  {
-    electricNode.setPositives(getInputDirections())
-    electricNode.setNegatives(getOutputDirections())
-    electricNode.reconstruct()
-    markUpdate()
-    notifyChange()
   }
 
   override def onPlaced(entityLiving: EntityLivingBase, itemStack: ItemStack)

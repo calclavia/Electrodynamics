@@ -16,18 +16,18 @@ import resonant.lib.transform.vector.Vector3
 import scala.collection.mutable
 
 /**
- * Handles lasers
+ * Handles laser interaction
  * @author Calclavia
  */
 object Laser
 {
   val maxDistance = 100
 
-  val minEnergy = 100D
-  val maxEnergy = 8000D
+  val minEnergy = 100d
+  val maxEnergy = 20000d
 
-  val minEnergyToMine = 4000D
-  val maxEnergyToMine = 500000D
+  val minEnergyToMine = 4000d
+  val maxEnergyToMine = 500000d
   val minBurnEnergy = minEnergyToMine
   val currentBlockEnergy = mutable.HashMap[Vector3, Double]()
   val accumilatedBlockEnergy = mutable.HashMap[Vector3, Double]()

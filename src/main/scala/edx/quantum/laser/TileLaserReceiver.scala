@@ -8,14 +8,17 @@ import net.minecraft.block.material.Material
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.item.ItemStack
 import net.minecraft.util.{MovingObjectPosition, ResourceLocation}
-import net.minecraft.world.IBlockAccess
 import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11._
+import resonant.lib.grid.core.TSpatialNodeProvider
+import resonant.lib.grid.energy.electric.NodeElectricComponent
 import resonant.lib.prefab.tile.spatial.SpatialTile
 import resonant.lib.prefab.tile.traits.TRotatable
 import resonant.lib.render.RenderUtility
 import resonant.lib.transform.vector.Vector3
+
+import scala.collection.convert.wrapAll._
 
 /**
  * A block that receives laser light and generates a voltage.
@@ -27,50 +30,29 @@ object TileLaserReceiver
   @SideOnly(Side.CLIENT) val texture = new ResourceLocation(Reference.domain, Reference.modelPath + "laserReceiver.png")
 }
 
-class TileLaserReceiver extends SpatialTile(Material.rock) with ILaserHandler with TRotatable
+class TileLaserReceiver extends SpatialTile(Material.rock) with ILaserHandler with TSpatialNodeProvider with TRotatable
 {
-  var redstoneValue = 0
+  val electricNode = new NodeElectricComponent(this)
+
   private var energy = 0D
-  private var prevRedstoneValue = 0;
 
   domain = ""
   textureName = "stone"
   normalRender = false
   isOpaqueCube = false
+  nodes.add(electricNode)
 
-  override def update()
-  {
-    if (energy > 0)
-    {
-      redstoneValue = Math.min(Math.ceil(energy / (Laser.maxEnergy / 15)), 15).toInt
+  electricNode.dynamicTerminals = true
+  electricNode.setPositives(Set(ForgeDirection.NORTH, ForgeDirection.EAST))
+  electricNode.setNegatives(Set(ForgeDirection.SOUTH, ForgeDirection.WEST))
 
-      if (redstoneValue != prevRedstoneValue)
-      {
-        world.notifyBlocksOfNeighborChange(xi, yi, zi, getBlockType)
-        ForgeDirection.VALID_DIRECTIONS.foreach(dir => world.notifyBlocksOfNeighborChange(xi + dir.offsetX, yi + dir.offsetY, zi + dir.offsetZ, getBlockType))
-        prevRedstoneValue = redstoneValue
-      }
-
-      energy = 0
-    }
-    else
-    {
-      redstoneValue = 0
-
-      if (redstoneValue != prevRedstoneValue)
-      {
-        world.notifyBlocksOfNeighborChange(xi, yi, zi, getBlockType)
-        ForgeDirection.VALID_DIRECTIONS.foreach(dir => world.notifyBlocksOfNeighborChange(xi + dir.offsetX, yi + dir.offsetY, zi + dir.offsetZ, getBlockType))
-        prevRedstoneValue = redstoneValue
-      }
-    }
-  }
+  override def canUpdate: Boolean = false
 
   override def onLaserHit(renderStart: Vector3, incident: Vector3, hit: MovingObjectPosition, color: Vector3, energy: Double): Boolean =
   {
     if (hit.sideHit == getDirection.ordinal)
     {
-      this.energy += energy
+      electricNode.generatePower(energy)
     }
 
     return false
@@ -81,12 +63,6 @@ class TileLaserReceiver extends SpatialTile(Material.rock) with ILaserHandler wi
     val l = BlockPistonBase.determineOrientation(world, xi, yi, zi, entityLiving)
     world.setBlockMetadataWithNotify(xi, yi, zi, l, 2)
   }
-
-  override def getLightValue(access: IBlockAccess): Int = redstoneValue
-
-  override def getWeakRedstonePower(access: IBlockAccess, side: Int): Int = getStrongRedstonePower(access, side)
-
-  override def getStrongRedstonePower(access: IBlockAccess, side: Int): Int = redstoneValue
 
   @SideOnly(Side.CLIENT)
   override def renderDynamic(pos: Vector3, frame: Float, pass: Int)

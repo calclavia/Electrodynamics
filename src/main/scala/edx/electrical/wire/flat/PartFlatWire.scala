@@ -116,8 +116,6 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
     return wire.getThickness > getThickness
   }
 
-  def getThickness: Int = if (insulated) 1 else 0
-
   /**
    * Packet Methods
    */
@@ -286,6 +284,8 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
   override def getSubParts: JIterable[IndexedCuboid6] = Seq(new IndexedCuboid6(0, PartFlatWire.selectionBounds(getThickness)(side)))
 
   def getOcclusionBoxes: JIterable[Cuboid6] = Seq(PartFlatWire.occlusionBounds(getThickness)(side))
+
+  def getThickness: Int = if (insulated) 1 else 0
 
   override def solid(arg0: Int) = false
 
@@ -487,15 +487,19 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
         if (tpCorner != null)
         {
           val part = tpCorner.partMap(absDir ^ 1)
-          val absToDir = ForgeDirection.getOrientation(absDir)
-          val absFromDir = ForgeDirection.getOrientation(absDir).getOpposite
-          val node = part.asInstanceOf[INodeProvider].getNode(classOf[NodeElectricComponent], absFromDir)
 
-          if (canConnect(node, absFromDir))
+          if (part != null)
           {
-            //TODO: Check dir
-            connect(node, absToDir)
-            return true
+            val absToDir = ForgeDirection.getOrientation(absDir)
+            val absFromDir = ForgeDirection.getOrientation(absDir).getOpposite
+            val node = part.asInstanceOf[INodeProvider].getNode(classOf[NodeElectricComponent], absFromDir)
+
+            if (canConnect(node, absFromDir))
+            {
+              //TODO: Check dir
+              connect(node, absToDir)
+              return true
+            }
           }
         }
       }
