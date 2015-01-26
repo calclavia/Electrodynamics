@@ -9,7 +9,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import resonant.lib.content.prefab.TIO
 import resonant.lib.grid.core.TBlockNodeProvider
 import resonant.lib.grid.energy.electric.NodeElectricComponent
-import resonant.lib.prefab.tile.spatial.ResonantTile
+import resonant.lib.prefab.tile.spatial.{ResonantBlock, ResonantTile}
 import resonant.lib.render.block.RenderConnectedTexture
 import resonant.lib.transform.region.Cuboid
 

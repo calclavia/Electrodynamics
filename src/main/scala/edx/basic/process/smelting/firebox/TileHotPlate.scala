@@ -14,7 +14,7 @@ import net.minecraft.world.IBlockAccess
 import resonant.lib.content.prefab.TInventory
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
-import resonant.lib.prefab.tile.spatial.ResonantTile
+import resonant.lib.prefab.tile.spatial.{ResonantBlock, ResonantTile}
 import resonant.lib.transform.region.Cuboid
 import resonant.lib.transform.vector.{Vector2, Vector3}
 import resonant.lib.wrapper.ByteBufWrapper._
@@ -87,6 +87,20 @@ class TileHotPlate extends ResonantTile(Material.iron) with TInventory with TPac
 
   def canSmelt(stack: ItemStack): Boolean = stack != null && FurnaceRecipes.smelting.getSmeltingResult(stack) != null
 
+  def canRun: Boolean =
+  {
+    val tileEntity = worldObj.getTileEntity(xCoord, yCoord - 1, zCoord)
+
+    if (tileEntity.isInstanceOf[TileFirebox])
+    {
+      if ((tileEntity.asInstanceOf[TileFirebox]).isBurning)
+      {
+        return true
+      }
+    }
+    return false
+  }
+
   override def randomDisplayTick()
   {
     val height = 0.2
@@ -118,6 +132,8 @@ class TileHotPlate extends ResonantTile(Material.iron) with TInventory with TPac
   {
     return smeltTime(i)
   }
+
+  override def getSizeInventory: Int = 4
 
   override def isItemValidForSlot(i: Int, itemStack: ItemStack): Boolean =
   {
@@ -157,8 +173,6 @@ class TileHotPlate extends ResonantTile(Material.iron) with TInventory with TPac
 
   }
 
-  override def getSizeInventory: Int = 4
-
   @SideOnly(Side.CLIENT)
   override def registerIcons(iconReg: IIconRegister)
   {
@@ -173,20 +187,6 @@ class TileHotPlate extends ResonantTile(Material.iron) with TInventory with TPac
   override def getIcon(access: IBlockAccess, side: Int): IIcon =
   {
     return if (access.getBlockMetadata(xi, yi, zi) == 1) ResonantBlock.icon.get("electricHotPlate") else (if (canRun) ResonantBlock.icon.get("hotPlate_on") else ResonantBlock.icon.get(getTextureName))
-  }
-
-  def canRun: Boolean =
-  {
-    val tileEntity = worldObj.getTileEntity(xCoord, yCoord - 1, zCoord)
-
-    if (tileEntity.isInstanceOf[TileFirebox])
-    {
-      if ((tileEntity.asInstanceOf[TileFirebox]).isBurning)
-      {
-        return true
-      }
-    }
-    return false
   }
 
   @SideOnly(Side.CLIENT)

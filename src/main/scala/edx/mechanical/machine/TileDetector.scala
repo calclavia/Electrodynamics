@@ -10,7 +10,6 @@ import io.netty.buffer.ByteBuf
 import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.entity.Entity
 import net.minecraft.entity.item.EntityItem
-import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.network.Packet
@@ -20,9 +19,10 @@ import net.minecraft.world.IBlockAccess
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.core.ResonantEngine
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
-import resonant.lib.network.handle.IPacketIDReceiver
+import resonant.lib.network.handle.TPacketReceiver
+import resonant.lib.prefab.tile.spatial.ResonantBlock
 
-class TileDetector extends TileFilterable with IPacketIDReceiver
+class TileDetector extends TileFilterable with TPacketReceiver
 {
   private var powering: Boolean = false
 
@@ -112,10 +112,10 @@ class TileDetector extends TileFilterable with IPacketIDReceiver
     return ResonantEngine.packetHandler.toMCPacket(new PacketTile(xi, yi, zi, Array[Any](0, this.isInverted)))
   }
 
-  override def read(data: ByteBuf, id: Int, player: EntityPlayer, `type`: PacketType): Boolean =
+  override def read(buf: ByteBuf, id: Int, packetType: PacketType)
   {
-    if (id == 0) this.setInverted(data.readBoolean)
-    return true
+    if (id == 0)
+      setInverted(buf.readBoolean)
   }
 
   @SideOnly(Side.CLIENT) override def registerIcons(iconReg: IIconRegister)

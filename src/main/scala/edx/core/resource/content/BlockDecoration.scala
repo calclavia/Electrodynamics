@@ -10,6 +10,7 @@ import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.util.IIcon
 import resonant.lib.prefab.tile.item.ItemBlockMetadata
+import resonant.lib.prefab.tile.spatial.ResonantBlock
 import resonant.lib.wrapper.CollectionWrapper._
 
 /**

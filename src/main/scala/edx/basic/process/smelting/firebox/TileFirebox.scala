@@ -25,7 +25,7 @@ import resonant.lib.grid.energy.electric.NodeElectricComponent
 import resonant.lib.grid.thermal.{BoilEvent, ThermalPhysics}
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
-import resonant.lib.prefab.tile.spatial.ResonantTile
+import resonant.lib.prefab.tile.spatial.{ResonantBlock, ResonantTile}
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.FluidUtility
 import resonant.lib.wrapper.ByteBufWrapper._
@@ -161,6 +161,11 @@ class TileFirebox extends ResonantTile(Material.rock) with IFluidHandler with TI
     return this.getBlockMetadata == 1
   }
 
+  def canBurn(stack: ItemStack): Boolean =
+  {
+    return TileEntityFurnace.getItemBurnTime(stack) > 0
+  }
+
   override def randomDisplayTick(): Unit =
   {
     if (isBurning)
@@ -200,11 +205,6 @@ class TileFirebox extends ResonantTile(Material.rock) with IFluidHandler with TI
   override def isItemValidForSlot(i: Int, itemStack: ItemStack): Boolean =
   {
     return i == 0 && canBurn(itemStack)
-  }
-
-  def canBurn(stack: ItemStack): Boolean =
-  {
-    return TileEntityFurnace.getItemBurnTime(stack) > 0
   }
 
   /**

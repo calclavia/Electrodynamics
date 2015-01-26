@@ -22,7 +22,7 @@ import org.lwjgl.opengl.GL11
 import resonant.core.ResonantEngine
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketReceiver
-import resonant.lib.prefab.tile.spatial.ResonantTile
+import resonant.lib.prefab.tile.spatial.{ResonantBlock, ResonantTile}
 import resonant.lib.render.RenderItemOverlayUtility
 import resonant.lib.transform.vector.{Vector2, Vector3}
 import resonant.lib.utility.inventory.InventoryUtility
@@ -108,18 +108,6 @@ class TileImprinter extends ResonantTile(Material.circuits) with ISidedInventory
   }
 
   /**
-   * Sets the given item stack to the specified slot in the inventory (can be crafting or armor
-   * sections).
-   */
-  def setInventorySlotContents(slot: Int, itemStack: ItemStack)
-  {
-    if (slot < this.getSizeInventory)
-    {
-      inventory(slot) = itemStack
-    }
-  }
-
-  /**
    * Inventory methods.
    */
   override def canUpdate: Boolean =
@@ -179,6 +167,18 @@ class TileImprinter extends ResonantTile(Material.circuits) with ISidedInventory
     else
     {
       return null
+    }
+  }
+
+  /**
+   * Sets the given item stack to the specified slot in the inventory (can be crafting or armor
+   * sections).
+   */
+  def setInventorySlotContents(slot: Int, itemStack: ItemStack)
+  {
+    if (slot < this.getSizeInventory)
+    {
+      inventory(slot) = itemStack
     }
   }
 

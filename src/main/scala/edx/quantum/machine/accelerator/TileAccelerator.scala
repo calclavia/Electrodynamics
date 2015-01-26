@@ -16,7 +16,7 @@ import resonant.api.tile.{IElectromagnet, IRotatable}
 import resonant.lib.content.prefab.TInventory
 import resonant.lib.grid.energy.EnergyStorage
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
-import resonant.lib.network.handle.{TPacketIDReceiver, TPacketSender}
+import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
 import resonant.lib.prefab.tile.spatial.ResonantTile
 import resonant.lib.prefab.tile.traits.TEnergyProvider
 import resonant.lib.transform.vector.Vector3
@@ -24,7 +24,7 @@ import resonant.lib.utility.BlockUtility
 
 import scala.collection.JavaConversions._
 
-class TileAccelerator extends ResonantTile(Material.iron) with TInventory with IElectromagnet with IRotatable with TPacketIDReceiver with TPacketSender with TEnergyProvider
+class TileAccelerator extends ResonantTile(Material.iron) with TInventory with IElectromagnet with IRotatable with TPacketReceiver with TPacketSender with TEnergyProvider
 {
   final val DESC_PACKET_ID = 2
   /**
@@ -231,7 +231,7 @@ class TileAccelerator extends ResonantTile(Material.iron) with TInventory with I
   ///         Save handling             ///
   ////////////////////////////////////////
 
-  override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType): Boolean =
+  override def read(buf: ByteBuf, id: Int, packetType: PacketType)
   {
     //Client only packets
     if (world.isRemote)
@@ -242,11 +242,9 @@ class TileAccelerator extends ResonantTile(Material.iron) with TInventory with I
         this.totalEnergyConsumed = buf.readDouble()
         this.antimatter = buf.readInt()
         this.energy.value = buf.readDouble()
-        return true
       }
     }
 
-    return true
   }
 
   override def readFromNBT(par1NBTTagCompound: NBTTagCompound)
