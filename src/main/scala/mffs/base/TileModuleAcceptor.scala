@@ -5,13 +5,12 @@ import java.util.{Set => JSet}
 import io.netty.buffer.ByteBuf
 import mffs.Content
 import mffs.util.TCache
-import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.fluids.FluidContainerRegistry
 import resonant.api.mffs.modules.{IModule, IModuleProvider}
-import resonant.lib.wrapper.ByteBufWrapper._
 import resonant.lib.network.discriminator.PacketType
+import resonant.lib.wrapper.ByteBufWrapper._
 
 import scala.collection.convert.wrapAll._
 
@@ -36,42 +35,20 @@ abstract class TileModuleAcceptor extends TileFortron with IModuleProvider with 
 		}
 	}
 
-	override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType): Boolean =
+	override def read(buf: ByteBuf, id: Int, packetType: PacketType)
 	{
-		super.read(buf, id, player, packet)
+		super.read(buf, id, packetType)
 
 		if (id == TilePacketType.description.id)
 		{
 			clientFortronCost = buf.readInt()
 		}
-
-		return false
 	}
 
 	override def start()
 	{
 		super.start()
 		fortronTank.setCapacity((this.getModuleCount(Content.moduleCapacity) * this.capacityBoost + this.capacityBase) * FluidContainerRegistry.BUCKET_VOLUME)
-	}
-
-	def consumeCost()
-	{
-		if (getFortronCost() > 0)
-		{
-			requestFortron(getFortronCost(), true)
-		}
-	}
-
-	override def getModule(module: IModule): ItemStack =
-	{
-		val cacheID = "getModule_" + module.hashCode
-
-		if (hasCache(classOf[ItemStack], cacheID)) return getCache(classOf[ItemStack], cacheID)
-		@unchecked
-		val returnStack = new ItemStack(module.asInstanceOf[Item], getModuleStacks().count(_.getItem == module))
-
-		cache(cacheID, returnStack.copy)
-		return returnStack
 	}
 
 	@unchecked
@@ -98,49 +75,12 @@ abstract class TileModuleAcceptor extends TileFortron with IModuleProvider with 
 		return count
 	}
 
-	def getModuleStacks(slots: Int*): JSet[ItemStack] =
+	def consumeCost()
 	{
-		var cacheID: String = "getModuleStacks_"
-
-		if (slots != null)
+		if (getFortronCost() > 0)
 		{
-			cacheID += slots.hashCode()
+			requestFortron(getFortronCost(), true)
 		}
-
-		if (hasCache(classOf[Set[ItemStack]], cacheID)) return getCache(classOf[Set[ItemStack]], cacheID)
-
-		var modules: Set[ItemStack] = null
-
-		if (slots == null || slots.length <= 0)
-			modules = ((startModuleIndex until endModuleIndex) map (getStackInSlot(_)) filter (_ != null) filter (_.getItem.isInstanceOf[IModule])).toSet
-		else
-			modules = (slots map (getStackInSlot(_)) filter (_ != null) filter (_.getItem.isInstanceOf[IModule])).toSet
-
-		cache(cacheID, modules)
-
-		return modules
-	}
-
-	@SuppressWarnings(Array("unchecked"))
-	def getModules(slots: Int*): JSet[IModule] =
-	{
-		var cacheID: String = "getModules_"
-		if (slots != null)
-		{
-			cacheID += slots.hashCode()
-		}
-
-		if (hasCache(classOf[Set[IModule]], cacheID)) return getCache(classOf[Set[IModule]], cacheID)
-
-		var modules: Set[IModule] = null
-
-		if (slots == null || slots.length <= 0)
-			modules = ((startModuleIndex until endModuleIndex) map (getStackInSlot(_)) filter (_ != null) filter (_.getItem.isInstanceOf[IModule]) map (_.getItem.asInstanceOf[IModule])).toSet
-		else
-			modules = (slots map (getStackInSlot(_)) filter (_ != null) filter (_.getItem.isInstanceOf[IModule]) map (_.getItem.asInstanceOf[IModule])).toSet
-
-		cache(cacheID, modules)
-		return modules
 	}
 
 	/**
@@ -167,6 +107,64 @@ abstract class TileModuleAcceptor extends TileFortron with IModuleProvider with 
 	protected def doGetFortronCost: Int = Math.round((getModuleStacks() foldLeft 0f)((a: Float, b: ItemStack) => a + b.stackSize * b.getItem.asInstanceOf[IModule].getFortronCost(getAmplifier)))
 
 	protected def getAmplifier: Float = 1f
+
+	def getModuleStacks(slots: Int*): JSet[ItemStack] =
+	{
+		var cacheID: String = "getModuleStacks_"
+
+		if (slots != null)
+		{
+			cacheID += slots.hashCode()
+		}
+
+		if (hasCache(classOf[Set[ItemStack]], cacheID)) return getCache(classOf[Set[ItemStack]], cacheID)
+
+		var modules: Set[ItemStack] = null
+
+		if (slots == null || slots.length <= 0)
+			modules = ((startModuleIndex until endModuleIndex) map (getStackInSlot(_)) filter (_ != null) filter (_.getItem.isInstanceOf[IModule])).toSet
+		else
+			modules = (slots map (getStackInSlot(_)) filter (_ != null) filter (_.getItem.isInstanceOf[IModule])).toSet
+
+		cache(cacheID, modules)
+
+		return modules
+	}
+
+	override def getModule(module: IModule): ItemStack =
+	{
+		val cacheID = "getModule_" + module.hashCode
+
+		if (hasCache(classOf[ItemStack], cacheID))
+			return getCache(classOf[ItemStack], cacheID)
+
+		val returnStack = new ItemStack(module.asInstanceOf[Item], getModuleStacks().count(_.getItem == module))
+
+		cache(cacheID, returnStack.copy)
+		return returnStack
+	}
+
+	@SuppressWarnings(Array("unchecked"))
+	def getModules(slots: Int*): JSet[IModule] =
+	{
+		var cacheID: String = "getModules_"
+		if (slots != null)
+		{
+			cacheID += slots.hashCode()
+		}
+
+		if (hasCache(classOf[Set[IModule]], cacheID)) return getCache(classOf[Set[IModule]], cacheID)
+
+		var modules: Set[IModule] = null
+
+		if (slots == null || slots.length <= 0)
+			modules = ((startModuleIndex until endModuleIndex) map (getStackInSlot(_)) filter (_ != null) filter (_.getItem.isInstanceOf[IModule]) map (_.getItem.asInstanceOf[IModule])).toSet
+		else
+			modules = (slots map (getStackInSlot(_)) filter (_ != null) filter (_.getItem.isInstanceOf[IModule]) map (_.getItem.asInstanceOf[IModule])).toSet
+
+		cache(cacheID, modules)
+		return modules
+	}
 
 	override def markDirty()
 	{

@@ -1,14 +1,12 @@
 package mffs.base
 
 import io.netty.buffer.ByteBuf
-import mffs.ModularForceFieldSystem
-import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import resonant.lib.content.prefab.TInventory
-import resonant.lib.wrapper.ByteBufWrapper._
-import resonant.lib.network.discriminator.{PacketTile, PacketType}
+import resonant.lib.network.discriminator.PacketType
 import resonant.lib.utility.inventory.TPrefabInventory
+import resonant.lib.wrapper.ByteBufWrapper._
 
 /**
  * All TileEntities that have an inventory should extend this.
@@ -29,17 +27,14 @@ abstract class TileMFFSInventory extends TileMFFS with TInventory with TPrefabIn
     }
   }
 
-  override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType): Boolean =
+  override def read(buf: ByteBuf, id: Int, packetType: PacketType)
   {
-    super.read(buf, id, player, packet)
+    super.read(buf, id, packetType)
 
     if (id == TilePacketType.description.id || id == TilePacketType.inventory.id)
     {
       getInventory.load(buf.readTag())
     }
-
-
-    return false
   }
 
   /**

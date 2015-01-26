@@ -3,14 +3,13 @@ package mffs.base
 import io.netty.buffer.ByteBuf
 import mffs.ModularForceFieldSystem
 import mffs.util.{FortronUtility, TransferMode}
-import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import resonant.api.mffs.fortron.{FrequencyGridRegistry, IFortronFrequency}
-import resonant.lib.wrapper.ByteBufWrapper._
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.netty.PacketManager
+import resonant.lib.wrapper.ByteBufWrapper._
 
 import scala.collection.convert.wrapAll._
 
@@ -32,6 +31,11 @@ abstract class TileFortron extends TileFrequency with IFluidHandler with IFortro
 		{
 			sendFortronToClients
 		}
+	}
+
+	def sendFortronToClients
+	{
+		ModularForceFieldSystem.packetHandler.sendToAllAround(PacketManager.request(this, TilePacketType.fortron.id), this.worldObj, toVector3, 25)
 	}
 
 	override def invalidate()
@@ -57,22 +61,14 @@ abstract class TileFortron extends TileFrequency with IFluidHandler with IFortro
 		}
 	}
 
-	override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType): Boolean =
+	override def read(buf: ByteBuf, id: Int, packetType: PacketType)
 	{
-		super.read(buf, id, player, packet)
+		super.read(buf, id, packetType)
 
 		if (id == TilePacketType.fortron.id)
 		{
 			fortronTank = buf.readTank()
 		}
-
-
-		return false
-	}
-
-	def sendFortronToClients
-	{
-		ModularForceFieldSystem.packetHandler.sendToAllAround(PacketManager.request(this, TilePacketType.fortron.id), this.worldObj, toVector3, 25)
 	}
 
 	/**

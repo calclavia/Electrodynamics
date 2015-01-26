@@ -22,10 +22,10 @@ import net.minecraft.world.{IBlockAccess, World}
 import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import resonant.api.mffs.machine.IProjector
 import resonant.api.mffs.modules.{IModule, IProjectorMode}
-import resonant.lib.wrapper.ByteBufWrapper._
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.transform.region.Cuboid
 import resonant.lib.transform.vector.Vector3
+import resonant.lib.wrapper.ByteBufWrapper._
 
 import scala.collection.JavaConversions._
 import scala.collection.mutable
@@ -70,8 +70,6 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
     calculateField(postCalculation)
   }
 
-  def postCalculation() = if (clientSideSimulationRequired) sendFieldToClient
-
   override def getLightValue(access: IBlockAccess) = if (getMode() != null) 10 else 0
 
   override def write(buf: ByteBuf, id: Int)
@@ -84,9 +82,9 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
     }
   }
 
-  override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType): Boolean =
+  override def read(buf: ByteBuf, id: Int, packetType: PacketType)
   {
-    super.read(buf, id, player, packet)
+    super.read(buf, id, packetType)
 
     if (worldObj.isRemote)
     {
@@ -125,39 +123,6 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
         isInverted = !isInverted
       }
     }
-    return false
-  }
-
-  def sendFieldToClient
-  {
-    val nbt = new NBTTagCompound
-    val nbtList = new NBTTagList
-    calculatedField foreach (vec => nbtList.appendTag(vec.toNBT))
-    nbt.setTag("blockList", nbtList)
-    ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(this, TilePacketType.field.id: Integer, nbt))
-  }
-
-  /**
-   * Initiate a field calculation
-   */
-  protected override def calculateField(callBack: () => Unit = null)
-  {
-    if (!worldObj.isRemote && !isCalculating)
-    {
-      if (getMode != null)
-      {
-        forceFields.clear
-      }
-
-      super.calculateField(callBack)
-      isCompleteConstructing = false
-      fieldRequireTicks = getModuleStacks() exists (module => module.getItem.asInstanceOf[IModule].requireTicks(module))
-    }
-  }
-
-  private def clientSideSimulationRequired: Boolean =
-  {
-    return getModuleCount(Content.moduleRepulsion) > 0
   }
 
   override def update()
@@ -195,33 +160,38 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
     }
   }
 
+  def postCalculation() = if (clientSideSimulationRequired) sendFieldToClient
+
+  def sendFieldToClient
+  {
+    val nbt = new NBTTagCompound
+    val nbtList = new NBTTagList
+    calculatedField foreach (vec => nbtList.appendTag(vec.toNBT))
+    nbt.setTag("blockList", nbtList)
+    ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(this, TilePacketType.field.id: Integer, nbt))
+  }
+
+  private def clientSideSimulationRequired: Boolean =
+  {
+    return getModuleCount(Content.moduleRepulsion) > 0
+  }
+
   /**
-   * Returns Fortron cost in ticks.
+   * Initiate a field calculation
    */
-  protected override def doGetFortronCost: Int =
+  protected override def calculateField(callBack: () => Unit = null)
   {
-    if (this.getMode != null)
+    if (!worldObj.isRemote && !isCalculating)
     {
-      return Math.round(super.doGetFortronCost + this.getMode.getFortronCost(this.getAmplifier))
+      if (getMode != null)
+      {
+        forceFields.clear
+      }
+
+      super.calculateField(callBack)
+      isCompleteConstructing = false
+      fieldRequireTicks = getModuleStacks() exists (module => module.getItem.asInstanceOf[IModule].requireTicks(module))
     }
-    return 0
-  }
-
-  protected override def getAmplifier: Float =
-  {
-    if (this.getMode.isInstanceOf[ItemModeCustom])
-    {
-      return Math.max((this.getMode.asInstanceOf[ItemModeCustom]).getFieldBlocks(this, this.getModeStack).size / 100, 1)
-    }
-    return Math.max(Math.min((if (calculatedField != null) calculatedField.size else 0) / 1000, 10), 1)
-  }
-
-  override def markDirty()
-  {
-    super.markDirty()
-
-    if (world != null)
-      destroyField()
   }
 
   /**
@@ -317,6 +287,8 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
            (block.getMaterial.isLiquid || block == Blocks.snow || block == Blocks.vine || block == Blocks.tallgrass || block == Blocks.deadbush || block.isReplaceable(world, vector.xi, vector.yi, vector.zi))
   }
 
+  def getProjectionSpeed: Int = 28 + 28 * getModuleCount(Content.moduleSpeed, getModuleSlots: _*)
+
   def destroyField()
   {
     if (!world.isRemote && calculatedField != null && !isCalculating)
@@ -332,13 +304,19 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
     }
   }
 
+  override def markDirty()
+  {
+    super.markDirty()
+
+    if (world != null)
+      destroyField()
+  }
+
   override def invalidate
   {
     destroyField()
     super.invalidate
   }
-
-  def getProjectionSpeed: Int = 28 + 28 * getModuleCount(Content.moduleSpeed, getModuleSlots: _*)
 
   override def getForceFields: JSet[Vector3] = forceFields
 
@@ -394,5 +372,26 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
   override def renderInventory(itemStack: ItemStack)
   {
     RenderElectromagneticProjector.render(this, -0.5, -0.5, -0.5, 0, true, true)
+  }
+
+  /**
+   * Returns Fortron cost in ticks.
+   */
+  protected override def doGetFortronCost: Int =
+  {
+    if (this.getMode != null)
+    {
+      return Math.round(super.doGetFortronCost + this.getMode.getFortronCost(this.getAmplifier))
+    }
+    return 0
+  }
+
+  protected override def getAmplifier: Float =
+  {
+    if (this.getMode.isInstanceOf[ItemModeCustom])
+    {
+      return Math.max((this.getMode.asInstanceOf[ItemModeCustom]).getFieldBlocks(this, this.getModeStack).size / 100, 1)
+    }
+    return Math.max(Math.min((if (calculatedField != null) calculatedField.size else 0) / 1000, 10), 1)
   }
 }

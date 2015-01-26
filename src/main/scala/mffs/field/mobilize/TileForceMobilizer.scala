@@ -12,7 +12,7 @@ import mffs.util.MFFSUtility
 import mffs.{Content, ModularForceFieldSystem, Reference, Settings}
 import net.minecraft.client.renderer.RenderBlocks
 import net.minecraft.entity.Entity
-import net.minecraft.entity.player.{EntityPlayer, EntityPlayerMP}
+import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.AxisAlignedBB
@@ -433,9 +433,9 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
     }
   }
 
-  override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType) : Boolean =
+  override def read(buf: ByteBuf, id: Int, packetType: PacketType)
   {
-    super.read(buf, id, player, packet)
+    super.read(buf, id, packetType)
 
     if (world.isRemote)
     {
@@ -538,7 +538,6 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
         doAnchor = !doAnchor
       }
     }
-    return false
   }
 
   override def markDirty()

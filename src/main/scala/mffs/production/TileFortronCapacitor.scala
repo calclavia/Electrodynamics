@@ -10,23 +10,22 @@ import mffs.item.card.ItemCardFrequency
 import mffs.util.TransferMode.TransferMode
 import mffs.util.{FortronUtility, TransferMode}
 import net.minecraft.client.renderer.RenderBlocks
-import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.fluids.IFluidContainerItem
 import resonant.api.mffs.card.ICoordLink
 import resonant.api.mffs.fortron.{FrequencyGridRegistry, IFortronCapacitor, IFortronFrequency, IFortronStorage}
 import resonant.api.mffs.modules.IModule
-import resonant.lib.wrapper.ByteBufWrapper._
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.transform.vector.Vector3
+import resonant.lib.wrapper.ByteBufWrapper._
 
 import scala.collection.JavaConversions._
 
 class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with IFortronCapacitor
 {
-  private var transferMode = TransferMode.equalize
   private val tickRate = 10
+  private var transferMode = TransferMode.equalize
 
   capacityBase = 700
   capacityBoost = 10
@@ -69,6 +68,8 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
     }
   }
 
+  def getTransmissionRate: Int = 300 + 60 * getModuleCount(Content.moduleSpeed)
+
   override def getAmplifier: Float = 0f
 
   /**
@@ -85,9 +86,9 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
     }
   }
 
-  override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType) : Boolean =
+  override def read(buf: ByteBuf, id: Int, packetType: PacketType)
   {
-	  super.read(buf, id, player, packet)
+    super.read(buf, id, packetType)
 
     if (id == TilePacketType.description.id)
     {
@@ -95,10 +96,8 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
     }
     else if (id == TilePacketType.toggleMoe.id)
     {
-      transferMode = this.transferMode.toggle
+      transferMode = transferMode.toggle
     }
-
-    return false
   }
 
   override def readFromNBT(nbt: NBTTagCompound)
@@ -117,7 +116,11 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
 
   override def getFrequencyDevices: JSet[IFortronFrequency] = FrequencyGridRegistry.instance.getNodes(classOf[IFortronFrequency], world, toVector3, getTransmissionRange, getFrequency)
 
+  def getTransmissionRange: Int = 15 + getModuleCount(Content.moduleScale)
+
   def getInputDevices: JSet[IFortronFrequency] = getDevicesFromStacks(getInputStacks)
+
+  def getInputStacks: Set[ItemStack] = ((4 to 7) map (i => getStackInSlot(i)) filter (_ != null)).toSet
 
   def getOutputDevices: JSet[IFortronFrequency] = getDevicesFromStacks(getOutputStacks)
 
@@ -134,6 +137,8 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
     return devices
   }
 
+  def getOutputStacks: Set[ItemStack] = ((8 to 11) map (i => getStackInSlot(i)) filter (_ != null)).toSet
+
   override def isItemValidForSlot(slotID: Int, itemStack: ItemStack): Boolean =
   {
     if (slotID == 0)
@@ -148,15 +153,7 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
     return true
   }
 
-  def getInputStacks: Set[ItemStack] = ((4 to 7) map (i => getStackInSlot(i)) filter (_ != null)).toSet
-
-  def getOutputStacks: Set[ItemStack] = ((8 to 11) map (i => getStackInSlot(i)) filter (_ != null)).toSet
-
   def getTransferMode: TransferMode = transferMode
-
-  def getTransmissionRange: Int = 15 + getModuleCount(Content.moduleScale)
-
-  def getTransmissionRate: Int = 300 + 60 * getModuleCount(Content.moduleSpeed)
 
   @SideOnly(Side.CLIENT)
   override def renderStatic(renderer: RenderBlocks, pos: Vector3, pass: Int): Boolean =

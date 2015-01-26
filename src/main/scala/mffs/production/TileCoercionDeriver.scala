@@ -7,7 +7,6 @@ import mffs.item.card.ItemCardFrequency
 import mffs.util.FortronUtility
 import mffs.{Content, Settings}
 import net.minecraft.client.renderer.RenderBlocks
-import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
@@ -188,9 +187,9 @@ class TileCoercionDeriver extends TileModuleAcceptor with TTEBridge
     }
   }
 
-  override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType): Boolean =
+  override def read(buf: ByteBuf, id: Int, packetType: PacketType)
   {
-    super.read(buf, id, player, packet)
+    super.read(buf, id, packetType)
 
     if (world.isRemote)
     {
@@ -198,7 +197,6 @@ class TileCoercionDeriver extends TileModuleAcceptor with TTEBridge
       {
         isInversed = buf.readBoolean()
         processTime = buf.readInt()
-        return true
       }
     }
     else
@@ -206,11 +204,8 @@ class TileCoercionDeriver extends TileModuleAcceptor with TTEBridge
       if (id == TilePacketType.toggleMoe.id)
       {
         isInversed = !isInversed
-        return true
       }
     }
-
-    return false
   }
 
   override def readFromNBT(nbt: NBTTagCompound)

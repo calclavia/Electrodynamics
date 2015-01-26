@@ -8,18 +8,17 @@ import mffs.field.mobilize.event.{DelayedEvent, IDelayedEventHandler}
 import mffs.field.module.ItemModuleArray
 import mffs.item.card.ItemCard
 import mffs.util.TCache
-import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.mffs.machine.{IFieldMatrix, IPermissionProvider}
 import resonant.api.mffs.modules.{IModule, IProjectorMode}
-import resonant.lib.prefab.tile.traits.TRotatable
-import resonant.lib.wrapper.ByteBufWrapper._
 import resonant.lib.network.discriminator.PacketType
+import resonant.lib.prefab.tile.traits.TRotatable
 import resonant.lib.transform.rotation.EulerAngle
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.RotationUtility
+import resonant.lib.wrapper.ByteBufWrapper._
 
 import scala.collection.convert.wrapAll._
 import scala.collection.mutable
@@ -29,16 +28,15 @@ import scala.util.{Failure, Success}
 
 abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with IDelayedEventHandler with TRotatable with IPermissionProvider
 {
-  protected var calculatedField: mutable.Set[Vector3] = null
   protected final val delayedEvents = new mutable.SynchronizedQueue[DelayedEvent]()
-
+  val _getModuleSlots = (14 until 25).toArray
+  protected val modeSlotID = 1
   /**
    * Are the directions on the GUI absolute values?
    */
   var absoluteDirection = false
+  protected var calculatedField: mutable.Set[Vector3] = null
   protected var isCalculating = false
-
-  protected val modeSlotID = 1
 
   override def update()
   {
@@ -63,9 +61,9 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     }
   }
 
-  override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType): Boolean =
+  override def read(buf: ByteBuf, id: Int, packetType: PacketType)
   {
-    super.read(buf, id, player, packet)
+    super.read(buf, id, packetType)
 
     if (world.isRemote)
     {
@@ -81,8 +79,6 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
         absoluteDirection = !absoluteDirection
       }
     }
-
-    return false
   }
 
   override def isItemValidForSlot(slotID: Int, itemStack: ItemStack): Boolean =
@@ -99,16 +95,121 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     return itemStack.getItem.isInstanceOf[IModule]
   }
 
-  def getModeStack: ItemStack =
+  def getSidedModuleCount(module: IModule, directions: ForgeDirection*): Int =
   {
-    if (this.getStackInSlot(modeSlotID) != null)
+    var actualDirs = directions
+
+    if (directions == null || directions.length > 0)
+      actualDirs = ForgeDirection.VALID_DIRECTIONS
+
+    return actualDirs.foldLeft(0)((b, a) => b + getModuleCount(module, getDirectionSlots(a): _*))
+  }
+
+  def getPositiveScale: Vector3 =
+  {
+    val cacheID = "getPositiveScale"
+
+    if (hasCache(classOf[Vector3], cacheID)) return getCache(classOf[Vector3], cacheID)
+
+    var zScalePos = 0
+    var xScalePos = 0
+    var yScalePos = 0
+
+    if (absoluteDirection)
     {
-      if (this.getStackInSlot(modeSlotID).getItem.isInstanceOf[IProjectorMode])
-      {
-        return this.getStackInSlot(modeSlotID)
-      }
+      zScalePos = getModuleCount(Content.moduleScale, getDirectionSlots(ForgeDirection.SOUTH): _*)
+      xScalePos = getModuleCount(Content.moduleScale, getDirectionSlots(ForgeDirection.EAST): _*)
+      yScalePos = getModuleCount(Content.moduleScale, getDirectionSlots(ForgeDirection.UP): _*)
     }
-    return null
+    else
+    {
+      val direction = getDirection
+
+      zScalePos = getModuleCount(Content.moduleScale, getDirectionSlots(RotationUtility.getRelativeSide(direction, ForgeDirection.SOUTH)): _*)
+      xScalePos = getModuleCount(Content.moduleScale, getDirectionSlots(RotationUtility.getRelativeSide(direction, ForgeDirection.EAST)): _*)
+      yScalePos = getModuleCount(Content.moduleScale, getDirectionSlots(ForgeDirection.UP): _*)
+    }
+
+    val omnidirectionalScale = getModuleCount(Content.moduleScale, getModuleSlots: _*)
+
+    zScalePos += omnidirectionalScale
+    xScalePos += omnidirectionalScale
+    yScalePos += omnidirectionalScale
+
+    val positiveScale = new Vector3(xScalePos, yScalePos, zScalePos)
+
+    cache(cacheID, positiveScale)
+
+    return positiveScale
+  }
+
+  def getModuleSlots: Array[Int] = _getModuleSlots
+
+  def getNegativeScale: Vector3 =
+  {
+    val cacheID = "getNegativeScale"
+
+    if (hasCache(classOf[Vector3], cacheID)) return getCache(classOf[Vector3], cacheID)
+
+    var zScaleNeg = 0
+    var xScaleNeg = 0
+    var yScaleNeg = 0
+
+    val direction = getDirection
+
+    if (absoluteDirection)
+    {
+      zScaleNeg = getModuleCount(Content.moduleScale, getDirectionSlots(ForgeDirection.NORTH): _*)
+      xScaleNeg = getModuleCount(Content.moduleScale, getDirectionSlots(ForgeDirection.WEST): _*)
+      yScaleNeg = getModuleCount(Content.moduleScale, getDirectionSlots(ForgeDirection.DOWN): _*)
+    }
+    else
+    {
+      zScaleNeg = getModuleCount(Content.moduleScale, getDirectionSlots(RotationUtility.getRelativeSide(direction, ForgeDirection.NORTH)): _*)
+      xScaleNeg = getModuleCount(Content.moduleScale, getDirectionSlots(RotationUtility.getRelativeSide(direction, ForgeDirection.WEST)): _*)
+      yScaleNeg = getModuleCount(Content.moduleScale, getDirectionSlots(ForgeDirection.DOWN): _*)
+    }
+
+    val omnidirectionalScale = this.getModuleCount(Content.moduleScale, getModuleSlots: _*)
+    zScaleNeg += omnidirectionalScale
+    xScaleNeg += omnidirectionalScale
+    yScaleNeg += omnidirectionalScale
+
+    val negativeScale = new Vector3(xScaleNeg, yScaleNeg, zScaleNeg)
+
+    cache(cacheID, negativeScale)
+
+    return negativeScale
+  }
+
+  def getInteriorPoints: JSet[Vector3] =
+  {
+    val cacheID = "getInteriorPoints"
+
+    if (hasCache(classOf[Set[Vector3]], cacheID)) return getCache(classOf[Set[Vector3]], cacheID)
+
+    if (getModeStack != null && getModeStack.getItem.isInstanceOf[TCache])
+    {
+      (getModeStack.getItem.asInstanceOf[TCache]).clearCache
+    }
+
+    val newField = getMode.getInteriorPoints(this)
+
+    if (getModuleCount(Content.moduleArray) > 0)
+    {
+      Content.moduleArray.asInstanceOf[ItemModuleArray].onPreCalculateInterior(this, getMode.getExteriorPoints(this), newField)
+    }
+
+    val translation = getTranslation
+    val rotationYaw = getRotationYaw
+    val rotationPitch = getRotationPitch
+    val rotation = new EulerAngle(rotationYaw, rotationPitch, 0)
+    val maxHeight = world.getHeight
+
+    val field = mutable.Set((newField.view.par map (pos => (pos.transform(rotation) + toVector3 + translation).round) filter (position => position.yi <= maxHeight && position.yi >= 0)).seq.toSeq: _ *)
+
+    cache(cacheID, field)
+    return field
   }
 
   def getMode: IProjectorMode =
@@ -120,14 +221,16 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     return null
   }
 
-  def getSidedModuleCount(module: IModule, directions: ForgeDirection*): Int =
+  def getModeStack: ItemStack =
   {
-    var actualDirs = directions
-
-    if (directions == null || directions.length > 0)
-      actualDirs = ForgeDirection.VALID_DIRECTIONS
-
-    return actualDirs.foldLeft(0)((b, a) => b + getModuleCount(module, getDirectionSlots(a): _*))
+    if (this.getStackInSlot(modeSlotID) != null)
+    {
+      if (this.getStackInSlot(modeSlotID).getItem.isInstanceOf[IProjectorMode])
+      {
+        return this.getStackInSlot(modeSlotID)
+      }
+    }
+    return null
   }
 
   def getTranslation: Vector3 =
@@ -171,81 +274,6 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     return translation
   }
 
-  def getPositiveScale: Vector3 =
-  {
-    val cacheID = "getPositiveScale"
-
-    if (hasCache(classOf[Vector3], cacheID)) return getCache(classOf[Vector3], cacheID)
-
-    var zScalePos = 0
-    var xScalePos = 0
-    var yScalePos = 0
-
-    if (absoluteDirection)
-    {
-      zScalePos = getModuleCount(Content.moduleScale, getDirectionSlots(ForgeDirection.SOUTH): _*)
-      xScalePos = getModuleCount(Content.moduleScale, getDirectionSlots(ForgeDirection.EAST): _*)
-      yScalePos = getModuleCount(Content.moduleScale, getDirectionSlots(ForgeDirection.UP): _*)
-    }
-    else
-    {
-      val direction = getDirection
-
-      zScalePos = getModuleCount(Content.moduleScale, getDirectionSlots(RotationUtility.getRelativeSide(direction, ForgeDirection.SOUTH)): _*)
-      xScalePos = getModuleCount(Content.moduleScale, getDirectionSlots(RotationUtility.getRelativeSide(direction, ForgeDirection.EAST)): _*)
-      yScalePos = getModuleCount(Content.moduleScale, getDirectionSlots(ForgeDirection.UP): _*)
-    }
-
-    val omnidirectionalScale = getModuleCount(Content.moduleScale, getModuleSlots: _*)
-
-    zScalePos += omnidirectionalScale
-    xScalePos += omnidirectionalScale
-    yScalePos += omnidirectionalScale
-
-    val positiveScale = new Vector3(xScalePos, yScalePos, zScalePos)
-
-    cache(cacheID, positiveScale)
-
-    return positiveScale
-  }
-
-  def getNegativeScale: Vector3 =
-  {
-    val cacheID = "getNegativeScale"
-
-    if (hasCache(classOf[Vector3], cacheID)) return getCache(classOf[Vector3], cacheID)
-
-    var zScaleNeg = 0
-    var xScaleNeg = 0
-    var yScaleNeg = 0
-
-    val direction = getDirection
-
-    if (absoluteDirection)
-    {
-      zScaleNeg = getModuleCount(Content.moduleScale, getDirectionSlots(ForgeDirection.NORTH): _*)
-      xScaleNeg = getModuleCount(Content.moduleScale, getDirectionSlots(ForgeDirection.WEST): _*)
-      yScaleNeg = getModuleCount(Content.moduleScale, getDirectionSlots(ForgeDirection.DOWN): _*)
-    }
-    else
-    {
-      zScaleNeg = getModuleCount(Content.moduleScale, getDirectionSlots(RotationUtility.getRelativeSide(direction, ForgeDirection.NORTH)): _*)
-      xScaleNeg = getModuleCount(Content.moduleScale, getDirectionSlots(RotationUtility.getRelativeSide(direction, ForgeDirection.WEST)): _*)
-      yScaleNeg = getModuleCount(Content.moduleScale, getDirectionSlots(ForgeDirection.DOWN): _*)
-    }
-
-    val omnidirectionalScale = this.getModuleCount(Content.moduleScale, getModuleSlots: _*)
-    zScaleNeg += omnidirectionalScale
-    xScaleNeg += omnidirectionalScale
-    yScaleNeg += omnidirectionalScale
-
-    val negativeScale = new Vector3(xScaleNeg, yScaleNeg, zScaleNeg)
-
-    cache(cacheID, negativeScale)
-
-    return negativeScale
-  }
-
   def getRotationYaw: Int =
   {
     val cacheID = "getRotationYaw"
@@ -270,6 +298,27 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     return horizontalRotation
   }
 
+  override def getDirectionSlots(direction: ForgeDirection): Array[Int] =
+  {
+    direction match
+    {
+      case ForgeDirection.UP =>
+        return Array(10, 11)
+      case ForgeDirection.DOWN =>
+        return Array(12, 13)
+      case ForgeDirection.SOUTH =>
+        return Array(2, 3)
+      case ForgeDirection.NORTH =>
+        return Array(4, 5)
+      case ForgeDirection.WEST =>
+        return Array(6, 7)
+      case ForgeDirection.EAST =>
+        return Array(8, 9)
+      case _ =>
+        return Array[Int]()
+    }
+  }
+
   def getRotationPitch: Int =
   {
     val cacheID = "getRotationPitch"
@@ -282,6 +331,31 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     cache(cacheID, verticalRotation)
 
     return verticalRotation
+  }
+
+  def getCalculatedField: JSet[Vector3] =
+  {
+    return if (calculatedField != null) calculatedField else mutable.Set.empty[Vector3]
+  }
+
+  def queueEvent(evt: DelayedEvent)
+  {
+    delayedEvents += evt
+  }
+
+  /**
+   * NBT Methods
+   */
+  override def readFromNBT(nbt: NBTTagCompound)
+  {
+    super.readFromNBT(nbt)
+    absoluteDirection = nbt.getBoolean("isAbsolute")
+  }
+
+  override def writeToNBT(nbt: NBTTagCompound)
+  {
+    super.writeToNBT(nbt)
+    nbt.setBoolean("isAbsolute", absoluteDirection)
   }
 
   /**
@@ -352,86 +426,6 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     getModules() foreach (_.onPostCalculate(this, field))
 
     return field
-  }
-
-  def getInteriorPoints: JSet[Vector3] =
-  {
-    val cacheID = "getInteriorPoints"
-
-    if (hasCache(classOf[Set[Vector3]], cacheID)) return getCache(classOf[Set[Vector3]], cacheID)
-
-    if (getModeStack != null && getModeStack.getItem.isInstanceOf[TCache])
-    {
-      (getModeStack.getItem.asInstanceOf[TCache]).clearCache
-    }
-
-    val newField = getMode.getInteriorPoints(this)
-
-    if (getModuleCount(Content.moduleArray) > 0)
-    {
-      Content.moduleArray.asInstanceOf[ItemModuleArray].onPreCalculateInterior(this, getMode.getExteriorPoints(this), newField)
-    }
-
-    val translation = getTranslation
-    val rotationYaw = getRotationYaw
-    val rotationPitch = getRotationPitch
-    val rotation = new EulerAngle(rotationYaw, rotationPitch, 0)
-    val maxHeight = world.getHeight
-
-    val field = mutable.Set((newField.view.par map (pos => (pos.transform(rotation) + toVector3 + translation).round) filter (position => position.yi <= maxHeight && position.yi >= 0)).seq.toSeq: _ *)
-
-    cache(cacheID, field)
-    return field
-  }
-
-  val _getModuleSlots = (14 until 25).toArray
-
-  def getModuleSlots: Array[Int] = _getModuleSlots
-
-  override def getDirectionSlots(direction: ForgeDirection): Array[Int] =
-  {
-    direction match
-    {
-      case ForgeDirection.UP =>
-        return Array(10, 11)
-      case ForgeDirection.DOWN =>
-        return Array(12, 13)
-      case ForgeDirection.SOUTH =>
-        return Array(2, 3)
-      case ForgeDirection.NORTH =>
-        return Array(4, 5)
-      case ForgeDirection.WEST =>
-        return Array(6, 7)
-      case ForgeDirection.EAST =>
-        return Array(8, 9)
-      case _ =>
-        return Array[Int]()
-    }
-  }
-
-  def getCalculatedField: JSet[Vector3] =
-  {
-    return if (calculatedField != null) calculatedField else mutable.Set.empty[Vector3]
-  }
-
-  def queueEvent(evt: DelayedEvent)
-  {
-    delayedEvents += evt
-  }
-
-  /**
-   * NBT Methods
-   */
-  override def readFromNBT(nbt: NBTTagCompound)
-  {
-    super.readFromNBT(nbt)
-    absoluteDirection = nbt.getBoolean("isAbsolute")
-  }
-
-  override def writeToNBT(nbt: NBTTagCompound)
-  {
-    super.writeToNBT(nbt)
-    nbt.setBoolean("isAbsolute", absoluteDirection)
   }
 
 }

@@ -13,7 +13,7 @@ import net.minecraft.network.Packet
 import resonant.api.mffs.machine.IActivatable
 import resonant.api.tile.{ICamouflageMaterial, IPlayerUsing}
 import resonant.lib.network.discriminator.PacketType
-import resonant.lib.network.handle.{IPacketIDReceiver, TPacketSender}
+import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
 import resonant.lib.network.netty.PacketManager
 import resonant.lib.prefab.tile.spatial.ResonantTile
 import resonant.lib.prefab.tile.traits.TRotatable
@@ -27,7 +27,7 @@ import scala.collection.convert.wrapAll._
  * A base tile class for all MFFS blocks to inherit.
  * @author Calclavia
  */
-abstract class TileMFFS extends ResonantTile(Material.iron) with ICamouflageMaterial with IPacketIDReceiver with TPacketSender with IActivatable with IPlayerUsing
+abstract class TileMFFS extends ResonantTile(Material.iron) with ICamouflageMaterial with TPacketReceiver with TPacketSender with IActivatable with IPlayerUsing
 {
   /**
    * Used for client side animations.
@@ -92,14 +92,14 @@ abstract class TileMFFS extends ResonantTile(Material.iron) with ICamouflageMate
     }
   }
 
-  override def getDescPacket: PacketType = PacketManager.request(this, TilePacketType.description.id)
-
   override def getDescriptionPacket: Packet =
   {
     return ModularForceFieldSystem.packetHandler.toMCPacket(getDescPacket)
   }
 
-  override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType): Boolean =
+  override def getDescPacket: PacketType = PacketManager.request(this, TilePacketType.description.id)
+
+  override def read(buf: ByteBuf, id: Int, packetType: PacketType)
   {
     if (id == TilePacketType.description.id)
     {
@@ -125,9 +125,6 @@ abstract class TileMFFS extends ResonantTile(Material.iron) with ICamouflageMate
         setActive(false)
       }
     }
-
-
-    return false
   }
 
   def setActive(flag: Boolean)
