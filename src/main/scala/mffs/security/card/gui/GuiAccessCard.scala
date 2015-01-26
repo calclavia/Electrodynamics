@@ -7,8 +7,8 @@ import net.minecraft.client.gui.GuiButton
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.Container
 import net.minecraft.item.ItemStack
+import resonantengine.core.network.discriminator.PacketPlayerItem
 import resonantengine.lib.access.Permissions
-import resonantengine.lib.network.discriminator.PacketPlayerItem
 import resonantengine.lib.render.EnumColor
 import resonantengine.lib.wrapper.CollectionWrapper._
 import resonantengine.lib.wrapper.StringWrapper._

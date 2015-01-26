@@ -22,7 +22,7 @@ import net.minecraft.world.{IBlockAccess, World}
 import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import resonantengine.api.mffs.machine.IProjector
 import resonantengine.api.mffs.modules.{IModule, IProjectorMode}
-import resonantengine.lib.network.discriminator.{PacketTile, PacketType}
+import resonantengine.core.network.discriminator.{PacketTile, PacketType}
 import resonantengine.lib.transform.region.Cuboid
 import resonantengine.lib.transform.vector.Vector3
 import resonantengine.lib.wrapper.ByteBufWrapper._
@@ -68,6 +68,40 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
   {
     super.start()
     calculateField(postCalculation)
+  }
+
+  def postCalculation() = if (clientSideSimulationRequired) sendFieldToClient
+
+  def sendFieldToClient
+  {
+    val nbt = new NBTTagCompound
+    val nbtList = new NBTTagList
+    calculatedField foreach (vec => nbtList.appendTag(vec.toNBT))
+    nbt.setTag("blockList", nbtList)
+    ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(this, TilePacketType.field.id: Integer, nbt))
+  }
+
+  private def clientSideSimulationRequired: Boolean =
+  {
+    return getModuleCount(Content.moduleRepulsion) > 0
+  }
+
+  /**
+   * Initiate a field calculation
+   */
+  protected override def calculateField(callBack: () => Unit = null)
+  {
+    if (!worldObj.isRemote && !isCalculating)
+    {
+      if (getMode != null)
+      {
+        forceFields.clear
+      }
+
+      super.calculateField(callBack)
+      isCompleteConstructing = false
+      fieldRequireTicks = getModuleStacks() exists (module => module.getItem.asInstanceOf[IModule].requireTicks(module))
+    }
   }
 
   override def getLightValue(access: IBlockAccess) = if (getMode() != null) 10 else 0
@@ -157,40 +191,6 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
     else if (!worldObj.isRemote)
     {
       destroyField()
-    }
-  }
-
-  def postCalculation() = if (clientSideSimulationRequired) sendFieldToClient
-
-  def sendFieldToClient
-  {
-    val nbt = new NBTTagCompound
-    val nbtList = new NBTTagList
-    calculatedField foreach (vec => nbtList.appendTag(vec.toNBT))
-    nbt.setTag("blockList", nbtList)
-    ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(this, TilePacketType.field.id: Integer, nbt))
-  }
-
-  private def clientSideSimulationRequired: Boolean =
-  {
-    return getModuleCount(Content.moduleRepulsion) > 0
-  }
-
-  /**
-   * Initiate a field calculation
-   */
-  protected override def calculateField(callBack: () => Unit = null)
-  {
-    if (!worldObj.isRemote && !isCalculating)
-    {
-      if (getMode != null)
-      {
-        forceFields.clear
-      }
-
-      super.calculateField(callBack)
-      isCompleteConstructing = false
-      fieldRequireTicks = getModuleStacks() exists (module => module.getItem.asInstanceOf[IModule].requireTicks(module))
     }
   }
 

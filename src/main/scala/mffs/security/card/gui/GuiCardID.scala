@@ -5,7 +5,7 @@ import mffs.item.gui.ContainerItem
 import mffs.security.card.ItemCardIdentification
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
-import resonantengine.lib.network.discriminator.PacketPlayerItem
+import resonantengine.core.network.discriminator.PacketPlayerItem
 import resonantengine.lib.utility.LanguageUtility
 
 /**
@@ -25,6 +25,12 @@ class GuiCardID(player: EntityPlayer, itemStack: ItemStack) extends GuiAccessCar
       textField.setText(access.username)
   }
 
+  override def keyTyped(char: Char, p_73869_2_ : Int)
+  {
+    super.keyTyped(char, p_73869_2_)
+    ModularForceFieldSystem.packetHandler.sendToServer(new PacketPlayerItem(player) <<< 1 <<< textField.getText)
+  }
+
   protected override def drawGuiContainerForegroundLayer(x: Int, y: Int)
   {
     drawStringCentered(LanguageUtility.getLocal("item.mffs:cardIdentification.name"))
@@ -35,12 +41,6 @@ class GuiCardID(player: EntityPlayer, itemStack: ItemStack) extends GuiAccessCar
   protected override def drawGuiContainerBackgroundLayer(f: Float, x: Int, y: Int)
   {
     super.drawGuiContainerBackgroundLayer(f, x, y)
-  }
-
-  override def keyTyped(char: Char, p_73869_2_ : Int)
-  {
-    super.keyTyped(char, p_73869_2_)
-    ModularForceFieldSystem.packetHandler.sendToServer(new PacketPlayerItem(player) <<< 1 <<< textField.getText)
   }
 
 }

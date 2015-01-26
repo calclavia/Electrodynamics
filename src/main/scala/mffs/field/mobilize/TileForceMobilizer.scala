@@ -22,7 +22,7 @@ import resonantengine.api.mffs.Blacklist
 import resonantengine.api.mffs.card.ICoordLink
 import resonantengine.api.mffs.event.EventForceMobilize
 import resonantengine.api.mffs.modules.{IModule, IProjectorMode}
-import resonantengine.lib.network.discriminator.{PacketTile, PacketType}
+import resonantengine.core.network.discriminator.{PacketTile, PacketType}
 import resonantengine.lib.transform.region.Cuboid
 import resonantengine.lib.transform.vector.{Vector3, VectorWorld}
 import resonantengine.lib.wrapper.ByteBufWrapper._

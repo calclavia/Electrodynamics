@@ -5,7 +5,7 @@ import mffs.base.{GuiMFFS, TilePacketType}
 import net.minecraft.client.gui.GuiButton
 import net.minecraft.entity.player.EntityPlayer
 import org.lwjgl.opengl.GL11
-import resonantengine.lib.network.discriminator.PacketTile
+import resonantengine.core.network.discriminator.PacketTile
 import resonantengine.lib.prefab.gui.GuiContainerBase.SlotType
 import resonantengine.lib.render.EnumColor
 import resonantengine.lib.utility.LanguageUtility

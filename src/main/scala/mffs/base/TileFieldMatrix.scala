@@ -13,12 +13,12 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import resonantengine.api.mffs.machine.{IFieldMatrix, IPermissionProvider}
 import resonantengine.api.mffs.modules.{IModule, IProjectorMode}
-import resonantengine.lib.network.discriminator.PacketType
-import resonantengine.lib.prefab.tile.traits.TRotatable
+import resonantengine.core.network.discriminator.PacketType
 import resonantengine.lib.transform.rotation.EulerAngle
 import resonantengine.lib.transform.vector.Vector3
 import resonantengine.lib.utility.RotationUtility
 import resonantengine.lib.wrapper.ByteBufWrapper._
+import resonantengine.prefab.block.traits.TRotatable
 
 import scala.collection.convert.wrapAll._
 import scala.collection.mutable
@@ -143,8 +143,6 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     return positiveScale
   }
 
-  def getModuleSlots: Array[Int] = _getModuleSlots
-
   def getNegativeScale: Vector3 =
   {
     val cacheID = "getNegativeScale"
@@ -180,6 +178,29 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     cache(cacheID, negativeScale)
 
     return negativeScale
+  }
+
+  def getModuleSlots: Array[Int] = _getModuleSlots
+
+  override def getDirectionSlots(direction: ForgeDirection): Array[Int] =
+  {
+    direction match
+    {
+      case ForgeDirection.UP =>
+        return Array(10, 11)
+      case ForgeDirection.DOWN =>
+        return Array(12, 13)
+      case ForgeDirection.SOUTH =>
+        return Array(2, 3)
+      case ForgeDirection.NORTH =>
+        return Array(4, 5)
+      case ForgeDirection.WEST =>
+        return Array(6, 7)
+      case ForgeDirection.EAST =>
+        return Array(8, 9)
+      case _ =>
+        return Array[Int]()
+    }
   }
 
   def getInteriorPoints: JSet[Vector3] =
@@ -296,27 +317,6 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     cache(cacheID, horizontalRotation)
 
     return horizontalRotation
-  }
-
-  override def getDirectionSlots(direction: ForgeDirection): Array[Int] =
-  {
-    direction match
-    {
-      case ForgeDirection.UP =>
-        return Array(10, 11)
-      case ForgeDirection.DOWN =>
-        return Array(12, 13)
-      case ForgeDirection.SOUTH =>
-        return Array(2, 3)
-      case ForgeDirection.NORTH =>
-        return Array(4, 5)
-      case ForgeDirection.WEST =>
-        return Array(6, 7)
-      case ForgeDirection.EAST =>
-        return Array(8, 9)
-      case _ =>
-        return Array[Int]()
-    }
   }
 
   def getRotationPitch: Int =

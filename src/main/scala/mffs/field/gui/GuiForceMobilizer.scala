@@ -8,7 +8,7 @@ import net.minecraft.client.gui.GuiButton
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.{Blocks, Items}
 import net.minecraft.item.ItemStack
-import resonantengine.lib.network.discriminator.PacketTile
+import resonantengine.core.network.discriminator.PacketTile
 import resonantengine.lib.render.EnumColor
 import resonantengine.lib.utility.LanguageUtility
 import resonantengine.lib.utility.science.UnitDisplay

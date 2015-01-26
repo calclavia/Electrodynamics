@@ -11,9 +11,9 @@ import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import resonantengine.api.mffs.modules.IModule
+import resonantengine.core.network.discriminator.PacketType
 import resonantengine.lib.grid.energy.electric.TTEBridge
 import resonantengine.lib.mod.compat.energy.Compatibility
-import resonantengine.lib.network.discriminator.PacketType
 import resonantengine.lib.transform.vector.Vector3
 import resonantengine.lib.wrapper.ByteBufWrapper._
 

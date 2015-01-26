@@ -16,9 +16,9 @@ import net.minecraftforge.common.config.Configuration
 import net.minecraftforge.fluids.FluidRegistry
 import org.modstats.{ModstatInfo, Modstats}
 import resonantengine.api.mffs.Blacklist
+import resonantengine.core.network.netty.PacketManager
 import resonantengine.lib.mod.config.ConfigHandler
 import resonantengine.lib.mod.loadable.LoadableHandler
-import resonantengine.lib.network.netty.PacketManager
 import resonantengine.lib.prefab.damage.CustomDamageSource
 
 @Mod(modid = Reference.id, name = Reference.name, version = Reference.version, dependencies = "required-after:ResonantEngine", modLanguage = "scala", guiFactory = "mffs.MFFSGuiFactory")

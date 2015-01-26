@@ -12,8 +12,7 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.World
 import resonantengine.api.item.IItemFrequency
 import resonantengine.api.network.IPacketReceiver
-import resonantengine.lib.network.discriminator.PacketType
-import resonantengine.prefab.network.TPacketReceiver
+import resonantengine.core.network.discriminator.PacketType
 import resonantengine.lib.utility.LanguageUtility
 import resonantengine.lib.wrapper.CollectionWrapper._
 

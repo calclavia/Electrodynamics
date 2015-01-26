@@ -16,7 +16,7 @@ import net.minecraftforge.fluids.IFluidContainerItem
 import resonantengine.api.mffs.card.ICoordLink
 import resonantengine.api.mffs.fortron.{FrequencyGridRegistry, IFortronCapacitor, IFortronFrequency, IFortronStorage}
 import resonantengine.api.mffs.modules.IModule
-import resonantengine.lib.network.discriminator.PacketType
+import resonantengine.core.network.discriminator.PacketType
 import resonantengine.lib.transform.vector.Vector3
 import resonantengine.lib.wrapper.ByteBufWrapper._
 
@@ -122,8 +122,6 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
 
   def getInputStacks: Set[ItemStack] = ((4 to 7) map (i => getStackInSlot(i)) filter (_ != null)).toSet
 
-  def getOutputDevices: JSet[IFortronFrequency] = getDevicesFromStacks(getOutputStacks)
-
   def getDevicesFromStacks(stacks: Set[ItemStack]): JSet[IFortronFrequency] =
   {
     val devices = new JHashSet[IFortronFrequency]()
@@ -136,6 +134,8 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
 
     return devices
   }
+
+  def getOutputDevices: JSet[IFortronFrequency] = getDevicesFromStacks(getOutputStacks)
 
   def getOutputStacks: Set[ItemStack] = ((8 to 11) map (i => getStackInSlot(i)) filter (_ != null)).toSet
 

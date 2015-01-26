@@ -16,7 +16,7 @@ import net.minecraftforge.fluids.IFluidBlock
 import resonantengine.api.mffs.Blacklist
 import resonantengine.api.mffs.event.EventStabilize
 import resonantengine.api.mffs.machine.IProjector
-import resonantengine.lib.network.discriminator.PacketTile
+import resonantengine.core.network.discriminator.PacketTile
 import resonantengine.lib.transform.rotation.EulerAngle
 import resonantengine.lib.transform.vector.{Vector3, VectorWorld}
 
