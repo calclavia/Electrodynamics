@@ -6,10 +6,10 @@ import mffs.util.{FortronUtility, TransferMode}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
-import resonant.api.mffs.fortron.{FrequencyGridRegistry, IFortronFrequency}
-import resonant.lib.network.discriminator.PacketType
-import resonant.lib.network.netty.PacketManager
-import resonant.lib.wrapper.ByteBufWrapper._
+import resonantengine.api.mffs.fortron.{FrequencyGridRegistry, IFortronFrequency}
+import resonantengine.lib.network.discriminator.PacketType
+import resonantengine.lib.network.netty.PacketManager
+import resonantengine.lib.wrapper.ByteBufWrapper._
 
 import scala.collection.convert.wrapAll._
 

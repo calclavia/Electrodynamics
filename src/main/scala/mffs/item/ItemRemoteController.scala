@@ -20,13 +20,13 @@ import net.minecraft.world.World
 import net.minecraft.world.chunk.Chunk
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action
 import net.minecraftforge.fluids.FluidContainerRegistry
-import resonant.api.mffs.card.ICoordLink
-import resonant.api.mffs.event.EventForceMobilize
-import resonant.api.mffs.fortron.{FrequencyGridRegistry, IFortronFrequency}
-import resonant.lib.transform.vector.{Vector3, VectorWorld}
-import resonant.lib.utility.LanguageUtility
-import resonant.lib.utility.science.UnitDisplay
-import resonant.lib.wrapper.CollectionWrapper._
+import resonantengine.api.mffs.card.ICoordLink
+import resonantengine.api.mffs.event.EventForceMobilize
+import resonantengine.api.mffs.fortron.{FrequencyGridRegistry, IFortronFrequency}
+import resonantengine.lib.transform.vector.{Vector3, VectorWorld}
+import resonantengine.lib.utility.LanguageUtility
+import resonantengine.lib.utility.science.UnitDisplay
+import resonantengine.lib.wrapper.CollectionWrapper._
 
 import scala.collection.JavaConversions._
 

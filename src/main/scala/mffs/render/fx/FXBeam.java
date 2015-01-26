@@ -11,8 +11,8 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
-import resonant.lib.render.RenderUtility;
-import resonant.lib.transform.vector.Vector3;
+import resonantengine.lib.render.RenderUtility;
+import resonantengine.lib.transform.vector.Vector3;
 
 /**
  * Based off Thaumcraft's Beam Renderer.

@@ -2,9 +2,9 @@ package mffs.field.mode
 
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import mffs.base.ItemMFFS
-import resonant.api.mffs.machine.{IFieldMatrix, IProjector}
-import resonant.api.mffs.modules.IProjectorMode
-import resonant.lib.transform.vector.Vector3
+import resonantengine.api.mffs.machine.{IFieldMatrix, IProjector}
+import resonantengine.api.mffs.modules.IProjectorMode
+import resonantengine.lib.transform.vector.Vector3
 
 abstract class ItemMode extends ItemMFFS with IProjectorMode
 {

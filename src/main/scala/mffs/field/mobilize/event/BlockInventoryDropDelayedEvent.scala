@@ -4,7 +4,7 @@ import mffs.base.TileMFFSInventory
 import net.minecraft.block.Block
 import net.minecraft.init.Blocks
 import net.minecraft.world.World
-import resonant.lib.transform.vector.Vector3
+import resonantengine.lib.transform.vector.Vector3
 
 import scala.collection.JavaConversions._
 

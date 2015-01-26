@@ -4,9 +4,9 @@ import mffs.base.TileFieldMatrix
 import mffs.item.card.ItemCardFrequency
 import mffs.slot.SlotBase
 import net.minecraft.entity.player.EntityPlayer
-import resonant.lib.prefab.gui.ContainerBase
-import resonant.lib.prefab.gui.slot.SlotSpecific
-import resonant.lib.transform.vector.Vector2
+import resonantengine.lib.prefab.gui.ContainerBase
+import resonantengine.lib.prefab.gui.slot.SlotSpecific
+import resonantengine.lib.transform.vector.Vector2
 
 class ContainerMatrix(player: EntityPlayer, tileEntity: TileFieldMatrix, val matrixCenter: Vector2 = new Vector2(110, 55)) extends ContainerBase(tileEntity)
 {

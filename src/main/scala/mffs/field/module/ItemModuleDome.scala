@@ -4,8 +4,8 @@ import java.util.Set
 
 import mffs.base.ItemModule
 import net.minecraft.tileentity.TileEntity
-import resonant.api.mffs.machine.IFieldMatrix
-import resonant.lib.transform.vector.Vector3
+import resonantengine.api.mffs.machine.IFieldMatrix
+import resonantengine.lib.transform.vector.Vector3
 
 import scala.collection.convert.wrapAll._
 

@@ -21,11 +21,11 @@ import net.minecraftforge.client.event.TextureStitchEvent
 import net.minecraftforge.event.entity.living.LivingSpawnEvent
 import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action
-import resonant.api.mffs.event.{EventForceMobilize, EventStabilize}
-import resonant.api.mffs.fortron.FrequencyGridRegistry
-import resonant.lib.event.ChunkModifiedEvent
-import resonant.lib.mod.config.ConfigHandler
-import resonant.lib.transform.vector.Vector3
+import resonantengine.api.mffs.event.{EventForceMobilize, EventStabilize}
+import resonantengine.api.mffs.fortron.FrequencyGridRegistry
+import resonantengine.api.event.ChunkModifiedEvent
+import resonantengine.lib.mod.config.ConfigHandler
+import resonantengine.lib.transform.vector.Vector3
 
 import scala.collection.JavaConversions._
 

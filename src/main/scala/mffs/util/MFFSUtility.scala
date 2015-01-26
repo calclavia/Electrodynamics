@@ -12,12 +12,12 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.event.entity.player.PlayerInteractEvent
-import resonant.api.mffs.fortron.FrequencyGridRegistry
-import resonant.api.mffs.machine.IProjector
-import resonant.lib.access.Permission
-import resonant.lib.grid.frequency.GridFrequency
-import resonant.lib.transform.rotation.EulerAngle
-import resonant.lib.transform.vector.Vector3
+import resonantengine.api.mffs.fortron.FrequencyGridRegistry
+import resonantengine.api.mffs.machine.IProjector
+import resonantengine.lib.access.Permission
+import resonantengine.lib.grid.frequency.GridFrequency
+import resonantengine.lib.transform.rotation.EulerAngle
+import resonantengine.lib.transform.vector.Vector3
 
 import scala.collection.JavaConversions._
 import scala.collection.mutable

@@ -18,14 +18,14 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.AxisAlignedBB
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.api.mffs.Blacklist
-import resonant.api.mffs.card.ICoordLink
-import resonant.api.mffs.event.EventForceMobilize
-import resonant.api.mffs.modules.{IModule, IProjectorMode}
-import resonant.lib.network.discriminator.{PacketTile, PacketType}
-import resonant.lib.transform.region.Cuboid
-import resonant.lib.transform.vector.{Vector3, VectorWorld}
-import resonant.lib.wrapper.ByteBufWrapper._
+import resonantengine.api.mffs.Blacklist
+import resonantengine.api.mffs.card.ICoordLink
+import resonantengine.api.mffs.event.EventForceMobilize
+import resonantengine.api.mffs.modules.{IModule, IProjectorMode}
+import resonantengine.lib.network.discriminator.{PacketTile, PacketType}
+import resonantengine.lib.transform.region.Cuboid
+import resonantengine.lib.transform.vector.{Vector3, VectorWorld}
+import resonantengine.lib.wrapper.ByteBufWrapper._
 
 import scala.collection.convert.wrapAll._
 import scala.collection.mutable

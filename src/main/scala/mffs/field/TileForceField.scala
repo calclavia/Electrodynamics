@@ -17,14 +17,14 @@ import net.minecraft.network.Packet
 import net.minecraft.potion.{Potion, PotionEffect}
 import net.minecraft.util.{IIcon, MovingObjectPosition}
 import net.minecraft.world.IBlockAccess
-import resonant.api.mffs.machine.{IForceField, IProjector}
-import resonant.api.mffs.modules.IModule
-import resonant.lib.network.discriminator.{PacketTile, PacketType}
-import resonant.lib.network.handle.TPacketReceiver
-import resonant.lib.prefab.tile.spatial.ResonantTile
-import resonant.lib.transform.region.Cuboid
-import resonant.lib.transform.vector.Vector3
-import resonant.lib.wrapper.ByteBufWrapper._
+import resonantengine.api.mffs.machine.{IForceField, IProjector}
+import resonantengine.api.mffs.modules.IModule
+import resonantengine.lib.network.discriminator.{PacketTile, PacketType}
+import resonantengine.prefab.network.TPacketReceiver
+import resonantengine.lib.prefab.tile.spatial.ResonantTile
+import resonantengine.lib.transform.region.Cuboid
+import resonantengine.lib.transform.vector.Vector3
+import resonantengine.lib.wrapper.ByteBufWrapper._
 
 import scala.collection.convert.wrapAll._
 

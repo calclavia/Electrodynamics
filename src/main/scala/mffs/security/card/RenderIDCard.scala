@@ -13,7 +13,7 @@ import net.minecraftforge.client.IItemRenderer
 import net.minecraftforge.client.IItemRenderer.ItemRenderType
 import org.lwjgl.opengl.GL11._
 import org.lwjgl.opengl.GL12
-import resonant.lib.transform.vector.Vector2
+import resonantengine.lib.transform.vector.Vector2
 
 /**
  * All thanks to Briman for the id card face rendering! Check out the mod MineForver!

@@ -3,10 +3,10 @@ package mffs.base
 import io.netty.buffer.ByteBuf
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
-import resonant.lib.content.prefab.TInventory
-import resonant.lib.network.discriminator.PacketType
-import resonant.lib.utility.inventory.TPrefabInventory
-import resonant.lib.wrapper.ByteBufWrapper._
+import resonantengine.lib.content.prefab.TInventory
+import resonantengine.lib.network.discriminator.PacketType
+import resonantengine.lib.utility.inventory.TPrefabInventory
+import resonantengine.lib.wrapper.ByteBufWrapper._
 
 /**
  * All TileEntities that have an inventory should extend this.

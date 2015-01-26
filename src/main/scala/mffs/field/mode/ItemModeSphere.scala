@@ -6,9 +6,9 @@ import cpw.mods.fml.relauncher.{Side, SideOnly}
 import mffs.Content
 import net.minecraft.tileentity.TileEntity
 import org.lwjgl.opengl.GL11
-import resonant.api.mffs.machine.{IFieldMatrix, IProjector}
-import resonant.lib.render.model.ModelCube
-import resonant.lib.transform.vector.Vector3
+import resonantengine.api.mffs.machine.{IFieldMatrix, IProjector}
+import resonantengine.lib.render.model.ModelCube
+import resonantengine.lib.transform.vector.Vector3
 
 class ItemModeSphere extends ItemMode
 {

@@ -18,11 +18,11 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.ChatComponentText
 import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.api.mffs.machine.{IFieldMatrix, IProjector}
-import resonant.lib.transform.vector.Vector3
-import resonant.lib.utility.LanguageUtility
-import resonant.lib.utility.nbt.NBTUtility
-import resonant.lib.wrapper.CollectionWrapper._
+import resonantengine.api.mffs.machine.{IFieldMatrix, IProjector}
+import resonantengine.lib.transform.vector.Vector3
+import resonantengine.lib.utility.LanguageUtility
+import resonantengine.lib.utility.nbt.NBTUtility
+import resonantengine.lib.wrapper.CollectionWrapper._
 
 import scala.collection.JavaConversions._
 import scala.collection.mutable

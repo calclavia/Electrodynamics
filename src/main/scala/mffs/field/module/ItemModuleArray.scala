@@ -4,8 +4,8 @@ import java.util.{HashSet, Set}
 
 import mffs.base.ItemModule
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.api.mffs.machine.IFieldMatrix
-import resonant.lib.transform.vector.Vector3
+import resonantengine.api.mffs.machine.IFieldMatrix
+import resonantengine.lib.transform.vector.Vector3
 
 import scala.collection.JavaConversions._
 import scala.collection.mutable

@@ -10,10 +10,10 @@ import mffs.item.card.ItemCardFrequency
 import mffs.{ModularForceFieldSystem, Settings}
 import net.minecraft.client.renderer.RenderBlocks
 import net.minecraft.item.ItemStack
-import resonant.api.mffs.card.IAccessCard
-import resonant.lib.access.Permission
-import resonant.lib.prefab.tile.traits.TRotatable
-import resonant.lib.transform.vector.Vector3
+import resonantengine.api.mffs.card.IAccessCard
+import resonantengine.lib.access.Permission
+import resonantengine.lib.prefab.tile.traits.TRotatable
+import resonantengine.lib.transform.vector.Vector3
 
 object TileBiometricIdentifier
 {

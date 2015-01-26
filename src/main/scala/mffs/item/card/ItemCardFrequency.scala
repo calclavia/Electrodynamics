@@ -10,13 +10,14 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.World
-import resonant.api.items.IItemFrequency
-import resonant.lib.network.discriminator.PacketType
-import resonant.lib.network.handle.TPacketReceiver
-import resonant.lib.utility.LanguageUtility
-import resonant.lib.wrapper.CollectionWrapper._
+import resonantengine.api.item.IItemFrequency
+import resonantengine.api.network.IPacketReceiver
+import resonantengine.lib.network.discriminator.PacketType
+import resonantengine.prefab.network.TPacketReceiver
+import resonantengine.lib.utility.LanguageUtility
+import resonantengine.lib.wrapper.CollectionWrapper._
 
-class ItemCardFrequency extends ItemCard with IItemFrequency with TPacketReceiver
+class ItemCardFrequency extends ItemCard with IItemFrequency with IPacketReceiver
 {
   override def addInformation(itemStack: ItemStack, par2EntityPlayer: EntityPlayer, list: List[_], par4: Boolean)
   {

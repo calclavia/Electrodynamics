@@ -8,9 +8,9 @@ import mffs.util.TCache
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.fluids.FluidContainerRegistry
-import resonant.api.mffs.modules.{IModule, IModuleProvider}
-import resonant.lib.network.discriminator.PacketType
-import resonant.lib.wrapper.ByteBufWrapper._
+import resonantengine.api.mffs.modules.{IModule, IModuleProvider}
+import resonantengine.lib.network.discriminator.PacketType
+import resonantengine.lib.wrapper.ByteBufWrapper._
 
 import scala.collection.convert.wrapAll._
 

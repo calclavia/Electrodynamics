@@ -2,8 +2,8 @@ package mffs.slot;
 
 import mffs.base.TileFrequency;
 import net.minecraft.item.ItemStack;
-import resonant.api.tile.IBlockFrequency;
-import resonant.api.items.IItemFrequency;
+import resonantengine.api.tile.IBlockFrequency;
+import resonantengine.api.item.IItemFrequency;
 
 public class SlotCard extends SlotBase
 {

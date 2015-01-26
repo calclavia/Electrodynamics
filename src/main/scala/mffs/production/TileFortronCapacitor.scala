@@ -13,12 +13,12 @@ import net.minecraft.client.renderer.RenderBlocks
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.fluids.IFluidContainerItem
-import resonant.api.mffs.card.ICoordLink
-import resonant.api.mffs.fortron.{FrequencyGridRegistry, IFortronCapacitor, IFortronFrequency, IFortronStorage}
-import resonant.api.mffs.modules.IModule
-import resonant.lib.network.discriminator.PacketType
-import resonant.lib.transform.vector.Vector3
-import resonant.lib.wrapper.ByteBufWrapper._
+import resonantengine.api.mffs.card.ICoordLink
+import resonantengine.api.mffs.fortron.{FrequencyGridRegistry, IFortronCapacitor, IFortronFrequency, IFortronStorage}
+import resonantengine.api.mffs.modules.IModule
+import resonantengine.lib.network.discriminator.PacketType
+import resonantengine.lib.transform.vector.Vector3
+import resonantengine.lib.wrapper.ByteBufWrapper._
 
 import scala.collection.JavaConversions._
 

@@ -7,13 +7,13 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
-import resonant.api.mffs.machine.{IFieldMatrix, IProjector}
-import resonant.api.mffs.modules.IModule
-import resonant.lib.transform.region.Cuboid
-import resonant.lib.transform.vector.Vector3
-import resonant.lib.utility.LanguageUtility
-import resonant.lib.utility.science.UnitDisplay
-import resonant.lib.wrapper.CollectionWrapper._
+import resonantengine.api.mffs.machine.{IFieldMatrix, IProjector}
+import resonantengine.api.mffs.modules.IModule
+import resonantengine.lib.transform.region.Cuboid
+import resonantengine.lib.transform.vector.Vector3
+import resonantengine.lib.utility.LanguageUtility
+import resonantengine.lib.utility.science.UnitDisplay
+import resonantengine.lib.wrapper.CollectionWrapper._
 
 import scala.collection.convert.wrapAll._
 class ItemModule extends ItemMFFS with IModule

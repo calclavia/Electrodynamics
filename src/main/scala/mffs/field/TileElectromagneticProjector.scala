@@ -20,12 +20,12 @@ import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.{NBTTagCompound, NBTTagList}
 import net.minecraft.world.{IBlockAccess, World}
 import net.minecraftforge.event.entity.player.PlayerInteractEvent
-import resonant.api.mffs.machine.IProjector
-import resonant.api.mffs.modules.{IModule, IProjectorMode}
-import resonant.lib.network.discriminator.{PacketTile, PacketType}
-import resonant.lib.transform.region.Cuboid
-import resonant.lib.transform.vector.Vector3
-import resonant.lib.wrapper.ByteBufWrapper._
+import resonantengine.api.mffs.machine.IProjector
+import resonantengine.api.mffs.modules.{IModule, IProjectorMode}
+import resonantengine.lib.network.discriminator.{PacketTile, PacketType}
+import resonantengine.lib.transform.region.Cuboid
+import resonantengine.lib.transform.vector.Vector3
+import resonantengine.lib.wrapper.ByteBufWrapper._
 
 import scala.collection.JavaConversions._
 import scala.collection.mutable

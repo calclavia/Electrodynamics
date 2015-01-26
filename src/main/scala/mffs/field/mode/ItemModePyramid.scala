@@ -6,10 +6,10 @@ import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.client.renderer.Tessellator
 import net.minecraft.tileentity.TileEntity
 import org.lwjgl.opengl.GL11
-import resonant.api.mffs.machine.{IFieldMatrix, IProjector}
-import resonant.lib.transform.region.Cuboid
-import resonant.lib.transform.rotation.EulerAngle
-import resonant.lib.transform.vector.Vector3
+import resonantengine.api.mffs.machine.{IFieldMatrix, IProjector}
+import resonantengine.lib.transform.region.Cuboid
+import resonantengine.lib.transform.rotation.EulerAngle
+import resonantengine.lib.transform.vector.Vector3
 
 class ItemModePyramid extends ItemMode
 {

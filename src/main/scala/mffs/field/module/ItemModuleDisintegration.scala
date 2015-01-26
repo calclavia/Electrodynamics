@@ -11,10 +11,10 @@ import net.minecraft.block.BlockLiquid
 import net.minecraft.item.{ItemBlock, ItemStack}
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.fluids.IFluidBlock
-import resonant.api.mffs.Blacklist
-import resonant.api.mffs.machine.IProjector
-import resonant.lib.network.discriminator.PacketTile
-import resonant.lib.transform.vector.Vector3
+import resonantengine.api.mffs.Blacklist
+import resonantengine.api.mffs.machine.IProjector
+import resonantengine.lib.network.discriminator.PacketTile
+import resonantengine.lib.transform.vector.Vector3
 
 class ItemModuleDisintegration extends ItemModule
 {

@@ -6,7 +6,7 @@ import mffs.Reference
 import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.model.AdvancedModelLoader
 import org.lwjgl.opengl.GL11._
-import resonant.lib.render.RenderUtility
+import resonantengine.lib.render.RenderUtility
 
 @SideOnly(Side.CLIENT)
 final object RenderForceMobilizer

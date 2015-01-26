@@ -5,8 +5,8 @@ import mffs.item.gui.ContainerItem
 import mffs.security.card.ItemCardIdentification
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
-import resonant.lib.network.discriminator.PacketPlayerItem
-import resonant.lib.utility.LanguageUtility
+import resonantengine.lib.network.discriminator.PacketPlayerItem
+import resonantengine.lib.utility.LanguageUtility
 
 /**
  * @author Calclavia

@@ -6,8 +6,8 @@ import mffs.field.TileElectromagneticProjector
 import mffs.security.MFFSPermissions
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.ChatComponentTranslation
-import resonant.api.mffs.machine.IProjector
-import resonant.lib.transform.vector.Vector3
+import resonantengine.api.mffs.machine.IProjector
+import resonantengine.lib.transform.vector.Vector3
 
 class ItemModuleBroadcast extends ItemModuleDefense
 {

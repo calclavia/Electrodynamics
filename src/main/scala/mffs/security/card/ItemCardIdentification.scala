@@ -9,15 +9,16 @@ import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.world.World
-import resonant.lib.access.{AccessUser, Permissions}
-import resonant.lib.network.discriminator.PacketType
-import resonant.lib.network.handle.TPacketReceiver
-import resonant.lib.utility.LanguageUtility
-import resonant.lib.utility.nbt.NBTUtility
-import resonant.lib.wrapper.ByteBufWrapper._
-import resonant.lib.wrapper.CollectionWrapper._
+import resonantengine.api.network.IPacketReceiver
+import resonantengine.lib.access.{AccessUser, Permissions}
+import resonantengine.lib.network.discriminator.PacketType
+import resonantengine.prefab.network.TPacketReceiver
+import resonantengine.lib.utility.LanguageUtility
+import resonantengine.lib.utility.nbt.NBTUtility
+import resonantengine.lib.wrapper.ByteBufWrapper._
+import resonantengine.lib.wrapper.CollectionWrapper._
 
-class ItemCardIdentification extends ItemCardAccess with TPacketReceiver
+class ItemCardIdentification extends ItemCardAccess with IPacketReceiver
 {
   override def hitEntity(itemStack: ItemStack, entityLiving: EntityLivingBase, par3EntityLiving: EntityLivingBase): Boolean =
   {

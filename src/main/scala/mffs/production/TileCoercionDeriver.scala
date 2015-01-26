@@ -10,12 +10,12 @@ import net.minecraft.client.renderer.RenderBlocks
 import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
-import resonant.api.mffs.modules.IModule
-import resonant.lib.grid.energy.electric.TTEBridge
-import resonant.lib.mod.compat.energy.Compatibility
-import resonant.lib.network.discriminator.PacketType
-import resonant.lib.transform.vector.Vector3
-import resonant.lib.wrapper.ByteBufWrapper._
+import resonantengine.api.mffs.modules.IModule
+import resonantengine.lib.grid.energy.electric.TTEBridge
+import resonantengine.lib.mod.compat.energy.Compatibility
+import resonantengine.lib.network.discriminator.PacketType
+import resonantengine.lib.transform.vector.Vector3
+import resonantengine.lib.wrapper.ByteBufWrapper._
 
 /**
  * A TileEntity that extract energy into Fortron.

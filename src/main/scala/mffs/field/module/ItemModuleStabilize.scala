@@ -13,12 +13,12 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.IFluidBlock
-import resonant.api.mffs.Blacklist
-import resonant.api.mffs.event.EventStabilize
-import resonant.api.mffs.machine.IProjector
-import resonant.lib.network.discriminator.PacketTile
-import resonant.lib.transform.rotation.EulerAngle
-import resonant.lib.transform.vector.{Vector3, VectorWorld}
+import resonantengine.api.mffs.Blacklist
+import resonantengine.api.mffs.event.EventStabilize
+import resonantengine.api.mffs.machine.IProjector
+import resonantengine.lib.network.discriminator.PacketTile
+import resonantengine.lib.transform.rotation.EulerAngle
+import resonantengine.lib.transform.vector.{Vector3, VectorWorld}
 
 class ItemModuleStabilize extends ItemModule
 {

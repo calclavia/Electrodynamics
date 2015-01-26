@@ -2,7 +2,7 @@ package mffs.item.gui
 
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
-import resonant.lib.utility.inventory.ExternalInventory
+import resonantengine.lib.utility.inventory.ExternalInventory
 
 /**
  * A temporary inventory used by items for copying

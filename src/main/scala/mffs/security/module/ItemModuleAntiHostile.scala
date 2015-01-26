@@ -5,8 +5,8 @@ import java.util.Set
 import mffs.ModularForceFieldSystem
 import net.minecraft.entity.monster.IMob
 import net.minecraft.entity.{EntityLivingBase, INpc}
-import resonant.api.mffs.machine.IProjector
-import resonant.lib.transform.vector.Vector3
+import resonantengine.api.mffs.machine.IProjector
+import resonantengine.lib.transform.vector.Vector3
 
 class ItemModuleAntiHostile extends ItemModuleDefense
 {
