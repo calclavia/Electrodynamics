@@ -13,7 +13,7 @@ import org.lwjgl.opengl.GL11
 import resonant.lib.content.prefab.TIO
 import resonant.lib.grid.core.TBlockNodeProvider
 import resonant.lib.grid.energy.electric.NodeElectricComponent
-import resonant.lib.prefab.tile.spatial.SpatialTile
+import resonant.lib.prefab.tile.spatial.ResonantTile
 import resonant.lib.prefab.tile.traits.TRotatable
 import resonant.lib.render.RenderUtility
 import resonant.lib.transform.vector.Vector3
@@ -41,7 +41,7 @@ object TileMotor
   val motorConstant = fieldStrength * area * coils
 }
 
-class TileMotor extends SpatialTile(Material.iron) with TIO with TBlockNodeProvider with TRotatable
+class TileMotor extends ResonantTile(Material.iron) with TIO with TBlockNodeProvider with TRotatable
 {
   private val electricNode = new NodeElectricComponent(this)
   private val mechNode = new NodeMechanical(this)

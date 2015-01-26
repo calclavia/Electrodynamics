@@ -5,13 +5,13 @@ import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.lib.prefab.tile.spatial.SpatialTile
+import resonant.lib.prefab.tile.spatial.ResonantTile
 import resonant.lib.transform.vector.Vector3
 
 /**
  * @author Calclavia
  */
-abstract class TileFocus(material: Material) extends SpatialTile(material) with IFocus
+abstract class TileFocus(material: Material) extends ResonantTile(material) with IFocus
 {
   override def onPlaced(entityLiving: EntityLivingBase, itemStack: ItemStack)
   {

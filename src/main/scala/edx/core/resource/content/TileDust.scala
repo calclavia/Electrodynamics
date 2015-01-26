@@ -3,7 +3,7 @@ package edx.core.resource.content
 import edx.core.Reference
 import net.minecraft.block.material.Material
 import net.minecraft.nbt.NBTTagCompound
-import resonant.lib.prefab.tile.spatial.SpatialTile
+import resonant.lib.prefab.tile.spatial.ResonantTile
 import resonant.lib.transform.region.Cuboid
 
 /**
@@ -13,7 +13,7 @@ import resonant.lib.transform.region.Cuboid
  *
  * @author Calclavia
  */
-class TileDust extends SpatialTile(Material.sand)
+class TileDust extends ResonantTile(Material.sand)
 {
   var resMaterial = ""
   textureName = Reference.prefix + ""

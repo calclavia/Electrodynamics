@@ -22,7 +22,7 @@ import resonant.lib.grid.energy.EnergyStorage
 import resonant.lib.grid.energy.electric.NodeElectricComponent
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
-import resonant.lib.prefab.tile.spatial.SpatialTile
+import resonant.lib.prefab.tile.spatial.ResonantTile
 import resonant.lib.prefab.tile.traits.TEnergyProvider
 import resonant.lib.render.RenderUtility
 import resonant.lib.transform.vector.Vector3
@@ -48,7 +48,7 @@ object TileBattery
   def getEnergyForTier(tier: Int) = Math.round(Math.pow(500000000, (tier / (maxTier + 0.7f)) + 1) / 500000000) * 500000000
 }
 
-class TileBattery extends SpatialTile(Material.iron) with TIO with TBlockNodeProvider with TPacketSender with TPacketReceiver with TEnergyProvider with ISimpleItemRenderer
+class TileBattery extends ResonantTile(Material.iron) with TIO with TBlockNodeProvider with TPacketSender with TPacketReceiver with TEnergyProvider with ISimpleItemRenderer
 {
   private val electricNode = new NodeElectricComponent(this)
   var energyRenderLevel = 0

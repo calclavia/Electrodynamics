@@ -16,7 +16,7 @@ import org.lwjgl.opengl.GL11
 import resonant.lib.content.prefab.TInventory
 import resonant.lib.network.discriminator.PacketTile
 import resonant.lib.network.handle.TPacketSender
-import resonant.lib.prefab.tile.spatial.SpatialTile
+import resonant.lib.prefab.tile.spatial.ResonantTile
 import resonant.lib.prefab.tile.traits.TRotatable
 import resonant.lib.render.RenderItemOverlayUtility
 import resonant.lib.transform.vector.Vector3
@@ -33,7 +33,7 @@ object TilePlacer
   @SideOnly(Side.CLIENT) private var iconBack: IIcon = null
 }
 
-class TilePlacer extends SpatialTile(Material.rock) with TInventory with TRotatable with TPacketSender
+class TilePlacer extends ResonantTile(Material.rock) with TInventory with TRotatable with TPacketSender
 {
   private var _doWork: Boolean = false
   private var autoPullItems: Boolean = false
@@ -53,11 +53,6 @@ class TilePlacer extends SpatialTile(Material.rock) with TInventory with TRotata
     work
   }
 
-  override def onNeighborChanged(block: Block)
-  {
-    work
-  }
-
   def work
   {
     if (isIndirectlyPowered)
@@ -65,6 +60,11 @@ class TilePlacer extends SpatialTile(Material.rock) with TInventory with TRotata
       _doWork = true
       placeDelay = 0
     }
+  }
+
+  override def onNeighborChanged(block: Block)
+  {
+    work
   }
 
   override def start

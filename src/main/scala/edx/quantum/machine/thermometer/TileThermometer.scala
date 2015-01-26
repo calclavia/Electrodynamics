@@ -17,7 +17,7 @@ import net.minecraft.util.IIcon
 import net.minecraft.world.IBlockAccess
 import resonant.lib.grid.thermal.GridThermal
 import resonant.lib.prefab.tile.item.ItemBlockSaved
-import resonant.lib.prefab.tile.spatial.SpatialTile
+import resonant.lib.prefab.tile.spatial.ResonantTile
 import resonant.lib.transform.vector.{Vector3, VectorWorld}
 import resonant.lib.utility.inventory.InventoryUtility
 
@@ -32,7 +32,7 @@ object TileThermometer
 
 @Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "OpenComputers")
 @deprecated
-class TileThermometer extends SpatialTile(Material.piston) with SimpleComponent
+class TileThermometer extends ResonantTile(Material.piston) with SimpleComponent
 {
   var detectedTemperature: Float = 295
   var previousDetectedTemperature: Float = 295
@@ -79,6 +79,11 @@ class TileThermometer extends SpatialTile(Material.piston) with SimpleComponent
       threshold = TileThermometer.MAX_THRESHOLD
     }
     markUpdate
+  }
+
+  def getThreshold: Int =
+  {
+    return threshold
   }
 
   override def configure(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
@@ -139,11 +144,6 @@ class TileThermometer extends SpatialTile(Material.piston) with SimpleComponent
   def isOverThreshold: Boolean =
   {
     return detectedTemperature >= getThreshold
-  }
-
-  def getThreshold: Int =
-  {
-    return threshold
   }
 
   def setTrack(track: Vector3)

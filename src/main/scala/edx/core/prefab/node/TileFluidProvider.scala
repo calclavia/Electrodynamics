@@ -9,7 +9,7 @@ import resonant.lib.grid.core.TBlockNodeProvider
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
 import resonant.lib.prefab.fluid.NodeFluid
-import resonant.lib.prefab.tile.spatial.SpatialTile
+import resonant.lib.prefab.tile.spatial.ResonantTile
 import resonant.lib.wrapper.ByteBufWrapper._
 
 /**
@@ -17,7 +17,7 @@ import resonant.lib.wrapper.ByteBufWrapper._
  *
  * @author DarkGuardsman, Calclavia
  */
-abstract class TileFluidProvider(material: Material) extends SpatialTile(material) with TBlockNodeProvider with IFluidHandler with TPacketReceiver with TPacketSender
+abstract class TileFluidProvider(material: Material) extends ResonantTile(material) with TBlockNodeProvider with IFluidHandler with TPacketReceiver with TPacketSender
 {
   protected var colorID: Int = 0
   protected var clientRenderMask = 0x3F

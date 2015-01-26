@@ -17,7 +17,7 @@ import resonant.lib.grid.energy.EnergyStorage
 import resonant.lib.grid.energy.electric.NodeElectricComponent
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketReceiver
-import resonant.lib.prefab.tile.spatial.SpatialTile
+import resonant.lib.prefab.tile.spatial.ResonantTile
 import resonant.lib.prefab.tile.traits.{TEnergyProvider, TRotatable}
 import resonant.lib.transform.vector.Vector3
 
@@ -29,7 +29,7 @@ object TileNuclearBoiler
   final val power: Long = 50000
 }
 
-class TileNuclearBoiler extends SpatialTile(Material.iron) with TInventory with TBlockNodeProvider with IPacketReceiver with IFluidHandler with TRotatable with TEnergyProvider with TIO
+class TileNuclearBoiler extends ResonantTile(Material.iron) with TInventory with TBlockNodeProvider with IPacketReceiver with IFluidHandler with TRotatable with TEnergyProvider with TIO
 {
   final val totalTime: Int = 20 * 15
   final val waterTank: FluidTank = new FluidTank(QuantumContent.fluidStackWater.copy, FluidContainerRegistry.BUCKET_VOLUME * 5)

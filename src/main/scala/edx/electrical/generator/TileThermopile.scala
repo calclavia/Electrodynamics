@@ -10,11 +10,11 @@ import net.minecraftforge.common.util.ForgeDirection
 import resonant.lib.content.prefab.TIO
 import resonant.lib.grid.core.TBlockNodeProvider
 import resonant.lib.grid.energy.electric.NodeElectricComponent
-import resonant.lib.prefab.tile.spatial.{SpatialBlock, SpatialTile}
+import resonant.lib.prefab.tile.spatial.ResonantTile
 
 import scala.collection.convert.wrapAll._
 
-class TileThermopile extends SpatialTile(Material.rock) with TBlockNodeProvider with TIO
+class TileThermopile extends ResonantTile(Material.rock) with TBlockNodeProvider with TIO
 {
   /**
    * The amount of ticks the thermopile will use the temperature differences before turning all
@@ -106,7 +106,7 @@ class TileThermopile extends SpatialTile(Material.rock) with TBlockNodeProvider 
   @SideOnly(Side.CLIENT)
   override def registerIcons(iconReg: IIconRegister)
   {
-    SpatialBlock.icon.put("thermopile_top", iconReg.registerIcon(Reference.prefix + "thermopile_top"))
+    ResonantBlock.icon.put("thermopile_top", iconReg.registerIcon(Reference.prefix + "thermopile_top"))
     super.registerIcons(iconReg)
   }
 
@@ -115,7 +115,7 @@ class TileThermopile extends SpatialTile(Material.rock) with TBlockNodeProvider 
   {
     if (side == 1)
     {
-      return SpatialBlock.icon.get("thermopile_top")
+      return ResonantBlock.icon.get("thermopile_top")
     }
 
     return super.getIcon(side, meta)

@@ -10,7 +10,6 @@ import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.util.IIcon
 import resonant.lib.prefab.tile.item.ItemBlockMetadata
-import resonant.lib.prefab.tile.spatial.SpatialBlock
 import resonant.lib.wrapper.CollectionWrapper._
 
 /**
@@ -19,7 +18,7 @@ import resonant.lib.wrapper.CollectionWrapper._
  * @author Calclavia
  *
  */
-class BlockDecoration extends SpatialBlock(Material.rock)
+class BlockDecoration extends ResonantBlock(Material.rock)
 {
   var iconNames = Array("material_stone_brick", "material_stone_brick2", "material_stone_chiseled", "material_stone_cobble", "material_stone_cracked", "material_stone", "material_stone_slab", "material_stone_mossy", "material_steel_dark", "material_steel_tint", "material_steel")
   var icons = new Array[IIcon](iconNames.length)

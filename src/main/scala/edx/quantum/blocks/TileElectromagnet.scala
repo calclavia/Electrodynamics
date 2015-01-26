@@ -13,7 +13,6 @@ import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11._
 import resonant.api.tile.IElectromagnet
 import resonant.lib.prefab.tile.item.ItemBlockMetadata
-import resonant.lib.prefab.tile.spatial.SpatialBlock
 import resonant.lib.render.{RenderBlockUtility, RenderUtility}
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.world.WorldUtility
@@ -22,7 +21,7 @@ import resonant.lib.wrapper.CollectionWrapper._
 /**
  * Electromagnet block
  */
-class TileElectromagnet extends SpatialBlock(Material.iron) with IElectromagnet
+class TileElectromagnet extends ResonantBlock(Material.iron) with IElectromagnet
 {
   private val edgeTexture: String = "stone"
   private var iconTop: IIcon = null

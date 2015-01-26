@@ -17,14 +17,14 @@ import resonant.lib.content.prefab.TInventory
 import resonant.lib.grid.energy.EnergyStorage
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.{TPacketIDReceiver, TPacketSender}
-import resonant.lib.prefab.tile.spatial.SpatialTile
+import resonant.lib.prefab.tile.spatial.ResonantTile
 import resonant.lib.prefab.tile.traits.TEnergyProvider
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.BlockUtility
 
 import scala.collection.JavaConversions._
 
-class TileAccelerator extends SpatialTile(Material.iron) with TInventory with IElectromagnet with IRotatable with TPacketIDReceiver with TPacketSender with TEnergyProvider
+class TileAccelerator extends ResonantTile(Material.iron) with TInventory with IElectromagnet with IRotatable with TPacketIDReceiver with TPacketSender with TEnergyProvider
 {
   final val DESC_PACKET_ID = 2
   /**

@@ -5,13 +5,12 @@ import net.minecraft.block.material.Material
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.lib.prefab.tile.spatial.SpatialBlock
 import resonant.lib.transform.vector.Vector3
 
 /**
  * Siren block
  */
-class TileSiren extends SpatialBlock(Material.wood)
+class TileSiren extends ResonantBlock(Material.wood)
 {
 
   override def update

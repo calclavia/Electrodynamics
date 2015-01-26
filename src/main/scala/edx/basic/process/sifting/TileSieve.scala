@@ -19,7 +19,7 @@ import resonant.lib.content.prefab.TInventory
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
 import resonant.lib.prefab.tile.item.ItemBlockSaved
-import resonant.lib.prefab.tile.spatial.SpatialTile
+import resonant.lib.prefab.tile.spatial.ResonantTile
 import resonant.lib.render.{RenderItemOverlayUtility, RenderUtility}
 import resonant.lib.transform.region.Cuboid
 import resonant.lib.transform.vector.Vector3
@@ -31,7 +31,7 @@ object TileSieve
   val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "sieve.tcn"))
 }
 
-class TileSieve extends SpatialTile(Material.wood) with TInventory with TPacketSender with TPacketReceiver with ISimpleItemRenderer
+class TileSieve extends ResonantTile(Material.wood) with TInventory with TPacketSender with TPacketReceiver with ISimpleItemRenderer
 {
   //Constructor
   setTextureName("material_wood_top")

@@ -14,7 +14,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.event.PlasmaEvent
 import resonant.lib.grid.thermal.GridThermal
 import resonant.lib.mod.config.Config
-import resonant.lib.prefab.tile.spatial.SpatialTile
+import resonant.lib.prefab.tile.spatial.ResonantTile
 import resonant.lib.transform.vector.Vector3
 
 object TilePlasma
@@ -22,7 +22,7 @@ object TilePlasma
   @Config var plasmaMaxTemperature: Int = 1000000
 }
 
-class TilePlasma extends SpatialTile(Material.lava)
+class TilePlasma extends ResonantTile(Material.lava)
 {
   private var temperature: Double = TilePlasma.plasmaMaxTemperature
 

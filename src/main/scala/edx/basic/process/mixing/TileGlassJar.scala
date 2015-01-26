@@ -24,7 +24,7 @@ import resonant.lib.factory.resources.item.TItemResource
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
 import resonant.lib.prefab.tile.item.ItemBlockSaved
-import resonant.lib.prefab.tile.spatial.SpatialTile
+import resonant.lib.prefab.tile.spatial.ResonantTile
 import resonant.lib.render.RenderUtility
 import resonant.lib.render.model.ModelCube
 import resonant.lib.transform.region.Cuboid
@@ -43,7 +43,7 @@ object TileGlassJar
   val dustMaterialTexture = new ResourceLocation(Reference.domain, Reference.blockTextureDirectory + "material_sand.png")
 }
 
-class TileGlassJar extends SpatialTile(Material.wood) with TPacketReceiver with TPacketSender with ISimpleItemRenderer
+class TileGlassJar extends ResonantTile(Material.wood) with TPacketReceiver with TPacketSender with ISimpleItemRenderer
 {
   var alloy = new Alloy(8)
   var mixed = false
@@ -108,20 +108,6 @@ class TileGlassJar extends SpatialTile(Material.wood) with TPacketReceiver with 
 
     GL11.glPushMatrix()
     GL11.glTranslated(0, 0.3, 0)
-    renderJar()
-    GL11.glPopMatrix()
-  }
-
-  @SideOnly(Side.CLIENT)
-  override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
-  {
-    GL11.glPushMatrix()
-    GL11.glTranslated(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5)
-    renderMixture()
-    GL11.glPopMatrix()
-
-    GL11.glPushMatrix()
-    GL11.glTranslated(pos.x + 0.5, pos.y + 0.8, pos.z + 0.5)
     renderJar()
     GL11.glPopMatrix()
   }
@@ -191,6 +177,20 @@ class TileGlassJar extends SpatialTile(Material.wood) with TPacketReceiver with 
     RenderUtility.bind(Reference.domain, Reference.modelPath + "glassJar.png")
     TileGlassJar.model.renderAll()
     RenderUtility.disableBlending()
+  }
+
+  @SideOnly(Side.CLIENT)
+  override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
+  {
+    GL11.glPushMatrix()
+    GL11.glTranslated(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5)
+    renderMixture()
+    GL11.glPopMatrix()
+
+    GL11.glPushMatrix()
+    GL11.glTranslated(pos.x + 0.5, pos.y + 0.8, pos.z + 0.5)
+    renderJar()
+    GL11.glPopMatrix()
   }
 
   @SideOnly(Side.CLIENT)

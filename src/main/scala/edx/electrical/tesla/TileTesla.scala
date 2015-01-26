@@ -24,7 +24,7 @@ import resonant.lib.grid.energy.electric.NodeElectricComponent
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
 import resonant.lib.prefab.tile.multiblock.reference.{IMultiBlockStructure, MultiBlockHandler}
-import resonant.lib.prefab.tile.spatial.SpatialTile
+import resonant.lib.prefab.tile.spatial.ResonantTile
 import resonant.lib.prefab.tile.traits.TEnergyProvider
 import resonant.lib.render.EnumColor
 import resonant.lib.transform.vector.{Vector3, VectorWorld}
@@ -45,7 +45,7 @@ object TileTesla
   final val DEFAULT_COLOR: Int = 12
 }
 
-class TileTesla extends SpatialTile(Material.iron) with TBlockNodeProvider with IMultiBlockStructure[TileTesla] with ITesla with TPacketReceiver with TPacketSender with TEnergyProvider with TIO
+class TileTesla extends ResonantTile(Material.iron) with TBlockNodeProvider with IMultiBlockStructure[TileTesla] with ITesla with TPacketReceiver with TPacketSender with TEnergyProvider with TIO
 {
   final val TRANSFER_CAP: Double = 10000D
   /** Prevents transfer loops */

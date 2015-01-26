@@ -21,7 +21,6 @@ import net.minecraftforge.common.util.ForgeDirection
 import resonant.core.ResonantEngine
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketIDReceiver
-import resonant.lib.prefab.tile.spatial.SpatialBlock
 
 class TileDetector extends TileFilterable with IPacketIDReceiver
 {
@@ -121,19 +120,19 @@ class TileDetector extends TileFilterable with IPacketIDReceiver
 
   @SideOnly(Side.CLIENT) override def registerIcons(iconReg: IIconRegister)
   {
-    SpatialBlock.icon.put("detector_front_green", iconReg.registerIcon(Reference.prefix + "detector_front_green"))
-    SpatialBlock.icon.put("detector_front_red", iconReg.registerIcon(Reference.prefix + "detector_front_red"))
-    SpatialBlock.icon.put("detector_side_green", iconReg.registerIcon(Reference.prefix + "detector_side_green"))
-    SpatialBlock.icon.put("detector_side_red", iconReg.registerIcon(Reference.prefix + "detector_side_red"))
+    ResonantBlock.icon.put("detector_front_green", iconReg.registerIcon(Reference.prefix + "detector_front_green"))
+    ResonantBlock.icon.put("detector_front_red", iconReg.registerIcon(Reference.prefix + "detector_front_red"))
+    ResonantBlock.icon.put("detector_side_green", iconReg.registerIcon(Reference.prefix + "detector_side_green"))
+    ResonantBlock.icon.put("detector_side_red", iconReg.registerIcon(Reference.prefix + "detector_side_red"))
   }
 
   @SideOnly(Side.CLIENT) override def getIcon(side: Int, metadata: Int): IIcon =
   {
     if (side == ForgeDirection.SOUTH.ordinal)
     {
-      return SpatialBlock.icon.get("detector_front_green")
+      return ResonantBlock.icon.get("detector_front_green")
     }
-    return SpatialBlock.icon.get("detector_side_green")
+    return ResonantBlock.icon.get("detector_side_green")
   }
 
   @SideOnly(Side.CLIENT) override def getIcon(iBlockAccess: IBlockAccess, side: Int): IIcon =
@@ -146,7 +145,7 @@ class TileDetector extends TileFilterable with IPacketIDReceiver
       isFront = side == (tileEntity.asInstanceOf[TileDetector]).getDirection.ordinal
       isInverted = (tileEntity.asInstanceOf[TileDetector]).isInverted
     }
-    return if (isInverted) (if (isFront) SpatialBlock.icon.get("detector_front_red") else SpatialBlock.icon.get("detector_side_red")) else (if (isFront) SpatialBlock.icon.get("detector_front_green") else SpatialBlock.icon.get("detector_side_green"))
+    return if (isInverted) (if (isFront) ResonantBlock.icon.get("detector_front_red") else ResonantBlock.icon.get("detector_side_red")) else (if (isFront) ResonantBlock.icon.get("detector_front_green") else ResonantBlock.icon.get("detector_side_green"))
   }
 
   override def getStrongRedstonePower(access: IBlockAccess, side: Int): Int =

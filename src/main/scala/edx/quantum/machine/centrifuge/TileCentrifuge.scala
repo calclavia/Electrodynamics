@@ -18,7 +18,7 @@ import resonant.lib.grid.energy.electric.NodeElectricComponent
 import resonant.lib.mod.compat.energy.Compatibility
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketReceiver
-import resonant.lib.prefab.tile.spatial.SpatialTile
+import resonant.lib.prefab.tile.spatial.ResonantTile
 import resonant.lib.prefab.tile.traits.{TEnergyProvider, TRotatable}
 import resonant.lib.transform.vector.Vector3
 
@@ -31,7 +31,7 @@ object TileCentrifuge
   final val DIAN: Long = 500000
 }
 
-class TileCentrifuge extends SpatialTile(Material.iron) with TInventory with TBlockNodeProvider with IPacketReceiver with IFluidHandler with IInventory with TEnergyProvider with TRotatable with TIO
+class TileCentrifuge extends ResonantTile(Material.iron) with TInventory with TBlockNodeProvider with IPacketReceiver with IFluidHandler with IInventory with TEnergyProvider with TRotatable with TIO
 {
   val gasTank: FluidTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 5)
   private val electricNode = new NodeElectricComponent(this)

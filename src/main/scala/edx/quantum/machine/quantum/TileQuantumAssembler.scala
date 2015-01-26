@@ -15,7 +15,7 @@ import resonant.lib.grid.energy.EnergyStorage
 import resonant.lib.grid.energy.electric.NodeElectricComponent
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketReceiver
-import resonant.lib.prefab.tile.spatial.SpatialTile
+import resonant.lib.prefab.tile.spatial.ResonantTile
 import resonant.lib.prefab.tile.traits.TEnergyProvider
 import resonant.lib.transform.vector.Vector3
 
@@ -24,7 +24,7 @@ import resonant.lib.transform.vector.Vector3
  *
  * @author Calclavia, Darkguardsman
  */
-class TileQuantumAssembler extends SpatialTile(Material.iron) with TInventory with TBlockNodeProvider with IPacketReceiver with TEnergyProvider
+class TileQuantumAssembler extends ResonantTile(Material.iron) with TInventory with TBlockNodeProvider with IPacketReceiver with TEnergyProvider
 {
   private val electricNode = new NodeElectricComponent(this)
 

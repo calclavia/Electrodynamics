@@ -2,7 +2,7 @@ package edx.quantum.machine.fulmination
 
 import net.minecraft.block.material.Material
 import resonant.lib.grid.energy.EnergyStorage
-import resonant.lib.prefab.tile.spatial.SpatialTile
+import resonant.lib.prefab.tile.spatial.ResonantTile
 import resonant.lib.prefab.tile.traits.TEnergyProvider
 
 /**
@@ -13,7 +13,7 @@ object TileFulmination
   private final val maxEnergy: Long = 10000000000000L
 }
 
-class TileFulmination extends SpatialTile(Material.iron) with TEnergyProvider
+class TileFulmination extends ResonantTile(Material.iron) with TEnergyProvider
 {
   //TODO: Dummy
   energy = new EnergyStorage

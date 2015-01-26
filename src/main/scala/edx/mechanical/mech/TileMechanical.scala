@@ -8,7 +8,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import resonant.lib.grid.core.TBlockNodeProvider
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
-import resonant.lib.prefab.tile.spatial.SpatialTile
+import resonant.lib.prefab.tile.spatial.ResonantTile
 import resonant.lib.prefab.tile.traits.TRotatable
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.wrapper.ByteBufWrapper._
@@ -18,7 +18,7 @@ import scala.collection.convert.wrapAll._
 /** Prefab for resonantinduction.mechanical tiles
   *
   * @author Calclavia */
-abstract class TileMechanical(material: Material) extends SpatialTile(material: Material) with TRotatable with TBlockNodeProvider with TPacketSender with TPacketReceiver
+abstract class TileMechanical(material: Material) extends ResonantTile(material: Material) with TRotatable with TBlockNodeProvider with TPacketSender with TPacketReceiver
 {
   /** Node that handles most mechanical actions */
   private var _mechanicalNode: NodeMechanical = null
@@ -53,8 +53,6 @@ abstract class TileMechanical(material: Material) extends SpatialTile(material: 
     }
   }
 
-  def mechanicalNode = _mechanicalNode
-
   override def read(buf: ByteBuf, id: Int, packetType: PacketType)
   {
     super.read(buf, id, packetType)
@@ -65,6 +63,8 @@ abstract class TileMechanical(material: Material) extends SpatialTile(material: 
       case 1 => mechanicalNode.angularVelocity = buf.readFloat()
     }
   }
+
+  def mechanicalNode = _mechanicalNode
 
   def mechanicalNode_=(newNode: NodeMechanical)
 {

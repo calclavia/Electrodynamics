@@ -18,7 +18,7 @@ import resonant.lib.grid.energy.electric.NodeElectricComponent
 import resonant.lib.mod.config.Config
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketReceiver
-import resonant.lib.prefab.tile.spatial.SpatialTile
+import resonant.lib.prefab.tile.spatial.ResonantTile
 import resonant.lib.prefab.tile.traits.TEnergyProvider
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.science.UnitDisplay
@@ -30,7 +30,7 @@ object TilePlasmaHeater
   @Config var plasmaHeatAmount: Int = 100
 }
 
-class TilePlasmaHeater extends SpatialTile(Material.iron) with TBlockNodeProvider with IPacketReceiver with IFluidHandler with TEnergyProvider
+class TilePlasmaHeater extends ResonantTile(Material.iron) with TBlockNodeProvider with IPacketReceiver with IFluidHandler with TEnergyProvider
 {
   final val tankInputDeuterium: FluidTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 10)
   final val tankInputTritium: FluidTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 10)

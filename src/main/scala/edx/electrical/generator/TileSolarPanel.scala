@@ -9,13 +9,13 @@ import net.minecraftforge.common.util.ForgeDirection
 import resonant.lib.content.prefab.TIO
 import resonant.lib.grid.core.TBlockNodeProvider
 import resonant.lib.grid.energy.electric.NodeElectricComponent
-import resonant.lib.prefab.tile.spatial.{SpatialBlock, SpatialTile}
+import resonant.lib.prefab.tile.spatial.ResonantTile
 import resonant.lib.render.block.RenderConnectedTexture
 import resonant.lib.transform.region.Cuboid
 
 import scala.collection.convert.wrapAll._
 
-class TileSolarPanel extends SpatialTile(Material.iron) with TBlockNodeProvider with TIO with RenderConnectedTexture
+class TileSolarPanel extends ResonantTile(Material.iron) with TBlockNodeProvider with TIO with RenderConnectedTexture
 {
   private val electricNode = new NodeElectricComponent(this)
 
@@ -36,8 +36,8 @@ class TileSolarPanel extends SpatialTile(Material.iron) with TBlockNodeProvider 
   @SideOnly(Side.CLIENT)
   override def registerIcons(iconReg: IIconRegister)
   {
-    SpatialBlock.icon.put("solarPanel_side", iconReg.registerIcon(Reference.prefix + "solarPanel_side"))
-    SpatialBlock.icon.put("solarPanel_bottom", iconReg.registerIcon(Reference.prefix + "solarPanel_bottom"))
+    ResonantBlock.icon.put("solarPanel_side", iconReg.registerIcon(Reference.prefix + "solarPanel_side"))
+    ResonantBlock.icon.put("solarPanel_bottom", iconReg.registerIcon(Reference.prefix + "solarPanel_bottom"))
     super.registerIcons(iconReg)
   }
 
@@ -45,11 +45,11 @@ class TileSolarPanel extends SpatialTile(Material.iron) with TBlockNodeProvider 
   override def getIcon(side: Int, meta: Int): IIcon =
   {
     if (side == 0)
-      return SpatialBlock.icon.get("solarPanel_bottom")
+      return ResonantBlock.icon.get("solarPanel_bottom")
     else if (side == 1)
       return getIcon
 
-    return SpatialBlock.icon.get("solarPanel_side")
+    return ResonantBlock.icon.get("solarPanel_side")
   }
 
   override def update()

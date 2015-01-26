@@ -22,14 +22,14 @@ import org.lwjgl.opengl.GL11
 import resonant.core.ResonantEngine
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketReceiver
-import resonant.lib.prefab.tile.spatial.{SpatialBlock, SpatialTile}
+import resonant.lib.prefab.tile.spatial.ResonantTile
 import resonant.lib.render.RenderItemOverlayUtility
 import resonant.lib.transform.vector.{Vector2, Vector3}
 import resonant.lib.utility.inventory.InventoryUtility
 
 import scala.collection.JavaConversions._
 
-class TileImprinter extends SpatialTile(Material.circuits) with ISidedInventory with IPacketReceiver
+class TileImprinter extends ResonantTile(Material.circuits) with ISidedInventory with IPacketReceiver
 {
   var inventory: Array[ItemStack] = new Array[ItemStack](10)
 
@@ -59,6 +59,16 @@ class TileImprinter extends SpatialTile(Material.circuits) with ISidedInventory 
       }
     }
     nbt.setTag("Items", var2)
+  }
+
+  def getSizeInventory: Int =
+  {
+    return this.inventory.length
+  }
+
+  def getStackInSlot(slot: Int): ItemStack =
+  {
+    return this.inventory(slot)
   }
 
   def read(data: ByteBuf, player: EntityPlayer, `type`: PacketType)
@@ -95,6 +105,18 @@ class TileImprinter extends SpatialTile(Material.circuits) with ISidedInventory 
       }
     }
 
+  }
+
+  /**
+   * Sets the given item stack to the specified slot in the inventory (can be crafting or armor
+   * sections).
+   */
+  def setInventorySlotContents(slot: Int, itemStack: ItemStack)
+  {
+    if (slot < this.getSizeInventory)
+    {
+      inventory(slot) = itemStack
+    }
   }
 
   /**
@@ -160,34 +182,7 @@ class TileImprinter extends SpatialTile(Material.circuits) with ISidedInventory 
     }
   }
 
-  /**
-   * Sets the given item stack to the specified slot in the inventory (can be crafting or armor
-   * sections).
-   */
-  def setInventorySlotContents(slot: Int, itemStack: ItemStack)
-  {
-    if (slot < this.getSizeInventory)
-    {
-      inventory(slot) = itemStack
-    }
-  }
-
-  def getSizeInventory: Int =
-  {
-    return this.inventory.length
-  }
-
-  def getStackInSlot(slot: Int): ItemStack =
-  {
-    return this.inventory(slot)
-  }
-
   def openInventory
-  {
-    this.onInventoryChanged
-  }
-
-  def closeInventory
   {
     this.onInventoryChanged
   }
@@ -250,6 +245,11 @@ class TileImprinter extends SpatialTile(Material.circuits) with ISidedInventory 
     }
   }
 
+  def closeInventory
+  {
+    this.onInventoryChanged
+  }
+
   def getInventoryStackLimit: Int =
   {
     return 64
@@ -291,22 +291,22 @@ class TileImprinter extends SpatialTile(Material.circuits) with ISidedInventory 
   @SideOnly(Side.CLIENT) override def registerIcons(iconReg: IIconRegister)
   {
     super.registerIcons(iconReg)
-    SpatialBlock.icon.put("imprinter_side", iconReg.registerIcon(Reference.prefix + "imprinter_side"))
-    SpatialBlock.icon.put("imprinter_top", iconReg.registerIcon(Reference.prefix + "imprinter_top"))
-    SpatialBlock.icon.put("imprinter_bottom", iconReg.registerIcon(Reference.prefix + "imprinter_bottom"))
+    ResonantBlock.icon.put("imprinter_side", iconReg.registerIcon(Reference.prefix + "imprinter_side"))
+    ResonantBlock.icon.put("imprinter_top", iconReg.registerIcon(Reference.prefix + "imprinter_top"))
+    ResonantBlock.icon.put("imprinter_bottom", iconReg.registerIcon(Reference.prefix + "imprinter_bottom"))
   }
 
   @SideOnly(Side.CLIENT) override def getIcon(side: Int, meta: Int): IIcon =
   {
     if (side == 1)
     {
-      return SpatialBlock.icon.get("imprinter_top")
+      return ResonantBlock.icon.get("imprinter_top")
     }
     else if (side == 0)
     {
-      return SpatialBlock.icon.get("imprinter_bottom")
+      return ResonantBlock.icon.get("imprinter_bottom")
     }
-    return SpatialBlock.icon.get("imprinter_side")
+    return ResonantBlock.icon.get("imprinter_side")
   }
 
   override def use(player: EntityPlayer, hitSide: Int, hit: Vector3): Boolean =

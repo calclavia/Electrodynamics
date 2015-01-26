@@ -14,7 +14,7 @@ import net.minecraft.world.IBlockAccess
 import resonant.lib.content.prefab.TInventory
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
-import resonant.lib.prefab.tile.spatial.{SpatialBlock, SpatialTile}
+import resonant.lib.prefab.tile.spatial.ResonantTile
 import resonant.lib.transform.region.Cuboid
 import resonant.lib.transform.vector.{Vector2, Vector3}
 import resonant.lib.wrapper.ByteBufWrapper._
@@ -30,7 +30,7 @@ object TileHotPlate
   final val maxSmeltTime: Int = 200
 }
 
-class TileHotPlate extends SpatialTile(Material.iron) with TInventory with TPacketSender with TPacketReceiver
+class TileHotPlate extends ResonantTile(Material.iron) with TInventory with TPacketSender with TPacketReceiver
 {
   /** Amount of smelt time left */
   final val smeltTime = Array[Int](0, 0, 0, 0)
@@ -86,22 +86,6 @@ class TileHotPlate extends SpatialTile(Material.iron) with TInventory with TPack
   }
 
   def canSmelt(stack: ItemStack): Boolean = stack != null && FurnaceRecipes.smelting.getSmeltingResult(stack) != null
-
-  override def getSizeInventory: Int = 4
-
-  def canRun: Boolean =
-  {
-    val tileEntity = worldObj.getTileEntity(xCoord, yCoord - 1, zCoord)
-
-    if (tileEntity.isInstanceOf[TileFirebox])
-    {
-      if ((tileEntity.asInstanceOf[TileFirebox]).isBurning)
-      {
-        return true
-      }
-    }
-    return false
-  }
 
   override def randomDisplayTick()
   {
@@ -173,12 +157,14 @@ class TileHotPlate extends SpatialTile(Material.iron) with TInventory with TPack
 
   }
 
+  override def getSizeInventory: Int = 4
+
   @SideOnly(Side.CLIENT)
   override def registerIcons(iconReg: IIconRegister)
   {
     super.registerIcons(iconReg)
-    SpatialBlock.icon.put("electricHotPlate", iconReg.registerIcon(Reference.prefix + "electricHotPlate"))
-    SpatialBlock.icon.put("hotPlate_on", iconReg.registerIcon(Reference.prefix + "hotPlate_on"))
+    ResonantBlock.icon.put("electricHotPlate", iconReg.registerIcon(Reference.prefix + "electricHotPlate"))
+    ResonantBlock.icon.put("hotPlate_on", iconReg.registerIcon(Reference.prefix + "hotPlate_on"))
   }
 
   /**
@@ -186,13 +172,27 @@ class TileHotPlate extends SpatialTile(Material.iron) with TInventory with TPack
    */
   override def getIcon(access: IBlockAccess, side: Int): IIcon =
   {
-    return if (access.getBlockMetadata(xi, yi, zi) == 1) SpatialBlock.icon.get("electricHotPlate") else (if (canRun) SpatialBlock.icon.get("hotPlate_on") else SpatialBlock.icon.get(getTextureName))
+    return if (access.getBlockMetadata(xi, yi, zi) == 1) ResonantBlock.icon.get("electricHotPlate") else (if (canRun) ResonantBlock.icon.get("hotPlate_on") else ResonantBlock.icon.get(getTextureName))
+  }
+
+  def canRun: Boolean =
+  {
+    val tileEntity = worldObj.getTileEntity(xCoord, yCoord - 1, zCoord)
+
+    if (tileEntity.isInstanceOf[TileFirebox])
+    {
+      if ((tileEntity.asInstanceOf[TileFirebox]).isBurning)
+      {
+        return true
+      }
+    }
+    return false
   }
 
   @SideOnly(Side.CLIENT)
   override def getIcon(side: Int, meta: Int): IIcon =
   {
-    return if (meta == 1) SpatialBlock.icon.get("electricHotPlate") else SpatialBlock.icon.get(getTextureName)
+    return if (meta == 1) ResonantBlock.icon.get("electricHotPlate") else ResonantBlock.icon.get(getTextureName)
   }
 
   override def click(player: EntityPlayer)

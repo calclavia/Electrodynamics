@@ -9,7 +9,7 @@ import net.minecraft.util.IIcon
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import resonant.api.tile.IBoilHandler
-import resonant.lib.prefab.tile.spatial.SpatialTile
+import resonant.lib.prefab.tile.spatial.ResonantTile
 
 /**
  * Funnel for gas.
@@ -19,7 +19,7 @@ object TileFunnel
   private var iconTop: IIcon = null
 }
 
-class TileFunnel extends SpatialTile(Material.iron) with IBoilHandler
+class TileFunnel extends ResonantTile(Material.iron) with IBoilHandler
 {
   private final val tank: FluidTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 16)
 

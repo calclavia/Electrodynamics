@@ -17,7 +17,7 @@ import net.minecraft.world.IBlockAccess
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketReceiver
-import resonant.lib.prefab.tile.spatial.SpatialTile
+import resonant.lib.prefab.tile.spatial.ResonantTile
 import resonant.lib.prefab.tile.traits.TRotatable
 import resonant.lib.transform.vector.{Vector3, VectorWorld}
 import resonant.lib.utility.inventory.InternalInventoryHandler
@@ -32,7 +32,7 @@ object TileBreaker
   @SideOnly(Side.CLIENT) private var iconBack: IIcon = null
 }
 
-class TileBreaker extends SpatialTile(Material.iron) with TRotatable with IPacketReceiver
+class TileBreaker extends ResonantTile(Material.iron) with TRotatable with IPacketReceiver
 {
   private var _doWork: Boolean = false
   private var invHandler: InternalInventoryHandler = null

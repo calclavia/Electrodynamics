@@ -15,7 +15,7 @@ import resonant.api.recipe.{MachineRecipes, RecipeType}
 import resonant.lib.content.prefab.TInventory
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
-import resonant.lib.prefab.tile.spatial.SpatialTile
+import resonant.lib.prefab.tile.spatial.ResonantTile
 import resonant.lib.render.{RenderItemOverlayUtility, RenderUtility}
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.inventory.InventoryUtility
@@ -41,7 +41,7 @@ object TileWorkbench
   val model = Array(AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "workbench_0.obj")), AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "workbench_1.obj")))
 }
 
-class TileWorkbench extends SpatialTile(Material.wood) with TInventory with TPacketSender with TPacketReceiver
+class TileWorkbench extends ResonantTile(Material.wood) with TInventory with TPacketSender with TPacketReceiver
 {
   //Constructor
   setTextureName("material_wood_surface")

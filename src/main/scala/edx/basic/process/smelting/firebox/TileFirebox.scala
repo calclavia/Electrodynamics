@@ -25,7 +25,7 @@ import resonant.lib.grid.energy.electric.NodeElectricComponent
 import resonant.lib.grid.thermal.{BoilEvent, ThermalPhysics}
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
-import resonant.lib.prefab.tile.spatial.{SpatialBlock, SpatialTile}
+import resonant.lib.prefab.tile.spatial.ResonantTile
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.FluidUtility
 import resonant.lib.wrapper.ByteBufWrapper._
@@ -36,7 +36,7 @@ import resonant.lib.wrapper.CollectionWrapper._
  *
  * @author Calclavia
  */
-class TileFirebox extends SpatialTile(Material.rock) with IFluidHandler with TInventory with TBlockNodeProvider with TIO with TPacketSender with TPacketReceiver
+class TileFirebox extends ResonantTile(Material.rock) with IFluidHandler with TInventory with TBlockNodeProvider with TIO with TPacketSender with TPacketReceiver
 {
   /**
    * 1KG of coal ~= 24MJ
@@ -161,11 +161,6 @@ class TileFirebox extends SpatialTile(Material.rock) with IFluidHandler with TIn
     return this.getBlockMetadata == 1
   }
 
-  def canBurn(stack: ItemStack): Boolean =
-  {
-    return TileEntityFurnace.getItemBurnTime(stack) > 0
-  }
-
   override def randomDisplayTick(): Unit =
   {
     if (isBurning)
@@ -205,6 +200,11 @@ class TileFirebox extends SpatialTile(Material.rock) with IFluidHandler with TIn
   override def isItemValidForSlot(i: Int, itemStack: ItemStack): Boolean =
   {
     return i == 0 && canBurn(itemStack)
+  }
+
+  def canBurn(stack: ItemStack): Boolean =
+  {
+    return TileEntityFurnace.getItemBurnTime(stack) > 0
   }
 
   /**
@@ -276,14 +276,14 @@ class TileFirebox extends SpatialTile(Material.rock) with IFluidHandler with TIn
   override def registerIcons(iconReg: IIconRegister)
   {
     super.registerIcons(iconReg)
-    SpatialBlock.icon.put("firebox_side_on", iconReg.registerIcon(Reference.prefix + "firebox_side_on"))
-    SpatialBlock.icon.put("firebox_side_off", iconReg.registerIcon(Reference.prefix + "firebox_side_off"))
-    SpatialBlock.icon.put("firebox_top_on", iconReg.registerIcon(Reference.prefix + "firebox_top_on"))
-    SpatialBlock.icon.put("firebox_top_off", iconReg.registerIcon(Reference.prefix + "firebox_top_off"))
-    SpatialBlock.icon.put("firebox_electric_side_on", iconReg.registerIcon(Reference.prefix + "firebox_electric_side_on"))
-    SpatialBlock.icon.put("firebox_electric_side_off", iconReg.registerIcon(Reference.prefix + "firebox_electric_side_off"))
-    SpatialBlock.icon.put("firebox_electric_top_on", iconReg.registerIcon(Reference.prefix + "firebox_electric_top_on"))
-    SpatialBlock.icon.put("firebox_electric_top_off", iconReg.registerIcon(Reference.prefix + "firebox_electric_top_off"))
+    ResonantBlock.icon.put("firebox_side_on", iconReg.registerIcon(Reference.prefix + "firebox_side_on"))
+    ResonantBlock.icon.put("firebox_side_off", iconReg.registerIcon(Reference.prefix + "firebox_side_off"))
+    ResonantBlock.icon.put("firebox_top_on", iconReg.registerIcon(Reference.prefix + "firebox_top_on"))
+    ResonantBlock.icon.put("firebox_top_off", iconReg.registerIcon(Reference.prefix + "firebox_top_off"))
+    ResonantBlock.icon.put("firebox_electric_side_on", iconReg.registerIcon(Reference.prefix + "firebox_electric_side_on"))
+    ResonantBlock.icon.put("firebox_electric_side_off", iconReg.registerIcon(Reference.prefix + "firebox_electric_side_off"))
+    ResonantBlock.icon.put("firebox_electric_top_on", iconReg.registerIcon(Reference.prefix + "firebox_electric_top_on"))
+    ResonantBlock.icon.put("firebox_electric_top_off", iconReg.registerIcon(Reference.prefix + "firebox_electric_top_off"))
   }
 
   @SideOnly(Side.CLIENT)
@@ -292,9 +292,9 @@ class TileFirebox extends SpatialTile(Material.rock) with IFluidHandler with TIn
     val isElectric = meta == 1
 
     if (side <= 1)
-      return if (isBurning) (if (isElectric) SpatialBlock.icon.get("firebox_electric_top_on") else SpatialBlock.icon.get("firebox_top_on")) else (if (isElectric) SpatialBlock.icon.get("firebox_electric_top_off") else SpatialBlock.icon.get("firebox_top_off"))
+      return if (isBurning) (if (isElectric) ResonantBlock.icon.get("firebox_electric_top_on") else ResonantBlock.icon.get("firebox_top_on")) else (if (isElectric) ResonantBlock.icon.get("firebox_electric_top_off") else ResonantBlock.icon.get("firebox_top_off"))
 
-    return if (isBurning) (if (isElectric) SpatialBlock.icon.get("firebox_electric_side_on") else SpatialBlock.icon.get("firebox_side_on")) else (if (isElectric) SpatialBlock.icon.get("firebox_electric_side_off") else SpatialBlock.icon.get("firebox_side_off"))
+    return if (isBurning) (if (isElectric) ResonantBlock.icon.get("firebox_electric_side_on") else ResonantBlock.icon.get("firebox_side_on")) else (if (isElectric) ResonantBlock.icon.get("firebox_electric_side_off") else ResonantBlock.icon.get("firebox_side_off"))
   }
 
   override def click(player: EntityPlayer)
