@@ -13,7 +13,7 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.Vec3
 import net.minecraft.world.IBlockAccess
 import net.minecraftforge.common.util.ForgeDirection
-import resonantengine.api.tile.INodeProvider
+import resonantengine.api.graph.INodeProvider
 import resonantengine.lib.prefab.tile.item.ItemBlockMetadata
 import resonantengine.lib.transform.vector.Vector3
 import resonantengine.lib.wrapper.CollectionWrapper._

@@ -19,9 +19,9 @@ import net.minecraft.network.Packet
 import net.minecraft.util.IIcon
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
+import resonantengine.api.network.IPacketReceiver
 import resonantengine.core.ResonantEngine
 import resonantengine.lib.network.discriminator.{PacketTile, PacketType}
-import resonantengine.lib.network.handle.IPacketReceiver
 import resonantengine.lib.prefab.tile.spatial.{ResonantBlock, ResonantTile}
 import resonantengine.lib.render.RenderItemOverlayUtility
 import resonantengine.lib.transform.vector.{Vector2, Vector3}

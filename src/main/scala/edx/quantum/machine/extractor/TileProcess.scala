@@ -3,7 +3,7 @@ package edx.quantum.machine.extractor
 import net.minecraft.block.material.Material
 import net.minecraft.item.ItemStack
 import net.minecraftforge.fluids.{FluidContainerRegistry, FluidStack, FluidTank}
-import resonantengine.api.recipe.{MachineRecipes, RecipeResource}
+import resonantengine.api.edx.recipe.{MachineRecipes, RecipeResource}
 import resonantengine.lib.content.prefab.TInventory
 import resonantengine.lib.grid.core.TBlockNodeProvider
 import resonantengine.lib.prefab.tile.spatial.ResonantTile

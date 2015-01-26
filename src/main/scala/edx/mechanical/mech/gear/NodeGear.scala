@@ -7,7 +7,7 @@ import edx.mechanical.mech.gearshaft.{NodeGearShaft, PartGearShaft}
 import edx.mechanical.mech.grid.NodeMechanical
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.util.ForgeDirection
-import resonantengine.api.tile.INodeProvider
+import resonantengine.api.graph.INodeProvider
 import resonantengine.lib.transform.vector.Vector3
 import resonantengine.lib.wrapper.ForgeDirectionWrapper._
 

@@ -18,11 +18,11 @@ import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.IItemRenderer.ItemRenderType
 import net.minecraftforge.client.model.AdvancedModelLoader
 import org.lwjgl.opengl.GL11
-import resonantengine.api.items.ISimpleItemRenderer
+import resonantengine.api.item.ISimpleItemRenderer
 import resonantengine.lib.factory.resources.ResourceFactory
 import resonantengine.lib.factory.resources.item.TItemResource
 import resonantengine.lib.network.discriminator.PacketType
-import resonantengine.lib.network.handle.{TPacketReceiver, TPacketSender}
+import resonantengine.prefab.network.{TPacketReceiver, TPacketSender}
 import resonantengine.lib.prefab.tile.item.ItemBlockSaved
 import resonantengine.lib.prefab.tile.spatial.ResonantTile
 import resonantengine.lib.render.RenderUtility

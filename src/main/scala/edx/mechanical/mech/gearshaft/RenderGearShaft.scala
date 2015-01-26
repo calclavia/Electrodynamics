@@ -9,7 +9,7 @@ import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL11.glRotatef
-import resonantengine.api.items.ISimpleItemRenderer
+import resonantengine.api.item.ISimpleItemRenderer
 import resonantengine.lib.render.RenderUtility
 import resonantengine.lib.wrapper.ForgeDirectionWrapper._
 

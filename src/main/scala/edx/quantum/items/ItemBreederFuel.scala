@@ -1,7 +1,7 @@
 package edx.quantum.items
 
 import net.minecraft.item.ItemStack
-import resonantengine.api.tile.{IReactor, IReactorComponent}
+import resonantengine.api.edx.machine.{IReactor, IReactorComponent}
 
 /**
  * Breeder rods

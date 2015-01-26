@@ -1,7 +1,7 @@
 package edx.core.resource.alloy
 
 import net.minecraft.nbt.NBTTagCompound
-import resonantengine.api.ISave
+import resonantengine.api.misc.ISave
 import resonantengine.lib.wrapper.NBTWrapper._
 
 /**

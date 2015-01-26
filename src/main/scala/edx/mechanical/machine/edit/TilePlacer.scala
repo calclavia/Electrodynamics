@@ -15,7 +15,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
 import resonantengine.lib.content.prefab.TInventory
 import resonantengine.lib.network.discriminator.PacketTile
-import resonantengine.lib.network.handle.TPacketSender
+import resonantengine.prefab.network.TPacketSender
 import resonantengine.lib.prefab.tile.spatial.ResonantTile
 import resonantengine.lib.prefab.tile.traits.TRotatable
 import resonantengine.lib.render.RenderItemOverlayUtility

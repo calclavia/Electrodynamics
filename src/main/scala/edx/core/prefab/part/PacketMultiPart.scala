@@ -5,7 +5,7 @@ import io.netty.buffer.ByteBuf
 import io.netty.channel.ChannelHandlerContext
 import net.minecraft.entity.player.EntityPlayer
 import resonantengine.lib.network.discriminator.PacketType
-import resonantengine.lib.network.handle.TPacketReceiver
+import resonantengine.prefab.network.TPacketReceiver
 import resonantengine.lib.transform.vector.Vector3
 
 /**

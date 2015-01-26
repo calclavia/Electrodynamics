@@ -15,8 +15,8 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.IIcon
 import net.minecraft.world.IBlockAccess
 import net.minecraftforge.common.util.ForgeDirection
+import resonantengine.api.network.IPacketReceiver
 import resonantengine.lib.network.discriminator.{PacketTile, PacketType}
-import resonantengine.lib.network.handle.IPacketReceiver
 import resonantengine.lib.prefab.tile.spatial.ResonantTile
 import resonantengine.lib.prefab.tile.traits.TRotatable
 import resonantengine.lib.transform.vector.{Vector3, VectorWorld}

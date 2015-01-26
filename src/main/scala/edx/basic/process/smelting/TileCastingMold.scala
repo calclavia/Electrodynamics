@@ -8,9 +8,9 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
-import resonantengine.api.recipe.{MachineRecipes, RecipeResource, RecipeType}
+import resonantengine.api.edx.recipe.{MachineRecipes, RecipeResource, RecipeType}
+import resonantengine.api.network.IPacketReceiver
 import resonantengine.lib.network.discriminator.{PacketTile, PacketType}
-import resonantengine.lib.network.handle.IPacketReceiver
 import resonantengine.lib.prefab.tile.mixed.TileInventory
 import resonantengine.lib.transform.vector.Vector3
 import resonantengine.lib.utility.FluidUtility

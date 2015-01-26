@@ -7,7 +7,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import resonantengine.lib.grid.core.TBlockNodeProvider
 import resonantengine.lib.network.discriminator.PacketType
-import resonantengine.lib.network.handle.{TPacketReceiver, TPacketSender}
+import resonantengine.prefab.network.{TPacketReceiver, TPacketSender}
 import resonantengine.lib.prefab.fluid.NodeFluid
 import resonantengine.lib.prefab.tile.spatial.ResonantTile
 import resonantengine.lib.wrapper.ByteBufWrapper._

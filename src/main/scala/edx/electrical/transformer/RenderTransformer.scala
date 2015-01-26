@@ -9,7 +9,7 @@ import net.minecraftforge.client.IItemRenderer
 import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.client.model.obj.WavefrontObject
 import org.lwjgl.opengl.GL11
-import resonantengine.api.items.ISimpleItemRenderer
+import resonantengine.api.item.ISimpleItemRenderer
 import resonantengine.lib.render.RenderUtility
 
 @SideOnly(Side.CLIENT)

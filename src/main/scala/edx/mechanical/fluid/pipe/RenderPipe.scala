@@ -10,10 +10,10 @@ import net.minecraftforge.client.IItemRenderer.ItemRenderType
 import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
-import resonantengine.api.items.ISimpleItemRenderer
+import resonantengine.api.item.ISimpleItemRenderer
 import resonantengine.lib.render.{FluidRenderUtility, RenderUtility}
 import resonantengine.lib.transform.vector.Vector3
-import resonantengine.lib.world.WorldUtility
+import resonantengine.lib.utility.WorldUtility
 import resonantengine.lib.wrapper.BitmaskWrapper._
 
 @SideOnly(Side.CLIENT)

@@ -15,13 +15,13 @@ import net.minecraftforge.client.IItemRenderer.ItemRenderType
 import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11._
-import resonantengine.api.items.ISimpleItemRenderer
+import resonantengine.api.item.ISimpleItemRenderer
 import resonantengine.lib.content.prefab.TIO
 import resonantengine.lib.grid.core.TBlockNodeProvider
 import resonantengine.lib.grid.energy.EnergyStorage
 import resonantengine.lib.grid.energy.electric.NodeElectricComponent
 import resonantengine.lib.network.discriminator.PacketType
-import resonantengine.lib.network.handle.{TPacketReceiver, TPacketSender}
+import resonantengine.prefab.network.{TPacketReceiver, TPacketSender}
 import resonantengine.lib.prefab.tile.spatial.ResonantTile
 import resonantengine.lib.prefab.tile.traits.TEnergyProvider
 import resonantengine.lib.render.RenderUtility

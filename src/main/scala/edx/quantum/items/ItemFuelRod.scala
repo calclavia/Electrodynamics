@@ -8,7 +8,7 @@ import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.util.ForgeDirection
-import resonantengine.api.tile.{IReactor, IReactorComponent}
+import resonantengine.api.edx.machine.{IReactor, IReactorComponent}
 import resonantengine.lib.grid.thermal.GridThermal
 import resonantengine.lib.transform.vector.VectorWorld
 import resonantengine.lib.wrapper.CollectionWrapper._

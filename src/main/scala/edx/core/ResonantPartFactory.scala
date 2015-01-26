@@ -24,8 +24,8 @@ object ResonantPartFactory extends IPartFactory
   {
     MultiPartRegistry.registerParts(this, partMap.keys.toArray)
 
-    MultipartGenerator.registerTrait("resonant.api.tile.INodeProvider", "edx.core.prefab.pass.TNodeProvider")
-    MultipartGenerator.registerTrait("resonant.core.debug.IDebugInfo", "edx.core.prefab.pass.TDebugInfo")
+    MultipartGenerator.registerTrait("resonantengine.api.graph.INodeProvider", "edx.core.prefab.pass.TraitNodeProvider")
+    MultipartGenerator.registerTrait("resonantengine.api.tile.IDebugInfo", "edx.core.prefab.pass.TraitDebugInfo")
     MultipartGenerator.registerPassThroughInterface("net.minecraftforge.fluids.IFluidHandler")
   }
 

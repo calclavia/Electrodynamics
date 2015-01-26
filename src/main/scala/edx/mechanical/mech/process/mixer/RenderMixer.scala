@@ -10,7 +10,7 @@ import net.minecraftforge.client.IItemRenderer
 import net.minecraftforge.client.model.{AdvancedModelLoader, IModelCustom}
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL11.{glPopMatrix, glPushMatrix, glTranslatef}
-import resonantengine.api.items.ISimpleItemRenderer
+import resonantengine.api.item.ISimpleItemRenderer
 import resonantengine.lib.render.RenderUtility
 
 /**

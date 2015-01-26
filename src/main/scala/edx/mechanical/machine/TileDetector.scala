@@ -19,7 +19,7 @@ import net.minecraft.world.IBlockAccess
 import net.minecraftforge.common.util.ForgeDirection
 import resonantengine.core.ResonantEngine
 import resonantengine.lib.network.discriminator.{PacketTile, PacketType}
-import resonantengine.lib.network.handle.TPacketReceiver
+import resonantengine.prefab.network.TPacketReceiver
 import resonantengine.lib.prefab.tile.spatial.ResonantBlock
 
 class TileDetector extends TileFilterable with TPacketReceiver

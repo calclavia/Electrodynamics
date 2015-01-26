@@ -20,7 +20,7 @@ import net.minecraft.util.{IIcon, ResourceLocation}
 import net.minecraftforge.client.event.TextureStitchEvent
 import net.minecraftforge.fluids.{Fluid, FluidContainerRegistry, FluidRegistry, FluidStack}
 import net.minecraftforge.oredict.OreDictionary
-import resonantengine.api.recipe.{MachineRecipes, RecipeType}
+import resonantengine.api.edx.recipe.{MachineRecipes, RecipeType}
 import resonantengine.lib.factory.resources.ResourceFactory
 import resonantengine.lib.utility.LanguageUtility
 import resonantengine.lib.wrapper.StringWrapper._

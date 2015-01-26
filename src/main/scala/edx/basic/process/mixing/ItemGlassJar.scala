@@ -6,8 +6,9 @@ import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.world.World
+import resonantengine.api.transform.vector.IVector3
 import resonantengine.lib.prefab.tile.item.ItemBlockSaved
-import resonantengine.lib.transform.vector.{IVector3, Vector3}
+import resonantengine.lib.transform.vector.Vector3
 import resonantengine.lib.utility.nbt.NBTUtility
 
 /**

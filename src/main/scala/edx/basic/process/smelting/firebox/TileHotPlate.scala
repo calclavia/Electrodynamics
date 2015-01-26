@@ -13,7 +13,7 @@ import net.minecraft.util.IIcon
 import net.minecraft.world.IBlockAccess
 import resonantengine.lib.content.prefab.TInventory
 import resonantengine.lib.network.discriminator.PacketType
-import resonantengine.lib.network.handle.{TPacketReceiver, TPacketSender}
+import resonantengine.prefab.network.{TPacketReceiver, TPacketSender}
 import resonantengine.lib.prefab.tile.spatial.{ResonantBlock, ResonantTile}
 import resonantengine.lib.transform.region.Cuboid
 import resonantengine.lib.transform.vector.{Vector2, Vector3}

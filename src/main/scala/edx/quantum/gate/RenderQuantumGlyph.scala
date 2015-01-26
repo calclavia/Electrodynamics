@@ -7,7 +7,7 @@ import net.minecraft.init.Blocks
 import net.minecraft.item.ItemStack
 import net.minecraftforge.client.IItemRenderer
 import org.lwjgl.opengl.GL11
-import resonantengine.api.items.ISimpleItemRenderer
+import resonantengine.api.item.ISimpleItemRenderer
 import resonantengine.lib.render.RenderUtility
 
 object RenderQuantumGlyph extends ISimpleItemRenderer

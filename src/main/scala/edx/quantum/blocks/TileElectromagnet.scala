@@ -16,7 +16,7 @@ import resonantengine.lib.prefab.tile.item.ItemBlockMetadata
 import resonantengine.lib.prefab.tile.spatial.ResonantBlock
 import resonantengine.lib.render.{RenderBlockUtility, RenderUtility}
 import resonantengine.lib.transform.vector.Vector3
-import resonantengine.lib.world.WorldUtility
+import resonantengine.lib.utility.WorldUtility
 import resonantengine.lib.wrapper.CollectionWrapper._
 
 /**

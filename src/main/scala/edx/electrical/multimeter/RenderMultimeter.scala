@@ -9,7 +9,7 @@ import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.IItemRenderer
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
-import resonantengine.api.items.ISimpleItemRenderer
+import resonantengine.api.item.ISimpleItemRenderer
 import resonantengine.lib.render.RenderUtility
 import resonantengine.lib.transform.vector.Vector3
 import resonantengine.lib.utility.LanguageUtility

@@ -11,13 +11,13 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
+import resonantengine.api.network.IPacketReceiver
 import resonantengine.lib.content.prefab.{TIO, TInventory}
 import resonantengine.lib.grid.core.TBlockNodeProvider
 import resonantengine.lib.grid.energy.EnergyStorage
 import resonantengine.lib.grid.energy.electric.NodeElectricComponent
 import resonantengine.lib.mod.compat.energy.Compatibility
 import resonantengine.lib.network.discriminator.{PacketTile, PacketType}
-import resonantengine.lib.network.handle.IPacketReceiver
 import resonantengine.lib.prefab.tile.spatial.ResonantTile
 import resonantengine.lib.prefab.tile.traits.{TEnergyProvider, TRotatable}
 import resonantengine.lib.transform.vector.Vector3

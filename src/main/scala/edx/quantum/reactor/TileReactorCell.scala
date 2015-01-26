@@ -19,9 +19,9 @@ import net.minecraft.world.World
 import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
-import resonantengine.api.tile.{IReactor, IReactorComponent}
+import resonantengine.api.edx.machine.{IReactor, IReactorComponent}
 import resonantengine.lib.grid.thermal.{GridThermal, ThermalPhysics}
-import resonantengine.lib.network.handle.{TPacketReceiver, TPacketSender}
+import resonantengine.prefab.network.{TPacketReceiver, TPacketSender}
 import resonantengine.lib.prefab.poison.PoisonRadiation
 import resonantengine.lib.prefab.tile.mixed.TileInventory
 import resonantengine.lib.prefab.tile.multiblock.reference.{IMultiBlockStructure, MultiBlockHandler}

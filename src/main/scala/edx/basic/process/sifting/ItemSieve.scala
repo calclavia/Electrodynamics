@@ -6,7 +6,7 @@ import net.minecraft.block.Block
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.{EnumAction, ItemStack}
 import net.minecraft.world.World
-import resonantengine.api.recipe.{MachineRecipes, RecipeType}
+import resonantengine.api.edx.recipe.{MachineRecipes, RecipeType}
 import resonantengine.lib.prefab.tile.item.ItemBlockSaved
 import resonantengine.lib.render.EnumColor
 import resonantengine.lib.transform.vector.Vector3

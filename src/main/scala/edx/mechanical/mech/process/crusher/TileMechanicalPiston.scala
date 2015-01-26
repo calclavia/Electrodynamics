@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
-import resonantengine.api.recipe.{MachineRecipes, RecipeResource, RecipeType}
+import resonantengine.api.edx.recipe.{MachineRecipes, RecipeResource, RecipeType}
 import resonantengine.lib.mod.config.Config
 import resonantengine.lib.transform.vector.Vector3
 import resonantengine.lib.utility.MovementUtility

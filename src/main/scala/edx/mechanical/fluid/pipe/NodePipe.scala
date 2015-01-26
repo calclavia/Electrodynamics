@@ -4,7 +4,7 @@ import edx.core.prefab.node.{NodeFluidPressure, TMultipartNode}
 import edx.core.prefab.part.connector.TColorable
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.IFluidHandler
-import resonantengine.api.tile.INodeProvider
+import resonantengine.api.graph.INodeProvider
 
 /**
  * Pressure node for the pipe

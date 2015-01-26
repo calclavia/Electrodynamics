@@ -11,7 +11,7 @@ import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11._
-import resonantengine.api.recipe.{MachineRecipes, RecipeType}
+import resonantengine.api.edx.recipe.{MachineRecipes, RecipeType}
 import resonantengine.lib.prefab.Timer
 import resonantengine.lib.prefab.damage.CustomDamageSource
 import resonantengine.lib.render.RenderUtility

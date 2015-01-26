@@ -2,10 +2,10 @@ package edx.mechanical.mech.grid
 
 import edx.core.interfaces.TNodeMechanical
 import edx.core.prefab.node.TMultipartNode
-import resonantengine.api.tile.INodeProvider
-import resonantengine.core.debug.IDebugInfo
+import resonantengine.api.graph.INodeProvider
+import resonantengine.api.tile.IDebugInfo
+import resonantengine.api.transform.vector.IVectorWorld
 import resonantengine.lib.grid.core.{GridNode, NodeGrid, TTileConnector}
-import resonantengine.lib.transform.vector.IVectorWorld
 
 import scala.beans.BeanProperty
 import scala.collection.convert.wrapAll._

@@ -2,7 +2,7 @@ package edx.core.prefab.pass;
 
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
-import resonantengine.core.debug.IDebugInfo;
+import resonantengine.api.tile.IDebugInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * @author Calclavia
  */
-public class TDebugInfo extends TileMultipart implements IDebugInfo
+public class TraitDebugInfo extends TileMultipart implements IDebugInfo
 {
 	@Override
 	public List<String> getDebugInfo()

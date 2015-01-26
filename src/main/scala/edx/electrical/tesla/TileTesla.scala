@@ -22,7 +22,7 @@ import resonantengine.lib.grid.core.TBlockNodeProvider
 import resonantengine.lib.grid.energy.EnergyStorage
 import resonantengine.lib.grid.energy.electric.NodeElectricComponent
 import resonantengine.lib.network.discriminator.{PacketTile, PacketType}
-import resonantengine.lib.network.handle.{TPacketReceiver, TPacketSender}
+import resonantengine.prefab.network.{TPacketReceiver, TPacketSender}
 import resonantengine.lib.prefab.tile.multiblock.reference.{IMultiBlockStructure, MultiBlockHandler}
 import resonantengine.lib.prefab.tile.spatial.ResonantTile
 import resonantengine.lib.prefab.tile.traits.TEnergyProvider

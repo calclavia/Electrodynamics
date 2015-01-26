@@ -8,7 +8,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.{Item, ItemBlock, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.World
-import resonantengine.api.items.IEnergyItem
+import resonantengine.api.item.IEnergyItem
 import resonantengine.lib.render.EnumColor
 import resonantengine.lib.utility.LanguageUtility
 import resonantengine.lib.utility.science.UnitDisplay

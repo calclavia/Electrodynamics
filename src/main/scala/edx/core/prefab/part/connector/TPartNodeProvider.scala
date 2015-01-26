@@ -4,7 +4,7 @@ import java.util.{List => JList}
 
 import codechicken.multipart.TMultiPart
 import net.minecraft.nbt.NBTTagCompound
-import resonantengine.api.ISave
+import resonantengine.api.misc.ISave
 import resonantengine.lib.grid.core.TNodeProvider
 
 import scala.collection.convert.wrapAll._

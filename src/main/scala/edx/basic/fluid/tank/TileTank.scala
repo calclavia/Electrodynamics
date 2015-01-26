@@ -18,7 +18,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import org.lwjgl.opengl.GL11
 import resonantengine.api.tile.IRemovable.ISneakPickup
-import resonantengine.api.tile.node.INode
+import resonantengine.api.graph.node.INode
 import resonantengine.lib.grid.core.Node
 import resonantengine.lib.render.block.RenderConnectedTexture
 import resonantengine.lib.render.{FluidRenderUtility, RenderBlockUtility, RenderUtility}

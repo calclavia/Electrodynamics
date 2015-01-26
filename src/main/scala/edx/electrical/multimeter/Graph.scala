@@ -1,7 +1,7 @@
 package edx.electrical.multimeter
 
 import net.minecraft.nbt.NBTTagCompound
-import resonantengine.api.ISave
+import resonantengine.api.misc.ISave
 import resonantengine.lib.collection.EvictingList
 import resonantengine.lib.wrapper.NBTWrapper._
 

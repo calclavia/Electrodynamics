@@ -4,8 +4,8 @@ import codechicken.multipart.PartMap;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 import net.minecraftforge.common.util.ForgeDirection;
-import resonantengine.api.tile.INodeProvider;
-import resonantengine.api.tile.node.INode;
+import resonantengine.api.graph.INodeProvider;
+import resonantengine.api.graph.node.INode;
 
 /**
  * TNodeProvider multipart Trait.
@@ -13,7 +13,7 @@ import resonantengine.api.tile.node.INode;
  *
  * @author Calclavia
  */
-public class TNodeProvider extends TileMultipart implements INodeProvider
+public class TraitNodeProvider extends TileMultipart implements INodeProvider
 {
 	@Override
 	public <N extends INode> N getNode(Class<? extends N> nodeType, ForgeDirection from)

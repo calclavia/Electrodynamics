@@ -25,12 +25,12 @@ import net.minecraftforge.oredict.OreDictionary
 import org.apache.commons.lang3.ArrayUtils
 import org.lwjgl.opengl.GL11
 import resonantengine.api.gui.ISlotPickResult
-import resonantengine.api.recipe.{MachineRecipes, RecipeResource, RecipeType}
+import resonantengine.api.edx.recipe.{MachineRecipes, RecipeResource, RecipeType}
+import resonantengine.api.network.IPacketReceiver
 import resonantengine.api.tile.IRotatable
 import resonantengine.core.ResonantEngine
 import resonantengine.lib.collection.Pair
 import resonantengine.lib.network.discriminator.{PacketTile, PacketType}
-import resonantengine.lib.network.handle.IPacketReceiver
 import resonantengine.lib.prefab.gui.ContainerDummy
 import resonantengine.lib.prefab.tile.item.ItemBlockSaved
 import resonantengine.lib.prefab.tile.mixed.TileInventory

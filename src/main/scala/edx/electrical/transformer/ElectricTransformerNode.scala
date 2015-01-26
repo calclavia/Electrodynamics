@@ -1,7 +1,7 @@
 package edx.electrical.transformer
 
 import net.minecraftforge.common.util.ForgeDirection
-import resonantengine.api.tile.INodeProvider
+import resonantengine.api.graph.INodeProvider
 import resonantengine.lib.grid.energy.electric.NodeElectricComponent
 
 /**

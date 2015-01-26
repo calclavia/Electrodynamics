@@ -24,7 +24,7 @@ import resonantengine.lib.grid.energy.EnergyStorage
 import resonantengine.lib.grid.energy.electric.NodeElectricComponent
 import resonantengine.lib.grid.thermal.{BoilEvent, ThermalPhysics}
 import resonantengine.lib.network.discriminator.PacketType
-import resonantengine.lib.network.handle.{TPacketReceiver, TPacketSender}
+import resonantengine.prefab.network.{TPacketReceiver, TPacketSender}
 import resonantengine.lib.prefab.tile.spatial.{ResonantBlock, ResonantTile}
 import resonantengine.lib.transform.vector.Vector3
 import resonantengine.lib.utility.FluidUtility

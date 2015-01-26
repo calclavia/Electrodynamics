@@ -4,7 +4,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent
 import net.minecraft.block.Block
 import net.minecraft.item.ItemStack
 import net.minecraftforge.common.config.Configuration
-import resonantengine.api.recipe.QuantumAssemblerRecipes
+import resonantengine.api.edx.recipe.QuantumAssemblerRecipes
 import resonantengine.lib.mod.config.Config
 import resonantengine.lib.mod.config.ConfigEvent.PostConfigEvent
 import resonantengine.lib.prefab.poison.PotionRadiation

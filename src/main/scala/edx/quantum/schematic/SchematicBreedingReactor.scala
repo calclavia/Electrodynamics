@@ -8,7 +8,7 @@ import net.minecraft.init.Blocks
 import net.minecraftforge.common.util.ForgeDirection
 import resonantengine.lib.collection.Pair
 import resonantengine.lib.transform.vector.Vector3
-import resonantengine.lib.world.schematic.Schematic
+import resonantengine.lib.schematic.Schematic
 
 class SchematicBreedingReactor extends Schematic
 {

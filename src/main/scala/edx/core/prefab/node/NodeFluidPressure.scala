@@ -2,8 +2,7 @@ package edx.core.prefab.node
 
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.{FluidContainerRegistry, IFluidHandler}
-import resonantengine.api.IUpdate
-import resonantengine.api.tile.INodeProvider
+import resonantengine.api.graph.{IUpdate, INodeProvider}
 import resonantengine.lib.grid.core.UpdateTicker
 import resonantengine.lib.prefab.fluid.NodeFluid
 

@@ -10,8 +10,8 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.{ChatComponentText, MovingObjectPosition}
 import net.minecraftforge.common.util.ForgeDirection
-import resonantengine.api.tile.INodeProvider
-import resonantengine.api.tile.node.INode
+import resonantengine.api.graph.INodeProvider
+import resonantengine.api.graph.node.INode
 import resonantengine.lib.utility.WrenchUtility
 
 /**

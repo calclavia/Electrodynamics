@@ -15,7 +15,7 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.MovingObjectPosition
 import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
-import resonantengine.api.tile.node.INode
+import resonantengine.api.graph.node.INode
 import resonantengine.lib.prefab.tile.multiblock.reference.IMultiBlockStructure
 import resonantengine.lib.utility.WrenchUtility
 
