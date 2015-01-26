@@ -7,10 +7,10 @@ import net.minecraft.init.Blocks
 import net.minecraft.inventory.Container
 import net.minecraft.item.ItemStack
 import resonantengine.core.network.discriminator.PacketTile
-import resonantengine.lib.prefab.gui.GuiContainerBase
 import resonantengine.lib.render.EnumColor
 import resonantengine.lib.utility.science.UnitDisplay
 import resonantengine.lib.wrapper.CollectionWrapper._
+import resonantengine.prefab.gui.GuiContainerBase
 
 class GuiMFFS(container: Container, tile: TileMFFS) extends GuiContainerBase(container)
 {

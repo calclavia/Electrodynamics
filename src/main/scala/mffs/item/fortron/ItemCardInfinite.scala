@@ -4,7 +4,7 @@ import mffs.item.card.ItemCard
 import mffs.util.FortronUtility
 import net.minecraft.item.ItemStack
 import net.minecraftforge.fluids.FluidStack
-import resonantengine.lib.prefab.item.TFluidContainerItem
+import resonantengine.prefab.item.TFluidContainerItem
 
 /**
  * A card used by admins or players to cheat infinite energy.
