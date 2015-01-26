@@ -13,7 +13,7 @@ import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL11._
-import resonant.lib.grid.core.TSpatialNodeProvider
+import resonant.lib.grid.core.TBlockNodeProvider
 import resonant.lib.grid.energy.electric.NodeElectricComponent
 import resonant.lib.prefab.tile.spatial.SpatialTile
 import resonant.lib.prefab.tile.traits.TRotatable
@@ -38,7 +38,7 @@ object TileLaserEmitter
   val texture = new ResourceLocation(Reference.domain, Reference.modelPath + "laserEmitter.png")
 }
 
-class TileLaserEmitter extends SpatialTile(Material.iron) with ILaserHandler with TSpatialNodeProvider with TRotatable
+class TileLaserEmitter extends SpatialTile(Material.iron) with ILaserHandler with TBlockNodeProvider with TRotatable
 {
   val electricNode = new NodeElectricComponent(this)
 

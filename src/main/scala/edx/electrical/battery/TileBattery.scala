@@ -17,12 +17,13 @@ import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11._
 import resonant.api.items.ISimpleItemRenderer
 import resonant.lib.content.prefab.TIO
-import resonant.lib.grid.core.TSpatialNodeProvider
+import resonant.lib.grid.core.TBlockNodeProvider
 import resonant.lib.grid.energy.EnergyStorage
+import resonant.lib.grid.energy.electric.NodeElectricComponent
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
 import resonant.lib.prefab.tile.spatial.SpatialTile
-import resonant.lib.prefab.tile.traits.{TElectric, TEnergyProvider}
+import resonant.lib.prefab.tile.traits.TEnergyProvider
 import resonant.lib.render.RenderUtility
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.science.UnitDisplay
@@ -47,8 +48,9 @@ object TileBattery
   def getEnergyForTier(tier: Int) = Math.round(Math.pow(500000000, (tier / (maxTier + 0.7f)) + 1) / 500000000) * 500000000
 }
 
-class TileBattery extends SpatialTile(Material.iron) with TIO with TElectric with TSpatialNodeProvider with TPacketSender with TPacketReceiver with TEnergyProvider with ISimpleItemRenderer
+class TileBattery extends SpatialTile(Material.iron) with TIO with TBlockNodeProvider with TPacketSender with TPacketReceiver with TEnergyProvider with ISimpleItemRenderer
 {
+  private val electricNode = new NodeElectricComponent(this)
   var energyRenderLevel = 0
 
   nodes.add(electricNode)
@@ -102,6 +104,7 @@ class TileBattery extends SpatialTile(Material.iron) with TIO with TElectric wit
         energyRenderLevel = Math.round((energy.value / TileBattery.getEnergyForTier(getBlockMetadata).toDouble) * 8).toInt
         sendDescPacket()
       }
+
       /**
        * Update packet when energy level changes.
 

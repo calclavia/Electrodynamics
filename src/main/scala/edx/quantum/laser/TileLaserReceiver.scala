@@ -11,7 +11,7 @@ import net.minecraft.util.{MovingObjectPosition, ResourceLocation}
 import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11._
-import resonant.lib.grid.core.TSpatialNodeProvider
+import resonant.lib.grid.core.TBlockNodeProvider
 import resonant.lib.grid.energy.electric.NodeElectricComponent
 import resonant.lib.prefab.tile.spatial.SpatialTile
 import resonant.lib.prefab.tile.traits.TRotatable
@@ -30,7 +30,7 @@ object TileLaserReceiver
   @SideOnly(Side.CLIENT) val texture = new ResourceLocation(Reference.domain, Reference.modelPath + "laserReceiver.png")
 }
 
-class TileLaserReceiver extends SpatialTile(Material.rock) with ILaserHandler with TSpatialNodeProvider with TRotatable
+class TileLaserReceiver extends SpatialTile(Material.rock) with ILaserHandler with TBlockNodeProvider with TRotatable
 {
   val electricNode = new NodeElectricComponent(this)
 

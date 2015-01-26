@@ -19,12 +19,13 @@ import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import resonant.lib.content.prefab.{TIO, TInventory}
+import resonant.lib.grid.core.TBlockNodeProvider
 import resonant.lib.grid.energy.EnergyStorage
+import resonant.lib.grid.energy.electric.NodeElectricComponent
 import resonant.lib.grid.thermal.{BoilEvent, ThermalPhysics}
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
 import resonant.lib.prefab.tile.spatial.{SpatialBlock, SpatialTile}
-import resonant.lib.prefab.tile.traits.TElectric
 import resonant.lib.transform.vector.Vector3
 import resonant.lib.utility.FluidUtility
 import resonant.lib.wrapper.ByteBufWrapper._
@@ -35,7 +36,7 @@ import resonant.lib.wrapper.CollectionWrapper._
  *
  * @author Calclavia
  */
-class TileFirebox extends SpatialTile(Material.rock) with IFluidHandler with TInventory with TElectric with TIO with TPacketSender with TPacketReceiver
+class TileFirebox extends SpatialTile(Material.rock) with IFluidHandler with TInventory with TBlockNodeProvider with TIO with TPacketSender with TPacketReceiver
 {
   /**
    * 1KG of coal ~= 24MJ
@@ -45,8 +46,9 @@ class TileFirebox extends SpatialTile(Material.rock) with IFluidHandler with TIn
    * into fluids to increase their internal energy.
    */
   private final val power = 100000
-  val energy = new EnergyStorage
   protected val tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME)
+  private val electricNode = new NodeElectricComponent(this)
+  private val energy = new EnergyStorage
   private var burnTime = 0
   private var heatEnergy = 0d
 
@@ -159,6 +161,11 @@ class TileFirebox extends SpatialTile(Material.rock) with IFluidHandler with TIn
     return this.getBlockMetadata == 1
   }
 
+  def canBurn(stack: ItemStack): Boolean =
+  {
+    return TileEntityFurnace.getItemBurnTime(stack) > 0
+  }
+
   override def randomDisplayTick(): Unit =
   {
     if (isBurning)
@@ -184,6 +191,8 @@ class TileFirebox extends SpatialTile(Material.rock) with IFluidHandler with TIn
     }
   }
 
+  def isBurning: Boolean = burnTime > 0
+
   override def getSizeInventory = 1
 
   def getMeltIronEnergy(volume: Float): Double =
@@ -196,11 +205,6 @@ class TileFirebox extends SpatialTile(Material.rock) with IFluidHandler with TIn
   override def isItemValidForSlot(i: Int, itemStack: ItemStack): Boolean =
   {
     return i == 0 && canBurn(itemStack)
-  }
-
-  def canBurn(stack: ItemStack): Boolean =
-  {
-    return TileEntityFurnace.getItemBurnTime(stack) > 0
   }
 
   /**
@@ -292,8 +296,6 @@ class TileFirebox extends SpatialTile(Material.rock) with IFluidHandler with TIn
 
     return if (isBurning) (if (isElectric) SpatialBlock.icon.get("firebox_electric_side_on") else SpatialBlock.icon.get("firebox_side_on")) else (if (isElectric) SpatialBlock.icon.get("firebox_electric_side_off") else SpatialBlock.icon.get("firebox_side_off"))
   }
-
-  def isBurning: Boolean = burnTime > 0
 
   override def click(player: EntityPlayer)
   {

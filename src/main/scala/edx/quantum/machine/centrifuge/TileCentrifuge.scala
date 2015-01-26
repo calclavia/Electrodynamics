@@ -11,12 +11,14 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
-import resonant.lib.content.prefab.TIO
+import resonant.lib.content.prefab.{TIO, TInventory}
+import resonant.lib.grid.core.TBlockNodeProvider
 import resonant.lib.grid.energy.EnergyStorage
+import resonant.lib.grid.energy.electric.NodeElectricComponent
 import resonant.lib.mod.compat.energy.Compatibility
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketReceiver
-import resonant.lib.prefab.tile.mixed.TileElectricInventory
+import resonant.lib.prefab.tile.spatial.SpatialTile
 import resonant.lib.prefab.tile.traits.{TEnergyProvider, TRotatable}
 import resonant.lib.transform.vector.Vector3
 
@@ -29,9 +31,10 @@ object TileCentrifuge
   final val DIAN: Long = 500000
 }
 
-class TileCentrifuge extends TileElectricInventory(Material.iron) with IPacketReceiver with IFluidHandler with IInventory with TEnergyProvider with TRotatable with TIO
+class TileCentrifuge extends SpatialTile(Material.iron) with TInventory with TBlockNodeProvider with IPacketReceiver with IFluidHandler with IInventory with TEnergyProvider with TRotatable with TIO
 {
   val gasTank: FluidTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 5)
+  private val electricNode = new NodeElectricComponent(this)
   var timer: Int = 0
   var rotation: Float = 0
 
@@ -148,22 +151,6 @@ class TileCentrifuge extends TileElectricInventory(Material.iron) with IPacketRe
     return false
   }
 
-  override def isItemValidForSlot(i: Int, itemStack: ItemStack): Boolean =
-  {
-    i match
-    {
-      case 0 =>
-        return Compatibility.isHandler(itemStack.getItem, null)
-      case 1 =>
-        return true
-      case 2 =>
-        return itemStack.getItem eq QuantumContent.itemUranium
-      case 3 =>
-        return itemStack.getItem eq QuantumContent.itemUranium
-    }
-    return false
-  }
-
   override def use(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
   {
     openGui(player, QuantumContent)
@@ -256,6 +243,22 @@ class TileCentrifuge extends TileElectricInventory(Material.iron) with IPacketRe
   override def canInsertItem(slotID: Int, itemStack: ItemStack, side: Int): Boolean =
   {
     return slotID == 1 && this.isItemValidForSlot(slotID, itemStack)
+  }
+
+  override def isItemValidForSlot(i: Int, itemStack: ItemStack): Boolean =
+  {
+    i match
+    {
+      case 0 =>
+        return Compatibility.isHandler(itemStack.getItem, null)
+      case 1 =>
+        return true
+      case 2 =>
+        return itemStack.getItem eq QuantumContent.itemUranium
+      case 3 =>
+        return itemStack.getItem eq QuantumContent.itemUranium
+    }
+    return false
   }
 
   override def canExtractItem(slotID: Int, itemstack: ItemStack, j: Int): Boolean =

@@ -9,10 +9,13 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import resonant.api.recipe.QuantumAssemblerRecipes
+import resonant.lib.content.prefab.TInventory
+import resonant.lib.grid.core.TBlockNodeProvider
 import resonant.lib.grid.energy.EnergyStorage
+import resonant.lib.grid.energy.electric.NodeElectricComponent
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketReceiver
-import resonant.lib.prefab.tile.mixed.TileElectricInventory
+import resonant.lib.prefab.tile.spatial.SpatialTile
 import resonant.lib.prefab.tile.traits.TEnergyProvider
 import resonant.lib.transform.vector.Vector3
 
@@ -21,8 +24,10 @@ import resonant.lib.transform.vector.Vector3
  *
  * @author Calclavia, Darkguardsman
  */
-class TileQuantumAssembler extends TileElectricInventory(Material.iron) with IPacketReceiver with TEnergyProvider
+class TileQuantumAssembler extends SpatialTile(Material.iron) with TInventory with TBlockNodeProvider with IPacketReceiver with TEnergyProvider
 {
+  private val electricNode = new NodeElectricComponent(this)
+
   private[quantum] var power: Long = 1000000000L
   private[quantum] var MAX_TIME: Int = 20 * 120
   private[quantum] var time: Int = 0
@@ -44,6 +49,7 @@ class TileQuantumAssembler extends TileElectricInventory(Material.iron) with IPa
   normalRender = false
   customItemRender = true
   textureName = "machine"
+  nodes.add(electricNode)
 
   override def getSizeInventory: Int = 7
 

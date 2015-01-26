@@ -5,7 +5,7 @@ import io.netty.buffer.ByteBuf
 import net.minecraft.block.material.Material
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.lib.grid.core.TSpatialNodeProvider
+import resonant.lib.grid.core.TBlockNodeProvider
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
 import resonant.lib.prefab.tile.spatial.SpatialTile
@@ -18,7 +18,7 @@ import scala.collection.convert.wrapAll._
 /** Prefab for resonantinduction.mechanical tiles
   *
   * @author Calclavia */
-abstract class TileMechanical(material: Material) extends SpatialTile(material: Material) with TRotatable with TSpatialNodeProvider with TPacketSender with TPacketReceiver
+abstract class TileMechanical(material: Material) extends SpatialTile(material: Material) with TRotatable with TBlockNodeProvider with TPacketSender with TPacketReceiver
 {
   /** Node that handles most mechanical actions */
   private var _mechanicalNode: NodeMechanical = null
@@ -42,18 +42,6 @@ abstract class TileMechanical(material: Material) extends SpatialTile(material: 
     return false
   }
 
-  def mechanicalNode = _mechanicalNode
-
-  def mechanicalNode_=(newNode: NodeMechanical)
-  {
-    _mechanicalNode = newNode
-    mechanicalNode.onVelocityChanged = () => sendPacket(1)
-    nodes.removeAll(nodes.filter(_.isInstanceOf[NodeMechanical]))
-    nodes.add(mechanicalNode)
-  }
-
-  mechanicalNode = new NodeMechanical(this)
-
   override def write(buf: ByteBuf, id: Int)
   {
     super.write(buf, id)
@@ -65,6 +53,8 @@ abstract class TileMechanical(material: Material) extends SpatialTile(material: 
     }
   }
 
+  def mechanicalNode = _mechanicalNode
+
   override def read(buf: ByteBuf, id: Int, packetType: PacketType)
   {
     super.read(buf, id, packetType)
@@ -75,5 +65,19 @@ abstract class TileMechanical(material: Material) extends SpatialTile(material: 
       case 1 => mechanicalNode.angularVelocity = buf.readFloat()
     }
   }
+
+  def mechanicalNode_=(newNode: NodeMechanical)
+{
+  _mechanicalNode = newNode
+  mechanicalNode.onVelocityChanged = () => sendPacket(1)
+  nodes.removeAll(nodes.filter(_.isInstanceOf[NodeMechanical]))
+  nodes.add(mechanicalNode)
+  }
+
+  mechanicalNode = new NodeMechanical(this)
+
+
+
+
 
 }

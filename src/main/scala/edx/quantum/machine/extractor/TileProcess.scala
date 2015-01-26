@@ -4,14 +4,16 @@ import net.minecraft.block.material.Material
 import net.minecraft.item.ItemStack
 import net.minecraftforge.fluids.{FluidContainerRegistry, FluidStack, FluidTank}
 import resonant.api.recipe.{MachineRecipes, RecipeResource}
-import resonant.lib.prefab.tile.mixed.TileElectricInventory
+import resonant.lib.content.prefab.TInventory
+import resonant.lib.grid.core.TBlockNodeProvider
+import resonant.lib.prefab.tile.spatial.SpatialTile
 
 /**
  * General class for all machines that do traditional recipe processing
  *
  * @author Calclavia
  */
-abstract class TileProcess(material: Material) extends TileElectricInventory(material)
+abstract class TileProcess(material: Material) extends SpatialTile(material) with TInventory with TBlockNodeProvider
 {
   protected var inputSlot: Int = 0
   protected var outputSlot: Int = 0

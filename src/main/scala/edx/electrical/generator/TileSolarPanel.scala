@@ -7,16 +7,18 @@ import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.util.IIcon
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.lib.content.prefab.TIO
-import resonant.lib.grid.core.TSpatialNodeProvider
+import resonant.lib.grid.core.TBlockNodeProvider
+import resonant.lib.grid.energy.electric.NodeElectricComponent
 import resonant.lib.prefab.tile.spatial.{SpatialBlock, SpatialTile}
-import resonant.lib.prefab.tile.traits.TElectric
 import resonant.lib.render.block.RenderConnectedTexture
 import resonant.lib.transform.region.Cuboid
 
 import scala.collection.convert.wrapAll._
 
-class TileSolarPanel extends SpatialTile(Material.iron) with TElectric with TSpatialNodeProvider with TIO with RenderConnectedTexture
+class TileSolarPanel extends SpatialTile(Material.iron) with TBlockNodeProvider with TIO with RenderConnectedTexture
 {
+  private val electricNode = new NodeElectricComponent(this)
+
   ioMap = 728
   textureName = "solarPanel_top"
   bounds = new Cuboid(0, 0, 0, 1, 0.3f, 1)

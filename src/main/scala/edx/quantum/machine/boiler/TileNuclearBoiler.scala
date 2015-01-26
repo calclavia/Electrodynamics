@@ -11,11 +11,13 @@ import net.minecraft.network.Packet
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import resonant.core.ResonantEngine
-import resonant.lib.content.prefab.TIO
+import resonant.lib.content.prefab.{TIO, TInventory}
+import resonant.lib.grid.core.TBlockNodeProvider
 import resonant.lib.grid.energy.EnergyStorage
+import resonant.lib.grid.energy.electric.NodeElectricComponent
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.IPacketReceiver
-import resonant.lib.prefab.tile.mixed.TileElectricInventory
+import resonant.lib.prefab.tile.spatial.SpatialTile
 import resonant.lib.prefab.tile.traits.{TEnergyProvider, TRotatable}
 import resonant.lib.transform.vector.Vector3
 
@@ -27,14 +29,12 @@ object TileNuclearBoiler
   final val power: Long = 50000
 }
 
-class TileNuclearBoiler extends TileElectricInventory(Material.iron) with IPacketReceiver with IFluidHandler with TRotatable with TEnergyProvider with TIO
+class TileNuclearBoiler extends SpatialTile(Material.iron) with TInventory with TBlockNodeProvider with IPacketReceiver with IFluidHandler with TRotatable with TEnergyProvider with TIO
 {
   final val totalTime: Int = 20 * 15
-
   final val waterTank: FluidTank = new FluidTank(QuantumContent.fluidStackWater.copy, FluidContainerRegistry.BUCKET_VOLUME * 5)
-
   final val gasTank: FluidTank = new FluidTank(QuantumContent.fluidStackUraniumHexaflouride.copy, FluidContainerRegistry.BUCKET_VOLUME * 5)
-
+  private val electricNode = new NodeElectricComponent(this)
   var timer: Int = 0
 
   var rotation: Float = 0

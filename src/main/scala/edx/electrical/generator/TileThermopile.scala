@@ -8,20 +8,20 @@ import net.minecraft.init.Blocks
 import net.minecraft.util.IIcon
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.lib.content.prefab.TIO
-import resonant.lib.grid.core.TSpatialNodeProvider
+import resonant.lib.grid.core.TBlockNodeProvider
+import resonant.lib.grid.energy.electric.NodeElectricComponent
 import resonant.lib.prefab.tile.spatial.{SpatialBlock, SpatialTile}
-import resonant.lib.prefab.tile.traits.TElectric
 
 import scala.collection.convert.wrapAll._
 
-class TileThermopile extends SpatialTile(Material.rock) with TElectric with TSpatialNodeProvider with TIO
+class TileThermopile extends SpatialTile(Material.rock) with TBlockNodeProvider with TIO
 {
   /**
    * The amount of ticks the thermopile will use the temperature differences before turning all
    * adjacent sides to thermal equilibrium.
    */
   private val maxTicks = 120 * 20
-
+  private val electricNode = new NodeElectricComponent(this)
   private var ticksUsed = 0
 
   ioMap = 728

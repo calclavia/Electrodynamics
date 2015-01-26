@@ -18,11 +18,13 @@ import net.minecraft.util.ChatComponentText
 import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.lib.content.prefab.TIO
+import resonant.lib.grid.core.TBlockNodeProvider
 import resonant.lib.grid.energy.EnergyStorage
+import resonant.lib.grid.energy.electric.NodeElectricComponent
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
-import resonant.lib.prefab.tile.mixed.TileElectric
 import resonant.lib.prefab.tile.multiblock.reference.{IMultiBlockStructure, MultiBlockHandler}
+import resonant.lib.prefab.tile.spatial.SpatialTile
 import resonant.lib.prefab.tile.traits.TEnergyProvider
 import resonant.lib.render.EnumColor
 import resonant.lib.transform.vector.{Vector3, VectorWorld}
@@ -43,13 +45,13 @@ object TileTesla
   final val DEFAULT_COLOR: Int = 12
 }
 
-class TileTesla extends TileElectric(Material.iron) with IMultiBlockStructure[TileTesla] with ITesla with TPacketReceiver with TPacketSender with TEnergyProvider with TIO
+class TileTesla extends SpatialTile(Material.iron) with TBlockNodeProvider with IMultiBlockStructure[TileTesla] with ITesla with TPacketReceiver with TPacketSender with TEnergyProvider with TIO
 {
-
   final val TRANSFER_CAP: Double = 10000D
   /** Prevents transfer loops */
   final val outputBlacklist: Set[TileTesla] = new HashSet[TileTesla]
   final val connectedTeslas: Set[TileTesla] = new HashSet[TileTesla]
+  private val electricNode = new NodeElectricComponent(this)
   var dyeID: Int = TileTesla.DEFAULT_COLOR
   var canReceive: Boolean = true
   var attackEntities: Boolean = true
@@ -399,6 +401,12 @@ class TileTesla extends TileElectric(Material.iron) with IMultiBlockStructure[Ti
     getMultiBlock.save(nbt)
   }
 
+  def getMultiBlock: MultiBlockHandler[TileTesla] =
+  {
+    if (multiBlock == null) multiBlock = new MultiBlockHandler[TileTesla](this)
+    return multiBlock
+  }
+
   def setLink(vector3: Vector3, dimID: Int, setOpponent: Boolean)
   {
     if (!worldObj.isRemote)
@@ -600,12 +608,6 @@ class TileTesla extends TileElectric(Material.iron) with IMultiBlockStructure[Ti
     {
       this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, 0, 3)
     }
-  }
-
-  def getMultiBlock: MultiBlockHandler[TileTesla] =
-  {
-    if (multiBlock == null) multiBlock = new MultiBlockHandler[TileTesla](this)
-    return multiBlock
   }
 
   def getLowestTesla: TileTesla =

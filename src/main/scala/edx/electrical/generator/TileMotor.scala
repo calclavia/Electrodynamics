@@ -11,9 +11,10 @@ import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
 import resonant.lib.content.prefab.TIO
-import resonant.lib.grid.core.TSpatialNodeProvider
+import resonant.lib.grid.core.TBlockNodeProvider
+import resonant.lib.grid.energy.electric.NodeElectricComponent
 import resonant.lib.prefab.tile.spatial.SpatialTile
-import resonant.lib.prefab.tile.traits.{TElectric, TRotatable}
+import resonant.lib.prefab.tile.traits.TRotatable
 import resonant.lib.render.RenderUtility
 import resonant.lib.transform.vector.Vector3
 
@@ -40,9 +41,10 @@ object TileMotor
   val motorConstant = fieldStrength * area * coils
 }
 
-class TileMotor extends SpatialTile(Material.iron) with TIO with TElectric with TSpatialNodeProvider with TRotatable
+class TileMotor extends SpatialTile(Material.iron) with TIO with TBlockNodeProvider with TRotatable
 {
-  var mechNode = new NodeMechanical(this)
+  private val electricNode = new NodeElectricComponent(this)
+  private val mechNode = new NodeMechanical(this)
   {
     override def canConnect(from: ForgeDirection): Boolean =
     {
@@ -67,8 +69,8 @@ class TileMotor extends SpatialTile(Material.iron) with TIO with TElectric with 
 
   override def start()
   {
-    super.start()
     updateConnections()
+    super.start()
   }
 
   def updateConnections()
