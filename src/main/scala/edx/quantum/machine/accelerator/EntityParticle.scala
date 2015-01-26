@@ -15,7 +15,7 @@ import net.minecraftforge.common.ForgeChunkManager
 import net.minecraftforge.common.ForgeChunkManager.Type
 import net.minecraftforge.common.util.ForgeDirection
 import resonantengine.api.tile.IElectromagnet
-import resonantengine.lib.poison.PoisonRadiation
+import resonantengine.lib.potion.PoisonRadiation
 import resonantengine.lib.transform.vector.Vector3
 
 import scala.collection.JavaConversions._
@@ -229,9 +229,9 @@ class EntityParticle(par1World: World) extends Entity(par1World) with IEntityAdd
     return this.getParticleVelocity - (this.getParticleVelocity / Math.min(Math.max(70 * this.getParticleVelocity, 4), 30))
   }
 
-  override def applyEntityCollision(par1Entity: Entity)
+  def getParticleVelocity: Double =
   {
-    this.handleCollisionWithEntity
+    return Math.abs(this.motionX) + Math.abs(this.motionY) + Math.abs(this.motionZ)
   }
 
   def handleCollisionWithEntity
@@ -264,15 +264,15 @@ class EntityParticle(par1World: World) extends Entity(par1World) with IEntityAdd
     setDead
   }
 
-  def getParticleVelocity: Double =
-  {
-    return Math.abs(this.motionX) + Math.abs(this.motionY) + Math.abs(this.motionZ)
-  }
-
   override def setDead
   {
     ForgeChunkManager.releaseTicket(this.updateTicket)
     super.setDead
+  }
+
+  override def applyEntityCollision(par1Entity: Entity)
+  {
+    this.handleCollisionWithEntity
   }
 
   protected override def entityInit

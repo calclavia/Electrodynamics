@@ -21,7 +21,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
 import resonantengine.api.edx.machine.{IReactor, IReactorComponent}
 import resonantengine.lib.grid.thermal.{GridThermal, ThermalPhysics}
-import resonantengine.lib.poison.PoisonRadiation
+import resonantengine.lib.potion.PoisonRadiation
 import resonantengine.lib.render.RenderUtility
 import resonantengine.lib.render.model.ModelCube
 import resonantengine.lib.transform.vector.Vector3
@@ -114,8 +114,6 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
     }
     return lowest
   }
-
-  override def getMultiBlock: MultiBlockHandler[TileReactorCell] = multiBlock
 
   override def onNeighborChanged(block: Block)
   {
@@ -244,6 +242,8 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
       }
     }
   }
+
+  override def getMultiBlock: MultiBlockHandler[TileReactorCell] = multiBlock
 
   override def getWorld: World =
   {
