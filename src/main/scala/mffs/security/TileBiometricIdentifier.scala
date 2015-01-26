@@ -13,7 +13,7 @@ import net.minecraft.item.ItemStack
 import resonantengine.api.mffs.card.IAccessCard
 import resonantengine.lib.access.Permission
 import resonantengine.lib.transform.vector.Vector3
-import resonantengine.prefab.block.traits.TRotatable
+import resonantengine.prefab.block.impl.TRotatable
 
 object TileBiometricIdentifier
 {

@@ -18,7 +18,7 @@ import resonantengine.lib.transform.rotation.EulerAngle
 import resonantengine.lib.transform.vector.Vector3
 import resonantengine.lib.utility.RotationUtility
 import resonantengine.lib.wrapper.ByteBufWrapper._
-import resonantengine.prefab.block.traits.TRotatable
+import resonantengine.prefab.block.impl.TRotatable
 
 import scala.collection.convert.wrapAll._
 import scala.collection.mutable
@@ -233,6 +233,101 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     return field
   }
 
+  def getCalculatedField: JSet[Vector3] =
+  {
+    return if (calculatedField != null) calculatedField else mutable.Set.empty[Vector3]
+  }
+
+  def queueEvent(evt: DelayedEvent)
+  {
+    delayedEvents += evt
+  }
+
+  /**
+   * NBT Methods
+   */
+  override def readFromNBT(nbt: NBTTagCompound)
+  {
+    super.readFromNBT(nbt)
+    absoluteDirection = nbt.getBoolean("isAbsolute")
+  }
+
+  override def writeToNBT(nbt: NBTTagCompound)
+  {
+    super.writeToNBT(nbt)
+    nbt.setBoolean("isAbsolute", absoluteDirection)
+  }
+
+  /**
+   * Calculates the force field
+   * @param callBack - Optional callback
+   */
+  protected def calculateField(callBack: () => Unit = null)
+  {
+    if (!worldObj.isRemote && !isCalculating)
+    {
+      if (getMode != null)
+      {
+        //Clear mode cache
+        if (getModeStack.getItem.isInstanceOf[TCache])
+          getModeStack.getItem.asInstanceOf[TCache].clearCache()
+
+        isCalculating = true
+
+        Future
+        {
+          generateCalculatedField
+        }.onComplete
+        {
+          case Success(field) =>
+          {
+            calculatedField = field
+            isCalculating = false
+
+            if (callBack != null)
+              callBack.apply()
+          }
+          case Failure(t) =>
+          {
+            //println(getClass.getName + ": An error has occurred upon field calculation: " + t.getMessage)
+            isCalculating = false
+          }
+        }
+      }
+    }
+  }
+
+  protected def generateCalculatedField = getExteriorPoints
+
+  /**
+   * Gets the exterior points of the field based on the matrix.
+   */
+  protected def getExteriorPoints: mutable.Set[Vector3] =
+  {
+    var field = mutable.Set.empty[Vector3]
+
+    if (getModuleCount(Content.moduleInvert) > 0)
+      field = getMode.getInteriorPoints(this)
+    else
+      field = getMode.getExteriorPoints(this)
+
+    getModules() foreach (_.onPreCalculate(this, field))
+
+    val translation = getTranslation
+    val rotationYaw = getRotationYaw
+    val rotationPitch = getRotationPitch
+
+    val rotation: EulerAngle = new EulerAngle(rotationYaw, rotationPitch)
+
+    val maxHeight = world.getHeight
+
+    field = mutable.Set((field.view.par map (pos => (pos.transform(rotation) + toVector3 + translation).round) filter (position => position.yi <= maxHeight && position.yi >= 0)).seq.toSeq: _ *)
+
+    getModules() foreach (_.onPostCalculate(this, field))
+
+    return field
+  }
+
   def getMode: IProjectorMode =
   {
     if (this.getModeStack != null)
@@ -331,101 +426,6 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     cache(cacheID, verticalRotation)
 
     return verticalRotation
-  }
-
-  def getCalculatedField: JSet[Vector3] =
-  {
-    return if (calculatedField != null) calculatedField else mutable.Set.empty[Vector3]
-  }
-
-  def queueEvent(evt: DelayedEvent)
-  {
-    delayedEvents += evt
-  }
-
-  /**
-   * NBT Methods
-   */
-  override def readFromNBT(nbt: NBTTagCompound)
-  {
-    super.readFromNBT(nbt)
-    absoluteDirection = nbt.getBoolean("isAbsolute")
-  }
-
-  override def writeToNBT(nbt: NBTTagCompound)
-  {
-    super.writeToNBT(nbt)
-    nbt.setBoolean("isAbsolute", absoluteDirection)
-  }
-
-  /**
-   * Calculates the force field
-   * @param callBack - Optional callback
-   */
-  protected def calculateField(callBack: () => Unit = null)
-  {
-    if (!worldObj.isRemote && !isCalculating)
-    {
-      if (getMode != null)
-      {
-        //Clear mode cache
-        if (getModeStack.getItem.isInstanceOf[TCache])
-          getModeStack.getItem.asInstanceOf[TCache].clearCache()
-
-        isCalculating = true
-
-        Future
-        {
-          generateCalculatedField
-        }.onComplete
-        {
-          case Success(field) =>
-          {
-            calculatedField = field
-            isCalculating = false
-
-            if (callBack != null)
-              callBack.apply()
-          }
-          case Failure(t) =>
-          {
-            //println(getClass.getName + ": An error has occurred upon field calculation: " + t.getMessage)
-            isCalculating = false
-          }
-        }
-      }
-    }
-  }
-
-  protected def generateCalculatedField = getExteriorPoints
-
-  /**
-   * Gets the exterior points of the field based on the matrix.
-   */
-  protected def getExteriorPoints: mutable.Set[Vector3] =
-  {
-    var field = mutable.Set.empty[Vector3]
-
-    if (getModuleCount(Content.moduleInvert) > 0)
-      field = getMode.getInteriorPoints(this)
-    else
-      field = getMode.getExteriorPoints(this)
-
-    getModules() foreach (_.onPreCalculate(this, field))
-
-    val translation = getTranslation
-    val rotationYaw = getRotationYaw
-    val rotationPitch = getRotationPitch
-
-    val rotation: EulerAngle = new EulerAngle(rotationYaw, rotationPitch)
-
-    val maxHeight = world.getHeight
-
-    field = mutable.Set((field.view.par map (pos => (pos.transform(rotation) + toVector3 + translation).round) filter (position => position.yi <= maxHeight && position.yi >= 0)).seq.toSeq: _ *)
-
-    getModules() foreach (_.onPostCalculate(this, field))
-
-    return field
   }
 
 }
