@@ -343,7 +343,7 @@ object QuantumContent extends ContentHolder
      */
     if (tile.isInstanceOf[TileTank])
     {
-      val fluidStack = tile.asInstanceOf[TileTank].fluidNode.getPrimaryTank.getFluid
+      val fluidStack = tile.asInstanceOf[TileTank].fluidNode.getTank.getFluid
 
       if (fluidStack != null)
         fluidStack.setTemperature(evt.temperature)

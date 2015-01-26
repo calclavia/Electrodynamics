@@ -2,9 +2,8 @@ package edx.core.prefab.node
 
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.{FluidContainerRegistry, IFluidHandler}
-import resonantengine.api.graph.{IUpdate, INodeProvider}
+import resonantengine.api.graph.{INodeProvider, IUpdate}
 import resonantengine.lib.grid.core.UpdateTicker
-import resonantengine.lib.prefab.fluid.NodeFluid
 
 import scala.collection.convert.wrapAll._
 
@@ -66,7 +65,7 @@ class NodeFluidPressure(parent: INodeProvider, volume: Int = FluidContainerRegis
             //High pressure to low
             if (pressureA >= pressureB)
             {
-              val tankA = getPrimaryTank
+              val tankA = getTank
 
               if (tankA != null)
               {
@@ -78,7 +77,7 @@ class NodeFluidPressure(parent: INodeProvider, volume: Int = FluidContainerRegis
 
                   if (amountA > 0)
                   {
-                    val tankB = otherNode.getPrimaryTank
+                    val tankB = otherNode.getTank
 
                     if (tankB != null)
                     {
@@ -94,7 +93,7 @@ class NodeFluidPressure(parent: INodeProvider, volume: Int = FluidContainerRegis
             //It's a fluid handler.
             val pressure = this.pressure(dir)
             val tankPressure = 0
-            val sourceTank = getPrimaryTank
+            val sourceTank = getTank
             val transferAmount = (Math.max(pressure, tankPressure) - Math.min(pressure, tankPressure)) * flowRate
 
             if (pressure > tankPressure)
@@ -124,8 +123,8 @@ class NodeFluidPressure(parent: INodeProvider, volume: Int = FluidContainerRegis
 
   protected def doDistribute(deltaTime: Double, dir: ForgeDirection, nodeA: NodeFluidPressure, nodeB: NodeFluidPressure, flowRate: Int)
   {
-    val tankA = nodeA.getPrimaryTank
-    val tankB = nodeB.getPrimaryTank
+    val tankA = nodeA.getTank
+    val tankB = nodeB.getTank
     val pressureA = nodeA.pressure(dir)
     val pressureB = nodeB.pressure(dir.getOpposite)
     val amountA = tankA.getFluidAmount

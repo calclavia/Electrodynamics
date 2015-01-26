@@ -82,7 +82,7 @@ class TileGrate extends TileFluidProvider(Material.rock) with TRotatable
       {
         val pressure = fluidNode.asInstanceOf[NodeFluidPressure].pressure(getDirection)
         val blockEffect = Math.abs(pressure * grateEffectMultiplier).toInt
-        fluidNode.getPrimaryTank.setCapacity(Math.max(blockEffect * FluidContainerRegistry.BUCKET_VOLUME * grateDrainSpeedMultiplier, FluidContainerRegistry.BUCKET_VOLUME).toInt)
+        fluidNode.getTank.setCapacity(Math.max(blockEffect * FluidContainerRegistry.BUCKET_VOLUME * grateDrainSpeedMultiplier, FluidContainerRegistry.BUCKET_VOLUME).toInt)
 
         if (pressure > 0)
         {

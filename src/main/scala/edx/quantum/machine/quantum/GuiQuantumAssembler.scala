@@ -5,8 +5,8 @@ import edx.core.Reference
 import net.minecraft.entity.player.InventoryPlayer
 import net.minecraft.util.ResourceLocation
 import org.lwjgl.opengl.GL11
-import resonantengine.lib.prefab.gui.GuiContainerBase
 import resonantengine.lib.utility.science.UnitDisplay
+import resonantengine.prefab.gui.GuiContainerBase
 
 object GuiQuantumAssembler
 {

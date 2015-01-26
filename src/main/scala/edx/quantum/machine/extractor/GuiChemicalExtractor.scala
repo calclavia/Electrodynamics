@@ -2,9 +2,9 @@ package edx.quantum.machine.extractor
 
 import net.minecraft.entity.player.InventoryPlayer
 import net.minecraft.util.StatCollector
-import resonantengine.lib.prefab.gui.GuiContainerBase
-import resonantengine.lib.prefab.gui.GuiContainerBase.SlotType
 import resonantengine.lib.utility.science.UnitDisplay
+import resonantengine.prefab.gui.GuiContainerBase
+import resonantengine.prefab.gui.GuiContainerBase.SlotType
 
 class GuiChemicalExtractor(par1InventoryPlayer: InventoryPlayer, tileEntity: TileChemicalExtractor) extends GuiContainerBase(new ContainerChemicalExtractor(par1InventoryPlayer, tileEntity))
 {

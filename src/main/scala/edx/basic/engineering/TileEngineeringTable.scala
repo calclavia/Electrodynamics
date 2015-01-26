@@ -31,7 +31,6 @@ import resonantengine.api.tile.IRotatable
 import resonantengine.core.ResonantEngine
 import resonantengine.core.network.discriminator.{PacketTile, PacketType}
 import resonantengine.lib.collection.Pair
-import resonantengine.lib.prefab.gui.ContainerDummy
 import resonantengine.lib.render.RenderItemOverlayUtility
 import resonantengine.lib.transform.region.Cuboid
 import resonantengine.lib.transform.vector.{Vector2, Vector3}
@@ -40,6 +39,7 @@ import resonantengine.lib.utility.inventory.AutoCraftingManager.IAutoCrafter
 import resonantengine.lib.utility.inventory.{AutoCraftingManager, InventoryUtility}
 import resonantengine.prefab.block.itemblock.ItemBlockSaved
 import resonantengine.prefab.block.mixed.TileInventory
+import resonantengine.prefab.gui.ContainerDummy
 
 import scala.collection.JavaConversions._
 
@@ -127,129 +127,6 @@ class TileEngineeringTable extends TileInventory(Material.wood) with IPacketRece
         }
       }
     }
-  }
-
-  override def getSizeInventory: Int =
-  {
-    return 10 + (if (this.invPlayer != null) this.invPlayer.getSizeInventory else 0)
-  }
-
-  override def setInventorySlotContents(slot: Int, itemStack: ItemStack)
-  {
-    if (slot < TileEngineeringTable.CRAFTING_MATRIX_END)
-    {
-      craftingMatrix(slot) = itemStack
-    }
-    else if (slot < TileEngineeringTable.CRAFTING_OUTPUT_END)
-    {
-      outputInventory(slot - TileEngineeringTable.CRAFTING_MATRIX_END) = itemStack
-    }
-    else if (slot < TileEngineeringTable.PLAYER_OUTPUT_END && this.invPlayer != null)
-    {
-      this.invPlayer.setInventorySlotContents(slot - TileEngineeringTable.CRAFTING_OUTPUT_END, itemStack)
-      val player: EntityPlayer = this.invPlayer.player
-      if (player.isInstanceOf[EntityPlayerMP])
-      {
-        (player.asInstanceOf[EntityPlayerMP]).sendContainerToPlayer(player.inventoryContainer)
-      }
-    }
-    else if (searchInventories)
-    {
-      var idDisplacement: Int = TileEngineeringTable.PLAYER_OUTPUT_END
-      for (dir <- ForgeDirection.VALID_DIRECTIONS)
-      {
-        val tile: TileEntity = toVectorWorld.add(dir).getTileEntity
-        if (tile.isInstanceOf[IInventory])
-        {
-          val inventory: IInventory = tile.asInstanceOf[IInventory]
-          val slotID: Int = slot - idDisplacement
-          if (slotID >= 0 && slotID < inventory.getSizeInventory)
-          {
-            inventory.setInventorySlotContents(slotID, itemStack)
-          }
-          idDisplacement += inventory.getSizeInventory
-        }
-      }
-    }
-    onInventoryChanged
-  }
-
-  /**
-   * Updates all the output slots. Call this to update the Engineering Table.
-   */
-  override def onInventoryChanged
-  {
-    if (worldObj != null)
-    {
-      if (!worldObj.isRemote)
-      {
-        this.outputInventory(TileEngineeringTable.CRAFTING_OUTPUT_SLOT) = null
-        var didCraft: Boolean = false
-        val inventoryCrafting: InventoryCrafting = this.getCraftingMatrix
-        val matrixOutput: ItemStack = CraftingManager.getInstance.findMatchingRecipe(inventoryCrafting, this.worldObj)
-        if (matrixOutput != null && this.getCraftingManager.getIdealRecipe(matrixOutput) != null)
-        {
-          this.outputInventory(TileEngineeringTable.CRAFTING_OUTPUT_SLOT) = matrixOutput
-          didCraft = true
-        }
-        if (!didCraft)
-        {
-          val filterStack: ItemStack = craftingMatrix(TileEngineeringTable.CENTER_SLOT)
-          if (filterStack != null && filterStack.getItem.isInstanceOf[ItemImprint])
-          {
-            val filters: java.util.List[ItemStack] = ItemImprint.getFilters(filterStack)
-            for (o <- filters)
-            {
-              val outputStack: ItemStack = o
-              if (outputStack != null)
-              {
-                val idealRecipe: Pair[ItemStack, Array[ItemStack]] = this.getCraftingManager.getIdealRecipe(outputStack)
-                if (idealRecipe != null)
-                {
-                  val recipeOutput: ItemStack = idealRecipe.left
-                  if (recipeOutput != null & recipeOutput.stackSize > 0)
-                  {
-                    this.outputInventory(TileEngineeringTable.CRAFTING_OUTPUT_SLOT) = recipeOutput
-                    didCraft = true
-                    worldObj.markBlockForUpdate(xCoord, yCoord, zCoord)
-                    return
-                  }
-                }
-              }
-            }
-          }
-        }
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord)
-      }
-    }
-  }
-
-  /**
-   * Gets the AutoCraftingManager that does all the crafting results
-   */
-  def getCraftingManager: AutoCraftingManager =
-  {
-    if (craftManager == null)
-    {
-      craftManager = new AutoCraftingManager(this)
-    }
-    return craftManager
-  }
-
-  /**
-   * Construct an InventoryCrafting Matrix on the fly.
-   *
-   * @return
-   */
-  def getCraftingMatrix: InventoryCrafting =
-  {
-    val inventoryCrafting: InventoryCrafting = new InventoryCrafting(new ContainerDummy(this), 3, 3)
-
-    for (i <- 0 until this.craftingMatrix.length)
-    {
-      inventoryCrafting.setInventorySlotContents(i, this.craftingMatrix(i))
-    }
-    return inventoryCrafting
   }
 
   override def use(player: EntityPlayer, hitSide: Int, hit: Vector3): Boolean =
@@ -453,6 +330,49 @@ class TileEngineeringTable extends TileInventory(Material.wood) with IPacketRece
     nbt.setBoolean("searchInventories", this.searchInventories)
   }
 
+  override def getSizeInventory: Int =
+  {
+    return 10 + (if (this.invPlayer != null) this.invPlayer.getSizeInventory else 0)
+  }
+
+  /**
+   * DO NOT USE THIS INTERNALLY. FOR EXTERNAL USE ONLY!
+   */
+  override def getStackInSlot(slot: Int): ItemStack =
+  {
+    if (slot < TileEngineeringTable.CRAFTING_MATRIX_END)
+    {
+      return this.craftingMatrix(slot)
+    }
+    else if (slot < TileEngineeringTable.CRAFTING_OUTPUT_END)
+    {
+      return outputInventory(slot - TileEngineeringTable.CRAFTING_MATRIX_END)
+    }
+    else if (slot < TileEngineeringTable.PLAYER_OUTPUT_END && invPlayer != null)
+    {
+      return this.invPlayer.getStackInSlot(slot - TileEngineeringTable.CRAFTING_OUTPUT_END)
+    }
+    else if (searchInventories)
+    {
+      var idDisplacement: Int = TileEngineeringTable.PLAYER_OUTPUT_END
+      for (dir <- ForgeDirection.VALID_DIRECTIONS)
+      {
+        val tile: TileEntity = toVectorWorld.add(dir).getTileEntity
+        if (tile.isInstanceOf[IInventory])
+        {
+          val inventory: IInventory = tile.asInstanceOf[IInventory]
+          val slotID: Int = slot - idDisplacement
+          if (slotID >= 0 && slotID < inventory.getSizeInventory)
+          {
+            return inventory.getStackInSlot(slotID)
+          }
+          idDisplacement += inventory.getSizeInventory
+        }
+      }
+    }
+    return null
+  }
+
   def read(data: ByteBuf, player: EntityPlayer, `type`: PacketType)
   {
     try
@@ -536,6 +456,124 @@ class TileEngineeringTable extends TileInventory(Material.wood) with IPacketRece
     }
   }
 
+  override def setInventorySlotContents(slot: Int, itemStack: ItemStack)
+  {
+    if (slot < TileEngineeringTable.CRAFTING_MATRIX_END)
+    {
+      craftingMatrix(slot) = itemStack
+    }
+    else if (slot < TileEngineeringTable.CRAFTING_OUTPUT_END)
+    {
+      outputInventory(slot - TileEngineeringTable.CRAFTING_MATRIX_END) = itemStack
+    }
+    else if (slot < TileEngineeringTable.PLAYER_OUTPUT_END && this.invPlayer != null)
+    {
+      this.invPlayer.setInventorySlotContents(slot - TileEngineeringTable.CRAFTING_OUTPUT_END, itemStack)
+      val player: EntityPlayer = this.invPlayer.player
+      if (player.isInstanceOf[EntityPlayerMP])
+      {
+        (player.asInstanceOf[EntityPlayerMP]).sendContainerToPlayer(player.inventoryContainer)
+      }
+    }
+    else if (searchInventories)
+    {
+      var idDisplacement: Int = TileEngineeringTable.PLAYER_OUTPUT_END
+      for (dir <- ForgeDirection.VALID_DIRECTIONS)
+      {
+        val tile: TileEntity = toVectorWorld.add(dir).getTileEntity
+        if (tile.isInstanceOf[IInventory])
+        {
+          val inventory: IInventory = tile.asInstanceOf[IInventory]
+          val slotID: Int = slot - idDisplacement
+          if (slotID >= 0 && slotID < inventory.getSizeInventory)
+          {
+            inventory.setInventorySlotContents(slotID, itemStack)
+          }
+          idDisplacement += inventory.getSizeInventory
+        }
+      }
+    }
+    onInventoryChanged
+  }
+
+  /**
+   * Updates all the output slots. Call this to update the Engineering Table.
+   */
+  override def onInventoryChanged
+  {
+    if (worldObj != null)
+    {
+      if (!worldObj.isRemote)
+      {
+        this.outputInventory(TileEngineeringTable.CRAFTING_OUTPUT_SLOT) = null
+        var didCraft: Boolean = false
+        val inventoryCrafting: InventoryCrafting = this.getCraftingMatrix
+        val matrixOutput: ItemStack = CraftingManager.getInstance.findMatchingRecipe(inventoryCrafting, this.worldObj)
+        if (matrixOutput != null && this.getCraftingManager.getIdealRecipe(matrixOutput) != null)
+        {
+          this.outputInventory(TileEngineeringTable.CRAFTING_OUTPUT_SLOT) = matrixOutput
+          didCraft = true
+        }
+        if (!didCraft)
+        {
+          val filterStack: ItemStack = craftingMatrix(TileEngineeringTable.CENTER_SLOT)
+          if (filterStack != null && filterStack.getItem.isInstanceOf[ItemImprint])
+          {
+            val filters: java.util.List[ItemStack] = ItemImprint.getFilters(filterStack)
+            for (o <- filters)
+            {
+              val outputStack: ItemStack = o
+              if (outputStack != null)
+              {
+                val idealRecipe: Pair[ItemStack, Array[ItemStack]] = this.getCraftingManager.getIdealRecipe(outputStack)
+                if (idealRecipe != null)
+                {
+                  val recipeOutput: ItemStack = idealRecipe.left
+                  if (recipeOutput != null & recipeOutput.stackSize > 0)
+                  {
+                    this.outputInventory(TileEngineeringTable.CRAFTING_OUTPUT_SLOT) = recipeOutput
+                    didCraft = true
+                    worldObj.markBlockForUpdate(xCoord, yCoord, zCoord)
+                    return
+                  }
+                }
+              }
+            }
+          }
+        }
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord)
+      }
+    }
+  }
+
+  /**
+   * Gets the AutoCraftingManager that does all the crafting results
+   */
+  def getCraftingManager: AutoCraftingManager =
+  {
+    if (craftManager == null)
+    {
+      craftManager = new AutoCraftingManager(this)
+    }
+    return craftManager
+  }
+
+  /**
+   * Construct an InventoryCrafting Matrix on the fly.
+   *
+   * @return
+   */
+  def getCraftingMatrix: InventoryCrafting =
+  {
+    val inventoryCrafting: InventoryCrafting = new InventoryCrafting(new ContainerDummy(this), 3, 3)
+
+    for (i <- 0 until this.craftingMatrix.length)
+    {
+      inventoryCrafting.setInventorySlotContents(i, this.craftingMatrix(i))
+    }
+    return inventoryCrafting
+  }
+
   override def isItemValidForSlot(i: Int, itemstack: ItemStack): Boolean =
   {
     return true
@@ -581,44 +619,6 @@ class TileEngineeringTable extends TileInventory(Material.wood) with IPacketRece
       }
     }
     return slot == optimalSlot
-  }
-
-  /**
-   * DO NOT USE THIS INTERNALLY. FOR EXTERNAL USE ONLY!
-   */
-  override def getStackInSlot(slot: Int): ItemStack =
-  {
-    if (slot < TileEngineeringTable.CRAFTING_MATRIX_END)
-    {
-      return this.craftingMatrix(slot)
-    }
-    else if (slot < TileEngineeringTable.CRAFTING_OUTPUT_END)
-    {
-      return outputInventory(slot - TileEngineeringTable.CRAFTING_MATRIX_END)
-    }
-    else if (slot < TileEngineeringTable.PLAYER_OUTPUT_END && invPlayer != null)
-    {
-      return this.invPlayer.getStackInSlot(slot - TileEngineeringTable.CRAFTING_OUTPUT_END)
-    }
-    else if (searchInventories)
-    {
-      var idDisplacement: Int = TileEngineeringTable.PLAYER_OUTPUT_END
-      for (dir <- ForgeDirection.VALID_DIRECTIONS)
-      {
-        val tile: TileEntity = toVectorWorld.add(dir).getTileEntity
-        if (tile.isInstanceOf[IInventory])
-        {
-          val inventory: IInventory = tile.asInstanceOf[IInventory]
-          val slotID: Int = slot - idDisplacement
-          if (slotID >= 0 && slotID < inventory.getSizeInventory)
-          {
-            return inventory.getStackInSlot(slotID)
-          }
-          idDisplacement += inventory.getSizeInventory
-        }
-      }
-    }
-    return null
   }
 
   override def canExtractItem(slot: Int, itemstack: ItemStack, side: Int): Boolean =

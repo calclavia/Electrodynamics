@@ -5,8 +5,8 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.{IInventory, Slot}
 import net.minecraft.item.ItemStack
 import net.minecraftforge.fluids.FluidContainerRegistry
-import resonantengine.lib.prefab.gui.ContainerBase
-import resonantengine.lib.prefab.gui.slot.{SlotEnergyItem, SlotSpecific}
+import resonantengine.prefab.gui.ContainerBase
+import resonantengine.prefab.gui.slot.{SlotEnergyItem, SlotSpecific}
 
 /**
  * Nuclear boiler container

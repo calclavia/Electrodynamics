@@ -2,9 +2,9 @@ package edx.quantum.machine.accelerator
 
 import edx.core.Settings
 import net.minecraft.entity.player.EntityPlayer
-import resonantengine.lib.prefab.gui.GuiContainerBase
 import resonantengine.lib.transform.vector.Vector3
 import resonantengine.lib.utility.science.UnitDisplay
+import resonantengine.prefab.gui.GuiContainerBase
 
 class GuiAccelerator(player: EntityPlayer, tileEntity: TileAccelerator) extends GuiContainerBase(new ContainerAccelerator(player, tileEntity))
 {

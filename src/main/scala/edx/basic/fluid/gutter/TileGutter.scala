@@ -5,7 +5,7 @@ import java.util.{ArrayList, List}
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import edx.basic.fluid.tank.TileTank
 import edx.core.Reference
-import edx.core.prefab.node.{NodeFluidPressure, TileFluidProvider}
+import edx.core.prefab.node.{NodeFluid, NodeFluidPressure, TileFluidProvider}
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.entity.Entity
@@ -19,7 +19,6 @@ import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import org.lwjgl.opengl.GL11
 import resonantengine.api.edx.recipe.{MachineRecipes, RecipeType}
-import resonantengine.lib.prefab.fluid.NodeFluid
 import resonantengine.lib.render.{FluidRenderUtility, RenderUtility}
 import resonantengine.lib.transform.region.Cuboid
 import resonantengine.lib.transform.vector.Vector3
@@ -215,6 +214,34 @@ class TileGutter extends TileFluidProvider(Material.rock)
     render(0, 0x0)
   }
 
+  override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
+  {
+    GL11.glPushMatrix()
+    GL11.glTranslated(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5)
+
+    render(0, clientRenderMask)
+
+    if (world != null)
+    {
+      val tank: IFluidTank = fluidNode
+      val percentageFilled = tank.getFluidAmount / tank.getCapacity.toDouble
+
+      if (percentageFilled > 0.1)
+      {
+        GL11.glPushMatrix()
+        GL11.glScaled(0.99, 0.99, 0.99)
+        val ySouthEast = FluidUtility.getAveragePercentageFilledForSides(classOf[TileGutter], percentageFilled, world, toVectorWorld, ForgeDirection.SOUTH, ForgeDirection.EAST)
+        val yNorthEast = FluidUtility.getAveragePercentageFilledForSides(classOf[TileGutter], percentageFilled, world, toVectorWorld, ForgeDirection.NORTH, ForgeDirection.EAST)
+        val ySouthWest = FluidUtility.getAveragePercentageFilledForSides(classOf[TileGutter], percentageFilled, world, toVectorWorld, ForgeDirection.SOUTH, ForgeDirection.WEST)
+        val yNorthWest = FluidUtility.getAveragePercentageFilledForSides(classOf[TileGutter], percentageFilled, world, toVectorWorld, ForgeDirection.NORTH, ForgeDirection.WEST)
+        FluidRenderUtility.renderFluidTesselation(tank, ySouthEast, yNorthEast, ySouthWest, yNorthWest)
+        GL11.glPopMatrix()
+      }
+    }
+
+    GL11.glPopMatrix()
+  }
+
   def render(meta: Int, sides: Int)
   {
     RenderUtility.bind(TileGutter.texture)
@@ -249,34 +276,6 @@ class TileGutter extends TileFluidProvider(Material.rock)
     }
   }
 
-  override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
-  {
-    GL11.glPushMatrix()
-    GL11.glTranslated(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5)
-
-    render(0, clientRenderMask)
-
-    if (world != null)
-    {
-      val tank: IFluidTank = fluidNode
-      val percentageFilled = tank.getFluidAmount / tank.getCapacity.toDouble
-
-      if (percentageFilled > 0.1)
-      {
-        GL11.glPushMatrix()
-        GL11.glScaled(0.99, 0.99, 0.99)
-        val ySouthEast = FluidUtility.getAveragePercentageFilledForSides(classOf[TileGutter], percentageFilled, world, toVectorWorld, ForgeDirection.SOUTH, ForgeDirection.EAST)
-        val yNorthEast = FluidUtility.getAveragePercentageFilledForSides(classOf[TileGutter], percentageFilled, world, toVectorWorld, ForgeDirection.NORTH, ForgeDirection.EAST)
-        val ySouthWest = FluidUtility.getAveragePercentageFilledForSides(classOf[TileGutter], percentageFilled, world, toVectorWorld, ForgeDirection.SOUTH, ForgeDirection.WEST)
-        val yNorthWest = FluidUtility.getAveragePercentageFilledForSides(classOf[TileGutter], percentageFilled, world, toVectorWorld, ForgeDirection.NORTH, ForgeDirection.WEST)
-        FluidRenderUtility.renderFluidTesselation(tank, ySouthEast, yNorthEast, ySouthWest, yNorthWest)
-        GL11.glPopMatrix()
-      }
-    }
-
-    GL11.glPopMatrix()
-  }
-
   //Recurse through all gutter blocks
   private def findGutters(traverse: Set[NodeGutter] = Set(fluidNode.asInstanceOf[NodeGutter])): Set[NodeGutter] =
   {
@@ -291,7 +290,7 @@ class TileGutter extends TileFluidProvider(Material.rock)
     return foundGutters
   }
 
-  private def findAllTanks = findGutters().map(_.getPrimaryTank).toList
+  private def findAllTanks = findGutters().map(_.getTank).toList
 
   class NodeGutter(parent: TileFluidProvider) extends NodeFluidGravity(parent)
   {

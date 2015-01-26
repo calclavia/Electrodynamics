@@ -17,8 +17,8 @@ import net.minecraft.world.IBlockAccess
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import org.lwjgl.opengl.GL11
-import resonantengine.api.tile.IRemovable.ISneakPickup
 import resonantengine.api.graph.node.INode
+import resonantengine.api.tile.IRemovable.ISneakPickup
 import resonantengine.lib.grid.core.Node
 import resonantengine.lib.render.block.RenderConnectedTexture
 import resonantengine.lib.render.{FluidRenderUtility, RenderBlockUtility, RenderUtility}
@@ -85,9 +85,9 @@ class TileTank extends TileFluidProvider(Material.iron) with ISneakPickup with R
 
   override def getLightValue(access: IBlockAccess): Int =
   {
-    if (fluidNode.getPrimaryTank.getFluid != null && fluidNode.getPrimaryTank.getFluid.getFluid != null)
+    if (fluidNode.getTank.getFluid != null && fluidNode.getTank.getFluid.getFluid != null)
     {
-      return fluidNode.getPrimaryTank.getFluid.getFluid.getLuminosity
+      return fluidNode.getTank.getFluid.getFluid.getLuminosity
     }
 
     return super.getLightValue(access)
@@ -103,7 +103,7 @@ class TileTank extends TileFluidProvider(Material.iron) with ISneakPickup with R
   @SideOnly(Side.CLIENT)
   override def renderDynamic(position: Vector3, frame: Float, pass: Int)
   {
-    renderTankFluid(position.x, position.y, position.z, fluidNode.getPrimaryTank.getFluid)
+    renderTankFluid(position.x, position.y, position.z, fluidNode.getTank.getFluid)
   }
 
   /**
@@ -122,7 +122,7 @@ class TileTank extends TileFluidProvider(Material.iron) with ISneakPickup with R
         if (!fluid.getFluid.isGaseous)
         {
           GL11.glScaled(0.99, 0.99, 0.99)
-          val tank: IFluidTank = fluidNode.getPrimaryTank
+          val tank: IFluidTank = fluidNode.getTank
           val percentageFilled: Double = tank.getFluidAmount.toDouble / tank.getCapacity.toDouble
           val ySouthEast = FluidUtility.getAveragePercentageFilledForSides(classOf[TileTank], percentageFilled, world, toVector3, ForgeDirection.SOUTH, ForgeDirection.EAST)
           val yNorthEast = FluidUtility.getAveragePercentageFilledForSides(classOf[TileTank], percentageFilled, world, toVector3, ForgeDirection.NORTH, ForgeDirection.EAST)
@@ -145,7 +145,7 @@ class TileTank extends TileFluidProvider(Material.iron) with ISneakPickup with R
 
     if (itemStack.getTagCompound != null && itemStack.getTagCompound.hasKey("fluid"))
     {
-      renderInventoryFluid(0, 0, 0, FluidStack.loadFluidStackFromNBT(itemStack.getTagCompound.getCompoundTag("fluid")), fluidNode.getPrimaryTank.getCapacity)
+      renderInventoryFluid(0, 0, 0, FluidStack.loadFluidStackFromNBT(itemStack.getTagCompound.getCompoundTag("fluid")), fluidNode.getTank.getCapacity)
     }
 
     GL11.glPopMatrix()

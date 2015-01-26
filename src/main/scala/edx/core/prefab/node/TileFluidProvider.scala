@@ -7,7 +7,6 @@ import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import resonantengine.core.network.discriminator.PacketType
 import resonantengine.lib.modcontent.block.ResonantTile
-import resonantengine.lib.prefab.fluid.NodeFluid
 import resonantengine.lib.wrapper.ByteBufWrapper._
 import resonantengine.prefab.block.impl.TBlockNodeProvider
 import resonantengine.prefab.network.{TPacketReceiver, TPacketSender}
@@ -43,11 +42,11 @@ abstract class TileFluidProvider(material: Material) extends ResonantTile(materi
       {
         buf <<< colorID
         buf <<< clientRenderMask
-        buf <<< fluidNode.getPrimaryTank
+        buf <<< fluidNode.getTank
       }
       case 1 =>
       {
-        buf <<< fluidNode.getPrimaryTank
+        buf <<< fluidNode.getTank
       }
     }
   }
@@ -76,14 +75,23 @@ abstract class TileFluidProvider(material: Material) extends ResonantTile(materi
     }
   }
 
-  def fluidNode = _fluidNode
-
   override def readFromNBT(nbt: NBTTagCompound)
   {
     super.readFromNBT(nbt)
     fluidNode.load(nbt)
     colorID = nbt.getInteger("colorID")
   }
+
+  def fluidNode = _fluidNode
+
+  override def writeToNBT(nbt: NBTTagCompound)
+  {
+    super.writeToNBT(nbt)
+    fluidNode.save(nbt)
+    nbt.setInteger("colorID", colorID)
+  }
+
+  override def drain(from: ForgeDirection, resource: FluidStack, doDrain: Boolean): FluidStack = fluidNode.drain(from, resource, doDrain)
 
   def fluidNode_=(newNode: NodeFluid)
   {
@@ -96,15 +104,6 @@ abstract class TileFluidProvider(material: Material) extends ResonantTile(materi
     fluidNode.onFluidChanged = () => if (!world.isRemote) sendPacket(1)
     nodes.add(fluidNode)
   }
-
-  override def writeToNBT(nbt: NBTTagCompound)
-  {
-    super.writeToNBT(nbt)
-    fluidNode.save(nbt)
-    nbt.setInteger("colorID", colorID)
-  }
-
-  override def drain(from: ForgeDirection, resource: FluidStack, doDrain: Boolean): FluidStack = fluidNode.drain(from, resource, doDrain)
 
   override def drain(from: ForgeDirection, maxDrain: Int, doDrain: Boolean): FluidStack = fluidNode.drain(from, maxDrain, doDrain)
 

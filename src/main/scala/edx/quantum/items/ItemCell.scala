@@ -3,8 +3,8 @@ package edx.quantum.items
 import edx.core.{EDXCreativeTab, Reference}
 import edx.quantum.QuantumContent
 import net.minecraft.item.ItemStack
-import resonantengine.lib.prefab.item.ItemTooltip
 import resonantengine.lib.utility.LanguageUtility
+import resonantengine.prefab.item.ItemTooltip
 
 class ItemCell extends ItemTooltip
 {

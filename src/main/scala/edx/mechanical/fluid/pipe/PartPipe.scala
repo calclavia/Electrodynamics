@@ -87,7 +87,7 @@ class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorab
       //node Packet
       val nbt = new NBTTagCompound
       val averageAmount = averageTankData.reduce(_ + _) / averageTankData.size
-      val tempTank = node.getPrimaryTank //if (node.getFluid != null) new FluidTank(node.getFluid.getFluid, averageAmount, node.getCapacity) else new FluidTank(node.getCapacity)
+      val tempTank = node.getTank //if (node.getFluid != null) new FluidTank(node.getFluid.getFluid, averageAmount, node.getCapacity) else new FluidTank(node.getCapacity)
       tempTank.writeToNBT(nbt)
       packet.writeInt(node.getCapacity).writeNBTTagCompound(nbt)
     }
@@ -102,7 +102,7 @@ class PartPipe extends PartFramedNode with TMaterial[PipeMaterial] with TColorab
     if (packetID == 3 && world.isRemote)
     {
       node.setPrimaryTank(new FluidTank(packet.readInt))
-      node.getPrimaryTank.readFromNBT(packet.readNBTTagCompound)
+      node.getTank.readFromNBT(packet.readNBTTagCompound)
     }
   }
 

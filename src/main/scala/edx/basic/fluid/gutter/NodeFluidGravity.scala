@@ -12,8 +12,8 @@ class NodeFluidGravity(parent: TileFluidProvider, volume: Int = FluidContainerRe
 {
   override protected def doDistribute(deltaTime: Double, dir: ForgeDirection, nodeA: NodeFluidPressure, nodeB: NodeFluidPressure, flowRate: Int)
   {
-    val tankA = nodeA.getPrimaryTank
-    val tankB = nodeB.getPrimaryTank
+    val tankA = nodeA.getTank
+    val tankB = nodeB.getTank
     val pressureA = nodeA.pressure(dir)
     val pressureB = nodeB.pressure(dir.getOpposite)
     val amountA = tankA.getFluidAmount

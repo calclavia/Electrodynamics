@@ -2,8 +2,8 @@ package edx.quantum.reactor
 
 import net.minecraft.entity.player.InventoryPlayer
 import org.lwjgl.opengl.GL11
-import resonantengine.lib.prefab.gui.GuiContainerBase
 import resonantengine.lib.utility.LanguageUtility
+import resonantengine.prefab.gui.GuiContainerBase
 
 class GuiReactorCell(inventory: InventoryPlayer, tileEntity: TileReactorCell) extends GuiContainerBase(new ContainerReactorCell(inventory.player, tileEntity))
 {
