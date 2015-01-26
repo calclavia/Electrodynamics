@@ -20,7 +20,6 @@ import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import resonantengine.core.network.discriminator.PacketType
 import resonantengine.lib.content.prefab.{TIO, TInventory}
-import resonantengine.lib.grid.core.TBlockNodeProvider
 import resonantengine.lib.grid.energy.EnergyStorage
 import resonantengine.lib.grid.energy.electric.NodeElectricComponent
 import resonantengine.lib.grid.thermal.{BoilEvent, ThermalPhysics}
@@ -29,6 +28,7 @@ import resonantengine.lib.transform.vector.Vector3
 import resonantengine.lib.utility.FluidUtility
 import resonantengine.lib.wrapper.ByteBufWrapper._
 import resonantengine.lib.wrapper.CollectionWrapper._
+import resonantengine.prefab.block.impl.TBlockNodeProvider
 import resonantengine.prefab.network.{TPacketReceiver, TPacketSender}
 
 /**
@@ -191,8 +191,6 @@ class TileFirebox extends ResonantTile(Material.rock) with IFluidHandler with TI
     }
   }
 
-  def isBurning: Boolean = burnTime > 0
-
   override def getSizeInventory = 1
 
   def getMeltIronEnergy(volume: Float): Double =
@@ -296,6 +294,8 @@ class TileFirebox extends ResonantTile(Material.rock) with IFluidHandler with TI
 
     return if (isBurning) (if (isElectric) ResonantBlock.icon.get("firebox_electric_side_on") else ResonantBlock.icon.get("firebox_side_on")) else (if (isElectric) ResonantBlock.icon.get("firebox_electric_side_off") else ResonantBlock.icon.get("firebox_side_off"))
   }
+
+  def isBurning: Boolean = burnTime > 0
 
   override def click(player: EntityPlayer)
   {

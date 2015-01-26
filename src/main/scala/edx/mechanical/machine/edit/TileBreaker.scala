@@ -20,7 +20,7 @@ import resonantengine.core.network.discriminator.{PacketTile, PacketType}
 import resonantengine.lib.modcontent.block.ResonantTile
 import resonantengine.lib.transform.vector.{Vector3, VectorWorld}
 import resonantengine.lib.utility.inventory.InternalInventoryHandler
-import resonantengine.prefab.block.traits.TRotatable
+import resonantengine.prefab.block.impl.TRotatable
 
 /**
  * @author tgame14

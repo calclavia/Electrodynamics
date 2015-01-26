@@ -6,11 +6,10 @@ import net.minecraft.block.material.Material
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraftforge.common.util.ForgeDirection
 import resonantengine.core.network.discriminator.PacketType
-import resonantengine.lib.grid.core.TBlockNodeProvider
 import resonantengine.lib.modcontent.block.ResonantTile
 import resonantengine.lib.transform.vector.Vector3
 import resonantengine.lib.wrapper.ByteBufWrapper._
-import resonantengine.prefab.block.traits.TRotatable
+import resonantengine.prefab.block.impl.{TBlockNodeProvider, TRotatable}
 import resonantengine.prefab.network.{TPacketReceiver, TPacketSender}
 
 import scala.collection.convert.wrapAll._

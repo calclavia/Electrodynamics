@@ -8,9 +8,9 @@ import net.minecraft.init.Blocks
 import net.minecraft.util.IIcon
 import net.minecraftforge.common.util.ForgeDirection
 import resonantengine.lib.content.prefab.TIO
-import resonantengine.lib.grid.core.TBlockNodeProvider
 import resonantengine.lib.grid.energy.electric.NodeElectricComponent
 import resonantengine.lib.modcontent.block.{ResonantBlock, ResonantTile}
+import resonantengine.prefab.block.impl.TBlockNodeProvider
 
 import scala.collection.convert.wrapAll._
 

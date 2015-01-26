@@ -12,7 +12,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import resonantengine.api.tile.IRotatable
 import resonantengine.lib.modcontent.block.ResonantBlock
 import resonantengine.lib.transform.vector.Vector3
-import resonantengine.prefab.block.traits.TRotatable
+import resonantengine.prefab.block.impl.TRotatable
 
 object TileTurntable
 {

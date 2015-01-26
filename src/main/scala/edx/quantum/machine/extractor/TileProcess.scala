@@ -5,8 +5,8 @@ import net.minecraft.item.ItemStack
 import net.minecraftforge.fluids.{FluidContainerRegistry, FluidStack, FluidTank}
 import resonantengine.api.edx.recipe.{MachineRecipes, RecipeResource}
 import resonantengine.lib.content.prefab.TInventory
-import resonantengine.lib.grid.core.TBlockNodeProvider
 import resonantengine.lib.modcontent.block.ResonantTile
+import resonantengine.prefab.block.impl.TBlockNodeProvider
 
 /**
  * General class for all machines that do traditional recipe processing

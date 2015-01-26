@@ -20,7 +20,7 @@ import resonantengine.lib.render.RenderItemOverlayUtility
 import resonantengine.lib.transform.vector.Vector3
 import resonantengine.lib.utility.LanguageUtility
 import resonantengine.lib.utility.inventory.{InternalInventoryHandler, InventoryUtility}
-import resonantengine.prefab.block.traits.TRotatable
+import resonantengine.prefab.block.impl.TRotatable
 import resonantengine.prefab.network.TPacketSender
 
 /**
@@ -53,6 +53,11 @@ class TilePlacer extends ResonantTile(Material.rock) with TInventory with TRotat
     work
   }
 
+  override def onNeighborChanged(block: Block)
+  {
+    work
+  }
+
   def work
   {
     if (isIndirectlyPowered)
@@ -60,11 +65,6 @@ class TilePlacer extends ResonantTile(Material.rock) with TInventory with TRotat
       _doWork = true
       placeDelay = 0
     }
-  }
-
-  override def onNeighborChanged(block: Block)
-  {
-    work
   }
 
   override def start

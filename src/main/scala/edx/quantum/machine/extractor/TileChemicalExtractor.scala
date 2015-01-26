@@ -12,7 +12,7 @@ import resonantengine.lib.content.prefab.TIO
 import resonantengine.lib.grid.energy.EnergyStorage
 import resonantengine.lib.mod.compat.energy.Compatibility
 import resonantengine.lib.transform.vector.Vector3
-import resonantengine.prefab.block.traits.{TEnergyProvider, TRotatable}
+import resonantengine.prefab.block.impl.{TEnergyProvider, TRotatable}
 
 /**
  * Chemical extractor TileEntity

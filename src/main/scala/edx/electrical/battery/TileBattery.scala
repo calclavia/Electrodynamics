@@ -18,7 +18,6 @@ import org.lwjgl.opengl.GL11._
 import resonantengine.api.item.ISimpleItemRenderer
 import resonantengine.core.network.discriminator.PacketType
 import resonantengine.lib.content.prefab.TIO
-import resonantengine.lib.grid.core.TBlockNodeProvider
 import resonantengine.lib.grid.energy.EnergyStorage
 import resonantengine.lib.grid.energy.electric.NodeElectricComponent
 import resonantengine.lib.modcontent.block.ResonantTile
@@ -26,7 +25,7 @@ import resonantengine.lib.render.RenderUtility
 import resonantengine.lib.transform.vector.Vector3
 import resonantengine.lib.utility.science.UnitDisplay
 import resonantengine.lib.wrapper.ByteBufWrapper._
-import resonantengine.prefab.block.traits.TEnergyProvider
+import resonantengine.prefab.block.impl.{TBlockNodeProvider, TEnergyProvider}
 import resonantengine.prefab.network.{TPacketReceiver, TPacketSender}
 
 /** A modular battery box that allows shared connections with boxes next to it.

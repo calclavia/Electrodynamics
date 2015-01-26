@@ -6,10 +6,10 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import resonantengine.core.network.discriminator.PacketType
-import resonantengine.lib.grid.core.TBlockNodeProvider
 import resonantengine.lib.modcontent.block.ResonantTile
 import resonantengine.lib.prefab.fluid.NodeFluid
 import resonantengine.lib.wrapper.ByteBufWrapper._
+import resonantengine.prefab.block.impl.TBlockNodeProvider
 import resonantengine.prefab.network.{TPacketReceiver, TPacketSender}
 
 /**
@@ -52,20 +52,6 @@ abstract class TileFluidProvider(material: Material) extends ResonantTile(materi
     }
   }
 
-  def fluidNode = _fluidNode
-
-  def fluidNode_=(newNode: NodeFluid)
-  {
-    _fluidNode = newNode
-    fluidNode.onConnectionChanged = () =>
-    {
-      clientRenderMask = fluidNode.connectedMask
-      sendPacket(0)
-    }
-    fluidNode.onFluidChanged = () => if (!world.isRemote) sendPacket(1)
-    nodes.add(fluidNode)
-  }
-
   override def read(buf: ByteBuf, id: Int, packet: PacketType)
   {
     super.read(buf, id, packet)
@@ -90,11 +76,25 @@ abstract class TileFluidProvider(material: Material) extends ResonantTile(materi
     }
   }
 
+  def fluidNode = _fluidNode
+
   override def readFromNBT(nbt: NBTTagCompound)
   {
     super.readFromNBT(nbt)
     fluidNode.load(nbt)
     colorID = nbt.getInteger("colorID")
+  }
+
+  def fluidNode_=(newNode: NodeFluid)
+  {
+    _fluidNode = newNode
+    fluidNode.onConnectionChanged = () =>
+    {
+      clientRenderMask = fluidNode.connectedMask
+      sendPacket(0)
+    }
+    fluidNode.onFluidChanged = () => if (!world.isRemote) sendPacket(1)
+    nodes.add(fluidNode)
   }
 
   override def writeToNBT(nbt: NBTTagCompound)
@@ -115,4 +115,5 @@ abstract class TileFluidProvider(material: Material) extends ResonantTile(materi
   override def fill(from: ForgeDirection, resource: FluidStack, doFill: Boolean): Int = fluidNode.fill(from, resource, doFill)
 
   override def getTankInfo(from: ForgeDirection): Array[FluidTankInfo] = fluidNode.getTankInfo(from)
+
 }

@@ -1,11 +1,9 @@
 package edx.core.prefab.part.connector
 
-import java.util.{List => JList}
-
 import codechicken.multipart.TMultiPart
 import net.minecraft.nbt.NBTTagCompound
 import resonantengine.api.misc.ISave
-import resonantengine.lib.grid.core.TNodeProvider
+import resonantengine.prefab.block.impl.TNodeProvider
 
 import scala.collection.convert.wrapAll._
 

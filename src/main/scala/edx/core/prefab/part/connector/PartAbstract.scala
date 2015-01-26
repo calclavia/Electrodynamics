@@ -5,7 +5,7 @@ import codechicken.multipart.{IRedstonePart, TMultiPart}
 import edx.core.ResonantPartFactory
 import net.minecraft.item.ItemStack
 import net.minecraft.util.MovingObjectPosition
-import resonantengine.prefab.block.traits.TTicker
+import resonantengine.prefab.block.impl.TTicker
 
 import scala.collection.convert.wrapAll._
 import scala.collection.mutable

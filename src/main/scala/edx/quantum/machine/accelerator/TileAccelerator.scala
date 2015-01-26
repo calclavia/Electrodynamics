@@ -19,7 +19,7 @@ import resonantengine.lib.grid.energy.EnergyStorage
 import resonantengine.lib.modcontent.block.ResonantTile
 import resonantengine.lib.transform.vector.Vector3
 import resonantengine.lib.utility.BlockUtility
-import resonantengine.prefab.block.traits.TEnergyProvider
+import resonantengine.prefab.block.impl.TEnergyProvider
 import resonantengine.prefab.network.{TPacketReceiver, TPacketSender}
 
 import scala.collection.JavaConversions._
