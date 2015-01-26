@@ -26,7 +26,7 @@ import resonantengine.lib.modcontent.block.ResonantTile
 import resonantengine.lib.render.EnumColor
 import resonantengine.lib.transform.vector.{Vector3, VectorWorld}
 import resonantengine.lib.utility.{LanguageUtility, LinkUtility}
-import resonantengine.prefab.block.multiblock.reference.{IMultiBlockStructure, MultiBlockHandler}
+import resonantengine.prefab.block.multiblock.{IMultiBlockStructure, MultiBlockHandler}
 import resonantengine.prefab.block.traits.TEnergyProvider
 import resonantengine.prefab.network.{TPacketReceiver, TPacketSender}
 

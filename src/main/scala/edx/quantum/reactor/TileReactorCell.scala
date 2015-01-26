@@ -27,7 +27,7 @@ import resonantengine.lib.render.model.ModelCube
 import resonantengine.lib.transform.vector.Vector3
 import resonantengine.lib.utility.inventory.InventoryUtility
 import resonantengine.prefab.block.mixed.TileInventory
-import resonantengine.prefab.block.multiblock.reference.{IMultiBlockStructure, MultiBlockHandler}
+import resonantengine.prefab.block.multiblock.{IMultiBlockStructure, MultiBlockHandler}
 import resonantengine.prefab.network.{TPacketReceiver, TPacketSender}
 
 import scala.collection.convert.wrapAll._
@@ -243,8 +243,6 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
     }
   }
 
-  override def getMultiBlock: MultiBlockHandler[TileReactorCell] = multiBlock
-
   override def getWorld: World =
   {
     return worldObj
@@ -284,6 +282,8 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
     super.readFromNBT(nbt)
     getMultiBlock.load(nbt)
   }
+
+  override def getMultiBlock: MultiBlockHandler[TileReactorCell] = multiBlock
 
   override def writeToNBT(nbt: NBTTagCompound)
   {

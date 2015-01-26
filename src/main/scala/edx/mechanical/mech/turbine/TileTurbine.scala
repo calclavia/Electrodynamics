@@ -15,7 +15,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import resonantengine.core.network.discriminator.PacketType
 import resonantengine.lib.transform.vector.Vector3
 import resonantengine.lib.wrapper.ByteBufWrapper._
-import resonantengine.prefab.block.multiblock.reference.IMultiBlockStructure
+import resonantengine.prefab.block.multiblock.IMultiBlockStructure
 
 import scala.collection.JavaConversions._
 
@@ -60,6 +60,11 @@ class TileTurbine extends TileMechanical(Material.wood) with IMultiBlockStructur
   /** Called to play sound effects */
   def playSound()
   {
+  }
+
+  def getMultiBlock: TurbineMBlockHandler =
+  {
+    return multiBlock
   }
 
   def getArea: Int = (((multiBlockRadius + 0.5) * 2) * ((multiBlockRadius + 0.5) * 2)).toInt
@@ -111,11 +116,6 @@ class TileTurbine extends TileMechanical(Material.wood) with IMultiBlockStructur
     multiBlockRadius = nbt.getInteger("multiBlockRadius")
     tier = nbt.getInteger("tier")
     getMultiBlock.load(nbt)
-  }
-
-  def getMultiBlock: TurbineMBlockHandler =
-  {
-    return multiBlock
   }
 
   /** Writes a tile entity to NBT. */

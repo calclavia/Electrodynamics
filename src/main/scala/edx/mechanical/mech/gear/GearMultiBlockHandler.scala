@@ -3,7 +3,7 @@ package edx.mechanical.mech.gear
 import codechicken.multipart.TileMultipart
 import net.minecraftforge.common.util.ForgeDirection
 import resonantengine.lib.transform.vector.Vector3
-import resonantengine.prefab.block.multiblock.reference.MultiBlockHandler
+import resonantengine.prefab.block.multiblock.MultiBlockHandler
 
 class GearMultiBlockHandler(wrapper: PartGear) extends MultiBlockHandler[PartGear](wrapper: PartGear)
 {
