@@ -11,6 +11,7 @@ import mffs.security.MFFSPermissions
 import mffs.util.FortronUtility
 import net.minecraft.block.Block
 import net.minecraft.init.Blocks
+import net.minecraft.util.DamageSource
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.config.Configuration
 import net.minecraftforge.fluids.FluidRegistry
@@ -19,7 +20,6 @@ import resonantengine.api.mffs.Blacklist
 import resonantengine.core.network.netty.PacketManager
 import resonantengine.lib.mod.config.ConfigHandler
 import resonantengine.lib.mod.loadable.LoadableHandler
-import resonantengine.lib.prefab.damage.CustomDamageSource
 
 @Mod(modid = Reference.id, name = Reference.name, version = Reference.version, dependencies = "required-after:ResonantEngine", modLanguage = "scala", guiFactory = "mffs.MFFSGuiFactory")
 @ModstatInfo(prefix = "mffs")
@@ -28,7 +28,7 @@ object ModularForceFieldSystem
   /**
    * Damages
    */
-  val damageFieldShock = new CustomDamageSource("fieldShock").setDamageBypassesArmor
+  val damageFieldShock = new DamageSource("fieldShock").setDamageBypassesArmor()
   val fakeProfile = new GameProfile(UUID.randomUUID, "mffs")
   val packetHandler = new PacketManager(Reference.channel)
   val loadables = new LoadableHandler
