@@ -1,8 +1,8 @@
 package edx.basic.waila
 
 import cpw.mods.fml.common.event.FMLInterModComms
-import resonant.lib.mod.compat.Mods
-import resonant.lib.mod.loadable.ICompatProxy
+import resonantengine.lib.mod.compat.Mods
+import resonantengine.lib.mod.loadable.ICompatProxy
 
 /**
  * @author tgame14

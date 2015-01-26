@@ -6,7 +6,7 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.model.{AdvancedModelLoader, IModelCustom}
 import org.lwjgl.opengl.GL11
-import resonant.lib.render.RenderUtility
+import resonantengine.lib.render.RenderUtility
 
 @SideOnly(Side.CLIENT)
 object RenderPlasmaHeater

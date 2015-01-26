@@ -3,8 +3,8 @@ package edx.core.resource.alloy
 import java.awt.Color
 
 import net.minecraft.item.ItemStack
-import resonant.lib.factory.resources.ResourceFactory
-import resonant.lib.utility.nbt.NBTUtility
+import resonantengine.lib.factory.resources.ResourceFactory
+import resonantengine.lib.utility.nbt.NBTUtility
 
 /**
  * Manages alloys and metal mixtures

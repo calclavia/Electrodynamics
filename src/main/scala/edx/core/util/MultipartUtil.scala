@@ -6,7 +6,7 @@ import net.minecraft.init.Blocks
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.{IBlockAccess, World}
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.lib.transform.vector.{Vector3, VectorWorld}
+import resonantengine.lib.transform.vector.{Vector3, VectorWorld}
 
 /**
  * Multipart Utilities

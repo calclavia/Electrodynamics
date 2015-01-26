@@ -8,11 +8,11 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.ChatComponentText
 import net.minecraft.world.World
-import resonant.lib.prefab.tile.item.ItemBlockSaved
-import resonant.lib.transform.vector.Vector3
-import resonant.lib.utility.LanguageUtility
-import resonant.lib.utility.nbt.NBTUtility
-import resonant.lib.wrapper.CollectionWrapper._
+import resonantengine.lib.prefab.tile.item.ItemBlockSaved
+import resonantengine.lib.transform.vector.Vector3
+import resonantengine.lib.utility.LanguageUtility
+import resonantengine.lib.utility.nbt.NBTUtility
+import resonantengine.lib.wrapper.CollectionWrapper._
 
 class ItemBlockThermometer(block: Block) extends ItemBlockSaved(block: Block)
 {

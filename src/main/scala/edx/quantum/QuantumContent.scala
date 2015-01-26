@@ -34,15 +34,16 @@ import net.minecraftforge.common.{ForgeChunkManager, MinecraftForge}
 import net.minecraftforge.event.entity.player.FillBucketEvent
 import net.minecraftforge.fluids._
 import net.minecraftforge.oredict.{OreDictionary, ShapelessOreRecipe}
-import resonant.api.event.PlasmaEvent
-import resonant.api.recipe.QuantumAssemblerRecipes
-import resonant.api.tile.IElectromagnet
-import resonant.lib.factory.resources.block.OreGenerator
-import resonant.lib.grid.thermal.ThermalEvent
-import resonant.lib.mod.content.{ContentHolder, ExplicitContentName}
-import resonant.lib.transform.vector.VectorWorld
-import resonant.lib.utility.recipe.UniversalRecipe
-import resonant.lib.world.schematic.SchematicRegistry
+import resonantengine.api.event.PlasmaEvent
+import resonantengine.api.modcontent.ExplicitContentName
+import resonantengine.api.recipe.QuantumAssemblerRecipes
+import resonantengine.api.tile.IElectromagnet
+import resonantengine.lib.factory.resources.block.OreGenerator
+import resonantengine.lib.grid.thermal.ThermalEvent
+import resonantengine.lib.transform.vector.VectorWorld
+import resonantengine.lib.utility.recipe.UniversalRecipe
+import resonantengine.lib.world.schematic.SchematicRegistry
+import resonantengine.prefab.modcontent.ContentHolder
 
 import scala.collection.JavaConversions._
 
@@ -383,21 +384,6 @@ object QuantumContent extends ContentHolder
     return isItemStackOreDictionaryCompatible(itemStack, "cellEmpty")
   }
 
-  def isItemStackWaterCell(itemStack: ItemStack): Boolean =
-  {
-    return isItemStackOreDictionaryCompatible(itemStack, "cellWater")
-  }
-
-  def isItemStackUraniumOre(itemStack: ItemStack): Boolean =
-  {
-    return isItemStackOreDictionaryCompatible(itemStack, "dropUranium", "oreUranium")
-  }
-
-  def isItemStackDeuteriumCell(itemStack: ItemStack): Boolean =
-  {
-    return isItemStackOreDictionaryCompatible(itemStack, "molecule_1d", "molecule_1h2", "cellDeuterium")
-  }
-
   /** Compare to Ore Dict
     *
     * @param itemStack
@@ -417,6 +403,21 @@ object QuantumContent extends ContentHolder
       }
     }
     return false
+  }
+
+  def isItemStackWaterCell(itemStack: ItemStack): Boolean =
+  {
+    return isItemStackOreDictionaryCompatible(itemStack, "cellWater")
+  }
+
+  def isItemStackUraniumOre(itemStack: ItemStack): Boolean =
+  {
+    return isItemStackOreDictionaryCompatible(itemStack, "dropUranium", "oreUranium")
+  }
+
+  def isItemStackDeuteriumCell(itemStack: ItemStack): Boolean =
+  {
+    return isItemStackOreDictionaryCompatible(itemStack, "molecule_1d", "molecule_1h2", "cellDeuterium")
   }
 
   def isItemStackTritiumCell(itemStack: ItemStack): Boolean =

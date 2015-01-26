@@ -14,9 +14,9 @@ import net.minecraft.world.{ChunkCoordIntPair, World}
 import net.minecraftforge.common.ForgeChunkManager
 import net.minecraftforge.common.ForgeChunkManager.Type
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.api.tile.IElectromagnet
-import resonant.lib.prefab.poison.PoisonRadiation
-import resonant.lib.transform.vector.Vector3
+import resonantengine.api.tile.IElectromagnet
+import resonantengine.lib.prefab.poison.PoisonRadiation
+import resonantengine.lib.transform.vector.Vector3
 
 import scala.collection.JavaConversions._
 

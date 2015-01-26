@@ -1,6 +1,6 @@
 package edx.quantum.gate;
 
-import resonant.api.tile.IBlockFrequency;
+import resonantengine.api.tile.IBlockFrequency;
 
 /**
  * Only TileEntities should implement this.

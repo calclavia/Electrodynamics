@@ -9,10 +9,10 @@ import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.util.IIcon
 import net.minecraft.world.{IBlockAccess, World}
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.api.tile.IRotatable
-import resonant.lib.prefab.tile.spatial.ResonantBlock
-import resonant.lib.prefab.tile.traits.TRotatable
-import resonant.lib.transform.vector.Vector3
+import resonantengine.api.tile.IRotatable
+import resonantengine.lib.prefab.tile.spatial.ResonantBlock
+import resonantengine.lib.prefab.tile.traits.TRotatable
+import resonantengine.lib.transform.vector.Vector3
 
 object TileTurntable
 {

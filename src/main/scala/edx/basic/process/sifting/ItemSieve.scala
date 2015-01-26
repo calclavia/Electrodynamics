@@ -6,14 +6,14 @@ import net.minecraft.block.Block
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.{EnumAction, ItemStack}
 import net.minecraft.world.World
-import resonant.api.recipe.{MachineRecipes, RecipeType}
-import resonant.lib.prefab.tile.item.ItemBlockSaved
-import resonant.lib.render.EnumColor
-import resonant.lib.transform.vector.Vector3
-import resonant.lib.utility.inventory.{ExternalInventory, InventoryUtility}
-import resonant.lib.utility.nbt.NBTUtility
-import resonant.lib.wrapper.CollectionWrapper._
-import resonant.lib.wrapper.StringWrapper._
+import resonantengine.api.recipe.{MachineRecipes, RecipeType}
+import resonantengine.lib.prefab.tile.item.ItemBlockSaved
+import resonantengine.lib.render.EnumColor
+import resonantengine.lib.transform.vector.Vector3
+import resonantengine.lib.utility.inventory.{ExternalInventory, InventoryUtility}
+import resonantengine.lib.utility.nbt.NBTUtility
+import resonantengine.lib.wrapper.CollectionWrapper._
+import resonantengine.lib.wrapper.StringWrapper._
 
 /**
  * The ItemBlock for the glass jar

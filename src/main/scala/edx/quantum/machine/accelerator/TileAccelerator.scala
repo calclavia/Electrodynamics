@@ -12,15 +12,15 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.IIcon
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.api.tile.{IElectromagnet, IRotatable}
-import resonant.lib.content.prefab.TInventory
-import resonant.lib.grid.energy.EnergyStorage
-import resonant.lib.network.discriminator.{PacketTile, PacketType}
-import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
-import resonant.lib.prefab.tile.spatial.ResonantTile
-import resonant.lib.prefab.tile.traits.TEnergyProvider
-import resonant.lib.transform.vector.Vector3
-import resonant.lib.utility.BlockUtility
+import resonantengine.api.tile.{IElectromagnet, IRotatable}
+import resonantengine.lib.content.prefab.TInventory
+import resonantengine.lib.grid.energy.EnergyStorage
+import resonantengine.lib.network.discriminator.{PacketTile, PacketType}
+import resonantengine.lib.network.handle.{TPacketReceiver, TPacketSender}
+import resonantengine.lib.prefab.tile.spatial.ResonantTile
+import resonantengine.lib.prefab.tile.traits.TEnergyProvider
+import resonantengine.lib.transform.vector.Vector3
+import resonantengine.lib.utility.BlockUtility
 
 import scala.collection.JavaConversions._
 

@@ -11,8 +11,8 @@ import edx.core.prefab.part.CuboidShapes
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.MovingObjectPosition
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.lib.grid.core.NodeConnector
-import resonant.lib.wrapper.BitmaskWrapper._
+import resonantengine.lib.grid.core.NodeConnector
+import resonantengine.lib.wrapper.BitmaskWrapper._
 
 import scala.collection.convert.wrapAll._
 import scala.collection.mutable

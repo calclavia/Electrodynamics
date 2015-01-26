@@ -7,7 +7,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.Teleporter;
 import net.minecraft.world.WorldServer;
-import resonant.lib.transform.vector.VectorWorld;
+import resonantengine.lib.transform.vector.VectorWorld;
 
 import java.util.HashMap;
 

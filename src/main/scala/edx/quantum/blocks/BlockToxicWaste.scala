@@ -8,8 +8,8 @@ import net.minecraft.entity.{Entity, EntityLivingBase}
 import net.minecraft.util.DamageSource
 import net.minecraft.world.World
 import net.minecraftforge.fluids.BlockFluidClassic
-import resonant.lib.prefab.poison.PoisonRadiation
-import resonant.lib.transform.vector.Vector3
+import resonantengine.lib.prefab.poison.PoisonRadiation
+import resonantengine.lib.transform.vector.Vector3
 
 class BlockToxicWaste extends BlockFluidClassic(QuantumContent.getFluidToxicWaste, Material.water)
 {

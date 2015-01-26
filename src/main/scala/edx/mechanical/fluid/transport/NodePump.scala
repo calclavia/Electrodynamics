@@ -3,7 +3,7 @@ package edx.mechanical.fluid.transport
 import edx.core.prefab.node.NodeFluidPressure
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.IFluidHandler
-import resonant.api.tile.INodeProvider
+import resonantengine.api.tile.INodeProvider
 
 /**
  * A node for the pump

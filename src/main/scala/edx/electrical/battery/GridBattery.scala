@@ -2,7 +2,7 @@ package edx.electrical.battery
 
 import java.util.{Arrays, LinkedHashSet, Set}
 
-import resonant.lib.grid.core.Grid
+import resonantengine.lib.grid.core.Grid
 
 import scala.collection.JavaConversions._
 

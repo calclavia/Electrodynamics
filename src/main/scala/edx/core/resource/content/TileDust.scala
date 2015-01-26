@@ -3,8 +3,8 @@ package edx.core.resource.content
 import edx.core.Reference
 import net.minecraft.block.material.Material
 import net.minecraft.nbt.NBTTagCompound
-import resonant.lib.prefab.tile.spatial.ResonantTile
-import resonant.lib.transform.region.Cuboid
+import resonantengine.lib.prefab.tile.spatial.ResonantTile
+import resonantengine.lib.transform.region.Cuboid
 
 /**
  * A block for physical dust blocks

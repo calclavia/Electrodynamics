@@ -33,9 +33,9 @@ import net.minecraft.client.particle.{EntityDiggingFX, EntityFX}
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.Item
 import net.minecraft.world.World
-import resonant.lib.render.fx.FXElectricBolt2
-import resonant.lib.render.wrapper.ItemRenderHandler
-import resonant.lib.transform.vector.Vector3
+import resonantengine.lib.render.fx.FXElectricBolt2
+import resonantengine.lib.render.wrapper.ItemRenderHandler
+import resonantengine.lib.transform.vector.Vector3
 
 /** @author Calclavia */
 @SideOnly(Side.CLIENT) class ClientProxy extends CommonProxy

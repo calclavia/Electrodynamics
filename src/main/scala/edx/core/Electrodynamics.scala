@@ -13,9 +13,9 @@ import edx.quantum.QuantumContent
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.config.Configuration
 import org.modstats.{ModstatInfo, Modstats}
-import resonant.core.ResonantEngine
-import resonant.lib.mod.config.ConfigHandler
-import resonant.lib.mod.loadable.LoadableHandler
+import resonantengine.core.ResonantEngine
+import resonantengine.lib.mod.config.ConfigHandler
+import resonantengine.lib.mod.loadable.LoadableHandler
 
 /** The core module of Resonant Induction
   *

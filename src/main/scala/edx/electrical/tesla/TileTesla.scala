@@ -17,18 +17,18 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.ChatComponentText
 import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.lib.content.prefab.TIO
-import resonant.lib.grid.core.TBlockNodeProvider
-import resonant.lib.grid.energy.EnergyStorage
-import resonant.lib.grid.energy.electric.NodeElectricComponent
-import resonant.lib.network.discriminator.{PacketTile, PacketType}
-import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
-import resonant.lib.prefab.tile.multiblock.reference.{IMultiBlockStructure, MultiBlockHandler}
-import resonant.lib.prefab.tile.spatial.ResonantTile
-import resonant.lib.prefab.tile.traits.TEnergyProvider
-import resonant.lib.render.EnumColor
-import resonant.lib.transform.vector.{Vector3, VectorWorld}
-import resonant.lib.utility.{LanguageUtility, LinkUtility}
+import resonantengine.lib.content.prefab.TIO
+import resonantengine.lib.grid.core.TBlockNodeProvider
+import resonantengine.lib.grid.energy.EnergyStorage
+import resonantengine.lib.grid.energy.electric.NodeElectricComponent
+import resonantengine.lib.network.discriminator.{PacketTile, PacketType}
+import resonantengine.lib.network.handle.{TPacketReceiver, TPacketSender}
+import resonantengine.lib.prefab.tile.multiblock.reference.{IMultiBlockStructure, MultiBlockHandler}
+import resonantengine.lib.prefab.tile.spatial.ResonantTile
+import resonantengine.lib.prefab.tile.traits.TEnergyProvider
+import resonantengine.lib.render.EnumColor
+import resonantengine.lib.transform.vector.{Vector3, VectorWorld}
+import resonantengine.lib.utility.{LanguageUtility, LinkUtility}
 
 import scala.collection.JavaConversions._
 

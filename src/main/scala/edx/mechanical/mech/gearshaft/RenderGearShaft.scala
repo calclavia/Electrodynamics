@@ -9,9 +9,9 @@ import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL11.glRotatef
-import resonant.api.items.ISimpleItemRenderer
-import resonant.lib.render.RenderUtility
-import resonant.lib.wrapper.ForgeDirectionWrapper._
+import resonantengine.api.items.ISimpleItemRenderer
+import resonantengine.lib.render.RenderUtility
+import resonantengine.lib.wrapper.ForgeDirectionWrapper._
 
 @SideOnly(Side.CLIENT)
 object RenderGearShaft extends ISimpleItemRenderer

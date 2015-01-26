@@ -4,7 +4,7 @@
 package edx.electrical.tesla;
 
 import net.minecraft.tileentity.TileEntity;
-import resonant.api.mffs.fortron.IServerThread;
+import resonantengine.api.mffs.fortron.IServerThread;
 
 import java.util.Collections;
 import java.util.Iterator;

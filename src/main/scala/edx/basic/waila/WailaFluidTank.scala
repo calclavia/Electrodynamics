@@ -7,7 +7,7 @@ import mcp.mobius.waila.api.{IWailaConfigHandler, IWailaDataAccessor, IWailaData
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.fluids.IFluidTank
-import resonant.lib.utility.LanguageUtility
+import resonantengine.lib.utility.LanguageUtility
 
 /**
  * Waila support for tanks

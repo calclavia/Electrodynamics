@@ -10,10 +10,10 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.world.World
 import org.lwjgl.input.Keyboard
-import resonant.lib.render.EnumColor
-import resonant.lib.utility.LanguageUtility
-import resonant.lib.utility.science.UnitDisplay
-import resonant.lib.wrapper.CollectionWrapper._
+import resonantengine.lib.render.EnumColor
+import resonantengine.lib.utility.LanguageUtility
+import resonantengine.lib.utility.science.UnitDisplay
+import resonantengine.lib.wrapper.CollectionWrapper._
 
 class ItemPipe extends TItemMultiPart
 {

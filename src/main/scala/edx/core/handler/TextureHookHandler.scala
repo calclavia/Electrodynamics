@@ -5,7 +5,7 @@ import cpw.mods.fml.relauncher.{Side, SideOnly}
 import edx.core.Reference
 import edx.quantum.QuantumContent
 import net.minecraftforge.client.event.TextureStitchEvent
-import resonant.lib.render.RenderUtility
+import resonantengine.lib.render.RenderUtility
 
 /** Event handler for texture events
   * @author Calclavia

@@ -8,16 +8,16 @@ import net.minecraft.entity.item.EntityItem
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
-import resonant.api.recipe.QuantumAssemblerRecipes
-import resonant.lib.content.prefab.TInventory
-import resonant.lib.grid.core.TBlockNodeProvider
-import resonant.lib.grid.energy.EnergyStorage
-import resonant.lib.grid.energy.electric.NodeElectricComponent
-import resonant.lib.network.discriminator.{PacketTile, PacketType}
-import resonant.lib.network.handle.IPacketReceiver
-import resonant.lib.prefab.tile.spatial.ResonantTile
-import resonant.lib.prefab.tile.traits.TEnergyProvider
-import resonant.lib.transform.vector.Vector3
+import resonantengine.api.recipe.QuantumAssemblerRecipes
+import resonantengine.lib.content.prefab.TInventory
+import resonantengine.lib.grid.core.TBlockNodeProvider
+import resonantengine.lib.grid.energy.EnergyStorage
+import resonantengine.lib.grid.energy.electric.NodeElectricComponent
+import resonantengine.lib.network.discriminator.{PacketTile, PacketType}
+import resonantengine.lib.network.handle.IPacketReceiver
+import resonantengine.lib.prefab.tile.spatial.ResonantTile
+import resonantengine.lib.prefab.tile.traits.TEnergyProvider
+import resonantengine.lib.transform.vector.Vector3
 
 /**
  * Atomic assembler of items *

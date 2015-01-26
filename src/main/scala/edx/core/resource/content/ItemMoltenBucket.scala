@@ -2,7 +2,7 @@ package edx.core.resource.content
 
 import edx.core.Reference
 import net.minecraft.creativetab.CreativeTabs
-import resonant.lib.factory.resources.item.TItemResource
+import resonantengine.lib.factory.resources.item.TItemResource
 
 /**
  * @author Calclavia

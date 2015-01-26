@@ -17,14 +17,14 @@ import net.minecraft.world.IBlockAccess
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import org.lwjgl.opengl.GL11
-import resonant.api.tile.IRemovable.ISneakPickup
-import resonant.api.tile.node.INode
-import resonant.lib.grid.core.Node
-import resonant.lib.render.block.RenderConnectedTexture
-import resonant.lib.render.{FluidRenderUtility, RenderBlockUtility, RenderUtility}
-import resonant.lib.transform.vector.Vector3
-import resonant.lib.utility.FluidUtility
-import resonant.lib.wrapper.BitmaskWrapper._
+import resonantengine.api.tile.IRemovable.ISneakPickup
+import resonantengine.api.tile.node.INode
+import resonantengine.lib.grid.core.Node
+import resonantengine.lib.render.block.RenderConnectedTexture
+import resonantengine.lib.render.{FluidRenderUtility, RenderBlockUtility, RenderUtility}
+import resonantengine.lib.transform.vector.Vector3
+import resonantengine.lib.utility.FluidUtility
+import resonantengine.lib.wrapper.BitmaskWrapper._
 
 /**
  * Tile/Block class for basic Dynamic tanks

@@ -11,11 +11,11 @@ import net.minecraft.util.DamageSource
 import net.minecraft.world.IBlockAccess
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.api.event.PlasmaEvent
-import resonant.lib.grid.thermal.GridThermal
-import resonant.lib.mod.config.Config
-import resonant.lib.prefab.tile.spatial.ResonantTile
-import resonant.lib.transform.vector.Vector3
+import resonantengine.api.event.PlasmaEvent
+import resonantengine.lib.grid.thermal.GridThermal
+import resonantengine.lib.mod.config.Config
+import resonantengine.lib.prefab.tile.spatial.ResonantTile
+import resonantengine.lib.transform.vector.Vector3
 
 object TilePlasma
 {

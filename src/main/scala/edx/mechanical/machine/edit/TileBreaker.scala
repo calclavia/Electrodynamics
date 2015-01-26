@@ -15,12 +15,12 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.IIcon
 import net.minecraft.world.IBlockAccess
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.lib.network.discriminator.{PacketTile, PacketType}
-import resonant.lib.network.handle.IPacketReceiver
-import resonant.lib.prefab.tile.spatial.ResonantTile
-import resonant.lib.prefab.tile.traits.TRotatable
-import resonant.lib.transform.vector.{Vector3, VectorWorld}
-import resonant.lib.utility.inventory.InternalInventoryHandler
+import resonantengine.lib.network.discriminator.{PacketTile, PacketType}
+import resonantengine.lib.network.handle.IPacketReceiver
+import resonantengine.lib.prefab.tile.spatial.ResonantTile
+import resonantengine.lib.prefab.tile.traits.TRotatable
+import resonantengine.lib.transform.vector.{Vector3, VectorWorld}
+import resonantengine.lib.utility.inventory.InternalInventoryHandler
 
 /**
  * @author tgame14

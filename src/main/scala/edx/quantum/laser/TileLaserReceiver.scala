@@ -11,12 +11,12 @@ import net.minecraft.util.{MovingObjectPosition, ResourceLocation}
 import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11._
-import resonant.lib.grid.core.TBlockNodeProvider
-import resonant.lib.grid.energy.electric.NodeElectricComponent
-import resonant.lib.prefab.tile.spatial.ResonantTile
-import resonant.lib.prefab.tile.traits.TRotatable
-import resonant.lib.render.RenderUtility
-import resonant.lib.transform.vector.Vector3
+import resonantengine.lib.grid.core.TBlockNodeProvider
+import resonantengine.lib.grid.energy.electric.NodeElectricComponent
+import resonantengine.lib.prefab.tile.spatial.ResonantTile
+import resonantengine.lib.prefab.tile.traits.TRotatable
+import resonantengine.lib.render.RenderUtility
+import resonantengine.lib.transform.vector.Vector3
 
 import scala.collection.convert.wrapAll._
 

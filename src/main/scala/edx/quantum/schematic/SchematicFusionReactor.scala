@@ -6,9 +6,9 @@ import edx.quantum.QuantumContent
 import net.minecraft.block.Block
 import net.minecraft.init.Blocks
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.lib.collection.Pair
-import resonant.lib.transform.vector.Vector3
-import resonant.lib.world.schematic.Schematic
+import resonantengine.lib.collection.Pair
+import resonantengine.lib.transform.vector.Vector3
+import resonantengine.lib.world.schematic.Schematic
 
 class SchematicFusionReactor extends Schematic
 {

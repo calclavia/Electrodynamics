@@ -14,9 +14,9 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.MathHelper
 import net.minecraft.world.World
 import org.lwjgl.input.Keyboard
-import resonant.lib.render.EnumColor
-import resonant.lib.utility.LanguageUtility
-import resonant.lib.wrapper.CollectionWrapper._
+import resonantengine.lib.render.EnumColor
+import resonantengine.lib.utility.LanguageUtility
+import resonantengine.lib.wrapper.CollectionWrapper._
 
 class ItemMultimeter extends JItemMultiPart with IHighlight
 {

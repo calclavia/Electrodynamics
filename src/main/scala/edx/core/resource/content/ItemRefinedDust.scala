@@ -7,8 +7,8 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Blocks
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.world.World
-import resonant.lib.factory.resources.item.TItemResource
-import resonant.lib.transform.vector.Vector3
+import resonantengine.lib.factory.resources.item.TItemResource
+import resonantengine.lib.transform.vector.Vector3
 
 /**
  * @author Calclavia

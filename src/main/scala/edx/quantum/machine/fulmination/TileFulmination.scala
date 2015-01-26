@@ -1,9 +1,9 @@
 package edx.quantum.machine.fulmination
 
 import net.minecraft.block.material.Material
-import resonant.lib.grid.energy.EnergyStorage
-import resonant.lib.prefab.tile.spatial.ResonantTile
-import resonant.lib.prefab.tile.traits.TEnergyProvider
+import resonantengine.lib.grid.energy.EnergyStorage
+import resonantengine.lib.prefab.tile.spatial.ResonantTile
+import resonantengine.lib.prefab.tile.traits.TEnergyProvider
 
 /**
  * Fulmination TileEntity

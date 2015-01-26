@@ -11,7 +11,7 @@ import net.minecraft.item.ItemDye
 import net.minecraft.tileentity.TileEntityFurnace
 import net.minecraft.util.{DamageSource, MovingObjectPosition}
 import net.minecraft.world.World
-import resonant.lib.transform.vector.Vector3
+import resonantengine.lib.transform.vector.Vector3
 
 import scala.collection.mutable
 

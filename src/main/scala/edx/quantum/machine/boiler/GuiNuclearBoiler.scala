@@ -2,9 +2,9 @@ package edx.quantum.machine.boiler
 
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.StatCollector
-import resonant.lib.prefab.gui.GuiContainerBase
-import resonant.lib.prefab.gui.GuiContainerBase.SlotType
-import resonant.lib.utility.science.UnitDisplay
+import resonantengine.lib.prefab.gui.GuiContainerBase
+import resonantengine.lib.prefab.gui.GuiContainerBase.SlotType
+import resonantengine.lib.utility.science.UnitDisplay
 
 class GuiNuclearBoiler(player: EntityPlayer, tileEntity: TileNuclearBoiler) extends GuiContainerBase(new ContainerNuclearBoiler(player, tileEntity))
 {

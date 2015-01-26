@@ -1,8 +1,8 @@
 package edx.quantum.reactor
 
 import net.minecraft.block.material.Material
-import resonant.lib.prefab.tile.spatial.ResonantBlock
-import resonant.lib.transform.region.Cuboid
+import resonantengine.lib.prefab.tile.spatial.ResonantBlock
+import resonantengine.lib.transform.region.Cuboid
 
 /**
  * Control rod block

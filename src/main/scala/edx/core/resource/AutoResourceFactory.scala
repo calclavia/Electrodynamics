@@ -20,10 +20,10 @@ import net.minecraft.util.{IIcon, ResourceLocation}
 import net.minecraftforge.client.event.TextureStitchEvent
 import net.minecraftforge.fluids.{Fluid, FluidContainerRegistry, FluidRegistry, FluidStack}
 import net.minecraftforge.oredict.OreDictionary
-import resonant.api.recipe.{MachineRecipes, RecipeType}
-import resonant.lib.factory.resources.ResourceFactory
-import resonant.lib.utility.LanguageUtility
-import resonant.lib.wrapper.StringWrapper._
+import resonantengine.api.recipe.{MachineRecipes, RecipeType}
+import resonantengine.lib.factory.resources.ResourceFactory
+import resonantengine.lib.utility.LanguageUtility
+import resonantengine.lib.wrapper.StringWrapper._
 
 import scala.collection.convert.wrapAll._
 import scala.collection.mutable

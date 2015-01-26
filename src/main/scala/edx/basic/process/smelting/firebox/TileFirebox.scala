@@ -18,18 +18,18 @@ import net.minecraft.util.IIcon
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
-import resonant.lib.content.prefab.{TIO, TInventory}
-import resonant.lib.grid.core.TBlockNodeProvider
-import resonant.lib.grid.energy.EnergyStorage
-import resonant.lib.grid.energy.electric.NodeElectricComponent
-import resonant.lib.grid.thermal.{BoilEvent, ThermalPhysics}
-import resonant.lib.network.discriminator.PacketType
-import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
-import resonant.lib.prefab.tile.spatial.{ResonantBlock, ResonantTile}
-import resonant.lib.transform.vector.Vector3
-import resonant.lib.utility.FluidUtility
-import resonant.lib.wrapper.ByteBufWrapper._
-import resonant.lib.wrapper.CollectionWrapper._
+import resonantengine.lib.content.prefab.{TIO, TInventory}
+import resonantengine.lib.grid.core.TBlockNodeProvider
+import resonantengine.lib.grid.energy.EnergyStorage
+import resonantengine.lib.grid.energy.electric.NodeElectricComponent
+import resonantengine.lib.grid.thermal.{BoilEvent, ThermalPhysics}
+import resonantengine.lib.network.discriminator.PacketType
+import resonantengine.lib.network.handle.{TPacketReceiver, TPacketSender}
+import resonantengine.lib.prefab.tile.spatial.{ResonantBlock, ResonantTile}
+import resonantengine.lib.transform.vector.Vector3
+import resonantengine.lib.utility.FluidUtility
+import resonantengine.lib.wrapper.ByteBufWrapper._
+import resonantengine.lib.wrapper.CollectionWrapper._
 
 /**
  * Meant to replace the furnace class.

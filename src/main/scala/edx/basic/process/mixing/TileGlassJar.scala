@@ -18,20 +18,20 @@ import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.IItemRenderer.ItemRenderType
 import net.minecraftforge.client.model.AdvancedModelLoader
 import org.lwjgl.opengl.GL11
-import resonant.api.items.ISimpleItemRenderer
-import resonant.lib.factory.resources.ResourceFactory
-import resonant.lib.factory.resources.item.TItemResource
-import resonant.lib.network.discriminator.PacketType
-import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
-import resonant.lib.prefab.tile.item.ItemBlockSaved
-import resonant.lib.prefab.tile.spatial.ResonantTile
-import resonant.lib.render.RenderUtility
-import resonant.lib.render.model.ModelCube
-import resonant.lib.transform.region.Cuboid
-import resonant.lib.transform.vector.{Vector3, VectorWorld}
-import resonant.lib.utility.inventory.InventoryUtility
-import resonant.lib.utility.nbt.NBTUtility
-import resonant.lib.wrapper.ByteBufWrapper._
+import resonantengine.api.items.ISimpleItemRenderer
+import resonantengine.lib.factory.resources.ResourceFactory
+import resonantengine.lib.factory.resources.item.TItemResource
+import resonantengine.lib.network.discriminator.PacketType
+import resonantengine.lib.network.handle.{TPacketReceiver, TPacketSender}
+import resonantengine.lib.prefab.tile.item.ItemBlockSaved
+import resonantengine.lib.prefab.tile.spatial.ResonantTile
+import resonantengine.lib.render.RenderUtility
+import resonantengine.lib.render.model.ModelCube
+import resonantengine.lib.transform.region.Cuboid
+import resonantengine.lib.transform.vector.{Vector3, VectorWorld}
+import resonantengine.lib.utility.inventory.InventoryUtility
+import resonantengine.lib.utility.nbt.NBTUtility
+import resonantengine.lib.wrapper.ByteBufWrapper._
 
 /**
  * A glass jar for mixing different dusts/refined together.

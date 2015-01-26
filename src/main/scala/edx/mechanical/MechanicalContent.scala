@@ -16,10 +16,10 @@ import edx.mechanical.mech.turbine.{TileWaterTurbine, TileWindTurbine}
 import net.minecraft.block.Block
 import net.minecraft.init.{Blocks, Items}
 import net.minecraft.item.{Item, ItemStack}
-import resonant.api.tile.node.NodeRegistry
-import resonant.lib.mod.content.ContentHolder
-import resonant.lib.utility.recipe.UniversalRecipe
-import resonant.lib.world.schematic.{SchematicPlate, SchematicRegistry}
+import resonantengine.api.tile.node.NodeRegistry
+import resonantengine.lib.utility.recipe.UniversalRecipe
+import resonantengine.lib.world.schematic.{SchematicPlate, SchematicRegistry}
+import resonantengine.prefab.modcontent.ContentHolder
 
 /**
  * The core contents of Resonant Induction

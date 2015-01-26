@@ -8,10 +8,10 @@ import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.api.tile.{IReactor, IReactorComponent}
-import resonant.lib.grid.thermal.GridThermal
-import resonant.lib.transform.vector.VectorWorld
-import resonant.lib.wrapper.CollectionWrapper._
+import resonantengine.api.tile.{IReactor, IReactorComponent}
+import resonantengine.lib.grid.thermal.GridThermal
+import resonantengine.lib.transform.vector.VectorWorld
+import resonantengine.lib.wrapper.CollectionWrapper._
 
 /**
  * Fissile fuel rod

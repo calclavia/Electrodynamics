@@ -1,14 +1,14 @@
 package edx.core.resource.alloy
 
 import net.minecraft.nbt.NBTTagCompound
-import resonant.lib.utility.nbt.ISaveObj
-import resonant.lib.wrapper.NBTWrapper._
+import resonantengine.api.ISave
+import resonantengine.lib.wrapper.NBTWrapper._
 
 /**
  * A class that stores alloy objects. Alloys are materials that are composed of other materials.
  * @author Calclavia
  */
-class Alloy(val max: Int) extends ISaveObj
+class Alloy(val max: Int) extends ISave
 {
   var content = Map.empty[String, Int]
 

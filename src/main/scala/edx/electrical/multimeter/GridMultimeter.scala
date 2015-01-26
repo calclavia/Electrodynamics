@@ -1,10 +1,10 @@
 package edx.electrical.multimeter
 
 import net.minecraft.nbt.{NBTTagCompound, NBTTagList}
-import resonant.lib.grid.core.Grid
-import resonant.lib.transform.vector.Vector3
-import resonant.lib.utility.LanguageUtility
-import resonant.lib.utility.science.UnitDisplay
+import resonantengine.lib.grid.core.Grid
+import resonantengine.lib.transform.vector.Vector3
+import resonantengine.lib.utility.LanguageUtility
+import resonantengine.lib.utility.science.UnitDisplay
 
 import scala.collection.convert.wrapAll._
 import scala.collection.mutable.ArrayBuffer

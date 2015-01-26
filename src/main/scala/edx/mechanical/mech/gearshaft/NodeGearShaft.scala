@@ -4,9 +4,9 @@ import edx.core.interfaces.TNodeMechanical
 import edx.mechanical.mech.gear.{NodeGear, PartGear}
 import edx.mechanical.mech.grid.NodeMechanical
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.api.tile.INodeProvider
-import resonant.lib.transform.vector.Vector3
-import resonant.lib.wrapper.ForgeDirectionWrapper._
+import resonantengine.api.tile.INodeProvider
+import resonantengine.lib.transform.vector.Vector3
+import resonantengine.lib.wrapper.ForgeDirectionWrapper._
 
 class NodeGearShaft(parent: PartGearShaft) extends NodeMechanical(parent)
 {

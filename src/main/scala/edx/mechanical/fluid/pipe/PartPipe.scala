@@ -16,8 +16,8 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
-import resonant.lib.collection.EvictingList
-import resonant.lib.wrapper.BitmaskWrapper._
+import resonantengine.lib.collection.EvictingList
+import resonantengine.lib.wrapper.BitmaskWrapper._
 
 import scala.collection.convert.wrapAll._
 import scala.collection.mutable

@@ -14,17 +14,17 @@ import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.IItemRenderer.ItemRenderType
 import net.minecraftforge.client.model.AdvancedModelLoader
 import org.lwjgl.opengl.GL11
-import resonant.api.items.ISimpleItemRenderer
-import resonant.lib.content.prefab.TInventory
-import resonant.lib.network.discriminator.PacketType
-import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
-import resonant.lib.prefab.tile.item.ItemBlockSaved
-import resonant.lib.prefab.tile.spatial.ResonantTile
-import resonant.lib.render.{RenderItemOverlayUtility, RenderUtility}
-import resonant.lib.transform.region.Cuboid
-import resonant.lib.transform.vector.Vector3
-import resonant.lib.utility.inventory.InventoryUtility
-import resonant.lib.wrapper.ByteBufWrapper._
+import resonantengine.api.items.ISimpleItemRenderer
+import resonantengine.lib.content.prefab.TInventory
+import resonantengine.lib.network.discriminator.PacketType
+import resonantengine.lib.network.handle.{TPacketReceiver, TPacketSender}
+import resonantengine.lib.prefab.tile.item.ItemBlockSaved
+import resonantengine.lib.prefab.tile.spatial.ResonantTile
+import resonantengine.lib.render.{RenderItemOverlayUtility, RenderUtility}
+import resonantengine.lib.transform.region.Cuboid
+import resonantengine.lib.transform.vector.Vector3
+import resonantengine.lib.utility.inventory.InventoryUtility
+import resonantengine.lib.wrapper.ByteBufWrapper._
 
 object TileSieve
 {

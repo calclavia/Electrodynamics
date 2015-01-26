@@ -14,8 +14,8 @@ import net.minecraft.block.Block
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
-import resonant.lib.mod.AbstractProxy
-import resonant.lib.transform.vector.Vector3
+import resonantengine.lib.mod.AbstractProxy
+import resonantengine.lib.transform.vector.Vector3
 
 /**
  * @author Calclavia

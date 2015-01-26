@@ -19,13 +19,13 @@ import net.minecraft.network.Packet
 import net.minecraft.util.IIcon
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
-import resonant.core.ResonantEngine
-import resonant.lib.network.discriminator.{PacketTile, PacketType}
-import resonant.lib.network.handle.IPacketReceiver
-import resonant.lib.prefab.tile.spatial.{ResonantBlock, ResonantTile}
-import resonant.lib.render.RenderItemOverlayUtility
-import resonant.lib.transform.vector.{Vector2, Vector3}
-import resonant.lib.utility.inventory.InventoryUtility
+import resonantengine.core.ResonantEngine
+import resonantengine.lib.network.discriminator.{PacketTile, PacketType}
+import resonantengine.lib.network.handle.IPacketReceiver
+import resonantengine.lib.prefab.tile.spatial.{ResonantBlock, ResonantTile}
+import resonantengine.lib.render.RenderItemOverlayUtility
+import resonantengine.lib.transform.vector.{Vector2, Vector3}
+import resonantengine.lib.utility.inventory.InventoryUtility
 
 import scala.collection.JavaConversions._
 

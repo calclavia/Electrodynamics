@@ -1,9 +1,9 @@
 package edx.electrical.multimeter
 
 import net.minecraft.nbt.NBTTagCompound
-import resonant.lib.collection.EvictingList
-import resonant.lib.utility.nbt.ISaveObj
-import resonant.lib.wrapper.NBTWrapper._
+import resonantengine.api.ISave
+import resonantengine.lib.collection.EvictingList
+import resonantengine.lib.wrapper.NBTWrapper._
 
 import scala.collection.JavaConversions._
 
@@ -12,7 +12,7 @@ import scala.collection.JavaConversions._
  *
  * @author Calclavia
  */
-class Graph[V](val name: String, val maxPoints: Int = 0)(implicit n: Numeric[V]) extends ISaveObj
+class Graph[V](val name: String, val maxPoints: Int = 0)(implicit n: Numeric[V]) extends ISave
 {
   /**
    * Each point represents a tick.

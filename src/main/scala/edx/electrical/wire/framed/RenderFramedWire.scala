@@ -10,7 +10,7 @@ import edx.core.render.InvertX
 import edx.core.util.ResonantUtil
 import net.minecraft.util.{IIcon, ResourceLocation}
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.lib.wrapper.BitmaskWrapper._
+import resonantengine.lib.wrapper.BitmaskWrapper._
 
 import scala.collection.convert.wrapAll._
 import scala.collection.mutable

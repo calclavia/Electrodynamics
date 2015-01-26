@@ -6,7 +6,7 @@ import edx.core.prefab.part.connector.{PartAbstract, TPartNodeProvider}
 import edx.mechanical.mech.grid.NodeMechanical
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.lib.transform.vector.VectorWorld
+import resonantengine.lib.transform.vector.VectorWorld
 
 /** We assume all the force acting on the gear is 90 degrees.
   *

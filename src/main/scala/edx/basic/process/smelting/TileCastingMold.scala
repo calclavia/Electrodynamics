@@ -8,13 +8,13 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
-import resonant.api.recipe.{MachineRecipes, RecipeResource, RecipeType}
-import resonant.lib.network.discriminator.{PacketTile, PacketType}
-import resonant.lib.network.handle.IPacketReceiver
-import resonant.lib.prefab.tile.mixed.TileInventory
-import resonant.lib.transform.vector.Vector3
-import resonant.lib.utility.FluidUtility
-import resonant.lib.utility.inventory.InventoryUtility
+import resonantengine.api.recipe.{MachineRecipes, RecipeResource, RecipeType}
+import resonantengine.lib.network.discriminator.{PacketTile, PacketType}
+import resonantengine.lib.network.handle.IPacketReceiver
+import resonantengine.lib.prefab.tile.mixed.TileInventory
+import resonantengine.lib.transform.vector.Vector3
+import resonantengine.lib.utility.FluidUtility
+import resonantengine.lib.utility.inventory.InventoryUtility
 
 /**
  * Turns molten fuilds into ingots.

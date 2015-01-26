@@ -19,16 +19,16 @@ import net.minecraft.world.World
 import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
-import resonant.api.tile.{IReactor, IReactorComponent}
-import resonant.lib.grid.thermal.{GridThermal, ThermalPhysics}
-import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
-import resonant.lib.prefab.poison.PoisonRadiation
-import resonant.lib.prefab.tile.mixed.TileInventory
-import resonant.lib.prefab.tile.multiblock.reference.{IMultiBlockStructure, MultiBlockHandler}
-import resonant.lib.render.RenderUtility
-import resonant.lib.render.model.ModelCube
-import resonant.lib.transform.vector.Vector3
-import resonant.lib.utility.inventory.InventoryUtility
+import resonantengine.api.tile.{IReactor, IReactorComponent}
+import resonantengine.lib.grid.thermal.{GridThermal, ThermalPhysics}
+import resonantengine.lib.network.handle.{TPacketReceiver, TPacketSender}
+import resonantengine.lib.prefab.poison.PoisonRadiation
+import resonantengine.lib.prefab.tile.mixed.TileInventory
+import resonantengine.lib.prefab.tile.multiblock.reference.{IMultiBlockStructure, MultiBlockHandler}
+import resonantengine.lib.render.RenderUtility
+import resonantengine.lib.render.model.ModelCube
+import resonantengine.lib.transform.vector.Vector3
+import resonantengine.lib.utility.inventory.InventoryUtility
 
 import scala.collection.convert.wrapAll._
 

@@ -15,8 +15,8 @@ import edx.mechanical.mech.gear.ItemHandCrank
 import net.minecraft.block.Block
 import net.minecraft.init.{Blocks, Items}
 import net.minecraft.item.{Item, ItemStack}
-import resonant.lib.mod.content.ContentHolder
-import resonant.lib.utility.recipe.UniversalRecipe
+import resonantengine.lib.utility.recipe.UniversalRecipe
+import resonantengine.prefab.modcontent.ContentHolder
 ;
 
 object BasicContent extends ContentHolder

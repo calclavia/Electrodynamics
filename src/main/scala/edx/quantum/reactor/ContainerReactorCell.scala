@@ -4,8 +4,8 @@ import edx.quantum.items.{ItemBreederFuel, ItemFuelRod}
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.Slot
 import net.minecraft.item.ItemStack
-import resonant.lib.prefab.gui.ContainerBase
-import resonant.lib.prefab.gui.slot.SlotSpecific
+import resonantengine.lib.prefab.gui.ContainerBase
+import resonantengine.lib.prefab.gui.slot.SlotSpecific
 
 class ContainerReactorCell(player: EntityPlayer, tileEntity: TileReactorCell) extends ContainerBase(tileEntity)
 {

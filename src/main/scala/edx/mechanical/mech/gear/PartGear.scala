@@ -15,9 +15,9 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.MovingObjectPosition
 import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.api.tile.node.INode
-import resonant.lib.prefab.tile.multiblock.reference.IMultiBlockStructure
-import resonant.lib.utility.WrenchUtility
+import resonantengine.api.tile.node.INode
+import resonantengine.lib.prefab.tile.multiblock.reference.IMultiBlockStructure
+import resonantengine.lib.utility.WrenchUtility
 
 /**
  * We assume all the force acting on the gear is 90 degrees.
@@ -117,7 +117,7 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
 
   override def getMultiBlock: GearMultiBlockHandler = multiBlock
 
-  override def getMultiBlockVectors: java.util.List[resonant.lib.transform.vector.Vector3] = new resonant.lib.transform.vector.Vector3().getAround(this.world, placementSide, 1)
+  override def getMultiBlockVectors: java.util.List[resonantengine.lib.transform.vector.Vector3] = new resonantengine.lib.transform.vector.Vector3().getAround(this.world, placementSide, 1)
 
   def getWorld: World =
   {

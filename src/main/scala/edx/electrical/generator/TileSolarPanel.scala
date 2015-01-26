@@ -6,12 +6,12 @@ import net.minecraft.block.material.Material
 import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.util.IIcon
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.lib.content.prefab.TIO
-import resonant.lib.grid.core.TBlockNodeProvider
-import resonant.lib.grid.energy.electric.NodeElectricComponent
-import resonant.lib.prefab.tile.spatial.{ResonantBlock, ResonantTile}
-import resonant.lib.render.block.RenderConnectedTexture
-import resonant.lib.transform.region.Cuboid
+import resonantengine.lib.content.prefab.TIO
+import resonantengine.lib.grid.core.TBlockNodeProvider
+import resonantengine.lib.grid.energy.electric.NodeElectricComponent
+import resonantengine.lib.prefab.tile.spatial.{ResonantBlock, ResonantTile}
+import resonantengine.lib.render.block.RenderConnectedTexture
+import resonantengine.lib.transform.region.Cuboid
 
 import scala.collection.convert.wrapAll._
 

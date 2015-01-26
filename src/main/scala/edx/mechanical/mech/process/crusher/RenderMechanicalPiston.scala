@@ -9,7 +9,7 @@ import net.minecraftforge.client.model.{AdvancedModelLoader, IModelCustom}
 import net.minecraftforge.common.util.ForgeDirection
 import org.apache.commons.lang3.ArrayUtils
 import org.lwjgl.opengl.GL11
-import resonant.lib.render.RenderUtility
+import resonantengine.lib.render.RenderUtility
 
 @SideOnly(Side.CLIENT) object RenderMechanicalPiston
 {

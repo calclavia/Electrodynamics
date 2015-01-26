@@ -8,11 +8,11 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
-import resonant.lib.content.prefab.TIO
-import resonant.lib.grid.energy.EnergyStorage
-import resonant.lib.mod.compat.energy.Compatibility
-import resonant.lib.prefab.tile.traits.{TEnergyProvider, TRotatable}
-import resonant.lib.transform.vector.Vector3
+import resonantengine.lib.content.prefab.TIO
+import resonantengine.lib.grid.energy.EnergyStorage
+import resonantengine.lib.mod.compat.energy.Compatibility
+import resonantengine.lib.prefab.tile.traits.{TEnergyProvider, TRotatable}
+import resonantengine.lib.transform.vector.Vector3
 
 /**
  * Chemical extractor TileEntity

@@ -8,9 +8,9 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.entity.{Entity, EntityList, EntityLivingBase, IProjectile}
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.{NBTTagCompound, NBTTagList}
-import resonant.lib.utility.LanguageUtility
-import resonant.lib.utility.nbt.NBTUtility
-import resonant.lib.wrapper.CollectionWrapper._
+import resonantengine.lib.utility.LanguageUtility
+import resonantengine.lib.utility.nbt.NBTUtility
+import resonantengine.lib.wrapper.CollectionWrapper._
 
 import scala.collection.JavaConversions._
 

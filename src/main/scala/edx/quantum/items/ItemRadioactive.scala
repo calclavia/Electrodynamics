@@ -3,8 +3,8 @@ package edx.quantum.items
 import net.minecraft.entity.{Entity, EntityLivingBase}
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.world.World
-import resonant.lib.prefab.poison.PoisonRadiation
-import resonant.lib.transform.vector.Vector3
+import resonantengine.lib.prefab.poison.PoisonRadiation
+import resonantengine.lib.transform.vector.Vector3
 
 /**
  * Radioactive Items

@@ -10,11 +10,11 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
-import resonant.api.recipe.{MachineRecipes, RecipeResource, RecipeType}
-import resonant.lib.mod.config.Config
-import resonant.lib.transform.vector.Vector3
-import resonant.lib.utility.MovementUtility
-import resonant.lib.utility.inventory.InventoryUtility
+import resonantengine.api.recipe.{MachineRecipes, RecipeResource, RecipeType}
+import resonantengine.lib.mod.config.Config
+import resonantengine.lib.transform.vector.Vector3
+import resonantengine.lib.utility.MovementUtility
+import resonantengine.lib.utility.inventory.InventoryUtility
 
 /**
  * Mechanical driven piston that can be used to move basic blocks and crush ores

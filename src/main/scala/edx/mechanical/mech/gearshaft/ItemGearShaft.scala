@@ -10,7 +10,7 @@ import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.world.World
-import resonant.lib.wrapper.CollectionWrapper._
+import resonantengine.lib.wrapper.CollectionWrapper._
 
 class ItemGearShaft extends Item with TItemMultiPart with IHighlight
 {

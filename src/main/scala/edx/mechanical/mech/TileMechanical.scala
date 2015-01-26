@@ -5,13 +5,13 @@ import io.netty.buffer.ByteBuf
 import net.minecraft.block.material.Material
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.lib.grid.core.TBlockNodeProvider
-import resonant.lib.network.discriminator.PacketType
-import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
-import resonant.lib.prefab.tile.spatial.ResonantTile
-import resonant.lib.prefab.tile.traits.TRotatable
-import resonant.lib.transform.vector.Vector3
-import resonant.lib.wrapper.ByteBufWrapper._
+import resonantengine.lib.grid.core.TBlockNodeProvider
+import resonantengine.lib.network.discriminator.PacketType
+import resonantengine.lib.network.handle.{TPacketReceiver, TPacketSender}
+import resonantengine.lib.prefab.tile.spatial.ResonantTile
+import resonantengine.lib.prefab.tile.traits.TRotatable
+import resonantengine.lib.transform.vector.Vector3
+import resonantengine.lib.wrapper.ByteBufWrapper._
 
 import scala.collection.convert.wrapAll._
 

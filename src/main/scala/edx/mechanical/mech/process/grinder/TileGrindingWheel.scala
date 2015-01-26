@@ -11,13 +11,13 @@ import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11._
-import resonant.api.recipe.{MachineRecipes, RecipeType}
-import resonant.lib.prefab.Timer
-import resonant.lib.prefab.damage.CustomDamageSource
-import resonant.lib.render.RenderUtility
-import resonant.lib.transform.region.Cuboid
-import resonant.lib.transform.rotation.AngleAxis
-import resonant.lib.transform.vector.Vector3
+import resonantengine.api.recipe.{MachineRecipes, RecipeType}
+import resonantengine.lib.prefab.Timer
+import resonantengine.lib.prefab.damage.CustomDamageSource
+import resonantengine.lib.render.RenderUtility
+import resonantengine.lib.transform.region.Cuboid
+import resonantengine.lib.transform.rotation.AngleAxis
+import resonantengine.lib.transform.vector.Vector3
 
 /**
  * The grinding wheel. This block will face the direction in which it can rotate.

@@ -4,8 +4,8 @@ import edx.quantum.QuantumContent
 import net.minecraft.entity.player.{EntityPlayer, InventoryPlayer}
 import net.minecraft.inventory.{IInventory, Slot, SlotFurnace}
 import net.minecraft.item.ItemStack
-import resonant.lib.prefab.gui.ContainerBase
-import resonant.lib.prefab.gui.slot.SlotEnergyItem
+import resonantengine.lib.prefab.gui.ContainerBase
+import resonantengine.lib.prefab.gui.slot.SlotEnergyItem
 
 class ContainerCentrifuge(par1InventoryPlayer: InventoryPlayer, tileEntity: TileCentrifuge) extends ContainerBase(tileEntity)
 {

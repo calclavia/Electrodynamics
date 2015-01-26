@@ -8,11 +8,11 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.{Item, ItemBlock, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.World
-import resonant.api.items.IEnergyItem
-import resonant.lib.render.EnumColor
-import resonant.lib.utility.LanguageUtility
-import resonant.lib.utility.science.UnitDisplay
-import resonant.lib.wrapper.CollectionWrapper._
+import resonantengine.api.items.IEnergyItem
+import resonantengine.lib.render.EnumColor
+import resonantengine.lib.utility.LanguageUtility
+import resonantengine.lib.utility.science.UnitDisplay
+import resonantengine.lib.wrapper.CollectionWrapper._
 
 object ItemBlockBattery
 {

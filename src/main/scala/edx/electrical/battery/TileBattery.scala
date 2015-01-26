@@ -15,19 +15,19 @@ import net.minecraftforge.client.IItemRenderer.ItemRenderType
 import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11._
-import resonant.api.items.ISimpleItemRenderer
-import resonant.lib.content.prefab.TIO
-import resonant.lib.grid.core.TBlockNodeProvider
-import resonant.lib.grid.energy.EnergyStorage
-import resonant.lib.grid.energy.electric.NodeElectricComponent
-import resonant.lib.network.discriminator.PacketType
-import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
-import resonant.lib.prefab.tile.spatial.ResonantTile
-import resonant.lib.prefab.tile.traits.TEnergyProvider
-import resonant.lib.render.RenderUtility
-import resonant.lib.transform.vector.Vector3
-import resonant.lib.utility.science.UnitDisplay
-import resonant.lib.wrapper.ByteBufWrapper._
+import resonantengine.api.items.ISimpleItemRenderer
+import resonantengine.lib.content.prefab.TIO
+import resonantengine.lib.grid.core.TBlockNodeProvider
+import resonantengine.lib.grid.energy.EnergyStorage
+import resonantengine.lib.grid.energy.electric.NodeElectricComponent
+import resonantengine.lib.network.discriminator.PacketType
+import resonantengine.lib.network.handle.{TPacketReceiver, TPacketSender}
+import resonantengine.lib.prefab.tile.spatial.ResonantTile
+import resonantengine.lib.prefab.tile.traits.TEnergyProvider
+import resonantengine.lib.render.RenderUtility
+import resonantengine.lib.transform.vector.Vector3
+import resonantengine.lib.utility.science.UnitDisplay
+import resonantengine.lib.wrapper.ByteBufWrapper._
 
 /** A modular battery box that allows shared connections with boxes next to it.
   *

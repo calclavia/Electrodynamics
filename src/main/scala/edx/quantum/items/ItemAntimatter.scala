@@ -9,7 +9,7 @@ import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.util.IIcon
 import net.minecraft.world.World
-import resonant.lib.wrapper.CollectionWrapper._
+import resonantengine.lib.wrapper.CollectionWrapper._
 
 class ItemAntimatter extends ItemCell
 {

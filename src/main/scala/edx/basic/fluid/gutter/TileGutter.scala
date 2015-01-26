@@ -18,14 +18,14 @@ import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import org.lwjgl.opengl.GL11
-import resonant.api.recipe.{MachineRecipes, RecipeType}
-import resonant.lib.prefab.fluid.NodeFluid
-import resonant.lib.render.{FluidRenderUtility, RenderUtility}
-import resonant.lib.transform.region.Cuboid
-import resonant.lib.transform.vector.Vector3
-import resonant.lib.utility.FluidUtility
-import resonant.lib.utility.inventory.InventoryUtility
-import resonant.lib.wrapper.BitmaskWrapper._
+import resonantengine.api.recipe.{MachineRecipes, RecipeType}
+import resonantengine.lib.prefab.fluid.NodeFluid
+import resonantengine.lib.render.{FluidRenderUtility, RenderUtility}
+import resonantengine.lib.transform.region.Cuboid
+import resonantengine.lib.transform.vector.Vector3
+import resonantengine.lib.utility.FluidUtility
+import resonantengine.lib.utility.inventory.InventoryUtility
+import resonantengine.lib.wrapper.BitmaskWrapper._
 
 import scala.collection.convert.wrapAll._
 

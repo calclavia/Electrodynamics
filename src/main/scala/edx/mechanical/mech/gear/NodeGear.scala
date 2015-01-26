@@ -7,9 +7,9 @@ import edx.mechanical.mech.gearshaft.{NodeGearShaft, PartGearShaft}
 import edx.mechanical.mech.grid.NodeMechanical
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.api.tile.INodeProvider
-import resonant.lib.transform.vector.Vector3
-import resonant.lib.wrapper.ForgeDirectionWrapper._
+import resonantengine.api.tile.INodeProvider
+import resonantengine.lib.transform.vector.Vector3
+import resonantengine.lib.wrapper.ForgeDirectionWrapper._
 
 /**
  * Node for the gear

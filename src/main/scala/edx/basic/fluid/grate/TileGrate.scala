@@ -14,10 +14,10 @@ import net.minecraft.util.{ChatComponentText, IIcon}
 import net.minecraft.world.IBlockAccess
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.{Fluid, FluidContainerRegistry, FluidRegistry, FluidStack}
-import resonant.lib.mod.config.Config
-import resonant.lib.prefab.tile.traits.TRotatable
-import resonant.lib.transform.vector.Vector3
-import resonant.lib.utility.FluidUtility
+import resonantengine.lib.mod.config.Config
+import resonantengine.lib.prefab.tile.traits.TRotatable
+import resonantengine.lib.transform.vector.Vector3
+import resonantengine.lib.utility.FluidUtility
 
 object TileGrate
 {

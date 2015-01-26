@@ -1,7 +1,7 @@
 package edx.core.interfaces
 
-import resonant.api.tile.node.INode
-import resonant.lib.transform.vector.IVectorWorld
+import resonantengine.api.tile.node.INode
+import resonantengine.lib.transform.vector.IVectorWorld
 
 /**
  * Applied to any node that will act as a mechanical object

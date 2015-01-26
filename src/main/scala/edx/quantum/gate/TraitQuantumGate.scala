@@ -1,7 +1,7 @@
 package edx.quantum.gate
 
 import codechicken.multipart.TileMultipart
-import resonant.api.tile.IBlockFrequency
+import resonantengine.api.tile.IBlockFrequency
 
 class TraitQuantumGate extends TileMultipart with IQuantumGate
 {

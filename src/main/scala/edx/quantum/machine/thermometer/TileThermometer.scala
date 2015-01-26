@@ -15,11 +15,11 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.IIcon
 import net.minecraft.world.IBlockAccess
-import resonant.lib.grid.thermal.GridThermal
-import resonant.lib.prefab.tile.item.ItemBlockSaved
-import resonant.lib.prefab.tile.spatial.ResonantTile
-import resonant.lib.transform.vector.{Vector3, VectorWorld}
-import resonant.lib.utility.inventory.InventoryUtility
+import resonantengine.lib.grid.thermal.GridThermal
+import resonantengine.lib.prefab.tile.item.ItemBlockSaved
+import resonantengine.lib.prefab.tile.spatial.ResonantTile
+import resonantengine.lib.transform.vector.{Vector3, VectorWorld}
+import resonantengine.lib.utility.inventory.InventoryUtility
 
 /**
  * Thermometer TileEntity

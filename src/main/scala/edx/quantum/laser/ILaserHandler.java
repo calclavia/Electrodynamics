@@ -1,7 +1,7 @@
 package edx.quantum.laser;
 
 import net.minecraft.util.MovingObjectPosition;
-import resonant.lib.transform.vector.Vector3;
+import resonantengine.lib.transform.vector.Vector3;
 
 /**
  * @author Calclavia

@@ -10,9 +10,9 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.{ChatComponentText, MovingObjectPosition}
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.api.tile.INodeProvider
-import resonant.api.tile.node.INode
-import resonant.lib.utility.WrenchUtility
+import resonantengine.api.tile.INodeProvider
+import resonantengine.api.tile.node.INode
+import resonantengine.lib.utility.WrenchUtility
 
 /**
  * TODO: We can't use face parts, need to use thicker ones. Also, transformer is currently NO-OP

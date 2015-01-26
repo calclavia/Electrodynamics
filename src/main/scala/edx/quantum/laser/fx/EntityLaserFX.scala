@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.Tessellator
 import net.minecraft.util.ResourceLocation
 import net.minecraft.world.World
 import org.lwjgl.opengl.GL11._
-import resonant.lib.transform.vector.Vector3
+import resonantengine.lib.transform.vector.Vector3
 
 /**
  * @author Calclavia

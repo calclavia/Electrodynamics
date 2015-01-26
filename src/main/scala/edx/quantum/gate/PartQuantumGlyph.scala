@@ -14,9 +14,9 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.{ChatComponentText, MovingObjectPosition}
-import resonant.api.mffs.fortron.FrequencyGridRegistry
-import resonant.api.tile.IBlockFrequency
-import resonant.lib.transform.vector.VectorWorld
+import resonantengine.api.mffs.fortron.FrequencyGridRegistry
+import resonantengine.api.tile.IBlockFrequency
+import resonantengine.lib.transform.vector.VectorWorld
 
 import scala.collection.JavaConversions._
 

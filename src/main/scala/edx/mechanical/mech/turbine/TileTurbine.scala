@@ -12,10 +12,10 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.AxisAlignedBB
 import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.lib.network.discriminator.PacketType
-import resonant.lib.prefab.tile.multiblock.reference.IMultiBlockStructure
-import resonant.lib.transform.vector.Vector3
-import resonant.lib.wrapper.ByteBufWrapper._
+import resonantengine.lib.network.discriminator.PacketType
+import resonantengine.lib.prefab.tile.multiblock.reference.IMultiBlockStructure
+import resonantengine.lib.transform.vector.Vector3
+import resonantengine.lib.wrapper.ByteBufWrapper._
 
 import scala.collection.JavaConversions._
 

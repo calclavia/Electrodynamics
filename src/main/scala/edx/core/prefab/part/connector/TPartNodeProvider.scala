@@ -4,8 +4,8 @@ import java.util.{List => JList}
 
 import codechicken.multipart.TMultiPart
 import net.minecraft.nbt.NBTTagCompound
-import resonant.api.ISave
-import resonant.lib.grid.core.TNodeProvider
+import resonantengine.api.ISave
+import resonantengine.lib.grid.core.TNodeProvider
 
 import scala.collection.convert.wrapAll._
 

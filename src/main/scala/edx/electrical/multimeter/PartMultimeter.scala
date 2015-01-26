@@ -20,12 +20,12 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.{ChatComponentText, MovingObjectPosition}
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.{FluidTankInfo, IFluidHandler}
-import resonant.api.tile.{INodeProvider, IRemovable}
-import resonant.lib.mod.compat.energy.Compatibility
-import resonant.lib.network.discriminator.PacketType
-import resonant.lib.network.handle.IPacketReceiver
-import resonant.lib.transform.vector.Vector3
-import resonant.lib.utility.WrenchUtility
+import resonantengine.api.tile.{INodeProvider, IRemovable}
+import resonantengine.lib.mod.compat.energy.Compatibility
+import resonantengine.lib.network.discriminator.PacketType
+import resonantengine.lib.network.handle.IPacketReceiver
+import resonantengine.lib.transform.vector.Vector3
+import resonantengine.lib.utility.WrenchUtility
 
 import scala.collection.convert.wrapAll._
 

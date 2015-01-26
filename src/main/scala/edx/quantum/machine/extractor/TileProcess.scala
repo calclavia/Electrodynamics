@@ -3,10 +3,10 @@ package edx.quantum.machine.extractor
 import net.minecraft.block.material.Material
 import net.minecraft.item.ItemStack
 import net.minecraftforge.fluids.{FluidContainerRegistry, FluidStack, FluidTank}
-import resonant.api.recipe.{MachineRecipes, RecipeResource}
-import resonant.lib.content.prefab.TInventory
-import resonant.lib.grid.core.TBlockNodeProvider
-import resonant.lib.prefab.tile.spatial.ResonantTile
+import resonantengine.api.recipe.{MachineRecipes, RecipeResource}
+import resonantengine.lib.content.prefab.TInventory
+import resonantengine.lib.grid.core.TBlockNodeProvider
+import resonantengine.lib.prefab.tile.spatial.ResonantTile
 
 /**
  * General class for all machines that do traditional recipe processing

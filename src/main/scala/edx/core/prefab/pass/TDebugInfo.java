@@ -2,7 +2,7 @@ package edx.core.prefab.pass;
 
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
-import resonant.lib.debug.IDebugInfo;
+import resonantengine.core.debug.IDebugInfo;
 
 import java.util.ArrayList;
 import java.util.List;

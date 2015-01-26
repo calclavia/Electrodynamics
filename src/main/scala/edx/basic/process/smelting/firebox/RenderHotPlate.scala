@@ -5,7 +5,7 @@ import net.minecraft.client.renderer.RenderBlocks
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.lib.render.RenderItemOverlayUtility
+import resonantengine.lib.render.RenderItemOverlayUtility
 
 @SideOnly(Side.CLIENT) class RenderHotPlate extends TileEntitySpecialRenderer
 {

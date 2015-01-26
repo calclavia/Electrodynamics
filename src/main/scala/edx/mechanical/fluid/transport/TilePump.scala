@@ -8,9 +8,9 @@ import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.{Fluid, FluidStack, FluidTankInfo, IFluidHandler}
 import org.lwjgl.opengl.GL11
-import resonant.api.tile.IRotatable
-import resonant.lib.render.RenderUtility
-import resonant.lib.transform.vector.Vector3
+import resonantengine.api.tile.IRotatable
+import resonantengine.lib.render.RenderUtility
+import resonantengine.lib.transform.vector.Vector3
 
 import scala.collection.mutable
 

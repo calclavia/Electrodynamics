@@ -1,6 +1,6 @@
 package edx.quantum.laser.focus;
 
-import resonant.lib.transform.vector.Vector3;
+import resonantengine.lib.transform.vector.Vector3;
 
 import java.util.List;
 

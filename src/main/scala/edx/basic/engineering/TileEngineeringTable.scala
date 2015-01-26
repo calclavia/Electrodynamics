@@ -24,22 +24,22 @@ import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.oredict.OreDictionary
 import org.apache.commons.lang3.ArrayUtils
 import org.lwjgl.opengl.GL11
-import resonant.api.gui.ISlotPickResult
-import resonant.api.recipe.{MachineRecipes, RecipeResource, RecipeType}
-import resonant.api.tile.IRotatable
-import resonant.core.ResonantEngine
-import resonant.lib.collection.Pair
-import resonant.lib.network.discriminator.{PacketTile, PacketType}
-import resonant.lib.network.handle.IPacketReceiver
-import resonant.lib.prefab.gui.ContainerDummy
-import resonant.lib.prefab.tile.item.ItemBlockSaved
-import resonant.lib.prefab.tile.mixed.TileInventory
-import resonant.lib.render.RenderItemOverlayUtility
-import resonant.lib.transform.region.Cuboid
-import resonant.lib.transform.vector.{Vector2, Vector3}
-import resonant.lib.utility.LanguageUtility
-import resonant.lib.utility.inventory.AutoCraftingManager.IAutoCrafter
-import resonant.lib.utility.inventory.{AutoCraftingManager, InventoryUtility}
+import resonantengine.api.gui.ISlotPickResult
+import resonantengine.api.recipe.{MachineRecipes, RecipeResource, RecipeType}
+import resonantengine.api.tile.IRotatable
+import resonantengine.core.ResonantEngine
+import resonantengine.lib.collection.Pair
+import resonantengine.lib.network.discriminator.{PacketTile, PacketType}
+import resonantengine.lib.network.handle.IPacketReceiver
+import resonantengine.lib.prefab.gui.ContainerDummy
+import resonantengine.lib.prefab.tile.item.ItemBlockSaved
+import resonantengine.lib.prefab.tile.mixed.TileInventory
+import resonantengine.lib.render.RenderItemOverlayUtility
+import resonantengine.lib.transform.region.Cuboid
+import resonantengine.lib.transform.vector.{Vector2, Vector3}
+import resonantengine.lib.utility.LanguageUtility
+import resonantengine.lib.utility.inventory.AutoCraftingManager.IAutoCrafter
+import resonantengine.lib.utility.inventory.{AutoCraftingManager, InventoryUtility}
 
 import scala.collection.JavaConversions._
 

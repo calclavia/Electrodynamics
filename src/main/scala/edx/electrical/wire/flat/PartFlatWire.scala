@@ -20,8 +20,8 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.{IIcon, MovingObjectPosition}
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
-import resonant.api.tile.INodeProvider
-import resonant.lib.grid.energy.electric.{NodeElectricComponent, NodeElectricJunction}
+import resonantengine.api.tile.INodeProvider
+import resonantengine.lib.grid.energy.electric.{NodeElectricComponent, NodeElectricJunction}
 
 import scala.collection.convert.wrapAll._
 

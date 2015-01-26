@@ -7,10 +7,10 @@ import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.init.Blocks
 import net.minecraft.util.IIcon
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.lib.content.prefab.TIO
-import resonant.lib.grid.core.TBlockNodeProvider
-import resonant.lib.grid.energy.electric.NodeElectricComponent
-import resonant.lib.prefab.tile.spatial.{ResonantBlock, ResonantTile}
+import resonantengine.lib.content.prefab.TIO
+import resonantengine.lib.grid.core.TBlockNodeProvider
+import resonantengine.lib.grid.energy.electric.NodeElectricComponent
+import resonantengine.lib.prefab.tile.spatial.{ResonantBlock, ResonantTile}
 
 import scala.collection.convert.wrapAll._
 

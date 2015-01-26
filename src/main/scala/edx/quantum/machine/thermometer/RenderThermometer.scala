@@ -4,7 +4,7 @@ import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer
 import net.minecraft.tileentity.TileEntity
 import org.lwjgl.opengl.GL11
-import resonant.lib.render.RenderUtility
+import resonantengine.lib.render.RenderUtility
 
 @SideOnly(Side.CLIENT) class RenderThermometer extends TileEntitySpecialRenderer
 {

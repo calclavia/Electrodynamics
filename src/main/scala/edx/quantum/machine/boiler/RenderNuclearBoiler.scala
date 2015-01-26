@@ -7,8 +7,8 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.model.{AdvancedModelLoader, IModelCustom}
 import org.lwjgl.opengl.GL11
-import resonant.lib.render.RenderUtility
-import resonant.lib.render.model.FixedTechneModel
+import resonantengine.lib.render.RenderUtility
+import resonantengine.lib.render.model.FixedTechneModel
 
 @SideOnly(Side.CLIENT) object RenderNuclearBoiler
 {

@@ -9,10 +9,10 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
 import net.minecraftforge.fluids.{FluidContainerRegistry, FluidStack, IFluidContainerItem}
-import resonant.lib.utility.LanguageUtility
-import resonant.lib.utility.science.UnitDisplay
-import resonant.lib.utility.science.UnitDisplay.Unit
-import resonant.lib.wrapper.CollectionWrapper._
+import resonantengine.lib.utility.LanguageUtility
+import resonantengine.lib.utility.science.UnitDisplay
+import resonantengine.lib.utility.science.UnitDisplay.Unit
+import resonantengine.lib.wrapper.CollectionWrapper._
 
 /**
  * @author Darkguardsman

@@ -4,7 +4,7 @@ import edx.quantum.QuantumContent
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.{IInventory, Slot, SlotFurnace}
 import net.minecraft.item.ItemStack
-import resonant.lib.prefab.gui.ContainerBase
+import resonantengine.lib.prefab.gui.ContainerBase
 
 /**
  * Accelerator container

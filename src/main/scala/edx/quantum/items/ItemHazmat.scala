@@ -5,7 +5,7 @@ import net.minecraft.entity.{Entity, EntityLivingBase}
 import net.minecraft.item.{Item, ItemArmor, ItemStack}
 import net.minecraft.util.DamageSource
 import net.minecraftforge.common.util.EnumHelper
-import resonant.api.armor.IAntiPoisonArmor
+import resonantengine.api.armor.IAntiPoisonArmor
 
 /**
  * Hazmat

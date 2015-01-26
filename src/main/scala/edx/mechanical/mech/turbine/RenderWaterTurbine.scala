@@ -9,8 +9,8 @@ import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.IItemRenderer
 import net.minecraftforge.client.model.{AdvancedModelLoader, IModelCustom}
 import org.lwjgl.opengl.GL11
-import resonant.api.items.ISimpleItemRenderer
-import resonant.lib.render.RenderUtility
+import resonantengine.api.items.ISimpleItemRenderer
+import resonantengine.lib.render.RenderUtility
 
 @SideOnly(Side.CLIENT) object RenderWaterTurbine
 {

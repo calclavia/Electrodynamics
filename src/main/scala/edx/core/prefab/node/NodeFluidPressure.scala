@@ -2,10 +2,10 @@ package edx.core.prefab.node
 
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.{FluidContainerRegistry, IFluidHandler}
-import resonant.api.IUpdate
-import resonant.api.tile.INodeProvider
-import resonant.lib.grid.core.UpdateTicker
-import resonant.lib.prefab.fluid.NodeFluid
+import resonantengine.api.IUpdate
+import resonantengine.api.tile.INodeProvider
+import resonantengine.lib.grid.core.UpdateTicker
+import resonantengine.lib.prefab.fluid.NodeFluid
 
 import scala.collection.convert.wrapAll._
 

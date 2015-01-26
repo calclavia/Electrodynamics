@@ -6,10 +6,10 @@ package edx.electrical.multimeter
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.client.gui.{GuiButton, GuiTextField}
 import net.minecraft.entity.player.InventoryPlayer
-import resonant.lib.prefab.gui.GuiContainerBase
-import resonant.lib.render.EnumColor
-import resonant.lib.utility.LanguageUtility
-import resonant.lib.wrapper.CollectionWrapper._
+import resonantengine.lib.prefab.gui.GuiContainerBase
+import resonantengine.lib.render.EnumColor
+import resonantengine.lib.utility.LanguageUtility
+import resonantengine.lib.wrapper.CollectionWrapper._
 
 /**
  * Multimeter GUI

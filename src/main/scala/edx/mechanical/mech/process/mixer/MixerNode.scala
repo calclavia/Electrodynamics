@@ -2,7 +2,7 @@ package edx.mechanical.mech.process.mixer
 
 import edx.mechanical.mech.grid.NodeMechanical
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.api.tile.INodeProvider
+import resonantengine.api.tile.INodeProvider
 
 /**
  * Node designed just for the Mixer to use

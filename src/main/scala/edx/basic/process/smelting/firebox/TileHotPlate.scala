@@ -11,14 +11,14 @@ import net.minecraft.item.crafting.FurnaceRecipes
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.IIcon
 import net.minecraft.world.IBlockAccess
-import resonant.lib.content.prefab.TInventory
-import resonant.lib.network.discriminator.PacketType
-import resonant.lib.network.handle.{TPacketReceiver, TPacketSender}
-import resonant.lib.prefab.tile.spatial.{ResonantBlock, ResonantTile}
-import resonant.lib.transform.region.Cuboid
-import resonant.lib.transform.vector.{Vector2, Vector3}
-import resonant.lib.wrapper.ByteBufWrapper._
-import resonant.lib.wrapper.RandomWrapper._
+import resonantengine.lib.content.prefab.TInventory
+import resonantengine.lib.network.discriminator.PacketType
+import resonantengine.lib.network.handle.{TPacketReceiver, TPacketSender}
+import resonantengine.lib.prefab.tile.spatial.{ResonantBlock, ResonantTile}
+import resonantengine.lib.transform.region.Cuboid
+import resonantengine.lib.transform.vector.{Vector2, Vector3}
+import resonantengine.lib.wrapper.ByteBufWrapper._
+import resonantengine.lib.wrapper.RandomWrapper._
 
 /**
  * For smelting items.
