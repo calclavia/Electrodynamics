@@ -16,9 +16,9 @@ import edx.mechanical.mech.turbine.{TileWaterTurbine, TileWindTurbine}
 import net.minecraft.block.Block
 import net.minecraft.init.{Blocks, Items}
 import net.minecraft.item.{Item, ItemStack}
-import resonantengine.api.tile.node.NodeRegistry
+import resonantengine.api.graph.node.NodeRegistry
+import resonantengine.lib.schematic.{SchematicPlate, SchematicRegistry}
 import resonantengine.lib.utility.recipe.UniversalRecipe
-import resonantengine.lib.world.schematic.{SchematicPlate, SchematicRegistry}
 import resonantengine.prefab.modcontent.ContentHolder
 
 /**
