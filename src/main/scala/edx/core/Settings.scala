@@ -7,7 +7,7 @@ import net.minecraftforge.common.config.Configuration
 import resonantengine.api.edx.recipe.QuantumAssemblerRecipes
 import resonantengine.lib.mod.config.Config
 import resonantengine.lib.mod.config.ConfigEvent.PostConfigEvent
-import resonantengine.lib.prefab.poison.PotionRadiation
+import resonantengine.lib.poison.PotionRadiation
 
 import scala.collection.convert.wrapAll._
 

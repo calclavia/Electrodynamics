@@ -16,10 +16,10 @@ import net.minecraftforge.fluids.IFluidBlock
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL11._
 import resonantengine.api.edx.recipe.{MachineRecipes, RecipeType}
-import resonantengine.lib.prefab.Timer
 import resonantengine.lib.render.RenderUtility
 import resonantengine.lib.transform.rotation.Quaternion
 import resonantengine.lib.transform.vector.Vector3
+import resonantengine.prefab.misc.Timer
 
 import scala.collection.JavaConversions._
 

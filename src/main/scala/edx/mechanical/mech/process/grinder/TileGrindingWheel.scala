@@ -7,17 +7,16 @@ import net.minecraft.block.material.Material
 import net.minecraft.entity.Entity
 import net.minecraft.entity.item.EntityItem
 import net.minecraft.item.{ItemBlock, ItemStack}
-import net.minecraft.util.ResourceLocation
+import net.minecraft.util.{DamageSource, ResourceLocation}
 import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11._
 import resonantengine.api.edx.recipe.{MachineRecipes, RecipeType}
-import resonantengine.lib.prefab.Timer
-import resonantengine.lib.prefab.damage.CustomDamageSource
 import resonantengine.lib.render.RenderUtility
 import resonantengine.lib.transform.region.Cuboid
 import resonantengine.lib.transform.rotation.AngleAxis
 import resonantengine.lib.transform.vector.Vector3
+import resonantengine.prefab.misc.Timer
 
 /**
  * The grinding wheel. This block will face the direction in which it can rotate.
@@ -162,7 +161,7 @@ class TileGrindingWheel extends TileMechanical(Material.rock)
       }
       else
       {
-        entity.attackEntityFrom(new CustomDamageSource("grinder", this), 2)
+        entity.attackEntityFrom(new DamageSource("grinder"), 2)
       }
     }
 

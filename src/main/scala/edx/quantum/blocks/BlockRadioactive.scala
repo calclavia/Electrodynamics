@@ -12,7 +12,7 @@ import net.minecraft.entity.{Entity, EntityLiving, EntityLivingBase}
 import net.minecraft.init.Blocks
 import net.minecraft.util.{AxisAlignedBB, IIcon}
 import net.minecraft.world.World
-import resonantengine.lib.prefab.poison.PoisonRadiation
+import resonantengine.lib.poison.PoisonRadiation
 import resonantengine.lib.transform.vector.Vector3
 
 import scala.collection.JavaConversions._
