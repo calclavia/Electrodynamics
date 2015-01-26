@@ -11,8 +11,8 @@ import net.minecraftforge.fluids._
 import resonantengine.lib.content.prefab.TIO
 import resonantengine.lib.grid.energy.EnergyStorage
 import resonantengine.lib.mod.compat.energy.Compatibility
-import resonantengine.lib.prefab.tile.traits.{TEnergyProvider, TRotatable}
 import resonantengine.lib.transform.vector.Vector3
+import resonantengine.prefab.block.traits.{TEnergyProvider, TRotatable}
 
 /**
  * Chemical extractor TileEntity

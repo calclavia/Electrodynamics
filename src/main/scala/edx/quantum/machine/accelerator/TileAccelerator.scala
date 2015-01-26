@@ -13,14 +13,14 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.IIcon
 import net.minecraftforge.common.util.ForgeDirection
 import resonantengine.api.tile.{IElectromagnet, IRotatable}
+import resonantengine.core.network.discriminator.{PacketTile, PacketType}
 import resonantengine.lib.content.prefab.TInventory
 import resonantengine.lib.grid.energy.EnergyStorage
-import resonantengine.lib.network.discriminator.{PacketTile, PacketType}
-import resonantengine.prefab.network.{TPacketReceiver, TPacketSender}
-import resonantengine.lib.prefab.tile.spatial.ResonantTile
-import resonantengine.lib.prefab.tile.traits.TEnergyProvider
+import resonantengine.lib.modcontent.block.ResonantTile
 import resonantengine.lib.transform.vector.Vector3
 import resonantengine.lib.utility.BlockUtility
+import resonantengine.prefab.block.traits.TEnergyProvider
+import resonantengine.prefab.network.{TPacketReceiver, TPacketSender}
 
 import scala.collection.JavaConversions._
 

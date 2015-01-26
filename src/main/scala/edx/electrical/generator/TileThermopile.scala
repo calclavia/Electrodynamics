@@ -10,7 +10,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import resonantengine.lib.content.prefab.TIO
 import resonantengine.lib.grid.core.TBlockNodeProvider
 import resonantengine.lib.grid.energy.electric.NodeElectricComponent
-import resonantengine.lib.prefab.tile.spatial.{ResonantBlock, ResonantTile}
+import resonantengine.lib.modcontent.block.{ResonantBlock, ResonantTile}
 
 import scala.collection.convert.wrapAll._
 

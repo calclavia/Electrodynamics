@@ -15,13 +15,13 @@ import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.{Fluid, FluidStack, FluidTank, FluidTankInfo}
 import org.lwjgl.opengl.GL11
 import resonantengine.api.tile.IBoilHandler
-import resonantengine.lib.prefab.tile.item.ItemBlockMetadata
 import resonantengine.lib.render.RenderUtility
 import resonantengine.lib.transform.vector.Vector3
 import resonantengine.lib.utility.MathUtility
 import resonantengine.lib.utility.inventory.InventoryUtility
 import resonantengine.lib.wrapper.CollectionWrapper._
 import resonantengine.lib.wrapper.NBTWrapper._
+import resonantengine.prefab.block.itemblock.ItemBlockMetadata
 
 /**
  * The vertical wind turbine collects airflow.

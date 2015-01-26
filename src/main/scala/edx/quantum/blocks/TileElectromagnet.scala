@@ -12,12 +12,12 @@ import net.minecraft.world.IBlockAccess
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11._
 import resonantengine.api.tile.IElectromagnet
-import resonantengine.lib.prefab.tile.item.ItemBlockMetadata
-import resonantengine.lib.prefab.tile.spatial.ResonantBlock
+import resonantengine.lib.modcontent.block.ResonantBlock
 import resonantengine.lib.render.{RenderBlockUtility, RenderUtility}
 import resonantengine.lib.transform.vector.Vector3
 import resonantengine.lib.utility.WorldUtility
 import resonantengine.lib.wrapper.CollectionWrapper._
+import resonantengine.prefab.block.itemblock.ItemBlockMetadata
 
 /**
  * Electromagnet block

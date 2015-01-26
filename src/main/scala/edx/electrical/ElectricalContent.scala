@@ -25,7 +25,7 @@ import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.event.TextureStitchEvent
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.oredict.{OreDictionary, ShapelessOreRecipe}
-import resonantengine.api.modcontent.ExplicitContentName
+import resonantengine.lib.modcontent.ExplicitContentName
 import resonantengine.lib.utility.recipe.UniversalRecipe
 import resonantengine.prefab.modcontent.ContentHolder
 

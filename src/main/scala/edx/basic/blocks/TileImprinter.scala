@@ -21,8 +21,8 @@ import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
 import resonantengine.api.network.IPacketReceiver
 import resonantengine.core.ResonantEngine
-import resonantengine.lib.network.discriminator.{PacketTile, PacketType}
-import resonantengine.lib.prefab.tile.spatial.{ResonantBlock, ResonantTile}
+import resonantengine.core.network.discriminator.{PacketTile, PacketType}
+import resonantengine.lib.modcontent.block.{ResonantBlock, ResonantTile}
 import resonantengine.lib.render.RenderItemOverlayUtility
 import resonantengine.lib.transform.vector.{Vector2, Vector3}
 import resonantengine.lib.utility.inventory.InventoryUtility
@@ -59,16 +59,6 @@ class TileImprinter extends ResonantTile(Material.circuits) with ISidedInventory
       }
     }
     nbt.setTag("Items", var2)
-  }
-
-  def getSizeInventory: Int =
-  {
-    return this.inventory.length
-  }
-
-  def getStackInSlot(slot: Int): ItemStack =
-  {
-    return this.inventory(slot)
   }
 
   def read(data: ByteBuf, player: EntityPlayer, `type`: PacketType)
@@ -170,19 +160,12 @@ class TileImprinter extends ResonantTile(Material.circuits) with ISidedInventory
     }
   }
 
-  /**
-   * Sets the given item stack to the specified slot in the inventory (can be crafting or armor
-   * sections).
-   */
-  def setInventorySlotContents(slot: Int, itemStack: ItemStack)
+  def openInventory
   {
-    if (slot < this.getSizeInventory)
-    {
-      inventory(slot) = itemStack
-    }
+    this.onInventoryChanged
   }
 
-  def openInventory
+  def closeInventory
   {
     this.onInventoryChanged
   }
@@ -245,11 +228,6 @@ class TileImprinter extends ResonantTile(Material.circuits) with ISidedInventory
     }
   }
 
-  def closeInventory
-  {
-    this.onInventoryChanged
-  }
-
   def getInventoryStackLimit: Int =
   {
     return 64
@@ -270,14 +248,14 @@ class TileImprinter extends ResonantTile(Material.circuits) with ISidedInventory
     return this.isItemValidForSlot(slot, itemstack)
   }
 
-  def isItemValidForSlot(i: Int, itemstack: ItemStack): Boolean =
-  {
-    return true
-  }
-
   def canExtractItem(slot: Int, itemstack: ItemStack, side: Int): Boolean =
   {
     return this.isItemValidForSlot(slot, itemstack)
+  }
+
+  def isItemValidForSlot(i: Int, itemstack: ItemStack): Boolean =
+  {
+    return true
   }
 
   override def renderDynamic(position: Vector3, frame: Float, pass: Int)
@@ -394,6 +372,28 @@ class TileImprinter extends ResonantTile(Material.circuits) with ISidedInventory
       }
     }
     return false
+  }
+
+  def getStackInSlot(slot: Int): ItemStack =
+  {
+    return this.inventory(slot)
+  }
+
+  /**
+   * Sets the given item stack to the specified slot in the inventory (can be crafting or armor
+   * sections).
+   */
+  def setInventorySlotContents(slot: Int, itemStack: ItemStack)
+  {
+    if (slot < this.getSizeInventory)
+    {
+      inventory(slot) = itemStack
+    }
+  }
+
+  def getSizeInventory: Int =
+  {
+    return this.inventory.length
   }
 
   override def onNeighborChanged(block: Block)

@@ -1,7 +1,7 @@
 package edx.quantum.reactor
 
 import net.minecraft.block.material.Material
-import resonantengine.lib.prefab.tile.spatial.ResonantBlock
+import resonantengine.lib.modcontent.block.ResonantBlock
 import resonantengine.lib.transform.region.Cuboid
 
 /**

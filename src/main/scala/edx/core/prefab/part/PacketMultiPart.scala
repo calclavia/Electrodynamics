@@ -4,9 +4,9 @@ import codechicken.multipart.{TMultiPart, TileMultipart}
 import io.netty.buffer.ByteBuf
 import io.netty.channel.ChannelHandlerContext
 import net.minecraft.entity.player.EntityPlayer
-import resonantengine.lib.network.discriminator.PacketType
-import resonantengine.prefab.network.TPacketReceiver
+import resonantengine.core.network.discriminator.PacketType
 import resonantengine.lib.transform.vector.Vector3
+import resonantengine.prefab.network.TPacketReceiver
 
 /**
  * Packet handler for blocks and tile entities.
@@ -57,11 +57,6 @@ class PacketMultiPart extends PacketType
     handle(player)
   }
 
-  override def handleServerSide(player: EntityPlayer)
-  {
-    handle(player)
-  }
-
   def handle(player: EntityPlayer)
   {
     val tile = player.getEntityWorld.getTileEntity(this.x, this.y, this.z)
@@ -79,5 +74,10 @@ class PacketMultiPart extends PacketType
     {
       throw new UnsupportedOperationException("Packet was sent to a multipart not implementing IPacketReceiver, this is a coding error [" + tile + "] in " + new Vector3(x, y, z))
     }
+  }
+
+  override def handleServerSide(player: EntityPlayer)
+  {
+    handle(player)
   }
 }

@@ -13,10 +13,10 @@ import org.lwjgl.opengl.GL11
 import resonantengine.lib.content.prefab.TIO
 import resonantengine.lib.grid.core.TBlockNodeProvider
 import resonantengine.lib.grid.energy.electric.NodeElectricComponent
-import resonantengine.lib.prefab.tile.spatial.ResonantTile
-import resonantengine.lib.prefab.tile.traits.TRotatable
+import resonantengine.lib.modcontent.block.ResonantTile
 import resonantengine.lib.render.RenderUtility
 import resonantengine.lib.transform.vector.Vector3
+import resonantengine.prefab.block.traits.TRotatable
 
 /**
  * A kinetic energy to electrical energy converter.

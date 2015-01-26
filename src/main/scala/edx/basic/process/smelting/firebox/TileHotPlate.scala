@@ -11,14 +11,14 @@ import net.minecraft.item.crafting.FurnaceRecipes
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.IIcon
 import net.minecraft.world.IBlockAccess
+import resonantengine.core.network.discriminator.PacketType
 import resonantengine.lib.content.prefab.TInventory
-import resonantengine.lib.network.discriminator.PacketType
-import resonantengine.prefab.network.{TPacketReceiver, TPacketSender}
-import resonantengine.lib.prefab.tile.spatial.{ResonantBlock, ResonantTile}
+import resonantengine.lib.modcontent.block.{ResonantBlock, ResonantTile}
 import resonantengine.lib.transform.region.Cuboid
 import resonantengine.lib.transform.vector.{Vector2, Vector3}
 import resonantengine.lib.wrapper.ByteBufWrapper._
 import resonantengine.lib.wrapper.RandomWrapper._
+import resonantengine.prefab.network.{TPacketReceiver, TPacketSender}
 
 /**
  * For smelting items.
@@ -85,22 +85,6 @@ class TileHotPlate extends ResonantTile(Material.iron) with TInventory with TPac
     }
   }
 
-  def canSmelt(stack: ItemStack): Boolean = stack != null && FurnaceRecipes.smelting.getSmeltingResult(stack) != null
-
-  def canRun: Boolean =
-  {
-    val tileEntity = worldObj.getTileEntity(xCoord, yCoord - 1, zCoord)
-
-    if (tileEntity.isInstanceOf[TileFirebox])
-    {
-      if ((tileEntity.asInstanceOf[TileFirebox]).isBurning)
-      {
-        return true
-      }
-    }
-    return false
-  }
-
   override def randomDisplayTick()
   {
     val height = 0.2
@@ -133,12 +117,12 @@ class TileHotPlate extends ResonantTile(Material.iron) with TInventory with TPac
     return smeltTime(i)
   }
 
-  override def getSizeInventory: Int = 4
-
   override def isItemValidForSlot(i: Int, itemStack: ItemStack): Boolean =
   {
     return i < getSizeInventory && canSmelt(itemStack)
   }
+
+  def canSmelt(stack: ItemStack): Boolean = stack != null && FurnaceRecipes.smelting.getSmeltingResult(stack) != null
 
   override def write(buf: ByteBuf, id: Int)
   {
@@ -173,6 +157,8 @@ class TileHotPlate extends ResonantTile(Material.iron) with TInventory with TPac
 
   }
 
+  override def getSizeInventory: Int = 4
+
   @SideOnly(Side.CLIENT)
   override def registerIcons(iconReg: IIconRegister)
   {
@@ -187,6 +173,20 @@ class TileHotPlate extends ResonantTile(Material.iron) with TInventory with TPac
   override def getIcon(access: IBlockAccess, side: Int): IIcon =
   {
     return if (access.getBlockMetadata(xi, yi, zi) == 1) ResonantBlock.icon.get("electricHotPlate") else (if (canRun) ResonantBlock.icon.get("hotPlate_on") else ResonantBlock.icon.get(getTextureName))
+  }
+
+  def canRun: Boolean =
+  {
+    val tileEntity = worldObj.getTileEntity(xCoord, yCoord - 1, zCoord)
+
+    if (tileEntity.isInstanceOf[TileFirebox])
+    {
+      if ((tileEntity.asInstanceOf[TileFirebox]).isBurning)
+      {
+        return true
+      }
+    }
+    return false
   }
 
   @SideOnly(Side.CLIENT)

@@ -13,15 +13,15 @@ import net.minecraft.util.{ChatComponentText, IIcon}
 import net.minecraft.world.IBlockAccess
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
+import resonantengine.core.network.discriminator.PacketTile
 import resonantengine.lib.content.prefab.TInventory
-import resonantengine.lib.network.discriminator.PacketTile
-import resonantengine.prefab.network.TPacketSender
-import resonantengine.lib.prefab.tile.spatial.ResonantTile
-import resonantengine.lib.prefab.tile.traits.TRotatable
+import resonantengine.lib.modcontent.block.ResonantTile
 import resonantengine.lib.render.RenderItemOverlayUtility
 import resonantengine.lib.transform.vector.Vector3
 import resonantengine.lib.utility.LanguageUtility
 import resonantengine.lib.utility.inventory.{InternalInventoryHandler, InventoryUtility}
+import resonantengine.prefab.block.traits.TRotatable
+import resonantengine.prefab.network.TPacketSender
 
 /**
  * @author tgame14

@@ -5,12 +5,12 @@ import net.minecraft.block.material.Material
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
+import resonantengine.core.network.discriminator.PacketType
 import resonantengine.lib.grid.core.TBlockNodeProvider
-import resonantengine.lib.network.discriminator.PacketType
-import resonantengine.prefab.network.{TPacketReceiver, TPacketSender}
+import resonantengine.lib.modcontent.block.ResonantTile
 import resonantengine.lib.prefab.fluid.NodeFluid
-import resonantengine.lib.prefab.tile.spatial.ResonantTile
 import resonantengine.lib.wrapper.ByteBufWrapper._
+import resonantengine.prefab.network.{TPacketReceiver, TPacketSender}
 
 /**
  * A prefab class for tiles that use the fluid network.
@@ -33,20 +33,6 @@ abstract class TileFluidProvider(material: Material) extends ResonantTile(materi
     }
   }
 
-  def fluidNode = _fluidNode
-
-  def fluidNode_=(newNode: NodeFluid)
-  {
-    _fluidNode = newNode
-    fluidNode.onConnectionChanged = () =>
-    {
-      clientRenderMask = fluidNode.connectedMask
-      sendPacket(0)
-    }
-    fluidNode.onFluidChanged = () => if (!world.isRemote) sendPacket(1)
-    nodes.add(fluidNode)
-  }
-
   override def write(buf: ByteBuf, id: Int)
   {
     super.write(buf, id)
@@ -64,6 +50,20 @@ abstract class TileFluidProvider(material: Material) extends ResonantTile(materi
         buf <<< fluidNode.getPrimaryTank
       }
     }
+  }
+
+  def fluidNode = _fluidNode
+
+  def fluidNode_=(newNode: NodeFluid)
+  {
+    _fluidNode = newNode
+    fluidNode.onConnectionChanged = () =>
+    {
+      clientRenderMask = fluidNode.connectedMask
+      sendPacket(0)
+    }
+    fluidNode.onFluidChanged = () => if (!world.isRemote) sendPacket(1)
+    nodes.add(fluidNode)
   }
 
   override def read(buf: ByteBuf, id: Int, packet: PacketType)

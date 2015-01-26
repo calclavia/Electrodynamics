@@ -23,8 +23,8 @@ import net.minecraftforge.fluids.{FluidTankInfo, IFluidHandler}
 import resonantengine.api.graph.INodeProvider
 import resonantengine.api.network.IPacketReceiver
 import resonantengine.api.tile.IRemovable
+import resonantengine.core.network.discriminator.PacketType
 import resonantengine.lib.mod.compat.energy.Compatibility
-import resonantengine.lib.network.discriminator.PacketType
 import resonantengine.lib.transform.vector.Vector3
 import resonantengine.lib.utility.WrenchUtility
 
@@ -52,6 +52,21 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
   {
     if (!world.isRemote)
       getGrid.remove(this)
+  }
+
+  def getGrid: GridMultimeter =
+  {
+    if (grid == null)
+    {
+      grid = new GridMultimeter
+      grid.add(this)
+    }
+    return grid
+  }
+
+  def setGrid(network: GridMultimeter)
+  {
+    grid = network
   }
 
   def updateDesc()
@@ -237,35 +252,20 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
     updateServer
   }
 
+  def updateServer
+  {
+  }
+
   def toggleMode
   {
     detectMode = DetectModes((detectMode.id + 1) % DetectModes.values.size).asInstanceOf[DetectModes.DetectMode]
     updateServer
   }
 
-  def updateServer
-  {
-  }
-
   def toggleDetectionValue
   {
     detectType = ((detectType + 1) % getGrid.graphs.size).asInstanceOf[Byte]
     updateServer
-  }
-
-  def getGrid: GridMultimeter =
-  {
-    if (grid == null)
-    {
-      grid = new GridMultimeter
-      grid.add(this)
-    }
-    return grid
-  }
-
-  def setGrid(network: GridMultimeter)
-  {
-    grid = network
   }
 
   override def load(nbt: NBTTagCompound)

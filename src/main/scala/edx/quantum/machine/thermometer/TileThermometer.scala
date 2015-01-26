@@ -16,10 +16,10 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.IIcon
 import net.minecraft.world.IBlockAccess
 import resonantengine.lib.grid.thermal.GridThermal
-import resonantengine.lib.prefab.tile.item.ItemBlockSaved
-import resonantengine.lib.prefab.tile.spatial.ResonantTile
+import resonantengine.lib.modcontent.block.ResonantTile
 import resonantengine.lib.transform.vector.{Vector3, VectorWorld}
 import resonantengine.lib.utility.inventory.InventoryUtility
+import resonantengine.prefab.block.itemblock.ItemBlockSaved
 
 /**
  * Thermometer TileEntity
@@ -81,11 +81,6 @@ class TileThermometer extends ResonantTile(Material.piston) with SimpleComponent
     markUpdate
   }
 
-  def getThreshold: Int =
-  {
-    return threshold
-  }
-
   override def configure(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
   {
     if (player.isSneaking)
@@ -141,11 +136,6 @@ class TileThermometer extends ResonantTile(Material.piston) with SimpleComponent
     }
   }
 
-  def isOverThreshold: Boolean =
-  {
-    return detectedTemperature >= getThreshold
-  }
-
   def setTrack(track: Vector3)
   {
     trackCoordinate = track
@@ -195,11 +185,21 @@ class TileThermometer extends ResonantTile(Material.piston) with SimpleComponent
     return Array[Any](this.getThreshold)
   }
 
+  def getThreshold: Int =
+  {
+    return threshold
+  }
+
   @Callback
   @Optional.Method(modid = "OpenComputers")
   def isAboveWarningTemperature(context: Context, args: Arguments): Array[Any] =
   {
     return Array[Any](this.isOverThreshold)
+  }
+
+  def isOverThreshold: Boolean =
+  {
+    return detectedTemperature >= getThreshold
   }
 
   @Callback

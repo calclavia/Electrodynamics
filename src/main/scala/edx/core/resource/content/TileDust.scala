@@ -3,7 +3,7 @@ package edx.core.resource.content
 import edx.core.Reference
 import net.minecraft.block.material.Material
 import net.minecraft.nbt.NBTTagCompound
-import resonantengine.lib.prefab.tile.spatial.ResonantTile
+import resonantengine.lib.modcontent.block.ResonantTile
 import resonantengine.lib.transform.region.Cuboid
 
 /**

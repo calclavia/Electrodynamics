@@ -15,9 +15,9 @@ import net.minecraft.world.IBlockAccess
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.{Fluid, FluidContainerRegistry, FluidRegistry, FluidStack}
 import resonantengine.lib.mod.config.Config
-import resonantengine.lib.prefab.tile.traits.TRotatable
 import resonantengine.lib.transform.vector.Vector3
 import resonantengine.lib.utility.FluidUtility
+import resonantengine.prefab.block.traits.TRotatable
 
 object TileGrate
 {

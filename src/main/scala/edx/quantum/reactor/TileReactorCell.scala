@@ -21,14 +21,14 @@ import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
 import resonantengine.api.edx.machine.{IReactor, IReactorComponent}
 import resonantengine.lib.grid.thermal.{GridThermal, ThermalPhysics}
-import resonantengine.prefab.network.{TPacketReceiver, TPacketSender}
 import resonantengine.lib.prefab.poison.PoisonRadiation
-import resonantengine.lib.prefab.tile.mixed.TileInventory
-import resonantengine.lib.prefab.tile.multiblock.reference.{IMultiBlockStructure, MultiBlockHandler}
 import resonantengine.lib.render.RenderUtility
 import resonantengine.lib.render.model.ModelCube
 import resonantengine.lib.transform.vector.Vector3
 import resonantengine.lib.utility.inventory.InventoryUtility
+import resonantengine.prefab.block.mixed.TileInventory
+import resonantengine.prefab.block.multiblock.reference.{IMultiBlockStructure, MultiBlockHandler}
+import resonantengine.prefab.network.{TPacketReceiver, TPacketSender}
 
 import scala.collection.convert.wrapAll._
 
@@ -114,8 +114,6 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
     }
     return lowest
   }
-
-  override def getMultiBlock: MultiBlockHandler[TileReactorCell] = multiBlock
 
   override def onNeighborChanged(block: Block)
   {
@@ -244,6 +242,8 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
       }
     }
   }
+
+  override def getMultiBlock: MultiBlockHandler[TileReactorCell] = multiBlock
 
   override def getWorld: World =
   {

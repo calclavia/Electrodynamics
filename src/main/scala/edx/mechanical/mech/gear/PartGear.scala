@@ -16,8 +16,8 @@ import net.minecraft.util.MovingObjectPosition
 import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
 import resonantengine.api.graph.node.INode
-import resonantengine.lib.prefab.tile.multiblock.reference.IMultiBlockStructure
 import resonantengine.lib.utility.WrenchUtility
+import resonantengine.prefab.block.multiblock.reference.IMultiBlockStructure
 
 /**
  * We assume all the force acting on the gear is 90 degrees.
@@ -96,6 +96,8 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
     return (primaryPos.xi == x && placementSide.offsetX == 0) || (primaryPos.yi == y && placementSide.offsetY == 0) || (primaryPos.zi == z && placementSide.offsetZ == 0)
   }
 
+  override def getMultiBlock: GearMultiBlockHandler = multiBlock
+
   @SideOnly(Side.CLIENT)
   override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
   {
@@ -114,8 +116,6 @@ class PartGear extends PartMechanical with IMultiBlockStructure[PartGear]
     super.save(nbt)
     getMultiBlock.save(nbt)
   }
-
-  override def getMultiBlock: GearMultiBlockHandler = multiBlock
 
   override def getMultiBlockVectors: java.util.List[resonantengine.lib.transform.vector.Vector3] = new resonantengine.lib.transform.vector.Vector3().getAround(this.world, placementSide, 1)
 

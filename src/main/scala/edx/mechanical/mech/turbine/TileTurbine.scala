@@ -12,10 +12,10 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.AxisAlignedBB
 import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
-import resonantengine.lib.network.discriminator.PacketType
-import resonantengine.lib.prefab.tile.multiblock.reference.IMultiBlockStructure
+import resonantengine.core.network.discriminator.PacketType
 import resonantengine.lib.transform.vector.Vector3
 import resonantengine.lib.wrapper.ByteBufWrapper._
+import resonantengine.prefab.block.multiblock.reference.IMultiBlockStructure
 
 import scala.collection.JavaConversions._
 
@@ -113,6 +113,11 @@ class TileTurbine extends TileMechanical(Material.wood) with IMultiBlockStructur
     getMultiBlock.load(nbt)
   }
 
+  def getMultiBlock: TurbineMBlockHandler =
+  {
+    return multiBlock
+  }
+
   /** Writes a tile entity to NBT. */
   override def writeToNBT(nbt: NBTTagCompound)
   {
@@ -120,11 +125,6 @@ class TileTurbine extends TileMechanical(Material.wood) with IMultiBlockStructur
     nbt.setInteger("multiBlockRadius", multiBlockRadius)
     nbt.setInteger("tier", tier)
     getMultiBlock.save(nbt)
-  }
-
-  def getMultiBlock: TurbineMBlockHandler =
-  {
-    return multiBlock
   }
 
   override def read(buf: ByteBuf, id: Int, packetType: PacketType)

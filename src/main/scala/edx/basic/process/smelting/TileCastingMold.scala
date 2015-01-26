@@ -10,11 +10,11 @@ import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import resonantengine.api.edx.recipe.{MachineRecipes, RecipeResource, RecipeType}
 import resonantengine.api.network.IPacketReceiver
-import resonantengine.lib.network.discriminator.{PacketTile, PacketType}
-import resonantengine.lib.prefab.tile.mixed.TileInventory
+import resonantengine.core.network.discriminator.{PacketTile, PacketType}
 import resonantengine.lib.transform.vector.Vector3
 import resonantengine.lib.utility.FluidUtility
 import resonantengine.lib.utility.inventory.InventoryUtility
+import resonantengine.prefab.block.mixed.TileInventory
 
 /**
  * Turns molten fuilds into ingots.

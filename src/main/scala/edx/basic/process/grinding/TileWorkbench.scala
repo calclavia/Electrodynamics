@@ -12,14 +12,14 @@ import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.oredict.OreDictionary
 import org.lwjgl.opengl.GL11
 import resonantengine.api.edx.recipe.{MachineRecipes, RecipeType}
+import resonantengine.core.network.discriminator.PacketType
 import resonantengine.lib.content.prefab.TInventory
-import resonantengine.lib.network.discriminator.PacketType
-import resonantengine.prefab.network.{TPacketReceiver, TPacketSender}
-import resonantengine.lib.prefab.tile.spatial.ResonantTile
+import resonantengine.lib.modcontent.block.ResonantTile
 import resonantengine.lib.render.{RenderItemOverlayUtility, RenderUtility}
 import resonantengine.lib.transform.vector.Vector3
 import resonantengine.lib.utility.inventory.InventoryUtility
 import resonantengine.lib.wrapper.ByteBufWrapper._
+import resonantengine.prefab.network.{TPacketReceiver, TPacketSender}
 
 /**
  * The workbench is meant for manual ore and wood processing.

@@ -9,9 +9,9 @@ import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.util.IIcon
-import resonantengine.lib.prefab.tile.item.ItemBlockMetadata
-import resonantengine.lib.prefab.tile.spatial.ResonantBlock
+import resonantengine.lib.modcontent.block.ResonantBlock
 import resonantengine.lib.wrapper.CollectionWrapper._
+import resonantengine.prefab.block.itemblock.ItemBlockMetadata
 
 /**
  * A block used to build machines or decoration.

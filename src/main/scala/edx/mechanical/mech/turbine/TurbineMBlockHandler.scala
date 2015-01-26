@@ -1,8 +1,8 @@
 package edx.mechanical.mech.turbine
 
 import net.minecraft.tileentity.TileEntity
-import resonantengine.lib.prefab.tile.multiblock.reference.MultiBlockHandler
 import resonantengine.lib.transform.vector.Vector3
+import resonantengine.prefab.block.multiblock.reference.MultiBlockHandler
 
 class TurbineMBlockHandler(wrapper: TileTurbine) extends MultiBlockHandler[TileTurbine](wrapper)
 {

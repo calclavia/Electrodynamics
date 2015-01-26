@@ -24,22 +24,22 @@ import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.oredict.OreDictionary
 import org.apache.commons.lang3.ArrayUtils
 import org.lwjgl.opengl.GL11
-import resonantengine.api.gui.ISlotPickResult
 import resonantengine.api.edx.recipe.{MachineRecipes, RecipeResource, RecipeType}
+import resonantengine.api.gui.ISlotPickResult
 import resonantengine.api.network.IPacketReceiver
 import resonantengine.api.tile.IRotatable
 import resonantengine.core.ResonantEngine
+import resonantengine.core.network.discriminator.{PacketTile, PacketType}
 import resonantengine.lib.collection.Pair
-import resonantengine.lib.network.discriminator.{PacketTile, PacketType}
 import resonantengine.lib.prefab.gui.ContainerDummy
-import resonantengine.lib.prefab.tile.item.ItemBlockSaved
-import resonantengine.lib.prefab.tile.mixed.TileInventory
 import resonantengine.lib.render.RenderItemOverlayUtility
 import resonantengine.lib.transform.region.Cuboid
 import resonantengine.lib.transform.vector.{Vector2, Vector3}
 import resonantengine.lib.utility.LanguageUtility
 import resonantengine.lib.utility.inventory.AutoCraftingManager.IAutoCrafter
 import resonantengine.lib.utility.inventory.{AutoCraftingManager, InventoryUtility}
+import resonantengine.prefab.block.itemblock.ItemBlockSaved
+import resonantengine.prefab.block.mixed.TileInventory
 
 import scala.collection.JavaConversions._
 
@@ -250,44 +250,6 @@ class TileEngineeringTable extends TileInventory(Material.wood) with IPacketRece
       inventoryCrafting.setInventorySlotContents(i, this.craftingMatrix(i))
     }
     return inventoryCrafting
-  }
-
-  /**
-   * DO NOT USE THIS INTERNALLY. FOR EXTERNAL USE ONLY!
-   */
-  override def getStackInSlot(slot: Int): ItemStack =
-  {
-    if (slot < TileEngineeringTable.CRAFTING_MATRIX_END)
-    {
-      return this.craftingMatrix(slot)
-    }
-    else if (slot < TileEngineeringTable.CRAFTING_OUTPUT_END)
-    {
-      return outputInventory(slot - TileEngineeringTable.CRAFTING_MATRIX_END)
-    }
-    else if (slot < TileEngineeringTable.PLAYER_OUTPUT_END && invPlayer != null)
-    {
-      return this.invPlayer.getStackInSlot(slot - TileEngineeringTable.CRAFTING_OUTPUT_END)
-    }
-    else if (searchInventories)
-    {
-      var idDisplacement: Int = TileEngineeringTable.PLAYER_OUTPUT_END
-      for (dir <- ForgeDirection.VALID_DIRECTIONS)
-      {
-        val tile: TileEntity = toVectorWorld.add(dir).getTileEntity
-        if (tile.isInstanceOf[IInventory])
-        {
-          val inventory: IInventory = tile.asInstanceOf[IInventory]
-          val slotID: Int = slot - idDisplacement
-          if (slotID >= 0 && slotID < inventory.getSizeInventory)
-          {
-            return inventory.getStackInSlot(slotID)
-          }
-          idDisplacement += inventory.getSizeInventory
-        }
-      }
-    }
-    return null
   }
 
   override def use(player: EntityPlayer, hitSide: Int, hit: Vector3): Boolean =
@@ -619,6 +581,44 @@ class TileEngineeringTable extends TileInventory(Material.wood) with IPacketRece
       }
     }
     return slot == optimalSlot
+  }
+
+  /**
+   * DO NOT USE THIS INTERNALLY. FOR EXTERNAL USE ONLY!
+   */
+  override def getStackInSlot(slot: Int): ItemStack =
+  {
+    if (slot < TileEngineeringTable.CRAFTING_MATRIX_END)
+    {
+      return this.craftingMatrix(slot)
+    }
+    else if (slot < TileEngineeringTable.CRAFTING_OUTPUT_END)
+    {
+      return outputInventory(slot - TileEngineeringTable.CRAFTING_MATRIX_END)
+    }
+    else if (slot < TileEngineeringTable.PLAYER_OUTPUT_END && invPlayer != null)
+    {
+      return this.invPlayer.getStackInSlot(slot - TileEngineeringTable.CRAFTING_OUTPUT_END)
+    }
+    else if (searchInventories)
+    {
+      var idDisplacement: Int = TileEngineeringTable.PLAYER_OUTPUT_END
+      for (dir <- ForgeDirection.VALID_DIRECTIONS)
+      {
+        val tile: TileEntity = toVectorWorld.add(dir).getTileEntity
+        if (tile.isInstanceOf[IInventory])
+        {
+          val inventory: IInventory = tile.asInstanceOf[IInventory]
+          val slotID: Int = slot - idDisplacement
+          if (slotID >= 0 && slotID < inventory.getSizeInventory)
+          {
+            return inventory.getStackInSlot(slotID)
+          }
+          idDisplacement += inventory.getSizeInventory
+        }
+      }
+    }
+    return null
   }
 
   override def canExtractItem(slot: Int, itemstack: ItemStack, side: Int): Boolean =

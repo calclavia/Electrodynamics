@@ -36,10 +36,10 @@ import net.minecraftforge.fluids._
 import net.minecraftforge.oredict.{OreDictionary, ShapelessOreRecipe}
 import resonantengine.api.edx.recipe.QuantumAssemblerRecipes
 import resonantengine.api.event.PlasmaEvent
-import resonantengine.api.modcontent.ExplicitContentName
 import resonantengine.api.tile.IElectromagnet
 import resonantengine.lib.factory.resources.block.OreGenerator
 import resonantengine.lib.grid.thermal.ThermalEvent
+import resonantengine.lib.modcontent.ExplicitContentName
 import resonantengine.lib.schematic.SchematicRegistry
 import resonantengine.lib.transform.vector.VectorWorld
 import resonantengine.lib.utility.recipe.UniversalRecipe

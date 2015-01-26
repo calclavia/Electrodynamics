@@ -7,8 +7,8 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import resonantengine.api.tile.{IFilterable, IRotatable}
-import resonantengine.lib.prefab.tile.mixed.TileInventory
 import resonantengine.lib.transform.vector.Vector3
+import resonantengine.prefab.block.mixed.TileInventory
 
 object TileFilterable
 {

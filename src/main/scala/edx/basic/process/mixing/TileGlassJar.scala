@@ -19,12 +19,10 @@ import net.minecraftforge.client.IItemRenderer.ItemRenderType
 import net.minecraftforge.client.model.AdvancedModelLoader
 import org.lwjgl.opengl.GL11
 import resonantengine.api.item.ISimpleItemRenderer
+import resonantengine.core.network.discriminator.PacketType
 import resonantengine.lib.factory.resources.ResourceFactory
 import resonantengine.lib.factory.resources.item.TItemResource
-import resonantengine.lib.network.discriminator.PacketType
-import resonantengine.prefab.network.{TPacketReceiver, TPacketSender}
-import resonantengine.lib.prefab.tile.item.ItemBlockSaved
-import resonantengine.lib.prefab.tile.spatial.ResonantTile
+import resonantengine.lib.modcontent.block.ResonantTile
 import resonantengine.lib.render.RenderUtility
 import resonantengine.lib.render.model.ModelCube
 import resonantengine.lib.transform.region.Cuboid
@@ -32,6 +30,8 @@ import resonantengine.lib.transform.vector.{Vector3, VectorWorld}
 import resonantengine.lib.utility.inventory.InventoryUtility
 import resonantengine.lib.utility.nbt.NBTUtility
 import resonantengine.lib.wrapper.ByteBufWrapper._
+import resonantengine.prefab.block.itemblock.ItemBlockSaved
+import resonantengine.prefab.network.{TPacketReceiver, TPacketSender}
 
 /**
  * A glass jar for mixing different dusts/refined together.
@@ -112,6 +112,20 @@ class TileGlassJar extends ResonantTile(Material.wood) with TPacketReceiver with
     GL11.glPopMatrix()
   }
 
+  @SideOnly(Side.CLIENT)
+  override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
+  {
+    GL11.glPushMatrix()
+    GL11.glTranslated(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5)
+    renderMixture()
+    GL11.glPopMatrix()
+
+    GL11.glPushMatrix()
+    GL11.glTranslated(pos.x + 0.5, pos.y + 0.8, pos.z + 0.5)
+    renderJar()
+    GL11.glPopMatrix()
+  }
+
   def renderMixture(itemStack: ItemStack = null)
   {
     val alloy: Alloy =
@@ -177,20 +191,6 @@ class TileGlassJar extends ResonantTile(Material.wood) with TPacketReceiver with
     RenderUtility.bind(Reference.domain, Reference.modelPath + "glassJar.png")
     TileGlassJar.model.renderAll()
     RenderUtility.disableBlending()
-  }
-
-  @SideOnly(Side.CLIENT)
-  override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
-  {
-    GL11.glPushMatrix()
-    GL11.glTranslated(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5)
-    renderMixture()
-    GL11.glPopMatrix()
-
-    GL11.glPushMatrix()
-    GL11.glTranslated(pos.x + 0.5, pos.y + 0.8, pos.z + 0.5)
-    renderJar()
-    GL11.glPopMatrix()
   }
 
   @SideOnly(Side.CLIENT)

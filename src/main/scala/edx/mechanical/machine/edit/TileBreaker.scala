@@ -16,11 +16,11 @@ import net.minecraft.util.IIcon
 import net.minecraft.world.IBlockAccess
 import net.minecraftforge.common.util.ForgeDirection
 import resonantengine.api.network.IPacketReceiver
-import resonantengine.lib.network.discriminator.{PacketTile, PacketType}
-import resonantengine.lib.prefab.tile.spatial.ResonantTile
-import resonantengine.lib.prefab.tile.traits.TRotatable
+import resonantengine.core.network.discriminator.{PacketTile, PacketType}
+import resonantengine.lib.modcontent.block.ResonantTile
 import resonantengine.lib.transform.vector.{Vector3, VectorWorld}
 import resonantengine.lib.utility.inventory.InternalInventoryHandler
+import resonantengine.prefab.block.traits.TRotatable
 
 /**
  * @author tgame14

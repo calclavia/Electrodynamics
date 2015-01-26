@@ -8,11 +8,11 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.ChatComponentText
 import net.minecraft.world.World
-import resonantengine.lib.prefab.tile.item.ItemBlockSaved
 import resonantengine.lib.transform.vector.Vector3
 import resonantengine.lib.utility.LanguageUtility
 import resonantengine.lib.utility.nbt.NBTUtility
 import resonantengine.lib.wrapper.CollectionWrapper._
+import resonantengine.prefab.block.itemblock.ItemBlockSaved
 
 class ItemBlockThermometer(block: Block) extends ItemBlockSaved(block: Block)
 {
@@ -52,19 +52,6 @@ class ItemBlockThermometer(block: Block) extends ItemBlockSaved(block: Block)
     return itemStack
   }
 
-  def setSavedCoords(itemStack: ItemStack, position: Vector3)
-  {
-    val nbt: NBTTagCompound = NBTUtility.getNBTTagCompound(itemStack)
-    if (position != null)
-    {
-      nbt.setTag("trackCoordinate", position.writeNBT(new NBTTagCompound))
-    }
-    else
-    {
-      nbt.removeTag("trackCoordinate")
-    }
-  }
-
   override def onItemUse(itemStack: ItemStack, player: EntityPlayer, world: World, x: Int, y: Int, z: Int, par7: Int, par8: Float, par9: Float, par10: Float): Boolean =
   {
     if (player.isSneaking)
@@ -77,5 +64,18 @@ class ItemBlockThermometer(block: Block) extends ItemBlockSaved(block: Block)
       return true
     }
     return super.onItemUse(itemStack, player, world, x, y, z, par7, par8, par9, par10)
+  }
+
+  def setSavedCoords(itemStack: ItemStack, position: Vector3)
+  {
+    val nbt: NBTTagCompound = NBTUtility.getNBTTagCompound(itemStack)
+    if (position != null)
+    {
+      nbt.setTag("trackCoordinate", position.writeNBT(new NBTTagCompound))
+    }
+    else
+    {
+      nbt.removeTag("trackCoordinate")
+    }
   }
 }

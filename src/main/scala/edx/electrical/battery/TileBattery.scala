@@ -16,18 +16,18 @@ import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11._
 import resonantengine.api.item.ISimpleItemRenderer
+import resonantengine.core.network.discriminator.PacketType
 import resonantengine.lib.content.prefab.TIO
 import resonantengine.lib.grid.core.TBlockNodeProvider
 import resonantengine.lib.grid.energy.EnergyStorage
 import resonantengine.lib.grid.energy.electric.NodeElectricComponent
-import resonantengine.lib.network.discriminator.PacketType
-import resonantengine.prefab.network.{TPacketReceiver, TPacketSender}
-import resonantengine.lib.prefab.tile.spatial.ResonantTile
-import resonantengine.lib.prefab.tile.traits.TEnergyProvider
+import resonantengine.lib.modcontent.block.ResonantTile
 import resonantengine.lib.render.RenderUtility
 import resonantengine.lib.transform.vector.Vector3
 import resonantengine.lib.utility.science.UnitDisplay
 import resonantengine.lib.wrapper.ByteBufWrapper._
+import resonantengine.prefab.block.traits.TEnergyProvider
+import resonantengine.prefab.network.{TPacketReceiver, TPacketSender}
 
 /** A modular battery box that allows shared connections with boxes next to it.
   *
@@ -67,15 +67,6 @@ class TileBattery extends ResonantTile(Material.iron) with TIO with TBlockNodePr
   {
     super.start()
     updateConnectionMask()
-  }
-
-  def updateConnectionMask()
-  {
-    electricNode.setPositives(getInputDirections())
-    electricNode.setNegatives(getOutputDirections())
-    electricNode.reconstruct()
-    markUpdate()
-    notifyChange()
   }
 
   override def update()
@@ -139,6 +130,15 @@ class TileBattery extends ResonantTile(Material.iron) with TIO with TBlockNodePr
   {
     super.setIO(dir, packet)
     updateConnectionMask()
+  }
+
+  def updateConnectionMask()
+  {
+    electricNode.setPositives(getInputDirections())
+    electricNode.setNegatives(getOutputDirections())
+    electricNode.reconstruct()
+    markUpdate()
+    notifyChange()
   }
 
   override def onPlaced(entityLiving: EntityLivingBase, itemStack: ItemStack)
