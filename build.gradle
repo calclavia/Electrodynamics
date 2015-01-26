@@ -31,10 +31,10 @@ buildProps.withReader {
 version = "${config.version.mod.major}.${config.version.mod.minor}.${config.version.mod.revis}"
 
 if (System.getenv("TEAMCITY_BUILDCONF_NAME")?.equalsIgnoreCase("Production")) {
-    group = "com.calclavia.resonantinduction"
+    group = "com.calclavia.electrodynamics"
     archivesBaseName = System.getenv("TEAMCITY_PROJECT_NAME")?.replaceAll(" ", "-")
 } else {
-    group = "dev.calclavia.resonantinduction"
+    group = "dev.calclavia.electrodynamics"
     archivesBaseName = System.getenv("TEAMCITY_PROJECT_NAME")?.replaceAll(" ", "-") + "-" + System.getenv("TEAMCITY_BUILDCONF_NAME")
 }
 
@@ -174,12 +174,10 @@ repositories {
 dependencies {
 	if (System.getenv("TEAMCITY_BUILDCONF_NAME") == "Development")
 	{
-		//compile group: 'dev.calclavia.universalelectricity', name: 'universal-electricity', version: "${rootProject.config.version.universalelectricity}", classifier: "dev"
 		compile group: 'dev.calclavia.resonantengine', name: 'resonant-engine', version: "${config.version.resonantengine}", classifier: "dev"
 	}
 	else
 	{
-		//compile group: 'com.calclavia.universalelectricity', name: 'universal-electricity', version: "${rootProject.config.version.universalelectricity}", classifier: "dev"
 		compile group: 'com.calclavia.resonantengine', name: 'resonant-engine', version: "${config.version.resonantengine}", classifier: "dev"
 	}
 	
