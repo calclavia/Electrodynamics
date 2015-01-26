@@ -19,16 +19,16 @@ import net.minecraft.util.{IIcon, MovingObjectPosition}
 import net.minecraft.world.IBlockAccess
 import resonant.api.mffs.machine.{IForceField, IProjector}
 import resonant.api.mffs.modules.IModule
-import resonant.lib.wrapper.ByteBufWrapper._
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.TPacketReceiver
-import resonant.lib.prefab.tile.spatial.SpatialTile
+import resonant.lib.prefab.tile.spatial.ResonantTile
 import resonant.lib.transform.region.Cuboid
 import resonant.lib.transform.vector.Vector3
+import resonant.lib.wrapper.ByteBufWrapper._
 
 import scala.collection.convert.wrapAll._
 
-class TileForceField extends SpatialTile(Material.glass) with TPacketReceiver with IForceField
+class TileForceField extends ResonantTile(Material.glass) with TPacketReceiver with IForceField
 {
   private var camoStack: ItemStack = null
   private var projector: Vector3 = null
@@ -164,6 +164,43 @@ class TileForceField extends SpatialTile(Material.glass) with TPacketReceiver wi
 
     if (projector != null)
       projector.getModuleStacks(projector.getModuleSlots(): _*) forall (stack => stack.getItem.asInstanceOf[IModule].onCollideWithForceField(world, xi, yi, zi, player, stack))
+  }
+
+  /**
+   * @return Gets the projector block controlling this force field. Removes the force field if no
+   *         projector can be found.
+   */
+  def getProjector: TileElectromagneticProjector =
+  {
+    if (this.getProjectorSafe != null)
+    {
+      return getProjectorSafe
+    }
+
+    if (!this.worldObj.isRemote)
+    {
+      world.setBlock(xCoord, yCoord, zCoord, Blocks.air)
+    }
+
+    return null
+  }
+
+  def getProjectorSafe: TileElectromagneticProjector =
+  {
+    if (projector != null)
+    {
+      val projTile = projector.getTileEntity(world)
+
+      if (projTile.isInstanceOf[TileElectromagneticProjector])
+      {
+        val projector = projTile.asInstanceOf[IProjector]
+        if (world.isRemote || (projector.getCalculatedField != null && projector.getCalculatedField.contains(toVector3)))
+        {
+          return projTile.asInstanceOf[TileElectromagneticProjector]
+        }
+      }
+    }
+    return null
   }
 
   override def getCollisionBoxes(intersect: Cuboid, entity: Entity): Iterable[Cuboid] =
@@ -364,43 +401,6 @@ class TileForceField extends SpatialTile(Material.glass) with TPacketReceiver wi
     {
       camoStack = ItemStack.loadItemStackFromNBT(data.readTag())
     }
-  }
-
-  /**
-   * @return Gets the projector block controlling this force field. Removes the force field if no
-   *         projector can be found.
-   */
-  def getProjector: TileElectromagneticProjector =
-  {
-    if (this.getProjectorSafe != null)
-    {
-      return getProjectorSafe
-    }
-
-    if (!this.worldObj.isRemote)
-    {
-      world.setBlock(xCoord, yCoord, zCoord, Blocks.air)
-    }
-
-    return null
-  }
-
-  def getProjectorSafe: TileElectromagneticProjector =
-  {
-    if (projector != null)
-    {
-      val projTile = projector.getTileEntity(world)
-
-      if (projTile.isInstanceOf[TileElectromagneticProjector])
-      {
-        val projector = projTile.asInstanceOf[IProjector]
-        if (world.isRemote || (projector.getCalculatedField != null && projector.getCalculatedField.contains(toVector3)))
-        {
-          return projTile.asInstanceOf[TileElectromagneticProjector]
-        }
-      }
-    }
-    return null
   }
 
   def setProjector(position: Vector3)
