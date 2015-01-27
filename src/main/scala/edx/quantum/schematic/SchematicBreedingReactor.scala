@@ -2,6 +2,7 @@ package edx.quantum.schematic
 
 import java.util.HashMap
 
+import edx.electrical.ElectricalContent
 import edx.quantum.QuantumContent
 import net.minecraft.block.Block
 import net.minecraft.init.Blocks
@@ -42,7 +43,7 @@ class SchematicBreedingReactor extends Schematic
           if (!((x == -r || x == r) && (z == -r || z == r)))
           {
             returnMap.put(new Vector3(x, 0, z), new Pair[Block, Integer](QuantumContent.blockReactorCell, 0))
-            returnMap.put(new Vector3(x, -3, z), new Pair[Block, Integer](QuantumContent.blockSiren, 0))
+            returnMap.put(new Vector3(x, -3, z), new Pair[Block, Integer](ElectricalContent.blockSiren, 0))
             returnMap.put(new Vector3(x, -2, z), new Pair[Block, Integer](Blocks.redstone_wire, 0))
           }
           else

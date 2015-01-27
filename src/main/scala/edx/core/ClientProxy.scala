@@ -10,9 +10,10 @@ import edx.basic.process.smelting.firebox.{RenderHotPlate, TileHotPlate}
 import edx.basic.process.smelting.{RenderCastingMold, TileCastingMold}
 import edx.core.fx.FXElectricBolt
 import edx.electrical.ElectricalContent
+import edx.electrical.circuit.component.laser.fx.{EntityBlockParticleFX, EntityLaserFX, EntityScorchFX}
+import edx.electrical.circuit.component.tesla.{RenderTesla, TileTesla}
+import edx.electrical.circuit.transformer.RenderTransformer
 import edx.electrical.multimeter.{GuiMultimeter, PartMultimeter, RenderMultimeter}
-import edx.electrical.tesla.{RenderTesla, TileTesla}
-import edx.electrical.transformer.RenderTransformer
 import edx.mechanical.MechanicalContent
 import edx.mechanical.fluid.pipe.RenderPipe
 import edx.mechanical.mech.gear.RenderGear
@@ -20,7 +21,6 @@ import edx.mechanical.mech.gearshaft.RenderGearShaft
 import edx.mechanical.mech.process.crusher.{RenderMechanicalPiston, TileMechanicalPiston}
 import edx.mechanical.mech.turbine._
 import edx.quantum.gate.RenderQuantumGlyph
-import edx.quantum.laser.fx.{EntityBlockParticleFX, EntityLaserFX, EntityScorchFX}
 import edx.quantum.machine.accelerator.{EntityParticle, RenderParticle}
 import edx.quantum.machine.boiler.{GuiNuclearBoiler, RenderNuclearBoiler, TileNuclearBoiler}
 import edx.quantum.machine.centrifuge.{GuiCentrifuge, RenderCentrifuge, TileCentrifuge}

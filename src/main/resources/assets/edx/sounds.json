@@ -10,5 +10,11 @@
     "sounds": [
       "gearCrank"
     ]
+  },
+  "siren": {
+    "category": "ambient",
+    "sounds": [
+      "siren"
+    ]
   }
 }

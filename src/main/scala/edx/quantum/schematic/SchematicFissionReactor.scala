@@ -2,6 +2,7 @@ package edx.quantum.schematic
 
 import java.util.HashMap
 
+import edx.electrical.ElectricalContent
 import edx.quantum.QuantumContent
 import net.minecraft.block.Block
 import net.minecraft.init.Blocks
@@ -42,7 +43,7 @@ class SchematicFissionReactor extends Schematic
         }
       }
 
-      returnMap.put(new Vector3(0, -3, 0), new Pair[Block, Integer](QuantumContent.blockSiren, 0))
+      returnMap.put(new Vector3(0, -3, 0), new Pair[Block, Integer](ElectricalContent.blockSiren, 0))
       returnMap.put(new Vector3(0, -2, 0), new Pair[Block, Integer](Blocks.redstone_wire, 0))
       returnMap.put(new Vector3, new Pair[Block, Integer](QuantumContent.blockReactorCell, 0))
     }

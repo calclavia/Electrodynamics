@@ -22,7 +22,7 @@ class ContainerNuclearBoiler(player: EntityPlayer, tileEntity: TileNuclearBoiler
   this.addSlotToContainer(new SlotEnergyItem(tileEntity.asInstanceOf[IInventory], 0, 56, 26))
   this.addSlotToContainer(new Slot(tileEntity.asInstanceOf[IInventory], 1, 25, 50))
   this.addSlotToContainer(new Slot(tileEntity.asInstanceOf[IInventory], 2, 136, 50))
-  this.addSlotToContainer(new SlotSpecific(tileEntity.asInstanceOf[IInventory], 3, 81, 26, new ItemStack(QuantumContent.itemYellowCake), new ItemStack(QuantumContent.blockUraniumOre)))
+  this.addSlotToContainer(new SlotSpecific(tileEntity.asInstanceOf[IInventory], 3, 81, 26, new ItemStack(QuantumContent.itemYellowCake)))
   this.addPlayerInventory(player)
 
   override def canInteractWith(par1EntityPlayer: EntityPlayer): Boolean =

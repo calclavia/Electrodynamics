@@ -31,8 +31,7 @@ object BasicContent extends ContentHolder
   var itemHammer: Item = new ItemHammer
   var itemHandCrank: Item = new ItemHandCrank
 
-  //  var blockEngineeringTable: Block = new TileEngineeringTable
-  //manager.newBlock(classOf[BlockCrate])
+  var blockWorkbench: Block = new TileWorkbench
   var blockImprinter: Block = new TileImprinter
   var blockTurntable: Block = new TileTurntable
   var blockFirebox: Block = new TileFirebox
@@ -41,10 +40,8 @@ object BasicContent extends ContentHolder
   var blockCast: Block = new TileCastingMold
   var blockGutter: Block = new TileGutter
   var blockTank: Block = new TileTank
-  var blockWorkbench: Block = new TileWorkbench
   var blockGlassJar: Block = new TileGlassJar
 
-  //var blockFilter: Block = contentRegistry.newBlock( classOf[ TileFilter ] )
   var blockGrate: Block = new TileGrate
 
   //Constructor
@@ -53,13 +50,6 @@ object BasicContent extends ContentHolder
 
   override def postInit()
   {
-    //recipes += shaped(ArchaicContent.blockEngineeringTable, "P", "C", 'P', Blocks.wooden_pressure_plate, 'C', Blocks.crafting_table)
-    //recipes += shaped(ArchaicBlocks.blockFilter, "B", "P", "B", 'B', Blocks.iron_bars, 'P', Items.paper)
-
-    //recipes += shaped(new ItemStack(ArchaicBlocks.blockCrate, 1, 0), "WWW", "WSW", "WWW", 'S', "stickWood", 'W', "logWood")
-    //recipes += new CrateRecipe(new ItemStack(ArchaicBlocks.blockCrate, 1, 1), "WWW", "WSW", "WWW", 'S', new ItemStack(ArchaicBlocks.blockCrate, 1, 0), 'W', "ingotIron")
-    //recipes +=new CrateRecipe(new ItemStack(ArchaicBlocks.blockCrate, 1, 2), "WWW", "WSW", "WWW", 'S', new ItemStack(ArchaicBlocks.blockCrate, 1, 1), 'W', UniversalRecipe.PRIMARY_METAL.get)
-
     recipes += shaped(BasicContent.blockFirebox, "III", "SFS", "SSS", 'I', Items.iron_ingot, 'F', Blocks.furnace, 'S', Blocks.stone)
     recipes += shaped(new ItemStack(BasicContent.blockFirebox, 1, 1), "III", "SFS", "SSS", 'I', UniversalRecipe.PRIMARY_METAL.get, 'F', new ItemStack(BasicContent.blockFirebox, 1, 0), 'S', UniversalRecipe.WIRE.get)
     recipes += shaped(BasicContent.blockImprinter, "SSS", "W W", "PPP", 'S', Blocks.stone, 'P', Blocks.piston, 'W', "logWood")

@@ -64,13 +64,11 @@ object QuantumContent extends ContentHolder
   var blockPlasma: Block = new TilePlasma
   var blockElectromagnet: Block = new TileElectromagnet
   var blockChemicalExtractor: Block = new TileChemicalExtractor
-  var blockSiren: Block = new TileSiren
   var blockSteamFunnel: Block = new TileFunnel
   var blockAccelerator: Block = new TileAccelerator
   var blockFulmination: Block = new TileFulmination
   var blockQuantumAssembler: Block = new TileQuantumAssembler
   var blockReactorCell: Block = new TileReactorCell
-  var blockUraniumOre: Block = new BlockUraniumOre
   var blockToxicWaste: Block = new BlockToxicWaste().setCreativeTab(null)
 
   //Cells
@@ -231,6 +229,19 @@ object QuantumContent extends ContentHolder
     return fluid
   }
 
+  def fluidSteam: Fluid =
+  {
+    var fluid = FluidRegistry.getFluid("steam")
+
+    if (fluid == null)
+    {
+      fluid = new Fluid("steam").setGaseous(true)
+      FluidRegistry.registerFluid(fluid)
+    }
+
+    return fluid
+  }
+
   override def postInit()
   {
     super.postInit()
@@ -281,7 +292,6 @@ object QuantumContent extends ContentHolder
     recipes += shaped(blockNuclearBoiler, "S S", "FBF", "SMS", 'F', Blocks.furnace, 'S', UniversalRecipe.PRIMARY_PLATE.get, 'B', Items.bucket, 'M', UniversalRecipe.MOTOR.get)
     recipes += shaped(blockChemicalExtractor, "BSB", "MCM", "BSB", 'C', UniversalRecipe.CIRCUIT_T3.get, 'S', UniversalRecipe.PRIMARY_PLATE.get, 'B', UniversalRecipe.SECONDARY_METAL.get, 'M', UniversalRecipe.MOTOR.get)
 
-    recipes += shaped(new ItemStack(blockSiren, 2), "NPN", 'N', Blocks.noteblock, 'P', UniversalRecipe.SECONDARY_PLATE.get)
     recipes += shaped(blockReactorCell, "SCS", "MEM", "SCS", 'E', "cellEmpty", 'C', UniversalRecipe.CIRCUIT_T2.get, 'S', UniversalRecipe.PRIMARY_PLATE.get, 'M', UniversalRecipe.MOTOR.get)
     recipes += shaped(blockFusionCore, "CPC", "PFP", "CPC", 'P', UniversalRecipe.PRIMARY_PLATE.get, 'F', QuantumContent.blockReactorCell, 'C', UniversalRecipe.CIRCUIT_T3.get)
     recipes += shaped(new ItemStack(itemCell, 16), " T ", "TGT", " T ", 'T', "ingotTin", 'G', Blocks.glass)
@@ -371,16 +381,6 @@ object QuantumContent extends ContentHolder
     return isItemStackOreDictionaryCompatible(itemStack, "cellEmpty")
   }
 
-  def isItemStackWaterCell(itemStack: ItemStack): Boolean =
-  {
-    return isItemStackOreDictionaryCompatible(itemStack, "cellWater")
-  }
-
-  def isItemStackUraniumOre(itemStack: ItemStack): Boolean =
-  {
-    return isItemStackOreDictionaryCompatible(itemStack, "dropUranium", "oreUranium")
-  }
-
   /** Compare to Ore Dict
     *
     * @param itemStack
@@ -400,6 +400,16 @@ object QuantumContent extends ContentHolder
       }
     }
     return false
+  }
+
+  def isItemStackWaterCell(itemStack: ItemStack): Boolean =
+  {
+    return isItemStackOreDictionaryCompatible(itemStack, "cellWater")
+  }
+
+  def isItemStackUraniumOre(itemStack: ItemStack): Boolean =
+  {
+    return isItemStackOreDictionaryCompatible(itemStack, "dropUranium", "oreUranium")
   }
 
   def isItemStackDeuteriumCell(itemStack: ItemStack): Boolean =
@@ -426,19 +436,6 @@ object QuantumContent extends ContentHolder
   def fluidStackUraniumHexaflouride: FluidStack = new FluidStack(QuantumContent.fluidUraniumHexaflouride, 0)
 
   def fluidStackSteam: FluidStack = new FluidStack(fluidSteam, 0)
-
-  def fluidSteam: Fluid =
-  {
-    var fluid = FluidRegistry.getFluid("steam")
-
-    if (fluid == null)
-    {
-      fluid = new Fluid("steam").setGaseous(true)
-      FluidRegistry.registerFluid(fluid)
-    }
-
-    return fluid
-  }
 
   def FLUIDSTACK_DEUTERIUM: FluidStack = new FluidStack(FLUID_DEUTERIUM, 0)
 

@@ -1,7 +1,7 @@
 package edx.core.prefab.part.connector
 
 import codechicken.lib.data.{MCDataInput, MCDataOutput}
-import edx.core.util.ResonantUtil
+import edx.core.util.ColorUtil
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
@@ -33,7 +33,7 @@ trait TColorable extends PartAbstract
   {
     if (itemStack != null)
     {
-      val dyeColor = ResonantUtil.isDye(itemStack)
+      val dyeColor = ColorUtil.isDye(itemStack)
 
       if (dyeColor != -1)
       {

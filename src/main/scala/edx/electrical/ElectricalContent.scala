@@ -5,18 +5,19 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent
 import cpw.mods.fml.common.registry.GameRegistry
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import edx.core.{EDXCreativeTab, Reference, ResonantPartFactory}
-import edx.electrical.battery.{ItemBlockBattery, TileBattery}
-import edx.electrical.generator.{TileMotor, TileSolarPanel, TileThermopile}
+import edx.electrical.circuit.component.TileSiren
+import edx.electrical.circuit.component.laser.focus.{ItemFocusingMatrix, TileFocusCrystal, TileMirror}
+import edx.electrical.circuit.component.laser.{TileLaserEmitter, TileLaserReceiver}
+import edx.electrical.circuit.component.tesla.TileTesla
+import edx.electrical.circuit.source.battery.{ItemBlockBattery, TileBattery}
+import edx.electrical.circuit.source.{TileMotor, TileSolarPanel, TileThermopile}
+import edx.electrical.circuit.transformer.{ItemElectricTransformer, PartElectricTransformer}
+import edx.electrical.circuit.wire.ItemWire
+import edx.electrical.circuit.wire.base.WireMaterial
+import edx.electrical.circuit.wire.flat.{PartFlatWire, RenderFlatWire}
+import edx.electrical.circuit.wire.framed.{PartFramedWire, RenderFramedWire}
 import edx.electrical.multimeter.{ItemMultimeter, PartMultimeter}
-import edx.electrical.tesla.TileTesla
-import edx.electrical.transformer.{ItemElectricTransformer, PartElectricTransformer}
-import edx.electrical.wire.ItemWire
-import edx.electrical.wire.base.WireMaterial
-import edx.electrical.wire.flat.{PartFlatWire, RenderFlatWire}
-import edx.electrical.wire.framed.{PartFramedWire, RenderFramedWire}
 import edx.quantum.gate.{ItemQuantumGlyph, PartQuantumGlyph}
-import edx.quantum.laser.focus.{ItemFocusingMatrix, TileFocusCrystal, TileMirror}
-import edx.quantum.laser.{TileLaserEmitter, TileLaserReceiver}
 import ic2.api.item.IC2Items
 import net.minecraft.block.Block
 import net.minecraft.init.{Blocks, Items}
@@ -36,7 +37,8 @@ object ElectricalContent extends ContentHolder
   var itemWire = new ItemWire
   var itemMultimeter = new ItemMultimeter
   var itemTransformer = new ItemElectricTransformer
-  @ExplicitContentName("insulation") var itemInsulation = new Item
+  @ExplicitContentName("insulation")
+  var itemInsulation = new Item
   var itemQuantumGlyph = new ItemQuantumGlyph
 
   var itemFocusingMatrix: ItemFocusingMatrix = new ItemFocusingMatrix
@@ -51,6 +53,7 @@ object ElectricalContent extends ContentHolder
   var blockLaserReceiver: Block = new TileLaserReceiver
   var blockMirror: Block = new TileMirror
   var blockFocusCrystal: Block = new TileFocusCrystal
+  var blockSiren: Block = new TileSiren
 
   var tierOneBattery: ItemStack = null
   var tierTwoBattery: ItemStack = null
@@ -88,6 +91,7 @@ object ElectricalContent extends ContentHolder
 
   override def postInit()
   {
+    recipes += shaped(new ItemStack(blockSiren, 2), "NPN", 'N', Blocks.noteblock, 'P', UniversalRecipe.SECONDARY_PLATE.get)
     recipes += shaped(blockTesla, "WEW", " C ", "DID", 'W', "wire", 'E', Items.ender_eye, 'C', UniversalRecipe.BATTERY.get, 'D', Items.diamond, 'I', UniversalRecipe.PRIMARY_PLATE.get)
     recipes += shaped(itemMultimeter, "WWW", "ICI", 'W', "wire", 'C', UniversalRecipe.BATTERY.get, 'I', UniversalRecipe.PRIMARY_METAL.get)
     recipes += shaped(tierOneBattery, "III", "IRI", "III", 'R', Blocks.redstone_block, 'I', UniversalRecipe.PRIMARY_METAL.get)
