@@ -8,6 +8,7 @@ import cpw.mods.fml.client.registry.{ClientRegistry, RenderingRegistry}
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import edx.basic.process.smelting.firebox.{RenderHotPlate, TileHotPlate}
 import edx.basic.process.smelting.{RenderCastingMold, TileCastingMold}
+import edx.core.fx.FXElectricBolt
 import edx.electrical.ElectricalContent
 import edx.electrical.multimeter.{GuiMultimeter, PartMultimeter, RenderMultimeter}
 import edx.electrical.tesla.{RenderTesla, TileTesla}
@@ -33,7 +34,6 @@ import net.minecraft.client.particle.{EntityDiggingFX, EntityFX}
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.Item
 import net.minecraft.world.World
-import resonantengine.lib.render.fx.FXElectricBolt2
 import resonantengine.lib.render.wrapper.ItemRenderHandler
 import resonantengine.lib.transform.vector.Vector3
 
@@ -145,7 +145,7 @@ import resonantengine.lib.transform.vector.Vector3
   {
     if (world.isRemote)
     {
-      FMLClientHandler.instance.getClient.effectRenderer.addEffect(new FXElectricBolt2(world, start, target, split).setColor(r, g, b))
+      FMLClientHandler.instance.getClient.effectRenderer.addEffect(new FXElectricBolt(world, start, target, split).setColor(r, g, b))
     }
   }
 

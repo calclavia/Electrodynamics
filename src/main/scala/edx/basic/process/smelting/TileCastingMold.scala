@@ -144,7 +144,7 @@ class TileCastingMold extends TileInventory(Material.rock) with IFluidHandler wi
 
   override def update
   {
-    val checkPos: Vector3 = toVector3.add(0, 1, 0)
+    val checkPos: Vector3 = position.add(0, 1, 0)
     val drainStack: FluidStack = FluidUtility.drainBlock(worldObj, checkPos, false)
     if (MachineRecipes.instance.getOutput(RecipeType.SMELTER.name, drainStack).length > 0)
     {

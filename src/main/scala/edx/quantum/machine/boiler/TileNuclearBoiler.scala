@@ -183,7 +183,7 @@ class TileNuclearBoiler extends ResonantTile(Material.iron) with TInventory with
 
   override def getDescPacket: PacketTile =
   {
-    return new PacketTile(xi, yi, zi, Array[Any](this.timer, QuantumContent.getFluidAmount(this.waterTank.getFluid), QuantumContent.getFluidAmount(this.gasTank.getFluid)))
+    return new PacketTile(x, y, z, Array[Any](this.timer, QuantumContent.getFluidAmount(this.waterTank.getFluid), QuantumContent.getFluidAmount(this.gasTank.getFluid)))
   }
 
   override def use(player: EntityPlayer, side: Int, hit: Vector3): Boolean =

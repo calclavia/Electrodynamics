@@ -49,7 +49,7 @@ class TileMirror extends TileFocus(Material.glass) with ILaserHandler with IFocu
       {
         val dir = ForgeDirection.getOrientation(a)
         val axis = new Vector3(dir)
-        val rotateAngle = world.getIndirectPowerLevelTo(xi + axis.x.toInt, yi + axis.y.toInt, zi + axis.z.toInt, a) * 15
+        val rotateAngle = world.getIndirectPowerLevelTo(x + axis.x.toInt, y + axis.y.toInt, z + axis.z.toInt, a) * 15
 
         if (rotateAngle > 0)
         {
@@ -57,7 +57,7 @@ class TileMirror extends TileFocus(Material.glass) with ILaserHandler with IFocu
         }
       }
 
-      world.markBlockForUpdate(xi, yi, zi)
+      world.markBlockForUpdate(x, y, z)
     }
 
     if (world.getTotalWorldTime % 20 == 0)
@@ -66,8 +66,8 @@ class TileMirror extends TileFocus(Material.glass) with ILaserHandler with IFocu
 
   override def focus(newPosition: Vector3)
   {
-    normal = ((newPosition - toVector3) - 0.5).normalize
-    world.markBlockForUpdate(xi, yi, zi)
+    normal = ((newPosition - position) - 0.5).normalize
+    world.markBlockForUpdate(x, y, z)
   }
 
   override def getFocus: Vector3 = normal
@@ -89,7 +89,7 @@ class TileMirror extends TileFocus(Material.glass) with ILaserHandler with IFocu
     /**
      * Render incoming laser
      */
-    Electrodynamics.proxy.renderLaser(worldObj, renderStart, toVector3 + 0.5, color, energy)
+    Electrodynamics.proxy.renderLaser(worldObj, renderStart, position + 0.5, color, energy)
 
     /**
      * Calculate Reflection
@@ -102,7 +102,7 @@ class TileMirror extends TileFocus(Material.glass) with ILaserHandler with IFocu
     if (rotateAngle < Math.PI)
     {
       val newDirection = (incidentDirection.clone.transform(new Quaternion(rotateAngle, axisOfReflection))).normalize
-      Laser.spawn(worldObj, toVector3 + 0.5 + newDirection * 0.9, toVector3 + 0.5, newDirection, color, energy / 1.2)
+      Laser.spawn(worldObj, position + 0.5 + newDirection * 0.9, position + 0.5, newDirection, color, energy / 1.2)
     }
 
     return true
@@ -112,7 +112,7 @@ class TileMirror extends TileFocus(Material.glass) with ILaserHandler with IFocu
   {
     val nbt = new NBTTagCompound()
     writeToNBT(nbt)
-    return new S35PacketUpdateTileEntity(xi, yi, zi, 0, nbt)
+    return new S35PacketUpdateTileEntity(x, y, z, 0, nbt)
   }
 
   override def writeToNBT(nbt: NBTTagCompound)

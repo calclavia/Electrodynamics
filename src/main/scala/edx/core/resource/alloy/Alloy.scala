@@ -25,8 +25,6 @@ class Alloy(val max: Int) extends ISave
 
   def percentage(material: String): Float = content(material) / size.toFloat
 
-  def size = content.values.foldLeft(0)(_ + _)
-
   def percentage = size / max.toFloat
 
   /**
@@ -43,6 +41,8 @@ class Alloy(val max: Int) extends ISave
   }
 
   def color = AlloyUtility.mixedColor(content.map(keyVal => (keyVal._1, keyVal._2 / size.toFloat)))
+
+  def size = content.values.foldLeft(0)(_ + _)
 
   override def save(nbt: NBTTagCompound)
   {

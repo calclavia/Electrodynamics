@@ -6,7 +6,6 @@ import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.world.World
-import resonantengine.api.transform.vector.IVector3
 import resonantengine.lib.transform.vector.Vector3
 import resonantengine.lib.utility.nbt.NBTUtility
 import resonantengine.prefab.block.itemblock.ItemBlockSaved
@@ -25,7 +24,7 @@ class ItemGlassJar(block: Block) extends ItemBlockSaved(block) with TAlloyItem
 
     if (!world.isRemote)
     {
-      val currLook = new Vector3(player.getLookVec).asInstanceOf[IVector3]
+      val currLook = new Vector3(player.getLookVec).asInstanceOf[Vector3]
 
       if (lastLook == null)
       {

@@ -17,15 +17,8 @@ abstract class PartMechanical extends PartAbstract with JNormalOcclusion with TF
   var placementSide: ForgeDirection = ForgeDirection.UNKNOWN
   /** The tier of this mechanical part */
   var tier = 0
-  def mechanicalNode = _mechanicalNode
   /** Node that handles resonantinduction.mechanical action of the machine */
   private var _mechanicalNode: NodeMechanical = null
-  def mechanicalNode_=(mech: NodeMechanical)
-{
-  _mechanicalNode = mech
-  mechanicalNode.onVelocityChanged = () => if (world != null) sendPacket(1)
-  nodes.add(mechanicalNode)
-}
 
   def preparePlacement(side: Int, itemDamage: Int)
   {
@@ -70,6 +63,15 @@ abstract class PartMechanical extends PartAbstract with JNormalOcclusion with TF
       //        mechanicalNode.prevAngle = packet.readFloat()
       //        mechanicalNode.prevTime = System.currentTimeMillis()
     }
+  }
+
+  def mechanicalNode = _mechanicalNode
+
+  def mechanicalNode_=(mech: NodeMechanical)
+  {
+    _mechanicalNode = mech
+    mechanicalNode.onVelocityChanged = () => if (world != null) sendPacket(1)
+    nodes.add(mechanicalNode)
   }
 
   override def load(nbt: NBTTagCompound)

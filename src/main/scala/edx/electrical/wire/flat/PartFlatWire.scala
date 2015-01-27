@@ -283,9 +283,9 @@ class PartFlatWire extends PartAbstract with TWire with TFacePart with TNormalOc
 
   override def getSubParts: JIterable[IndexedCuboid6] = Seq(new IndexedCuboid6(0, PartFlatWire.selectionBounds(getThickness)(side)))
 
-  def getOcclusionBoxes: JIterable[Cuboid6] = Seq(PartFlatWire.occlusionBounds(getThickness)(side))
-
   def getThickness: Int = if (insulated) 1 else 0
+
+  def getOcclusionBoxes: JIterable[Cuboid6] = Seq(PartFlatWire.occlusionBounds(getThickness)(side))
 
   override def solid(arg0: Int) = false
 

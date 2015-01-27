@@ -57,8 +57,8 @@ class TileLaserEmitter extends ResonantTile(Material.iron) with ILaserHandler wi
    */
   override def onPlaced(entityLiving: EntityLivingBase, itemStack: ItemStack)
   {
-    val l = BlockPistonBase.determineOrientation(world, xi, yi, zi, entityLiving)
-    world.setBlockMetadataWithNotify(xi, yi, zi, l, 2)
+    val l = BlockPistonBase.determineOrientation(world, x, y, z, entityLiving)
+    world.setBlockMetadataWithNotify(x, y, z, l, 2)
   }
 
   override def getLightValue(access: IBlockAccess): Int = ((electricNode.power / Laser.maxEnergy) * 15).toInt
@@ -71,7 +71,7 @@ class TileLaserEmitter extends ResonantTile(Material.iron) with ILaserHandler wi
 
     if (electricNode.power > 0)
     {
-      Laser.spawn(worldObj, toVector3 + 0.5 + new Vector3(getDirection) * 0.51, toVector3 + new Vector3(getDirection) * 0.6 + 0.5, new Vector3(getDirection), electricNode.power / 20)
+      Laser.spawn(worldObj, position + 0.5 + new Vector3(getDirection) * 0.51, position + new Vector3(getDirection) * 0.6 + 0.5, new Vector3(getDirection), electricNode.power / 20)
     }
   }
 

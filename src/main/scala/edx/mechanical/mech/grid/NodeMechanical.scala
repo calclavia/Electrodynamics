@@ -4,7 +4,6 @@ import edx.core.interfaces.TNodeMechanical
 import edx.core.prefab.node.TMultipartNode
 import resonantengine.api.graph.INodeProvider
 import resonantengine.api.tile.IDebugInfo
-import resonantengine.api.transform.vector.IVectorWorld
 import resonantengine.lib.grid.core.{GridNode, NodeGrid, TTileConnector}
 
 import scala.beans.BeanProperty
@@ -15,7 +14,7 @@ import scala.collection.convert.wrapAll._
  *
  * @author Calclavia, Darkguardsman
  */
-class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](parent) with TTileConnector[NodeMechanical] with TMultipartNode[NodeMechanical] with TNodeMechanical with IVectorWorld with IDebugInfo
+class NodeMechanical(parent: INodeProvider) extends NodeGrid[NodeMechanical](parent) with TTileConnector[NodeMechanical] with TMultipartNode[NodeMechanical] with TNodeMechanical with IDebugInfo
 {
   /**
    * Angle calculations

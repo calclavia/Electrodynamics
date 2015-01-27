@@ -196,19 +196,6 @@ object QuantumContent extends ContentHolder
     return fluid
   }
 
-  def fluidSteam: Fluid =
-  {
-    var fluid = FluidRegistry.getFluid("steam")
-
-    if (fluid == null)
-    {
-      fluid = new Fluid("steam").setGaseous(true)
-      FluidRegistry.registerFluid(fluid)
-    }
-
-    return fluid
-  }
-
   def FLUID_DEUTERIUM: Fluid =
   {
     var fluid: Fluid = FluidRegistry.getFluid("deuterium")
@@ -384,6 +371,16 @@ object QuantumContent extends ContentHolder
     return isItemStackOreDictionaryCompatible(itemStack, "cellEmpty")
   }
 
+  def isItemStackWaterCell(itemStack: ItemStack): Boolean =
+  {
+    return isItemStackOreDictionaryCompatible(itemStack, "cellWater")
+  }
+
+  def isItemStackUraniumOre(itemStack: ItemStack): Boolean =
+  {
+    return isItemStackOreDictionaryCompatible(itemStack, "dropUranium", "oreUranium")
+  }
+
   /** Compare to Ore Dict
     *
     * @param itemStack
@@ -403,16 +400,6 @@ object QuantumContent extends ContentHolder
       }
     }
     return false
-  }
-
-  def isItemStackWaterCell(itemStack: ItemStack): Boolean =
-  {
-    return isItemStackOreDictionaryCompatible(itemStack, "cellWater")
-  }
-
-  def isItemStackUraniumOre(itemStack: ItemStack): Boolean =
-  {
-    return isItemStackOreDictionaryCompatible(itemStack, "dropUranium", "oreUranium")
   }
 
   def isItemStackDeuteriumCell(itemStack: ItemStack): Boolean =
@@ -439,6 +426,19 @@ object QuantumContent extends ContentHolder
   def fluidStackUraniumHexaflouride: FluidStack = new FluidStack(QuantumContent.fluidUraniumHexaflouride, 0)
 
   def fluidStackSteam: FluidStack = new FluidStack(fluidSteam, 0)
+
+  def fluidSteam: Fluid =
+  {
+    var fluid = FluidRegistry.getFluid("steam")
+
+    if (fluid == null)
+    {
+      fluid = new Fluid("steam").setGaseous(true)
+      FluidRegistry.registerFluid(fluid)
+    }
+
+    return fluid
+  }
 
   def FLUIDSTACK_DEUTERIUM: FluidStack = new FluidStack(FLUID_DEUTERIUM, 0)
 

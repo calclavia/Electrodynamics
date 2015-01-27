@@ -62,11 +62,6 @@ class TileTurbine extends TileMechanical(Material.wood) with IMultiBlockStructur
   {
   }
 
-  def getMultiBlock: TurbineMBlockHandler =
-  {
-    return multiBlock
-  }
-
   def getArea: Int = (((multiBlockRadius + 0.5) * 2) * ((multiBlockRadius + 0.5) * 2)).toInt
 
   @SideOnly(Side.CLIENT)
@@ -98,10 +93,7 @@ class TileTurbine extends TileMechanical(Material.wood) with IMultiBlockStructur
     return vectors
   }
 
-  def getPosition: Vector3 =
-  {
-    return toVector3
-  }
+  override def getPosition: Vector3 = position
 
   def onMultiBlockChanged()
   {
@@ -137,6 +129,11 @@ class TileTurbine extends TileMechanical(Material.wood) with IMultiBlockStructur
       tier = buf.readInt()
       buf >>>> getMultiBlock.load
     }
+  }
+
+  def getMultiBlock: TurbineMBlockHandler =
+  {
+    return multiBlock
   }
 
   override def write(buf: ByteBuf, id: Int)

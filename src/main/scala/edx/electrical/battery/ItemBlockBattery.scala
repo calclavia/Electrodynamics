@@ -55,22 +55,6 @@ class ItemBlockBattery(block: Block) extends ItemBlock(block) with TEnergyItem
     this.setEnergy(itemStack, 0)
   }
 
-  override def setEnergy(itemStack: ItemStack, joules: Double): ItemStack =
-  {
-    if (itemStack.getTagCompound == null)
-    {
-      itemStack.setTagCompound(new NBTTagCompound)
-    }
-    val energy: Double = Math.max(Math.min(joules, this.getEnergyCapacity(itemStack)), 0)
-    itemStack.getTagCompound.setDouble("energy", energy)
-    return itemStack
-  }
-
-  def getEnergyCapacity(theItem: ItemStack): Double =
-  {
-    return TileBattery.getEnergyForTier(ItemBlockBattery.getTier(theItem))
-  }
-
   override def recharge(itemStack: ItemStack, energy: Double, doReceive: Boolean): Double =
   {
     val rejectedElectricity: Double = Math.max((this.getEnergy(itemStack) + energy) - this.getEnergyCapacity(itemStack), 0)
@@ -104,5 +88,21 @@ class ItemBlockBattery(block: Block) extends ItemBlock(block) with TEnergyItem
       list.add(setEnergy(ItemBlockBattery.setTier(new ItemStack(this), tier), 0))
       list.add(setEnergy(ItemBlockBattery.setTier(new ItemStack(this), tier), TileBattery.getEnergyForTier(tier)))
     }
+  }
+
+  override def setEnergy(itemStack: ItemStack, joules: Double): ItemStack =
+  {
+    if (itemStack.getTagCompound == null)
+    {
+      itemStack.setTagCompound(new NBTTagCompound)
+    }
+    val energy: Double = Math.max(Math.min(joules, this.getEnergyCapacity(itemStack)), 0)
+    itemStack.getTagCompound.setDouble("energy", energy)
+    return itemStack
+  }
+
+  def getEnergyCapacity(theItem: ItemStack): Double =
+  {
+    return TileBattery.getEnergyForTier(ItemBlockBattery.getTier(theItem))
   }
 }

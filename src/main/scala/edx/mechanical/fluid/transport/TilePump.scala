@@ -54,7 +54,7 @@ class TilePump extends TileMechanical(Material.iron) with IRotatable with IFluid
   {
     if (from == getDirection.getOpposite)
     {
-      val tileOut = (toVectorWorld + from.getOpposite).getTileEntity
+      val tileOut = (position + from.getOpposite).getTileEntity
       if (tileOut.isInstanceOf[IFluidHandler])
         return (tileOut.asInstanceOf[IFluidHandler]).fill(from, resource, doFill)
     }

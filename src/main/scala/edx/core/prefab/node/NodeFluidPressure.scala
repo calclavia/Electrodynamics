@@ -143,8 +143,6 @@ class NodeFluidPressure(parent: INodeProvider, volume: Int = FluidContainerRegis
     }
   }
 
-  def pressure(direction: ForgeDirection): Int = _pressure
-
   protected def updatePressure()
   {
     var totalPressure = 0
@@ -181,6 +179,8 @@ class NodeFluidPressure(parent: INodeProvider, volume: Int = FluidContainerRegis
       pressure = Math.max(minPressure, Math.min(maxPressure, totalPressure / connectionSize + Integer.signum(totalPressure)))
     }
   }
+
+  def pressure(direction: ForgeDirection): Int = _pressure
 
   def pressure: Int = _pressure
 

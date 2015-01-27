@@ -83,7 +83,7 @@ class TileDetector extends TileFilterable with TPacketReceiver
             this.worldObj.notifyBlocksOfNeighborChange(x, this.yCoord + 1, z, MechanicalContent.blockDetector)
           }
         }
-        ResonantEngine.packetHandler.sendToAllAround(new PacketTile(xi, yi, zi, Array[Any](0, this.isInverted)), this)
+        ResonantEngine.packetHandler.sendToAllAround(new PacketTile(x, y, z, Array[Any](0, this.isInverted)), this)
       }
     }
   }
@@ -109,7 +109,7 @@ class TileDetector extends TileFilterable with TPacketReceiver
 
   override def getDescriptionPacket: Packet =
   {
-    return ResonantEngine.packetHandler.toMCPacket(new PacketTile(xi, yi, zi, Array[Any](0, this.isInverted)))
+    return ResonantEngine.packetHandler.toMCPacket(new PacketTile(x, y, z, Array[Any](0, this.isInverted)))
   }
 
   override def read(buf: ByteBuf, id: Int, packetType: PacketType)
@@ -139,7 +139,7 @@ class TileDetector extends TileFilterable with TPacketReceiver
   {
     var isInverted: Boolean = false
     var isFront: Boolean = false
-    val tileEntity: TileEntity = iBlockAccess.getTileEntity(xi, yi, zi)
+    val tileEntity: TileEntity = iBlockAccess.getTileEntity(x, y, z)
     if (tileEntity.isInstanceOf[TileDetector])
     {
       isFront = side == (tileEntity.asInstanceOf[TileDetector]).getDirection.ordinal

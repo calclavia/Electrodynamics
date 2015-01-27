@@ -30,8 +30,6 @@ class Graph[V](val name: String, val maxPoints: Int = 0)(implicit n: Numeric[V])
 
   def apply(x: Int = 0): V = if (points.size > x) points.get(x) else default
 
-  def default: V = n.zero
-
   def getDouble(x: Int = 0) = n.toDouble(this(x))
 
   def queue(value: V)
@@ -47,6 +45,8 @@ class Graph[V](val name: String, val maxPoints: Int = 0)(implicit n: Numeric[V])
     peak = default
     for (point <- points) if (n.gt(point, n.zero)) peak = y
   }
+
+  def default: V = n.zero
 
   def load(nbt: NBTTagCompound)
   {

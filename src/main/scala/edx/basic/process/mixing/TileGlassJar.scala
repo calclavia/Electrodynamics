@@ -90,7 +90,7 @@ class TileGlassJar extends ResonantTile(Material.wood) with TPacketReceiver with
 
   override def onRemove(block: Block, par6: Int)
   {
-    val stack: ItemStack = ItemBlockSaved.getItemStackWithNBT(block, world, xi, yi, zi)
+    val stack: ItemStack = ItemBlockSaved.getItemStackWithNBT(block, world, x, y, z)
     InventoryUtility.dropItemStack(world, center, stack)
   }
 
@@ -108,20 +108,6 @@ class TileGlassJar extends ResonantTile(Material.wood) with TPacketReceiver with
 
     GL11.glPushMatrix()
     GL11.glTranslated(0, 0.3, 0)
-    renderJar()
-    GL11.glPopMatrix()
-  }
-
-  @SideOnly(Side.CLIENT)
-  override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
-  {
-    GL11.glPushMatrix()
-    GL11.glTranslated(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5)
-    renderMixture()
-    GL11.glPopMatrix()
-
-    GL11.glPushMatrix()
-    GL11.glTranslated(pos.x + 0.5, pos.y + 0.8, pos.z + 0.5)
     renderJar()
     GL11.glPopMatrix()
   }
@@ -191,6 +177,20 @@ class TileGlassJar extends ResonantTile(Material.wood) with TPacketReceiver with
     RenderUtility.bind(Reference.domain, Reference.modelPath + "glassJar.png")
     TileGlassJar.model.renderAll()
     RenderUtility.disableBlending()
+  }
+
+  @SideOnly(Side.CLIENT)
+  override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
+  {
+    GL11.glPushMatrix()
+    GL11.glTranslated(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5)
+    renderMixture()
+    GL11.glPopMatrix()
+
+    GL11.glPushMatrix()
+    GL11.glTranslated(pos.x + 0.5, pos.y + 0.8, pos.z + 0.5)
+    renderJar()
+    GL11.glPopMatrix()
   }
 
   @SideOnly(Side.CLIENT)

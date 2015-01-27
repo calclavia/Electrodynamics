@@ -74,12 +74,12 @@ class NodeFluid(parent: INodeProvider, volume: Int = FluidContainerRegistry.BUCK
     getTank.readFromNBT(nbt.getCompoundTag("tank"))
   }
 
+  override def getTank: FluidTank = tank
+
   override def save(nbt: NBTTagCompound)
   {
     nbt.setTag("tank", getTank.writeToNBT(new NBTTagCompound))
   }
-
-  override def getTank: FluidTank = tank
 
   /**
    * Sets the primary tank (not checked)

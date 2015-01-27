@@ -42,7 +42,7 @@ class TileMechanicalPiston extends TileMechanical(Material.piston)
     super.update
     if (markRevolve)
     {
-      val movePosition: Vector3 = toVector3.add(getDirection)
+      val movePosition: Vector3 = position.add(getDirection)
       if (!hitOreBlock(movePosition))
       {
         if (!worldObj.isRemote)

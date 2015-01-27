@@ -85,6 +85,24 @@ class TileHotPlate extends ResonantTile(Material.iron) with TInventory with TPac
     }
   }
 
+  def canSmelt(stack: ItemStack): Boolean = stack != null && FurnaceRecipes.smelting.getSmeltingResult(stack) != null
+
+  override def getSizeInventory: Int = 4
+
+  def canRun: Boolean =
+  {
+    val tileEntity = worldObj.getTileEntity(xCoord, yCoord - 1, zCoord)
+
+    if (tileEntity.isInstanceOf[TileFirebox])
+    {
+      if ((tileEntity.asInstanceOf[TileFirebox]).isBurning)
+      {
+        return true
+      }
+    }
+    return false
+  }
+
   override def randomDisplayTick()
   {
     val height = 0.2
@@ -122,8 +140,6 @@ class TileHotPlate extends ResonantTile(Material.iron) with TInventory with TPac
     return i < getSizeInventory && canSmelt(itemStack)
   }
 
-  def canSmelt(stack: ItemStack): Boolean = stack != null && FurnaceRecipes.smelting.getSmeltingResult(stack) != null
-
   override def write(buf: ByteBuf, id: Int)
   {
     super.write(buf, id)
@@ -157,8 +173,6 @@ class TileHotPlate extends ResonantTile(Material.iron) with TInventory with TPac
 
   }
 
-  override def getSizeInventory: Int = 4
-
   @SideOnly(Side.CLIENT)
   override def registerIcons(iconReg: IIconRegister)
   {
@@ -172,21 +186,7 @@ class TileHotPlate extends ResonantTile(Material.iron) with TInventory with TPac
    */
   override def getIcon(access: IBlockAccess, side: Int): IIcon =
   {
-    return if (access.getBlockMetadata(xi, yi, zi) == 1) ResonantBlock.icon.get("electricHotPlate") else (if (canRun) ResonantBlock.icon.get("hotPlate_on") else ResonantBlock.icon.get(getTextureName))
-  }
-
-  def canRun: Boolean =
-  {
-    val tileEntity = worldObj.getTileEntity(xCoord, yCoord - 1, zCoord)
-
-    if (tileEntity.isInstanceOf[TileFirebox])
-    {
-      if ((tileEntity.asInstanceOf[TileFirebox]).isBurning)
-      {
-        return true
-      }
-    }
-    return false
+    return if (access.getBlockMetadata(x, y, z) == 1) ResonantBlock.icon.get("electricHotPlate") else (if (canRun) ResonantBlock.icon.get("hotPlate_on") else ResonantBlock.icon.get(getTextureName))
   }
 
   @SideOnly(Side.CLIENT)

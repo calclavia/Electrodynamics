@@ -69,7 +69,7 @@ class TileMixer extends TileMechanical(Material.iron)
       {
         if (x != 0 && z != 0)
         {
-          val block: Block = toVector3.add(x, 0, z).getBlock(world)
+          val block: Block = position.add(x, 0, z).getBlock(world)
           if (block != null && !(block.isInstanceOf[IFluidBlock]))
           {
             return true
@@ -100,9 +100,9 @@ class TileMixer extends TileMechanical(Material.iron)
     {
       val entity: Entity = obj.asInstanceOf[Entity]
       val originalPosition: Vector3 = new Vector3(entity)
-      val relativePosition: Vector3 = originalPosition - toVector3.add(0.5)
+      val relativePosition: Vector3 = originalPosition - position.add(0.5)
       relativePosition.transform(new Quaternion(-mechanicalNode.angularVelocity, new Vector3(1, 0, 0)))
-      val newPosition: Vector3 = toVector3 + 0.5 + relativePosition
+      val newPosition: Vector3 = position + 0.5 + relativePosition
       val difference: Vector3 = (newPosition - originalPosition) * 0.5
       entity.addVelocity(difference.x, difference.y, difference.z)
       entity.onGround = false
@@ -121,7 +121,7 @@ class TileMixer extends TileMechanical(Material.iron)
       {
         TileMixer.MIXER_ITEM_TIMER.put(processingItem, TileMixer.PROCESS_TIME)
       }
-      if (!processingItem.isDead && (toVector3 + 0.5).distance(new Vector3(processingItem)) < 2)
+      if (!processingItem.isDead && (position + 0.5).distance(new Vector3(processingItem)) < 2)
       {
         val timeLeft: Int = TileMixer.MIXER_ITEM_TIMER.decrease(processingItem)
         if (timeLeft <= 0)

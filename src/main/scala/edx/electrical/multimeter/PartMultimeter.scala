@@ -54,21 +54,6 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
       getGrid.remove(this)
   }
 
-  def getGrid: GridMultimeter =
-  {
-    if (grid == null)
-    {
-      grid = new GridMultimeter
-      grid.add(this)
-    }
-    return grid
-  }
-
-  def setGrid(network: GridMultimeter)
-  {
-    grid = network
-  }
-
   def updateDesc()
   {
     writeDesc(getWriteStream)
@@ -202,6 +187,21 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
         if (isPrimary) packet.writeNBTTagCompound(getGrid.save)
       }
     }
+  }
+
+  def getGrid: GridMultimeter =
+  {
+    if (grid == null)
+    {
+      grid = new GridMultimeter
+      grid.add(this)
+    }
+    return grid
+  }
+
+  def setGrid(network: GridMultimeter)
+  {
+    grid = network
   }
 
   override def read(packet: MCDataInput, packetID: Int)

@@ -58,7 +58,7 @@ class TilePlasma extends ResonantTile(Material.lava)
   override def update
   {
     super.update
-    GridThermal.addHeat(toVectorWorld, ((temperature - GridThermal.getTemperature(toVectorWorld)) * 0.1f).asInstanceOf[Float])
+    GridThermal.addHeat(position, ((temperature - GridThermal.getTemperature(position)) * 0.1f).asInstanceOf[Float])
     if (ticks % 20 == 0)
     {
       temperature /= 1.5
@@ -71,7 +71,7 @@ class TilePlasma extends ResonantTile(Material.lava)
       {
         if (worldObj.rand.nextFloat < 0.4)
         {
-          val diDian: Vector3 = toVector3
+          val diDian: Vector3 = position
           diDian.add(ForgeDirection.getOrientation(i))
           val tileEntity: TileEntity = diDian.getTileEntity(worldObj)
           if (!(tileEntity.isInstanceOf[TilePlasma]))

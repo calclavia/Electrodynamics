@@ -42,6 +42,18 @@ class ItemFocusingMatrix extends Item
       add(list, "None")
   }
 
+  def getControlCoordinate(stack: ItemStack): Vector3 =
+  {
+    val nbt = stack.getTagCompound
+
+    if (nbt != null)
+    {
+      return new Vector3(nbt)
+    }
+
+    return null
+  }
+
   override def onItemUse(itemStack: ItemStack, player: EntityPlayer, world: World, x: Int, y: Int, z: Int, par7: Int, par8: Float, par9: Float, par10: Float): Boolean =
   {
     val tile = world.getTileEntity(x, y, z)
@@ -121,18 +133,6 @@ class ItemFocusingMatrix extends Item
     val nbt = if (stack.getTagCompound != null) stack.getTagCompound else new NBTTagCompound()
     vec.writeNBT(nbt)
     stack.setTagCompound(nbt)
-  }
-
-  def getControlCoordinate(stack: ItemStack): Vector3 =
-  {
-    val nbt = stack.getTagCompound
-
-    if (nbt != null)
-    {
-      return new Vector3(nbt)
-    }
-
-    return null
   }
 
 }

@@ -97,7 +97,7 @@ class TileFirebox extends ResonantTile(Material.rock) with IFluidHandler with TI
 
       if (burnTime > 0)
       {
-        if (block.isAir(world, xi, yi + 1, zi))
+        if (block.isAir(world, x, y + 1, z))
         {
           worldObj.setBlock(xCoord, yCoord + 1, zCoord, Blocks.fire)
         }
@@ -114,7 +114,7 @@ class TileFirebox extends ResonantTile(Material.rock) with IFluidHandler with TI
           {
             if (FluidRegistry.getFluid("steam") != null)
             {
-              MinecraftForge.EVENT_BUS.post(new BoilEvent(worldObj, toVectorWorld.add(0, 1, 0), new FluidStack(FluidRegistry.WATER, volume), new FluidStack(FluidRegistry.getFluid("steam"), volume), 2, false))
+              MinecraftForge.EVENT_BUS.post(new BoilEvent(worldObj, position.add(0, 1, 0), new FluidStack(FluidRegistry.WATER, volume), new FluidStack(FluidRegistry.getFluid("steam"), volume), 2, false))
               boiledVolume += volume
             }
             if (boiledVolume >= FluidContainerRegistry.BUCKET_VOLUME)
@@ -161,11 +161,6 @@ class TileFirebox extends ResonantTile(Material.rock) with IFluidHandler with TI
     return this.getBlockMetadata == 1
   }
 
-  def canBurn(stack: ItemStack): Boolean =
-  {
-    return TileEntityFurnace.getItemBurnTime(stack) > 0
-  }
-
   override def randomDisplayTick(): Unit =
   {
     if (isBurning)
@@ -191,11 +186,13 @@ class TileFirebox extends ResonantTile(Material.rock) with IFluidHandler with TI
     }
   }
 
+  def isBurning: Boolean = burnTime > 0
+
   override def getSizeInventory = 1
 
   def getMeltIronEnergy(volume: Float): Double =
   {
-    val temperatureChange: Float = 1811 - ThermalPhysics.getDefaultTemperature(toVectorWorld)
+    val temperatureChange: Float = 1811 - ThermalPhysics.getDefaultTemperature(position)
     val mass: Float = ThermalPhysics.getMass(volume, 7.9f)
     return ThermalPhysics.getEnergyForTemperatureChange(mass, 450, temperatureChange) + ThermalPhysics.getEnergyForStateChange(mass, 272000)
   }
@@ -203,6 +200,11 @@ class TileFirebox extends ResonantTile(Material.rock) with IFluidHandler with TI
   override def isItemValidForSlot(i: Int, itemStack: ItemStack): Boolean =
   {
     return i == 0 && canBurn(itemStack)
+  }
+
+  def canBurn(stack: ItemStack): Boolean =
+  {
+    return TileEntityFurnace.getItemBurnTime(stack) > 0
   }
 
   /**
@@ -295,8 +297,6 @@ class TileFirebox extends ResonantTile(Material.rock) with IFluidHandler with TI
     return if (isBurning) (if (isElectric) ResonantBlock.icon.get("firebox_electric_side_on") else ResonantBlock.icon.get("firebox_side_on")) else (if (isElectric) ResonantBlock.icon.get("firebox_electric_side_off") else ResonantBlock.icon.get("firebox_side_off"))
   }
 
-  def isBurning: Boolean = burnTime > 0
-
   override def click(player: EntityPlayer)
   {
     if (server)
@@ -307,7 +307,7 @@ class TileFirebox extends ResonantTile(Material.rock) with IFluidHandler with TI
 
   override def use(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
   {
-    if (FluidUtility.playerActivatedFluidItem(world, xi, yi, zi, player, side))
+    if (FluidUtility.playerActivatedFluidItem(world, x, y, z, player, side))
     {
       return true
     }

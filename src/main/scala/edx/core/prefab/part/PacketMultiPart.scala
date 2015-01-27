@@ -57,6 +57,11 @@ class PacketMultiPart extends PacketType
     handle(player)
   }
 
+  override def handleServerSide(player: EntityPlayer)
+  {
+    handle(player)
+  }
+
   def handle(player: EntityPlayer)
   {
     val tile = player.getEntityWorld.getTileEntity(this.x, this.y, this.z)
@@ -74,10 +79,5 @@ class PacketMultiPart extends PacketType
     {
       throw new UnsupportedOperationException("Packet was sent to a multipart not implementing IPacketReceiver, this is a coding error [" + tile + "] in " + new Vector3(x, y, z))
     }
-  }
-
-  override def handleServerSide(player: EntityPlayer)
-  {
-    handle(player)
   }
 }

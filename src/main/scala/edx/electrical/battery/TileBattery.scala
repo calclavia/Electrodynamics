@@ -68,6 +68,15 @@ class TileBattery extends ResonantTile(Material.iron) with TIO with TBlockNodePr
     updateConnectionMask()
   }
 
+  def updateConnectionMask()
+  {
+    electricNode.setPositives(getInputDirections())
+    electricNode.setNegatives(getOutputDirections())
+    electricNode.reconstruct()
+    markUpdate()
+    notifyChange()
+  }
+
   override def update()
   {
     super.update()
@@ -131,22 +140,13 @@ class TileBattery extends ResonantTile(Material.iron) with TIO with TBlockNodePr
     updateConnectionMask()
   }
 
-  def updateConnectionMask()
-  {
-    electricNode.setPositives(getInputDirections())
-    electricNode.setNegatives(getOutputDirections())
-    electricNode.reconstruct()
-    markUpdate()
-    notifyChange()
-  }
-
   override def onPlaced(entityLiving: EntityLivingBase, itemStack: ItemStack)
   {
     if (!world.isRemote && itemStack.getItem.isInstanceOf[ItemBlockBattery])
     {
       energy.max = (TileBattery.getEnergyForTier(ItemBlockBattery.getTier(itemStack)))
       energy.value = itemStack.getItem.asInstanceOf[ItemBlockBattery].getEnergy(itemStack)
-      world.setBlockMetadataWithNotify(xi, yi, zi, ItemBlockBattery.getTier(itemStack), 3)
+      world.setBlockMetadataWithNotify(x, y, z, ItemBlockBattery.getTier(itemStack), 3)
     }
   }
 
@@ -155,7 +155,7 @@ class TileBattery extends ResonantTile(Material.iron) with TIO with TBlockNodePr
     val ret = new ArrayList[ItemStack]
     val itemStack: ItemStack = new ItemStack(getBlockType, 1)
     val itemBlock: ItemBlockBattery = itemStack.getItem.asInstanceOf[ItemBlockBattery]
-    ItemBlockBattery.setTier(itemStack, world.getBlockMetadata(xi, yi, zi).asInstanceOf[Byte])
+    ItemBlockBattery.setTier(itemStack, world.getBlockMetadata(x, y, z).asInstanceOf[Byte])
     itemBlock.setEnergy(itemStack, energy.value)
     ret.add(itemStack)
     return ret
@@ -201,7 +201,7 @@ class TileBattery extends ResonantTile(Material.iron) with TIO with TBlockNodePr
 
     for (check <- ForgeDirection.VALID_DIRECTIONS)
     {
-      if ((toVectorWorld + check).getTileEntity.isInstanceOf[TileBattery])
+      if ((position + check).getTileEntity.isInstanceOf[TileBattery])
       {
         disabledParts ++= partToDisable(check.ordinal)
         if (check == ForgeDirection.UP)
@@ -214,7 +214,7 @@ class TileBattery extends ResonantTile(Material.iron) with TIO with TBlockNodePr
           var connectionParts = Set.empty[String]
           val downDirs = ForgeDirection.VALID_DIRECTIONS.filter(_.offsetY == 0)
           downDirs.foreach(s => connectionParts ++= connectionPartToEnable(s.ordinal))
-          downDirs.filter(s => (toVectorWorld + s).getTileEntity.isInstanceOf[TileBattery]).foreach(s => connectionParts --= connectionPartToEnable(s.ordinal))
+          downDirs.filter(s => (position + s).getTileEntity.isInstanceOf[TileBattery]).foreach(s => connectionParts --= connectionPartToEnable(s.ordinal))
           enabledParts ++= connectionParts
         }
       }

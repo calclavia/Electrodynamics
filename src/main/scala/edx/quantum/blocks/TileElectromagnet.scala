@@ -114,7 +114,7 @@ class TileElectromagnet extends ResonantBlock(Material.iron) with IElectromagnet
 
     for (dir <- ForgeDirection.VALID_DIRECTIONS)
     {
-      val check = toVector3 + dir
+      val check = position + dir
       val checkTile = check.getTileEntity(world)
 
       if (checkTile != null && checkTile.getClass == tile.getClass && check.getBlockMetadata(world) == tile.getBlockMetadata)
@@ -123,7 +123,7 @@ class TileElectromagnet extends ResonantBlock(Material.iron) with IElectromagnet
       }
     }
 
-    RenderBlockUtility.tessellateBlockWithConnectedTextures(sideMap, world, xi, yi, zi, tile.getBlockType, null, RenderUtility.getIcon(edgeTexture))
+    RenderBlockUtility.tessellateBlockWithConnectedTextures(sideMap, world, x, y, z, tile.getBlockType, null, RenderUtility.getIcon(edgeTexture))
   }
 
 }

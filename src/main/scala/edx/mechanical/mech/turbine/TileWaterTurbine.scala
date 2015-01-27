@@ -37,7 +37,7 @@ class TileWaterTurbine extends TileTurbine
     {
       if (other.isInstanceOf[NodeMechanical] && !other.isInstanceOf[TileTurbine])
       {
-        val sourceTile: TileEntity = toVectorWorld.add(from).getTileEntity
+        val sourceTile: TileEntity = position.add(from).getTileEntity
 
         if (sourceTile.isInstanceOf[INodeProvider])
         {
@@ -69,7 +69,7 @@ class TileWaterTurbine extends TileTurbine
         val metadata = worldObj.getBlockMetadata(xCoord, yCoord + 1, zCoord)
         val isWater = blockAbove == Blocks.water || blockAbove == Blocks.flowing_water
 
-        if (isWater && metadata == 0 && blockBelow.isReplaceable(world, xi, yi - 1, zi))
+        if (isWater && metadata == 0 && blockBelow.isReplaceable(world, x, y - 1, z))
         {
           powerTicks = 20
           worldObj.setBlockToAir(xCoord, yCoord + 1, zCoord)
@@ -86,7 +86,7 @@ class TileWaterTurbine extends TileTurbine
       {
         if (dir != currentDir && dir != currentDir.getOpposite)
         {
-          val check: Vector3 = toVector3.add(dir)
+          val check: Vector3 = position.add(dir)
           val block = worldObj.getBlock(check.xi, check.yi, check.zi)
           val metadata: Int = worldObj.getBlockMetadata(check.xi, check.yi, check.zi)
 

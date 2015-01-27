@@ -94,7 +94,7 @@ class TileTesla extends ResonantTile(Material.iron) with TBlockNodeProvider with
       if (this.ticks % (4 + this.worldObj.rand.nextInt(2)) == 0 && ((this.worldObj.isRemote && isTransfering) || (this.energy.value != 0 && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))))
       {
         val topTesla: TileTesla = this.getTopTelsa
-        val topTeslaVector: Vector3 = toVector3
+        val topTeslaVector: Vector3 = position
         if (this.linked != null || this.isLinkedClient)
         {
           if (!this.worldObj.isRemote)
@@ -124,8 +124,8 @@ class TileTesla extends ResonantTile(Material.iron) with TBlockNodeProvider with
           {
             def compare(o1: ITesla, o2: ITesla): Int =
             {
-              val distance1: Double = toVector3.distance(new Vector3(o1.asInstanceOf[TileEntity]))
-              val distance2: Double = toVector3.distance(new Vector3(o2.asInstanceOf[TileEntity]))
+              val distance1: Double = position.distance(new Vector3(o1.asInstanceOf[TileEntity]))
+              val distance2: Double = position.distance(new Vector3(o2.asInstanceOf[TileEntity]))
               if (distance1 < distance2)
               {
                 return 1
@@ -141,7 +141,7 @@ class TileTesla extends ResonantTile(Material.iron) with TBlockNodeProvider with
           for (o <- TeslaGrid.instance.get)
           {
             var otherTesla = o
-            if (new Vector3(otherTesla.asInstanceOf[TileEntity]).distance(toVector3) < this.getRange && otherTesla != this)
+            if (new Vector3(otherTesla.asInstanceOf[TileEntity]).distance(position) < this.getRange && otherTesla != this)
             {
               if (otherTesla.isInstanceOf[TileTesla])
               {
@@ -172,11 +172,11 @@ class TileTesla extends ResonantTile(Material.iron) with TBlockNodeProvider with
                 if (tesla.isInstanceOf[TileTesla])
                 {
                   getMultiBlock.get.outputBlacklist.add(this)
-                  targetVector = tesla.asInstanceOf[TileTesla].getTopTelsa.toVector3
+                  targetVector = tesla.asInstanceOf[TileTesla].getTopTelsa.position
                   heightRange = (tesla.asInstanceOf[TileTesla]).getHeight
                 }
                 val distance: Double = topTeslaVector.distance(targetVector)
-                Electrodynamics.proxy.renderElectricShock(this.worldObj, topTesla.toVector3 + new Vector3(0.5), targetVector + new Vector3(0.5, Math.random * heightRange / 3 - heightRange / 3, 0.5), EnumColor.DYES(this.dyeID).toColor)
+                Electrodynamics.proxy.renderElectricShock(this.worldObj, topTesla.position + new Vector3(0.5), targetVector + new Vector3(0.5, Math.random * heightRange / 3 - heightRange / 3, 0.5), EnumColor.DYES(this.dyeID).toColor)
                 this.transfer(tesla, Math.min(transferEnergy, TRANSFER_CAP))
                 if (!sentPacket && transferEnergy > 0)
                 {
@@ -308,7 +308,7 @@ class TileTesla extends ResonantTile(Material.iron) with TBlockNodeProvider with
       return this.topCache
     }
     this.connectedTeslas.clear
-    val checkPosition: Vector3 = toVector3
+    val checkPosition: Vector3 = position
     var returnTile: TileTesla = this
     var exit = false
     while (exit)
@@ -344,7 +344,7 @@ class TileTesla extends ResonantTile(Material.iron) with TBlockNodeProvider with
     var exit = false
     while (!exit)
     {
-      val t: TileEntity = (toVector3 + new Vector3(0, y, 0)).getTileEntity(this.worldObj)
+      val t: TileEntity = (position + new Vector3(0, y, 0)).getTileEntity(this.worldObj)
       if (t.isInstanceOf[TileTesla])
       {
         this.connectedTeslas.add(t.asInstanceOf[TileTesla])
@@ -428,7 +428,7 @@ class TileTesla extends ResonantTile(Material.iron) with TBlockNodeProvider with
         val tileEntity: TileEntity = this.linked.getTileEntity(newOtherWorld)
         if (tileEntity.isInstanceOf[TileTesla])
         {
-          (tileEntity.asInstanceOf[TileTesla]).setLink(toVector3, this.worldObj.provider.dimensionId, false)
+          (tileEntity.asInstanceOf[TileTesla]).setLink(position, this.worldObj.provider.dimensionId, false)
         }
       }
     }
@@ -454,7 +454,7 @@ class TileTesla extends ResonantTile(Material.iron) with TBlockNodeProvider with
   def getMultiBlockVectors: java.lang.Iterable[Vector3] =
   {
     val vectors: List[Vector3] = new ArrayList[Vector3]
-    val checkPosition: Vector3 = toVector3
+    val checkPosition: Vector3 = position
     var exit = false
     while (!exit)
     {
@@ -474,7 +474,7 @@ class TileTesla extends ResonantTile(Material.iron) with TBlockNodeProvider with
 
   def getPosition: Vector3 =
   {
-    return toVector3
+    return position
   }
 
   def getWorld: World =
@@ -576,7 +576,7 @@ class TileTesla extends ResonantTile(Material.iron) with TBlockNodeProvider with
       else
       {
         if (world.isRemote) player.addChatMessage(new ChatComponentText("Marked link for device."))
-        LinkUtility.setLink(itemStack, toVectorWorld)
+        LinkUtility.setLink(itemStack, position)
       }
       return true
     }
@@ -593,8 +593,8 @@ class TileTesla extends ResonantTile(Material.iron) with TBlockNodeProvider with
     val mainTile: TileTesla = getLowestTesla
     mainTile.getMultiBlock.deconstruct
     mainTile.getMultiBlock.construct
-    val isTop: Boolean = (toVector3 + new Vector3(0, 1, 0)).getTileEntity(this.worldObj).isInstanceOf[TileTesla]
-    val isBottom: Boolean = (toVector3 + new Vector3(0, -1, 0)).getTileEntity(this.worldObj).isInstanceOf[TileTesla]
+    val isTop: Boolean = (position + new Vector3(0, 1, 0)).getTileEntity(this.worldObj).isInstanceOf[TileTesla]
+    val isBottom: Boolean = (position + new Vector3(0, -1, 0)).getTileEntity(this.worldObj).isInstanceOf[TileTesla]
     if (isTop && isBottom)
     {
       this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, 1, 3)
@@ -612,7 +612,7 @@ class TileTesla extends ResonantTile(Material.iron) with TBlockNodeProvider with
   def getLowestTesla: TileTesla =
   {
     var lowest: TileTesla = this
-    val checkPosition: Vector3 = toVector3
+    val checkPosition: Vector3 = position
     var exit = false
     while (!exit)
     {

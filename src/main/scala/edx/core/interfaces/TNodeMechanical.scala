@@ -1,14 +1,13 @@
 package edx.core.interfaces
 
 import resonantengine.api.graph.node.INode
-import resonantengine.api.transform.vector.IVectorWorld
 
 /**
  * Applied to any node that will act as a mechanical object
  *
  * @author Darkguardsman, Calclavia
  */
-trait TNodeMechanical extends INode with IVectorWorld
+trait TNodeMechanical extends INode
 {
   /**
    * Gets the angular velocity of the mechanical device from a specific side
@@ -26,7 +25,7 @@ trait TNodeMechanical extends INode with IVectorWorld
 
   /**
    * The mechanical resistance of this node.
-   * Consider the moment of inertia, which equals mass * radius ^ 2
+   * Consider the moment of inertia, which equals mass * radius * radius
    *
    * Torque = Moment of Intertia * angular velocity
    *

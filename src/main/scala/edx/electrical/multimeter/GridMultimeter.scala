@@ -11,23 +11,23 @@ import scala.collection.mutable.ArrayBuffer
 
 class GridMultimeter extends Grid[PartMultimeter]
 {
-  final val displayInformation = new ArrayBuffer[String]
-  /**
-   * The available graphs to be handled.
-   */
-  final val graphs = new ArrayBuffer[Graph[_]]
-  final val energyGraph = new Graph[Double]("energy", maxData)
-  final val powerGraph = new Graph[Double]("power", maxData)
-  final val voltageGraph = new Graph[Double]("voltage", maxData)
-  final val torqueGraph = new Graph[Double]("torque", maxData)
-  final val angularVelocityGraph = new Graph[Double]("speed", maxData)
-  final val fluidGraph = new Graph[Int]("fluid", maxData)
-  final val thermalGraph = new Graph[Int]("temperature", maxData)
-  final val pressureGraph = new Graph[Int]("pressure", maxData)
   /**
    * Maximum data points a graph can store.
    */
-  private val maxData: Int = 1
+  private final val maxData = 1
+  val displayInformation = new ArrayBuffer[String]
+  /**
+   * The available graphs to be handled.
+   */
+  val graphs = new ArrayBuffer[Graph[_]]
+  val energyGraph = new Graph[Double]("energy", maxData)
+  val powerGraph = new Graph[Double]("power", maxData)
+  val voltageGraph = new Graph[Double]("voltage", maxData)
+  val torqueGraph = new Graph[Double]("torque", maxData)
+  val angularVelocityGraph = new Graph[Double]("speed", maxData)
+  val fluidGraph = new Graph[Int]("fluid", maxData)
+  val thermalGraph = new Graph[Int]("temperature", maxData)
+  val pressureGraph = new Graph[Int]("pressure", maxData)
   /**
    * The absolute center of the multimeter screens.
    */
@@ -118,7 +118,7 @@ class GridMultimeter extends Grid[PartMultimeter]
         lowerBound = lowerBound.min(node.getPosition)
       })
 
-      center = upperBound.midPoint(lowerBound)
+      center = upperBound.midpoint(lowerBound)
       upperBound -= center
       lowerBound -= center
       size = new Vector3(Math.abs(upperBound.x) + Math.abs(lowerBound.x), Math.abs(upperBound.y) + Math.abs(lowerBound.y), Math.abs(upperBound.z) + Math.abs(lowerBound.z))

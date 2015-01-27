@@ -143,6 +143,28 @@ class TileImprinter extends ResonantTile(Material.circuits) with ISidedInventory
   }
 
   /**
+   * Sets the given item stack to the specified slot in the inventory (can be crafting or armor
+   * sections).
+   */
+  def setInventorySlotContents(slot: Int, itemStack: ItemStack)
+  {
+    if (slot < this.getSizeInventory)
+    {
+      inventory(slot) = itemStack
+    }
+  }
+
+  def getSizeInventory: Int =
+  {
+    return this.inventory.length
+  }
+
+  def getStackInSlot(slot: Int): ItemStack =
+  {
+    return this.inventory(slot)
+  }
+
+  /**
    * When some containers are closed they call this on each slot, then drop whatever it returns as
    * an EntityItem - like when you close a workbench GUI.
    */
@@ -248,14 +270,14 @@ class TileImprinter extends ResonantTile(Material.circuits) with ISidedInventory
     return this.isItemValidForSlot(slot, itemstack)
   }
 
-  def canExtractItem(slot: Int, itemstack: ItemStack, side: Int): Boolean =
-  {
-    return this.isItemValidForSlot(slot, itemstack)
-  }
-
   def isItemValidForSlot(i: Int, itemstack: ItemStack): Boolean =
   {
     return true
+  }
+
+  def canExtractItem(slot: Int, itemstack: ItemStack, side: Int): Boolean =
+  {
+    return this.isItemValidForSlot(slot, itemstack)
   }
 
   override def renderDynamic(position: Vector3, frame: Float, pass: Int)
@@ -348,12 +370,12 @@ class TileImprinter extends ResonantTile(Material.circuits) with ISidedInventory
                 InventoryUtility.dropItemStack(world, new Vector3(player), checkStack, 0)
                 inventory(slotID) = null
               }
-              world.markBlockForUpdate(xi, yi, zi)
+              world.markBlockForUpdate(x, y, z)
               return true
             }
           }
         }
-        world.markBlockForUpdate(xi, yi, zi)
+        world.markBlockForUpdate(x, y, z)
       }
       return true
     }
@@ -374,31 +396,9 @@ class TileImprinter extends ResonantTile(Material.circuits) with ISidedInventory
     return false
   }
 
-  def getStackInSlot(slot: Int): ItemStack =
-  {
-    return this.inventory(slot)
-  }
-
-  /**
-   * Sets the given item stack to the specified slot in the inventory (can be crafting or armor
-   * sections).
-   */
-  def setInventorySlotContents(slot: Int, itemStack: ItemStack)
-  {
-    if (slot < this.getSizeInventory)
-    {
-      inventory(slot) = itemStack
-    }
-  }
-
-  def getSizeInventory: Int =
-  {
-    return this.inventory.length
-  }
-
   override def onNeighborChanged(block: Block)
   {
-    val b: Block = toVectorWorld.add(ForgeDirection.getOrientation(1)).getBlock
+    val b: Block = (position + ForgeDirection.getOrientation(1)).getBlock
     if (Blocks.piston_head eq b)
     {
       onInventoryChanged

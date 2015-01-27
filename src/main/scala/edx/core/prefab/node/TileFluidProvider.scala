@@ -32,6 +32,20 @@ abstract class TileFluidProvider(material: Material) extends ResonantTile(materi
     }
   }
 
+  def fluidNode = _fluidNode
+
+  def fluidNode_=(newNode: NodeFluid)
+  {
+    _fluidNode = newNode
+    fluidNode.onConnectionChanged = () =>
+    {
+      clientRenderMask = fluidNode.connectedMask
+      sendPacket(0)
+    }
+    fluidNode.onFluidChanged = () => if (!world.isRemote) sendPacket(1)
+    nodes.add(fluidNode)
+  }
+
   override def write(buf: ByteBuf, id: Int)
   {
     super.write(buf, id)
@@ -82,8 +96,6 @@ abstract class TileFluidProvider(material: Material) extends ResonantTile(materi
     colorID = nbt.getInteger("colorID")
   }
 
-  def fluidNode = _fluidNode
-
   override def writeToNBT(nbt: NBTTagCompound)
   {
     super.writeToNBT(nbt)
@@ -92,18 +104,6 @@ abstract class TileFluidProvider(material: Material) extends ResonantTile(materi
   }
 
   override def drain(from: ForgeDirection, resource: FluidStack, doDrain: Boolean): FluidStack = fluidNode.drain(from, resource, doDrain)
-
-  def fluidNode_=(newNode: NodeFluid)
-  {
-    _fluidNode = newNode
-    fluidNode.onConnectionChanged = () =>
-    {
-      clientRenderMask = fluidNode.connectedMask
-      sendPacket(0)
-    }
-    fluidNode.onFluidChanged = () => if (!world.isRemote) sendPacket(1)
-    nodes.add(fluidNode)
-  }
 
   override def drain(from: ForgeDirection, maxDrain: Int, doDrain: Boolean): FluidStack = fluidNode.drain(from, maxDrain, doDrain)
 

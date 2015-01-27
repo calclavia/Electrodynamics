@@ -58,7 +58,7 @@ class TileCentrifuge extends ResonantTile(Material.iron) with TInventory with TB
         for (i <- 0 to 6)
         {
           val direction: ForgeDirection = ForgeDirection.getOrientation(i)
-          val tileEntity: TileEntity = toVector3.add(direction).getTileEntity(world)
+          val tileEntity: TileEntity = position.add(direction).getTileEntity(world)
           if (tileEntity.isInstanceOf[IFluidHandler] && tileEntity.getClass != this.getClass)
           {
             val fluidHandler: IFluidHandler = (tileEntity.asInstanceOf[IFluidHandler])
@@ -165,7 +165,7 @@ class TileCentrifuge extends ResonantTile(Material.iron) with TInventory with TB
 
   override def getDescPacket: PacketTile =
   {
-    return new PacketTile(xi, yi, zi, Array[Any](this.timer, QuantumContent.getFluidAmount(this.gasTank.getFluid)))
+    return new PacketTile(x, y, z, Array[Any](this.timer, QuantumContent.getFluidAmount(this.gasTank.getFluid)))
   }
 
   /**

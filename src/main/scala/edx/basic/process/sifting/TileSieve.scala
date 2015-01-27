@@ -107,7 +107,7 @@ class TileSieve extends ResonantTile(Material.wood) with TInventory with TPacket
 
   override def onRemove(block: Block, par6: Int)
   {
-    val stack: ItemStack = ItemBlockSaved.getItemStackWithNBT(block, world, xi, yi, zi)
+    val stack: ItemStack = ItemBlockSaved.getItemStackWithNBT(block, world, x, y, z)
     InventoryUtility.dropItemStack(world, center, stack)
   }
 

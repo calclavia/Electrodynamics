@@ -52,6 +52,20 @@ object RenderPipe extends ISimpleItemRenderer
   }
 
   /**
+   * Render inventory pipe
+   */
+  def renderInventoryItem(renderType: ItemRenderType, itemStack: ItemStack, data: AnyRef*)
+  {
+    GL11.glPushMatrix()
+
+    if (renderType == ItemRenderType.EQUIPPED_FIRST_PERSON || renderType == ItemRenderType.EQUIPPED)
+      GL11.glTranslated(0.5, 0.5, 0.5)
+
+    render(itemStack.getItemDamage, -1, 0xC)
+    GL11.glPopMatrix()
+  }
+
+  /**
    * Render Pipe Model
    */
   def render(meta: Int, colorCode: Int, sides: Int)
@@ -102,19 +116,5 @@ object RenderPipe extends ISimpleItemRenderer
     }
 
     RenderUtility.disableBlending()
-  }
-
-  /**
-   * Render inventory pipe
-   */
-  def renderInventoryItem(renderType: ItemRenderType, itemStack: ItemStack, data: AnyRef*)
-  {
-    GL11.glPushMatrix()
-
-    if (renderType == ItemRenderType.EQUIPPED_FIRST_PERSON || renderType == ItemRenderType.EQUIPPED)
-      GL11.glTranslated(0.5, 0.5, 0.5)
-
-    render(itemStack.getItemDamage, -1, 0xC)
-    GL11.glPopMatrix()
   }
 }

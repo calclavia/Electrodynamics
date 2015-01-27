@@ -66,17 +66,13 @@ abstract class TileMechanical(material: Material) extends ResonantTile(material:
   def mechanicalNode = _mechanicalNode
 
   def mechanicalNode_=(newNode: NodeMechanical)
-{
-  _mechanicalNode = newNode
-  mechanicalNode.onVelocityChanged = () => sendPacket(1)
-  nodes.removeAll(nodes.filter(_.isInstanceOf[NodeMechanical]))
-  nodes.add(mechanicalNode)
+  {
+    _mechanicalNode = newNode
+    mechanicalNode.onVelocityChanged = () => sendPacket(1)
+    nodes.removeAll(nodes.filter(_.isInstanceOf[NodeMechanical]))
+    nodes.add(mechanicalNode)
   }
 
   mechanicalNode = new NodeMechanical(this)
-
-
-
-
 
 }

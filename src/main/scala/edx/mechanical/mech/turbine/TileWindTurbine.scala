@@ -65,7 +65,7 @@ class TileWindTurbine extends TileTurbine with IBoilHandler
         //Break under storm
         InventoryUtility.dropItemStack(worldObj, new Vector3(x, y, z), new ItemStack(Blocks.wool, 1 + worldObj.rand.nextInt(2)))
         InventoryUtility.dropItemStack(worldObj, new Vector3(x, y, z), new ItemStack(Items.stick, 3 + worldObj.rand.nextInt(8)))
-        toVectorWorld.setBlockToAir()
+        position.setBlockToAir()
       }
       else if (getMultiBlock.isPrimary)
       {

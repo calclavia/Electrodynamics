@@ -71,16 +71,6 @@ class TileThermometer extends ResonantTile(Material.piston) with SimpleComponent
     return true
   }
 
-  def setThreshold(newThreshold: Int)
-  {
-    threshold = newThreshold % TileThermometer.MAX_THRESHOLD
-    if (threshold <= 0)
-    {
-      threshold = TileThermometer.MAX_THRESHOLD
-    }
-    markUpdate
-  }
-
   override def configure(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
   {
     if (player.isSneaking)
@@ -92,6 +82,16 @@ class TileThermometer extends ResonantTile(Material.piston) with SimpleComponent
       setThreshold(getThreshold + 10)
     }
     return true
+  }
+
+  def setThreshold(newThreshold: Int)
+  {
+    threshold = newThreshold % TileThermometer.MAX_THRESHOLD
+    if (threshold <= 0)
+    {
+      threshold = TileThermometer.MAX_THRESHOLD
+    }
+    markUpdate
   }
 
   override def getStrongRedstonePower(access: IBlockAccess, side: Int): Int =
@@ -106,7 +106,7 @@ class TileThermometer extends ResonantTile(Material.piston) with SimpleComponent
 
   override def onRemove(block: Block, par6: Int)
   {
-    val stack: ItemStack = ItemBlockSaved.getItemStackWithNBT(getBlockType, world, xi, yi, zi)
+    val stack: ItemStack = ItemBlockSaved.getItemStackWithNBT(getBlockType, world, x, y, z)
     InventoryUtility.dropItemStack(world, center, stack)
   }
 
@@ -123,7 +123,7 @@ class TileThermometer extends ResonantTile(Material.piston) with SimpleComponent
         }
         else
         {
-          detectedTemperature = GridThermal.getTemperature(toVectorWorld)
+          detectedTemperature = GridThermal.getTemperature(position)
         }
         if (detectedTemperature != previousDetectedTemperature || isProvidingPower != this.isOverThreshold)
         {
@@ -134,6 +134,16 @@ class TileThermometer extends ResonantTile(Material.piston) with SimpleComponent
         }
       }
     }
+  }
+
+  def isOverThreshold: Boolean =
+  {
+    return detectedTemperature >= getThreshold
+  }
+
+  def getThreshold: Int =
+  {
+    return threshold
   }
 
   def setTrack(track: Vector3)
@@ -185,21 +195,11 @@ class TileThermometer extends ResonantTile(Material.piston) with SimpleComponent
     return Array[Any](this.getThreshold)
   }
 
-  def getThreshold: Int =
-  {
-    return threshold
-  }
-
   @Callback
   @Optional.Method(modid = "OpenComputers")
   def isAboveWarningTemperature(context: Context, args: Arguments): Array[Any] =
   {
     return Array[Any](this.isOverThreshold)
-  }
-
-  def isOverThreshold: Boolean =
-  {
-    return detectedTemperature >= getThreshold
   }
 
   @Callback

@@ -19,13 +19,13 @@ class TileSiren extends ResonantBlock(Material.wood)
     val world: World = worldObj
     if (world != null)
     {
-      val metadata: Int = world.getBlockMetadata(xi, yi, zi)
-      if (world.getBlockPowerInput(xi, yi, zi) > 0)
+      val metadata: Int = world.getBlockMetadata(x, y, z)
+      if (world.getBlockPowerInput(x, y, z) > 0)
       {
         var volume: Float = 0.5f
         for (i <- 0 to 6)
         {
-          val check: Vector3 = toVector3.add(ForgeDirection.getOrientation(i))
+          val check: Vector3 = position.add(ForgeDirection.getOrientation(i))
           if (check.getBlock(world) eq getBlockType)
           {
             volume *= 1.5f
@@ -38,7 +38,7 @@ class TileSiren extends ResonantBlock(Material.wood)
 
   override def configure(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
   {
-    var metadata: Int = world.getBlockMetadata(xi, yi, zi)
+    var metadata: Int = world.getBlockMetadata(x, y, z)
     if (player.isSneaking)
     {
       metadata -= 1
@@ -48,7 +48,7 @@ class TileSiren extends ResonantBlock(Material.wood)
       metadata += 1
     }
     metadata = Math.max(metadata % 16, 0)
-    world.setBlockMetadataWithNotify(xi, yi, zi, metadata, 2)
+    world.setBlockMetadataWithNotify(x, y, z, metadata, 2)
     return true
   }
 }

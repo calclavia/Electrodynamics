@@ -68,13 +68,13 @@ class TileAccelerator extends ResonantTile(Material.iron) with TInventory with I
             //Create new particle if we have materials to spawn it with
             if (getStackInSlot(0) != null && lastSpawnTick >= 40)
             {
-              val spawn_vec: Vector3 = toVector3
+              val spawn_vec: Vector3 = position
               spawn_vec.add(getDirection.getOpposite)
               spawn_vec.add(0.5f)
               if (EntityParticle.canSpawnParticle(worldObj, spawn_vec))
               {
                 totalEnergyConsumed = 0
-                entityParticle = new EntityParticle(worldObj, spawn_vec, toVector3, getDirection.getOpposite)
+                entityParticle = new EntityParticle(worldObj, spawn_vec, position, getDirection.getOpposite)
                 worldObj.spawnEntityInWorld(entityParticle)
                 CalculateParticleDensity
                 decrStackSize(0, 1)
@@ -205,7 +205,7 @@ class TileAccelerator extends ResonantTile(Material.iron) with TInventory with I
 
   override def getDescPacket: PacketTile =
   {
-    return new PacketTile(xi, yi, zi, Array[Any](DESC_PACKET_ID, velocity, totalEnergyConsumed, antimatter, energy.value))
+    return new PacketTile(x, y, z, Array[Any](DESC_PACKET_ID, velocity, totalEnergyConsumed, antimatter, energy.value))
   }
 
   /////////////////////////////////////////
@@ -223,7 +223,7 @@ class TileAccelerator extends ResonantTile(Material.iron) with TInventory with I
 
   override def activate(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
   {
-    player.openGui(Electrodynamics, 0, world, xi, yi, zi)
+    player.openGui(Electrodynamics, 0, world, x, y, z)
     return true
   }
 

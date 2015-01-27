@@ -17,7 +17,7 @@ class NodePipe(parent: PartPipe) extends NodeFluidPressure(parent) with TMultipa
   {
     for (dir <- ForgeDirection.VALID_DIRECTIONS)
     {
-      val tile = toVectorWorld.add(dir).getTileEntity(world)
+      val tile = position.add(dir).getTileEntity(world)
 
       if (tile.isInstanceOf[IFluidHandler])
       {

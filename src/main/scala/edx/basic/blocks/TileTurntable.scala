@@ -36,7 +36,7 @@ class TileTurntable extends ResonantBlock(Material.piston) with TRotatable
 
   override def update()
   {
-    updateTurntableState(world, xi, yi, zi)
+    updateTurntableState(world, x, y, z)
   }
 
   private def updateTurntableState(world: World, x: Int, y: Int, z: Int)

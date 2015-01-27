@@ -62,7 +62,7 @@ class TileGrindingWheel extends TileMechanical(Material.rock)
 
       if (grindingItem != null)
       {
-        if (TileGrindingWheel.grindingTimer.containsKey(grindingItem) && !grindingItem.isDead && toVector3.add(0.5).distance(new Vector3(grindingItem)) < 1)
+        if (TileGrindingWheel.grindingTimer.containsKey(grindingItem) && !grindingItem.isDead && position.add(0.5).distance(new Vector3(grindingItem)) < 1)
         {
           val timeLeft: Int = TileGrindingWheel.grindingTimer.decrease(grindingItem)
           if (timeLeft <= 0)
@@ -136,6 +136,11 @@ class TileGrindingWheel extends TileMechanical(Material.rock)
     return results.length > 0
   }
 
+  /**
+   * Can this machine work this tick?
+   */
+  def canWork: Boolean = counter >= requiredTorque
+
   override def collide(entity: Entity)
   {
     if (entity.isInstanceOf[EntityItem])
@@ -178,11 +183,6 @@ class TileGrindingWheel extends TileMechanical(Material.rock)
       entity.addVelocity(velocity.x, velocity.y, velocity.z)
     }
   }
-
-  /**
-   * Can this machine work this tick?
-   */
-  def canWork: Boolean = counter >= requiredTorque
 
   def canGrind(itemStack: ItemStack): Boolean = MachineRecipes.instance.getOutput(RecipeType.SIFTER.name, itemStack).length > 0
 
