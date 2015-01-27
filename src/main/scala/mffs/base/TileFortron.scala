@@ -35,14 +35,14 @@ abstract class TileFortron extends TileFrequency with IFluidHandler with IFortro
 
 	def sendFortronToClients
 	{
-		ModularForceFieldSystem.packetHandler.sendToAllAround(PacketManager.request(this, TilePacketType.fortron.id), this.worldObj, toVector3, 25)
+		ModularForceFieldSystem.packetHandler.sendToAllAround(PacketManager.request(this, TilePacketType.fortron.id), this.worldObj, position, 25)
 	}
 
 	override def invalidate()
 	{
 		if (this.markSendFortron)
 		{
-			FortronUtility.transferFortron(this, FrequencyGridRegistry.instance.getNodes(classOf[IFortronFrequency], worldObj, toVector3, 100, this.getFrequency), TransferMode.drain, Integer.MAX_VALUE)
+			FortronUtility.transferFortron(this, FrequencyGridRegistry.instance.getNodes(classOf[IFortronFrequency], worldObj, position, 100, this.getFrequency), TransferMode.drain, Integer.MAX_VALUE)
 		}
 
 		super.invalidate()

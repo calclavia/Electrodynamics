@@ -70,40 +70,6 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
     calculateField(postCalculation)
   }
 
-  def postCalculation() = if (clientSideSimulationRequired) sendFieldToClient
-
-  def sendFieldToClient
-  {
-    val nbt = new NBTTagCompound
-    val nbtList = new NBTTagList
-    calculatedField foreach (vec => nbtList.appendTag(vec.toNBT))
-    nbt.setTag("blockList", nbtList)
-    ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(this, TilePacketType.field.id: Integer, nbt))
-  }
-
-  private def clientSideSimulationRequired: Boolean =
-  {
-    return getModuleCount(Content.moduleRepulsion) > 0
-  }
-
-  /**
-   * Initiate a field calculation
-   */
-  protected override def calculateField(callBack: () => Unit = null)
-  {
-    if (!worldObj.isRemote && !isCalculating)
-    {
-      if (getMode != null)
-      {
-        forceFields.clear
-      }
-
-      super.calculateField(callBack)
-      isCompleteConstructing = false
-      fieldRequireTicks = getModuleStacks() exists (module => module.getItem.asInstanceOf[IModule].requireTicks(module))
-    }
-  }
-
   override def getLightValue(access: IBlockAccess) = if (getMode() != null) 10 else 0
 
   override def write(buf: ByteBuf, id: Int)
@@ -130,7 +96,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
       {
         val packetType = buf.readInt
         val vector = new Vector3(buf.readInt, buf.readInt, buf.readInt) + 0.5
-        val root = toVector3 + 0.5
+        val root = position + 0.5
 
         if (packetType == 1)
         {
@@ -194,6 +160,40 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
     }
   }
 
+  def postCalculation() = if (clientSideSimulationRequired) sendFieldToClient
+
+  def sendFieldToClient
+  {
+    val nbt = new NBTTagCompound
+    val nbtList = new NBTTagList
+    calculatedField foreach (vec => nbtList.appendTag(vec.toNBT))
+    nbt.setTag("blockList", nbtList)
+    ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(this, TilePacketType.field.id: Integer, nbt))
+  }
+
+  private def clientSideSimulationRequired: Boolean =
+  {
+    return getModuleCount(Content.moduleRepulsion) > 0
+  }
+
+  /**
+   * Initiate a field calculation
+   */
+  protected override def calculateField(callBack: () => Unit = null)
+  {
+    if (!worldObj.isRemote && !isCalculating)
+    {
+      if (getMode != null)
+      {
+        forceFields.clear
+      }
+
+      super.calculateField(callBack)
+      isCompleteConstructing = false
+      fieldRequireTicks = getModuleStacks() exists (module => module.getItem.asInstanceOf[IModule].requireTicks(module))
+    }
+  }
+
   /**
    * Projects a force field based on the calculations made.
    */
@@ -226,7 +226,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
           //Creates a collection of positions that will be evaluated
           val evaluateField = potentialField
             .view.par
-            .filter(!_.equals(toVector3))
+            .filter(!_.equals(position))
             .filter(v => canReplaceBlock(v, v.getBlock(world)))
             .filter(_.getBlock(world) != Content.forceField)
             .filter(v => world.getChunkFromBlockCoords(v.xi, v.zi).isChunkLoaded)
@@ -270,7 +270,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
                 val tileEntity = vector.getTileEntity(world)
 
                 if (tileEntity.isInstanceOf[TileForceField])
-                  tileEntity.asInstanceOf[TileForceField].setProjector(toVector3)
+                  tileEntity.asInstanceOf[TileForceField].setProjector(position)
               })
           }
 

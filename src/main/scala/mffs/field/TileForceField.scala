@@ -57,7 +57,7 @@ class TileForceField extends ResonantTile(Material.glass) with TPacketReceiver w
   {
     var renderType = 0
     var camoBlock: Block = null
-    val tileEntity = access.getTileEntity(xi, yi, zi)
+    val tileEntity = access.getTileEntity(x, y, z)
 
     if (camoStack != null && camoStack.getItem().isInstanceOf[ItemBlock])
     {
@@ -81,37 +81,37 @@ class TileForceField extends ResonantTile(Material.glass) with TPacketReceiver w
         renderType match
         {
           case 4 =>
-            renderer.renderBlockLiquid(block, xi, yi, zi)
+            renderer.renderBlockLiquid(block, x, y, z)
           case 31 =>
-            renderer.renderBlockLog(block, xi, yi, zi)
+            renderer.renderBlockLog(block, x, y, z)
           case 1 =>
-            renderer.renderCrossedSquares(block, xi, yi, zi)
+            renderer.renderCrossedSquares(block, x, y, z)
           case 20 =>
-            renderer.renderBlockVine(block, xi, yi, zi)
+            renderer.renderBlockVine(block, x, y, z)
           case 39 =>
-            renderer.renderBlockQuartz(block, xi, yi, zi)
+            renderer.renderBlockQuartz(block, x, y, z)
           case 5 =>
-            renderer.renderBlockRedstoneWire(block, xi, yi, zi)
+            renderer.renderBlockRedstoneWire(block, x, y, z)
           case 13 =>
-            renderer.renderBlockCactus(block, xi, yi, zi)
+            renderer.renderBlockCactus(block, x, y, z)
           case 23 =>
-            renderer.renderBlockLilyPad(block, xi, yi, zi)
+            renderer.renderBlockLilyPad(block, x, y, z)
           case 6 =>
-            renderer.renderBlockCrops(block, xi, yi, zi)
+            renderer.renderBlockCrops(block, x, y, z)
           case 7 =>
-            renderer.renderBlockDoor(block, xi, yi, zi)
+            renderer.renderBlockDoor(block, x, y, z)
           case 12 =>
-            renderer.renderBlockLever(block, xi, yi, zi)
+            renderer.renderBlockLever(block, x, y, z)
           case 29 =>
-            renderer.renderBlockTripWireSource(block, xi, yi, zi)
+            renderer.renderBlockTripWireSource(block, x, y, z)
           case 30 =>
-            renderer.renderBlockTripWire(block, xi, yi, zi)
+            renderer.renderBlockTripWire(block, x, y, z)
           case 14 =>
-            renderer.renderBlockBed(block, xi, yi, zi)
+            renderer.renderBlockBed(block, x, y, z)
           case 16 =>
-            renderer.renderPistonBase(block, xi, yi, zi, false)
+            renderer.renderPistonBase(block, x, y, z, false)
           case 17 =>
-            renderer.renderPistonExtension(block, xi, yi, zi, true)
+            renderer.renderPistonExtension(block, x, y, z, true)
           case _ =>
             super.renderStatic(renderer, pos, pass)
         }
@@ -163,7 +163,7 @@ class TileForceField extends ResonantTile(Material.glass) with TPacketReceiver w
     val projector = getProjector
 
     if (projector != null)
-      projector.getModuleStacks(projector.getModuleSlots(): _*) forall (stack => stack.getItem.asInstanceOf[IModule].onCollideWithForceField(world, xi, yi, zi, player, stack))
+      projector.getModuleStacks(projector.getModuleSlots(): _*) forall (stack => stack.getItem.asInstanceOf[IModule].onCollideWithForceField(world, x, y, z, player, stack))
   }
 
   override def getCollisionBoxes(intersect: Cuboid, entity: Entity): Iterable[Cuboid] =
@@ -195,13 +195,50 @@ class TileForceField extends ResonantTile(Material.glass) with TPacketReceiver w
     return super.getCollisionBoxes(intersect, entity)
   }
 
+  /**
+   * @return Gets the projector block controlling this force field. Removes the force field if no
+   *         projector can be found.
+   */
+  def getProjector: TileElectromagneticProjector =
+  {
+    if (this.getProjectorSafe != null)
+    {
+      return getProjectorSafe
+    }
+
+    if (!this.worldObj.isRemote)
+    {
+      world.setBlock(xCoord, yCoord, zCoord, Blocks.air)
+    }
+
+    return null
+  }
+
+  def getProjectorSafe: TileElectromagneticProjector =
+  {
+    if (projector != null)
+    {
+      val projTile = projector.getTileEntity(world)
+
+      if (projTile.isInstanceOf[TileElectromagneticProjector])
+      {
+        val projector = projTile.asInstanceOf[IProjector]
+        if (world.isRemote || (projector.getCalculatedField != null && projector.getCalculatedField.contains(position)))
+        {
+          return projTile.asInstanceOf[TileElectromagneticProjector]
+        }
+      }
+    }
+    return null
+  }
+
   override def collide(entity: Entity)
   {
     val projector = getProjector()
 
     if (projector != null)
     {
-      if (!projector.getModuleStacks(projector.getModuleSlots(): _*).forall(stack => stack.getItem().asInstanceOf[IModule].onCollideWithForceField(world, xi, yi, zi, entity, stack)))
+      if (!projector.getModuleStacks(projector.getModuleSlots(): _*).forall(stack => stack.getItem().asInstanceOf[IModule].onCollideWithForceField(world, x, y, z, entity, stack)))
         return
 
       val biometricIdentifier = projector.getBiometricIdentifier
@@ -279,7 +316,7 @@ class TileForceField extends ResonantTile(Material.glass) with TPacketReceiver w
     {
       try
       {
-        return camoStack.getItem().asInstanceOf[ItemBlock].field_150939_a.colorMultiplier(access, xi, yi, zi)
+        return camoStack.getItem().asInstanceOf[ItemBlock].field_150939_a.colorMultiplier(access, x, y, z)
       }
       catch
         {
@@ -326,7 +363,7 @@ class TileForceField extends ResonantTile(Material.glass) with TPacketReceiver w
 
     if (!world.isRemote)
     {
-      world.setBlockToAir(xi, yi, zi)
+      world.setBlockToAir(x, y, z)
     }
   }
 
@@ -385,7 +422,7 @@ class TileForceField extends ResonantTile(Material.glass) with TPacketReceiver w
   {
     if (getProjectorSafe != null)
     {
-      camoStack = MFFSUtility.getCamoBlock(getProjector, toVector3)
+      camoStack = MFFSUtility.getCamoBlock(getProjector, position)
     }
   }
 
@@ -406,42 +443,5 @@ class TileForceField extends ResonantTile(Material.glass) with TPacketReceiver w
     {
       nbt.setTag("projector", projector.toNBT)
     }
-  }
-
-  /**
-   * @return Gets the projector block controlling this force field. Removes the force field if no
-   *         projector can be found.
-   */
-  def getProjector: TileElectromagneticProjector =
-  {
-    if (this.getProjectorSafe != null)
-    {
-      return getProjectorSafe
-    }
-
-    if (!this.worldObj.isRemote)
-    {
-      world.setBlock(xCoord, yCoord, zCoord, Blocks.air)
-    }
-
-    return null
-  }
-
-  def getProjectorSafe: TileElectromagneticProjector =
-  {
-    if (projector != null)
-    {
-      val projTile = projector.getTileEntity(world)
-
-      if (projTile.isInstanceOf[TileElectromagneticProjector])
-      {
-        val projector = projTile.asInstanceOf[IProjector]
-        if (world.isRemote || (projector.getCalculatedField != null && projector.getCalculatedField.contains(toVector3)))
-        {
-          return projTile.asInstanceOf[TileElectromagneticProjector]
-        }
-      }
-    }
-    return null
   }
 }

@@ -105,6 +105,27 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     return actualDirs.foldLeft(0)((b, a) => b + getModuleCount(module, getDirectionSlots(a): _*))
   }
 
+  override def getDirectionSlots(direction: ForgeDirection): Array[Int] =
+  {
+    direction match
+    {
+      case ForgeDirection.UP =>
+        return Array(10, 11)
+      case ForgeDirection.DOWN =>
+        return Array(12, 13)
+      case ForgeDirection.SOUTH =>
+        return Array(2, 3)
+      case ForgeDirection.NORTH =>
+        return Array(4, 5)
+      case ForgeDirection.WEST =>
+        return Array(6, 7)
+      case ForgeDirection.EAST =>
+        return Array(8, 9)
+      case _ =>
+        return Array[Int]()
+    }
+  }
+
   def getPositiveScale: Vector3 =
   {
     val cacheID = "getPositiveScale"
@@ -143,6 +164,8 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     return positiveScale
   }
 
+  def getModuleSlots: Array[Int] = _getModuleSlots
+
   def getNegativeScale: Vector3 =
   {
     val cacheID = "getNegativeScale"
@@ -180,29 +203,6 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     return negativeScale
   }
 
-  def getModuleSlots: Array[Int] = _getModuleSlots
-
-  override def getDirectionSlots(direction: ForgeDirection): Array[Int] =
-  {
-    direction match
-    {
-      case ForgeDirection.UP =>
-        return Array(10, 11)
-      case ForgeDirection.DOWN =>
-        return Array(12, 13)
-      case ForgeDirection.SOUTH =>
-        return Array(2, 3)
-      case ForgeDirection.NORTH =>
-        return Array(4, 5)
-      case ForgeDirection.WEST =>
-        return Array(6, 7)
-      case ForgeDirection.EAST =>
-        return Array(8, 9)
-      case _ =>
-        return Array[Int]()
-    }
-  }
-
   def getInteriorPoints: JSet[Vector3] =
   {
     val cacheID = "getInteriorPoints"
@@ -227,7 +227,7 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     val rotation = new EulerAngle(rotationYaw, rotationPitch, 0)
     val maxHeight = world.getHeight
 
-    val field = mutable.Set((newField.view.par map (pos => (pos.transform(rotation) + toVector3 + translation).round) filter (position => position.yi <= maxHeight && position.yi >= 0)).seq.toSeq: _ *)
+    val field = mutable.Set((newField.view.par map (pos => (pos.transform(rotation) + position + translation).round) filter (position => position.yi <= maxHeight && position.yi >= 0)).seq.toSeq: _ *)
 
     cache(cacheID, field)
     return field
@@ -321,7 +321,7 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
 
     val maxHeight = world.getHeight
 
-    field = mutable.Set((field.view.par map (pos => (pos.transform(rotation) + toVector3 + translation).round) filter (position => position.yi <= maxHeight && position.yi >= 0)).seq.toSeq: _ *)
+    field = mutable.Set((field.view.par map (pos => (pos.transform(rotation) + position + translation).round) filter (position => position.yi <= maxHeight && position.yi >= 0)).seq.toSeq: _ *)
 
     getModules() foreach (_.onPostCalculate(this, field))
 
@@ -333,18 +333,6 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     if (this.getModeStack != null)
     {
       return this.getModeStack.getItem.asInstanceOf[IProjectorMode]
-    }
-    return null
-  }
-
-  def getModeStack: ItemStack =
-  {
-    if (this.getStackInSlot(modeSlotID) != null)
-    {
-      if (this.getStackInSlot(modeSlotID).getItem.isInstanceOf[IProjectorMode])
-      {
-        return this.getStackInSlot(modeSlotID)
-      }
     }
     return null
   }
@@ -426,6 +414,18 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     cache(cacheID, verticalRotation)
 
     return verticalRotation
+  }
+
+  def getModeStack: ItemStack =
+  {
+    if (this.getStackInSlot(modeSlotID) != null)
+    {
+      if (this.getStackInSlot(modeSlotID).getItem.isInstanceOf[IProjectorMode])
+      {
+        return this.getStackInSlot(modeSlotID)
+      }
+    }
+    return null
   }
 
 }

@@ -56,7 +56,7 @@ abstract class TileMFFS extends ResonantTile(Material.iron) with ICamouflageMate
   {
     if (!world.isRemote)
     {
-      if (world.isBlockIndirectlyGettingPowered(xi, yi, zi))
+      if (world.isBlockIndirectlyGettingPowered(x, y, z))
       {
         powerOn()
       }
@@ -92,12 +92,12 @@ abstract class TileMFFS extends ResonantTile(Material.iron) with ICamouflageMate
     }
   }
 
+  override def getDescPacket: PacketType = PacketManager.request(this, TilePacketType.description.id)
+
   override def getDescriptionPacket: Packet =
   {
     return ModularForceFieldSystem.packetHandler.toMCPacket(getDescPacket)
   }
-
-  override def getDescPacket: PacketType = PacketManager.request(this, TilePacketType.description.id)
 
   override def read(buf: ByteBuf, id: Int, packetType: PacketType)
   {
@@ -144,7 +144,7 @@ abstract class TileMFFS extends ResonantTile(Material.iron) with ICamouflageMate
     }
   }
 
-  def isPoweredByRedstone: Boolean = world.isBlockIndirectlyGettingPowered(xi, yi, zi)
+  def isPoweredByRedstone: Boolean = world.isBlockIndirectlyGettingPowered(x, y, z)
 
   override def readFromNBT(nbt: NBTTagCompound)
   {
@@ -174,7 +174,7 @@ abstract class TileMFFS extends ResonantTile(Material.iron) with ICamouflageMate
         }
       }
 
-      player.openGui(ModularForceFieldSystem, 0, world, xi, yi, zi)
+      player.openGui(ModularForceFieldSystem, 0, world, x, y, z)
     }
     return true
   }
@@ -185,8 +185,8 @@ abstract class TileMFFS extends ResonantTile(Material.iron) with ICamouflageMate
     {
       if (!world.isRemote)
       {
-        InventoryUtility.dropBlockAsItem(world, toVector3)
-        world.setBlock(xi, yi, zi, Blocks.air)
+        InventoryUtility.dropBlockAsItem(world, position)
+        world.setBlock(x, y, z, Blocks.air)
         return true
       }
       return false

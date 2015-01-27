@@ -114,13 +114,15 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
 
   def getDeviceCount = getFrequencyDevices.size + getInputDevices.size + getOutputDevices.size
 
-  override def getFrequencyDevices: JSet[IFortronFrequency] = FrequencyGridRegistry.instance.getNodes(classOf[IFortronFrequency], world, toVector3, getTransmissionRange, getFrequency)
+  override def getFrequencyDevices: JSet[IFortronFrequency] = FrequencyGridRegistry.instance.getNodes(classOf[IFortronFrequency], world, position, getTransmissionRange, getFrequency)
 
   def getTransmissionRange: Int = 15 + getModuleCount(Content.moduleScale)
 
   def getInputDevices: JSet[IFortronFrequency] = getDevicesFromStacks(getInputStacks)
 
   def getInputStacks: Set[ItemStack] = ((4 to 7) map (i => getStackInSlot(i)) filter (_ != null)).toSet
+
+  def getOutputDevices: JSet[IFortronFrequency] = getDevicesFromStacks(getOutputStacks)
 
   def getDevicesFromStacks(stacks: Set[ItemStack]): JSet[IFortronFrequency] =
   {
@@ -134,8 +136,6 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
 
     return devices
   }
-
-  def getOutputDevices: JSet[IFortronFrequency] = getDevicesFromStacks(getOutputStacks)
 
   def getOutputStacks: Set[ItemStack] = ((8 to 11) map (i => getStackInSlot(i)) filter (_ != null)).toSet
 
