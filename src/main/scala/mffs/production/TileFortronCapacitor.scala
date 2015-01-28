@@ -13,11 +13,11 @@ import net.minecraft.client.renderer.RenderBlocks
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.fluids.IFluidContainerItem
+import nova.core.util.transform.Vector3d
 import resonantengine.api.mffs.card.ICoordLink
 import resonantengine.api.mffs.fortron.{FrequencyGridRegistry, IFortronCapacitor, IFortronFrequency, IFortronStorage}
 import resonantengine.api.mffs.modules.IModule
 import resonantengine.core.network.discriminator.PacketType
-import resonantengine.lib.transform.vector.Vector3
 import resonantengine.lib.wrapper.ByteBufWrapper._
 
 import scala.collection.JavaConversions._
@@ -122,8 +122,6 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
 
   def getInputStacks: Set[ItemStack] = ((4 to 7) map (i => getStackInSlot(i)) filter (_ != null)).toSet
 
-  def getOutputDevices: JSet[IFortronFrequency] = getDevicesFromStacks(getOutputStacks)
-
   def getDevicesFromStacks(stacks: Set[ItemStack]): JSet[IFortronFrequency] =
   {
     val devices = new JHashSet[IFortronFrequency]()
@@ -136,6 +134,8 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
 
     return devices
   }
+
+  def getOutputDevices: JSet[IFortronFrequency] = getDevicesFromStacks(getOutputStacks)
 
   def getOutputStacks: Set[ItemStack] = ((8 to 11) map (i => getStackInSlot(i)) filter (_ != null)).toSet
 
@@ -156,13 +156,13 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
   def getTransferMode: TransferMode = transferMode
 
   @SideOnly(Side.CLIENT)
-  override def renderStatic(renderer: RenderBlocks, pos: Vector3, pass: Int): Boolean =
+  override def renderStatic(renderer: RenderBlocks, pos: Vector3d, pass: Int): Boolean =
   {
     return false
   }
 
   @SideOnly(Side.CLIENT)
-  override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
+  override def renderDynamic(pos: Vector3d, frame: Float, pass: Int)
   {
     RenderFortronCapacitor.render(this, pos.x, pos.y, pos.z, frame, isActive, false)
   }

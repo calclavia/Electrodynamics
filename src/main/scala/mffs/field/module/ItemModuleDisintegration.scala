@@ -11,10 +11,10 @@ import net.minecraft.block.BlockLiquid
 import net.minecraft.item.{ItemBlock, ItemStack}
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.fluids.IFluidBlock
+import nova.core.util.transform.Vector3d
 import resonantengine.api.mffs.Blacklist
 import resonantengine.api.mffs.machine.IProjector
 import resonantengine.core.network.discriminator.PacketTile
-import resonantengine.lib.transform.vector.Vector3
 
 class ItemModuleDisintegration extends ItemModule
 {
@@ -22,13 +22,13 @@ class ItemModuleDisintegration extends ItemModule
   setMaxStackSize(1)
   setCost(20)
 
-  override def onProject(projector: IProjector, fields: Set[Vector3]): Boolean =
+  override def onProject(projector: IProjector, fields: Set[Vector3d]): Boolean =
   {
     this.blockCount = 0
     return false
   }
 
-  override def onProject(projector: IProjector, position: Vector3): Int =
+  override def onProject(projector: IProjector, position: Vector3d): Int =
   {
     val proj = projector.asInstanceOf[TileElectromagneticProjector]
     val world = proj.world

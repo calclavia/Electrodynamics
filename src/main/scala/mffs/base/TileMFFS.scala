@@ -10,12 +10,12 @@ import net.minecraft.entity.player.{EntityPlayer, EntityPlayerMP}
 import net.minecraft.init.Blocks
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.network.Packet
+import nova.core.util.transform.Vector3d
 import resonantengine.api.mffs.machine.IActivatable
 import resonantengine.api.tile.{ICamouflageMaterial, IPlayerUsing}
 import resonantengine.core.network.discriminator.PacketType
 import resonantengine.core.network.netty.PacketManager
 import resonantengine.lib.modcontent.block.ResonantTile
-import resonantengine.lib.transform.vector.Vector3
 import resonantengine.lib.utility.inventory.InventoryUtility
 import resonantengine.lib.wrapper.ByteBufWrapper._
 import resonantengine.prefab.block.impl.TRotatable
@@ -92,12 +92,12 @@ abstract class TileMFFS extends ResonantTile(Material.iron) with ICamouflageMate
     }
   }
 
-  override def getDescPacket: PacketType = PacketManager.request(this, TilePacketType.description.id)
-
   override def getDescriptionPacket: Packet =
   {
     return ModularForceFieldSystem.packetHandler.toMCPacket(getDescPacket)
   }
+
+  override def getDescPacket: PacketType = PacketManager.request(this, TilePacketType.description.id)
 
   override def read(buf: ByteBuf, id: Int, packetType: PacketType)
   {
@@ -162,7 +162,7 @@ abstract class TileMFFS extends ResonantTile(Material.iron) with ICamouflageMate
 
   def isActive: Boolean = active
 
-  override protected def use(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
+  override protected def use(player: EntityPlayer, side: Int, hit: Vector3d): Boolean =
   {
     if (!world.isRemote)
     {
@@ -179,7 +179,7 @@ abstract class TileMFFS extends ResonantTile(Material.iron) with ICamouflageMate
     return true
   }
 
-  override protected def configure(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
+  override protected def configure(player: EntityPlayer, side: Int, hit: Vector3d): Boolean =
   {
     if (player.isSneaking)
     {

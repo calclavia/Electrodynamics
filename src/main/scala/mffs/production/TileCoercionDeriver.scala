@@ -10,11 +10,11 @@ import net.minecraft.client.renderer.RenderBlocks
 import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
+import nova.core.util.transform.Vector3d
 import resonantengine.api.mffs.modules.IModule
 import resonantengine.core.network.discriminator.PacketType
 import resonantengine.lib.grid.energy.electric.TTEBridge
 import resonantengine.lib.mod.compat.energy.Compatibility
-import resonantengine.lib.transform.vector.Vector3
 import resonantengine.lib.wrapper.ByteBufWrapper._
 
 /**
@@ -223,13 +223,13 @@ class TileCoercionDeriver extends TileModuleAcceptor with TTEBridge
   }
 
   @SideOnly(Side.CLIENT)
-  override def renderStatic(renderer: RenderBlocks, pos: Vector3, pass: Int): Boolean =
+  override def renderStatic(renderer: RenderBlocks, pos: Vector3d, pass: Int): Boolean =
   {
     return false
   }
 
   @SideOnly(Side.CLIENT)
-  override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
+  override def renderDynamic(pos: Vector3d, frame: Float, pass: Int)
   {
     RenderCoercionDeriver.render(this, pos.x, pos.y, pos.z, frame, isActive, false)
   }

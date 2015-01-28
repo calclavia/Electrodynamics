@@ -4,11 +4,12 @@ import mffs.base.TileMFFSInventory
 import net.minecraft.block.Block
 import net.minecraft.init.Blocks
 import net.minecraft.world.World
-import resonantengine.lib.transform.vector.Vector3
+import nova.core.util.transform.Vector3d
 
 import scala.collection.JavaConversions._
 
-class BlockInventoryDropDelayedEvent(handler: IDelayedEventHandler, ticks: Int, block: Block, world: World, position: Vector3, projector: TileMFFSInventory) extends BlockDropDelayedEvent(handler, ticks, block, world, position)
+class BlockInventoryDropDelayedEvent(handler: IDelayedEventHandler, ticks: Int, block: Block, world: World, position: Vector3d, projector: TileMFFSInventory)
+    extends BlockDropDelayedEvent(handler, ticks, block, world, position)
 {
   protected override def onEvent
   {

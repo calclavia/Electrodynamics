@@ -8,8 +8,8 @@ import net.minecraft.init.Blocks
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.fluids.BlockFluidBase
+import nova.core.util.transform.Vector3d
 import resonantengine.api.mffs.machine.IProjector
-import resonantengine.lib.transform.vector.Vector3
 
 import scala.collection.JavaConversions._
 
@@ -17,7 +17,7 @@ class ItemModuleSponge extends ItemModule
 {
   setMaxStackSize(1)
 
-  override def onProject(projector: IProjector, fields: Set[Vector3]): Boolean =
+  override def onProject(projector: IProjector, fields: Set[Vector3d]): Boolean =
   {
     if (projector.getTicks % 60 == 0)
     {

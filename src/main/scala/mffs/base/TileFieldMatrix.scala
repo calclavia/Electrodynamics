@@ -11,11 +11,11 @@ import mffs.util.TCache
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
+import nova.core.util.transform.Vector3d
 import resonantengine.api.mffs.machine.{IFieldMatrix, IPermissionProvider}
 import resonantengine.api.mffs.modules.{IModule, IProjectorMode}
 import resonantengine.core.network.discriminator.PacketType
 import resonantengine.lib.transform.rotation.EulerAngle
-import resonantengine.lib.transform.vector.Vector3
 import resonantengine.lib.utility.RotationUtility
 import resonantengine.lib.wrapper.ByteBufWrapper._
 import resonantengine.prefab.block.impl.TRotatable
@@ -35,7 +35,7 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
    * Are the directions on the GUI absolute values?
    */
   var absoluteDirection = false
-  protected var calculatedField: mutable.Set[Vector3] = null
+  protected var calculatedField: mutable.Set[Vector3d] = null
   protected var isCalculating = false
 
   override def update()
@@ -105,32 +105,11 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     return actualDirs.foldLeft(0)((b, a) => b + getModuleCount(module, getDirectionSlots(a): _*))
   }
 
-  override def getDirectionSlots(direction: ForgeDirection): Array[Int] =
-  {
-    direction match
-    {
-      case ForgeDirection.UP =>
-        return Array(10, 11)
-      case ForgeDirection.DOWN =>
-        return Array(12, 13)
-      case ForgeDirection.SOUTH =>
-        return Array(2, 3)
-      case ForgeDirection.NORTH =>
-        return Array(4, 5)
-      case ForgeDirection.WEST =>
-        return Array(6, 7)
-      case ForgeDirection.EAST =>
-        return Array(8, 9)
-      case _ =>
-        return Array[Int]()
-    }
-  }
-
-  def getPositiveScale: Vector3 =
+  def getPositiveScale: Vector3d =
   {
     val cacheID = "getPositiveScale"
 
-    if (hasCache(classOf[Vector3], cacheID)) return getCache(classOf[Vector3], cacheID)
+    if (hasCache(classOf[Vector3d], cacheID)) return getCache(classOf[Vector3d], cacheID)
 
     var zScalePos = 0
     var xScalePos = 0
@@ -157,20 +136,18 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     xScalePos += omnidirectionalScale
     yScalePos += omnidirectionalScale
 
-    val positiveScale = new Vector3(xScalePos, yScalePos, zScalePos)
+    val positiveScale = new Vector3d(xScalePos, yScalePos, zScalePos)
 
     cache(cacheID, positiveScale)
 
     return positiveScale
   }
 
-  def getModuleSlots: Array[Int] = _getModuleSlots
-
-  def getNegativeScale: Vector3 =
+  def getNegativeScale: Vector3d =
   {
     val cacheID = "getNegativeScale"
 
-    if (hasCache(classOf[Vector3], cacheID)) return getCache(classOf[Vector3], cacheID)
+    if (hasCache(classOf[Vector3d], cacheID)) return getCache(classOf[Vector3d], cacheID)
 
     var zScaleNeg = 0
     var xScaleNeg = 0
@@ -196,18 +173,19 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     xScaleNeg += omnidirectionalScale
     yScaleNeg += omnidirectionalScale
 
-    val negativeScale = new Vector3(xScaleNeg, yScaleNeg, zScaleNeg)
+    val negativeScale = new Vector3d(xScaleNeg, yScaleNeg, zScaleNeg)
 
     cache(cacheID, negativeScale)
 
     return negativeScale
   }
 
-  def getInteriorPoints: JSet[Vector3] =
-  {
+  def getModuleSlots: Array[Int] = _getModuleSlots
+
+  def getInteriorPoints: JSet[Vector3d] = {
     val cacheID = "getInteriorPoints"
 
-    if (hasCache(classOf[Set[Vector3]], cacheID)) return getCache(classOf[Set[Vector3]], cacheID)
+    if (hasCache(classOf[Set[Vector3d]], cacheID)) return getCache(classOf[Set[Vector3d]], cacheID)
 
     if (getModeStack != null && getModeStack.getItem.isInstanceOf[TCache])
     {
@@ -233,101 +211,6 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     return field
   }
 
-  def getCalculatedField: JSet[Vector3] =
-  {
-    return if (calculatedField != null) calculatedField else mutable.Set.empty[Vector3]
-  }
-
-  def queueEvent(evt: DelayedEvent)
-  {
-    delayedEvents += evt
-  }
-
-  /**
-   * NBT Methods
-   */
-  override def readFromNBT(nbt: NBTTagCompound)
-  {
-    super.readFromNBT(nbt)
-    absoluteDirection = nbt.getBoolean("isAbsolute")
-  }
-
-  override def writeToNBT(nbt: NBTTagCompound)
-  {
-    super.writeToNBT(nbt)
-    nbt.setBoolean("isAbsolute", absoluteDirection)
-  }
-
-  /**
-   * Calculates the force field
-   * @param callBack - Optional callback
-   */
-  protected def calculateField(callBack: () => Unit = null)
-  {
-    if (!worldObj.isRemote && !isCalculating)
-    {
-      if (getMode != null)
-      {
-        //Clear mode cache
-        if (getModeStack.getItem.isInstanceOf[TCache])
-          getModeStack.getItem.asInstanceOf[TCache].clearCache()
-
-        isCalculating = true
-
-        Future
-        {
-          generateCalculatedField
-        }.onComplete
-        {
-          case Success(field) =>
-          {
-            calculatedField = field
-            isCalculating = false
-
-            if (callBack != null)
-              callBack.apply()
-          }
-          case Failure(t) =>
-          {
-            //println(getClass.getName + ": An error has occurred upon field calculation: " + t.getMessage)
-            isCalculating = false
-          }
-        }
-      }
-    }
-  }
-
-  protected def generateCalculatedField = getExteriorPoints
-
-  /**
-   * Gets the exterior points of the field based on the matrix.
-   */
-  protected def getExteriorPoints: mutable.Set[Vector3] =
-  {
-    var field = mutable.Set.empty[Vector3]
-
-    if (getModuleCount(Content.moduleInvert) > 0)
-      field = getMode.getInteriorPoints(this)
-    else
-      field = getMode.getExteriorPoints(this)
-
-    getModules() foreach (_.onPreCalculate(this, field))
-
-    val translation = getTranslation
-    val rotationYaw = getRotationYaw
-    val rotationPitch = getRotationPitch
-
-    val rotation: EulerAngle = new EulerAngle(rotationYaw, rotationPitch)
-
-    val maxHeight = world.getHeight
-
-    field = mutable.Set((field.view.par map (pos => (pos.transform(rotation) + position + translation).round) filter (position => position.yi <= maxHeight && position.yi >= 0)).seq.toSeq: _ *)
-
-    getModules() foreach (_.onPostCalculate(this, field))
-
-    return field
-  }
-
   def getMode: IProjectorMode =
   {
     if (this.getModeStack != null)
@@ -337,11 +220,23 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     return null
   }
 
-  def getTranslation: Vector3 =
+  def getModeStack: ItemStack =
+  {
+    if (this.getStackInSlot(modeSlotID) != null)
+    {
+      if (this.getStackInSlot(modeSlotID).getItem.isInstanceOf[IProjectorMode])
+      {
+        return this.getStackInSlot(modeSlotID)
+      }
+    }
+    return null
+  }
+
+  def getTranslation: Vector3d =
   {
     val cacheID = "getTranslation"
 
-    if (hasCache(classOf[Vector3], cacheID)) return getCache(classOf[Vector3], cacheID)
+    if (hasCache(classOf[Vector3d], cacheID)) return getCache(classOf[Vector3d], cacheID)
 
     val direction = getDirection
 
@@ -371,7 +266,7 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
       yTranslationNeg = getModuleCount(Content.moduleTranslate, getDirectionSlots(ForgeDirection.DOWN): _*)
     }
 
-    val translation = new Vector3(xTranslationPos - xTranslationNeg, yTranslationPos - yTranslationNeg, zTranslationPos - zTranslationNeg)
+    val translation = new Vector3d(xTranslationPos - xTranslationNeg, yTranslationPos - yTranslationNeg, zTranslationPos - zTranslationNeg)
 
     cache(cacheID, translation)
 
@@ -416,16 +311,111 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     return verticalRotation
   }
 
-  def getModeStack: ItemStack =
+  override def getDirectionSlots(direction: ForgeDirection): Array[Int] =
   {
-    if (this.getStackInSlot(modeSlotID) != null)
-    {
-      if (this.getStackInSlot(modeSlotID).getItem.isInstanceOf[IProjectorMode])
-      {
-        return this.getStackInSlot(modeSlotID)
+    direction match {
+      case ForgeDirection.UP =>
+        return Array(10, 11)
+      case ForgeDirection.DOWN =>
+        return Array(12, 13)
+      case ForgeDirection.SOUTH =>
+        return Array(2, 3)
+      case ForgeDirection.NORTH =>
+        return Array(4, 5)
+      case ForgeDirection.WEST =>
+        return Array(6, 7)
+      case ForgeDirection.EAST =>
+        return Array(8, 9)
+      case _ =>
+        return Array[Int]()
+    }
+  }
+
+  def getCalculatedField: JSet[Vector3d] = {
+    return if (calculatedField != null) calculatedField else mutable.Set.empty[Vector3d]
+  }
+
+  def queueEvent(evt: DelayedEvent) {
+    delayedEvents += evt
+  }
+
+  /**
+   * NBT Methods
+   */
+  override def readFromNBT(nbt: NBTTagCompound) {
+    super.readFromNBT(nbt)
+    absoluteDirection = nbt.getBoolean("isAbsolute")
+  }
+
+  override def writeToNBT(nbt: NBTTagCompound) {
+    super.writeToNBT(nbt)
+    nbt.setBoolean("isAbsolute", absoluteDirection)
+  }
+
+  /**
+   * Calculates the force field
+   * @param callBack - Optional callback
+   */
+  protected def calculateField(callBack: () => Unit = null) {
+    if (!worldObj.isRemote && !isCalculating) {
+      if (getMode != null) {
+        //Clear mode cache
+        if (getModeStack.getItem.isInstanceOf[TCache]) {
+          getModeStack.getItem.asInstanceOf[TCache].clearCache()
+        }
+
+        isCalculating = true
+
+        Future {
+          generateCalculatedField
+        }.onComplete {
+          case Success(field) => {
+            calculatedField = field
+            isCalculating = false
+
+            if (callBack != null) {
+              callBack.apply()
+            }
+          }
+          case Failure(t) => {
+            //println(getClass.getName + ": An error has occurred upon field calculation: " + t.getMessage)
+            isCalculating = false
+          }
+        }
       }
     }
-    return null
+  }
+
+  protected def generateCalculatedField = getExteriorPoints
+
+  /**
+   * Gets the exterior points of the field based on the matrix.
+   */
+  protected def getExteriorPoints: mutable.Set[Vector3d] = {
+    var field = mutable.Set.empty[Vector3d]
+
+    if (getModuleCount(Content.moduleInvert) > 0) {
+      field = getMode.getInteriorPoints(this)
+    }
+    else {
+      field = getMode.getExteriorPoints(this)
+    }
+
+    getModules() foreach (_.onPreCalculate(this, field))
+
+    val translation = getTranslation
+    val rotationYaw = getRotationYaw
+    val rotationPitch = getRotationPitch
+
+    val rotation: EulerAngle = new EulerAngle(rotationYaw, rotationPitch)
+
+    val maxHeight = world.getHeight
+
+    field = mutable.Set((field.view.par map (pos => (pos.transform(rotation) + position + translation).round) filter (position => position.yi <= maxHeight && position.yi >= 0)).seq.toSeq: _ *)
+
+    getModules() foreach (_.onPostCalculate(this, field))
+
+    return field
   }
 
 }

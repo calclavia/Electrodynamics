@@ -1,16 +1,16 @@
 package mffs.field.mode
 
 import net.minecraft.nbt.NBTTagCompound
-import resonantengine.lib.transform.vector.Vector3
+import nova.core.util.transform.Vector3d
 
 /**
  * @author Calclavia
  */
 abstract class Schematic
 {
-  def getExterior: Set[Vector3]
+  def getExterior: Set[Vector3d]
 
-  def getInterior: Set[Vector3]
+  def getInterior: Set[Vector3d]
 
   def load(nbt: NBTTagCompound)
   {

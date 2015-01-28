@@ -10,9 +10,9 @@ import mffs.item.card.ItemCardFrequency
 import mffs.{ModularForceFieldSystem, Settings}
 import net.minecraft.client.renderer.RenderBlocks
 import net.minecraft.item.ItemStack
+import nova.core.util.transform.Vector3d
 import resonantengine.api.mffs.card.IAccessCard
 import resonantengine.lib.access.Permission
-import resonantengine.lib.transform.vector.Vector3
 import resonantengine.prefab.block.impl.TRotatable
 
 object TileBiometricIdentifier
@@ -68,13 +68,13 @@ class TileBiometricIdentifier extends TileFrequency with TRotatable
   }
 
   @SideOnly(Side.CLIENT)
-  override def renderStatic(renderer: RenderBlocks, pos: Vector3, pass: Int): Boolean =
+  override def renderStatic(renderer: RenderBlocks, pos: Vector3d, pass: Int): Boolean =
   {
     return false
   }
 
   @SideOnly(Side.CLIENT)
-  override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
+  override def renderDynamic(pos: Vector3d, frame: Float, pass: Int)
   {
     RenderBiometricIdentifier.render(this, pos.x, pos.y, pos.z, frame, isActive, false)
   }

@@ -5,19 +5,20 @@ import java.util.{HashSet, Set}
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.client.renderer.Tessellator
 import net.minecraft.tileentity.TileEntity
+import nova.core.util.transform.Vector3d
 import org.lwjgl.opengl.GL11
 import resonantengine.api.mffs.machine.{IFieldMatrix, IProjector}
 import resonantengine.lib.transform.region.Cuboid
 import resonantengine.lib.transform.rotation.EulerAngle
-import resonantengine.lib.transform.vector.Vector3
+import resonantengine.nova.wrapper._
 
 class ItemModePyramid extends ItemMode
 {
   private val step = 1
 
-  def getExteriorPoints(projector: IFieldMatrix): Set[Vector3] =
+  def getExteriorPoints(projector: IFieldMatrix): Set[Vector3d] =
   {
-    val fieldBlocks = new HashSet[Vector3]
+    val fieldBlocks = new HashSet[Vector3d]
 
     val posScale = projector.getPositiveScale
     val negScale = projector.getNegativeScale
@@ -37,12 +38,15 @@ class ItemModePyramid extends ItemMode
     {
       for (x <- -initX to initX; z <- -initZ to initZ)
       {
-        if (Math.abs(x) == Math.round(xSize) && Math.abs(z) <= Math.round(zSize))
-          fieldBlocks.add(new Vector3(x, y, z))
-        else if (Math.abs(z) == Math.round(zSize) && Math.abs(x) <= Math.round(xSize))
-          fieldBlocks.add(new Vector3(x, y, z))
-        else if (y == -ySize)
-          fieldBlocks.add(new Vector3(x, y, z))
+        if (Math.abs(x) == Math.round(xSize) && Math.abs(z) <= Math.round(zSize)) {
+          fieldBlocks.add(new Vector3d(x, y, z))
+        }
+        else if (Math.abs(z) == Math.round(zSize) && Math.abs(x) <= Math.round(xSize)) {
+          fieldBlocks.add(new Vector3d(x, y, z))
+        }
+        else if (y == -ySize) {
+          fieldBlocks.add(new Vector3d(x, y, z))
+        }
       }
 
       xSize -= xDecr
@@ -52,21 +56,21 @@ class ItemModePyramid extends ItemMode
     return fieldBlocks
   }
 
-  def getInteriorPoints(projector: IFieldMatrix): Set[Vector3] =
+  def getInteriorPoints(projector: IFieldMatrix): Set[Vector3d] =
   {
-    val fieldBlocks: Set[Vector3] = new HashSet[Vector3]
-    val posScale: Vector3 = projector.getPositiveScale
-    val negScale: Vector3 = projector.getNegativeScale
+    val fieldBlocks: Set[Vector3d] = new HashSet[Vector3d]
+    val posScale: Vector3d = projector.getPositiveScale
+    val negScale: Vector3d = projector.getNegativeScale
     val xStretch: Int = posScale.xi + negScale.xi
     val yStretch: Int = posScale.yi + negScale.yi
     val zStretch: Int = posScale.zi + negScale.zi
-    val translation = new Vector3(0, -0.4, 0)
+    val translation = new Vector3d(0, -0.4, 0)
 
     for (x <- -xStretch to xStretch by step; y <- 0 to yStretch by step; z <- -zStretch to zStretch by step)
     {
-      val position = new Vector3(x, y, z) + translation
+      val position = new Vector3d(x, y, z) + translation
 
-      if (isInField(projector, position + new Vector3(projector.asInstanceOf[TileEntity])))
+      if (isInField(projector, position + new Vector3d(projector.asInstanceOf[TileEntity])))
       {
         fieldBlocks.add(position)
       }
@@ -74,17 +78,17 @@ class ItemModePyramid extends ItemMode
     return fieldBlocks
   }
 
-  override def isInField(projector: IFieldMatrix, position: Vector3): Boolean =
+  override def isInField(projector: IFieldMatrix, position: Vector3d): Boolean =
   {
-    val posScale: Vector3 = projector.getPositiveScale.clone
-    val negScale: Vector3 = projector.getNegativeScale.clone
+    val posScale = projector.getPositiveScale
+    val negScale = projector.getNegativeScale
     val xStretch: Int = posScale.xi + negScale.xi
     val yStretch: Int = posScale.yi + negScale.yi
     val zStretch: Int = posScale.zi + negScale.zi
-    val projectorPos: Vector3 = new Vector3(projector.asInstanceOf[TileEntity])
+    val projectorPos: Vector3d = new Vector3d(projector.asInstanceOf[TileEntity])
     projectorPos.add(projector.getTranslation)
-    projectorPos.add(new Vector3(0, -negScale.yi + 1, 0))
-    val relativePosition: Vector3 = position.clone.subtract(projectorPos)
+    projectorPos.add(new Vector3d(0, -negScale.yi + 1, 0))
+    val relativePosition: Vector3d = position.clone.subtract(projectorPos)
     relativePosition.transform(new EulerAngle(-projector.getRotationYaw, -projector.getRotationPitch, 0))
     val region: Cuboid = new Cuboid(-negScale, posScale)
 
@@ -108,7 +112,7 @@ class ItemModePyramid extends ItemMode
     val width: Float = 0.3f
     val uvMaxX: Int = 2
     val uvMaxY: Int = 2
-    val translation: Vector3 = new Vector3(0, -0.4, 0)
+    val translation: Vector3d = new Vector3d(0, -0.4, 0)
     tessellator.startDrawing(6)
     tessellator.setColorRGBA(72, 198, 255, 255)
     tessellator.addVertexWithUV(0 + translation.x, 0 + translation.y, 0 + translation.z, 0, 0)

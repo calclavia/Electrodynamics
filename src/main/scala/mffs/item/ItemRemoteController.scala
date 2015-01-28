@@ -23,7 +23,7 @@ import net.minecraftforge.fluids.FluidContainerRegistry
 import resonantengine.api.mffs.card.ICoordLink
 import resonantengine.api.mffs.event.EventForceMobilize
 import resonantengine.api.mffs.fortron.{FrequencyGridRegistry, IFortronFrequency}
-import resonantengine.lib.transform.vector.{Vector3, VectorWorld}
+import resonantengine.lib.transform.vector.VectorWorld
 import resonantengine.lib.utility.LanguageUtility
 import resonantengine.lib.utility.science.UnitDisplay
 import resonantengine.lib.wrapper.CollectionWrapper._
@@ -78,6 +78,13 @@ class ItemRemoteController extends ItemCardFrequency with ICoordLink
     return true
   }
 
+  def setLink(itemStack: ItemStack, vec: VectorWorld) {
+    if (itemStack.getTagCompound == null) {
+      itemStack.setTagCompound(new NBTTagCompound)
+    }
+    itemStack.getTagCompound.setTag("link", vec.toNBT)
+  }
+
   def clearLink(itemStack: ItemStack)
   {
     itemStack.getTagCompound.removeTag("link")
@@ -87,7 +94,7 @@ class ItemRemoteController extends ItemCardFrequency with ICoordLink
   {
     if (!entityPlayer.isSneaking)
     {
-      val position: Vector3 = this.getLink(itemStack)
+      val position: Vector3d = this.getLink(itemStack)
       if (position != null)
       {
         val block: Block = position.getBlock(world)
@@ -96,9 +103,9 @@ class ItemRemoteController extends ItemCardFrequency with ICoordLink
           val chunk: Chunk = world.getChunkFromBlockCoords(position.xi, position.zi)
           if (chunk != null && chunk.isChunkLoaded && (MFFSUtility.hasPermission(world, position, Action.RIGHT_CLICK_BLOCK, entityPlayer) || MFFSUtility.hasPermission(world, position, MFFSPermissions.remoteControl, entityPlayer)))
           {
-            val requiredEnergy = new Vector3(entityPlayer).distance(position) * (FluidContainerRegistry.BUCKET_VOLUME / 100)
+            val requiredEnergy = new Vector3d(entityPlayer).distance(position) * (FluidContainerRegistry.BUCKET_VOLUME / 100)
             var receivedEnergy = 0
-            val fortronTiles: Set[IFortronFrequency] = FrequencyGridRegistry.instance.getNodes(classOf[IFortronFrequency], world, new Vector3(entityPlayer), 50, this.getFrequency(itemStack))
+            val fortronTiles: Set[IFortronFrequency] = FrequencyGridRegistry.instance.getNodes(classOf[IFortronFrequency], world, new Vector3d(entityPlayer), 50, this.getFrequency(itemStack))
 
             for (fortronTile <- fortronTiles)
             {
@@ -107,7 +114,8 @@ class ItemRemoteController extends ItemCardFrequency with ICoordLink
               {
                 if (world.isRemote)
                 {
-                  ModularForceFieldSystem.proxy.renderBeam(world, new Vector3(entityPlayer).add(new Vector3(0, entityPlayer.getEyeHeight - 0.2, 0)), new Vector3(fortronTile.asInstanceOf[TileEntity]).add(0.5), FieldColor.blue, 20)
+                  ModularForceFieldSystem.proxy.renderBeam(world, new Vector3d(entityPlayer).add(new Vector3d(0, entityPlayer.getEyeHeight - 0.2, 0)), new
+                          Vector3d(fortronTile.asInstanceOf[TileEntity]).add(0.5), FieldColor.blue, 20)
                 }
                 receivedEnergy += consumedEnergy
               }
@@ -170,22 +178,13 @@ class ItemRemoteController extends ItemCardFrequency with ICoordLink
       import scala.collection.JavaConversions._
       for (itemStack <- this.remotesCached)
       {
-        if (!temporaryRemoteBlacklist.contains(itemStack) && (new Vector3(evt.beforeX, evt.beforeY, evt.beforeZ) == this.getLink(itemStack)))
+        if (!temporaryRemoteBlacklist.contains(itemStack) && (new Vector3d(evt.beforeX, evt.beforeY, evt.beforeZ) == this.getLink(itemStack)))
         {
           this.setLink(itemStack, new VectorWorld(evt.world, evt.afterX, evt.afterY, evt.afterZ))
           temporaryRemoteBlacklist.add(itemStack)
         }
       }
     }
-  }
-
-  def setLink(itemStack: ItemStack, vec: VectorWorld)
-  {
-    if (itemStack.getTagCompound == null)
-    {
-      itemStack.setTagCompound(new NBTTagCompound)
-    }
-    itemStack.getTagCompound.setTag("link", vec.toNBT)
   }
 
 }

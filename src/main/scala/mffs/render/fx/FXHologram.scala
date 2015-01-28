@@ -6,14 +6,14 @@ import mffs.Content
 import net.minecraft.client.particle.EntityFX
 import net.minecraft.client.renderer.{OpenGlHelper, RenderBlocks, Tessellator}
 import net.minecraft.world.World
+import nova.core.util.transform.Vector3d
 import org.lwjgl.opengl.GL11
 import resonantengine.lib.render.RenderUtility
-import resonantengine.lib.transform.vector.Vector3
 
 @SideOnly(Side.CLIENT)
-class FXHologram(par1World: World, position: Vector3, red: Float, green: Float, blue: Float, age: Int) extends FXMFFS(par1World, position.x, position.y, position.z)
+class FXHologram(par1World: World, position: Vector3d, red: Float, green: Float, blue: Float, age: Int) extends FXMFFS(par1World, position.x, position.y, position.z)
 {
-  private var targetPosition: Vector3 = null
+  private var targetPosition: Vector3d = null
 
   this.setRBGColorF(red, green, blue)
   this.particleMaxAge = age
@@ -25,7 +25,7 @@ class FXHologram(par1World: World, position: Vector3, red: Float, green: Float, 
    * @param targetPosition
    * @return
    */
-  def setTarget(targetPosition: Vector3): FXHologram =
+  def setTarget(targetPosition: Vector3d): FXHologram =
   {
     this.targetPosition = targetPosition
     this.motionX = (this.targetPosition.x - this.posX) / this.particleMaxAge

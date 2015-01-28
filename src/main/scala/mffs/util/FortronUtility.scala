@@ -6,9 +6,10 @@ import mffs.{Content, ModularForceFieldSystem, Settings}
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
 import net.minecraftforge.fluids.{Fluid, FluidStack, FluidTank}
+import nova.core.util.transform.Vector3d
 import resonantengine.api.mffs.fortron.IFortronFrequency
 import resonantengine.api.mffs.modules.IModuleProvider
-import resonantengine.lib.transform.vector.Vector3
+import resonantengine.nova.wrapper._
 
 import scala.collection.mutable
 
@@ -159,7 +160,7 @@ object FortronUtility
         toBeInjected = transferer.requestFortron(receiver.provideFortron(toBeInjected, true), true)
         if (world.isRemote && toBeInjected > 0 && !isCamo)
         {
-          ModularForceFieldSystem.proxy.renderBeam(world, new Vector3(tileEntity) + 0.5, new Vector3(receiver.asInstanceOf[TileEntity]) + 0.5, FieldColor.blue, 20)
+          ModularForceFieldSystem.proxy.renderBeam(world, new Vector3d(tileEntity) + 0.5, new Vector3d(receiver.asInstanceOf[TileEntity]) + 0.5, FieldColor.blue, 20)
         }
       }
       else
@@ -169,7 +170,7 @@ object FortronUtility
         toBeEjected = receiver.requestFortron(transferer.provideFortron(toBeEjected, true), true)
         if (world.isRemote && toBeEjected > 0 && !isCamo)
         {
-          ModularForceFieldSystem.proxy.renderBeam(world, new Vector3(receiver.asInstanceOf[TileEntity]) + 0.5, new Vector3(tileEntity) + 0.5, FieldColor.blue, 20)
+          ModularForceFieldSystem.proxy.renderBeam(world, new Vector3d(receiver.asInstanceOf[TileEntity]) + 0.5, new Vector3d(tileEntity) + 0.5, FieldColor.blue, 20)
         }
       }
     }

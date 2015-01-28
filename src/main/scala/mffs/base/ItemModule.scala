@@ -7,15 +7,16 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
+import nova.core.util.transform.{Cuboid, Vector3d}
 import resonantengine.api.mffs.machine.{IFieldMatrix, IProjector}
 import resonantengine.api.mffs.modules.IModule
-import resonantengine.lib.transform.region.Cuboid
-import resonantengine.lib.transform.vector.Vector3
 import resonantengine.lib.utility.LanguageUtility
 import resonantengine.lib.utility.science.UnitDisplay
 import resonantengine.lib.wrapper.CollectionWrapper._
+import resonantengine.nova.wrapper._
 
 import scala.collection.convert.wrapAll._
+
 class ItemModule extends ItemMFFS with IModule
 {
   private var fortronCost = 0.5f
@@ -31,20 +32,20 @@ class ItemModule extends ItemMFFS with IModule
     return this.fortronCost
   }
 
-  override def onPreCalculate(projector: IFieldMatrix, position: JSet[Vector3])
+  override def onPreCalculate(projector: IFieldMatrix, position: JSet[Vector3d])
   {
   }
 
-  override def onPostCalculate(projector: IFieldMatrix, position: JSet[Vector3])
+  override def onPostCalculate(projector: IFieldMatrix, position: JSet[Vector3d])
   {
   }
 
-  override def onProject(projector: IProjector, fields: JSet[Vector3]): Boolean =
+  override def onProject(projector: IProjector, fields: JSet[Vector3d]): Boolean =
   {
     return false
   }
 
-  override def onProject(projector: IProjector, position: Vector3): Int =
+  override def onProject(projector: IProjector, position: Vector3d): Int =
   {
     return 0
   }
@@ -66,7 +67,7 @@ class ItemModule extends ItemMFFS with IModule
     return this
   }
 
-  override def onDestroy(projector: IProjector, field: JSet[Vector3]): Boolean =
+  override def onDestroy(projector: IProjector, field: JSet[Vector3d]): Boolean =
   {
     return false
   }
@@ -81,7 +82,7 @@ class ItemModule extends ItemMFFS with IModule
   def getEntitiesInField(projector: IProjector): Set[Entity] =
   {
     val tile = projector.asInstanceOf[TileEntity]
-    val volume = new Cuboid(-projector.getNegativeScale, projector.getPositiveScale + 1) + (new Vector3(tile) + projector.getTranslation)
+    val volume = new Cuboid(-projector.getNegativeScale, projector.getPositiveScale + 1) + (tile.getPosition + projector.getTranslation)
     return (tile.getWorldObj.getEntitiesWithinAABB(classOf[Entity], volume.toAABB) map (_.asInstanceOf[Entity])).toSet
   }
 }

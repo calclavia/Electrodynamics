@@ -4,11 +4,12 @@ import java.util.{HashSet, Set}
 
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.tileentity.TileEntity
+import nova.core.util.transform.Vector3d
 import org.lwjgl.opengl.GL11
 import resonantengine.api.mffs.machine.{IFieldMatrix, IProjector}
 import resonantengine.lib.render.model.ModelCube
 import resonantengine.lib.transform.rotation.EulerAngle
-import resonantengine.lib.transform.vector.Vector3
+import resonantengine.nova.wrapper._
 
 /**
  * A cylinder mode.
@@ -20,9 +21,9 @@ class ItemModeCylinder extends ItemMode
   private val step = 1
   private val radiusExpansion: Int = 0
 
-  def getExteriorPoints(projector: IFieldMatrix): Set[Vector3] =
+  def getExteriorPoints(projector: IFieldMatrix): Set[Vector3d] =
   {
-    val fieldBlocks = new HashSet[Vector3]
+    val fieldBlocks = new HashSet[Vector3d]
     val posScale = projector.getPositiveScale
     val negScale = projector.getNegativeScale
     val radius = (posScale.xi + negScale.xi + posScale.zi + negScale.zi) / 2
@@ -32,21 +33,21 @@ class ItemModeCylinder extends ItemMode
     {
       if ((y == 0 || y == height - 1) && (x * x + z * z + radiusExpansion) <= (radius * radius))
       {
-        fieldBlocks.add(new Vector3(x, y, z))
+        fieldBlocks.add(new Vector3d(x, y, z))
       }
 
       if ((x * x + z * z + radiusExpansion) <= (radius * radius) && (x * x + z * z + radiusExpansion) >= ((radius - 1) * (radius - 1)))
       {
-        fieldBlocks.add(new Vector3(x, y, z))
+        fieldBlocks.add(new Vector3d(x, y, z))
       }
     }
 
     return fieldBlocks
   }
 
-  def getInteriorPoints(projector: IFieldMatrix): Set[Vector3] =
+  def getInteriorPoints(projector: IFieldMatrix): Set[Vector3d] =
   {
-    val fieldBlocks = new HashSet[Vector3]
+    val fieldBlocks = new HashSet[Vector3d]
     val translation = projector.getTranslation
     val posScale = projector.getPositiveScale
     val negScale = projector.getNegativeScale
@@ -55,9 +56,9 @@ class ItemModeCylinder extends ItemMode
 
     for (x <- -radius to radius by step; y <- 0 to height by step; z <- -radius to radius by step)
     {
-      val position = new Vector3(x, y, z)
+      val position = new Vector3d(x, y, z)
 
-      if (isInField(projector, position + new Vector3(projector.asInstanceOf[TileEntity]) + translation))
+      if (isInField(projector, position + new Vector3d(projector.asInstanceOf[TileEntity]) + translation))
       {
         fieldBlocks.add(position)
       }
@@ -66,14 +67,14 @@ class ItemModeCylinder extends ItemMode
     return fieldBlocks
   }
 
-  override def isInField(projector: IFieldMatrix, position: Vector3): Boolean =
+  override def isInField(projector: IFieldMatrix, position: Vector3d): Boolean =
   {
-    val posScale: Vector3 = projector.getPositiveScale
-    val negScale: Vector3 = projector.getNegativeScale
+    val posScale: Vector3d = projector.getPositiveScale
+    val negScale: Vector3d = projector.getNegativeScale
     val radius: Int = (posScale.xi + negScale.xi + posScale.zi + negScale.zi) / 2
-    val projectorPos: Vector3 = new Vector3(projector.asInstanceOf[TileEntity])
+    val projectorPos: Vector3d = new Vector3d(projector.asInstanceOf[TileEntity])
     projectorPos.add(projector.getTranslation)
-    val relativePosition: Vector3 = position.clone.subtract(projectorPos)
+    val relativePosition: Vector3d = position.clone.subtract(projectorPos)
     relativePosition.transform(new EulerAngle(-projector.getRotationYaw, -projector.getRotationPitch, 0))
     if (relativePosition.x * relativePosition.x + relativePosition.z * relativePosition.z + radiusExpansion <= radius * radius)
     {
@@ -100,7 +101,7 @@ class ItemModeCylinder extends ItemMode
       {
         if (i % 2 == 0)
         {
-          val vector = new Vector3(renderX / detail, renderY / detail, renderZ / detail)
+          val vector = new Vector3d(renderX / detail, renderY / detail, renderZ / detail)
           GL11.glTranslated(vector.x, vector.y, vector.z)
           ModelCube.INSTNACE.render
           GL11.glTranslated(-vector.x, -vector.y, -vector.z)
