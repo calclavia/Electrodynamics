@@ -17,12 +17,12 @@ import net.minecraft.network.Packet
 import net.minecraft.potion.{Potion, PotionEffect}
 import net.minecraft.util.{IIcon, MovingObjectPosition}
 import net.minecraft.world.IBlockAccess
-import nova.core.util.transform.Vector3d
 import resonantengine.api.mffs.machine.{IForceField, IProjector}
 import resonantengine.api.mffs.modules.IModule
 import resonantengine.core.network.discriminator.{PacketTile, PacketType}
 import resonantengine.lib.modcontent.block.ResonantTile
 import resonantengine.lib.transform.region.Cuboid
+import resonantengine.lib.transform.vector.Vector3
 import resonantengine.lib.wrapper.ByteBufWrapper._
 import resonantengine.prefab.network.TPacketReceiver
 
@@ -31,7 +31,7 @@ import scala.collection.convert.wrapAll._
 class TileForceField extends ResonantTile(Material.glass) with TPacketReceiver with IForceField
 {
   private var camoStack: ItemStack = null
-  private var projector: Vector3d = null
+  private var projector: Vector3 = null
 
   /**
    * Constructor
@@ -53,7 +53,7 @@ class TileForceField extends ResonantTile(Material.glass) with TPacketReceiver w
   override def getRenderBlockPass: Int = 1
 
   @SideOnly(Side.CLIENT)
-  override def renderStatic(renderer: RenderBlocks, pos: Vector3d, pass: Int): Boolean =
+  override def renderStatic(renderer: RenderBlocks, pos: Vector3, pass: Int): Boolean =
   {
     var renderType = 0
     var camoBlock: Block = null
@@ -195,6 +195,43 @@ class TileForceField extends ResonantTile(Material.glass) with TPacketReceiver w
     return super.getCollisionBoxes(intersect, entity)
   }
 
+  /**
+   * @return Gets the projector block controlling this force field. Removes the force field if no
+   *         projector can be found.
+   */
+  def getProjector: TileElectromagneticProjector =
+  {
+    if (this.getProjectorSafe != null)
+    {
+      return getProjectorSafe
+    }
+
+    if (!this.worldObj.isRemote)
+    {
+      world.setBlock(xCoord, yCoord, zCoord, Blocks.air)
+    }
+
+    return null
+  }
+
+  def getProjectorSafe: TileElectromagneticProjector =
+  {
+    if (projector != null)
+    {
+      val projTile = projector.getTileEntity(world)
+
+      if (projTile.isInstanceOf[TileElectromagneticProjector])
+      {
+        val projector = projTile.asInstanceOf[IProjector]
+        if (world.isRemote || (projector.getCalculatedField != null && projector.getCalculatedField.contains(position)))
+        {
+          return projTile.asInstanceOf[TileElectromagneticProjector]
+        }
+      }
+    }
+    return null
+  }
+
   override def collide(entity: Entity)
   {
     val projector = getProjector()
@@ -206,7 +243,7 @@ class TileForceField extends ResonantTile(Material.glass) with TPacketReceiver w
 
       val biometricIdentifier = projector.getBiometricIdentifier
 
-      if (center.distance(new Vector3d(entity)) < 0.5)
+      if (center.distance(new Vector3(entity)) < 0.5)
       {
         if (!world.isRemote && entity.isInstanceOf[EntityLiving])
         {
@@ -240,36 +277,6 @@ class TileForceField extends ResonantTile(Material.glass) with TPacketReceiver w
       }
     }
 
-  }
-
-  /**
-   * @return Gets the projector block controlling this force field. Removes the force field if no
-   *         projector can be found.
-   */
-  def getProjector: TileElectromagneticProjector = {
-    if (this.getProjectorSafe != null) {
-      return getProjectorSafe
-    }
-
-    if (!this.worldObj.isRemote) {
-      world.setBlock(xCoord, yCoord, zCoord, Blocks.air)
-    }
-
-    return null
-  }
-
-  def getProjectorSafe: TileElectromagneticProjector = {
-    if (projector != null) {
-      val projTile = projector.getTileEntity(world)
-
-      if (projTile.isInstanceOf[TileElectromagneticProjector]) {
-        val projector = projTile.asInstanceOf[IProjector]
-        if (world.isRemote || (projector.getCalculatedField != null && projector.getCalculatedField.contains(position))) {
-          return projTile.asInstanceOf[TileElectromagneticProjector]
-        }
-      }
-    }
-    return null
   }
 
   @SideOnly(Side.CLIENT)
@@ -388,7 +395,7 @@ class TileForceField extends ResonantTile(Material.glass) with TPacketReceiver w
   {
     super.read(buf, id, packetType)
 
-    setProjector(new Vector3d(buf.readInt, buf.readInt, buf.readInt))
+    setProjector(new Vector3(buf.readInt, buf.readInt, buf.readInt))
     markRender()
     camoStack = null
 
@@ -398,7 +405,7 @@ class TileForceField extends ResonantTile(Material.glass) with TPacketReceiver w
     }
   }
 
-  def setProjector(position: Vector3d)
+  def setProjector(position: Vector3)
   {
     projector = position
 
@@ -422,7 +429,7 @@ class TileForceField extends ResonantTile(Material.glass) with TPacketReceiver w
   override def readFromNBT(nbt: NBTTagCompound)
   {
     super.readFromNBT(nbt)
-    projector = new Vector3d(nbt.getCompoundTag("projector"))
+    projector = new Vector3(nbt.getCompoundTag("projector"))
   }
 
   /**

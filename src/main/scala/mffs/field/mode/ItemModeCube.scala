@@ -4,48 +4,47 @@ import java.util.{HashSet, Set}
 
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.tileentity.TileEntity
-import nova.core.util.transform.Vector3d
 import org.lwjgl.opengl.GL11
 import resonantengine.api.mffs.machine.{IFieldMatrix, IProjector}
 import resonantengine.lib.render.model.ModelCube
 import resonantengine.lib.transform.region.Cuboid
 import resonantengine.lib.transform.rotation.EulerAngle
+import resonantengine.lib.transform.vector.Vector3
 
 class ItemModeCube extends ItemMode
 {
   private val step = 1
 
-  def getExteriorPoints(projector: IFieldMatrix): Set[Vector3d] =
+  def getExteriorPoints(projector: IFieldMatrix): Set[Vector3] =
   {
-    val fieldBlocks = new HashSet[Vector3d]
-    val posScale: Vector3d = projector.getPositiveScale
-    val negScale: Vector3d = projector.getNegativeScale
+    val fieldBlocks = new HashSet[Vector3]
+    val posScale: Vector3 = projector.getPositiveScale
+    val negScale: Vector3 = projector.getNegativeScale
 
     for (x <- -negScale.xi to posScale.xi by step; y <- -negScale.yi to posScale.yi by step; z <- -negScale.zi to posScale.zi by step)
-      if (y == -negScale.yi || y == posScale.yi || x == -negScale.xi || x == posScale.xi || z == -negScale.zi || z == posScale.zi) {
-        fieldBlocks.add(new Vector3d(x, y, z))
-      }
+      if (y == -negScale.yi || y == posScale.yi || x == -negScale.xi || x == posScale.xi || z == -negScale.zi || z == posScale.zi)
+        fieldBlocks.add(new Vector3(x, y, z))
 
 
     return fieldBlocks
   }
 
-  def getInteriorPoints(projector: IFieldMatrix): Set[Vector3d] =
+  def getInteriorPoints(projector: IFieldMatrix): Set[Vector3] =
   {
-    val fieldBlocks = new HashSet[Vector3d]
+    val fieldBlocks = new HashSet[Vector3]
     val posScale = projector.getPositiveScale
     val negScale = projector.getNegativeScale
 
     //TODO: Check parallel possibility
     for (x <- -negScale.xi to posScale.xi by step; y <- -negScale.yi to posScale.yi by step; z <- -negScale.zi to posScale.zi by step)
-      fieldBlocks.add(new Vector3d(x, y, z))
+      fieldBlocks.add(new Vector3(x, y, z))
 
     return fieldBlocks
   }
 
-  override def isInField(projector: IFieldMatrix, position: Vector3d): Boolean =
+  override def isInField(projector: IFieldMatrix, position: Vector3): Boolean =
   {
-    val projectorPos: Vector3d = new Vector3d(projector.asInstanceOf[TileEntity])
+    val projectorPos: Vector3 = new Vector3(projector.asInstanceOf[TileEntity])
     projectorPos.add(projector.getTranslation)
     val relativePosition = position.clone.subtract(projectorPos)
     relativePosition.transform(new EulerAngle(-projector.getRotationYaw, -projector.getRotationPitch, 0))

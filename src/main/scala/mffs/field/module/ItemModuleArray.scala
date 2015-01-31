@@ -4,23 +4,22 @@ import java.util.{HashSet, Set}
 
 import mffs.base.ItemModule
 import net.minecraftforge.common.util.ForgeDirection
-import nova.core.util.transform.Vector3d
 import resonantengine.api.mffs.machine.IFieldMatrix
-import resonantengine.nova.wrapper._
+import resonantengine.lib.transform.vector.Vector3
 
 import scala.collection.JavaConversions._
 import scala.collection.mutable
 
 class ItemModuleArray extends ItemModule
 {
-  override def onPreCalculate(projector: IFieldMatrix, fieldBlocks: Set[Vector3d])
+  override def onPreCalculate(projector: IFieldMatrix, fieldBlocks: Set[Vector3])
   {
     onPreCalculateInterior(projector, fieldBlocks, fieldBlocks)
   }
 
-  def onPreCalculateInterior(projector: IFieldMatrix, exterior: Set[Vector3d], interior: Set[Vector3d])
+  def onPreCalculateInterior(projector: IFieldMatrix, exterior: Set[Vector3], interior: Set[Vector3])
   {
-    val originalField: Set[Vector3d] = new HashSet(interior)
+    val originalField: Set[Vector3] = new HashSet(interior)
     val longestDirectional = getDirectionWidthMap(exterior)
 
     ForgeDirection.VALID_DIRECTIONS.foreach(
@@ -37,7 +36,7 @@ class ItemModuleArray extends ItemModule
 
             originalField.foreach(originalFieldBlock =>
                                   {
-                                    val newFieldBlock: Vector3d = originalFieldBlock.clone + (new Vector3d(direction) * directionalDisplacementScale)
+                                    val newFieldBlock: Vector3 = originalFieldBlock.clone + (new Vector3(direction) * directionalDisplacementScale)
                                     interior.add(newFieldBlock)
                                   })
           }
@@ -46,7 +45,7 @@ class ItemModuleArray extends ItemModule
     )
   }
 
-  def getDirectionWidthMap(field: Set[Vector3d]): mutable.Map[ForgeDirection, Integer] =
+  def getDirectionWidthMap(field: Set[Vector3]): mutable.Map[ForgeDirection, Integer] =
   {
     val longestDirectional = mutable.Map.empty[ForgeDirection, Integer]
 

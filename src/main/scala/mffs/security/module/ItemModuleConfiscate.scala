@@ -5,13 +5,13 @@ import java.util.Set
 import mffs.field.TileElectromagneticProjector
 import mffs.security.MFFSPermissions
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.util.ChatComponentTranslation
-import nova.core.util.transform.Vector3d
+import net.minecraft.util.{ChatComponentTranslation, ChatComponentText}
 import resonantengine.api.mffs.machine.IProjector
+import resonantengine.lib.transform.vector.Vector3
 
 class ItemModuleConfiscate extends ItemModuleDefense
 {
-  override def onProject(projector: IProjector, fields: Set[Vector3d]): Boolean =
+  override def onProject(projector: IProjector, fields: Set[Vector3]): Boolean =
   {
     val proj = projector.asInstanceOf[TileElectromagneticProjector]
     val entities = getEntitiesInField(projector)

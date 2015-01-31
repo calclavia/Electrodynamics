@@ -9,11 +9,11 @@ import mffs.security.{MFFSPermissions, TileBiometricIdentifier}
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.util.ChatComponentText
-import nova.core.util.transform.Vector3d
 import resonantengine.api.mffs.card.ICoordLink
 import resonantengine.api.mffs.fortron.FrequencyGridRegistry
 import resonantengine.api.tile.IBlockFrequency
 import resonantengine.lib.access.Permission
+import resonantengine.lib.transform.vector.Vector3
 
 import scala.collection.convert.wrapAll._
 
@@ -35,10 +35,7 @@ abstract class TileFrequency extends TileMFFSInventory with IBlockFrequency
 
   def hasPermission(profile: GameProfile, permissions: Permission*): Boolean = permissions.forall(hasPermission(profile, _))
 
-  /**
-   * Gets the first linked biometric identifier, based on the card slots and frequency.
-   */
-  def getBiometricIdentifier: TileBiometricIdentifier = if (getBiometricIdentifiers.size > 0) getBiometricIdentifiers.head else null
+  def hasPermission(profile: GameProfile, permission: Permission): Boolean = !isActive || getBiometricIdentifiers.forall(_.hasPermission(profile, permission))
 
   def getBiometricIdentifiers: JSet[TileBiometricIdentifier] =
   {
@@ -84,9 +81,14 @@ abstract class TileFrequency extends TileMFFSInventory with IBlockFrequency
   }
 
   /**
+   * Gets the first linked biometric identifier, based on the card slots and frequency.
+   */
+  def getBiometricIdentifier: TileBiometricIdentifier = if (getBiometricIdentifiers.size > 0) getBiometricIdentifiers.head else null
+
+  /**
    * Permissions
    */
-  override protected def configure(player: EntityPlayer, side: Int, hit: Vector3d): Boolean =
+  override protected def configure(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
   {
     if (!hasPermission(player.getGameProfile, MFFSPermissions.configure))
     {
@@ -96,6 +98,4 @@ abstract class TileFrequency extends TileMFFSInventory with IBlockFrequency
 
     return super.configure(player, side, hit)
   }
-
-  def hasPermission(profile: GameProfile, permission: Permission): Boolean = !isActive || getBiometricIdentifiers.forall(_.hasPermission(profile, permission))
 }

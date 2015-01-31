@@ -4,14 +4,14 @@ import cpw.mods.fml.common.Loader
 import cpw.mods.fml.relauncher.ReflectionHelper
 import mffs.field.mobilize.TileForceMobilizer
 import net.minecraft.world.World
-import nova.core.util.transform.Vector3d
+import resonantengine.lib.transform.vector.Vector3
 
 /**
  * Removes the TileEntity
  *
  * @author Calclavia
  */
-class BlockNotifyDelayedEvent(handler: IDelayedEventHandler, ticks: Int, world: World, position: Vector3d) extends DelayedEvent(handler, ticks)
+class BlockNotifyDelayedEvent(handler: IDelayedEventHandler, ticks: Int, world: World, position: Vector3) extends DelayedEvent(handler, ticks)
 {
   protected override def onEvent
   {

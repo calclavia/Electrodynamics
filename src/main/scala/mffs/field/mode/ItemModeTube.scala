@@ -5,34 +5,34 @@ import java.util.{HashSet, Set}
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import mffs.render.model.ModelPlane
 import net.minecraftforge.common.util.ForgeDirection
-import nova.core.util.transform.Vector3d
 import org.lwjgl.opengl.GL11
 import resonantengine.api.mffs.machine.{IFieldMatrix, IProjector}
+import resonantengine.lib.transform.vector.Vector3
 
 class ItemModeTube extends ItemModeCube
 {
   private val step = 1
 
-  override def getExteriorPoints(projector: IFieldMatrix): Set[Vector3d] =
+  override def getExteriorPoints(projector: IFieldMatrix): Set[Vector3] =
   {
-    val fieldBlocks = new HashSet[Vector3d]
+    val fieldBlocks = new HashSet[Vector3]
     val direction: ForgeDirection = projector.getDirection
-    val posScale: Vector3d = projector.getPositiveScale
-    val negScale: Vector3d = projector.getNegativeScale
+    val posScale: Vector3 = projector.getPositiveScale
+    val negScale: Vector3 = projector.getNegativeScale
 
     for (x <- -negScale.xi to posScale.xi by step; y <- -negScale.yi to posScale.yi by step; z <- -negScale.zi to posScale.zi by step)
     {
       if (!(direction == ForgeDirection.UP || direction == ForgeDirection.DOWN) && (y == -negScale.yi || y == posScale.yi))
       {
-        fieldBlocks.add(new Vector3d(x, y, z))
+        fieldBlocks.add(new Vector3(x, y, z))
       }
       else if (!(direction == ForgeDirection.NORTH || direction == ForgeDirection.SOUTH) && (z == -negScale.zi || z == posScale.zi))
       {
-        fieldBlocks.add(new Vector3d(x, y, z))
+        fieldBlocks.add(new Vector3(x, y, z))
       }
       else if (!(direction == ForgeDirection.WEST || direction == ForgeDirection.EAST) && (x == -negScale.xi || x == posScale.xi))
       {
-        fieldBlocks.add(new Vector3d(x, y, z))
+        fieldBlocks.add(new Vector3(x, y, z))
       }
     }
 

@@ -6,17 +6,16 @@ import mffs.Content
 import net.minecraft.client.particle.EntityFX
 import net.minecraft.client.renderer.{OpenGlHelper, RenderBlocks, Tessellator}
 import net.minecraft.world.World
-import nova.core.util.transform.Vector3d
 import org.lwjgl.opengl.GL11
 import resonantengine.lib.render.RenderUtility
 import resonantengine.lib.transform.rotation.EulerAngle
+import resonantengine.lib.transform.vector.Vector3
 
 /**
  * @author Calclavia
  */
 @SideOnly(Side.CLIENT)
-class FXHologramOrbit(par1World: World, orbitPosition: Vector3d, position: Vector3d, red: Float, green: Float, blue: Float, age: Int, maxSpeed: Float)
-    extends FXHologram(par1World, position, red, green, blue, age)
+class FXHologramOrbit(par1World: World, orbitPosition: Vector3, position: Vector3, red: Float, green: Float, blue: Float, age: Int, maxSpeed: Float) extends FXHologram(par1World, position, red, green, blue, age)
 {
   private var rotation: Double = 0
 
@@ -27,10 +26,10 @@ class FXHologramOrbit(par1World: World, orbitPosition: Vector3d, position: Vecto
     val yDifference: Double = this.posY - orbitPosition.y
     val zDifference: Double = this.posZ - orbitPosition.z
     val speed: Double = this.maxSpeed * (this.particleAge.asInstanceOf[Float] / this.particleMaxAge.asInstanceOf[Float])
-    val originalPosition: Vector3d = new Vector3d(this)
-    val relativePosition: Vector3d = originalPosition.clone.subtract(this.orbitPosition)
+    val originalPosition: Vector3 = new Vector3(this)
+    val relativePosition: Vector3 = originalPosition.clone.subtract(this.orbitPosition)
     relativePosition.transform(new EulerAngle(speed, 0, 0))
-    val newPosition: Vector3d = this.orbitPosition.clone.add(relativePosition)
+    val newPosition: Vector3 = this.orbitPosition.clone.add(relativePosition)
     this.rotation += speed
     this.moveEntity(newPosition.x - originalPosition.x, newPosition.y - originalPosition.y, newPosition.z - originalPosition.z)
   }

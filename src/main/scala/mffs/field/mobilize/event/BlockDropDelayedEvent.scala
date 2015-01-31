@@ -3,9 +3,9 @@ package mffs.field.mobilize.event
 import net.minecraft.block.Block
 import net.minecraft.init.Blocks
 import net.minecraft.world.World
-import nova.core.util.transform.Vector3d
+import resonantengine.lib.transform.vector.Vector3
 
-class BlockDropDelayedEvent(handler: IDelayedEventHandler, ticks: Int, block: Block, world: World, position: Vector3d) extends DelayedEvent(handler, ticks)
+class BlockDropDelayedEvent(handler: IDelayedEventHandler, ticks: Int, block: Block, world: World, position: Vector3) extends DelayedEvent(handler, ticks)
 {
   protected override def onEvent
   {

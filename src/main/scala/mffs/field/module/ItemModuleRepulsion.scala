@@ -5,18 +5,21 @@ import java.util.{Set => JSet}
 import mffs.base.ItemModule
 import mffs.field.TileElectromagneticProjector
 import mffs.security.MFFSPermissions
+import net.minecraft.entity.Entity
 import net.minecraft.entity.player.{EntityPlayer, EntityPlayerMP}
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
-import nova.core.util.transform.Vector3d
 import resonantengine.api.mffs.machine.IProjector
-import resonantengine.nova.wrapper._
+import resonantengine.lib.transform.region.Cuboid
+import resonantengine.lib.transform.vector.Vector3
+
+import scala.collection.JavaConversions._
 
 class ItemModuleRepulsion extends ItemModule
 {
   setCost(8)
 
-  override def onProject(projector: IProjector, fields: JSet[Vector3d]): Boolean =
+  override def onProject(projector: IProjector, fields: JSet[Vector3]): Boolean =
   {
     val tile = projector.asInstanceOf[TileEntity]
     val repulsionVelocity = Math.max(projector.getModuleCount(this) / 20, 1.2)
@@ -27,7 +30,7 @@ class ItemModuleRepulsion extends ItemModule
             .filter(
               entity =>
               {
-                if (fields.contains(new Vector3d(entity).floor) || projector.getMode.isInField(projector, new Vector3d(entity)))
+                if (fields.contains(new Vector3(entity).floor) || projector.getMode.isInField(projector, new Vector3(entity)))
                 {
                   if (entity.isInstanceOf[EntityPlayer])
                   {
@@ -42,7 +45,7 @@ class ItemModuleRepulsion extends ItemModule
             .foreach(
               entity =>
               {
-                val repelDirection = new Vector3d(entity) - ((new Vector3d(entity).floor + 0.5).normalize)
+                val repelDirection = new Vector3(entity) - ((new Vector3(entity).floor + 0.5).normalize)
                 entity.motionX = repelDirection.x * Math.max(repulsionVelocity, Math.abs(entity.motionX))
                 entity.motionY = repelDirection.y * Math.max(repulsionVelocity, Math.abs(entity.motionY))
                 entity.motionZ = repelDirection.z * Math.max(repulsionVelocity, Math.abs(entity.motionZ))
@@ -59,7 +62,7 @@ class ItemModuleRepulsion extends ItemModule
     return true
   }
 
-  override def onDestroy(projector: IProjector, field: JSet[Vector3d]): Boolean =
+  override def onDestroy(projector: IProjector, field: JSet[Vector3]): Boolean =
   {
     projector.asInstanceOf[TileElectromagneticProjector].sendFieldToClient
     return false

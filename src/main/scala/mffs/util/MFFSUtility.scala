@@ -12,13 +12,12 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.event.entity.player.PlayerInteractEvent
-import nova.core.util.transform.Vector3d
 import resonantengine.api.mffs.fortron.FrequencyGridRegistry
 import resonantengine.api.mffs.machine.IProjector
 import resonantengine.lib.access.Permission
 import resonantengine.lib.grid.frequency.GridFrequency
 import resonantengine.lib.transform.rotation.EulerAngle
-import resonantengine.nova.wrapper._
+import resonantengine.lib.transform.vector.Vector3
 
 import scala.collection.JavaConversions._
 import scala.collection.mutable
@@ -66,7 +65,7 @@ object MFFSUtility
       ForgeDirection.VALID_DIRECTIONS.foreach(
         direction =>
         {
-          val vector = new Vector3d(tileEntity) + direction
+          val vector = new Vector3(tileEntity) + direction
           val checkTile = vector.getTileEntity(tileEntity.getWorldObj())
 
           if (checkTile != null)
@@ -96,7 +95,7 @@ object MFFSUtility
     return null
   }
 
-  def getCamoBlock(proj: IProjector, position: Vector3d): ItemStack =
+  def getCamoBlock(proj: IProjector, position: Vector3): ItemStack =
   {
     val projector = proj.asInstanceOf[TileElectromagneticProjector]
     val tile = projector.asInstanceOf[TileEntity]
@@ -113,8 +112,8 @@ object MFFSUtility
 
             if (fieldMap != null)
             {
-              val fieldCenter = new Vector3d(projector.asInstanceOf[TileEntity]) + projector.getTranslation()
-              var relativePosition: Vector3d = position - fieldCenter
+              val fieldCenter = new Vector3(projector.asInstanceOf[TileEntity]) + projector.getTranslation()
+              var relativePosition: Vector3 = position - fieldCenter
               relativePosition = relativePosition.transform(new EulerAngle(-projector.getRotationYaw, -projector.getRotationPitch, 0))
 
               val blockInfo = fieldMap(relativePosition.round)
@@ -158,25 +157,26 @@ object MFFSUtility
     return null
   }
 
-  def hasPermission(world: World, position: Vector3d, permission: Permission, player: EntityPlayer): Boolean =
+  def hasPermission(world: World, position: Vector3, permission: Permission, player: EntityPlayer): Boolean =
   {
     return hasPermission(world, position, permission, player.getGameProfile())
   }
 
-  def hasPermission(world: World, position: Vector3d, permission: Permission, profile: GameProfile): Boolean =
+  def hasPermission(world: World, position: Vector3, permission: Permission, profile: GameProfile): Boolean =
   {
     return getRelevantProjectors(world, position).forall(_.hasPermission(profile, permission))
+  }
+
+  def hasPermission(world: World, position: Vector3, action: PlayerInteractEvent.Action, player: EntityPlayer): Boolean =
+  {
+    return getRelevantProjectors(world, position) forall (_.isAccessGranted(world, position, player, action))
   }
 
   /**
    * Gets the set of projectors that have an effect in this position.
    */
-  def getRelevantProjectors(world: World, position: Vector3d): mutable.Set[TileElectromagneticProjector] = {
-    return FrequencyGridRegistry.instance.asInstanceOf[GridFrequency].getNodes(classOf[TileElectromagneticProjector]) filter (_.isInField(position))
-  }
-
-  def hasPermission(world: World, position: Vector3d, action: PlayerInteractEvent.Action, player: EntityPlayer): Boolean =
+  def getRelevantProjectors(world: World, position: Vector3): mutable.Set[TileElectromagneticProjector] =
   {
-    return getRelevantProjectors(world, position) forall (_.isAccessGranted(world, position, player, action))
+    return FrequencyGridRegistry.instance.asInstanceOf[GridFrequency].getNodes(classOf[TileElectromagneticProjector]) filter (_.isInField(position))
   }
 }

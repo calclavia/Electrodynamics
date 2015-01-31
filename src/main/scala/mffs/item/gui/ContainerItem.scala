@@ -4,7 +4,7 @@ import mffs.slot.SlotDisabled
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.{IInventory, Slot}
 import net.minecraft.item.ItemStack
-import nova.core.util.transform.Vector3d
+import resonantengine.lib.transform.vector.Vector3
 import resonantengine.lib.utility.inventory.{ExternalInventory, InventoryUtility}
 import resonantengine.prefab.gui.ContainerBase
 
@@ -40,7 +40,7 @@ class ContainerItem(player: EntityPlayer, itemStack: ItemStack, inventory: IInve
   {
     (0 until inventory.getSizeInventory) filter (inventory.getStackInSlot(_) != null) foreach (i =>
     {
-      InventoryUtility.dropItemStack(player.worldObj, new Vector3d(player), inventory.getStackInSlot(i))
+      InventoryUtility.dropItemStack(player.worldObj, new Vector3(player), inventory.getStackInSlot(i))
       inventory.setInventorySlotContents(i, null)
     })
 

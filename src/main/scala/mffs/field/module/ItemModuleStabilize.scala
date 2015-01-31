@@ -18,7 +18,7 @@ import resonantengine.api.mffs.event.EventStabilize
 import resonantengine.api.mffs.machine.IProjector
 import resonantengine.core.network.discriminator.PacketTile
 import resonantengine.lib.transform.rotation.EulerAngle
-import resonantengine.lib.transform.vector.VectorWorld
+import resonantengine.lib.transform.vector.{Vector3, VectorWorld}
 
 class ItemModuleStabilize extends ItemModule
 {
@@ -27,13 +27,13 @@ class ItemModuleStabilize extends ItemModule
   setMaxStackSize(1)
   setCost(20)
 
-  override def onProject(projector: IProjector, fields: Set[Vector3d]): Boolean =
+  override def onProject(projector: IProjector, fields: Set[Vector3]): Boolean =
   {
     blockCount = 0
     return false
   }
 
-  override def onProject(projector: IProjector, position: Vector3d): Int =
+  override def onProject(projector: IProjector, position: Vector3): Int =
   {
     val tile = projector.asInstanceOf[TileEntity]
     val world = tile.getWorldObj
@@ -42,8 +42,8 @@ class ItemModuleStabilize extends ItemModule
     if (projector.getMode.isInstanceOf[ItemModeCustom] && !(projector.getModuleCount(Content.moduleCamouflage) > 0))
     {
       val fieldBlocks = projector.getMode.asInstanceOf[ItemModeCustom].getFieldBlockMap(projector, projector.getModeStack)
-      val fieldCenter: Vector3d = new Vector3d(tile) + projector.getTranslation
-      val relativePosition: Vector3d = position.clone.subtract(fieldCenter)
+      val fieldCenter: Vector3 = new Vector3(tile) + projector.getTranslation
+      val relativePosition: Vector3 = position.clone.subtract(fieldCenter)
       relativePosition.transform(new EulerAngle(-projector.getRotationYaw, -projector.getRotationPitch, 0))
       blockInfo = fieldBlocks(relativePosition.round)
     }

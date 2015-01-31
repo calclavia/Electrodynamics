@@ -6,12 +6,12 @@ import mffs.ModularForceFieldSystem
 import net.minecraft.entity.monster.IMob
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.entity.{EntityLivingBase, INpc}
-import nova.core.util.transform.Vector3d
 import resonantengine.api.mffs.machine.IProjector
+import resonantengine.lib.transform.vector.Vector3
 
 class ItemModuleAntiFriendly extends ItemModuleDefense
 {
-  override def onProject(projector: IProjector, fields: Set[Vector3d]): Boolean =
+  override def onProject(projector: IProjector, fields: Set[Vector3]): Boolean =
   {
     val entities = getEntitiesInField(projector)
 
