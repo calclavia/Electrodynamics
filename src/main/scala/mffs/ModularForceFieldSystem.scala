@@ -2,116 +2,81 @@ package mffs
 
 import java.util.UUID
 
-import com.mojang.authlib.GameProfile
-import cpw.mods.fml.common.Mod.EventHandler
-import cpw.mods.fml.common.event.{FMLInitializationEvent, FMLPostInitializationEvent, FMLPreInitializationEvent}
-import cpw.mods.fml.common.network.NetworkRegistry
-import cpw.mods.fml.common.{Mod, SidedProxy}
-import api.security.MFFSPermissions
-import api.util.FortronUtility
-import net.minecraft.block.Block
-import net.minecraft.init.Blocks
-import net.minecraft.util.DamageSource
-import net.minecraftforge.common.MinecraftForge
-import net.minecraftforge.common.config.Configuration
-import net.minecraftforge.fluids.FluidRegistry
-import org.modstats.{ModstatInfo, Modstats}
-import resonantengine.api.mffs.Blacklist
-import resonantengine.core.network.netty.PacketManager
-import resonantengine.lib.mod.config.ConfigHandler
-import resonantengine.lib.mod.loadable.LoadableHandler
+import mffs.api.Blacklist
+import mffs.security.MFFSPermissions
+import nova.core.loader.{Loadable, NovaMod}
 
-@Mod(modid = Reference.id, name = Reference.name, version = Reference.version, dependencies = "required-after:ResonantEngine", modLanguage = "scala", guiFactory = "mffs.MFFSGuiFactory")
-@ModstatInfo(prefix = "mffs")
-object ModularForceFieldSystem
-{
-  /**
-   * Damages
-   */
-  val damageFieldShock = new DamageSource("fieldShock").setDamageBypassesArmor()
-  val fakeProfile = new GameProfile(UUID.randomUUID, "mffs")
-  val packetHandler = new PacketManager(Reference.channel)
-  val loadables = new LoadableHandler
-  @SidedProxy(clientSide = "mffs.ClientProxy", serverSide = "mffs.CommonProxy")
-  var proxy: CommonProxy = _
+@NovaMod(id = Reference.id, name = Reference.name, version = Reference.version, dependencies = Array("ResonantEngine"))
+object ModularForceFieldSystem extends Loadable {
+	/**
+	 * General constants
+	 */
+	val damageFieldShock = new DamageSource("fieldShock").setDamageBypassesArmor()
+	val fakeProfile = new GameProfile(UUID.randomUUID, "mffs")
 
-  @EventHandler
-  def preInit(event: FMLPreInitializationEvent)
-  {
-    Settings.config = new Configuration(event.getSuggestedConfigurationFile)
+	override def preInit() {
+		/**
+		 * Registration
+		 */
+		Modstats.instance.getReporter.registerMod(this)
+		NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy)
+		MinecraftForge.EVENT_BUS.register(SubscribeEventHandler)
+		MinecraftForge.EVENT_BUS.register(Settings)
 
-    /**
-     * Registration
-     */
-    Modstats.instance.getReporter.registerMod(this)
-    NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy)
-    MinecraftForge.EVENT_BUS.register(SubscribeEventHandler)
-    MinecraftForge.EVENT_BUS.register(Settings)
+		ConfigHandler.sync(Settings, Settings.config)
 
-    ConfigHandler.sync(Settings, Settings.config)
+		loadables.applyModule(proxy)
+		loadables.applyModule(packetHandler)
+		loadables.applyModule(Content)
 
-    loadables.applyModule(proxy)
-    loadables.applyModule(packetHandler)
-    loadables.applyModule(Content)
+		Settings.config.load
 
-    Settings.config.load
+		loadables.preInit()
 
-    loadables.preInit()
+		MinecraftForge.EVENT_BUS.register(Content.remoteController)
 
-    MinecraftForge.EVENT_BUS.register(Content.remoteController)
+		/**
+		 * Fluid Instantiation
+		 */
+		FortronUtility.fluidFortron.setGaseous(true)
+		FluidRegistry.registerFluid(FortronUtility.fluidFortron)
 
-    /**
-     * Fluid Instantiation
-     */
-    FortronUtility.fluidFortron.setGaseous(true)
-    FluidRegistry.registerFluid(FortronUtility.fluidFortron)
+		Content.preInit()
+	}
 
-    Settings.config.save()
-  }
+	override def load(evt: FMLInitializationEvent) {
+		Content.init()
+	}
 
-  @EventHandler
-  def load(evt: FMLInitializationEvent)
-  {
-    loadables.init()
-  }
+	override def postInit() {
+		/**
+		 * Add to black lists
+		 */
+		Blacklist.stabilizationBlacklist.add(Blocks.water)
+		Blacklist.stabilizationBlacklist.add(Blocks.flowing_water)
+		Blacklist.stabilizationBlacklist.add(Blocks.lava)
+		Blacklist.stabilizationBlacklist.add(Blocks.flowing_lava)
 
-  @EventHandler
-  def postInit(evt: FMLPostInitializationEvent)
-  {
-    Settings.config.load()
+		Blacklist.disintegrationBlacklist.add(Blocks.water)
+		Blacklist.disintegrationBlacklist.add(Blocks.flowing_water)
+		Blacklist.disintegrationBlacklist.add(Blocks.lava)
+		Blacklist.disintegrationBlacklist.add(Blocks.flowing_lava)
 
-    /**
-     * Add to black lists
-     */
-    Blacklist.stabilizationBlacklist.add(Blocks.water)
-    Blacklist.stabilizationBlacklist.add(Blocks.flowing_water)
-    Blacklist.stabilizationBlacklist.add(Blocks.lava)
-    Blacklist.stabilizationBlacklist.add(Blocks.flowing_lava)
+		Blacklist.mobilizerBlacklist.add(Blocks.bedrock)
+		Blacklist.mobilizerBlacklist.add(Content.forceField)
 
-    Blacklist.disintegrationBlacklist.add(Blocks.water)
-    Blacklist.disintegrationBlacklist.add(Blocks.flowing_water)
-    Blacklist.disintegrationBlacklist.add(Blocks.lava)
-    Blacklist.disintegrationBlacklist.add(Blocks.flowing_lava)
+		try {
+			val clazz = Class.forName("ic2.api.tile.ExplosionWhitelist")
+			clazz.getMethod("addWhitelistedBlock", classOf[Block]).invoke(null, Content.forceField)
+		}
+		catch {
+			case _: Throwable => Reference.logger.info("IC2 Explosion white list API not found. Ignoring...")
+		}
 
-    Blacklist.mobilizerBlacklist.add(Blocks.bedrock)
-    Blacklist.mobilizerBlacklist.add(Content.forceField)
+		//Inititate MFFS Permissions
+		MFFSPermissions
 
-    try
-    {
-      val clazz = Class.forName("ic2.api.tile.ExplosionWhitelist")
-      clazz.getMethod("addWhitelistedBlock", classOf[Block]).invoke(null, Content.forceField)
-    }
-    catch
-      {
-        case _: Throwable => Reference.logger.info("IC2 Explosion white list API not found. Ignoring...")
-      }
-
-    //Inititate MFFS Permissions
-    MFFSPermissions
-
-    loadables.postInit()
-
-    Settings.config.save()
-  }
+		Content.postInit()
+	}
 
 }
