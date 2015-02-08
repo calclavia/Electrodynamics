@@ -6,10 +6,10 @@ import com.mojang.authlib.GameProfile
 import cpw.mods.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent
 import cpw.mods.fml.common.eventhandler.{Event, SubscribeEvent}
 import cpw.mods.fml.relauncher.{Side, SideOnly}
-import mffs.base.TileFortron
-import mffs.field.TileElectromagneticProjector
-import mffs.security.MFFSPermissions
-import mffs.util.{FortronUtility, MFFSUtility}
+import api.base.TileFortron
+import api.field.TileElectromagneticProjector
+import api.security.MFFSPermissions
+import api.util.{FortronUtility, MFFSUtility}
 import net.minecraft.block.BlockSkull
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Blocks

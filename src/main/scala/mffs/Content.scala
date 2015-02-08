@@ -1,17 +1,17 @@
 package mffs
 
-import mffs.base.{ItemMFFS, ItemModule}
-import mffs.field.mobilize.TileForceMobilizer
-import mffs.field.mode._
-import mffs.field.module._
-import mffs.field.{TileElectromagneticProjector, TileForceField}
-import mffs.item.ItemRemoteController
-import mffs.item.card.{ItemCard, ItemCardFrequency, ItemCardLink}
-import mffs.item.fortron.ItemCardInfinite
-import mffs.production.{TileCoercionDeriver, TileFortronCapacitor}
-import mffs.security.TileBiometricIdentifier
-import mffs.security.card.ItemCardIdentification
-import mffs.security.module._
+import api.base.{ItemMFFS, ItemModule}
+import api.field.mobilize.TileForceMobilizer
+import api.field.mode._
+import api.field.module._
+import api.field.{TileElectromagneticProjector, TileForceField}
+import api.item.ItemRemoteController
+import api.item.card.{ItemCard, ItemCardFrequency, ItemCardLink}
+import api.item.fortron.ItemCardInfinite
+import api.production.{TileCoercionDeriver, TileFortronCapacitor}
+import api.security.TileBiometricIdentifier
+import api.security.card.ItemCardIdentification
+import api.security.module._
 import net.minecraft.block.Block
 import net.minecraft.init.{Blocks, Items}
 import net.minecraft.item.ItemStack

@@ -7,8 +7,8 @@ import cpw.mods.fml.common.Mod.EventHandler
 import cpw.mods.fml.common.event.{FMLInitializationEvent, FMLPostInitializationEvent, FMLPreInitializationEvent}
 import cpw.mods.fml.common.network.NetworkRegistry
 import cpw.mods.fml.common.{Mod, SidedProxy}
-import mffs.security.MFFSPermissions
-import mffs.util.FortronUtility
+import api.security.MFFSPermissions
+import api.util.FortronUtility
 import net.minecraft.block.Block
 import net.minecraft.init.Blocks
 import net.minecraft.util.DamageSource
