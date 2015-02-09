@@ -1,6 +1,6 @@
 package mffs.api.machine;
 
-import com.resonant.wrapper.core.api.tile.IBlockFrequency;
+import com.resonant.wrapper.core.api.tile.BlockFrequency;
 import net.minecraft.inventory.IInventory;
 import nova.core.util.transform.Vector3d;
 
@@ -10,7 +10,7 @@ import java.util.Set;
  * Also extends IDisableable, IFortronFrequency
  * @author Calclavia
  */
-public abstract interface IProjector extends IInventory, IFieldMatrix, IBlockFrequency {
+public abstract interface IProjector extends IInventory, IFieldMatrix, BlockFrequency {
 	/**
 	 * Projects the force field.
 	 */
