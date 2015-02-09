@@ -1,6 +1,6 @@
 package mffs
 
-import com.resonant.prefab.modcontent.ContentLoader
+import com.resonant.core.prefab.modcontent.ContentLoader
 
 /**
  * The main content of MFFS

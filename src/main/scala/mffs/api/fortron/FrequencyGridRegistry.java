@@ -1,6 +1,6 @@
 package mffs.api.fortron;
 
-import com.resonant.core.api.tile.IBlockFrequency;
+import com.resonant.wrapper.core.api.tile.IBlockFrequency;
 import net.minecraft.world.World;
 import nova.core.util.transform.Cuboid;
 import nova.core.util.transform.Vector3d;

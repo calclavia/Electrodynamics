@@ -1,6 +1,6 @@
 package mffs.api.machine;
 
-import com.resonant.core.api.tile.IBlockFrequency;
+import com.resonant.wrapper.core.api.tile.IBlockFrequency;
 import net.minecraft.inventory.IInventory;
 import nova.core.util.transform.Vector3d;
 
