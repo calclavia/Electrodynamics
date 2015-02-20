@@ -4,7 +4,6 @@ import java.util.UUID
 
 import mffs.api.Blacklist
 import mffs.security.MFFSPermissions
-import nova.core.loader.{Loadable, NovaMod}
 
 @NovaMod(id = Reference.id, name = Reference.name, version = Reference.version, dependencies = Array("ResonantEngine"))
 object ModularForceFieldSystem extends Loadable {
@@ -66,7 +65,7 @@ object ModularForceFieldSystem extends Loadable {
 		Blacklist.mobilizerBlacklist.add(Content.forceField)
 
 		try {
-			val clazz = Class.forName("ic2.api.tile.ExplosionWhitelist")
+			val clazz = Class.forName("ic2.api.block.ExplosionWhitelist")
 			clazz.getMethod("addWhitelistedBlock", classOf[Block]).invoke(null, Content.forceField)
 		}
 		catch {

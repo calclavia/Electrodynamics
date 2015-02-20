@@ -10,21 +10,9 @@ import net.minecraft.entity.player.{EntityPlayer, EntityPlayerMP}
 import net.minecraft.init.Blocks
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.network.Packet
-import resonantengine.api.mffs.machine.IActivatable
-import resonantengine.api.tile.{ICamouflageMaterial, IPlayerUsing}
-import resonantengine.core.network.discriminator.PacketType
-import resonantengine.core.network.netty.PacketManager
-import resonantengine.lib.modcontent.block.ResonantTile
-import resonantengine.lib.transform.vector.Vector3
-import resonantengine.lib.utility.inventory.InventoryUtility
-import resonantengine.lib.wrapper.ByteBufWrapper._
-import resonantengine.prefab.block.impl.TRotatable
-import resonantengine.prefab.network.{TPacketReceiver, TPacketSender}
-
-import scala.collection.convert.wrapAll._
 
 /**
- * A base tile class for all MFFS blocks to inherit.
+ * A base block class for all MFFS blocks to inherit.
  * @author Calclavia
  */
 abstract class TileMFFS extends ResonantTile(Material.iron) with ICamouflageMaterial with TPacketReceiver with TPacketSender with IActivatable with IPlayerUsing

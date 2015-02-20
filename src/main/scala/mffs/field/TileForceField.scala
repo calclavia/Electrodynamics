@@ -17,14 +17,6 @@ import net.minecraft.network.Packet
 import net.minecraft.potion.{Potion, PotionEffect}
 import net.minecraft.util.{IIcon, MovingObjectPosition}
 import net.minecraft.world.IBlockAccess
-import resonantengine.api.mffs.machine.{IForceField, IProjector}
-import resonantengine.api.mffs.modules.IModule
-import resonantengine.core.network.discriminator.{PacketTile, PacketType}
-import resonantengine.lib.modcontent.block.ResonantTile
-import resonantengine.lib.transform.region.Cuboid
-import resonantengine.lib.transform.vector.Vector3
-import resonantengine.lib.wrapper.ByteBufWrapper._
-import resonantengine.prefab.network.TPacketReceiver
 
 import scala.collection.convert.wrapAll._
 
@@ -193,43 +185,6 @@ class TileForceField extends ResonantTile(Material.glass) with TPacketReceiver w
     }
 
     return super.getCollisionBoxes(intersect, entity)
-  }
-
-  /**
-   * @return Gets the projector block controlling this force field. Removes the force field if no
-   *         projector can be found.
-   */
-  def getProjector: TileElectromagneticProjector =
-  {
-    if (this.getProjectorSafe != null)
-    {
-      return getProjectorSafe
-    }
-
-    if (!this.worldObj.isRemote)
-    {
-      world.setBlock(xCoord, yCoord, zCoord, Blocks.air)
-    }
-
-    return null
-  }
-
-  def getProjectorSafe: TileElectromagneticProjector =
-  {
-    if (projector != null)
-    {
-      val projTile = projector.getTileEntity(world)
-
-      if (projTile.isInstanceOf[TileElectromagneticProjector])
-      {
-        val projector = projTile.asInstanceOf[IProjector]
-        if (world.isRemote || (projector.getCalculatedField != null && projector.getCalculatedField.contains(position)))
-        {
-          return projTile.asInstanceOf[TileElectromagneticProjector]
-        }
-      }
-    }
-    return null
   }
 
   override def collide(entity: Entity)
@@ -433,7 +388,7 @@ class TileForceField extends ResonantTile(Material.glass) with TPacketReceiver w
   }
 
   /**
-   * Writes a tile entity to NBT.
+   * Writes a block entity to NBT.
    */
   override def writeToNBT(nbt: NBTTagCompound)
   {
@@ -443,5 +398,35 @@ class TileForceField extends ResonantTile(Material.glass) with TPacketReceiver w
     {
       nbt.setTag("projector", projector.toNBT)
     }
+  }
+
+	/**
+	 * @return Gets the projector block controlling this force field. Removes the force field if no
+	 *         projector can be found.
+	 */
+	def getProjector: TileElectromagneticProjector = {
+		if (this.getProjectorSafe != null) {
+			return getProjectorSafe
+		}
+
+		if (!this.worldObj.isRemote) {
+			world.setBlock(xCoord, yCoord, zCoord, Blocks.air)
+		}
+
+		return null
+	}
+
+	def getProjectorSafe: TileElectromagneticProjector = {
+		if (projector != null) {
+			val projTile = projector.getTileEntity(world)
+
+			if (projTile.isInstanceOf[TileElectromagneticProjector]) {
+				val projector = projTile.asInstanceOf[IProjector]
+				if (world.isRemote || (projector.getCalculatedField != null && projector.getCalculatedField.contains(position))) {
+					return projTile.asInstanceOf[TileElectromagneticProjector]
+				}
+			}
+		}
+		return null
   }
 }
