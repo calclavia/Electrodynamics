@@ -1,19 +1,6 @@
 package mffs.security.card
 
-import cpw.mods.fml.client.FMLClientHandler
-import cpw.mods.fml.relauncher.{Side, SideOnly}
 import mffs.Content
-import net.minecraft.client.Minecraft
-import net.minecraft.client.entity.AbstractClientPlayer
-import net.minecraft.client.renderer.{ItemRenderer, Tessellator}
-import net.minecraft.entity.EntityLiving
-import net.minecraft.item.ItemStack
-import net.minecraft.util.{IIcon, ResourceLocation}
-import net.minecraftforge.client.IItemRenderer
-import net.minecraftforge.client.IItemRenderer.ItemRenderType
-import org.lwjgl.opengl.GL11._
-import org.lwjgl.opengl.GL12
-import resonantengine.lib.transform.vector.Vector2
 
 /**
  * All thanks to Briman for the id card face rendering! Check out the mod MineForver!
@@ -23,21 +10,21 @@ import resonantengine.lib.transform.vector.Vector2
 @SideOnly(Side.CLIENT)
 class RenderIDCard extends IItemRenderer
 {
-  def renderItem(renderType: IItemRenderer.ItemRenderType, itemStack: ItemStack, data: AnyRef*)
+	def renderItem(renderType: IItemRenderer.ItemRenderType, Item: Item, data: AnyRef*)
   {
-    if (itemStack.getItem.isInstanceOf[ItemCardIdentification])
+	  if (Item.getItem.isInstanceOf[ItemCardIdentification])
     {
-      val card = itemStack.getItem.asInstanceOf[ItemCardIdentification]
+		val card = Item.getItem.asInstanceOf[ItemCardIdentification]
       glPushMatrix
       glDisable(GL_CULL_FACE)
       transform(renderType)
-      renderItemIcon(Content.cardID.getIcon(itemStack, 0))
+		renderItemIcon(Content.cardID.getIcon(Item, 0))
 
       if (renderType != ItemRenderType.INVENTORY)
       {
         glTranslatef(0f, 0f, -0.0005f)
       }
-      renderPlayerFace(getSkinFace(card.getAccess(itemStack).username))
+		renderPlayerFace(getSkinFace(card.getAccess(Item).username))
       glEnable(GL_CULL_FACE)
       glPopMatrix
     }
@@ -146,19 +133,19 @@ class RenderIDCard extends IItemRenderer
     glEnd
   }
 
-  def handleRenderType(item: ItemStack, `type`: IItemRenderer.ItemRenderType): Boolean =
+	def handleRenderType(item: Item, `type`: IItemRenderer.ItemRenderType): Boolean =
   {
     return true
   }
 
-  def shouldUseRenderHelper(`type`: IItemRenderer.ItemRenderType, item: ItemStack, helper: IItemRenderer.ItemRendererHelper): Boolean =
+	def shouldUseRenderHelper(`type`: IItemRenderer.ItemRenderType, item: Item, helper: IItemRenderer.ItemRendererHelper): Boolean =
   {
     return false
   }
 
-  private def renderItem3D(par1EntityLiving: EntityLiving, par2ItemStack: ItemStack, par3: Int)
+	private def renderItem3D(par1EntityLiving: EntityLiving, par2Item: Item, par3: Int)
   {
-    val icon: IIcon = par1EntityLiving.getItemIcon(par2ItemStack, par3)
+	  val icon: IIcon = par1EntityLiving.getItemIcon(par2Item, par3)
     if (icon == null)
     {
       glPopMatrix

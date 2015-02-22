@@ -4,28 +4,9 @@ import java.io.File
 import java.util
 import java.util.{Set => JSet}
 
-import cpw.mods.fml.relauncher.{Side, SideOnly}
 import mffs.field.module.ItemModuleArray
 import mffs.util.TCache
 import mffs.{Content, Settings}
-import net.minecraft.block.Block
-import net.minecraft.client.gui.GuiScreen
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.item.ItemStack
-import net.minecraft.nbt.{NBTTagCompound, NBTTagList}
-import net.minecraft.server.MinecraftServer
-import net.minecraft.tileentity.TileEntity
-import net.minecraft.util.ChatComponentText
-import net.minecraft.world.World
-import net.minecraftforge.common.util.ForgeDirection
-import resonantengine.api.mffs.machine.{IFieldMatrix, IProjector}
-import resonantengine.lib.transform.vector.Vector3
-import resonantengine.lib.utility.LanguageUtility
-import resonantengine.lib.utility.nbt.NBTUtility
-import resonantengine.lib.wrapper.CollectionWrapper._
-
-import scala.collection.JavaConversions._
-import scala.collection.mutable
 
 class ItemModeCustom extends ItemMode with TCache
 {
@@ -41,9 +22,9 @@ class ItemModeCustom extends ItemMode with TCache
 
   val modes = Array(Content.modeCube, Content.modeSphere, Content.modeTube, Content.modePyramid)
 
-  override def addInformation(itemStack: ItemStack, par2EntityPlayer: EntityPlayer, list: util.List[_], par4: Boolean)
+	override def addInformation(Item: Item, par2EntityPlayer: EntityPlayer, list: util.List[_], par4: Boolean)
   {
-    val nbt: NBTTagCompound = NBTUtility.getNBTTagCompound(itemStack)
+	  val nbt: NBTTagCompound = NBTUtility.getNBTTagCompound(Item)
     list.add(LanguageUtility.getLocal("info.modeCustom.mode") + " " + (if (nbt.getBoolean(NBT_MODE)) LanguageUtility.getLocal("info.modeCustom.substraction") else LanguageUtility.getLocal("info.modeCustom.additive")))
     val point1: Vector3 = new Vector3(nbt.getCompoundTag(NBT_POINT_1))
     list.add(LanguageUtility.getLocal("info.modeCustom.point1") + " " + point1.xi + ", " + point1.yi + ", " + point1.zi)
@@ -65,7 +46,7 @@ class ItemModeCustom extends ItemMode with TCache
     }
     if (GuiScreen.isShiftKeyDown)
     {
-      super.addInformation(itemStack, par2EntityPlayer, list, par4)
+		super.addInformation(Item, par2EntityPlayer, list, par4)
     }
     else
     {
@@ -73,13 +54,13 @@ class ItemModeCustom extends ItemMode with TCache
     }
   }
 
-  override def onItemRightClick(itemStack: ItemStack, world: World, entityPlayer: EntityPlayer): ItemStack =
+	override def onItemRightClick(Item: Item, world: World, entityPlayer: EntityPlayer): Item =
   {
     if (!world.isRemote)
     {
       if (entityPlayer.isSneaking)
       {
-        val nbt: NBTTagCompound = NBTUtility.getNBTTagCompound(itemStack)
+		  val nbt: NBTTagCompound = NBTUtility.getNBTTagCompound(Item)
         if (nbt != null)
         {
           val point1 = new Vector3(nbt.getCompoundTag(NBT_POINT_1))
@@ -97,7 +78,7 @@ class ItemModeCustom extends ItemMode with TCache
               val minPoint = point1.min(point2)
               val maxPoint = point1.max(point2)
 
-              var saveNBT = NBTUtility.loadData(getSaveDirectory, NBT_FILE_SAVE_PREFIX + getModeID(itemStack))
+				var saveNBT = NBTUtility.loadData(getSaveDirectory, NBT_FILE_SAVE_PREFIX + getModeID(Item))
 
               if (saveNBT == null)
               {
@@ -141,7 +122,7 @@ class ItemModeCustom extends ItemMode with TCache
 
               saveNBT.setTag(NBT_FIELD_BLOCK_LIST, list)
               nbt.setInteger(NBT_FIELD_SIZE, list.tagCount)
-              NBTUtility.saveData(getSaveDirectory, NBT_FILE_SAVE_PREFIX + getModeID(itemStack), saveNBT)
+				NBTUtility.saveData(getSaveDirectory, NBT_FILE_SAVE_PREFIX + getModeID(Item), saveNBT)
               clearCache()
               entityPlayer.addChatMessage(new ChatComponentText(LanguageUtility.getLocal("message.modeCustom.saved")))
             }
@@ -150,7 +131,7 @@ class ItemModeCustom extends ItemMode with TCache
       }
       else
       {
-        val nbt = NBTUtility.getNBTTagCompound(itemStack)
+		  val nbt = NBTUtility.getNBTTagCompound(Item)
 
         if (nbt != null)
         {
@@ -159,14 +140,14 @@ class ItemModeCustom extends ItemMode with TCache
         }
       }
     }
-    return itemStack
+	  return Item
   }
 
-  override def onItemUse(itemStack: ItemStack, player: EntityPlayer, world: World, x: Int, y: Int, z: Int, par7: Int, par8: Float, par9: Float, par10: Float): Boolean =
+	override def onItemUse(Item: Item, player: EntityPlayer, world: World, x: Int, y: Int, z: Int, par7: Int, par8: Float, par9: Float, par10: Float): Boolean =
   {
     if (!world.isRemote)
     {
-      val nbt: NBTTagCompound = NBTUtility.getNBTTagCompound(itemStack)
+		val nbt: NBTTagCompound = NBTUtility.getNBTTagCompound(Item)
       if (nbt != null)
       {
         val point1: Vector3 = new Vector3(nbt.getCompoundTag(NBT_POINT_1))
@@ -185,13 +166,13 @@ class ItemModeCustom extends ItemMode with TCache
     return true
   }
 
-  def getFieldBlockMap(projector: IFieldMatrix, itemStack: ItemStack): mutable.Map[Vector3, (Block, Int)] =
+	def getFieldBlockMap(projector: IFieldMatrix, Item: Item): mutable.Map[Vector3, (Block, Int)] =
   {
-    val cacheID = "itemStack_" + itemStack.hashCode
+	  val cacheID = "Item_" + Item.hashCode
 
     if (hasCache(classOf[mutable.Map[Vector3, (Block, Int)]], cacheID)) return getCache(classOf[mutable.Map[Vector3, (Block, Int)]], cacheID)
 
-    val fieldMap = getFieldBlockMapClean(projector, itemStack)
+	  val fieldMap = getFieldBlockMapClean(projector, Item)
 
     if (projector.getModuleCount(Content.moduleArray) > 0)
     {
@@ -206,7 +187,7 @@ class ItemModeCustom extends ItemMode with TCache
         {
           val directionalDisplacementScale = directionalDisplacement * (i + 1)
 
-          getFieldBlocks(projector, itemStack) foreach (originalVec =>
+			getFieldBlocks(projector, Item) foreach (originalVec =>
           {
             val newFieldBlock = originalVec.clone + new Vector3(direction) * directionalDisplacementScale
             fieldMap.put(newFieldBlock, fieldMap(originalVec))
@@ -230,19 +211,19 @@ class ItemModeCustom extends ItemMode with TCache
     return this.getFieldBlocks(projector, projector.getModeStack)
   }
 
-  def getFieldBlocks(projector: IFieldMatrix, itemStack: ItemStack): Set[Vector3] =
+	def getFieldBlocks(projector: IFieldMatrix, Item: Item): Set[Vector3] =
   {
-    return getFieldBlockMapClean(projector, itemStack).keySet.toSet
+	  return getFieldBlockMapClean(projector, Item).keySet.toSet
   }
 
-  def getFieldBlockMapClean(projector: IFieldMatrix, itemStack: ItemStack): mutable.Map[Vector3, (Block, Int)] =
+	def getFieldBlockMapClean(projector: IFieldMatrix, Item: Item): mutable.Map[Vector3, (Block, Int)] =
   {
     val scale = (projector.getModuleCount(Content.moduleScale) / 3f + 1)
     val fieldBlocks = mutable.Map.empty[Vector3, (Block, Int)]
 
     if (getSaveDirectory != null)
     {
-      val nbt = NBTUtility.loadData(this.getSaveDirectory, NBT_FILE_SAVE_PREFIX + getModeID(itemStack))
+		val nbt = NBTUtility.loadData(this.getSaveDirectory, NBT_FILE_SAVE_PREFIX + getModeID(Item))
 
       if (nbt != null)
       {
@@ -256,9 +237,9 @@ class ItemModeCustom extends ItemMode with TCache
     return fieldBlocks
   }
 
-  def getModeID(itemStack: ItemStack): Int =
+	def getModeID(Item: Item): Int =
   {
-    val nbt = NBTUtility.getNBTTagCompound(itemStack)
+	  val nbt = NBTUtility.getNBTTagCompound(Item)
     var id: Int = nbt.getInteger(NBT_ID)
     if (id <= 0)
     {

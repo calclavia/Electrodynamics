@@ -1,21 +1,10 @@
 package mffs.production
 
-import cpw.mods.fml.relauncher.{Side, SideOnly}
-import io.netty.buffer.ByteBuf
+import com.resonant.core.graph.internal.electric.TTEBridge
 import mffs.base.{TileModuleAcceptor, TilePacketType}
 import mffs.item.card.ItemCardFrequency
 import mffs.util.FortronUtility
 import mffs.{Content, Settings}
-import net.minecraft.client.renderer.RenderBlocks
-import net.minecraft.init.Items
-import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NBTTagCompound
-import resonantengine.api.mffs.modules.IModule
-import resonantengine.core.network.discriminator.PacketType
-import resonantengine.lib.grid.energy.electric.TTEBridge
-import resonantengine.lib.mod.compat.energy.Compatibility
-import resonantengine.lib.transform.vector.Vector3
-import resonantengine.lib.wrapper.ByteBufWrapper._
 
 /**
  * A TileEntity that extract energy into Fortron.
@@ -146,22 +135,22 @@ class TileCoercionDeriver extends TileModuleAcceptor with TTEBridge
 
   def getPower: Double = TileCoercionDeriver.power + (TileCoercionDeriver.power * (getModuleCount(Content.moduleSpeed) / 8d))
 
-  override def isItemValidForSlot(slotID: Int, itemStack: ItemStack): Boolean =
+	override def isItemValidForSlot(slotID: Int, Item: Item): Boolean =
   {
-    if (itemStack != null)
+	  if (Item != null)
     {
       if (slotID >= startModuleIndex)
       {
-        return itemStack.getItem.isInstanceOf[IModule]
+		  return Item.getItem.isInstanceOf[IModule]
       }
       slotID match
       {
         case TileCoercionDeriver.slotFrequency =>
-          return itemStack.getItem.isInstanceOf[ItemCardFrequency]
+			return Item.getItem.isInstanceOf[ItemCardFrequency]
         case TileCoercionDeriver.slotBattery =>
-          return Compatibility.isHandler(itemStack.getItem, null)
+			return Compatibility.isHandler(Item.getItem, null)
         case TileCoercionDeriver.slotFuel =>
-          return itemStack.isItemEqual(new ItemStack(Items.dye, 1, 4)) || itemStack.isItemEqual(new ItemStack(Items.quartz))
+			return Item.isItemEqual(new Item(Items.dye, 1, 4)) || Item.isItemEqual(new Item(Items.quartz))
       }
     }
     return false
@@ -235,7 +224,7 @@ class TileCoercionDeriver extends TileModuleAcceptor with TTEBridge
   }
 
   @SideOnly(Side.CLIENT)
-  override def renderInventory(itemStack: ItemStack)
+  override def renderInventory(Item: Item)
   {
     RenderCoercionDeriver.render(this, -0.5, -0.5, -0.5, 0, true, true)
   }

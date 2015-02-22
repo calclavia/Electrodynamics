@@ -2,9 +2,6 @@ package mffs.field
 
 import java.util.{Set => JSet}
 
-import cpw.mods.fml.common.network.ByteBufUtils
-import cpw.mods.fml.relauncher.{Side, SideOnly}
-import io.netty.buffer.ByteBuf
 import mffs.base.{TileFieldMatrix, TilePacketType}
 import mffs.field.mode.ItemModeCustom
 import mffs.item.card.ItemCard
@@ -12,23 +9,6 @@ import mffs.render.FieldColor
 import mffs.security.MFFSPermissions
 import mffs.util.TCache
 import mffs.{Content, ModularForceFieldSystem, Reference, Settings}
-import net.minecraft.block.Block
-import net.minecraft.client.renderer.RenderBlocks
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.init.Blocks
-import net.minecraft.item.{Item, ItemStack}
-import net.minecraft.nbt.{NBTTagCompound, NBTTagList}
-import net.minecraft.world.{IBlockAccess, World}
-import net.minecraftforge.event.entity.player.PlayerInteractEvent
-import resonantengine.api.mffs.machine.IProjector
-import resonantengine.api.mffs.modules.{IModule, IProjectorMode}
-import resonantengine.core.network.discriminator.{PacketTile, PacketType}
-import resonantengine.lib.transform.region.Cuboid
-import resonantengine.lib.transform.vector.Vector3
-import resonantengine.lib.wrapper.ByteBufWrapper._
-
-import scala.collection.JavaConversions._
-import scala.collection.mutable
 
 class TileElectromagneticProjector extends TileFieldMatrix with IProjector
 {
@@ -53,13 +33,13 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
 
   override def getSizeInventory = 1 + 25 + 6
 
-  override def isItemValidForSlot(slotID: Int, itemStack: ItemStack): Boolean =
+	override def isItemValidForSlot(slotID: Int, Item: Item): Boolean =
   {
     slotID match
     {
-      case 0 => itemStack.getItem.isInstanceOf[ItemCard]
-      case `modeSlotID` => itemStack.getItem.isInstanceOf[IProjectorMode]
-      case x: Int if x < 26 => itemStack.getItem.isInstanceOf[IModule]
+		case 0 => Item.getItem.isInstanceOf[ItemCard]
+		case `modeSlotID` => Item.getItem.isInstanceOf[IProjectorMode]
+		case x: Int if x < 26 => Item.getItem.isInstanceOf[IModule]
       case _ => true
     }
   }
@@ -349,7 +329,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
 
   def getFilterItems: Set[Item] = getFilterStacks map (_.getItem)
 
-  def getFilterStacks: Set[ItemStack] = ((26 until 32) map (getStackInSlot(_)) filter (_ != null)).toSet
+	def getFilterStacks: Set[Item] = ((26 until 32) map (getStackInSlot(_)) filter (_ != null)).toSet
 
   def isInvertedFilter: Boolean = isInverted
 
@@ -369,7 +349,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
   }
 
   @SideOnly(Side.CLIENT)
-  override def renderInventory(itemStack: ItemStack)
+  override def renderInventory(Item: Item)
   {
     RenderElectromagneticProjector.render(this, -0.5, -0.5, -0.5, 0, true, true)
   }

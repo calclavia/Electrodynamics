@@ -2,9 +2,6 @@ package mffs.item.fortron
 
 import mffs.item.card.ItemCard
 import mffs.util.FortronUtility
-import net.minecraft.item.ItemStack
-import net.minecraftforge.fluids.FluidStack
-import resonantengine.prefab.item.TFluidContainerItem
 
 /**
  * A card used by admins or players to cheat infinite energy.
@@ -13,7 +10,7 @@ import resonantengine.prefab.item.TFluidContainerItem
  */
 class ItemCardInfinite extends ItemCard with TFluidContainerItem
 {
-  override def fill(container: ItemStack, resource: FluidStack, doFill: Boolean): Int = if (resource.getFluid == FortronUtility.fluidFortron) resource.amount else 0
+	override def fill(container: Item, resource: FluidStack, doFill: Boolean): Int = if (resource.getFluid == FortronUtility.fluidFortron) resource.amount else 0
 
-  override def drain(container: ItemStack, maxDrain: Int, doDrain: Boolean): FluidStack = new FluidStack(FortronUtility.fluidFortron, maxDrain)
+	override def drain(container: Item, maxDrain: Int, doDrain: Boolean): FluidStack = new FluidStack(FortronUtility.fluidFortron, maxDrain)
 }

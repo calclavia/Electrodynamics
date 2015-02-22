@@ -4,21 +4,13 @@ import mffs.ModularForceFieldSystem
 import mffs.base.TilePacketType
 import mffs.field.TileElectromagneticProjector
 import mffs.render.button.GuiIcon
-import net.minecraft.client.gui.GuiButton
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.init.Items
-import net.minecraft.item.ItemStack
-import resonantengine.core.network.discriminator.PacketTile
-import resonantengine.lib.render.EnumColor
-import resonantengine.lib.utility.science.UnitDisplay
-import resonantengine.lib.wrapper.CollectionWrapper._
 
 class GuiElectromagneticProjector(player: EntityPlayer, tile: TileElectromagneticProjector) extends GuiMatrix(new ContainerElectromagneticProjector(player, tile), tile)
 {
   override def initGui()
   {
     super.initGui()
-    buttonList.add(new GuiIcon(1, width / 2 - 110, height / 2 - 82, null, new ItemStack(Items.compass)))
+	  buttonList.add(new GuiIcon(1, width / 2 - 110, height / 2 - 82, null, new Item(Items.compass)))
     buttonList.add(new GuiButton(2, width / 2 - 73, height / 2 - 20, 45, 20, "Invert"))
     setupTooltips()
   }

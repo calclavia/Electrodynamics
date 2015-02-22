@@ -1,10 +1,10 @@
 package mffs.api.card;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.Item;
 import resonantengine.lib.transform.vector.VectorWorld;
 
 public interface ICoordLink {
-	public void setLink(ItemStack itemStack, VectorWorld position);
+	public void setLink(Item Item, VectorWorld position);
 
-	public VectorWorld getLink(ItemStack itemStack);
+	public VectorWorld getLink(Item Item);
 }

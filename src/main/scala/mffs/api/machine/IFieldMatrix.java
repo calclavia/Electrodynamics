@@ -1,9 +1,9 @@
 package mffs.api.machine;
 
-import mffs.api.modules.IModule;
 import mffs.api.modules.IModuleProvider;
 import mffs.api.modules.IProjectorMode;
-import net.minecraft.item.ItemStack;
+import mffs.api.modules.Module;
+import net.minecraft.item.Item;
 import nova.core.util.Direction;
 import nova.core.util.transform.Vector3d;
 
@@ -15,7 +15,7 @@ public interface IFieldMatrix extends IModuleProvider, IActivatable, IPermission
 	 */
 	public IProjectorMode getMode();
 
-	public ItemStack getModeStack();
+	public Item getModeStack();
 
 	/**
 	 * Gets the slot IDs based on the direction given.
@@ -32,7 +32,7 @@ public interface IFieldMatrix extends IModuleProvider, IActivatable, IPermission
 	 * @param direction - The direction facing.
 	 * @return Gets the amount of modules based on the side.
 	 */
-	public int getSidedModuleCount(IModule module, Direction... direction);
+	public int getSidedModuleCount(Module module, Direction... direction);
 
 	/**
 	 * Transformation information functions. Returns CACHED information unless the cache is cleared.

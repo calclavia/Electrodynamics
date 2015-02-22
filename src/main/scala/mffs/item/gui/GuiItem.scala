@@ -1,14 +1,9 @@
 package mffs.item.gui
 
-import net.minecraft.client.gui.GuiTextField
-import net.minecraft.inventory.Container
-import net.minecraft.item.ItemStack
-import resonantengine.prefab.gui.GuiContainerBase
-
 /**
  * @author Calclavia
  */
-class GuiItem(itemStack: ItemStack, container: Container) extends GuiContainerBase(container)
+class GuiItem(Item: Item, container: Container) extends GuiContainerBase(container)
 {
   var textField: GuiTextField = _
 

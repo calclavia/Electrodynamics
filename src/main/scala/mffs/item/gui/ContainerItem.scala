@@ -1,17 +1,11 @@
 package mffs.item.gui
 
 import mffs.slot.SlotDisabled
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.inventory.{IInventory, Slot}
-import net.minecraft.item.ItemStack
-import resonantengine.lib.transform.vector.Vector3
-import resonantengine.lib.utility.inventory.{ExternalInventory, InventoryUtility}
-import resonantengine.prefab.gui.ContainerBase
 
 /**
  * @author Calclavia
  */
-class ContainerItem(player: EntityPlayer, itemStack: ItemStack, inventory: IInventory = new ExternalInventory(null, 1)) extends ContainerBase(inventory)
+class ContainerItem(player: EntityPlayer, Item: Item, inventory: IInventory = new ExternalInventory(null, 1)) extends ContainerBase(inventory)
 {
   addPlayerInventory(player)
 
@@ -31,7 +25,7 @@ class ContainerItem(player: EntityPlayer, itemStack: ItemStack, inventory: IInve
     }
   }
 
-  override def transferStackInSlot(player: EntityPlayer, slot_id: Int): ItemStack = null
+	override def transferStackInSlot(player: EntityPlayer, slot_id: Int): Item = null
 
   /**
    * Drop all inventory contents upon container close.
@@ -40,7 +34,7 @@ class ContainerItem(player: EntityPlayer, itemStack: ItemStack, inventory: IInve
   {
     (0 until inventory.getSizeInventory) filter (inventory.getStackInSlot(_) != null) foreach (i =>
     {
-      InventoryUtility.dropItemStack(player.worldObj, new Vector3(player), inventory.getStackInSlot(i))
+		InventoryUtility.dropItem(player.worldObj, new Vector3(player), inventory.getStackInSlot(i))
       inventory.setInventorySlotContents(i, null)
     })
 

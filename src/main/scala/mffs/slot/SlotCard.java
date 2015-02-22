@@ -1,9 +1,9 @@
 package mffs.slot;
 
 import mffs.base.TileFrequency;
-import net.minecraft.item.ItemStack;
-import resonantengine.api.tile.IBlockFrequency;
+import net.minecraft.item.Item;
 import resonantengine.api.item.IItemFrequency;
+import resonantengine.api.tile.IBlockFrequency;
 
 public class SlotCard extends SlotBase
 {
@@ -16,13 +16,13 @@ public class SlotCard extends SlotBase
 	public void onSlotChanged()
 	{
 		super.onSlotChanged();
-		ItemStack itemStack = this.getStack();
+		Item Item = this.getStack();
 
-		if (itemStack != null)
+		if (Item != null)
 		{
-			if (itemStack.getItem() instanceof IItemFrequency)
+			if (Item.getItem() instanceof IItemFrequency)
 			{
-				((IItemFrequency) itemStack.getItem()).setFrequency(((IBlockFrequency) tileEntity).getFrequency(), itemStack);
+				((IItemFrequency) Item.getItem()).setFrequency(((IBlockFrequency) tileEntity).getFrequency(), Item);
 			}
 		}
 	}

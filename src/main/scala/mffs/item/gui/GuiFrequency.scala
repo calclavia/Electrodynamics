@@ -2,21 +2,13 @@ package mffs.item.gui
 
 import mffs.item.card.ItemCardFrequency
 import mffs.{ModularForceFieldSystem, Settings}
-import net.minecraft.client.gui.GuiButton
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.item.ItemStack
-import resonantengine.core.network.discriminator.PacketPlayerItem
-import resonantengine.lib.utility.LanguageUtility
-import resonantengine.lib.wrapper.CollectionWrapper._
-
-import scala.util.Random
 
 /**
  * @author Calclavia
  */
-class GuiFrequency(player: EntityPlayer, itemStack: ItemStack) extends GuiItem(itemStack, new ContainerFrequency(player, itemStack))
+class GuiFrequency(player: EntityPlayer, Item: Item) extends GuiItem(Item, new ContainerFrequency(player, Item))
 {
-  val item = itemStack.getItem.asInstanceOf[ItemCardFrequency]
+	val item = Item.getItem.asInstanceOf[ItemCardFrequency]
 
   override def initGui()
   {
@@ -33,7 +25,7 @@ class GuiFrequency(player: EntityPlayer, itemStack: ItemStack) extends GuiItem(i
     {
       val newFreq = Math.abs(textField.getText.toInt)
       ModularForceFieldSystem.packetHandler.sendToServer(new PacketPlayerItem(player, newFreq: Integer))
-      item.setFrequency(newFreq, itemStack)
+	  item.setFrequency(newFreq, Item)
     }
     catch
       {
@@ -44,7 +36,7 @@ class GuiFrequency(player: EntityPlayer, itemStack: ItemStack) extends GuiItem(i
   protected override def drawGuiContainerForegroundLayer(x: Int, y: Int)
   {
     drawStringCentered(LanguageUtility.getLocal("item.mffs:cardFrequency.name"))
-    drawStringCentered("" + item.getEncodedFrequency(itemStack), 20)
+	  drawStringCentered("" + item.getEncodedFrequency(Item), 20)
     textField.drawTextBox()
     drawStringCentered(LanguageUtility.getLocal("gui.makecopy"), 80)
 
@@ -65,7 +57,7 @@ class GuiFrequency(player: EntityPlayer, itemStack: ItemStack) extends GuiItem(i
     {
       val ranFreq = new Random().nextInt(Math.pow(10, (Settings.maxFrequencyDigits - 1)).toInt)
       textField.setText(ranFreq + "")
-      item.setFrequency(ranFreq, itemStack)
+		item.setFrequency(ranFreq, Item)
     }
   }
 

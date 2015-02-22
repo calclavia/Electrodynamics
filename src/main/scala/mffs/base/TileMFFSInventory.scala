@@ -1,13 +1,5 @@
 package mffs.base
 
-import io.netty.buffer.ByteBuf
-import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NBTTagCompound
-import resonantengine.core.network.discriminator.PacketType
-import resonantengine.lib.content.prefab.TInventory
-import resonantengine.lib.utility.inventory.TPrefabInventory
-import resonantengine.lib.wrapper.ByteBufWrapper._
-
 /**
  * All TileEntities that have an inventory should extend this.
  *
@@ -40,5 +32,5 @@ abstract class TileMFFSInventory extends TileMFFS with TInventory with TPrefabIn
   /**
    * Inventory Methods
    */
-  def getCards: Set[ItemStack] = Set(getStackInSlot(0))
+  def getCards: Set[Item] = Set(getStackInSlot(0))
 }

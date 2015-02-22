@@ -2,20 +2,9 @@ package mffs.base
 
 import java.util.{Set => JSet}
 
-import com.mojang.authlib.GameProfile
 import mffs.Reference
 import mffs.item.card.ItemCardFrequency
 import mffs.security.{MFFSPermissions, TileBiometricIdentifier}
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.item.ItemStack
-import net.minecraft.util.ChatComponentText
-import resonantengine.api.mffs.card.ICoordLink
-import resonantengine.api.mffs.fortron.FrequencyGridRegistry
-import resonantengine.api.tile.IBlockFrequency
-import resonantengine.lib.access.Permission
-import resonantengine.lib.transform.vector.Vector3
-
-import scala.collection.convert.wrapAll._
 
 abstract class TileFrequency extends TileMFFSInventory with IBlockFrequency
 {
@@ -40,8 +29,8 @@ abstract class TileFrequency extends TileMFFSInventory with IBlockFrequency
   def getBiometricIdentifiers: JSet[TileBiometricIdentifier] =
   {
     val cardLinks = (getCards.view
-      .filter(itemStack => itemStack != null && itemStack.getItem.isInstanceOf[ICoordLink])
-      .map(itemStack => itemStack.getItem.asInstanceOf[ICoordLink].getLink(itemStack))
+		.filter(Item => Item != null && Item.getItem.isInstanceOf[ICoordLink])
+		.map(Item => Item.getItem.asInstanceOf[ICoordLink].getLink(Item))
       .filter(_ != null)
       .map(_.getTileEntity)
       .filter(_.isInstanceOf[TileBiometricIdentifier])
@@ -70,7 +59,7 @@ abstract class TileFrequency extends TileMFFSInventory with IBlockFrequency
 
   }
 
-  def getFrequencyCard: ItemStack =
+	def getFrequencyCard: Item =
   {
     val stack = getStackInSlot(frequencySlot)
 

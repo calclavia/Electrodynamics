@@ -1,49 +1,24 @@
 package mffs
 
-import java.util.UUID
-
 import mffs.api.Blacklist
 import mffs.security.MFFSPermissions
+import nova.core.loader.{Loadable, NovaMod}
 
-@NovaMod(id = Reference.id, name = Reference.name, version = Reference.version, dependencies = Array("ResonantEngine"))
+@NovaMod(id = Reference.id, name = Reference.name, version = Reference.version, dependencies = Array("resonantengine"))
 object ModularForceFieldSystem extends Loadable {
-	/**
-	 * General constants
-	 */
-	val damageFieldShock = new DamageSource("fieldShock").setDamageBypassesArmor()
-	val fakeProfile = new GameProfile(UUID.randomUUID, "mffs")
 
 	override def preInit() {
 		/**
 		 * Registration
 		 */
-		Modstats.instance.getReporter.registerMod(this)
-		NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy)
-		MinecraftForge.EVENT_BUS.register(SubscribeEventHandler)
-		MinecraftForge.EVENT_BUS.register(Settings)
-
-		ConfigHandler.sync(Settings, Settings.config)
-
-		loadables.applyModule(proxy)
-		loadables.applyModule(packetHandler)
-		loadables.applyModule(Content)
-
-		Settings.config.load
-
-		loadables.preInit()
-
-		MinecraftForge.EVENT_BUS.register(Content.remoteController)
-
-		/**
-		 * Fluid Instantiation
-		 */
-		FortronUtility.fluidFortron.setGaseous(true)
-		FluidRegistry.registerFluid(FortronUtility.fluidFortron)
+		//		MinecraftForge.EVENT_BUS.register(SubscribeEventHandler)
+		//		MinecraftForge.EVENT_BUS.register(Settings)
+		//		MinecraftForge.EVENT_BUS.register(Content.remoteController)
 
 		Content.preInit()
 	}
 
-	override def load(evt: FMLInitializationEvent) {
+	override def load() {
 		Content.init()
 	}
 

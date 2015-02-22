@@ -2,25 +2,11 @@ package mffs.production
 
 import java.util.{HashSet => JHashSet, Set => JSet}
 
-import cpw.mods.fml.relauncher.{Side, SideOnly}
-import io.netty.buffer.ByteBuf
 import mffs.Content
 import mffs.base.{TileModuleAcceptor, TilePacketType}
 import mffs.item.card.ItemCardFrequency
 import mffs.util.TransferMode.TransferMode
 import mffs.util.{FortronUtility, TransferMode}
-import net.minecraft.client.renderer.RenderBlocks
-import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NBTTagCompound
-import net.minecraftforge.fluids.IFluidContainerItem
-import resonantengine.api.mffs.card.ICoordLink
-import resonantengine.api.mffs.fortron.{FrequencyGridRegistry, IFortronCapacitor, IFortronFrequency, IFortronStorage}
-import resonantengine.api.mffs.modules.IModule
-import resonantengine.core.network.discriminator.PacketType
-import resonantengine.lib.transform.vector.Vector3
-import resonantengine.lib.wrapper.ByteBufWrapper._
-
-import scala.collection.JavaConversions._
 
 class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with IFortronCapacitor
 {
@@ -120,34 +106,34 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
 
   def getInputDevices: JSet[IFortronFrequency] = getDevicesFromStacks(getInputStacks)
 
-  def getInputStacks: Set[ItemStack] = ((4 to 7) map (i => getStackInSlot(i)) filter (_ != null)).toSet
+	def getInputStacks: Set[Item] = ((4 to 7) map (i => getStackInSlot(i)) filter (_ != null)).toSet
 
   def getOutputDevices: JSet[IFortronFrequency] = getDevicesFromStacks(getOutputStacks)
 
-  def getDevicesFromStacks(stacks: Set[ItemStack]): JSet[IFortronFrequency] =
+	def getDevicesFromStacks(stacks: Set[Item]): JSet[IFortronFrequency] =
   {
     val devices = new JHashSet[IFortronFrequency]()
 
     stacks
             .filter(_.getItem.isInstanceOf[ICoordLink])
-            .map(itemStack => itemStack.getItem.asInstanceOf[ICoordLink].getLink(itemStack))
+		.map(Item => Item.getItem.asInstanceOf[ICoordLink].getLink(Item))
             .filter(linkPosition => linkPosition != null && linkPosition.getTileEntity(world).isInstanceOf[IFortronFrequency])
             .foreach(linkPosition => devices.add(linkPosition.getTileEntity(world).asInstanceOf[IFortronFrequency]))
 
     return devices
   }
 
-  def getOutputStacks: Set[ItemStack] = ((8 to 11) map (i => getStackInSlot(i)) filter (_ != null)).toSet
+	def getOutputStacks: Set[Item] = ((8 to 11) map (i => getStackInSlot(i)) filter (_ != null)).toSet
 
-  override def isItemValidForSlot(slotID: Int, itemStack: ItemStack): Boolean =
+	override def isItemValidForSlot(slotID: Int, Item: Item): Boolean =
   {
     if (slotID == 0)
     {
-      return itemStack.getItem.isInstanceOf[ItemCardFrequency]
+		return Item.getItem.isInstanceOf[ItemCardFrequency]
     }
     else if (slotID < 4)
     {
-      return itemStack.getItem.isInstanceOf[IModule]
+		return Item.getItem.isInstanceOf[IModule]
     }
 
     return true
@@ -168,7 +154,7 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
   }
 
   @SideOnly(Side.CLIENT)
-  override def renderInventory(itemStack: ItemStack)
+  override def renderInventory(Item: Item)
   {
     RenderFortronCapacitor.render(this, -0.5, -0.5, -0.5, 0, true, true)
   }

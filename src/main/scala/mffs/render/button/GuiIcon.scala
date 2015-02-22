@@ -1,13 +1,6 @@
 package mffs.render.button
 
-import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.{FontRenderer, GuiButton}
-import net.minecraft.client.renderer.RenderHelper
-import net.minecraft.client.renderer.entity.RenderItem
-import net.minecraft.item.ItemStack
-import org.lwjgl.opengl.GL11
-
-class GuiIcon(id: Int, xPos: Int, yPos: Int, itemStacks: ItemStack*) extends GuiButton(id, xPos, yPos, 20, 20, "")
+class GuiIcon(id: Int, xPos: Int, yPos: Int, Items: Item*) extends GuiButton(id, xPos, yPos, 20, 20, "")
 {
   private val itemRenderer = new RenderItem
   private var index = 0
@@ -19,7 +12,7 @@ class GuiIcon(id: Int, xPos: Int, yPos: Int, itemStacks: ItemStack*) extends Gui
    */
   def setIndex(i: Int): Boolean =
   {
-    if (i >= 0 && i < itemStacks.length)
+	  if (i >= 0 && i < Items.length)
     {
       if (index != i)
       {
@@ -35,13 +28,13 @@ class GuiIcon(id: Int, xPos: Int, yPos: Int, itemStacks: ItemStack*) extends Gui
   {
     super.drawButton(par1Minecraft, par2, par3)
 
-    if (visible && itemStacks(index) != null)
+	  if (visible && Items(index) != null)
     {
-      drawItemStack(itemStacks(index), xPosition, yPosition)
+		drawItem(Items(index), xPosition, yPosition)
     }
   }
 
-  protected def drawItemStack(itemStack: ItemStack, x: Int, y: Int)
+	protected def drawItem(Item: Item, x: Int, y: Int)
   {
     val renderX = x + 2
     val renderY = y + 1
@@ -51,8 +44,8 @@ class GuiIcon(id: Int, xPos: Int, yPos: Int, itemStacks: ItemStack*) extends Gui
     GL11.glTranslatef(0.0F, 0.0F, 32.0F)
     zLevel = 500.0F
     itemRenderer.zLevel = 500.0F
-    itemRenderer.renderItemAndEffectIntoGUI(fontRenderer, mc.renderEngine, itemStack, renderX, renderY)
-    itemRenderer.renderItemOverlayIntoGUI(fontRenderer, mc.renderEngine, itemStack, renderX, renderY)
+	  itemRenderer.renderItemAndEffectIntoGUI(fontRenderer, mc.renderEngine, Item, renderX, renderY)
+	  itemRenderer.renderItemOverlayIntoGUI(fontRenderer, mc.renderEngine, Item, renderX, renderY)
     zLevel = 0.0F
     itemRenderer.zLevel = 0.0F
     RenderHelper.disableStandardItemLighting

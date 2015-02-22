@@ -2,17 +2,6 @@ package mffs.item.card
 
 import java.util.List
 
-import cpw.mods.fml.relauncher.{Side, SideOnly}
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.util.ChatComponentTranslation
-import net.minecraft.world.World
-import resonantengine.api.mffs.card.ICoordLink
-import resonantengine.lib.transform.vector.VectorWorld
-import resonantengine.lib.wrapper.CollectionWrapper._
-import resonantengine.lib.wrapper.StringWrapper._
-
 /**
  * A linking card used to link machines in specific positions.
  *
@@ -21,13 +10,13 @@ import resonantengine.lib.wrapper.StringWrapper._
 class ItemCardLink extends ItemCard with ICoordLink
 {
   @SideOnly(Side.CLIENT)
-  override def addInformation(itemstack: ItemStack, entityplayer: EntityPlayer, list: List[_], flag: Boolean)
+  override def addInformation(Item: Item, entityplayer: EntityPlayer, list: List[_], flag: Boolean)
   {
-    super.addInformation(itemstack, entityplayer, list, flag)
+	  super.addInformation(Item, entityplayer, list, flag)
 
-    if (hasLink(itemstack))
+	  if (hasLink(Item))
     {
-      val vec: VectorWorld = getLink(itemstack)
+		val vec: VectorWorld = getLink(Item)
       val block = vec.getBlock(entityplayer.worldObj)
 
       if (block != null)
@@ -44,23 +33,23 @@ class ItemCardLink extends ItemCard with ICoordLink
     }
   }
 
-  def hasLink(itemStack: ItemStack): Boolean = getLink(itemStack) != null
+	def hasLink(Item: Item): Boolean = getLink(Item) != null
 
-  def getLink(itemStack: ItemStack): VectorWorld =
+	def getLink(Item: Item): VectorWorld =
   {
-    if (itemStack.stackTagCompound == null || !itemStack.getTagCompound.hasKey("link"))
+	  if (Item.stackTagCompound == null || !Item.getTagCompound.hasKey("link"))
     {
       return null
     }
-    return new VectorWorld(itemStack.getTagCompound.getCompoundTag("link"))
+	  return new VectorWorld(Item.getTagCompound.getCompoundTag("link"))
   }
 
-  override def onItemUse(itemStack: ItemStack, player: EntityPlayer, world: World, x: Int, y: Int, z: Int, par7: Int, par8: Float, par9: Float, par10: Float): Boolean =
+	override def onItemUse(Item: Item, player: EntityPlayer, world: World, x: Int, y: Int, z: Int, par7: Int, par8: Float, par9: Float, par10: Float): Boolean =
   {
     if (!world.isRemote)
     {
       val vector: VectorWorld = new VectorWorld(world, x, y, z)
-      this.setLink(itemStack, vector)
+		this.setLink(Item, vector)
 
       if (vector.getBlock(world) != null)
       {
@@ -70,18 +59,18 @@ class ItemCardLink extends ItemCard with ICoordLink
     return true
   }
 
-  def setLink(itemStack: ItemStack, vec: VectorWorld)
+	def setLink(Item: Item, vec: VectorWorld)
   {
-    if (itemStack.getTagCompound == null)
+	  if (Item.getTagCompound == null)
     {
-      itemStack.setTagCompound(new NBTTagCompound)
+		Item.setTagCompound(new NBTTagCompound)
     }
 
-    itemStack.getTagCompound.setTag("link", vec.toNBT)
+	  Item.getTagCompound.setTag("link", vec.toNBT)
   }
 
-  def clearLink(itemStack: ItemStack)
+	def clearLink(Item: Item)
   {
-    itemStack.getTagCompound.removeTag("link")
+	  Item.getTagCompound.removeTag("link")
   }
 }

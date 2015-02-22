@@ -2,47 +2,25 @@ package mffs.item
 
 import java.util.{HashSet, List, Set}
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent
-import cpw.mods.fml.relauncher.{Side, SideOnly}
 import mffs.ModularForceFieldSystem
 import mffs.item.card.ItemCardFrequency
 import mffs.render.FieldColor
 import mffs.security.MFFSPermissions
 import mffs.util.MFFSUtility
-import net.minecraft.block.Block
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.init.Blocks
-import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.tileentity.TileEntity
-import net.minecraft.util.ChatComponentText
-import net.minecraft.world.World
-import net.minecraft.world.chunk.Chunk
-import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action
-import net.minecraftforge.fluids.FluidContainerRegistry
-import resonantengine.api.mffs.card.ICoordLink
-import resonantengine.api.mffs.event.EventForceMobilize
-import resonantengine.api.mffs.fortron.{FrequencyGridRegistry, IFortronFrequency}
-import resonantengine.lib.transform.vector.{Vector3, VectorWorld}
-import resonantengine.lib.utility.LanguageUtility
-import resonantengine.lib.utility.science.UnitDisplay
-import resonantengine.lib.wrapper.CollectionWrapper._
-
-import scala.collection.JavaConversions._
 
 class ItemRemoteController extends ItemCardFrequency with ICoordLink
 {
-  private final val remotesCached = new HashSet[ItemStack]
-  private final val temporaryRemoteBlacklist = new HashSet[ItemStack]
+	private final val remotesCached = new HashSet[Item]
+	private final val temporaryRemoteBlacklist = new HashSet[Item]
 
   @SideOnly(Side.CLIENT)
-  override def addInformation(itemstack: ItemStack, entityplayer: EntityPlayer, list: List[_], flag: Boolean)
+  override def addInformation(Item: Item, entityplayer: EntityPlayer, list: List[_], flag: Boolean)
   {
-    super.addInformation(itemstack, entityplayer, list, flag)
+	  super.addInformation(Item, entityplayer, list, flag)
 
-    if (hasLink(itemstack))
+	  if (hasLink(Item))
     {
-      val vec: VectorWorld = getLink(itemstack)
+		val vec: VectorWorld = getLink(Item)
       val block: Block = vec.getBlock(entityplayer.worldObj)
       if (block ne Blocks.air)
       {
@@ -57,17 +35,17 @@ class ItemRemoteController extends ItemCardFrequency with ICoordLink
     }
   }
 
-  def hasLink(itemStack: ItemStack): Boolean =
+	def hasLink(Item: Item): Boolean =
   {
-    return getLink(itemStack) != null
+	  return getLink(Item) != null
   }
 
-  override def onItemUse(itemStack: ItemStack, player: EntityPlayer, world: World, x: Int, y: Int, z: Int, par7: Int, par8: Float, par9: Float, par10: Float): Boolean =
+	override def onItemUse(Item: Item, player: EntityPlayer, world: World, x: Int, y: Int, z: Int, par7: Int, par8: Float, par9: Float, par10: Float): Boolean =
   {
     if (!world.isRemote && player.isSneaking)
     {
       val vector: VectorWorld = new VectorWorld(world, x, y, z)
-      setLink(itemStack, vector)
+		setLink(Item, vector)
       val block = vector.getBlock
 
       if (block != null)
@@ -78,16 +56,16 @@ class ItemRemoteController extends ItemCardFrequency with ICoordLink
     return true
   }
 
-  def clearLink(itemStack: ItemStack)
+	def clearLink(Item: Item)
   {
-    itemStack.getTagCompound.removeTag("link")
+	  Item.getTagCompound.removeTag("link")
   }
 
-  override def onItemRightClick(itemStack: ItemStack, world: World, entityPlayer: EntityPlayer): ItemStack =
+	override def onItemRightClick(Item: Item, world: World, entityPlayer: EntityPlayer): Item =
   {
     if (!entityPlayer.isSneaking)
     {
-      val position: Vector3 = this.getLink(itemStack)
+		val position: Vector3 = this.getLink(Item)
       if (position != null)
       {
         val block: Block = position.getBlock(world)
@@ -98,7 +76,7 @@ class ItemRemoteController extends ItemCardFrequency with ICoordLink
           {
             val requiredEnergy = new Vector3(entityPlayer).distance(position) * (FluidContainerRegistry.BUCKET_VOLUME / 100)
             var receivedEnergy = 0
-            val fortronTiles: Set[IFortronFrequency] = FrequencyGridRegistry.instance.getNodes(classOf[IFortronFrequency], world, new Vector3(entityPlayer), 50, this.getFrequency(itemStack))
+			  val fortronTiles: Set[IFortronFrequency] = FrequencyGridRegistry.instance.getNodes(classOf[IFortronFrequency], world, new Vector3(entityPlayer), 50, this.getFrequency(Item))
 
             for (fortronTile <- fortronTiles)
             {
@@ -124,7 +102,7 @@ class ItemRemoteController extends ItemCardFrequency with ICoordLink
                       e.printStackTrace
                     }
                   }
-                return itemStack
+				  return Item
               }
             }
             if (!world.isRemote)
@@ -137,19 +115,19 @@ class ItemRemoteController extends ItemCardFrequency with ICoordLink
     }
     else
     {
-      super.onItemRightClick(itemStack, world, entityPlayer)
+		super.onItemRightClick(Item, world, entityPlayer)
     }
 
-    return itemStack
+	  return Item
   }
 
-  def getLink(itemStack: ItemStack): VectorWorld =
+	def getLink(Item: Item): VectorWorld =
   {
-    if (itemStack.stackTagCompound == null || !itemStack.getTagCompound.hasKey("link"))
+	  if (Item.stackTagCompound == null || !Item.getTagCompound.hasKey("link"))
     {
       return null
     }
-    return new VectorWorld(itemStack.getTagCompound.getCompoundTag("link"))
+	  return new VectorWorld(Item.getTagCompound.getCompoundTag("link"))
   }
 
   @SubscribeEvent def preMove(evt: EventForceMobilize.EventPreForceManipulate)
@@ -167,25 +145,24 @@ class ItemRemoteController extends ItemCardFrequency with ICoordLink
   {
     if (!evt.world.isRemote)
     {
-      import scala.collection.JavaConversions._
-      for (itemStack <- this.remotesCached)
+		for (Item <- this.remotesCached)
       {
-        if (!temporaryRemoteBlacklist.contains(itemStack) && (new Vector3(evt.beforeX, evt.beforeY, evt.beforeZ) == this.getLink(itemStack)))
+		  if (!temporaryRemoteBlacklist.contains(Item) && (new Vector3(evt.beforeX, evt.beforeY, evt.beforeZ) == this.getLink(Item)))
         {
-          this.setLink(itemStack, new VectorWorld(evt.world, evt.afterX, evt.afterY, evt.afterZ))
-          temporaryRemoteBlacklist.add(itemStack)
+			this.setLink(Item, new VectorWorld(evt.world, evt.afterX, evt.afterY, evt.afterZ))
+			temporaryRemoteBlacklist.add(Item)
         }
       }
     }
   }
 
-  def setLink(itemStack: ItemStack, vec: VectorWorld)
+	def setLink(Item: Item, vec: VectorWorld)
   {
-    if (itemStack.getTagCompound == null)
+	  if (Item.getTagCompound == null)
     {
-      itemStack.setTagCompound(new NBTTagCompound)
+		Item.setTagCompound(new NBTTagCompound)
     }
-    itemStack.getTagCompound.setTag("link", vec.toNBT)
+	  Item.getTagCompound.setTag("link", vec.toNBT)
   }
 
 }

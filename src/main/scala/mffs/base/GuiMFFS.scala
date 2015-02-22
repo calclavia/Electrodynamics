@@ -2,15 +2,6 @@ package mffs.base
 
 import mffs.ModularForceFieldSystem
 import mffs.render.button.GuiIcon
-import net.minecraft.client.gui.GuiButton
-import net.minecraft.init.Blocks
-import net.minecraft.inventory.Container
-import net.minecraft.item.ItemStack
-import resonantengine.core.network.discriminator.PacketTile
-import resonantengine.lib.render.EnumColor
-import resonantengine.lib.utility.science.UnitDisplay
-import resonantengine.lib.wrapper.CollectionWrapper._
-import resonantengine.prefab.gui.GuiContainerBase
 
 class GuiMFFS(container: Container, tile: TileMFFS) extends GuiContainerBase(container)
 {
@@ -24,7 +15,7 @@ class GuiMFFS(container: Container, tile: TileMFFS) extends GuiContainerBase(con
     buttonList.clear()
 
     //Activation button
-    buttonList.add(new GuiIcon(0, width / 2 - 110, height / 2 - 104, new ItemStack(Blocks.torch), new ItemStack(Blocks.redstone_torch)))
+	  buttonList.add(new GuiIcon(0, width / 2 - 110, height / 2 - 104, new Item(Blocks.torch), new Item(Blocks.redstone_torch)))
   }
 
   override def updateScreen()

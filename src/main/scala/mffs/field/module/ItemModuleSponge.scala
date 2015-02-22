@@ -3,15 +3,6 @@ package mffs.field.module
 import java.util.Set
 
 import mffs.base.ItemModule
-import net.minecraft.block.BlockLiquid
-import net.minecraft.init.Blocks
-import net.minecraft.item.ItemStack
-import net.minecraft.tileentity.TileEntity
-import net.minecraftforge.fluids.BlockFluidBase
-import resonantengine.api.mffs.machine.IProjector
-import resonantengine.lib.transform.vector.Vector3
-
-import scala.collection.JavaConversions._
 
 class ItemModuleSponge extends ItemModule
 {
@@ -40,7 +31,7 @@ class ItemModuleSponge extends ItemModule
     return super.onProject(projector, fields)
   }
 
-  override def requireTicks(moduleStack: ItemStack): Boolean =
+	override def requireTicks(moduleStack: Item): Boolean =
   {
     return true
   }

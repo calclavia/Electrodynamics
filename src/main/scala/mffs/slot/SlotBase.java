@@ -2,7 +2,7 @@ package mffs.slot;
 
 import mffs.base.TileMFFSInventory;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.Item;
 
 public class SlotBase extends Slot
 {
@@ -15,19 +15,19 @@ public class SlotBase extends Slot
 	}
 
 	@Override
-	public boolean isItemValid(ItemStack itemStack)
+	public boolean isItemValid(Item Item)
 	{
-		return this.tileEntity.isItemValidForSlot(this.slotNumber, itemStack);
+		return this.tileEntity.isItemValidForSlot(this.slotNumber, Item);
 	}
 
 	@Override
 	public int getSlotStackLimit()
 	{
-		ItemStack itemStack = this.tileEntity.getStackInSlot(this.slotNumber);
+		Item Item = this.tileEntity.getStackInSlot(this.slotNumber);
 
-		if (itemStack != null)
+		if (Item != null)
 		{
-			return itemStack.getMaxStackSize();
+			return Item.getMaxStackSize();
 		}
 
 		return this.tileEntity.getInventoryStackLimit();

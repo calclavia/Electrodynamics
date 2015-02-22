@@ -2,41 +2,9 @@ package mffs
 
 import java.util.{HashMap, UUID}
 
-import com.mojang.authlib.GameProfile
-import cpw.mods.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent
-import cpw.mods.fml.common.eventhandler.{Event, SubscribeEvent}
-import cpw.mods.fml.relauncher.{Side, SideOnly}
-import api.base.TileFortron
-import api.field.TileElectromagneticProjector
-import api.security.MFFSPermissions
-import api.util.{FortronUtility, MFFSUtility}
-import net.minecraft.block.BlockSkull
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.init.Blocks
-import net.minecraft.item.ItemSkull
-import net.minecraft.nbt.NBTUtil
-import net.minecraft.tileentity.{TileEntity, TileEntitySkull}
-import net.minecraft.util.{ChatComponentText, IIcon}
-import net.minecraftforge.client.event.TextureStitchEvent
-import net.minecraftforge.event.entity.living.LivingSpawnEvent
-import net.minecraftforge.event.entity.player.PlayerInteractEvent
-import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action
-import resonantengine.api.mffs.event.{EventForceMobilize, EventStabilize}
-import resonantengine.api.mffs.fortron.FrequencyGridRegistry
-import resonantengine.api.event.ChunkModifiedEvent
-import resonantengine.lib.mod.config.ConfigHandler
-import resonantengine.lib.transform.vector.Vector3
-
-import scala.collection.JavaConversions._
-
 object SubscribeEventHandler
 {
   val fluidIconMap = new HashMap[String, IIcon]
-
-  def registerIcon(name: String, event: TextureStitchEvent.Pre)
-  {
-    fluidIconMap.put(name, event.map.registerIcon(name))
-  }
 
   @SubscribeEvent
   @SideOnly(Side.CLIENT)
@@ -47,6 +15,10 @@ object SubscribeEventHandler
       registerIcon(Reference.prefix + "fortron", event)
     }
   }
+
+	def registerIcon(name: String, event: TextureStitchEvent.Pre) {
+		fluidIconMap.put(name, event.map.registerIcon(name))
+	}
 
   @SubscribeEvent
   @SideOnly(Side.CLIENT)
@@ -81,14 +53,14 @@ object SubscribeEventHandler
   @SubscribeEvent
   def eventStabilize(evt: EventStabilize)
   {
-    if (evt.itemStack.getItem.isInstanceOf[ItemSkull])
+	  if (evt.Item.getItem.isInstanceOf[ItemSkull])
     {
-      evt.world.setBlock(evt.x, evt.y, evt.z, Blocks.skull, evt.itemStack.getItemDamage, 2)
+		evt.world.setBlock(evt.x, evt.y, evt.z, Blocks.skull, evt.Item.getItemDamage, 2)
       val tile = evt.world.getTileEntity(evt.x, evt.y, evt.z)
 
       if (tile.isInstanceOf[TileEntitySkull])
       {
-        val nbt = evt.itemStack.getTagCompound
+		  val nbt = evt.Item.getTagCompound
 
         if (nbt != null)
         {
@@ -103,16 +75,17 @@ object SubscribeEventHandler
             gameProfile = new GameProfile(null.asInstanceOf[UUID], nbt.getString("SkullOwner"))
           }
 
-          if (gameProfile != null)
-            tile.asInstanceOf[TileEntitySkull].func_152106_a(gameProfile)
-          else
-            tile.asInstanceOf[TileEntitySkull].func_152107_a(evt.itemStack.getItemDamage)
+			if (gameProfile != null)
+				tile.asInstanceOf[TileEntitySkull].func_152106_a(gameProfile)
+			else {
+				tile.asInstanceOf[TileEntitySkull].func_152107_a(evt.Item.getItemDamage)
+			}
 
           Blocks.skull.asInstanceOf[BlockSkull].func_149965_a(evt.world, evt.x, evt.y, evt.z, tile.asInstanceOf[TileEntitySkull])
         }
       }
 
-      evt.itemStack.stackSize -= 1
+		evt.Item.stackSize -= 1
       evt.setCanceled(true)
     }
   }

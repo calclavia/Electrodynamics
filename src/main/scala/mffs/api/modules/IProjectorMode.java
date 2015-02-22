@@ -6,7 +6,7 @@ import nova.core.util.transform.Vector3d;
 
 import java.util.Set;
 
-public interface IProjectorMode extends IFortronCost {
+public interface IProjectorMode extends FortronCost {
 	/**
 	 * Called when the force field projector calculates the shape of the module.
 	 * @param projector - The Projector Object. Can cast to TileEntity.

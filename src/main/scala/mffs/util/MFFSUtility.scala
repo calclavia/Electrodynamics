@@ -1,26 +1,8 @@
 package mffs.util
 
-import com.mojang.authlib.GameProfile
 import mffs.Content
 import mffs.field.TileElectromagneticProjector
 import mffs.field.mode.ItemModeCustom
-import net.minecraft.block.Block
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.inventory.IInventory
-import net.minecraft.item.{Item, ItemBlock, ItemStack}
-import net.minecraft.tileentity.TileEntity
-import net.minecraft.world.World
-import net.minecraftforge.common.util.ForgeDirection
-import net.minecraftforge.event.entity.player.PlayerInteractEvent
-import resonantengine.api.mffs.fortron.FrequencyGridRegistry
-import resonantengine.api.mffs.machine.IProjector
-import resonantengine.lib.access.Permission
-import resonantengine.lib.grid.frequency.GridFrequency
-import resonantengine.lib.transform.rotation.EulerAngle
-import resonantengine.lib.transform.vector.Vector3
-
-import scala.collection.JavaConversions._
-import scala.collection.mutable
 
 /**
  * A class containing some general helpful functions.
@@ -30,22 +12,22 @@ import scala.collection.mutable
 object MFFSUtility
 {
   /**
-   * Gets the first itemStack that is an ItemBlock in this TileEntity or in nearby chests.
+   * Gets the first Item that is an ItemBlock in this TileEntity or in nearby chests.
    */
-  def getFirstItemBlock(tileEntity: TileEntity, itemStack: ItemStack): ItemStack =
+  def getFirstItemBlock(tileEntity: TileEntity, Item: Item): Item =
   {
-    return getFirstItemBlock(tileEntity, itemStack, true)
+	  return getFirstItemBlock(tileEntity, Item, true)
   }
 
-  def getFirstItemBlock(tileEntity: TileEntity, itemStack: ItemStack, recur: Boolean): ItemStack =
+	def getFirstItemBlock(tileEntity: TileEntity, Item: Item, recur: Boolean): Item =
   {
     if (tileEntity.isInstanceOf[IProjector])
     {
       val projector = tileEntity.asInstanceOf[IProjector]
 
-      projector.getModuleSlots().find(getFirstItemBlock(_, projector, itemStack) != null) match
+		projector.getModuleSlots().find(getFirstItemBlock(_, projector, Item) != null) match
       {
-        case Some(entry) => return getFirstItemBlock(entry, projector, itemStack)
+			case Some(entry) => return getFirstItemBlock(entry, projector, Item)
         case _ =>
       }
     }
@@ -53,7 +35,7 @@ object MFFSUtility
     {
       val inventory = tileEntity.asInstanceOf[IInventory]
 
-      (0 until inventory.getSizeInventory()).view map (getFirstItemBlock(_, inventory, itemStack)) headOption match
+		(0 until inventory.getSizeInventory()).view map (getFirstItemBlock(_, inventory, Item)) headOption match
       {
         case Some(entry) => return entry
         case _ =>
@@ -70,7 +52,7 @@ object MFFSUtility
 
           if (checkTile != null)
           {
-            val checkStack: ItemStack = getFirstItemBlock(checkTile, itemStack, false)
+			  val checkStack: Item = getFirstItemBlock(checkTile, Item, false)
 
             if (checkStack != null)
             {
@@ -82,12 +64,12 @@ object MFFSUtility
     return null
   }
 
-  def getFirstItemBlock(i: Int, inventory: IInventory, itemStack: ItemStack): ItemStack =
+	def getFirstItemBlock(i: Int, inventory: IInventory, Item: Item): Item =
   {
-    val checkStack: ItemStack = inventory.getStackInSlot(i)
+	  val checkStack: Item = inventory.getStackInSlot(i)
     if (checkStack != null && checkStack.getItem.isInstanceOf[ItemBlock])
     {
-      if (itemStack == null || checkStack.isItemEqual(itemStack))
+		if (Item == null || checkStack.isItemEqual(Item))
       {
         return checkStack
       }
@@ -95,7 +77,7 @@ object MFFSUtility
     return null
   }
 
-  def getCamoBlock(proj: IProjector, position: Vector3): ItemStack =
+	def getCamoBlock(proj: IProjector, position: Vector3): Item =
   {
     val projector = proj.asInstanceOf[TileElectromagneticProjector]
     val tile = projector.asInstanceOf[TileEntity]
@@ -120,7 +102,7 @@ object MFFSUtility
 
               if (blockInfo != null && !blockInfo._1.isAir(tile.getWorldObj(), position.xi, position.yi, position.zi))
               {
-                return new ItemStack(blockInfo._1, 1, blockInfo._2)
+				  return new Item(blockInfo._1, 1, blockInfo._2)
               }
             }
           }
@@ -137,11 +119,11 @@ object MFFSUtility
     return null
   }
 
-  def getFilterBlock(itemStack: ItemStack): Block =
+	def getFilterBlock(Item: Item): Block =
   {
-    if (itemStack != null)
+	  if (Item != null)
     {
-      return getFilterBlock(itemStack.getItem)
+		return getFilterBlock(Item.getItem)
 
     }
     return null
@@ -162,11 +144,6 @@ object MFFSUtility
     return hasPermission(world, position, permission, player.getGameProfile())
   }
 
-  def hasPermission(world: World, position: Vector3, permission: Permission, profile: GameProfile): Boolean =
-  {
-    return getRelevantProjectors(world, position).forall(_.hasPermission(profile, permission))
-  }
-
   def hasPermission(world: World, position: Vector3, action: PlayerInteractEvent.Action, player: EntityPlayer): Boolean =
   {
     return getRelevantProjectors(world, position) forall (_.isAccessGranted(world, position, player, action))
@@ -178,5 +155,9 @@ object MFFSUtility
   def getRelevantProjectors(world: World, position: Vector3): mutable.Set[TileElectromagneticProjector] =
   {
     return FrequencyGridRegistry.instance.asInstanceOf[GridFrequency].getNodes(classOf[TileElectromagneticProjector]) filter (_.isInField(position))
+  }
+
+	def hasPermission(world: World, position: Vector3, permission: Permission, profile: GameProfile): Boolean = {
+		return getRelevantProjectors(world, position).forall(_.hasPermission(profile, permission))
   }
 }

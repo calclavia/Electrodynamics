@@ -2,38 +2,26 @@ package mffs.security.card
 
 import java.util.List
 
-import io.netty.buffer.ByteBuf
 import mffs.ModularForceFieldSystem
 import mffs.item.gui.EnumGui
-import net.minecraft.entity.EntityLivingBase
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.item.ItemStack
-import net.minecraft.world.World
-import resonantengine.api.network.IPacketReceiver
-import resonantengine.core.network.discriminator.PacketType
-import resonantengine.lib.access.{AccessUser, Permissions}
-import resonantengine.lib.utility.LanguageUtility
-import resonantengine.lib.utility.nbt.NBTUtility
-import resonantengine.lib.wrapper.ByteBufWrapper._
-import resonantengine.lib.wrapper.CollectionWrapper._
 
 class ItemCardIdentification extends ItemCardAccess with IPacketReceiver
 {
-  override def hitEntity(itemStack: ItemStack, entityLiving: EntityLivingBase, par3EntityLiving: EntityLivingBase): Boolean =
+	override def hitEntity(Item: Item, entityLiving: EntityLivingBase, par3EntityLiving: EntityLivingBase): Boolean =
   {
     if (entityLiving.isInstanceOf[EntityPlayer])
     {
-      val access = getAccess(itemStack)
+		val access = getAccess(Item)
       access.username = entityLiving.asInstanceOf[EntityPlayer].getGameProfile.getName
-      setAccess(itemStack, access)
+		setAccess(Item, access)
     }
 
     return false
   }
 
-  override def addInformation(itemStack: ItemStack, player: EntityPlayer, info: List[_], b: Boolean)
+	override def addInformation(Item: Item, player: EntityPlayer, info: List[_], b: Boolean)
   {
-    val access = getAccess(itemStack)
+	  val access = getAccess(Item)
 
     if (access != null)
     {
@@ -46,20 +34,21 @@ class ItemCardIdentification extends ItemCardAccess with IPacketReceiver
 
   }
 
-  override def onItemRightClick(itemStack: ItemStack, world: World, player: EntityPlayer): ItemStack =
+	override def onItemRightClick(Item: Item, world: World, player: EntityPlayer): Item =
   {
     if (!world.isRemote)
     {
       if (player.isSneaking)
       {
-        var access = getAccess(itemStack)
+		  var access = getAccess(Item)
 
-        if (access != null)
-          access.username = player.getGameProfile.getName
-        else
-          access = new AccessUser(player.getGameProfile.getName)
+		  if (access != null)
+			  access.username = player.getGameProfile.getName
+		  else {
+			  access = new AccessUser(player.getGameProfile.getName)
+		  }
 
-        setAccess(itemStack, access)
+		  setAccess(Item, access)
       }
       else
       {
@@ -70,7 +59,7 @@ class ItemCardIdentification extends ItemCardAccess with IPacketReceiver
       }
     }
 
-    return itemStack
+	  return Item
   }
 
   /**
@@ -81,8 +70,8 @@ class ItemCardIdentification extends ItemCardAccess with IPacketReceiver
    */
   override def read(buf: ByteBuf, player: EntityPlayer, packet: PacketType)
   {
-    val itemStack = player.getCurrentEquippedItem
-    var access = getAccess(itemStack)
+	  val Item = player.getCurrentEquippedItem
+	  var access = getAccess(Item)
 
     buf.readInt() match
     {
@@ -122,12 +111,12 @@ class ItemCardIdentification extends ItemCardAccess with IPacketReceiver
       }
     }
 
-    setAccess(itemStack, access)
+	  setAccess(Item, access)
   }
 
-  override def getAccess(itemStack: ItemStack): AccessUser =
+	override def getAccess(Item: Item): AccessUser =
   {
-    val nbt = NBTUtility.getNBTTagCompound(itemStack)
+	  val nbt = NBTUtility.getNBTTagCompound(Item)
 
     if (nbt != null)
     {

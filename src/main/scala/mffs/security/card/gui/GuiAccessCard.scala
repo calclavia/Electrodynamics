@@ -3,25 +3,14 @@ package mffs.security.card.gui
 import mffs.ModularForceFieldSystem
 import mffs.item.gui.GuiItem
 import mffs.security.card.ItemCardAccess
-import net.minecraft.client.gui.GuiButton
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.inventory.Container
-import net.minecraft.item.ItemStack
-import resonantengine.core.network.discriminator.PacketPlayerItem
-import resonantengine.lib.access.Permissions
-import resonantengine.lib.render.EnumColor
-import resonantengine.lib.wrapper.CollectionWrapper._
-import resonantengine.lib.wrapper.StringWrapper._
-
-import scala.collection.convert.wrapAll._
 
 /**
  * A gui that contains the permissions
  * @author Calclavia
  */
-abstract class GuiAccessCard(player: EntityPlayer, itemStack: ItemStack, container: Container) extends GuiItem(itemStack, container)
+abstract class GuiAccessCard(player: EntityPlayer, Item: Item, container: Container) extends GuiItem(Item, container)
 {
-  val itemAccess = itemStack.getItem.asInstanceOf[ItemCardAccess]
+	val itemAccess = Item.getItem.asInstanceOf[ItemCardAccess]
   val permissions = Permissions.root.getAllChildren.toList
   val scroll = new GuiScroll(Math.max(permissions.size - 4, 0))
 

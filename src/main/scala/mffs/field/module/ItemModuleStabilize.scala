@@ -5,20 +5,6 @@ import java.util.Set
 import mffs.base.{ItemModule, TilePacketType}
 import mffs.field.mode.ItemModeCustom
 import mffs.{Content, ModularForceFieldSystem, Reference}
-import net.minecraft.block.{Block, BlockLiquid}
-import net.minecraft.init.Blocks
-import net.minecraft.inventory.IInventory
-import net.minecraft.item.{ItemBlock, ItemStack}
-import net.minecraft.tileentity.TileEntity
-import net.minecraftforge.common.MinecraftForge
-import net.minecraftforge.common.util.ForgeDirection
-import net.minecraftforge.fluids.IFluidBlock
-import resonantengine.api.mffs.Blacklist
-import resonantengine.api.mffs.event.EventStabilize
-import resonantengine.api.mffs.machine.IProjector
-import resonantengine.core.network.discriminator.PacketTile
-import resonantengine.lib.transform.rotation.EulerAngle
-import resonantengine.lib.transform.vector.{Vector3, VectorWorld}
 
 class ItemModuleStabilize extends ItemModule
 {
@@ -127,7 +113,7 @@ class ItemModuleStabilize extends ItemModule
     return 1
   }
 
-  private def isApproximationEqual(block: Block, checkStack: ItemStack): Boolean =
+	private def isApproximationEqual(block: Block, checkStack: Item): Boolean =
   {
     return block == Blocks.grass && (checkStack.getItem.asInstanceOf[ItemBlock]).field_150939_a == Blocks.dirt
   }

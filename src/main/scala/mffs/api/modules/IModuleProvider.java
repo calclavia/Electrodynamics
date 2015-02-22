@@ -1,20 +1,20 @@
 package mffs.api.modules;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.Item;
 
 import java.util.Set;
 
 public interface IModuleProvider {
 	/**
-	 * Gets the ItemStack of a specific module type. This ItemStack is constructed and NOT a reference to the actual stacks within the block.
+	 * Gets the Item of a specific module type. This Item is constructed and NOT a reference to the actual stacks within the block.
 	 */
-	public ItemStack getModule(IModule module);
+	public Item getModule(Module module);
 
-	public int getModuleCount(IModule module, int... slots);
+	public int getModuleCount(Module module, int... slots);
 
-	public Set<ItemStack> getModuleStacks(int... slots);
+	public Set<Item> getModuleStacks(int... slots);
 
-	public Set<IModule> getModules(int... slots);
+	public Set<Module> getModules(int... slots);
 
 	public int getFortronCost();
 }

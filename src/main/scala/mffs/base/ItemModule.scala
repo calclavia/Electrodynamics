@@ -2,28 +2,18 @@ package mffs.base
 
 import java.util.{List => JList, Set => JSet}
 
-import net.minecraft.entity.Entity
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.item.ItemStack
-import net.minecraft.tileentity.TileEntity
-import net.minecraft.world.World
-import resonantengine.api.mffs.machine.{IFieldMatrix, IProjector}
-import resonantengine.api.mffs.modules.IModule
-import resonantengine.lib.transform.region.Cuboid
-import resonantengine.lib.transform.vector.Vector3
-import resonantengine.lib.utility.LanguageUtility
-import resonantengine.lib.utility.science.UnitDisplay
-import resonantengine.lib.wrapper.CollectionWrapper._
+import com.resonant.core.prefab.itemblock.TooltipItem
+import mffs.api.modules.Module
+import nova.core.item.Item
 
-import scala.collection.convert.wrapAll._
-class ItemModule extends ItemMFFS with IModule
+class ItemModule extends Item with TooltipItem with Module
 {
   private var fortronCost = 0.5f
 
-  override def addInformation(itemStack: ItemStack, player: EntityPlayer, info: JList[_], b: Boolean)
+	override def addInformation(Item: Item, player: EntityPlayer, info: JList[_], b: Boolean)
   {
     info.add(LanguageUtility.getLocal("info.item.fortron") + " " + new UnitDisplay(UnitDisplay.Unit.LITER, getFortronCost(1) * 20) + "/s")
-    super.addInformation(itemStack, player, info, b)
+	  super.addInformation(Item, player, info, b)
   }
 
   override def getFortronCost(amplifier: Float): Float =
@@ -49,7 +39,7 @@ class ItemModule extends ItemMFFS with IModule
     return 0
   }
 
-  override def onCollideWithForceField(world: World, x: Int, y: Int, z: Int, entity: Entity, moduleStack: ItemStack): Boolean =
+	override def onCollideWithForceField(world: World, x: Int, y: Int, z: Int, entity: Entity, moduleStack: Item): Boolean =
   {
     return true
   }
@@ -73,7 +63,7 @@ class ItemModule extends ItemMFFS with IModule
 
   override
 
-  def requireTicks(moduleStack: ItemStack): Boolean =
+  def requireTicks(moduleStack: Item): Boolean =
   {
     return false
   }

@@ -1,12 +1,6 @@
 package mffs.field.mobilize.event
 
 import mffs.base.TileMFFSInventory
-import net.minecraft.block.Block
-import net.minecraft.init.Blocks
-import net.minecraft.world.World
-import resonantengine.lib.transform.vector.Vector3
-
-import scala.collection.JavaConversions._
 
 class BlockInventoryDropDelayedEvent(handler: IDelayedEventHandler, ticks: Int, block: Block, world: World, position: Vector3, projector: TileMFFSInventory) extends BlockDropDelayedEvent(handler, ticks, block, world, position)
 {
@@ -16,11 +10,11 @@ class BlockInventoryDropDelayedEvent(handler: IDelayedEventHandler, ticks: Int, 
     {
       if (position.getBlock(this.world) == block)
       {
-        val itemStacks = block.getDrops(this.world, this.position.xi, this.position.yi, this.position.zi, this.position.getBlockMetadata(world), 0)
+		  val Items = block.getDrops(this.world, this.position.xi, this.position.yi, this.position.zi, this.position.getBlockMetadata(world), 0)
 
-        for (itemStack <- itemStacks)
+		  for (Item <- Items)
         {
-          projector.mergeIntoInventory(itemStack)
+			projector.mergeIntoInventory(Item)
         }
 
         position.setBlock(world, Blocks.air)

@@ -1,7 +1,5 @@
 package mffs.field.mobilize
 
-import cpw.mods.fml.relauncher.{Side, SideOnly}
-import io.netty.buffer.ByteBuf
 import mffs.base.{TileFieldMatrix, TilePacketType}
 import mffs.field.mobilize.event.{BlockPreMoveDelayedEvent, DelayedEvent}
 import mffs.item.card.ItemCard
@@ -10,26 +8,6 @@ import mffs.render.fx.IEffectController
 import mffs.security.MFFSPermissions
 import mffs.util.MFFSUtility
 import mffs.{Content, ModularForceFieldSystem, Reference, Settings}
-import net.minecraft.client.renderer.RenderBlocks
-import net.minecraft.entity.Entity
-import net.minecraft.entity.player.EntityPlayerMP
-import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.util.AxisAlignedBB
-import net.minecraftforge.common.MinecraftForge
-import net.minecraftforge.common.util.ForgeDirection
-import resonantengine.api.mffs.Blacklist
-import resonantengine.api.mffs.card.ICoordLink
-import resonantengine.api.mffs.event.EventForceMobilize
-import resonantengine.api.mffs.modules.{IModule, IProjectorMode}
-import resonantengine.core.network.discriminator.{PacketTile, PacketType}
-import resonantengine.lib.transform.region.Cuboid
-import resonantengine.lib.transform.vector.{Vector3, VectorWorld}
-import resonantengine.lib.wrapper.ByteBufWrapper._
-
-import scala.collection.convert.wrapAll._
-import scala.collection.mutable
-import scala.math._
 
 class TileForceMobilizer extends TileFieldMatrix with IEffectController
 {
@@ -374,47 +352,6 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
     return target.world.isAirBlock(target.xi, target.yi, target.zi) || (targetBlock.isReplaceable(target.world, target.xi, target.yi, target.zi))
   }
 
-  /**
-   * Gets the position in which the manipulator will try to translate the field into.
-   *
-   * @return A vector of the target position.
-   */
-  def getTargetPosition: VectorWorld =
-  {
-    if (isTeleport)
-    {
-      val cardStack = getLinkCard
-
-      if (cardStack != null)
-        return cardStack.getItem.asInstanceOf[ICoordLink].getLink(cardStack)
-    }
-
-    return new VectorWorld(worldObj, getAbsoluteAnchor + getDirection)
-  }
-
-  private def isTeleport: Boolean =
-  {
-    if (Settings.allowForceManipulatorTeleport)
-    {
-      val cardStack = getLinkCard
-
-      if (cardStack != null)
-        return cardStack.getItem.asInstanceOf[ICoordLink].getLink(cardStack) != null
-    }
-    return false
-  }
-
-  def getLinkCard: ItemStack =
-  {
-    getInventory().getContainedItems filter (_ != null) find (_.getItem.isInstanceOf[ICoordLink]) match
-    {
-      case Some(itemStack) => return itemStack
-      case _ => return null
-    }
-  }
-
-  def getAbsoluteAnchor: Vector3 = position.add(this.anchor)
-
   def isVisibleToPlayer(position: Vector3): Boolean =
   {
     return (ForgeDirection.VALID_DIRECTIONS count ((dir: ForgeDirection) => (position + dir).getBlock(world).isOpaqueCube)) < 6
@@ -432,6 +369,23 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
       buf <<< (if (moveTime > 0) moveTime else getMoveTime)
     }
   }
+
+	/**
+	 * Gets the movement time required in TICKS.
+	 *
+	 * @return The time it takes to teleport (using a link card) to another coordinate OR
+	 *         ANIMATION_TIME for default move.
+	 */
+	def getMoveTime: Int = {
+		if (isTeleport) {
+			var time = (20 * this.getTargetPosition.distance(this.getAbsoluteAnchor)).toInt
+			if (this.getTargetPosition.world ne this.worldObj) {
+				time += 20 * 60
+			}
+			return time
+		}
+		return animationTime
+	}
 
   override def read(buf: ByteBuf, id: Int, packetType: PacketType)
   {
@@ -563,6 +517,43 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
     }
   }
 
+	/**
+	 * Gets the position in which the manipulator will try to translate the field into.
+	 *
+	 * @return A vector of the target position.
+	 */
+	def getTargetPosition: VectorWorld = {
+		if (isTeleport) {
+			val cardStack = getLinkCard
+
+			if (cardStack != null) {
+				return cardStack.getItem.asInstanceOf[ICoordLink].getLink(cardStack)
+			}
+		}
+
+		return new VectorWorld(worldObj, getAbsoluteAnchor + getDirection)
+	}
+
+	private def isTeleport: Boolean = {
+		if (Settings.allowForceManipulatorTeleport) {
+			val cardStack = getLinkCard
+
+			if (cardStack != null) {
+				return cardStack.getItem.asInstanceOf[ICoordLink].getLink(cardStack) != null
+			}
+		}
+		return false
+	}
+
+	def getLinkCard: Item = {
+		getInventory().getContainedItems filter (_ != null) find (_.getItem.isInstanceOf[ICoordLink]) match {
+			case Some(Item) => return Item
+			case _ => return null
+		}
+	}
+
+	def getAbsoluteAnchor: Vector3 = position.add(this.anchor)
+
   def getSearchBounds: AxisAlignedBB =
   {
     val positiveScale = position + getTranslation + getPositiveScale + 1
@@ -599,38 +590,18 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
 
   override def doGetFortronCost: Int = round(super.doGetFortronCost + (if (this.anchor != null) this.anchor.magnitude * 1000 else 0)).toInt
 
-  override def isItemValidForSlot(slotID: Int, itemStack: ItemStack): Boolean =
+	override def isItemValidForSlot(slotID: Int, Item: Item): Boolean =
   {
     if (slotID == 0)
     {
-      return itemStack.getItem.isInstanceOf[ItemCard]
+		return Item.getItem.isInstanceOf[ItemCard]
     }
     else if (slotID == modeSlotID)
     {
-      return itemStack.getItem.isInstanceOf[IProjectorMode]
+		return Item.getItem.isInstanceOf[IProjectorMode]
     }
 
-    return itemStack.getItem.isInstanceOf[IModule] || itemStack.getItem.isInstanceOf[ICoordLink]
-  }
-
-  /**
-   * Gets the movement time required in TICKS.
-   *
-   * @return The time it takes to teleport (using a link card) to another coordinate OR
-   *         ANIMATION_TIME for default move.
-   */
-  def getMoveTime: Int =
-  {
-    if (isTeleport)
-    {
-      var time = (20 * this.getTargetPosition.distance(this.getAbsoluteAnchor)).toInt
-      if (this.getTargetPosition.world ne this.worldObj)
-      {
-        time += 20 * 60
-      }
-      return time
-    }
-    return animationTime
+	  return Item.getItem.isInstanceOf[IModule] || Item.getItem.isInstanceOf[ICoordLink]
   }
 
   /**
@@ -706,7 +677,7 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
   }
 
   @SideOnly(Side.CLIENT)
-  override def renderInventory(itemStack: ItemStack)
+  override def renderInventory(Item: Item)
   {
     RenderForceMobilizer.render(this, -0.5, -0.5, -0.5, 0, true, true)
   }

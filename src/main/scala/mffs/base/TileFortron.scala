@@ -1,17 +1,8 @@
 package mffs.base
 
-import io.netty.buffer.ByteBuf
 import mffs.ModularForceFieldSystem
+import mffs.api.fortron.{FrequencyGridRegistry, IFortronFrequency}
 import mffs.util.{FortronUtility, TransferMode}
-import net.minecraft.nbt.NBTTagCompound
-import net.minecraftforge.common.util.ForgeDirection
-import net.minecraftforge.fluids._
-import resonantengine.api.mffs.fortron.{FrequencyGridRegistry, IFortronFrequency}
-import resonantengine.core.network.discriminator.PacketType
-import resonantengine.core.network.netty.PacketManager
-import resonantengine.lib.wrapper.ByteBufWrapper._
-
-import scala.collection.convert.wrapAll._
 
 /**
  * A TileEntity that is powered by FortronHelper.

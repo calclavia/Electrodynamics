@@ -2,7 +2,7 @@ package mffs.slot;
 
 import mffs.base.TileMFFSInventory;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.Item;
 
 public class SlotActive extends SlotBase
 {
@@ -12,9 +12,9 @@ public class SlotActive extends SlotBase
 	}
 
 	@Override
-	public boolean isItemValid(ItemStack itemStack)
+	public boolean isItemValid(Item Item)
 	{
-		return super.isItemValid(itemStack) && !this.tileEntity.isActive();
+		return super.isItemValid(Item) && !this.tileEntity.isActive();
 	}
 
 	@Override

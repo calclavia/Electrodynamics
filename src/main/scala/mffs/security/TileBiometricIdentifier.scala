@@ -3,17 +3,9 @@ package mffs.security
 import java.util
 import java.util.{Set => JSet}
 
-import com.mojang.authlib.GameProfile
-import cpw.mods.fml.relauncher.{Side, SideOnly}
 import mffs.base.TileFrequency
 import mffs.item.card.ItemCardFrequency
 import mffs.{ModularForceFieldSystem, Settings}
-import net.minecraft.client.renderer.RenderBlocks
-import net.minecraft.item.ItemStack
-import resonantengine.api.mffs.card.IAccessCard
-import resonantengine.lib.access.Permission
-import resonantengine.lib.transform.vector.Vector3
-import resonantengine.prefab.block.impl.TRotatable
 
 object TileBiometricIdentifier
 {
@@ -48,14 +40,15 @@ class TileBiometricIdentifier extends TileFrequency with TRotatable
     return getCards map (stack => stack.getItem.asInstanceOf[IAccessCard].getAccess(stack)) filter (_ != null) exists (_.hasPermission(profile.getName, permission))
   }
 
-  override def getCards: Set[ItemStack] = (getInventory().getContainedItems filter (_ != null) filter (_.getItem.isInstanceOf[IAccessCard])).toSet
+	override def getCards: Set[Item] = (getInventory().getContainedItems filter (_ != null) filter (_.getItem.isInstanceOf[IAccessCard])).toSet
 
-  override def isItemValidForSlot(slotID: Int, itemStack: ItemStack): Boolean =
+	override def isItemValidForSlot(slotID: Int, Item: Item): Boolean =
   {
-    if (slotID == 0)
-      return itemStack.getItem.isInstanceOf[ItemCardFrequency]
+	  if (slotID == 0) {
+		  return Item.getItem.isInstanceOf[ItemCardFrequency]
+	  }
 
-    return itemStack.getItem.isInstanceOf[IAccessCard]
+	  return Item.getItem.isInstanceOf[IAccessCard]
   }
 
   override def getInventoryStackLimit: Int = 1
@@ -80,7 +73,7 @@ class TileBiometricIdentifier extends TileFrequency with TRotatable
   }
 
   @SideOnly(Side.CLIENT)
-  override def renderInventory(itemStack: ItemStack)
+  override def renderInventory(Item: Item)
   {
     RenderBiometricIdentifier.render(this, -0.5, -0.5, -0.5, 0, true, true)
   }

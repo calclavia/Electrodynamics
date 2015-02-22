@@ -3,48 +3,38 @@ package mffs.item.card
 import java.util.List
 
 import com.google.common.hash.Hashing
-import io.netty.buffer.ByteBuf
 import mffs.ModularForceFieldSystem
 import mffs.item.gui.EnumGui
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.world.World
-import resonantengine.api.item.IItemFrequency
-import resonantengine.api.network.IPacketReceiver
-import resonantengine.core.network.discriminator.PacketType
-import resonantengine.lib.utility.LanguageUtility
-import resonantengine.lib.wrapper.CollectionWrapper._
 
 class ItemCardFrequency extends ItemCard with IItemFrequency with IPacketReceiver
 {
-  override def addInformation(itemStack: ItemStack, par2EntityPlayer: EntityPlayer, list: List[_], par4: Boolean)
+	override def addInformation(Item: Item, par2EntityPlayer: EntityPlayer, list: List[_], par4: Boolean)
   {
-    list.add(LanguageUtility.getLocal("info.cardFrequency.freq") + " " + getEncodedFrequency(itemStack))
+	  list.add(LanguageUtility.getLocal("info.cardFrequency.freq") + " " + getEncodedFrequency(Item))
   }
 
-  def getEncodedFrequency(itemStack: ItemStack): String =
+	def getEncodedFrequency(Item: Item): String =
   {
-    return Hashing.md5().hashInt(getFrequency(itemStack)).toString.take(12)
+	  return Hashing.md5().hashInt(getFrequency(Item)).toString.take(12)
   }
 
   /**
    * Frequency methods
    **/
-  override def getFrequency(itemStack: ItemStack): Int =
+  override def getFrequency(Item: Item): Int =
   {
-    if (itemStack != null)
+	  if (Item != null)
     {
-      if (itemStack.getTagCompound == null)
+		if (Item.getTagCompound == null)
       {
-        itemStack.setTagCompound(new NBTTagCompound)
+		  Item.setTagCompound(new NBTTagCompound)
       }
-      return itemStack.getTagCompound.getInteger("frequency")
+		return Item.getTagCompound.getInteger("frequency")
     }
     return 0
   }
 
-  override def onItemRightClick(itemStack: ItemStack, world: World, player: EntityPlayer): ItemStack =
+	override def onItemRightClick(Item: Item, world: World, player: EntityPlayer): Item =
   {
     if (!world.isRemote)
     {
@@ -54,7 +44,7 @@ class ItemCardFrequency extends ItemCard with IItemFrequency with IPacketReceive
       player.openGui(ModularForceFieldSystem, EnumGui.frequency.id, world, 0, 0, 0)
     }
 
-    return itemStack
+	  return Item
   }
 
   override def read(data: ByteBuf, player: EntityPlayer, packet: PacketType)
@@ -62,15 +52,15 @@ class ItemCardFrequency extends ItemCard with IItemFrequency with IPacketReceive
     setFrequency(data.readInt(), player.getCurrentEquippedItem)
   }
 
-  override def setFrequency(frequency: Int, itemStack: ItemStack)
+	override def setFrequency(frequency: Int, Item: Item)
   {
-    if (itemStack != null)
+	  if (Item != null)
     {
-      if (itemStack.getTagCompound == null)
+		if (Item.getTagCompound == null)
       {
-        itemStack.setTagCompound(new NBTTagCompound)
+		  Item.setTagCompound(new NBTTagCompound)
       }
-      itemStack.getTagCompound.setInteger("frequency", frequency)
+		Item.getTagCompound.setInteger("frequency", frequency)
     }
   }
 

@@ -1,7 +1,7 @@
 package mffs.api.event;
 
 import cpw.mods.fml.common.eventhandler.Cancelable;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.Item;
 import net.minecraft.world.World;
 import net.minecraftforge.event.world.WorldEvent;
 
@@ -11,14 +11,14 @@ import net.minecraftforge.event.world.WorldEvent;
  */
 @Cancelable
 public class EventStabilize extends WorldEvent {
-	public final ItemStack itemStack;
+	public final Item Item;
 	public final int x, y, z;
 
-	public EventStabilize(World world, int x, int y, int z, ItemStack itemStack) {
+	public EventStabilize(World world, int x, int y, int z, Item Item) {
 		super(world);
 		this.x = x;
 		this.y = y;
 		this.z = z;
-		this.itemStack = itemStack;
+		this.Item = Item;
 	}
 }

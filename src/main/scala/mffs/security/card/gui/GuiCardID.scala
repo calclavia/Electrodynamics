@@ -3,23 +3,19 @@ package mffs.security.card.gui
 import mffs.ModularForceFieldSystem
 import mffs.item.gui.ContainerItem
 import mffs.security.card.ItemCardIdentification
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.item.ItemStack
-import resonantengine.core.network.discriminator.PacketPlayerItem
-import resonantengine.lib.utility.LanguageUtility
 
 /**
  * @author Calclavia
  */
-class GuiCardID(player: EntityPlayer, itemStack: ItemStack) extends GuiAccessCard(player, itemStack, new ContainerItem(player, itemStack))
+class GuiCardID(player: EntityPlayer, Item: Item) extends GuiAccessCard(player, Item, new ContainerItem(player, Item))
 {
   override def initGui()
   {
     super.initGui()
     textField.setMaxStringLength(20)
 
-    val item = itemStack.getItem.asInstanceOf[ItemCardIdentification]
-    val access = item.getAccess(itemStack)
+	  val item = Item.getItem.asInstanceOf[ItemCardIdentification]
+	  val access = item.getAccess(Item)
 
     if (access != null)
       textField.setText(access.username)

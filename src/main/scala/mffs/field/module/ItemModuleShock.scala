@@ -4,14 +4,10 @@ import mffs.ModularForceFieldSystem
 import mffs.base.ItemModule
 import mffs.field.TileForceField
 import mffs.security.MFFSPermissions
-import net.minecraft.entity.Entity
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.item.ItemStack
-import net.minecraft.world.World
 
 class ItemModuleShock extends ItemModule
 {
-  override def onCollideWithForceField(world: World, x: Int, y: Int, z: Int, entity: Entity, moduleStack: ItemStack): Boolean =
+	override def onCollideWithForceField(world: World, x: Int, y: Int, z: Int, entity: Entity, moduleStack: Item): Boolean =
   {
     if (entity.isInstanceOf[EntityPlayer])
     {

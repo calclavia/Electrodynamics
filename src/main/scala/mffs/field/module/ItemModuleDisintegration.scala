@@ -7,14 +7,6 @@ import mffs.field.TileElectromagneticProjector
 import mffs.field.mobilize.event.{BlockDropDelayedEvent, BlockInventoryDropDelayedEvent, IDelayedEventHandler}
 import mffs.util.MFFSUtility
 import mffs.{Content, ModularForceFieldSystem}
-import net.minecraft.block.BlockLiquid
-import net.minecraft.item.{ItemBlock, ItemStack}
-import net.minecraft.tileentity.TileEntity
-import net.minecraftforge.fluids.IFluidBlock
-import resonantengine.api.mffs.Blacklist
-import resonantengine.api.mffs.machine.IProjector
-import resonantengine.core.network.discriminator.PacketTile
-import resonantengine.lib.transform.vector.Vector3
 
 class ItemModuleDisintegration extends ItemModule
 {
@@ -41,10 +33,10 @@ class ItemModuleDisintegration extends ItemModule
       val blockMetadata = position.getBlockMetadata(tileEntity.getWorldObj)
 
       val filterMatch = !proj.getFilterStacks.exists(
-        itemStack =>
+		  Item =>
         {
-          MFFSUtility.getFilterBlock(itemStack) != null &&
-          (itemStack.isItemEqual(new ItemStack(block, 1, blockMetadata)) || (itemStack.getItem.asInstanceOf[ItemBlock].field_150939_a == block && projector.getModuleCount(Content.moduleApproximation) > 0))
+			MFFSUtility.getFilterBlock(Item) != null &&
+				(Item.isItemEqual(new Item(block, 1, blockMetadata)) || (Item.getItem.asInstanceOf[ItemBlock].field_150939_a == block && projector.getModuleCount(Content.moduleApproximation) > 0))
         })
 
       if (proj.isInvertedFilter != filterMatch)
