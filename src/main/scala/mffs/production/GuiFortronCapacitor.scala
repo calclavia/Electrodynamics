@@ -3,15 +3,8 @@ package mffs.production
 import mffs.ModularForceFieldSystem
 import mffs.base.{GuiMFFS, TilePacketType}
 import mffs.render.button.GuiTransferModeButton
-import net.minecraft.client.gui.GuiButton
-import net.minecraft.entity.player.EntityPlayer
-import org.lwjgl.opengl.GL11
-import resonantengine.core.network.discriminator.PacketTile
-import resonantengine.lib.render.EnumColor
-import resonantengine.lib.utility.science.UnitDisplay
-import resonantengine.lib.wrapper.CollectionWrapper._
 
-class GuiFortronCapacitor(player: EntityPlayer, tile: TileFortronCapacitor) extends GuiMFFS(new ContainerFortronCapacitor(player, tile), tile)
+class GuiFortronCapacitor(player: EntityPlayer, tile: BlockFortronCapacitor) extends GuiMFFS(new ContainerFortronCapacitor(player, tile), tile)
 {
   override def initGui()
   {

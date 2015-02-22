@@ -1,12 +1,6 @@
 package mffs.field.mobilize
 
-import cpw.mods.fml.client.FMLClientHandler
-import cpw.mods.fml.relauncher.{Side, SideOnly}
 import mffs.Reference
-import net.minecraft.util.ResourceLocation
-import net.minecraftforge.client.model.AdvancedModelLoader
-import org.lwjgl.opengl.GL11._
-import resonantengine.lib.render.RenderUtility
 
 @SideOnly(Side.CLIENT)
 final object RenderForceMobilizer
@@ -15,7 +9,7 @@ final object RenderForceMobilizer
   val textureOff: ResourceLocation = new ResourceLocation(Reference.domain, Reference.modelPath + "forceMobilizer_off.png")
   val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "forceMobilizer.tcn"))
 
-  def render(tileEntity: TileForceMobilizer, x: Double, y: Double, z: Double, frame: Float, isActive: Boolean, isItem: Boolean)
+	def render(tileEntity: BlockMobilizer, x: Double, y: Double, z: Double, frame: Float, isActive: Boolean, isItem: Boolean)
   {
     if (isActive)
     {

@@ -2,10 +2,10 @@ package mffs.field.gui
 
 import mffs.ModularForceFieldSystem
 import mffs.base.TilePacketType
-import mffs.field.TileElectromagneticProjector
+import mffs.field.BlockProjector
 import mffs.render.button.GuiIcon
 
-class GuiElectromagneticProjector(player: EntityPlayer, tile: TileElectromagneticProjector) extends GuiMatrix(new ContainerElectromagneticProjector(player, tile), tile)
+class GuiElectromagneticProjector(player: EntityPlayer, tile: BlockProjector) extends GuiMatrix(new ContainerElectromagneticProjector(player, tile), tile)
 {
   override def initGui()
   {

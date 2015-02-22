@@ -2,11 +2,8 @@ package mffs.security
 
 import mffs.item.card.ItemCardFrequency
 import mffs.slot.SlotBase
-import net.minecraft.entity.player.EntityPlayer
-import resonantengine.prefab.gui.ContainerBase
-import resonantengine.prefab.gui.slot.SlotSpecific
 
-class ContainerBiometricIdentifier(player: EntityPlayer, tile: TileBiometricIdentifier) extends ContainerBase(tile)
+class ContainerBiometricIdentifier(player: EntityPlayer, tile: BlockBiometric) extends ContainerBase(tile)
 {
   //Frequency
   addSlotToContainer(new SlotSpecific(tile, 0, 8, 114, classOf[ItemCardFrequency]))

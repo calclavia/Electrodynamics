@@ -3,7 +3,7 @@ package mffs.field.module
 import java.util.Set
 
 import mffs.base.ItemModule
-import mffs.field.TileElectromagneticProjector
+import mffs.field.BlockProjector
 
 class ItemModuleFusion extends ItemModule
 {
@@ -13,7 +13,7 @@ class ItemModuleFusion extends ItemModule
 	override def onProject(projector: IProjector, fieldBlocks: Set[Vector3d]): Boolean =
   {
     val tile = projector.asInstanceOf[TileEntity]
-    val projectors = FrequencyGridRegistry.instance.getNodes(classOf[TileElectromagneticProjector], projector.getFrequency)
+	  val projectors = FrequencyGridRegistry.instance.getNodes(classOf[BlockProjector], projector.getFrequency)
 
     //TOOD: Check threading efficiency
     val checkProjectors = projectors.par filter (proj => proj.getWorldObj == tile.getWorldObj && proj.isActive && proj.getMode != null)

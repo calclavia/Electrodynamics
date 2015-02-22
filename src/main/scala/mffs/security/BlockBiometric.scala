@@ -7,12 +7,12 @@ import mffs.base.TileFrequency
 import mffs.item.card.ItemCardFrequency
 import mffs.{ModularForceFieldSystem, Settings}
 
-object TileBiometricIdentifier
+object BlockBiometric
 {
   val SLOT_COPY = 12
 }
 
-class TileBiometricIdentifier extends TileFrequency with TRotatable
+class BlockBiometric extends TileFrequency with TRotatable
 {
   /**
    * Rendering
@@ -53,9 +53,9 @@ class TileBiometricIdentifier extends TileFrequency with TRotatable
 
   override def getInventoryStackLimit: Int = 1
 
-  override def getBiometricIdentifiers: JSet[TileBiometricIdentifier] =
+	override def getBiometricIdentifiers: JSet[BlockBiometric] =
   {
-    val set = new util.HashSet[TileBiometricIdentifier]()
+	  val set = new util.HashSet[BlockBiometric]()
     set.add(this)
     return set
   }

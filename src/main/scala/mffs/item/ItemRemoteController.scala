@@ -3,10 +3,12 @@ package mffs.item
 import java.util.{HashSet, List, Set}
 
 import mffs.ModularForceFieldSystem
+import mffs.api.card.ICoordLink
 import mffs.item.card.ItemCardFrequency
 import mffs.render.FieldColor
 import mffs.security.MFFSPermissions
 import mffs.util.MFFSUtility
+import nova.core.item.Item
 
 class ItemRemoteController extends ItemCardFrequency with ICoordLink
 {
@@ -35,17 +37,11 @@ class ItemRemoteController extends ItemCardFrequency with ICoordLink
     }
   }
 
+
 	def hasLink(Item: Item): Boolean =
   {
 	  return getLink(Item) != null
   }
-
-	def getLink(Item: Item): VectorWorld = {
-		if (Item.stackTagCompound == null || !Item.getTagCompound.hasKey("link")) {
-			return null
-		}
-		return new VectorWorld(Item.getTagCompound.getCompoundTag("link"))
-	}
 
 	override def onItemUse(Item: Item, player: EntityPlayer, world: World, x: Int, y: Int, z: Int, par7: Int, par8: Float, par9: Float, par10: Float): Boolean =
   {
@@ -63,6 +59,13 @@ class ItemRemoteController extends ItemCardFrequency with ICoordLink
     }
     return true
   }
+
+	def setLink(Item: Item, vec: VectorWorld) {
+		if (Item.getTagCompound == null) {
+			Item.setTagCompound(new NBTTagCompound)
+		}
+		Item.getTagCompound.setTag("link", vec.toNBT)
+	}
 
 	def clearLink(Item: Item)
   {
@@ -131,6 +134,13 @@ class ItemRemoteController extends ItemCardFrequency with ICoordLink
 	  return Item
   }
 
+	def getLink(Item: Item): VectorWorld = {
+		if (Item.stackTagCompound == null || !Item.getTagCompound.hasKey("link")) {
+			return null
+		}
+		return new VectorWorld(Item.getTagCompound.getCompoundTag("link"))
+	}
+
   @SubscribeEvent def preMove(evt: EventForceMobilize.EventPreForceManipulate)
   {
     this.temporaryRemoteBlacklist.clear
@@ -155,15 +165,6 @@ class ItemRemoteController extends ItemCardFrequency with ICoordLink
         }
       }
     }
-  }
-
-	def setLink(Item: Item, vec: VectorWorld)
-  {
-	  if (Item.getTagCompound == null)
-    {
-		Item.setTagCompound(new NBTTagCompound)
-    }
-	  Item.getTagCompound.setTag("link", vec.toNBT)
   }
 
 }

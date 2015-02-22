@@ -1,12 +1,6 @@
 package mffs.field.mobilize.event
 
-import mffs.field.mobilize.TileForceMobilizer
-import net.minecraft.init.Blocks
-import net.minecraft.nbt.NBTTagCompound
-import net.minecraftforge.common.MinecraftForge
-import resonantengine.api.mffs.event.EventForceMobilize
-import resonantengine.lib.utility.MovementUtility
-import resonantengine.lib.transform.vector.VectorWorld
+import mffs.field.mobilize.BlockMobilizer
 
 /**
  * Removes the TileEntity
@@ -19,7 +13,7 @@ class BlockPreMoveDelayedEvent(_handler: IDelayedEventHandler, _ticks: Int, val 
   {
     if (!startPosition.world.isRemote)
     {
-      if ((handler.asInstanceOf[TileForceMobilizer]).canMove(startPosition, newPosition))
+		if ((handler.asInstanceOf[BlockMobilizer]).canMove(startPosition, newPosition))
       {
         val tileEntity = startPosition.getTileEntity
         val evt = new EventForceMobilize.EventPreForceManipulate(startPosition.world, startPosition.xi, startPosition.yi, startPosition.zi, newPosition.xi, newPosition.yi, newPosition.zi)
@@ -41,9 +35,9 @@ class BlockPreMoveDelayedEvent(_handler: IDelayedEventHandler, _ticks: Int, val 
       }
       else
       {
-        handler.asInstanceOf[TileForceMobilizer].failedPositions.add(startPosition)
-        handler.asInstanceOf[TileForceMobilizer].markFailMove()
-        handler.asInstanceOf[TileForceMobilizer].clearQueue()
+		  handler.asInstanceOf[BlockMobilizer].failedPositions.add(startPosition)
+		  handler.asInstanceOf[BlockMobilizer].markFailMove()
+		  handler.asInstanceOf[BlockMobilizer].clearQueue()
       }
     }
   }

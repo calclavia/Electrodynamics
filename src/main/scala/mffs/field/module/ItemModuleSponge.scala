@@ -28,7 +28,7 @@ class ItemModuleSponge extends ItemModule
       }
     }
 
-    return super.onProject(projector, fields)
+	  return super.onCreateField(projector, fields)
   }
 
 	override def requireTicks(moduleStack: Item): Boolean =

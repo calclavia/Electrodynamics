@@ -1,9 +1,10 @@
 package mffs.item.card
 
-import mffs.base.ItemMFFS
-import resonantengine.api.mffs.card.ICard
+import mffs.api.card.Card
+import nova.core.item.Item
 
-class ItemCard extends ItemMFFS with ICard
-{
-  setMaxStackSize(1)
+class ItemCard extends Item with Card {
+	override def getMaxCount: Int = 1
+
+	override def getID: String = "card"
 }

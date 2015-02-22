@@ -9,7 +9,7 @@ import mffs.security.MFFSPermissions
 import mffs.util.MFFSUtility
 import mffs.{Content, ModularForceFieldSystem, Reference, Settings}
 
-class TileForceMobilizer extends TileFieldMatrix with IEffectController
+class BlockMobilizer extends TileFieldMatrix with IEffectController
 {
   val packetRange = 60
   val animationTime = 20
@@ -104,7 +104,7 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
       queueEvent(new DelayedEvent(this, getMoveTime, () =>
       {
         moveEntities
-        ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(TileForceMobilizer.this, TilePacketType.field.id: Integer))
+		  ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(BlockMobilizer.this, TilePacketType.field.id: Integer))
 
         if (!isTeleport && doAnchor)
         {

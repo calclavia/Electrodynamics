@@ -1,11 +1,6 @@
 package mffs.production
 
-import cpw.mods.fml.client.FMLClientHandler
-import cpw.mods.fml.relauncher.{Side, SideOnly}
 import mffs.Reference
-import net.minecraft.util.ResourceLocation
-import net.minecraftforge.client.model.AdvancedModelLoader
-import org.lwjgl.opengl.GL11
 
 @SideOnly(Side.CLIENT)
 final object RenderFortronCapacitor
@@ -14,7 +9,7 @@ final object RenderFortronCapacitor
   val textureOff = new ResourceLocation(Reference.domain, Reference.modelPath + "fortronCapacitor_off.png")
   val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "fortronCapacitor.tcn"))
 
-  def render(tileEntity: TileFortronCapacitor, x: Double, y: Double, z: Double, frame: Float, isActive: Boolean, isItem: Boolean)
+	def render(tileEntity: BlockFortronCapacitor, x: Double, y: Double, z: Double, frame: Float, isActive: Boolean, isItem: Boolean)
   {
     if (isActive)
     {

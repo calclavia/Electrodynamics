@@ -8,7 +8,7 @@ import mffs.item.card.ItemCardFrequency
 import mffs.util.TransferMode.TransferMode
 import mffs.util.{FortronUtility, TransferMode}
 
-class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with IFortronCapacitor
+class BlockFortronCapacitor extends TileModuleAcceptor with IFortronStorage with IFortronCapacitor
 {
   private val tickRate = 10
   private var transferMode = TransferMode.equalize
@@ -56,6 +56,30 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
 
   def getTransmissionRate: Int = 300 + 60 * getModuleCount(Content.moduleSpeed)
 
+	override def getFrequencyDevices: JSet[IFortronFrequency] = FrequencyGridRegistry.instance.getNodes(classOf[IFortronFrequency], world, position, getTransmissionRange, getFrequency)
+
+	def getTransmissionRange: Int = 15 + getModuleCount(Content.moduleScale)
+
+	def getInputDevices: JSet[IFortronFrequency] = getDevicesFromStacks(getInputStacks)
+
+	def getInputStacks: Set[Item] = ((4 to 7) map (i => getStackInSlot(i)) filter (_ != null)).toSet
+
+	def getDevicesFromStacks(stacks: Set[Item]): JSet[IFortronFrequency] = {
+		val devices = new JHashSet[IFortronFrequency]()
+
+		stacks
+			.filter(_.getItem.isInstanceOf[ICoordLink])
+			.map(Item => Item.getItem.asInstanceOf[ICoordLink].getLink(Item))
+			.filter(linkPosition => linkPosition != null && linkPosition.getTileEntity(world).isInstanceOf[IFortronFrequency])
+			.foreach(linkPosition => devices.add(linkPosition.getTileEntity(world).asInstanceOf[IFortronFrequency]))
+
+		return devices
+	}
+
+	def getOutputDevices: JSet[IFortronFrequency] = getDevicesFromStacks(getOutputStacks)
+
+	def getOutputStacks: Set[Item] = ((8 to 11) map (i => getStackInSlot(i)) filter (_ != null)).toSet
+
   override def getAmplifier: Float = 0f
 
   /**
@@ -99,31 +123,6 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
   }
 
   def getDeviceCount = getFrequencyDevices.size + getInputDevices.size + getOutputDevices.size
-
-  override def getFrequencyDevices: JSet[IFortronFrequency] = FrequencyGridRegistry.instance.getNodes(classOf[IFortronFrequency], world, position, getTransmissionRange, getFrequency)
-
-  def getTransmissionRange: Int = 15 + getModuleCount(Content.moduleScale)
-
-  def getInputDevices: JSet[IFortronFrequency] = getDevicesFromStacks(getInputStacks)
-
-	def getInputStacks: Set[Item] = ((4 to 7) map (i => getStackInSlot(i)) filter (_ != null)).toSet
-
-	def getDevicesFromStacks(stacks: Set[Item]): JSet[IFortronFrequency] =
-  {
-    val devices = new JHashSet[IFortronFrequency]()
-
-    stacks
-            .filter(_.getItem.isInstanceOf[ICoordLink])
-		.map(Item => Item.getItem.asInstanceOf[ICoordLink].getLink(Item))
-            .filter(linkPosition => linkPosition != null && linkPosition.getTileEntity(world).isInstanceOf[IFortronFrequency])
-            .foreach(linkPosition => devices.add(linkPosition.getTileEntity(world).asInstanceOf[IFortronFrequency]))
-
-    return devices
-  }
-
-	def getOutputDevices: JSet[IFortronFrequency] = getDevicesFromStacks(getOutputStacks)
-
-	def getOutputStacks: Set[Item] = ((8 to 11) map (i => getStackInSlot(i)) filter (_ != null)).toSet
 
 	override def isItemValidForSlot(slotID: Int, Item: Item): Boolean =
   {

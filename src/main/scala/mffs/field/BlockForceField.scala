@@ -4,7 +4,7 @@ import mffs.security.MFFSPermissions
 import mffs.util.MFFSUtility
 import mffs.{Content, ModularForceFieldSystem}
 
-class TileForceField extends ResonantTile(Material.glass) with TPacketReceiver with IForceField
+class BlockForceField extends ResonantTile(Material.glass) with TPacketReceiver with IForceField
 {
 	private var camoStack: Item = null
 	private var projector: Vector3d = null
@@ -330,36 +330,6 @@ class TileForceField extends ResonantTile(Material.glass) with TPacketReceiver w
     return null
   }
 
-	/**
-	 * @return Gets the projector block controlling this force field. Removes the force field if no
-	 *         projector can be found.
-	 */
-	def getProjector: TileElectromagneticProjector = {
-		if (this.getProjectorSafe != null) {
-			return getProjectorSafe
-		}
-
-		if (!this.worldObj.isRemote) {
-			world.setBlock(xCoord, yCoord, zCoord, Blocks.air)
-		}
-
-		return null
-	}
-
-	def getProjectorSafe: TileElectromagneticProjector = {
-		if (projector != null) {
-			val projTile = projector.getTileEntity(world)
-
-			if (projTile.isInstanceOf[TileElectromagneticProjector]) {
-				val projector = projTile.asInstanceOf[IProjector]
-				if (world.isRemote || (projector.getCalculatedField != null && projector.getCalculatedField.contains(position))) {
-					return projTile.asInstanceOf[TileElectromagneticProjector]
-				}
-			}
-		}
-		return null
-	}
-
 	override def read(buf: Packet, id: Int, packetType: PacketType)
   {
     super.read(buf, id, packetType)
@@ -394,6 +364,36 @@ class TileForceField extends ResonantTile(Material.glass) with TPacketReceiver w
       camoStack = MFFSUtility.getCamoBlock(getProjector, position)
     }
   }
+
+	/**
+	 * @return Gets the projector block controlling this force field. Removes the force field if no
+	 *         projector can be found.
+	 */
+	def getProjector: BlockProjector = {
+		if (this.getProjectorSafe != null) {
+			return getProjectorSafe
+		}
+
+		if (!this.worldObj.isRemote) {
+			world.setBlock(xCoord, yCoord, zCoord, Blocks.air)
+		}
+
+		return null
+	}
+
+	def getProjectorSafe: BlockProjector = {
+		if (projector != null) {
+			val projTile = projector.getTileEntity(world)
+
+			if (projTile.isInstanceOf[BlockProjector]) {
+				val projector = projTile.asInstanceOf[IProjector]
+				if (world.isRemote || (projector.getCalculatedField != null && projector.getCalculatedField.contains(position))) {
+					return projTile.asInstanceOf[BlockProjector]
+				}
+			}
+		}
+		return null
+	}
 
   override def readFromNBT(nbt: NBTTagCompound)
   {

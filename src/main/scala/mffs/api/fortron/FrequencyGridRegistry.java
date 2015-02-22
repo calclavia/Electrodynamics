@@ -1,6 +1,6 @@
 package mffs.api.fortron;
 
-import com.resonant.wrapper.core.api.tile.BlockFrequency;
+import mffs.api.Frequency;
 import net.minecraft.world.World;
 import nova.core.util.transform.Cuboid;
 import nova.core.util.transform.Vector3d;
@@ -27,30 +27,30 @@ public class FrequencyGridRegistry {
 	}
 
 	public static interface IFrequencyGrid {
-		void add(BlockFrequency tileEntity);
+		void add(Frequency tileEntity);
 
-		void remove(BlockFrequency tileEntity);
+		void remove(Frequency tileEntity);
 
-		Set<BlockFrequency> getNodes();
+		Set<Frequency> getNodes();
 
-		<C extends BlockFrequency> Set<C> getNodes(Class<C> clazz);
+		<C extends Frequency> Set<C> getNodes(Class<C> clazz);
 
 		/**
 		 * Gets a list of TileEntities that has a specific frequency.
 		 */
-		Set<BlockFrequency> getNodes(int frequency);
+		Set<Frequency> getNodes(int frequency);
 
-		<C extends BlockFrequency> Set<C> getNodes(Class<C> clazz, int frequency);
+		<C extends Frequency> Set<C> getNodes(Class<C> clazz, int frequency);
 
 		/**
 		 * Gets a list of TileEntities that has a specific frequency, within a radius around a position.
 		 */
-		Set<BlockFrequency> getNodes(World world, Vector3d position, int radius, int frequency);
+		Set<Frequency> getNodes(World world, Vector3d position, int radius, int frequency);
 
-		<C extends BlockFrequency> Set<C> getNodes(Class<C> clazz, World world, Vector3d position, int radius, int frequency);
+		<C extends Frequency> Set<C> getNodes(Class<C> clazz, World world, Vector3d position, int radius, int frequency);
 
-		Set<BlockFrequency> getNodes(World world, Cuboid region, int frequency);
+		Set<Frequency> getNodes(World world, Cuboid region, int frequency);
 
-		<C extends BlockFrequency> Set<C> getNodes(Class<C> clazz, World world, Cuboid region, int frequency);
+		<C extends Frequency> Set<C> getNodes(Class<C> clazz, World world, Cuboid region, int frequency);
 	}
 }

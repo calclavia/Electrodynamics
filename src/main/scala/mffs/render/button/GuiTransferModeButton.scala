@@ -1,11 +1,9 @@
 package mffs.render.button
 
 import mffs.base.GuiMFFS
-import mffs.production.TileFortronCapacitor
-import net.minecraft.client.Minecraft
-import resonantengine.lib.transform.vector.Vector2
+import mffs.production.BlockFortronCapacitor
 
-class GuiTransferModeButton(id: Int, x: Int, y: Int, mainGui: GuiMFFS, tile: TileFortronCapacitor) extends GuiIndexedButton(id, x, y, new Vector2, mainGui)
+class GuiTransferModeButton(id: Int, x: Int, y: Int, mainGui: GuiMFFS, tile: BlockFortronCapacitor) extends GuiIndexedButton(id, x, y, new Vector2, mainGui)
 {
   override def drawButton(minecraft: Minecraft, x: Int, y: Int)
   {

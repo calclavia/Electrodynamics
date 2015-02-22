@@ -11,7 +11,7 @@ import mffs.{Content, Settings}
  *
  * @author Calclavia
  */
-object TileCoercionDeriver
+object BlockCoercionDeriver
 {
   val fuelProcessTime = 10 * 20
   val productionMultiplier = 4
@@ -32,7 +32,7 @@ object TileCoercionDeriver
   val power = 5000000
 }
 
-class TileCoercionDeriver extends TileModuleAcceptor with TTEBridge
+class BlockCoercionDeriver extends TileModuleAcceptor with TTEBridge
 {
   var processTime: Int = 0
   var isInversed = false
@@ -55,8 +55,8 @@ class TileCoercionDeriver extends TileModuleAcceptor with TTEBridge
       {
         if (isInversed && Settings.enableElectricity)
         {
-          val withdrawnElectricity = requestFortron(productionRate / 20, true) / TileCoercionDeriver.ueToFortronRatio
-          energy += withdrawnElectricity * TileCoercionDeriver.energyConversionPercentage
+			val withdrawnElectricity = requestFortron(productionRate / 20, true) / BlockCoercionDeriver.ueToFortronRatio
+			energy += withdrawnElectricity * BlockCoercionDeriver.energyConversionPercentage
 
           //          recharge(getStackInSlot(TileCoercionDeriver.slotBattery))
         }
@@ -67,15 +67,15 @@ class TileCoercionDeriver extends TileModuleAcceptor with TTEBridge
             //            discharge(getStackInSlot(TileCoercionDeriver.slotBattery))
             energy.max = getPower
 
-            if (energy >= getPower || (!Settings.enableElectricity && isItemValidForSlot(TileCoercionDeriver.slotFuel, getStackInSlot(TileCoercionDeriver.slotFuel))))
+			  if (energy >= getPower || (!Settings.enableElectricity && isItemValidForSlot(BlockCoercionDeriver.slotFuel, getStackInSlot(BlockCoercionDeriver.slotFuel))))
             {
               fortronTank.fill(FortronUtility.getFortron(productionRate), true)
               energy -= getPower
 
-              if (processTime == 0 && isItemValidForSlot(TileCoercionDeriver.slotFuel, getStackInSlot(TileCoercionDeriver.slotFuel)))
+				if (processTime == 0 && isItemValidForSlot(BlockCoercionDeriver.slotFuel, getStackInSlot(BlockCoercionDeriver.slotFuel)))
               {
-                decrStackSize(TileCoercionDeriver.slotFuel, 1)
-                processTime = TileCoercionDeriver.fuelProcessTime * Math.max(this.getModuleCount(Content.moduleScale) / 20, 1)
+				  decrStackSize(BlockCoercionDeriver.slotFuel, 1)
+				  processTime = BlockCoercionDeriver.fuelProcessTime * Math.max(this.getModuleCount(Content.moduleScale) / 20, 1)
               }
 
               if (processTime > 0)
@@ -121,11 +121,11 @@ class TileCoercionDeriver extends TileModuleAcceptor with TTEBridge
   {
     if (this.isActive)
     {
-      var production = (getPower.asInstanceOf[Float] / 20f * TileCoercionDeriver.ueToFortronRatio * Settings.fortronProductionMultiplier).asInstanceOf[Int]
+		var production = (getPower.asInstanceOf[Float] / 20f * BlockCoercionDeriver.ueToFortronRatio * Settings.fortronProductionMultiplier).asInstanceOf[Int]
 
       if (processTime > 0)
       {
-        production *= TileCoercionDeriver.productionMultiplier
+		  production *= BlockCoercionDeriver.productionMultiplier
       }
 
       return production
@@ -133,7 +133,7 @@ class TileCoercionDeriver extends TileModuleAcceptor with TTEBridge
     return 0
   }
 
-  def getPower: Double = TileCoercionDeriver.power + (TileCoercionDeriver.power * (getModuleCount(Content.moduleSpeed) / 8d))
+	def getPower: Double = BlockCoercionDeriver.power + (BlockCoercionDeriver.power * (getModuleCount(Content.moduleSpeed) / 8d))
 
 	override def isItemValidForSlot(slotID: Int, Item: Item): Boolean =
   {
@@ -145,11 +145,11 @@ class TileCoercionDeriver extends TileModuleAcceptor with TTEBridge
       }
       slotID match
       {
-        case TileCoercionDeriver.slotFrequency =>
+		  case BlockCoercionDeriver.slotFrequency =>
 			return Item.getItem.isInstanceOf[ItemCardFrequency]
-        case TileCoercionDeriver.slotBattery =>
+		  case BlockCoercionDeriver.slotBattery =>
 			return Compatibility.isHandler(Item.getItem, null)
-        case TileCoercionDeriver.slotFuel =>
+		  case BlockCoercionDeriver.slotFuel =>
 			return Item.isItemEqual(new Item(Items.dye, 1, 4)) || Item.isItemEqual(new Item(Items.quartz))
       }
     }

@@ -2,10 +2,10 @@ package mffs.field.gui
 
 import mffs.ModularForceFieldSystem
 import mffs.base.TilePacketType
-import mffs.field.mobilize.TileForceMobilizer
+import mffs.field.mobilize.BlockMobilizer
 import mffs.render.button.GuiIcon
 
-class GuiForceMobilizer(player: EntityPlayer, tile: TileForceMobilizer) extends GuiMatrix(new ContainerMatrix(player, tile), tile)
+class GuiForceMobilizer(player: EntityPlayer, tile: BlockMobilizer) extends GuiMatrix(new ContainerMatrix(player, tile), tile)
 {
   override def initGui
   {

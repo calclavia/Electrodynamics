@@ -1,6 +1,5 @@
 package mffs
 
-import mffs.api.Blacklist
 import mffs.security.MFFSPermissions
 import nova.core.loader.{Loadable, NovaMod}
 
@@ -25,7 +24,7 @@ object ModularForceFieldSystem extends Loadable {
 	override def postInit() {
 		/**
 		 * Add to black lists
-		 */
+
 		Blacklist.stabilizationBlacklist.add(Blocks.water)
 		Blacklist.stabilizationBlacklist.add(Blocks.flowing_water)
 		Blacklist.stabilizationBlacklist.add(Blocks.lava)
@@ -46,6 +45,7 @@ object ModularForceFieldSystem extends Loadable {
 		catch {
 			case _: Throwable => Reference.logger.info("IC2 Explosion white list API not found. Ignoring...")
 		}
+		 */
 
 		//Inititate MFFS Permissions
 		MFFSPermissions

@@ -1,18 +1,21 @@
 package mffs
 
 import com.resonant.core.prefab.modcontent.ContentLoader
-import mffs.base.ItemModule
-import mffs.field.mobilize.TileForceMobilizer
+import mffs.base.{ItemModule, Named}
+import mffs.field.mobilize.BlockMobilizer
 import mffs.field.mode._
-import mffs.field.{TileElectromagneticProjector, TileForceField}
+import mffs.field.module._
+import mffs.field.{BlockForceField, BlockProjector}
 import mffs.item.ItemRemoteController
 import mffs.item.card.{ItemCard, ItemCardFrequency, ItemCardLink}
 import mffs.item.fortron.ItemCardInfinite
-import mffs.production.{TileCoercionDeriver, TileFortronCapacitor}
-import mffs.security.TileBiometricIdentifier
+import mffs.production.{BlockCoercionDeriver, BlockFortronCapacitor}
+import mffs.security.BlockBiometric
 import mffs.security.card.ItemCardIdentification
+import mffs.security.module._
 import nova.core.block.Block
 import nova.core.item.Item
+import nova.core.render.texture.BlockTexture
 
 /**
  * The main content of MFFS
@@ -22,18 +25,18 @@ object Content extends ContentLoader {
 	/**
 	 * Blocks
 	 */
-	val coercionDeriver: Block = classOf[TileCoercionDeriver]
-	val fortronCapacitor: Block = classOf[TileFortronCapacitor]
-	val electromagneticProjector: Block = classOf[TileElectromagneticProjector]
-	val biometricIdentifier: Block = classOf[TileBiometricIdentifier]
-	val forceMobilizer: Block = classOf[TileForceMobilizer]
-	val forceField: Block = classOf[TileForceField]
+	val coercionDeriver: Block = classOf[BlockCoercionDeriver]
+	val fortronCapacitor: Block = classOf[BlockFortronCapacitor]
+	val electromagneticProjector: Block = classOf[BlockProjector]
+	val biometricIdentifier: Block = classOf[BlockBiometric]
+	val forceMobilizer: Block = classOf[BlockMobilizer]
+	val forceField: Block = classOf[BlockForceField]
 
 	/**
 	 * Misc Items
 	 */
-	val remoteController = new ItemRemoteController
-	val focusMatrix = new ItemMFFS()
+	val remoteController: Item = classOf[ItemRemoteController]
+	val focusMatrix = (new Item with Named).setName("focusMatrix")
 
 	/**
 	 * Cards
@@ -99,7 +102,10 @@ object Content extends ContentLoader {
 	@ExplicitContentName
 	val moduleAntiSpawn = new ItemModuleDefense().setCost(10)
 
-	manager.setTab(MFFSCreativeTab).setPrefix(Reference.prefix)
+	/**
+	 * Textures
+	 */
+	val machineTexture = new BlockTexture(Reference.id, "machine")
 
 	override def postInit() {
 		/**

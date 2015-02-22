@@ -1,7 +1,7 @@
 package mffs.util
 
 import mffs.Content
-import mffs.field.TileElectromagneticProjector
+import mffs.field.BlockProjector
 import mffs.field.mode.ItemModeCustom
 
 /**
@@ -79,7 +79,7 @@ object MFFSUtility
 
 	def getCamoBlock(proj: IProjector, position: Vector3d): Item =
   {
-    val projector = proj.asInstanceOf[TileElectromagneticProjector]
+	  val projector = proj.asInstanceOf[BlockProjector]
     val tile = projector.asInstanceOf[TileEntity]
 
     if (projector != null)
@@ -144,19 +144,19 @@ object MFFSUtility
     return hasPermission(world, position, permission, player.getGameProfile())
   }
 
-	def hasPermission(world: World, position: Vector3d, permission: Permission, profile: GameProfile): Boolean = {
-		return getRelevantProjectors(world, position).forall(_.hasPermission(profile, permission))
+	def hasPermission(world: World, position: Vector3d, action: PlayerInteractEvent.Action, player: EntityPlayer): Boolean = {
+		return getRelevantProjectors(world, position) forall (_.isAccessGranted(world, position, player, action))
   }
 
   /**
    * Gets the set of projectors that have an effect in this position.
    */
-  def getRelevantProjectors(world: World, position: Vector3d): mutable.Set[TileElectromagneticProjector] =
+  def getRelevantProjectors(world: World, position: Vector3d): mutable.Set[BlockProjector] =
   {
-    return FrequencyGridRegistry.instance.asInstanceOf[GridFrequency].getNodes(classOf[TileElectromagneticProjector]) filter (_.isInField(position))
+	  return FrequencyGridRegistry.instance.asInstanceOf[GridFrequency].getNodes(classOf[BlockProjector]) filter (_.isInField(position))
   }
 
-	def hasPermission(world: World, position: Vector3d, action: PlayerInteractEvent.Action, player: EntityPlayer): Boolean = {
-		return getRelevantProjectors(world, position) forall (_.isAccessGranted(world, position, player, action))
+	def hasPermission(world: World, position: Vector3d, permission: Permission, profile: GameProfile): Boolean = {
+		return getRelevantProjectors(world, position).forall(_.hasPermission(profile, permission))
   }
 }

@@ -2,7 +2,7 @@ package mffs.field.module
 
 import mffs.ModularForceFieldSystem
 import mffs.base.ItemModule
-import mffs.field.TileForceField
+import mffs.field.BlockForceField
 import mffs.security.MFFSPermissions
 
 class ItemModuleShock extends ItemModule
@@ -14,10 +14,11 @@ class ItemModuleShock extends ItemModule
       val entityPlayer = entity.asInstanceOf[EntityPlayer]
       val tile = world.getTileEntity(x, y, z)
 
-      if (tile.isInstanceOf[TileForceField])
+		if (tile.isInstanceOf[BlockForceField])
       {
-        if (tile.asInstanceOf[TileForceField].getProjector.hasPermission(entityPlayer.getGameProfile, MFFSPermissions.forceFieldWarp))
-          return true
+		  if (tile.asInstanceOf[BlockForceField].getProjector.hasPermission(entityPlayer.getGameProfile, MFFSPermissions.forceFieldWarp)) {
+			  return true
+		  }
       }
 
       entity.attackEntityFrom(ModularForceFieldSystem.damageFieldShock, moduleStack.stackSize)

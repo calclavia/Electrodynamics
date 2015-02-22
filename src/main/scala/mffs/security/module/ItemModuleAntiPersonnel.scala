@@ -3,14 +3,14 @@ package mffs.security.module
 import java.util.Set
 
 import mffs.ModularForceFieldSystem
-import mffs.field.TileElectromagneticProjector
+import mffs.field.BlockProjector
 import mffs.security.MFFSPermissions
 
 class ItemModuleAntiPersonnel extends ItemModuleDefense
 {
 	override def onProject(projector: IProjector, fields: Set[Vector3d]): Boolean =
   {
-    val proj = projector.asInstanceOf[TileElectromagneticProjector]
+	  val proj = projector.asInstanceOf[BlockProjector]
     val entities = getEntitiesInField(projector)
 
     entities.view

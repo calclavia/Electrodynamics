@@ -3,8 +3,11 @@ package mffs.item.card
 import java.util.List
 
 import com.google.common.hash.Hashing
+import com.resonant.wrapper.core.api.item.IItemFrequency
 import mffs.ModularForceFieldSystem
 import mffs.item.gui.EnumGui
+import nova.core.game.Game
+import nova.core.item.Item
 
 class ItemCardFrequency extends ItemCard with IItemFrequency with IPacketReceiver
 {

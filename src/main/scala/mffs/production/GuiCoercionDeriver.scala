@@ -3,7 +3,7 @@ package mffs.production
 import mffs.ModularForceFieldSystem
 import mffs.base.{GuiMFFS, TilePacketType}
 
-class GuiCoercionDeriver(player: EntityPlayer, tile: TileCoercionDeriver) extends GuiMFFS(new ContainerCoercionDeriver(player, tile), tile)
+class GuiCoercionDeriver(player: EntityPlayer, tile: BlockCoercionDeriver) extends GuiMFFS(new ContainerCoercionDeriver(player, tile), tile)
 {
   override def initGui
   {

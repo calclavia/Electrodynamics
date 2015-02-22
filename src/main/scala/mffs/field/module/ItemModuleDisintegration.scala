@@ -3,7 +3,7 @@ package mffs.field.module
 import java.util.Set
 
 import mffs.base.{ItemModule, TileMFFSInventory, TilePacketType}
-import mffs.field.TileElectromagneticProjector
+import mffs.field.BlockProjector
 import mffs.field.mobilize.event.{BlockDropDelayedEvent, BlockInventoryDropDelayedEvent, IDelayedEventHandler}
 import mffs.util.MFFSUtility
 import mffs.{Content, ModularForceFieldSystem}
@@ -22,7 +22,7 @@ class ItemModuleDisintegration extends ItemModule
 
 	override def onProject(projector: IProjector, position: Vector3d): Int =
   {
-    val proj = projector.asInstanceOf[TileElectromagneticProjector]
+	  val proj = projector.asInstanceOf[BlockProjector]
     val world = proj.world
 
     val tileEntity = projector.asInstanceOf[TileEntity]

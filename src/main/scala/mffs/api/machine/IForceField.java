@@ -1,7 +1,7 @@
 package mffs.api.machine;
 
 public abstract interface IForceField {
-	public IProjector getProjector();
+	public Projector getProjector();
 
 	/**
 	 * Weakens a force field block, destroying it temporarily and draining power from the projector.

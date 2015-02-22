@@ -1,15 +1,7 @@
 package mffs.field
 
-import cpw.mods.fml.client.FMLClientHandler
-import cpw.mods.fml.relauncher.{Side, SideOnly}
 import mffs.render.FieldColor
 import mffs.{Reference, Settings}
-import net.minecraft.client.Minecraft
-import net.minecraft.client.renderer.{RenderHelper, Tessellator}
-import net.minecraft.util.ResourceLocation
-import net.minecraftforge.client.model.AdvancedModelLoader
-import org.lwjgl.opengl.GL11._
-import resonantengine.lib.render.RenderUtility
 
 @SideOnly(Side.CLIENT)
 final object RenderElectromagneticProjector
@@ -19,7 +11,7 @@ final object RenderElectromagneticProjector
 
   val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "electromagneticProjector.tcn"))
 
-  def render(tileEntity: TileElectromagneticProjector, x: Double, y: Double, z: Double, frame: Float, isActive: Boolean, isItem: Boolean)
+	def render(tileEntity: BlockProjector, x: Double, y: Double, z: Double, frame: Float, isActive: Boolean, isItem: Boolean)
   {
     glPushMatrix
     glTranslated(x + 0.5, y + 0.5, z + 0.5)

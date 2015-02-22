@@ -2,11 +2,8 @@ package mffs.production
 
 import mffs.item.card.ItemCardFrequency
 import mffs.slot.SlotBase
-import net.minecraft.entity.player.EntityPlayer
-import resonantengine.prefab.gui.ContainerBase
-import resonantengine.prefab.gui.slot.SlotSpecific
 
-class ContainerCoercionDeriver(player: EntityPlayer, tileEntity: TileCoercionDeriver) extends ContainerBase(tileEntity)
+class ContainerCoercionDeriver(player: EntityPlayer, tileEntity: BlockCoercionDeriver) extends ContainerBase(tileEntity)
 {
   //Frequency
   addSlotToContainer(new SlotSpecific(tileEntity, 0, 8, 114, classOf[ItemCardFrequency]))

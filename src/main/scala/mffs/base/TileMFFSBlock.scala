@@ -1,10 +1,6 @@
 package mffs.base
 
-import net.minecraft.client.renderer.texture.IIconRegister
-import net.minecraft.util.IIcon
-import net.minecraft.world.IBlockAccess
-
-class TileMFFSBlock extends TileMFFS
+class TileMFFSBlock extends BlockMFFS
 {
   protected var blockIconTop: IIcon = null
   protected var blockIconOn: IIcon = null

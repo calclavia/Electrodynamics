@@ -3,7 +3,7 @@ package mffs.base
 import mffs.ModularForceFieldSystem
 import mffs.render.button.GuiIcon
 
-class GuiMFFS(container: Container, tile: TileMFFS) extends GuiContainerBase(container)
+class GuiMFFS(container: Container, tile: BlockMFFS) extends GuiContainerBase(container)
 {
   ySize = 217
 
@@ -22,7 +22,7 @@ class GuiMFFS(container: Container, tile: TileMFFS) extends GuiContainerBase(con
   {
     super.updateScreen()
 
-    if (tile.isInstanceOf[TileMFFS])
+	  if (tile.isInstanceOf[BlockMFFS])
     {
       if (buttonList.size > 0 && this.buttonList.get(0) != null)
       {

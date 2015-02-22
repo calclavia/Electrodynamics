@@ -1,7 +1,7 @@
 package mffs.api.modules;
 
 import mffs.api.machine.FieldMatrix;
-import mffs.api.machine.IProjector;
+import mffs.api.machine.Projector;
 import nova.core.util.transform.Vector3d;
 
 import java.util.Set;
@@ -28,5 +28,5 @@ public interface IProjectorMode extends FortronCost {
 	/**
 	 * Called to render an object in front of the projection.
 	 */
-	public void render(IProjector projector, double x, double y, double z, float f, long ticks);
+	public void render(Projector projector, double x, double y, double z, float f, long ticks);
 }

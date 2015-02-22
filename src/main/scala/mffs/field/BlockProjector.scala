@@ -10,7 +10,7 @@ import mffs.security.MFFSPermissions
 import mffs.util.TCache
 import mffs.{Content, ModularForceFieldSystem, Reference, Settings}
 
-class TileElectromagneticProjector extends TileFieldMatrix with IProjector
+class BlockProjector extends TileFieldMatrix with IProjector
 {
   /** A set containing all positions of all force field blocks generated. */
   val forceFields = mutable.Set.empty[Vector3d]
@@ -249,8 +249,9 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
 
                 val tileEntity = vector.getTileEntity(world)
 
-                if (tileEntity.isInstanceOf[TileForceField])
-                  tileEntity.asInstanceOf[TileForceField].setProjector(position)
+				  if (tileEntity.isInstanceOf[BlockForceField]) {
+					  tileEntity.asInstanceOf[BlockForceField].setProjector(position)
+				  }
               })
           }
 

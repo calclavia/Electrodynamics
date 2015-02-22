@@ -1,6 +1,6 @@
 package mffs.field.mobilize.event
 
-import mffs.field.mobilize.TileForceMobilizer
+import mffs.field.mobilize.BlockMobilizer
 
 /**
  * Removes the TileEntity
@@ -38,7 +38,7 @@ class BlockNotifyDelayedEvent(handler: IDelayedEventHandler, ticks: Int, world: 
             }
         }
 
-        handler.asInstanceOf[TileForceMobilizer].performingMove = false
+		  handler.asInstanceOf[BlockMobilizer].performingMove = false
       }
     }
   }
