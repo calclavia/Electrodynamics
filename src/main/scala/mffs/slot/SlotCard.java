@@ -1,13 +1,13 @@
 package mffs.slot;
 
-import mffs.base.TileFrequency;
+import mffs.base.BlockFrequency;
 import net.minecraft.item.Item;
 import resonantengine.api.item.IItemFrequency;
 import resonantengine.api.tile.IBlockFrequency;
 
 public class SlotCard extends SlotBase
 {
-	public SlotCard(TileFrequency tileEntity, int id, int par4, int par5)
+	public SlotCard(BlockFrequency tileEntity, int id, int par4, int par5)
 	{
 		super(tileEntity, id, par4, par5);
 	}

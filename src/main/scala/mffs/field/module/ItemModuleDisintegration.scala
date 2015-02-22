@@ -2,7 +2,7 @@ package mffs.field.module
 
 import java.util.Set
 
-import mffs.base.{ItemModule, TileMFFSInventory, TilePacketType}
+import mffs.base.{BlockInventory, ItemModule, TilePacketType}
 import mffs.field.BlockProjector
 import mffs.field.mobilize.event.{BlockDropDelayedEvent, BlockInventoryDropDelayedEvent, IDelayedEventHandler}
 import mffs.util.MFFSUtility
@@ -49,7 +49,7 @@ class ItemModuleDisintegration extends ItemModule
 
       if (projector.getModuleCount(Content.moduleCollection) > 0)
       {
-        proj.queueEvent(new BlockInventoryDropDelayedEvent(projector.asInstanceOf[IDelayedEventHandler], 39, block, world, position, projector.asInstanceOf[TileMFFSInventory]))
+		  proj.queueEvent(new BlockInventoryDropDelayedEvent(projector.asInstanceOf[IDelayedEventHandler], 39, block, world, position, projector.asInstanceOf[BlockInventory]))
       }
       else
       {

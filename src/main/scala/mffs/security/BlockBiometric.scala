@@ -3,7 +3,7 @@ package mffs.security
 import java.util
 import java.util.{Set => JSet}
 
-import mffs.base.TileFrequency
+import mffs.base.BlockFrequency
 import mffs.item.card.ItemCardFrequency
 import mffs.{ModularForceFieldSystem, Settings}
 
@@ -12,7 +12,7 @@ object BlockBiometric
   val SLOT_COPY = 12
 }
 
-class BlockBiometric extends TileFrequency with TRotatable
+class BlockBiometric extends BlockFrequency with TRotatable
 {
   /**
    * Rendering

@@ -1,7 +1,7 @@
 package mffs.base
 
 import mffs.ModularForceFieldSystem
-import mffs.api.fortron.{FrequencyGridRegistry, IFortronFrequency}
+import mffs.api.fortron.IFortronFrequency
 import mffs.util.{FortronUtility, TransferMode}
 
 /**
@@ -9,7 +9,7 @@ import mffs.util.{FortronUtility, TransferMode}
  *
  * @author Calclavia
  */
-abstract class TileFortron extends TileFrequency with IFluidHandler with IFortronFrequency
+abstract class TileFortron extends BlockFrequency with IFluidHandler with IFortronFrequency
 {
 	var markSendFortron = true
 	protected var fortronTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME)

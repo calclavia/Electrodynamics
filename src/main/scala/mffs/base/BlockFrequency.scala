@@ -12,7 +12,11 @@ import nova.core.entity.Entity
 import nova.core.item.Item
 import nova.core.util.transform.Vector3d
 
-abstract class TileFrequency extends TileMFFSInventory with Frequency {
+/**
+ * All blocks that have a frequency value should extend this
+ * @author Calclavia
+ */
+abstract class BlockFrequency extends BlockInventory with Frequency {
 	val frequencySlot = 0
 
 	override def load() {
