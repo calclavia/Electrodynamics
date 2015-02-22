@@ -1,6 +1,9 @@
 package mffs
 
 import mffs.security.MFFSPermissions
+import nova.core.event.EventListener
+import nova.core.event.EventManager.EmptyEvent
+import nova.core.game.Game
 import nova.core.loader.{Loadable, NovaMod}
 
 @NovaMod(id = Reference.id, name = Reference.name, version = Reference.version, dependencies = Array("resonantengine"))
@@ -14,10 +17,18 @@ object ModularForceFieldSystem extends Loadable {
 		//		MinecraftForge.EVENT_BUS.register(Settings)
 		//		MinecraftForge.EVENT_BUS.register(Content.remoteController)
 
+		Game.instance.eventManager.serverStarting.add(new EventListener[EmptyEvent] {
+			override def onEvent(event: EmptyEvent) {
+				GraphFrequency.client = new GraphFrequency
+				GraphFrequency.server = new GraphFrequency
+			}
+		})
+
 		Content.preInit()
+
 	}
 
-	override def load() {
+	override def init() {
 		Content.init()
 	}
 
