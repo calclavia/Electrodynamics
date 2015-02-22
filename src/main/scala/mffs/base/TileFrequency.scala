@@ -77,7 +77,7 @@ abstract class TileFrequency extends TileMFFSInventory with IBlockFrequency
   /**
    * Permissions
    */
-  override protected def configure(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
+  override protected def configure(player: EntityPlayer, side: Int, hit: Vector3d): Boolean =
   {
     if (!hasPermission(player.getGameProfile, MFFSPermissions.configure))
     {

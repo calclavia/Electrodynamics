@@ -19,17 +19,28 @@ class ItemCardIdentification extends ItemCardAccess with IPacketReceiver
     return false
   }
 
+	override def getAccess(Item: Item): AccessUser = {
+		val nbt = NBTUtility.getNBTTagCompound(Item)
+
+		if (nbt != null) {
+			val user = new AccessUser(nbt)
+			return user
+		}
+
+		return null
+	}
+
 	override def addInformation(Item: Item, player: EntityPlayer, info: List[_], b: Boolean)
   {
 	  val access = getAccess(Item)
 
     if (access != null)
     {
-      info.add(LanguageUtility.getLocal("info.cardIdentification.username") + " " + access.username)
+		info.add(Game.instance.get.languageManager.getLocal("info.cardIdentification.username") + " " + access.username)
     }
     else
     {
-      info.add(LanguageUtility.getLocal("info.cardIdentification.empty"))
+		info.add(Game.instance.get.languageManager.getLocal("info.cardIdentification.empty"))
     }
 
   }
@@ -68,7 +79,7 @@ class ItemCardIdentification extends ItemCardAccess with IPacketReceiver
    * @param player - player that is receiving the packet
    * @param packet - The packet instance that was sending this packet.
    */
-  override def read(buf: ByteBuf, player: EntityPlayer, packet: PacketType)
+  override def read(buf: Packet, player: EntityPlayer, packet: PacketType)
   {
 	  val Item = player.getCurrentEquippedItem
 	  var access = getAccess(Item)
@@ -112,18 +123,5 @@ class ItemCardIdentification extends ItemCardAccess with IPacketReceiver
     }
 
 	  setAccess(Item, access)
-  }
-
-	override def getAccess(Item: Item): AccessUser =
-  {
-	  val nbt = NBTUtility.getNBTTagCompound(Item)
-
-    if (nbt != null)
-    {
-      val user = new AccessUser(nbt)
-      return user
-    }
-
-    return null
   }
 }

@@ -42,7 +42,7 @@ abstract class TileFortron extends TileFrequency with IFluidHandler with IFortro
 	/**
 	 * Packets
 	 */
-	override def write(buf: ByteBuf, id: Int)
+	override def write(buf: Packet, id: Int)
 	{
 		super.write(buf, id)
 
@@ -52,7 +52,7 @@ abstract class TileFortron extends TileFrequency with IFluidHandler with IFortro
 		}
 	}
 
-	override def read(buf: ByteBuf, id: Int, packetType: PacketType)
+	override def read(buf: Packet, id: Int, packetType: PacketType)
 	{
 		super.read(buf, id, packetType)
 

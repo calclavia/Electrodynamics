@@ -62,7 +62,7 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
    * Packet Methods
    */
 
-  override def write(buf: ByteBuf, id: Int)
+  override def write(buf: Packet, id: Int)
   {
     super.write(buf, id)
 
@@ -72,7 +72,7 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
     }
   }
 
-  override def read(buf: ByteBuf, id: Int, packetType: PacketType)
+	override def read(buf: Packet, id: Int, packetType: PacketType)
   {
     super.read(buf, id, packetType)
 
@@ -108,8 +108,6 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
 
 	def getInputStacks: Set[Item] = ((4 to 7) map (i => getStackInSlot(i)) filter (_ != null)).toSet
 
-  def getOutputDevices: JSet[IFortronFrequency] = getDevicesFromStacks(getOutputStacks)
-
 	def getDevicesFromStacks(stacks: Set[Item]): JSet[IFortronFrequency] =
   {
     val devices = new JHashSet[IFortronFrequency]()
@@ -122,6 +120,8 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
 
     return devices
   }
+
+	def getOutputDevices: JSet[IFortronFrequency] = getDevicesFromStacks(getOutputStacks)
 
 	def getOutputStacks: Set[Item] = ((8 to 11) map (i => getStackInSlot(i)) filter (_ != null)).toSet
 
@@ -142,13 +142,13 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
   def getTransferMode: TransferMode = transferMode
 
   @SideOnly(Side.CLIENT)
-  override def renderStatic(renderer: RenderBlocks, pos: Vector3, pass: Int): Boolean =
+  override def renderStatic(renderer: RenderBlocks, pos: Vector3d, pass: Int): Boolean =
   {
     return false
   }
 
   @SideOnly(Side.CLIENT)
-  override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
+  override def renderDynamic(pos: Vector3d, frame: Float, pass: Int)
   {
     RenderFortronCapacitor.render(this, pos.x, pos.y, pos.z, frame, isActive, false)
   }

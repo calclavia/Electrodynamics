@@ -106,12 +106,12 @@ object SubscribeEventHandler
       return
     }
 
-    val position = new Vector3(evt.x, evt.y, evt.z)
+	  val position = new Vector3d(evt.x, evt.y, evt.z)
 
     val relevantProjectors = MFFSUtility.getRelevantProjectors(evt.entityPlayer.worldObj, position)
 
     //Check if we can sync this block (activate). If not, we cancel the event.
-    if (!relevantProjectors.forall(x => x.isAccessGranted(evt.entityPlayer.worldObj, new Vector3(evt.x, evt.y, evt.z), evt.entityPlayer, evt.action)))
+	  if (!relevantProjectors.forall(x => x.isAccessGranted(evt.entityPlayer.worldObj, new Vector3d(evt.x, evt.y, evt.z), evt.entityPlayer, evt.action)))
     {
       //Check if player has permission
       evt.entityPlayer.addChatMessage(new ChatComponentText("[" + Reference.name + "] You have no permission to do that!"))
@@ -127,7 +127,7 @@ object SubscribeEventHandler
   {
     if (!evt.world.isRemote && evt.block == Blocks.air)
     {
-      val vec = new Vector3(evt.x, evt.y, evt.z)
+		val vec = new Vector3d(evt.x, evt.y, evt.z)
 
       FrequencyGridRegistry.instance.getNodes(classOf[TileElectromagneticProjector])
       .view
@@ -144,7 +144,7 @@ object SubscribeEventHandler
   {
     if (!evt.entity.isInstanceOf[EntityPlayer])
     {
-      if (MFFSUtility.getRelevantProjectors(evt.world, new Vector3(evt.entityLiving)).exists(_.getModuleCount(Content.moduleAntiSpawn) > 0))
+		if (MFFSUtility.getRelevantProjectors(evt.world, new Vector3d(evt.entityLiving)).exists(_.getModuleCount(Content.moduleAntiSpawn) > 0))
       {
         evt.setResult(Event.Result.DENY)
       }

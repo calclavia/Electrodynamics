@@ -17,7 +17,7 @@ abstract class TileModuleAcceptor extends TileFortron with IModuleProvider with 
 	protected var capacityBase = 500
 	protected var capacityBoost = 5
 
-	override def write(buf: ByteBuf, id: Int)
+	override def write(buf: Packet, id: Int)
 	{
 		super.write(buf, id)
 
@@ -27,7 +27,7 @@ abstract class TileModuleAcceptor extends TileFortron with IModuleProvider with 
 		}
 	}
 
-	override def read(buf: ByteBuf, id: Int, packetType: PacketType) {
+	override def read(buf: Packet, id: Int, packetType: PacketType) {
 		super.read(buf, id, packetType)
 
 		if (id == TilePacketType.description.id) {

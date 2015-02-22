@@ -34,7 +34,7 @@ class ContainerItem(player: EntityPlayer, Item: Item, inventory: IInventory = ne
   {
     (0 until inventory.getSizeInventory) filter (inventory.getStackInSlot(_) != null) foreach (i =>
     {
-		InventoryUtility.dropItem(player.worldObj, new Vector3(player), inventory.getStackInSlot(i))
+		InventoryUtility.dropItem(player.worldObj, new Vector3d(player), inventory.getStackInSlot(i))
       inventory.setInventorySlotContents(i, null)
     })
 

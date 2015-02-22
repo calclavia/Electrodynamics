@@ -4,19 +4,13 @@ import java.util.Set
 
 import mffs.base.ItemModule
 import mffs.field.TileElectromagneticProjector
-import net.minecraft.tileentity.TileEntity
-import resonantengine.api.mffs.fortron.FrequencyGridRegistry
-import resonantengine.api.mffs.machine.IProjector
-import resonantengine.lib.transform.vector.Vector3
-
-import scala.collection.convert.wrapAll._
 
 class ItemModuleFusion extends ItemModule
 {
   setMaxStackSize(1)
   setCost(1f)
 
-  override def onProject(projector: IProjector, fieldBlocks: Set[Vector3]): Boolean =
+	override def onProject(projector: IProjector, fieldBlocks: Set[Vector3d]): Boolean =
   {
     val tile = projector.asInstanceOf[TileEntity]
     val projectors = FrequencyGridRegistry.instance.getNodes(classOf[TileElectromagneticProjector], projector.getFrequency)

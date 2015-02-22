@@ -29,7 +29,7 @@ class GuiCardID(player: EntityPlayer, Item: Item) extends GuiAccessCard(player, 
 
   protected override def drawGuiContainerForegroundLayer(x: Int, y: Int)
   {
-    drawStringCentered(LanguageUtility.getLocal("item.mffs:cardIdentification.name"))
+	  drawStringCentered(Game.instance.get.languageManager.getLocal("item.mffs:cardIdentification.name"))
     textField.drawTextBox()
     super.drawGuiContainerForegroundLayer(x, y)
   }

@@ -13,7 +13,7 @@ import mffs.{Content, ModularForceFieldSystem, Reference, Settings}
 class TileElectromagneticProjector extends TileFieldMatrix with IProjector
 {
   /** A set containing all positions of all force field blocks generated. */
-  val forceFields = mutable.Set.empty[Vector3]
+  val forceFields = mutable.Set.empty[Vector3d]
 
   /** Marks the field for an update call */
   var markFieldUpdate = true
@@ -52,7 +52,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
 
   override def getLightValue(access: IBlockAccess) = if (getMode() != null) 10 else 0
 
-  override def write(buf: ByteBuf, id: Int)
+	override def write(buf: Packet, id: Int)
   {
     super.write(buf, id)
 
@@ -62,7 +62,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
     }
   }
 
-  override def read(buf: ByteBuf, id: Int, packetType: PacketType)
+	override def read(buf: Packet, id: Int, packetType: PacketType)
   {
     super.read(buf, id, packetType)
 
@@ -75,7 +75,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
       else if (id == TilePacketType.effect.id)
       {
         val packetType = buf.readInt
-        val vector = new Vector3(buf.readInt, buf.readInt, buf.readInt) + 0.5
+		  val vector = new Vector3d(buf.readInt, buf.readInt, buf.readInt) + 0.5
         val root = position + 0.5
 
         if (packetType == 1)
@@ -91,9 +91,9 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
       }
       else if (id == TilePacketType.field.id)
       {
-        val nbt = ByteBufUtils.readTag(buf)
+		  val nbt = PacketUtils.readTag(buf)
         val nbtList = nbt.getTagList("blockList", 10)
-        calculatedField = mutable.Set(((0 until nbtList.tagCount) map (i => new Vector3(nbtList.getCompoundTagAt(i)))).toArray: _ *)
+		  calculatedField = mutable.Set(((0 until nbtList.tagCount) map (i => new Vector3d(nbtList.getCompoundTagAt(i)))).toArray: _ *)
       }
     }
     else
@@ -213,7 +213,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
             .take(constructionSpeed)
 
           //The collection containing the coordinates to actually place the field blocks.
-          var constructField = Set.empty[Vector3]
+		  var constructField = Set.empty[Vector3d]
 
           val result = evaluateField.forall(
             vector =>
@@ -260,7 +260,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
     }
   }
 
-  private def canReplaceBlock(vector: Vector3, block: Block): Boolean =
+	private def canReplaceBlock(vector: Vector3d, block: Block): Boolean =
   {
     return block == null ||
            (getModuleCount(Content.moduleDisintegration) > 0 && block.getBlockHardness(this.worldObj, vector.xi, vector.yi, vector.zi) != -1) ||
@@ -298,13 +298,13 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
     super.invalidate
   }
 
-  override def getForceFields: JSet[Vector3] = forceFields
+	override def getForceFields: JSet[Vector3d] = forceFields
 
   def getTicks: Long = ticks
 
-  def isInField(position: Vector3) = if (getMode != null) getMode.isInField(this, position) else false
+	def isInField(position: Vector3d) = if (getMode != null) getMode.isInField(this, position) else false
 
-  def isAccessGranted(checkWorld: World, checkPos: Vector3, player: EntityPlayer, action: PlayerInteractEvent.Action): Boolean =
+	def isAccessGranted(checkWorld: World, checkPos: Vector3d, player: EntityPlayer, action: PlayerInteractEvent.Action): Boolean =
   {
     var hasPerm = true
 
@@ -337,13 +337,13 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
    * Rendering
    */
   @SideOnly(Side.CLIENT)
-  override def renderStatic(renderer: RenderBlocks, pos: Vector3, pass: Int): Boolean =
+  override def renderStatic(renderer: RenderBlocks, pos: Vector3d, pass: Int): Boolean =
   {
     return false
   }
 
   @SideOnly(Side.CLIENT)
-  override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
+  override def renderDynamic(pos: Vector3d, frame: Float, pass: Int)
   {
     RenderElectromagneticProjector.render(this, pos.x, pos.y, pos.z, frame, isActive, false)
   }

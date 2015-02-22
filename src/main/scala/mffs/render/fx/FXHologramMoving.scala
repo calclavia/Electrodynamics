@@ -1,17 +1,9 @@
 package mffs.render.fx
 
-import cpw.mods.fml.client.FMLClientHandler
-import cpw.mods.fml.relauncher.{Side, SideOnly}
 import mffs.Content
-import net.minecraft.client.particle.EntityFX
-import net.minecraft.client.renderer.{OpenGlHelper, RenderBlocks, Tessellator}
-import net.minecraft.world.World
-import org.lwjgl.opengl.GL11
-import resonantengine.lib.render.RenderUtility
-import resonantengine.lib.transform.vector.Vector3
 
 @SideOnly(Side.CLIENT)
-class FXHologramMoving(par1World: World, position: Vector3, red: Float, green: Float, blue: Float, age: Int) extends EntityFX(par1World, position.x, position.y, position.z)
+class FXHologramMoving(par1World: World, position: Vector3d, red: Float, green: Float, blue: Float, age: Int) extends EntityFX(par1World, position.x, position.y, position.z)
 {
   this.setRBGColorF(red, green, blue)
   this.particleMaxAge = age

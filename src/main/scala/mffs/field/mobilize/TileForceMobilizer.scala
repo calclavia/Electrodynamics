@@ -14,8 +14,8 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
   val packetRange = 60
   val animationTime = 20
 
-  val failedPositions = mutable.Set.empty[Vector3]
-  var anchor = new Vector3()
+	val failedPositions = mutable.Set.empty[Vector3d]
+	var anchor = new Vector3d()
 
   /**
    * The display mode. 0 = none, 1 = minimal, 2 = maximal.
@@ -211,11 +211,11 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
 
           if (isTeleport)
           {
-            var targetPosition: Vector3 = null
+			  var targetPosition: Vector3d = null
 
             if (getTargetPosition.world == null)
             {
-              targetPosition = new Vector3(getTargetPosition)
+				targetPosition = new Vector3d(getTargetPosition)
             }
             else
             {
@@ -274,9 +274,9 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
     }
   }
 
-  override def generateCalculatedField: mutable.Set[Vector3] =
+	override def generateCalculatedField: mutable.Set[Vector3d] =
   {
-    var moveField: mutable.Set[Vector3] = null
+	  var moveField: mutable.Set[Vector3d] = null
 
     if (canMove)
       moveField = getInteriorPoints
@@ -352,171 +352,6 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
     return target.world.isAirBlock(target.xi, target.yi, target.zi) || (targetBlock.isReplaceable(target.world, target.xi, target.yi, target.zi))
   }
 
-  def isVisibleToPlayer(position: Vector3): Boolean =
-  {
-    return (ForgeDirection.VALID_DIRECTIONS count ((dir: ForgeDirection) => (position + dir).getBlock(world).isOpaqueCube)) < 6
-  }
-
-  override def write(buf: ByteBuf, id: Int)
-  {
-    super.write(buf, id)
-
-    if (id == TilePacketType.description.id)
-    {
-      buf <<< anchor
-      buf <<< previewMode
-      buf <<< doAnchor
-      buf <<< (if (moveTime > 0) moveTime else getMoveTime)
-    }
-  }
-
-	/**
-	 * Gets the movement time required in TICKS.
-	 *
-	 * @return The time it takes to teleport (using a link card) to another coordinate OR
-	 *         ANIMATION_TIME for default move.
-	 */
-	def getMoveTime: Int = {
-		if (isTeleport) {
-			var time = (20 * this.getTargetPosition.distance(this.getAbsoluteAnchor)).toInt
-			if (this.getTargetPosition.world ne this.worldObj) {
-				time += 20 * 60
-			}
-			return time
-		}
-		return animationTime
-	}
-
-  override def read(buf: ByteBuf, id: Int, packetType: PacketType)
-  {
-    super.read(buf, id, packetType)
-
-    if (world.isRemote)
-    {
-      if (id == TilePacketType.effect.id)
-      {
-        buf.readInt() match
-        {
-          case 1 =>
-          {
-            /**
-             * If we have more than one block that is visible that was moved, we will tell the client to render it.
-             *
-             * Params: id, Type1, Type2, Size, the coordinate
-             */
-            val isTeleportPacket = buf.readInt()
-            val vecSize = buf.readInt()
-
-            val hologramRenderPoints = ((0 until vecSize) map (i => buf.readInt().toDouble + 0.5)).toList grouped 3 map (new Vector3(_))
-
-            /**
-             * Movement Rendering
-             */
-            val direction = getDirection
-
-            isTeleportPacket match
-            {
-              case 1 => hologramRenderPoints foreach (vector => ModularForceFieldSystem.proxy.renderHologram(world, vector, FieldColor.blue, 30, vector + direction))
-              case 2 => hologramRenderPoints foreach (vector => ModularForceFieldSystem.proxy.renderHologram(world, vector, FieldColor.green, 30, vector + direction))
-            }
-          }
-          case 2 =>
-          {
-            /**
-             * Teleportation Rendering
-             */
-            val animationTime = buf.readInt()
-            val anchorPosition = new Vector3(buf)
-            val targetPosition = new VectorWorld(buf)
-            val isPreview = buf.readBoolean()
-            val vecSize = buf.readInt()
-            val hologramRenderPoints = ((0 until vecSize) map (i => buf.readInt().toDouble + 0.5)).toList grouped 3 map (new Vector3(_))
-            val color = if (isPreview) FieldColor.blue else FieldColor.green
-
-            hologramRenderPoints foreach (vector =>
-            {
-              //Render teleport start
-              ModularForceFieldSystem.proxy.renderHologramOrbit(this, world, anchorPosition, vector, color, animationTime, 30f)
-
-              if (targetPosition.world != null && targetPosition.world.getChunkProvider.chunkExists(targetPosition.xi, targetPosition.zi))
-              {
-                //Render teleport end
-                val destination = vector - anchorPosition + targetPosition
-                ModularForceFieldSystem.proxy.renderHologramOrbit(this, targetPosition.world, targetPosition, destination, color, animationTime, 30f)
-              }
-            })
-
-            canRenderMove = true
-          }
-          case 3 =>
-          {
-            /**
-             * Fail hologram rendering
-             */
-            val vecSize = buf.readInt()
-            val hologramRenderPoints = ((0 until vecSize) map (i => buf.readInt().toDouble + 0.5)).toList grouped 3 map (new Vector3(_))
-
-            hologramRenderPoints foreach (ModularForceFieldSystem.proxy.renderHologram(world, _, FieldColor.red, 30, null))
-          }
-        }
-      }
-      else if (id == TilePacketType.render.id)
-      {
-        canRenderMove = false
-      }
-      else if (id == TilePacketType.field.id)
-      {
-        this.moveEntities
-      }
-      else if (id == TilePacketType.description.id)
-      {
-        anchor = new Vector3(buf)
-        previewMode = buf.readInt()
-        doAnchor = buf.readBoolean()
-        clientMoveTime = buf.readInt
-      }
-    }
-    else
-    {
-      if (id == TilePacketType.toggleMoe.id)
-      {
-        anchor = new Vector3()
-        markDirty()
-      }
-      else if (id == TilePacketType.toggleMode2.id)
-      {
-        previewMode = (previewMode + 1) % 3
-      }
-      else if (id == TilePacketType.toggleMode3.id)
-      {
-        doAnchor = !doAnchor
-      }
-    }
-  }
-
-  override def markDirty()
-  {
-    super.markDirty()
-
-    if (world != null)
-    {
-      clearCache()
-      calculateField()
-    }
-  }
-
-  protected def moveEntities
-  {
-    val targetLocation = getTargetPosition
-    val bounds = getSearchBounds
-
-    if (bounds != null)
-    {
-      val entities = this.worldObj.getEntitiesWithinAABB(classOf[Entity], bounds)
-      entities map (_.asInstanceOf[Entity]) foreach (entity => moveEntity(entity, targetLocation + 0.5 + new Vector3(entity) - (getAbsoluteAnchor + 0.5)))
-    }
-  }
-
 	/**
 	 * Gets the position in which the manipulator will try to translate the field into.
 	 *
@@ -552,7 +387,172 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
 		}
 	}
 
-	def getAbsoluteAnchor: Vector3 = position.add(this.anchor)
+	def getAbsoluteAnchor: Vector3d = position.add(this.anchor)
+
+	def isVisibleToPlayer(position: Vector3d): Boolean =
+  {
+    return (ForgeDirection.VALID_DIRECTIONS count ((dir: ForgeDirection) => (position + dir).getBlock(world).isOpaqueCube)) < 6
+  }
+
+	override def write(buf: Packet, id: Int)
+  {
+    super.write(buf, id)
+
+    if (id == TilePacketType.description.id)
+    {
+      buf <<< anchor
+      buf <<< previewMode
+      buf <<< doAnchor
+      buf <<< (if (moveTime > 0) moveTime else getMoveTime)
+    }
+  }
+
+	/**
+	 * Gets the movement time required in TICKS.
+	 *
+	 * @return The time it takes to teleport (using a link card) to another coordinate OR
+	 *         ANIMATION_TIME for default move.
+	 */
+	def getMoveTime: Int = {
+		if (isTeleport) {
+			var time = (20 * this.getTargetPosition.distance(this.getAbsoluteAnchor)).toInt
+			if (this.getTargetPosition.world ne this.worldObj) {
+				time += 20 * 60
+			}
+			return time
+		}
+		return animationTime
+	}
+
+	override def read(buf: Packet, id: Int, packetType: PacketType)
+  {
+    super.read(buf, id, packetType)
+
+    if (world.isRemote)
+    {
+      if (id == TilePacketType.effect.id)
+      {
+        buf.readInt() match
+        {
+          case 1 =>
+          {
+            /**
+             * If we have more than one block that is visible that was moved, we will tell the client to render it.
+             *
+             * Params: id, Type1, Type2, Size, the coordinate
+             */
+            val isTeleportPacket = buf.readInt()
+            val vecSize = buf.readInt()
+
+			  val hologramRenderPoints = ((0 until vecSize) map (i => buf.readInt().toDouble + 0.5)).toList grouped 3 map (new Vector3d(_))
+
+            /**
+             * Movement Rendering
+             */
+            val direction = getDirection
+
+            isTeleportPacket match
+            {
+              case 1 => hologramRenderPoints foreach (vector => ModularForceFieldSystem.proxy.renderHologram(world, vector, FieldColor.blue, 30, vector + direction))
+              case 2 => hologramRenderPoints foreach (vector => ModularForceFieldSystem.proxy.renderHologram(world, vector, FieldColor.green, 30, vector + direction))
+            }
+          }
+          case 2 =>
+          {
+            /**
+             * Teleportation Rendering
+             */
+            val animationTime = buf.readInt()
+			  val anchorPosition = new Vector3d(buf)
+            val targetPosition = new VectorWorld(buf)
+            val isPreview = buf.readBoolean()
+            val vecSize = buf.readInt()
+			  val hologramRenderPoints = ((0 until vecSize) map (i => buf.readInt().toDouble + 0.5)).toList grouped 3 map (new Vector3d(_))
+            val color = if (isPreview) FieldColor.blue else FieldColor.green
+
+            hologramRenderPoints foreach (vector =>
+            {
+              //Render teleport start
+              ModularForceFieldSystem.proxy.renderHologramOrbit(this, world, anchorPosition, vector, color, animationTime, 30f)
+
+              if (targetPosition.world != null && targetPosition.world.getChunkProvider.chunkExists(targetPosition.xi, targetPosition.zi))
+              {
+                //Render teleport end
+                val destination = vector - anchorPosition + targetPosition
+                ModularForceFieldSystem.proxy.renderHologramOrbit(this, targetPosition.world, targetPosition, destination, color, animationTime, 30f)
+              }
+            })
+
+            canRenderMove = true
+          }
+          case 3 =>
+          {
+            /**
+             * Fail hologram rendering
+             */
+            val vecSize = buf.readInt()
+			  val hologramRenderPoints = ((0 until vecSize) map (i => buf.readInt().toDouble + 0.5)).toList grouped 3 map (new Vector3d(_))
+
+            hologramRenderPoints foreach (ModularForceFieldSystem.proxy.renderHologram(world, _, FieldColor.red, 30, null))
+          }
+        }
+      }
+      else if (id == TilePacketType.render.id)
+      {
+        canRenderMove = false
+      }
+      else if (id == TilePacketType.field.id)
+      {
+        this.moveEntities
+      }
+      else if (id == TilePacketType.description.id)
+      {
+		  anchor = new Vector3d(buf)
+        previewMode = buf.readInt()
+        doAnchor = buf.readBoolean()
+        clientMoveTime = buf.readInt
+      }
+    }
+    else
+    {
+      if (id == TilePacketType.toggleMoe.id)
+      {
+		  anchor = new Vector3d()
+        markDirty()
+      }
+      else if (id == TilePacketType.toggleMode2.id)
+      {
+        previewMode = (previewMode + 1) % 3
+      }
+      else if (id == TilePacketType.toggleMode3.id)
+      {
+        doAnchor = !doAnchor
+      }
+    }
+  }
+
+  override def markDirty()
+  {
+    super.markDirty()
+
+    if (world != null)
+    {
+      clearCache()
+      calculateField()
+    }
+  }
+
+  protected def moveEntities
+  {
+    val targetLocation = getTargetPosition
+    val bounds = getSearchBounds
+
+    if (bounds != null)
+    {
+      val entities = this.worldObj.getEntitiesWithinAABB(classOf[Entity], bounds)
+		entities map (_.asInstanceOf[Entity]) foreach (entity => moveEntity(entity, targetLocation + 0.5 + new Vector3d(entity) - (getAbsoluteAnchor + 0.5)))
+    }
+  }
 
   def getSearchBounds: AxisAlignedBB =
   {
@@ -563,7 +563,7 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
     return new Cuboid(minScale, maxScale).toAABB
   }
 
-  override def getTranslation: Vector3 = super.getTranslation + anchor
+	override def getTranslation: Vector3d = super.getTranslation + anchor
 
   protected def moveEntity(entity: Entity, location: VectorWorld)
   {
@@ -610,7 +610,7 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
   override def readFromNBT(nbt: NBTTagCompound)
   {
     super.readFromNBT(nbt)
-    this.anchor = new Vector3(nbt.getCompoundTag("anchor"))
+	  this.anchor = new Vector3d(nbt.getCompoundTag("anchor"))
     this.previewMode = nbt.getInteger("displayMode")
     this.doAnchor = nbt.getBoolean("doAnchor")
   }
@@ -631,7 +631,7 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
   def canContinueEffect = canRenderMove
 
   @SideOnly(Side.CLIENT)
-  override def renderStatic(renderer: RenderBlocks, pos: Vector3, pass: Int): Boolean =
+  override def renderStatic(renderer: RenderBlocks, pos: Vector3d, pass: Int): Boolean =
   {
     return false
   }
@@ -642,13 +642,13 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
     return Array[String]("isActivate", "setActivate", "resetAnchor", "canMove")
   }
 
-  def callMethod(computer: Vector3, context: Vector3, method: Int, arguments: Array[AnyRef]): Array[AnyRef] =
+  def callMethod(computer: Vector3d, context: Vector3d, method: Int, arguments: Array[AnyRef]): Array[AnyRef] =
   {
     method match
     {
       case 2 =>
       {
-        this.anchor = new Vector3
+        this.anchor = new Vector3d
         return null
       }
       case 3 =>
@@ -671,7 +671,7 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
 */
 
   @SideOnly(Side.CLIENT)
-  override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
+  override def renderDynamic(pos: Vector3d, frame: Float, pass: Int)
   {
     RenderForceMobilizer.render(this, pos.x, pos.y, pos.z, frame, isActive, false)
   }
@@ -687,7 +687,7 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
    * @param position - The position of the block to be moved.
    * @return True if move is successful.
    */
-  protected def moveBlock(position: Vector3): Boolean =
+  protected def moveBlock(position: Vector3d): Boolean =
   {
     if (!world.isRemote)
     {

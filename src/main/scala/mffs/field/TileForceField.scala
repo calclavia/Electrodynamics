@@ -7,7 +7,7 @@ import mffs.{Content, ModularForceFieldSystem}
 class TileForceField extends ResonantTile(Material.glass) with TPacketReceiver with IForceField
 {
 	private var camoStack: Item = null
-  private var projector: Vector3 = null
+	private var projector: Vector3d = null
 
   /**
    * Constructor
@@ -29,7 +29,7 @@ class TileForceField extends ResonantTile(Material.glass) with TPacketReceiver w
   override def getRenderBlockPass: Int = 1
 
   @SideOnly(Side.CLIENT)
-  override def renderStatic(renderer: RenderBlocks, pos: Vector3, pass: Int): Boolean =
+  override def renderStatic(renderer: RenderBlocks, pos: Vector3d, pass: Int): Boolean =
   {
     var renderType = 0
     var camoBlock: Block = null
@@ -142,36 +142,6 @@ class TileForceField extends ResonantTile(Material.glass) with TPacketReceiver w
       projector.getModuleStacks(projector.getModuleSlots(): _*) forall (stack => stack.getItem.asInstanceOf[IModule].onCollideWithForceField(world, x, y, z, player, stack))
   }
 
-	/**
-	 * @return Gets the projector block controlling this force field. Removes the force field if no
-	 *         projector can be found.
-	 */
-	def getProjector: TileElectromagneticProjector = {
-		if (this.getProjectorSafe != null) {
-			return getProjectorSafe
-		}
-
-		if (!this.worldObj.isRemote) {
-			world.setBlock(xCoord, yCoord, zCoord, Blocks.air)
-		}
-
-		return null
-	}
-
-	def getProjectorSafe: TileElectromagneticProjector = {
-		if (projector != null) {
-			val projTile = projector.getTileEntity(world)
-
-			if (projTile.isInstanceOf[TileElectromagneticProjector]) {
-				val projector = projTile.asInstanceOf[IProjector]
-				if (world.isRemote || (projector.getCalculatedField != null && projector.getCalculatedField.contains(position))) {
-					return projTile.asInstanceOf[TileElectromagneticProjector]
-				}
-			}
-		}
-		return null
-	}
-
   override def getCollisionBoxes(intersect: Cuboid, entity: Entity): Iterable[Cuboid] =
   {
     //TODO: Check if the entity filter actually works...
@@ -212,7 +182,7 @@ class TileForceField extends ResonantTile(Material.glass) with TPacketReceiver w
 
       val biometricIdentifier = projector.getBiometricIdentifier
 
-      if (center.distance(new Vector3(entity)) < 0.5)
+		if (center.distance(new Vector3d(entity)) < 0.5)
       {
         if (!world.isRemote && entity.isInstanceOf[EntityLiving])
         {
@@ -360,11 +330,41 @@ class TileForceField extends ResonantTile(Material.glass) with TPacketReceiver w
     return null
   }
 
-  override def read(buf: ByteBuf, id: Int, packetType: PacketType)
+	/**
+	 * @return Gets the projector block controlling this force field. Removes the force field if no
+	 *         projector can be found.
+	 */
+	def getProjector: TileElectromagneticProjector = {
+		if (this.getProjectorSafe != null) {
+			return getProjectorSafe
+		}
+
+		if (!this.worldObj.isRemote) {
+			world.setBlock(xCoord, yCoord, zCoord, Blocks.air)
+		}
+
+		return null
+	}
+
+	def getProjectorSafe: TileElectromagneticProjector = {
+		if (projector != null) {
+			val projTile = projector.getTileEntity(world)
+
+			if (projTile.isInstanceOf[TileElectromagneticProjector]) {
+				val projector = projTile.asInstanceOf[IProjector]
+				if (world.isRemote || (projector.getCalculatedField != null && projector.getCalculatedField.contains(position))) {
+					return projTile.asInstanceOf[TileElectromagneticProjector]
+				}
+			}
+		}
+		return null
+	}
+
+	override def read(buf: Packet, id: Int, packetType: PacketType)
   {
     super.read(buf, id, packetType)
 
-    setProjector(new Vector3(buf.readInt, buf.readInt, buf.readInt))
+	  setProjector(new Vector3d(buf.readInt, buf.readInt, buf.readInt))
     markRender()
     camoStack = null
 
@@ -374,7 +374,7 @@ class TileForceField extends ResonantTile(Material.glass) with TPacketReceiver w
     }
   }
 
-  def setProjector(position: Vector3)
+	def setProjector(position: Vector3d)
   {
     projector = position
 
@@ -398,7 +398,7 @@ class TileForceField extends ResonantTile(Material.glass) with TPacketReceiver w
   override def readFromNBT(nbt: NBTTagCompound)
   {
     super.readFromNBT(nbt)
-    projector = new Vector3(nbt.getCompoundTag("projector"))
+	  projector = new Vector3d(nbt.getCompoundTag("projector"))
   }
 
   /**

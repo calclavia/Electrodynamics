@@ -3,12 +3,14 @@ package mffs.base
 import java.util.{Set => JSet}
 
 import mffs.Content
+import mffs.api.machine.FieldMatrix
 import mffs.field.mobilize.event.{DelayedEvent, IDelayedEventHandler}
 import mffs.field.module.ItemModuleArray
 import mffs.item.card.ItemCard
 import mffs.util.TCache
+import nova.core.network.Packet
 
-abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with IDelayedEventHandler with TRotatable with IPermissionProvider
+abstract class TileFieldMatrix extends TileModuleAcceptor with FieldMatrix with IDelayedEventHandler with TRotatable with IPermissionProvider
 {
   protected final val delayedEvents = new mutable.SynchronizedQueue[DelayedEvent]()
   val _getModuleSlots = (14 until 25).toArray
@@ -17,7 +19,7 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
    * Are the directions on the GUI absolute values?
    */
   var absoluteDirection = false
-  protected var calculatedField: mutable.Set[Vector3] = null
+	protected var calculatedField: mutable.Set[Vector3d] = null
   protected var isCalculating = false
 
   override def update()
@@ -33,7 +35,7 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
 
   def clearQueue() = delayedEvents.clear()
 
-  override def write(buf: ByteBuf, id: Int)
+	override def write(buf: Packet, id: Int)
   {
     super.write(buf, id)
 
@@ -43,7 +45,7 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     }
   }
 
-  override def read(buf: ByteBuf, id: Int, packetType: PacketType)
+	override def read(buf: Packet, id: Int, packetType: PacketType)
   {
     super.read(buf, id, packetType)
 
@@ -108,11 +110,11 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     }
   }
 
-  def getPositiveScale: Vector3 =
+	def getPositiveScale: Vector3d =
   {
     val cacheID = "getPositiveScale"
 
-    if (hasCache(classOf[Vector3], cacheID)) return getCache(classOf[Vector3], cacheID)
+	  if (hasCache(classOf[Vector3d], cacheID)) return getCache(classOf[Vector3d], cacheID)
 
     var zScalePos = 0
     var xScalePos = 0
@@ -139,18 +141,18 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     xScalePos += omnidirectionalScale
     yScalePos += omnidirectionalScale
 
-    val positiveScale = new Vector3(xScalePos, yScalePos, zScalePos)
+	  val positiveScale = new Vector3d(xScalePos, yScalePos, zScalePos)
 
     cache(cacheID, positiveScale)
 
     return positiveScale
   }
 
-  def getNegativeScale: Vector3 =
+	def getNegativeScale: Vector3d =
   {
     val cacheID = "getNegativeScale"
 
-    if (hasCache(classOf[Vector3], cacheID)) return getCache(classOf[Vector3], cacheID)
+	  if (hasCache(classOf[Vector3d], cacheID)) return getCache(classOf[Vector3d], cacheID)
 
     var zScaleNeg = 0
     var xScaleNeg = 0
@@ -176,7 +178,7 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     xScaleNeg += omnidirectionalScale
     yScaleNeg += omnidirectionalScale
 
-    val negativeScale = new Vector3(xScaleNeg, yScaleNeg, zScaleNeg)
+	  val negativeScale = new Vector3d(xScaleNeg, yScaleNeg, zScaleNeg)
 
     cache(cacheID, negativeScale)
 
@@ -185,11 +187,11 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
 
 	def getModuleSlots: Array[Int] = _getModuleSlots
 
-  def getInteriorPoints: JSet[Vector3] =
+	def getInteriorPoints: JSet[Vector3d] =
   {
     val cacheID = "getInteriorPoints"
 
-    if (hasCache(classOf[Set[Vector3]], cacheID)) return getCache(classOf[Set[Vector3]], cacheID)
+	  if (hasCache(classOf[Set[Vector3d]], cacheID)) return getCache(classOf[Set[Vector3d]], cacheID)
 
     if (getModeStack != null && getModeStack.getItem.isInstanceOf[TCache])
     {
@@ -224,11 +226,11 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     return null
   }
 
-  def getTranslation: Vector3 =
+	def getTranslation: Vector3d =
   {
     val cacheID = "getTranslation"
 
-    if (hasCache(classOf[Vector3], cacheID)) return getCache(classOf[Vector3], cacheID)
+	  if (hasCache(classOf[Vector3d], cacheID)) return getCache(classOf[Vector3d], cacheID)
 
     val direction = getDirection
 
@@ -258,7 +260,7 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
       yTranslationNeg = getModuleCount(Content.moduleTranslate, getDirectionSlots(ForgeDirection.DOWN): _*)
     }
 
-    val translation = new Vector3(xTranslationPos - xTranslationNeg, yTranslationPos - yTranslationNeg, zTranslationPos - zTranslationNeg)
+	  val translation = new Vector3d(xTranslationPos - xTranslationNeg, yTranslationPos - yTranslationNeg, zTranslationPos - zTranslationNeg)
 
     cache(cacheID, translation)
 
@@ -315,8 +317,8 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     return null
   }
 
-	def getCalculatedField: JSet[Vector3] = {
-		return if (calculatedField != null) calculatedField else mutable.Set.empty[Vector3]
+	def getCalculatedField: JSet[Vector3d] = {
+		return if (calculatedField != null) calculatedField else mutable.Set.empty[Vector3d]
 	}
 
 	def queueEvent(evt: DelayedEvent) {
@@ -375,8 +377,8 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
 	/**
 	 * Gets the exterior points of the field based on the matrix.
 	 */
-	protected def getExteriorPoints: mutable.Set[Vector3] = {
-		var field = mutable.Set.empty[Vector3]
+	protected def getExteriorPoints: mutable.Set[Vector3d] = {
+		var field = mutable.Set.empty[Vector3d]
 
 		if (getModuleCount(Content.moduleInvert) > 0) {
 			field = getMode.getInteriorPoints(this)

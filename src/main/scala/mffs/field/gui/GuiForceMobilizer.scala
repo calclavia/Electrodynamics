@@ -63,13 +63,13 @@ class GuiForceMobilizer(player: EntityPlayer, tile: TileForceMobilizer) extends 
   {
     drawStringCentered(tile.getInventoryName)
 
-    drawString(EnumColor.DARK_AQUA + LanguageUtility.getLocal("gui.mobilizer.anchor") + ":", 8, 20)
+	  drawString(EnumColor.DARK_AQUA + Game.instance.get.languageManager.getLocal("gui.mobilizer.anchor") + ":", 8, 20)
     drawString(tile.anchor.xi + ", " + tile.anchor.yi + ", " + tile.anchor.zi, 8, 32)
 
-    drawString(EnumColor.DARK_AQUA + LanguageUtility.getLocal("gui.direction") + ":", 8, 48)
+	  drawString(EnumColor.DARK_AQUA + Game.instance.get.languageManager.getLocal("gui.direction") + ":", 8, 48)
     drawString(tile.getDirection.name, 8, 60)
 
-    drawString(EnumColor.DARK_AQUA + LanguageUtility.getLocal("gui.mobilizer.time") + ":", 8, 75)
+	  drawString(EnumColor.DARK_AQUA + Game.instance.get.languageManager.getLocal("gui.mobilizer.time") + ":", 8, 75)
     drawString((tile.clientMoveTime / 20) + "s", 8, 87)
 
     drawTextWithTooltip("fortron", EnumColor.DARK_RED + new UnitDisplay(UnitDisplay.Unit.LITER, tile.getFortronCost * 20).symbol().toString + "/s", 8, 100, x, y)

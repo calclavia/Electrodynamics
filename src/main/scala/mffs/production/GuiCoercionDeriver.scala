@@ -2,22 +2,13 @@ package mffs.production
 
 import mffs.ModularForceFieldSystem
 import mffs.base.{GuiMFFS, TilePacketType}
-import net.minecraft.client.gui.GuiButton
-import net.minecraft.entity.player.EntityPlayer
-import org.lwjgl.opengl.GL11
-import resonantengine.core.network.discriminator.PacketTile
-import resonantengine.lib.render.EnumColor
-import resonantengine.lib.utility.LanguageUtility
-import resonantengine.lib.utility.science.UnitDisplay
-import resonantengine.lib.wrapper.CollectionWrapper._
-import resonantengine.prefab.gui.GuiContainerBase.SlotType
 
 class GuiCoercionDeriver(player: EntityPlayer, tile: TileCoercionDeriver) extends GuiMFFS(new ContainerCoercionDeriver(player, tile), tile)
 {
   override def initGui
   {
     super.initGui
-    this.buttonList.add(new GuiButton(1, this.width / 2 - 10, this.height / 2 - 35, 58, 20, LanguageUtility.getLocal("gui.deriver.derive")))
+	  this.buttonList.add(new GuiButton(1, this.width / 2 - 10, this.height / 2 - 35, 58, 20, Game.instance.get.languageManager.getLocal("gui.deriver.derive")))
   }
 
   override def drawGuiContainerForegroundLayer(x: Int, y: Int)
@@ -30,17 +21,17 @@ class GuiCoercionDeriver(player: EntityPlayer, tile: TileCoercionDeriver) extend
 
     if (!tile.isInversed)
     {
-      buttonList.get(1).asInstanceOf[GuiButton].displayString = LanguageUtility.getLocal("gui.deriver.derive")
+		buttonList.get(1).asInstanceOf[GuiButton].displayString = Game.instance.get.languageManager.getLocal("gui.deriver.derive")
     }
     else
     {
-      buttonList.get(1).asInstanceOf[GuiButton].displayString = LanguageUtility.getLocal("gui.deriver.integrate")
+		buttonList.get(1).asInstanceOf[GuiButton].displayString = Game.instance.get.languageManager.getLocal("gui.deriver.integrate")
     }
 
     drawString(EnumColor.AQUA + "Energy Requirement:", 8, 20)
     renderUniversalDisplay(8, 30, tile.getPower, x, y, UnitDisplay.Unit.WATT)
 
-    drawTextWithTooltip("progress", "%1: " + (if (this.tile.isActive) LanguageUtility.getLocal("gui.deriver.running") else LanguageUtility.getLocal("gui.deriver.idle")), 8, 60, x, y)
+	  drawTextWithTooltip("progress", "%1: " + (if (this.tile.isActive) Game.instance.get.languageManager.getLocal("gui.deriver.running") else Game.instance.get.languageManager.getLocal("gui.deriver.idle")), 8, 60, x, y)
     drawString("Production: " + (if (this.tile.isInversed) EnumColor.DARK_RED else EnumColor.DARK_GREEN) + new UnitDisplay(UnitDisplay.Unit.LITER, tile.productionRate * 20) + "/s", 8, 100)
 
     drawFortronText(x, y)

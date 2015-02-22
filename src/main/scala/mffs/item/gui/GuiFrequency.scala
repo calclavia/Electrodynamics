@@ -13,7 +13,7 @@ class GuiFrequency(player: EntityPlayer, Item: Item) extends GuiItem(Item, new C
   override def initGui()
   {
     super.initGui()
-    buttonList.add(new GuiButton(1, width / 2 - 50, height / 2 - 60, 110, 20, LanguageUtility.getLocal("gui.frequency.random")))
+	  buttonList.add(new GuiButton(1, width / 2 - 50, height / 2 - 60, 110, 20, Game.instance.get.languageManager.getLocal("gui.frequency.random")))
     textField.setMaxStringLength(Settings.maxFrequencyDigits)
   }
 
@@ -35,10 +35,10 @@ class GuiFrequency(player: EntityPlayer, Item: Item) extends GuiItem(Item, new C
 
   protected override def drawGuiContainerForegroundLayer(x: Int, y: Int)
   {
-    drawStringCentered(LanguageUtility.getLocal("item.mffs:cardFrequency.name"))
+	  drawStringCentered(Game.instance.get.languageManager.getLocal("item.mffs:cardFrequency.name"))
 	  drawStringCentered("" + item.getEncodedFrequency(Item), 20)
     textField.drawTextBox()
-    drawStringCentered(LanguageUtility.getLocal("gui.makecopy"), 80)
+	  drawStringCentered(Game.instance.get.languageManager.getLocal("gui.makecopy"), 80)
 
     super.drawGuiContainerForegroundLayer(x, y)
   }

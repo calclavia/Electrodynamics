@@ -24,14 +24,14 @@ class ItemRemoteController extends ItemCardFrequency with ICoordLink
       val block: Block = vec.getBlock(entityplayer.worldObj)
       if (block ne Blocks.air)
       {
-        list.add(LanguageUtility.getLocal("info.item.linkedWith") + " " + block.getLocalizedName)
+		  list.add(Game.instance.get.languageManager.getLocal("info.item.linkedWith") + " " + block.getLocalizedName)
       }
       list.add(vec.xi + ", " + vec.yi + ", " + vec.zi)
-      list.add(LanguageUtility.getLocal("info.item.dimension") + " '" + vec.world.provider.getDimensionName + "'")
+		list.add(Game.instance.get.languageManager.getLocal("info.item.dimension") + " '" + vec.world.provider.getDimensionName + "'")
     }
     else
     {
-      list.add(LanguageUtility.getLocal("info.item.notLinked"))
+		list.add(Game.instance.get.languageManager.getLocal("info.item.notLinked"))
     }
   }
 
@@ -39,6 +39,13 @@ class ItemRemoteController extends ItemCardFrequency with ICoordLink
   {
 	  return getLink(Item) != null
   }
+
+	def getLink(Item: Item): VectorWorld = {
+		if (Item.stackTagCompound == null || !Item.getTagCompound.hasKey("link")) {
+			return null
+		}
+		return new VectorWorld(Item.getTagCompound.getCompoundTag("link"))
+	}
 
 	override def onItemUse(Item: Item, player: EntityPlayer, world: World, x: Int, y: Int, z: Int, par7: Int, par8: Float, par9: Float, par10: Float): Boolean =
   {
@@ -50,7 +57,8 @@ class ItemRemoteController extends ItemCardFrequency with ICoordLink
 
       if (block != null)
       {
-        player.addChatMessage(new ChatComponentText(LanguageUtility.getLocal("message.remoteController.linked").replaceAll("#p", x + ", " + y + ", " + z).replaceAll("#q", block.getLocalizedName)))
+		  player.addChatMessage(new
+				  ChatComponentText(Game.instance.get.languageManager.getLocal("message.remoteController.linked").replaceAll("#p", x + ", " + y + ", " + z).replaceAll("#q", block.getLocalizedName)))
       }
     }
     return true
@@ -65,7 +73,7 @@ class ItemRemoteController extends ItemCardFrequency with ICoordLink
   {
     if (!entityPlayer.isSneaking)
     {
-		val position: Vector3 = this.getLink(Item)
+		val position: Vector3d = this.getLink(Item)
       if (position != null)
       {
         val block: Block = position.getBlock(world)
@@ -74,9 +82,9 @@ class ItemRemoteController extends ItemCardFrequency with ICoordLink
           val chunk: Chunk = world.getChunkFromBlockCoords(position.xi, position.zi)
           if (chunk != null && chunk.isChunkLoaded && (MFFSUtility.hasPermission(world, position, Action.RIGHT_CLICK_BLOCK, entityPlayer) || MFFSUtility.hasPermission(world, position, MFFSPermissions.remoteControl, entityPlayer)))
           {
-            val requiredEnergy = new Vector3(entityPlayer).distance(position) * (FluidContainerRegistry.BUCKET_VOLUME / 100)
+			  val requiredEnergy = new Vector3d(entityPlayer).distance(position) * (FluidContainerRegistry.BUCKET_VOLUME / 100)
             var receivedEnergy = 0
-			  val fortronTiles: Set[IFortronFrequency] = FrequencyGridRegistry.instance.getNodes(classOf[IFortronFrequency], world, new Vector3(entityPlayer), 50, this.getFrequency(Item))
+			  val fortronTiles: Set[IFortronFrequency] = FrequencyGridRegistry.instance.getNodes(classOf[IFortronFrequency], world, new Vector3d(entityPlayer), 50, this.getFrequency(Item))
 
             for (fortronTile <- fortronTiles)
             {
@@ -85,7 +93,8 @@ class ItemRemoteController extends ItemCardFrequency with ICoordLink
               {
                 if (world.isRemote)
                 {
-                  ModularForceFieldSystem.proxy.renderBeam(world, new Vector3(entityPlayer).add(new Vector3(0, entityPlayer.getEyeHeight - 0.2, 0)), new Vector3(fortronTile.asInstanceOf[TileEntity]).add(0.5), FieldColor.blue, 20)
+					ModularForceFieldSystem.proxy.renderBeam(world, new Vector3d(entityPlayer).add(new Vector3d(0, entityPlayer.getEyeHeight - 0.2, 0)), new
+							Vector3d(fortronTile.asInstanceOf[TileEntity]).add(0.5), FieldColor.blue, 20)
                 }
                 receivedEnergy += consumedEnergy
               }
@@ -107,7 +116,8 @@ class ItemRemoteController extends ItemCardFrequency with ICoordLink
             }
             if (!world.isRemote)
             {
-              entityPlayer.addChatMessage(new ChatComponentText(LanguageUtility.getLocal("message.remoteController.fail").replaceAll("#p", new UnitDisplay(UnitDisplay.Unit.JOULES, requiredEnergy).toString)))
+				entityPlayer.addChatMessage(new ChatComponentText(Game.instance.get.languageManager.getLocal("message.remoteController.fail").replaceAll("#p", new
+						UnitDisplay(UnitDisplay.Unit.JOULES, requiredEnergy).toString)))
             }
           }
         }
@@ -119,15 +129,6 @@ class ItemRemoteController extends ItemCardFrequency with ICoordLink
     }
 
 	  return Item
-  }
-
-	def getLink(Item: Item): VectorWorld =
-  {
-	  if (Item.stackTagCompound == null || !Item.getTagCompound.hasKey("link"))
-    {
-      return null
-    }
-	  return new VectorWorld(Item.getTagCompound.getCompoundTag("link"))
   }
 
   @SubscribeEvent def preMove(evt: EventForceMobilize.EventPreForceManipulate)
@@ -147,7 +148,7 @@ class ItemRemoteController extends ItemCardFrequency with ICoordLink
     {
 		for (Item <- this.remotesCached)
       {
-		  if (!temporaryRemoteBlacklist.contains(Item) && (new Vector3(evt.beforeX, evt.beforeY, evt.beforeZ) == this.getLink(Item)))
+		  if (!temporaryRemoteBlacklist.contains(Item) && (new Vector3d(evt.beforeX, evt.beforeY, evt.beforeZ) == this.getLink(Item)))
         {
 			this.setLink(Item, new VectorWorld(evt.world, evt.afterX, evt.afterY, evt.afterZ))
 			temporaryRemoteBlacklist.add(Item)

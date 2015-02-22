@@ -1,21 +1,5 @@
 package mffs
 
-import com.mojang.authlib.GameProfile
-import cpw.mods.fml.common.FMLCommonHandler
-import cpw.mods.fml.common.network.IGuiHandler
-import api.field.TileElectromagneticProjector
-import api.field.gui.{ContainerElectromagneticProjector, ContainerMatrix}
-import api.field.mobilize.TileForceMobilizer
-import api.item.gui.{ContainerFrequency, ContainerItem}
-import api.production._
-import api.render.fx.IEffectController
-import api.security.{ContainerBiometricIdentifier, TileBiometricIdentifier}
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.server.MinecraftServer
-import net.minecraft.world.World
-import resonantengine.lib.mod.AbstractProxy
-import resonantengine.lib.transform.vector.Vector3
-
 class CommonProxy extends AbstractProxy with IGuiHandler
 {
   override def getServerGuiElement(id: Int, player: EntityPlayer, world: World, x: Int, y: Int, z: Int): AnyRef =
@@ -60,23 +44,23 @@ class CommonProxy extends AbstractProxy with IGuiHandler
     return false
   }
 
-  def renderBeam(world: World, position: Vector3, target: Vector3, color: (Float, Float, Float), age: Int)
+	def renderBeam(world: World, position: Vector3d, target: Vector3d, color: (Float, Float, Float), age: Int)
   {
   }
 
-  def renderHologram(world: World, position: Vector3, color: (Float, Float, Float), age: Int, targetPosition: Vector3)
+	def renderHologram(world: World, position: Vector3d, color: (Float, Float, Float), age: Int, targetPosition: Vector3d)
   {
   }
 
-  def renderHologramMoving(world: World, position: Vector3, color: (Float, Float, Float), age: Int)
+	def renderHologramMoving(world: World, position: Vector3d, color: (Float, Float, Float), age: Int)
   {
   }
 
-  def renderHologramOrbit(world: World, orbitCenter: Vector3, color: (Float, Float, Float), age: Int, maxSpeed: Float)
+	def renderHologramOrbit(world: World, orbitCenter: Vector3d, color: (Float, Float, Float), age: Int, maxSpeed: Float)
   {
   }
 
-  def renderHologramOrbit(owner: IEffectController, world: World, orbitCenter: Vector3, position: Vector3, color: (Float, Float, Float), age: Int, maxSpeed: Float)
+	def renderHologramOrbit(owner: IEffectController, world: World, orbitCenter: Vector3d, position: Vector3d, color: (Float, Float, Float), age: Int, maxSpeed: Float)
   {
   }
 }

@@ -1,13 +1,7 @@
 package mffs.render.button
 
-import cpw.mods.fml.client.FMLClientHandler
 import mffs.Reference
 import mffs.base.GuiMFFS
-import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiButton
-import org.lwjgl.opengl.GL11
-import resonantengine.lib.utility.LanguageUtility
-import resonantengine.lib.transform.vector.Vector2
 
 class GuiIndexedButton(id: Int, x: Int, y: Int, val offset: Vector2 = new Vector2, mainGui: GuiMFFS = null, name: String = "") extends GuiButton(id, x, y, 18, 18, name)
 {
@@ -44,8 +38,8 @@ class GuiIndexedButton(id: Int, x: Int, y: Int, val offset: Vector2 = new Vector
     {
       if (this.isPointInRegion(this.xPosition, this.yPosition, this.width, this.height, x, y))
       {
-        val title: String = LanguageUtility.getLocal("gui." + this.displayString + ".name")
-        this.mainGui.tooltip = LanguageUtility.getLocal("gui." + this.displayString + ".tooltip")
+		  val title: String = Game.instance.get.languageManager.getLocal("gui." + this.displayString + ".name")
+		  this.mainGui.tooltip = Game.instance.get.languageManager.getLocal("gui." + this.displayString + ".tooltip")
         if (title != null && title.length > 0)
         {
           this.mainGui.tooltip = title + ": " + this.mainGui.tooltip

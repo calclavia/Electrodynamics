@@ -9,7 +9,7 @@ import nova.core.util.transform.Vector3d;
 
 import java.util.Set;
 
-public interface IFieldMatrix extends IModuleProvider, IActivatable, IPermissionProvider {
+public interface FieldMatrix extends IModuleProvider, IActivatable, IPermissionProvider {
 	/**
 	 * Gets the mode of the projector, mainly the shape and size of it.
 	 */

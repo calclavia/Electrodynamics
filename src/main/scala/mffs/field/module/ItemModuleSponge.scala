@@ -8,7 +8,7 @@ class ItemModuleSponge extends ItemModule
 {
   setMaxStackSize(1)
 
-  override def onProject(projector: IProjector, fields: Set[Vector3]): Boolean =
+	override def onProject(projector: IProjector, fields: Set[Vector3d]): Boolean =
   {
     if (projector.getTicks % 60 == 0)
     {

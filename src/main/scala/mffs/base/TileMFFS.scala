@@ -1,15 +1,7 @@
 package mffs.base
 
-import io.netty.buffer.ByteBuf
 import mffs.ModularForceFieldSystem
 import mffs.item.card.ItemCardLink
-import net.minecraft.block.Block
-import net.minecraft.block.material.Material
-import net.minecraft.entity.Entity
-import net.minecraft.entity.player.{EntityPlayer, EntityPlayerMP}
-import net.minecraft.init.Blocks
-import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.network.Packet
 
 /**
  * A base block class for all MFFS blocks to inherit.
@@ -68,6 +60,11 @@ abstract class TileMFFS extends ResonantTile(Material.iron) with ICamouflageMate
     }
   }
 
+	def setActive(flag: Boolean) {
+		active = flag
+		worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord)
+	}
+
   override def getExplosionResistance(entity: Entity): Float = 100
 
   override def update()
@@ -87,7 +84,7 @@ abstract class TileMFFS extends ResonantTile(Material.iron) with ICamouflageMate
     return ModularForceFieldSystem.packetHandler.toMCPacket(getDescPacket)
   }
 
-  override def read(buf: ByteBuf, id: Int, packetType: PacketType)
+	override def read(buf: Packet, id: Int, packetType: PacketType)
   {
     if (id == TilePacketType.description.id)
     {
@@ -115,13 +112,7 @@ abstract class TileMFFS extends ResonantTile(Material.iron) with ICamouflageMate
     }
   }
 
-  def setActive(flag: Boolean)
-  {
-    active = flag
-    worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord)
-  }
-
-  override def write(buf: ByteBuf, id: Int)
+	override def write(buf: Packet, id: Int)
   {
     super.write(buf, id)
 
@@ -150,7 +141,7 @@ abstract class TileMFFS extends ResonantTile(Material.iron) with ICamouflageMate
 
   def isActive: Boolean = active
 
-  override protected def use(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
+	override protected def use(player: EntityPlayer, side: Int, hit: Vector3d): Boolean =
   {
     if (!world.isRemote)
     {
@@ -167,7 +158,7 @@ abstract class TileMFFS extends ResonantTile(Material.iron) with ICamouflageMate
     return true
   }
 
-  override protected def configure(player: EntityPlayer, side: Int, hit: Vector3): Boolean =
+	override protected def configure(player: EntityPlayer, side: Int, hit: Vector3d): Boolean =
   {
     if (player.isSneaking)
     {

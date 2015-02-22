@@ -1,10 +1,6 @@
 package mffs.field.gui
 
 import mffs.base.{GuiMFFS, TileFieldMatrix}
-import resonantengine.lib.transform.region.Rectangle
-import resonantengine.lib.transform.vector.Vector2
-import resonantengine.lib.utility.LanguageUtility
-import resonantengine.prefab.gui.GuiContainerBase.SlotType
 
 /**
  * Anything that has a field matrix within it.
@@ -19,16 +15,16 @@ abstract class GuiMatrix(container: ContainerMatrix, tile: TileFieldMatrix) exte
     /**
      * Tooltips
      */
-    val north = LanguageUtility.getLocal("gui.projector." + (if (tile.absoluteDirection) "north" else "front"))
-    val south = LanguageUtility.getLocal("gui.projector." + (if (tile.absoluteDirection) "south" else "back"))
-    val west = LanguageUtility.getLocal("gui.projector." + (if (tile.absoluteDirection) "west" else "left"))
-    val east = LanguageUtility.getLocal("gui.projector." + (if (tile.absoluteDirection) "east" else "right"))
-    val up = LanguageUtility.getLocal("gui.projector.up")
-    val down = LanguageUtility.getLocal("gui.projector.down")
+	val north = Game.instance.get.languageManager.getLocal("gui.projector." + (if (tile.absoluteDirection) "north" else "front"))
+	  val south = Game.instance.get.languageManager.getLocal("gui.projector." + (if (tile.absoluteDirection) "south" else "back"))
+	  val west = Game.instance.get.languageManager.getLocal("gui.projector." + (if (tile.absoluteDirection) "west" else "left"))
+	  val east = Game.instance.get.languageManager.getLocal("gui.projector." + (if (tile.absoluteDirection) "east" else "right"))
+	  val up = Game.instance.get.languageManager.getLocal("gui.projector.up")
+	  val down = Game.instance.get.languageManager.getLocal("gui.projector.down")
 
     //Mode
     drawSlot(matrixCenter.xi, matrixCenter.yi, SlotType.NONE, 1f, 0.4f, 0.4f)
-    tooltips.put(new Rectangle(matrixCenter, 18), LanguageUtility.getLocal("gui.projector.mode"))
+	  tooltips.put(new Rectangle(matrixCenter, 18), Game.instance.get.languageManager.getLocal("gui.projector.mode"))
 
     //NORTH
     (1 to 2) foreach (i => tooltips.put(new Rectangle(new Vector2(matrixCenter.xi, matrixCenter.yi - 18 * i), 18), north))

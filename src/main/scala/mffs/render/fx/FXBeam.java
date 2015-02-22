@@ -12,7 +12,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 import resonantengine.lib.render.RenderUtility;
-import resonantengine.lib.transform.vector.Vector3;
+import resonantengine.lib.transform.vector.Vector3d;
 
 /**
  * Based off Thaumcraft's Beam Renderer.
@@ -32,14 +32,14 @@ public abstract class FXBeam extends EntityFX
 	private float rotPitch = 0.0F;
 	private float prevYaw = 0.0F;
 	private float prevPitch = 0.0F;
-	private Vector3 target = new Vector3();
+	private Vector3d target = new Vector3d();
 	private float endModifier = 1.0F;
 	private boolean reverse = false;
 	private boolean pulse = true;
 	private int rotationSpeed = 20;
 	private float prevSize = 0.0F;
 
-	public FXBeam(ResourceLocation texture, World par1World, Vector3 position, Vector3 target2, float red, float green, float blue, int age)
+	public FXBeam(ResourceLocation texture, World par1World, Vector3d position, Vector3d target2, float red, float green, float blue, int age)
 	{
 		super(par1World, position.x(), position.y(), position.z(), 0.0D, 0.0D, 0.0D);
 		this.texture = texture;
@@ -55,7 +55,7 @@ public abstract class FXBeam extends EntityFX
 		float xd = (float) (this.posX - this.target.x());
 		float yd = (float) (this.posY - this.target.y());
 		float zd = (float) (this.posZ - this.target.z());
-		this.length = (float) new Vector3(this).distance(this.target);
+		this.length = (float) new Vector3d(this).distance(this.target);
 		double var7 = MathHelper.sqrt_double(xd * xd + zd * zd);
 		this.rotYaw = ((float) (Math.atan2(xd, zd) * 180.0D / 3.141592653589793D));
 		this.rotPitch = ((float) (Math.atan2(yd, var7) * 180.0D / 3.141592653589793D));

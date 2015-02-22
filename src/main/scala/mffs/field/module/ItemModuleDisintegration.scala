@@ -14,13 +14,13 @@ class ItemModuleDisintegration extends ItemModule
   setMaxStackSize(1)
   setCost(20)
 
-  override def onProject(projector: IProjector, fields: Set[Vector3]): Boolean =
+	override def onProject(projector: IProjector, fields: Set[Vector3d]): Boolean =
   {
     this.blockCount = 0
     return false
   }
 
-  override def onProject(projector: IProjector, position: Vector3): Int =
+	override def onProject(projector: IProjector, position: Vector3d): Int =
   {
     val proj = projector.asInstanceOf[TileElectromagneticProjector]
     val world = proj.world

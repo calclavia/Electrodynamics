@@ -10,7 +10,7 @@ import java.util.Set;
  * Also extends IDisableable, IFortronFrequency
  * @author Calclavia
  */
-public abstract interface IProjector extends IInventory, IFieldMatrix, BlockFrequency {
+public abstract interface IProjector extends IInventory, FieldMatrix, BlockFrequency {
 	/**
 	 * Projects the force field.
 	 */

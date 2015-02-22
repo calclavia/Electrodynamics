@@ -10,7 +10,7 @@ class ItemCardFrequency extends ItemCard with IItemFrequency with IPacketReceive
 {
 	override def addInformation(Item: Item, par2EntityPlayer: EntityPlayer, list: List[_], par4: Boolean)
   {
-	  list.add(LanguageUtility.getLocal("info.cardFrequency.freq") + " " + getEncodedFrequency(Item))
+	  list.add(Game.instance.get.languageManager.getLocal("info.cardFrequency.freq") + " " + getEncodedFrequency(Item))
   }
 
 	def getEncodedFrequency(Item: Item): String =
@@ -47,7 +47,7 @@ class ItemCardFrequency extends ItemCard with IItemFrequency with IPacketReceive
 	  return Item
   }
 
-  override def read(data: ByteBuf, player: EntityPlayer, packet: PacketType)
+	override def read(data: Packet, player: EntityPlayer, packet: PacketType)
   {
     setFrequency(data.readInt(), player.getCurrentEquippedItem)
   }

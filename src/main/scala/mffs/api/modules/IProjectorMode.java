@@ -1,6 +1,6 @@
 package mffs.api.modules;
 
-import mffs.api.machine.IFieldMatrix;
+import mffs.api.machine.FieldMatrix;
 import mffs.api.machine.IProjector;
 import nova.core.util.transform.Vector3d;
 
@@ -13,17 +13,17 @@ public interface IProjectorMode extends FortronCost {
 	 * @return The blocks actually making up the force field. This array of blocks are
 	 * NOT affected by rotation or translation, and is relative to the center of the projector.
 	 */
-	public Set<Vector3d> getExteriorPoints(IFieldMatrix projector);
+	public Set<Vector3d> getExteriorPoints(FieldMatrix projector);
 
 	/**
 	 * @return Gets all interior points. Not translated or rotated.
 	 */
-	public Set<Vector3d> getInteriorPoints(IFieldMatrix projector);
+	public Set<Vector3d> getInteriorPoints(FieldMatrix projector);
 
 	/**
 	 * @return Is this specific position inside of this force field?
 	 */
-	public boolean isInField(IFieldMatrix projector, Vector3d position);
+	public boolean isInField(FieldMatrix projector, Vector3d position);
 
 	/**
 	 * Called to render an object in front of the projection.

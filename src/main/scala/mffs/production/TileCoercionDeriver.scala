@@ -165,7 +165,7 @@ class TileCoercionDeriver extends TileModuleAcceptor with TTEBridge
     return false
   }
 
-  override def write(buf: ByteBuf, id: Int)
+	override def write(buf: Packet, id: Int)
   {
     super.write(buf, id)
 
@@ -176,7 +176,7 @@ class TileCoercionDeriver extends TileModuleAcceptor with TTEBridge
     }
   }
 
-  override def read(buf: ByteBuf, id: Int, packetType: PacketType)
+	override def read(buf: Packet, id: Int, packetType: PacketType)
   {
     super.read(buf, id, packetType)
 
@@ -212,13 +212,13 @@ class TileCoercionDeriver extends TileModuleAcceptor with TTEBridge
   }
 
   @SideOnly(Side.CLIENT)
-  override def renderStatic(renderer: RenderBlocks, pos: Vector3, pass: Int): Boolean =
+  override def renderStatic(renderer: RenderBlocks, pos: Vector3d, pass: Int): Boolean =
   {
     return false
   }
 
   @SideOnly(Side.CLIENT)
-  override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
+  override def renderDynamic(pos: Vector3d, frame: Float, pass: Int)
   {
     RenderCoercionDeriver.render(this, pos.x, pos.y, pos.z, frame, isActive, false)
   }

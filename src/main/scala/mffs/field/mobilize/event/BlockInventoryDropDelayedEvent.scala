@@ -2,7 +2,8 @@ package mffs.field.mobilize.event
 
 import mffs.base.TileMFFSInventory
 
-class BlockInventoryDropDelayedEvent(handler: IDelayedEventHandler, ticks: Int, block: Block, world: World, position: Vector3, projector: TileMFFSInventory) extends BlockDropDelayedEvent(handler, ticks, block, world, position)
+class BlockInventoryDropDelayedEvent(handler: IDelayedEventHandler, ticks: Int, block: Block, world: World, position: Vector3d, projector: TileMFFSInventory)
+	extends BlockDropDelayedEvent(handler, ticks, block, world, position)
 {
   protected override def onEvent
   {

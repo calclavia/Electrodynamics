@@ -1,14 +1,6 @@
 package mffs.security
 
-import cpw.mods.fml.client.FMLClientHandler
-import cpw.mods.fml.relauncher.{Side, SideOnly}
 import mffs.Reference
-import net.minecraft.client.Minecraft
-import net.minecraft.util.ResourceLocation
-import net.minecraftforge.client.model.AdvancedModelLoader
-import org.lwjgl.opengl.GL11._
-import resonantengine.lib.render.RenderUtility
-import resonantengine.lib.transform.vector.Vector3
 
 @SideOnly(Side.CLIENT)
 final object RenderBiometricIdentifier
@@ -48,7 +40,7 @@ final object RenderBiometricIdentifier
 
       val look = Minecraft.getMinecraft.thePlayer.rayTrace(8, 1)
 
-      if (look != null && tile.position.equals(new Vector3(look).floor))
+		if (look != null && tile.position.equals(new Vector3d(look).floor))
       {
         if (Math.random() > 0.05 || (tile.lastFlicker - t) > 200)
         {

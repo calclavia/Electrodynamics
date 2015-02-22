@@ -13,13 +13,13 @@ class ItemModuleStabilize extends ItemModule
   setMaxStackSize(1)
   setCost(20)
 
-  override def onProject(projector: IProjector, fields: Set[Vector3]): Boolean =
+	override def onProject(projector: IProjector, fields: Set[Vector3d]): Boolean =
   {
     blockCount = 0
     return false
   }
 
-  override def onProject(projector: IProjector, position: Vector3): Int =
+	override def onProject(projector: IProjector, position: Vector3d): Int =
   {
     val tile = projector.asInstanceOf[TileEntity]
     val world = tile.getWorldObj
@@ -28,8 +28,8 @@ class ItemModuleStabilize extends ItemModule
     if (projector.getMode.isInstanceOf[ItemModeCustom] && !(projector.getModuleCount(Content.moduleCamouflage) > 0))
     {
       val fieldBlocks = projector.getMode.asInstanceOf[ItemModeCustom].getFieldBlockMap(projector, projector.getModeStack)
-      val fieldCenter: Vector3 = new Vector3(tile) + projector.getTranslation
-      val relativePosition: Vector3 = position.clone.subtract(fieldCenter)
+		val fieldCenter: Vector3d = new Vector3d(tile) + projector.getTranslation
+		val relativePosition: Vector3d = position.clone.subtract(fieldCenter)
       relativePosition.transform(new EulerAngle(-projector.getRotationYaw, -projector.getRotationPitch, 0))
       blockInfo = fieldBlocks(relativePosition.round)
     }

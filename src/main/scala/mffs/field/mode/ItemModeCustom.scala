@@ -25,23 +25,23 @@ class ItemModeCustom extends ItemMode with TCache
 	override def addInformation(Item: Item, par2EntityPlayer: EntityPlayer, list: util.List[_], par4: Boolean)
   {
 	  val nbt: NBTTagCompound = NBTUtility.getNBTTagCompound(Item)
-    list.add(LanguageUtility.getLocal("info.modeCustom.mode") + " " + (if (nbt.getBoolean(NBT_MODE)) LanguageUtility.getLocal("info.modeCustom.substraction") else LanguageUtility.getLocal("info.modeCustom.additive")))
-    val point1: Vector3 = new Vector3(nbt.getCompoundTag(NBT_POINT_1))
-    list.add(LanguageUtility.getLocal("info.modeCustom.point1") + " " + point1.xi + ", " + point1.yi + ", " + point1.zi)
-    val point2: Vector3 = new Vector3(nbt.getCompoundTag(NBT_POINT_2))
-    list.add(LanguageUtility.getLocal("info.modeCustom.point2") + " " + point2.xi + ", " + point2.yi + ", " + point2.zi)
+	  list.add(Game.instance.get.languageManager.getLocal("info.modeCustom.mode") + " " + (if (nbt.getBoolean(NBT_MODE)) Game.instance.get.languageManager.getLocal("info.modeCustom.substraction") else Game.instance.get.languageManager.getLocal("info.modeCustom.additive")))
+	  val point1: Vector3d = new Vector3d(nbt.getCompoundTag(NBT_POINT_1))
+	  list.add(Game.instance.get.languageManager.getLocal("info.modeCustom.point1") + " " + point1.xi + ", " + point1.yi + ", " + point1.zi)
+	  val point2: Vector3d = new Vector3d(nbt.getCompoundTag(NBT_POINT_2))
+	  list.add(Game.instance.get.languageManager.getLocal("info.modeCustom.point2") + " " + point2.xi + ", " + point2.yi + ", " + point2.zi)
     val modeID: Int = nbt.getInteger(NBT_ID)
     if (modeID > 0)
     {
-      list.add(LanguageUtility.getLocal("info.modeCustom.modeID") + " " + modeID)
+		list.add(Game.instance.get.languageManager.getLocal("info.modeCustom.modeID") + " " + modeID)
       val fieldSize: Int = nbt.getInteger(NBT_FIELD_SIZE)
       if (fieldSize > 0)
       {
-        list.add(LanguageUtility.getLocal("info.modeCustom.fieldSize") + " " + fieldSize)
+		  list.add(Game.instance.get.languageManager.getLocal("info.modeCustom.fieldSize") + " " + fieldSize)
       }
       else
       {
-        list.add(LanguageUtility.getLocal("info.modeCustom.notSaved"))
+		  list.add(Game.instance.get.languageManager.getLocal("info.modeCustom.notSaved"))
       }
     }
     if (GuiScreen.isShiftKeyDown)
@@ -50,7 +50,7 @@ class ItemModeCustom extends ItemMode with TCache
     }
     else
     {
-      list.add(LanguageUtility.getLocal("info.modeCustom.shift"))
+		list.add(Game.instance.get.languageManager.getLocal("info.modeCustom.shift"))
     }
   }
 
@@ -63,8 +63,8 @@ class ItemModeCustom extends ItemMode with TCache
 		  val nbt: NBTTagCompound = NBTUtility.getNBTTagCompound(Item)
         if (nbt != null)
         {
-          val point1 = new Vector3(nbt.getCompoundTag(NBT_POINT_1))
-          val point2 = new Vector3(nbt.getCompoundTag(NBT_POINT_2))
+			val point1 = new Vector3d(nbt.getCompoundTag(NBT_POINT_1))
+			val point2 = new Vector3d(nbt.getCompoundTag(NBT_POINT_2))
 
           if (nbt.hasKey(NBT_POINT_1) && nbt.hasKey(NBT_POINT_2) && !(point1 == point2))
           {
@@ -97,7 +97,7 @@ class ItemModeCustom extends ItemMode with TCache
 
               for (x <- minPoint.xi to maxPoint.xi; y <- minPoint.yi to maxPoint.yi; z <- minPoint.zi to maxPoint.zi)
               {
-                val position = new Vector3(x, y, z)
+				  val position = new Vector3d(x, y, z)
                 val targetCheck = midPoint + position
                 val block = targetCheck.getBlock(world)
 
@@ -115,7 +115,7 @@ class ItemModeCustom extends ItemMode with TCache
                   }
                   else
                   {
-                    (0 until list.tagCount) filter (i => new Vector3(list.getCompoundTagAt(i)).equals(position)) foreach (list.removeTag(_))
+					  (0 until list.tagCount) filter (i => new Vector3d(list.getCompoundTagAt(i)).equals(position)) foreach (list.removeTag(_))
                   }
                 }
               }
@@ -124,7 +124,7 @@ class ItemModeCustom extends ItemMode with TCache
               nbt.setInteger(NBT_FIELD_SIZE, list.tagCount)
 				NBTUtility.saveData(getSaveDirectory, NBT_FILE_SAVE_PREFIX + getModeID(Item), saveNBT)
               clearCache()
-              entityPlayer.addChatMessage(new ChatComponentText(LanguageUtility.getLocal("message.modeCustom.saved")))
+				entityPlayer.addChatMessage(new ChatComponentText(Game.instance.get.languageManager.getLocal("message.modeCustom.saved")))
             }
           }
         }
@@ -136,7 +136,8 @@ class ItemModeCustom extends ItemMode with TCache
         if (nbt != null)
         {
           nbt.setBoolean(NBT_MODE, !nbt.getBoolean(NBT_MODE))
-          entityPlayer.addChatMessage(new ChatComponentText(LanguageUtility.getLocal("message.modeCustom.modeChange").replaceAll("#p", (if (nbt.getBoolean(NBT_MODE)) LanguageUtility.getLocal("info.modeCustom.substraction") else LanguageUtility.getLocal("info.modeCustom.additive")))))
+			entityPlayer.addChatMessage(new
+					ChatComponentText(Game.instance.get.languageManager.getLocal("message.modeCustom.modeChange").replaceAll("#p", (if (nbt.getBoolean(NBT_MODE)) Game.instance.get.languageManager.getLocal("info.modeCustom.substraction") else Game.instance.get.languageManager.getLocal("info.modeCustom.additive")))))
         }
       }
     }
@@ -150,15 +151,15 @@ class ItemModeCustom extends ItemMode with TCache
 		val nbt: NBTTagCompound = NBTUtility.getNBTTagCompound(Item)
       if (nbt != null)
       {
-        val point1: Vector3 = new Vector3(nbt.getCompoundTag(NBT_POINT_1))
-        if (!nbt.hasKey(NBT_POINT_1) || (point1 == new Vector3(0, 0, 0)))
+		  val point1: Vector3d = new Vector3d(nbt.getCompoundTag(NBT_POINT_1))
+		  if (!nbt.hasKey(NBT_POINT_1) || (point1 == new Vector3d(0, 0, 0)))
         {
-          nbt.setTag(NBT_POINT_1, new Vector3(x, y, z).toNBT)
+			nbt.setTag(NBT_POINT_1, new Vector3d(x, y, z).toNBT)
           player.addChatMessage(new ChatComponentText("Set point 1: " + x + ", " + y + ", " + z + "."))
         }
         else
         {
-          nbt.setTag(NBT_POINT_2, new Vector3(x, y, z).toNBT)
+			nbt.setTag(NBT_POINT_2, new Vector3d(x, y, z).toNBT)
           player.addChatMessage(new ChatComponentText("Set point 2: " + x + ", " + y + ", " + z + "."))
         }
       }
@@ -166,11 +167,11 @@ class ItemModeCustom extends ItemMode with TCache
     return true
   }
 
-	def getFieldBlockMap(projector: IFieldMatrix, Item: Item): mutable.Map[Vector3, (Block, Int)] =
+	def getFieldBlockMap(projector: IFieldMatrix, Item: Item): mutable.Map[Vector3d, (Block, Int)] =
   {
 	  val cacheID = "Item_" + Item.hashCode
 
-    if (hasCache(classOf[mutable.Map[Vector3, (Block, Int)]], cacheID)) return getCache(classOf[mutable.Map[Vector3, (Block, Int)]], cacheID)
+	  if (hasCache(classOf[mutable.Map[Vector3d, (Block, Int)]], cacheID)) return getCache(classOf[mutable.Map[Vector3d, (Block, Int)]], cacheID)
 
 	  val fieldMap = getFieldBlockMapClean(projector, Item)
 
@@ -189,7 +190,7 @@ class ItemModeCustom extends ItemMode with TCache
 
 			getFieldBlocks(projector, Item) foreach (originalVec =>
           {
-            val newFieldBlock = originalVec.clone + new Vector3(direction) * directionalDisplacementScale
+			  val newFieldBlock = originalVec.clone + new Vector3d(direction) * directionalDisplacementScale
             fieldMap.put(newFieldBlock, fieldMap(originalVec))
           })
         })
@@ -201,25 +202,25 @@ class ItemModeCustom extends ItemMode with TCache
     return fieldMap
   }
 
-  override def getInteriorPoints(projector: IFieldMatrix): JSet[Vector3] =
+	override def getInteriorPoints(projector: IFieldMatrix): JSet[Vector3d] =
   {
     return this.getExteriorPoints(projector)
   }
 
-  override def getExteriorPoints(projector: IFieldMatrix): JSet[Vector3] =
+	override def getExteriorPoints(projector: IFieldMatrix): JSet[Vector3d] =
   {
     return this.getFieldBlocks(projector, projector.getModeStack)
   }
 
-	def getFieldBlocks(projector: IFieldMatrix, Item: Item): Set[Vector3] =
+	def getFieldBlocks(projector: IFieldMatrix, Item: Item): Set[Vector3d] =
   {
 	  return getFieldBlockMapClean(projector, Item).keySet.toSet
   }
 
-	def getFieldBlockMapClean(projector: IFieldMatrix, Item: Item): mutable.Map[Vector3, (Block, Int)] =
+	def getFieldBlockMapClean(projector: IFieldMatrix, Item: Item): mutable.Map[Vector3d, (Block, Int)] =
   {
     val scale = (projector.getModuleCount(Content.moduleScale) / 3f + 1)
-    val fieldBlocks = mutable.Map.empty[Vector3, (Block, Int)]
+	  val fieldBlocks = mutable.Map.empty[Vector3d, (Block, Int)]
 
     if (getSaveDirectory != null)
     {
@@ -231,7 +232,8 @@ class ItemModeCustom extends ItemMode with TCache
 
         (0 until nbtTagList.tagCount)
           .map(i => nbtTagList.getCompoundTagAt(i))
-          .foreach(vectorTag => fieldBlocks.put(new Vector3(vectorTag) * scale, (Block.blockRegistry.getObject(vectorTag.getString(NBT_FIELD_BLOCK_NAME)).asInstanceOf[Block], vectorTag.getInteger(NBT_FIELD_BLOCK_METADATA))))
+			.foreach(vectorTag => fieldBlocks.put(new
+				Vector3d(vectorTag) * scale, (Block.blockRegistry.getObject(vectorTag.getString(NBT_FIELD_BLOCK_NAME)).asInstanceOf[Block], vectorTag.getInteger(NBT_FIELD_BLOCK_METADATA))))
       }
     }
     return fieldBlocks
@@ -274,7 +276,7 @@ class ItemModeCustom extends ItemMode with TCache
     return file
   }
 
-  override def isInField(projector: IFieldMatrix, position: Vector3): Boolean =
+	override def isInField(projector: IFieldMatrix, position: Vector3d): Boolean =
   {
     return false
   }

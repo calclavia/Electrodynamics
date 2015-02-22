@@ -1,6 +1,6 @@
 package mffs.api.modules;
 
-import mffs.api.machine.IFieldMatrix;
+import mffs.api.machine.FieldMatrix;
 import mffs.api.machine.IProjector;
 import nova.core.entity.Entity;
 import nova.core.util.transform.Vector3d;
@@ -43,14 +43,14 @@ public interface Module extends FortronCost {
 	 *
 	 * @return False if to prevent this position from being added to the projection que.
 	 */
-	void onPreCalculate(IFieldMatrix projector, Set<Vector3d> calculatedField);
+	void onPreCalculate(FieldMatrix projector, Set<Vector3d> calculatedField);
 
 	/**
 	 * Called in this module when after being calculated by the projector.
 	 *
 	 * @return False if to prevent this position from being added to the projection que.
 	 */
-	void onPostCalculate(IFieldMatrix projector, Set<Vector3d> fieldDefinition);
+	void onPostCalculate(FieldMatrix projector, Set<Vector3d> fieldDefinition);
 
 	/**
 	 * @return Does this module require ticking from the force field projector?

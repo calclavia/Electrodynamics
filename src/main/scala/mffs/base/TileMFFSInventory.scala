@@ -7,7 +7,7 @@ package mffs.base
  */
 abstract class TileMFFSInventory extends TileMFFS with TInventory with TPrefabInventory
 {
-  override def write(buf: ByteBuf, id: Int)
+	override def write(buf: Packet, id: Int)
   {
     super.write(buf, id)
 
@@ -19,7 +19,7 @@ abstract class TileMFFSInventory extends TileMFFS with TInventory with TPrefabIn
     }
   }
 
-  override def read(buf: ByteBuf, id: Int, packetType: PacketType)
+	override def read(buf: Packet, id: Int, packetType: PacketType)
   {
     super.read(buf, id, packetType)
 
