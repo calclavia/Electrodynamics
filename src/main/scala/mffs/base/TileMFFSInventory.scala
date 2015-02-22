@@ -9,21 +9,18 @@ import nova.core.network.Packet
  * @author Calclavia
  */
 abstract class TileMFFSInventory extends BlockMFFS with InventorySimpleProvider {
-	override def write(buf: Packet, id: Int) {
-		super.write(buf, id)
+	override def read(id: Int, packet: Packet) {
+		super.read(id, packet)
 
-		if (id == TilePacketType.description.id) {
-			val nbt = new NBTTagCompound
-			getInventory.save(nbt)
-			buf <<< nbt
+		if (id == TilePacketType.description.id || id == TilePacketType.inventory.id) {
+			inventory.read(id, packet)
 		}
 	}
 
-	override def read(buf: Packet, id: Int, packetType: PacketType) {
-		super.read(buf, id, packetType)
-
-		if (id == TilePacketType.description.id || id == TilePacketType.inventory.id) {
-			getInventory.load(buf.readTag())
+	override def write(id: Int, packet: Packet) {
+		super.write(id, packet)
+		if (id == TilePacketType.description.id) {
+			inventory.write(id, packet)
 		}
 	}
 }

@@ -22,23 +22,24 @@ abstract class TileFrequency extends TileMFFSInventory with Frequency {
 
 	override def unload() {
 		super.unload()
-		FrequencyGridRegistry.instance.remove(this)
+		GraphFrequency.instance.remove(this)
 	}
 
 	def hasPermission(profile: GameProfile, permissions: Permission*): Boolean = permissions.forall(hasPermission(profile, _))
 
 	def hasPermission(profile: GameProfile, permission: Permission): Boolean = !isActive || getBiometricIdentifiers.forall(_.hasPermission(profile, permission))
 
-	def getBiometricIdentifiers: JSet[BlockBiometric] = {
-		val cardLinks = (getConnectionCards.view
+	def getBiometricIdentifiers: Set[BlockBiometric] = {
+		val cardLinks = getConnectionCards.view
 			.filter(item => item != null && item.isInstanceOf[ICoordLink])
-			.map(item => item.asInstanceOf[ICoordLink].getLink(item))
+			.map(item => item.asInstanceOf[ICoordLink].getLink())
 			.filter(_ != null)
 			.filter(_.isInstanceOf[BlockBiometric])
-			.map(_.asInstanceOf[BlockBiometric]))
-			.force.toSet
+			.map(_.asInstanceOf[BlockBiometric])
+			.force
+			.toSet
 
-		val frequencyLinks = GraphFrequency.instance.get(getFrequency).filter(_.isInstanceOf[BlockBiometric]).toSet
+		val frequencyLinks = GraphFrequency.instance.get(getFrequency).filter(_.isInstanceOf[BlockBiometric]).toSet[BlockBiometric]
 
 		return frequencyLinks ++ cardLinks
 	}
@@ -47,7 +48,7 @@ abstract class TileFrequency extends TileMFFSInventory with Frequency {
 		val frequencyCard = getFrequencyCard
 
 		if (frequencyCard != null) {
-			return frequencyCard.getItem.asInstanceOf[ItemCardFrequency].getFrequency(frequencyCard)
+			return frequencyCard.asInstanceOf[ItemCardFrequency].getFrequency(frequencyCard)
 		}
 
 		return 0
@@ -57,11 +58,11 @@ abstract class TileFrequency extends TileMFFSInventory with Frequency {
 
 	}
 
-	def getFrequencyCard: Item = {
+	def getFrequencyCard: ItemCardFrequency = {
 		val stack = inventory.get(frequencySlot)
 
-		if (stack != null && stack.getItem.isInstanceOf[ItemCardFrequency]) {
-			return stack
+		if (stack != null && stack.isInstanceOf[ItemCardFrequency]) {
+			return stack.asInstanceOf[ItemCardFrequency]
 		}
 
 		return null
