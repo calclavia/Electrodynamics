@@ -343,7 +343,7 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with FieldMatrix with 
 	 * @param callBack - Optional callback
 	 */
 	protected def calculateField(callBack: () => Unit = null) {
-		if (!worldObj.isRemote && !isCalculating) {
+		if (Game.instance.networkManager.isServer && !isCalculating) {
 			if (getMode != null) {
 				//Clear mode cache
 				if (getModeStack.getItem.isInstanceOf[TCache]) {

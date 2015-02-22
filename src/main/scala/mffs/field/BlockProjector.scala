@@ -134,7 +134,7 @@ class BlockProjector extends TileFieldMatrix with IProjector
         worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, Reference.prefix + "field", 0.6f, (1 - this.worldObj.rand.nextFloat * 0.1f))
       }
     }
-    else if (!worldObj.isRemote)
+	else if (Game.instance.networkManager.isServer)
     {
       destroyField()
     }
@@ -161,7 +161,7 @@ class BlockProjector extends TileFieldMatrix with IProjector
    */
   protected override def calculateField(callBack: () => Unit = null)
   {
-    if (!worldObj.isRemote && !isCalculating)
+	  if (Game.instance.networkManager.isServer && !isCalculating)
     {
       if (getMode != null)
       {

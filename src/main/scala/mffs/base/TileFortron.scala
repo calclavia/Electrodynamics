@@ -18,7 +18,7 @@ abstract class TileFortron extends TileFrequency with IFluidHandler with IFortro
 	{
 		super.update()
 
-		if (!worldObj.isRemote && ticks % 60 == 0)
+		if (Game.instance.networkManager.isServer && ticks % 60 == 0)
 		{
 			sendFortronToClients
 		}

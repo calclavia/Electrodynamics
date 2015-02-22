@@ -49,7 +49,7 @@ class BlockCoercionDeriver extends TileModuleAcceptor with TTEBridge
   {
     super.update()
 
-    if (!worldObj.isRemote)
+	  if (Game.instance.networkManager.isServer)
     {
       if (isActive)
       {

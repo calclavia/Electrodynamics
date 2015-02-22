@@ -55,7 +55,7 @@ class BlockMobilizer extends TileFieldMatrix with IEffectController
       executePreviews()
       executeFailures()
     }
-    else if (!worldObj.isRemote && isActive)
+	else if (Game.instance.networkManager.isServer && isActive)
     {
       setActive(false)
     }
@@ -73,7 +73,7 @@ class BlockMobilizer extends TileFieldMatrix with IEffectController
           executeMovement()
           calculatedField = null
 
-          if (!worldObj.isRemote)
+			if (Game.instance.networkManager.isServer)
           {
             setActive(false)
           }
@@ -157,7 +157,7 @@ class BlockMobilizer extends TileFieldMatrix with IEffectController
 
   def whileMoving()
   {
-    if (!worldObj.isRemote && performingMove)
+	  if (Game.instance.networkManager.isServer && performingMove)
     {
       if (requestFortron(getFortronCost, false) >= getFortronCost)
       {

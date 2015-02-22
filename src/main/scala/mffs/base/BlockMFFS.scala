@@ -3,15 +3,15 @@ package mffs.base
 import java.util.Optional
 
 import com.resonant.wrapper.core.api.tile.IPlayerUsing
+import mffs.Content
 import mffs.api.machine.IActivatable
-import mffs.item.card.ItemCardLink
-import mffs.{Content, ModularForceFieldSystem}
 import nova.core.block.Block
 import nova.core.block.components.Stateful
-import nova.core.network.{PacketReceiver, PacketSender}
+import nova.core.game.Game
+import nova.core.network.{Packet, PacketReceiver, PacketSender}
 import nova.core.render.texture.Texture
 import nova.core.util.Direction
-import nova.core.util.components.Storable
+import nova.core.util.components.{Storable, Stored}
 
 /**
  * A base block class for all MFFS blocks to inherit.
@@ -26,11 +26,13 @@ abstract class BlockMFFS extends Block with PacketReceiver with PacketSender wit
 	/**
 	 * Is this machine switched on internally via GUI?
 	 */
+	@Stored
 	var isRedstoneActive = false
 
 	/**
 	 * Is the machine active and working?
 	 */
+	@Stored
 	private var active = false
 
 	//	blockHardness = Float.MaxValue
@@ -41,31 +43,16 @@ abstract class BlockMFFS extends Block with PacketReceiver with PacketSender wit
 
 	override def isOpaqueCube: Boolean = false
 
-	override def update() {
-		super.update()
-
-		if (!world.isRemote && ticks % 3 == 0 && playersUsing.size > 0) {
-			playersUsing foreach (player => ModularForceFieldSystem.packetHandler.sendToPlayer(getDescPacket, player.asInstanceOf[EntityPlayerMP]))
-		}
-	}
-
 	//	override def getExplosionResistance(entity: Entity): Float = 100
-	11111
 
-	override def getDescPacket: PacketType = PacketManager.request(this, TilePacketType.description.id)
-
-	override def getDescriptionPacket: Packet = {
-		return ModularForceFieldSystem.packetHandler.toMCPacket(getDescPacket)
-	}
-
-	override def read(buf: Packet, id: Int, packetType: PacketType) {
+	override def read(id: Int, buf: Packet) {
 		if (id == TilePacketType.description.id) {
 			val prevActive = active
 			active = buf.readBoolean()
 			isRedstoneActive = buf.readBoolean()
 
 			if (prevActive != this.active) {
-				markRender()
+				world.markStaticRender(position())
 			}
 		}
 		else if (id == TilePacketType.toggleActivation.id) {
@@ -80,56 +67,44 @@ abstract class BlockMFFS extends Block with PacketReceiver with PacketSender wit
 		}
 	}
 
-	//TODO: Implement redstone support
-	/*
-		override def onNeighborChanged(block: Block) {
-			if (!world.isRemote) {
-				if (world.isBlockIndirectlyGettingPowered(x, y, z)) {
-					powerOn()
-				}
-				else {
-					powerOff()
-				}
-			}
-		}
-
-		def powerOn() {
-			this.setActive(true)
-		}
-
-		def powerOff() {
-			if (!this.isRedstoneActive && !this.worldObj.isRemote) {
-				this.setActive(false)
-			}
-		}
-	*/
 	def setActive(flag: Boolean) {
 		active = flag
 		world().markStaticRender(position())
 	}
 
-	override def write(buf: Packet, id: Int) {
-		super.write(buf, id)
+	//TODO: Implement redstone support
+
+	override def write(id: Int, packet: Packet) {
+		super.write(id, packet)
 
 		if (id == TilePacketType.description.id) {
-			buf <<< active
-			buf <<< isRedstoneActive
+			packet <<< active
+			packet <<< isRedstoneActive
 		}
 	}
 
-	def isPoweredByRedstone: Boolean = world.isBlockIndirectlyGettingPowered(x, y, z)
-
-	override def readFromNBT(nbt: NBTTagCompound) {
-		super.readFromNBT(nbt)
-		this.active = nbt.getBoolean("isActive")
-		this.isRedstoneActive = nbt.getBoolean("isRedstoneActive")
+	override def onNeighborChanged(block: Block) {
+		if (Game.instance.networkManager.isServer) {
+			if (isPoweredByRedstone) {
+				powerOn()
+			}
+			else {
+				powerOff()
+			}
+		}
 	}
 
-	override def writeToNBT(nbt: NBTTagCompound) {
-		super.writeToNBT(nbt)
-		nbt.setBoolean("isActive", this.active)
-		nbt.setBoolean("isRedstoneActive", this.isRedstoneActive)
+	def powerOn() {
+		this.setActive(true)
 	}
+
+	def powerOff() {
+		if (!this.isRedstoneActive && Game.instance.networkManager.isServer) {
+			this.setActive(false)
+		}
+	}
+
+	def isPoweredByRedstone: Boolean = false
 
 	def isActive: Boolean = active
 
