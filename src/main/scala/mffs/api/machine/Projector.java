@@ -8,33 +8,35 @@ import java.util.Set;
 
 /**
  * Also extends IDisableable, IFortronFrequency
+ *
  * @author Calclavia
  */
-public abstract interface Projector extends IInventory, FieldMatrix, Frequency {
+public interface Projector extends IInventory, FieldMatrix, Frequency {
 	/**
 	 * Projects the force field.
 	 */
-	public void projectField();
+	void projectField();
 
 	/**
 	 * Destroys the force field.
 	 */
-	public void destroyField();
+	void destroyField();
 
 	/**
 	 * @return The speed in which a force field is constructed.
 	 */
-	public int getProjectionSpeed();
+	int getProjectionSpeed();
 
 	/**
 	 * @return The amount of ticks this projector has existed in the world.
 	 */
-	public long getTicks();
+	long getTicks();
 
 	/**
 	 * DO NOT modify this list. Read-only.
+	 *
 	 * @return The actual force field block coordinates in the world.
 	 */
-	public Set<Vector3d> getForceFields();
+	Set<Vector3d> getForceFields();
 
 }

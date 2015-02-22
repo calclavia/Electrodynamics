@@ -6,6 +6,7 @@ import com.resonant.core.prefab.itemblock.TooltipItem
 import com.resonant.wrapper.lib.utility.science.UnitDisplay
 import mffs.api.machine.Projector
 import mffs.api.modules.Module
+import mffs.field.BlockProjector
 import nova.core.entity.Entity
 import nova.core.game.Game
 import nova.core.item.Item
@@ -39,8 +40,8 @@ class ItemModule extends Item with TooltipItem with Module {
 	}
 
 	def getEntitiesInField(projector: Projector): JSet[Entity] = {
-		val tile = projector.asInstanceOf[TileEntity]
-		val volume = new Cuboid(-projector.getNegativeScale, projector.getPositiveScale + 1) + (new Vector3d(tile) + projector.getTranslation)
-		return (tile.getWorldObj.getEntitiesWithinAABB(classOf[Entity], volume.toAABB) map (_.asInstanceOf[Entity])).toSet
+		val blockProjector = projector.asInstanceOf[BlockProjector]
+		val volume = new Cuboid(-projector.getNegativeScale, projector.getPositiveScale + Vector3d.one) + (new Vector3d(blockProjector) + projector.getTranslation)
+		return (blockProjector.getWorldObj.getEntitiesWithinAABB(classOf[Entity], volume.toAABB) map (_.asInstanceOf[Entity])).toSet
 	}
 }

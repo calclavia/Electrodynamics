@@ -3,13 +3,14 @@ package mffs.base
 import java.util.{Set => JSet}
 
 import com.resonant.core.access.Permission
+import mffs.GraphFrequency
 import mffs.api.Frequency
 import mffs.api.card.ICoordLink
 import mffs.item.card.ItemCardFrequency
 import mffs.security.{BlockBiometric, MFFSPermissions}
-import mffs.{GraphFrequency, Reference}
 import nova.core.entity.Entity
 import nova.core.item.Item
+import nova.core.player.Player
 import nova.core.util.transform.Vector3d
 
 /**
@@ -29,9 +30,9 @@ abstract class BlockFrequency extends BlockInventory with Frequency {
 		GraphFrequency.instance.remove(this)
 	}
 
-	def hasPermission(profile: GameProfile, permissions: Permission*): Boolean = permissions.forall(hasPermission(profile, _))
+	def hasPermission(playerID: String, permissions: Permission*): Boolean = permissions.forall(hasPermission(playerID, _))
 
-	def hasPermission(profile: GameProfile, permission: Permission): Boolean = !isActive || getBiometricIdentifiers.forall(_.hasPermission(profile, permission))
+	def hasPermission(playerID: String, permission: Permission): Boolean = !isActive || getBiometricIdentifiers.forall(_.hasPermission(playerID, permission))
 
 	def getBiometricIdentifiers: Set[BlockBiometric] = {
 		val cardLinks = getConnectionCards.view
@@ -83,9 +84,12 @@ abstract class BlockFrequency extends BlockInventory with Frequency {
 	def getBiometricIdentifier: BlockBiometric = if (getBiometricIdentifiers.size > 0) getBiometricIdentifiers.head else null
 
 	override def onRightClick(entity: Entity, side: Int, hit: Vector3d): Boolean = {
-		if (!hasPermission(player.getGameProfile, MFFSPermissions.configure)) {
-			player.addChatMessage(new ChatComponentText("[" + Reference.name + "]" + " Access denied!"))
-			return false
+		if (entity.isInstanceOf[Player]) {
+			if (!hasPermission(entity.asInstanceOf[Player].getID, MFFSPermissions.configure)) {
+				//TODO: Add chat
+				//				player.addChatMessage(new ChatComponentText("[" + Reference.name + "]" + " Access denied!"))
+				return false
+			}
 		}
 
 		return super.onRightClick(entity, side, hit)

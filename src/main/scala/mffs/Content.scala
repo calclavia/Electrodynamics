@@ -1,6 +1,6 @@
 package mffs
 
-import com.resonant.core.prefab.modcontent.ContentLoader
+import com.resonant.core.prefab.modcontent.{ContentLoader, RecipeHolder}
 import mffs.base.{ItemModule, Named}
 import mffs.field.mobilize.BlockMobilizer
 import mffs.field.mode._
@@ -21,7 +21,7 @@ import nova.core.render.texture.BlockTexture
  * The main content of MFFS
  * @author Calclavia
  */
-object Content extends ContentLoader {
+object Content extends ContentLoader with RecipeHolder {
 	/**
 	 * Blocks
 	 */
@@ -36,26 +36,26 @@ object Content extends ContentLoader {
 	 * Misc Items
 	 */
 	val remoteController: Item = classOf[ItemRemoteController]
-	val focusMatrix = (new Item with Named).setName("focusMatrix")
+	val focusMatrix = () => (new Item with Named).setName("focusMatrix")
 
 	/**
 	 * Cards
 	 */
-	val cardBlank = new ItemCard
-	val cardInfinite = new ItemCardInfinite
-	val cardFrequency = new ItemCardFrequency
-	val cardID = new ItemCardIdentification
-	val cardLink = new ItemCardLink
+	val cardBlank = classOf[ItemCard]
+	val cardInfinite = classOf[ItemCardInfinite]
+	val cardFrequency = classOf[ItemCardFrequency]
+	val cardID = classOf[ItemCardIdentification]
+	val cardLink = classOf[ItemCardLink]
 
 	/**
 	 * Modes
 	 */
-	val modeCube = new ItemModeCube
-	val modeSphere = new ItemModeSphere
-	val modeTube = new ItemModeTube
-	val modeCylinder = new ItemModeCylinder
-	val modePyramid = new ItemModePyramid
-	val modeCustom = new ItemModeCustom
+	val modeCube = classOf[ItemModeCube]
+	val modeSphere = classOf[ItemModeSphere]
+	val modeTube = classOf[ItemModeTube]
+	val modeCylinder = classOf[ItemModeCylinder]
+	val modePyramid = classOf[ItemModePyramid]
+	val modeCustom = classOf[ItemModeCustom]
 
 	/**
 	 * Modules

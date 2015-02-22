@@ -2,20 +2,21 @@ package mffs.base
 
 import java.util.Optional
 
+import com.resonant.core.prefab.block.Rotatable
+import com.resonant.wrapper.core.Placeholder
 import com.resonant.wrapper.core.api.tile.IPlayerUsing
 import mffs.Content
 import mffs.api.machine.IActivatable
-import mffs.item.card.ItemCardLink
 import nova.core.block.Block
 import nova.core.block.components.Stateful
 import nova.core.entity.Entity
 import nova.core.game.Game
+import nova.core.gui.KeyManager.Key
 import nova.core.network.{Packet, PacketReceiver, PacketSender}
-import nova.core.player.Player
 import nova.core.render.texture.Texture
 import nova.core.util.Direction
 import nova.core.util.components.{Storable, Stored}
-import nova.core.util.transform.Vector3d
+import nova.core.util.transform.{Vector3d, Vector3i}
 
 /**
  * A base block class for all MFFS blocks to inherit.
@@ -71,13 +72,6 @@ abstract class BlockMFFS extends Block with PacketReceiver with PacketSender wit
 		}
 	}
 
-	def setActive(flag: Boolean) {
-		active = flag
-		world().markStaticRender(position())
-	}
-
-	//TODO: Implement redstone support
-
 	override def write(id: Int, packet: Packet) {
 		super.write(id, packet)
 
@@ -87,7 +81,9 @@ abstract class BlockMFFS extends Block with PacketReceiver with PacketSender wit
 		}
 	}
 
-	override def onNeighborChanged(block: Block) {
+	//TODO: Implement redstone support
+
+	override def onNeighborChange(neighborPosition: Vector3i) = {
 		if (Game.instance.networkManager.isServer) {
 			if (isPoweredByRedstone) {
 				powerOn()
@@ -102,6 +98,11 @@ abstract class BlockMFFS extends Block with PacketReceiver with PacketSender wit
 		this.setActive(true)
 	}
 
+	def setActive(flag: Boolean) {
+		active = flag
+		world().markStaticRender(position())
+	}
+
 	def powerOff() {
 		if (!this.isRedstoneActive && Game.instance.networkManager.isServer) {
 			this.setActive(false)
@@ -113,30 +114,20 @@ abstract class BlockMFFS extends Block with PacketReceiver with PacketSender wit
 	def isActive: Boolean = active
 
 	override def onRightClick(entity: Entity, side: Int, hit: Vector3d): Boolean = {
-		if (Game.instance.networkManager.isServer) {
-			if (entity.isInstanceOf[Player] && entity.asInstanceOf[Player].getInventory.getHeldItem.isPresent) {
-				if (player.getCurrentEquippedItem().getItem().isInstanceOf[ItemCardLink]) {
-					return false
+		if (Placeholder.isHoldingConfigurator(entity)) {
+			if (Placeholder.isKeyDown(Key.KEY_LSHIFT)) {
+				if (Game.instance.networkManager.isServer) {
+					//TODO: Fix this
+					// InventoryUtility.dropBlockAsItem(world, position)
+					world.setBlock(position, null)
+					return true
 				}
+				return false
 			}
-
-			player.openGui(ModularForceFieldSystem, 0, world, x, y, z)
-		}
-		return true
-	}
-
-	override protected def configure(player: EntityPlayer, side: Int, hit: Vector3d): Boolean = {
-		if (player.isSneaking) {
-			if (Game.instance.networkManager.isServer) {
-				InventoryUtility.dropBlockAsItem(world, position)
-				world.setBlock(x, y, z, Blocks.air)
-				return true
-			}
-			return false
 		}
 
-		if (this.isInstanceOf[TRotatable]) {
-			return this.asInstanceOf[TRotatable].rotate(side, hit)
+		if (this.isInstanceOf[Rotatable]) {
+			return this.asInstanceOf[Rotatable].rotate(side, hit)
 		}
 
 		return false

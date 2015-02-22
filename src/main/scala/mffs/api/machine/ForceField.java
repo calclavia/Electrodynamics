@@ -1,6 +1,6 @@
 package mffs.api.machine;
 
-public abstract interface IForceField {
+public abstract interface ForceField {
 	public Projector getProjector();
 
 	/**

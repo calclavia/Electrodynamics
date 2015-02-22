@@ -1,10 +1,17 @@
 package mffs.field
 
+import mffs.api.machine.ForceField
 import mffs.security.MFFSPermissions
 import mffs.util.MFFSUtility
 import mffs.{Content, ModularForceFieldSystem}
+import nova.core.block.Block
+import nova.core.entity.Entity
+import nova.core.game.Game
+import nova.core.item.Item
+import nova.core.network.PacketReceiver
+import nova.core.util.transform.Vector3d
 
-class BlockForceField extends ResonantTile(Material.glass) with TPacketReceiver with IForceField
+class BlockForceField extends Block with PacketReceiver with ForceField
 {
 	private var camoStack: Item = null
 	private var projector: Vector3d = null
@@ -142,6 +149,36 @@ class BlockForceField extends ResonantTile(Material.glass) with TPacketReceiver 
       projector.getModuleStacks(projector.getModuleSlots(): _*) forall (stack => stack.getItem.asInstanceOf[IModule].onCollideWithForceField(world, x, y, z, player, stack))
   }
 
+	/**
+	 * @return Gets the projector block controlling this force field. Removes the force field if no
+	 *         projector can be found.
+	 */
+	def getProjector: BlockProjector = {
+		if (this.getProjectorSafe != null) {
+			return getProjectorSafe
+		}
+
+		if (Game.instance.networkManager.isServer) {
+			world.setBlock(xCoord, yCoord, zCoord, Blocks.air)
+		}
+
+		return null
+	}
+
+	def getProjectorSafe: BlockProjector = {
+		if (projector != null) {
+			val projTile = projector.getTileEntity(world)
+
+			if (projTile.isInstanceOf[BlockProjector]) {
+				val projector = projTile.asInstanceOf[IProjector]
+				if (world.isRemote || (projector.getCalculatedField != null && projector.getCalculatedField.contains(position))) {
+					return projTile.asInstanceOf[BlockProjector]
+				}
+			}
+		}
+		return null
+	}
+
   override def getCollisionBoxes(intersect: Cuboid, entity: Entity): Iterable[Cuboid] =
   {
     //TODO: Check if the entity filter actually works...
@@ -217,36 +254,6 @@ class BlockForceField extends ResonantTile(Material.glass) with TPacketReceiver 
     }
 
   }
-
-	/**
-	 * @return Gets the projector block controlling this force field. Removes the force field if no
-	 *         projector can be found.
-	 */
-	def getProjector: BlockProjector = {
-		if (this.getProjectorSafe != null) {
-			return getProjectorSafe
-		}
-
-		if (Game.instance.networkManager.isServer) {
-			world.setBlock(xCoord, yCoord, zCoord, Blocks.air)
-		}
-
-		return null
-	}
-
-	def getProjectorSafe: BlockProjector = {
-		if (projector != null) {
-			val projTile = projector.getTileEntity(world)
-
-			if (projTile.isInstanceOf[BlockProjector]) {
-				val projector = projTile.asInstanceOf[IProjector]
-				if (world.isRemote || (projector.getCalculatedField != null && projector.getCalculatedField.contains(position))) {
-					return projTile.asInstanceOf[BlockProjector]
-				}
-			}
-		}
-		return null
-	}
 
   @SideOnly(Side.CLIENT)
   override def getIcon(access: IBlockAccess, side: Int): IIcon =

@@ -1,16 +1,17 @@
 package mffs.item.fortron
 
+import java.util.Optional
+
 import mffs.item.card.ItemCard
-import mffs.util.FortronUtility
+import nova.core.fluid.{FluidContainerProvider, FluidTankSimple, Tank}
 
 /**
  * A card used by admins or players to cheat infinite energy.
  *
  * @author Calclavia
  */
-class ItemCardInfinite extends ItemCard with TFluidContainerItem
-{
-	override def fill(container: Item, resource: FluidStack, doFill: Boolean): Int = if (resource.getFluid == FortronUtility.fluidFortron) resource.amount else 0
+class ItemCardInfinite extends ItemCard with FluidContainerProvider {
+	val tank = new FluidTankSimple
 
-	override def drain(container: Item, maxDrain: Int, doDrain: Boolean): FluidStack = new FluidStack(FortronUtility.fluidFortron, maxDrain)
+	override def getTank: Optional[Tank] = Optional.of(tank)
 }

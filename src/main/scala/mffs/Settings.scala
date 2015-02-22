@@ -1,12 +1,7 @@
 package mffs
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent
-import net.minecraft.block.Block
 import net.minecraftforge.common.config.Configuration
-import resonantengine.api.mffs.Blacklist
-import resonantengine.lib.mod.config.Config
-import resonantengine.lib.mod.config.ConfigEvent.PostConfigEvent
-import scala.collection.convert.wrapAll._
+import nova.core.util.Config
 /**
  * MFFS Configuration Settings
  *
@@ -14,9 +9,8 @@ import scala.collection.convert.wrapAll._
  */
 object Settings
 {
-  var config: Configuration = _
   final val maxFrequencyDigits: Int = 8
-
+	var config: Configuration = _
   @Config
   var maxForceFieldsPerTick: Int = 5000
   @Config
@@ -53,12 +47,4 @@ object Settings
   var stabilizationBlacklist: Array[String] = _
   @Config(comment = "A list of block names to not be disintegrated by the electromagnetic projector.")
   var disintegrationBlacklist: Array[String] = _
-
-  @SubscribeEvent
-  def configEvent(evt: PostConfigEvent)
-  {
-    Blacklist.stabilizationBlacklist.addAll(Settings.stabilizationBlacklist.map(Block.blockRegistry.getObject(_).asInstanceOf[Block]).toList)
-    Blacklist.disintegrationBlacklist.addAll(Settings.disintegrationBlacklist.map(Block.blockRegistry.getObject(_).asInstanceOf[Block]).toList)
-    Blacklist.mobilizerBlacklist.addAll(Settings.mobilizerBlacklist.map(Block.blockRegistry.getObject(_).asInstanceOf[Block]).toList)
-  }
 }
