@@ -7,6 +7,7 @@ import net.minecraftforge.common.config.{ConfigElement, Configuration}
 /**
  * @author Calclavia
  */
+@deprecated
 class MFFSGuiConfig(parent: GuiScreen) extends GuiConfig(parent, new ConfigElement(Settings.config.getCategory(Configuration.CATEGORY_GENERAL)).getChildElements(), Reference.id, false, false, GuiConfig.getAbridgedConfigPath(Settings.config.toString()))
 {
 

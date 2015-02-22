@@ -46,7 +46,7 @@ class ItemCardLink extends ItemCard with ICoordLink
 
 	override def onItemUse(Item: Item, player: EntityPlayer, world: World, x: Int, y: Int, z: Int, par7: Int, par8: Float, par9: Float, par10: Float): Boolean =
   {
-    if (!world.isRemote)
+	  if (Game.instance.networkManager.isServer)
     {
       val vector: VectorWorld = new VectorWorld(world, x, y, z)
 		this.setLink(Item, vector)

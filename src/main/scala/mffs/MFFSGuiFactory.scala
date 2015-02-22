@@ -10,6 +10,7 @@ import net.minecraft.client.gui.GuiScreen
  * Handles the config GUI
  * @author Calclavia
  */
+@deprecated
 class MFFSGuiFactory extends IModGuiFactory
 {
   override def initialize(minecraftInstance: Minecraft)

@@ -39,7 +39,7 @@ class ItemCardFrequency extends ItemCard with IItemFrequency with IPacketReceive
 
 	override def onItemRightClick(Item: Item, world: World, player: EntityPlayer): Item =
   {
-    if (!world.isRemote)
+	  if (Game.instance.networkManager.isServer)
     {
       /**
        * Open item GUI

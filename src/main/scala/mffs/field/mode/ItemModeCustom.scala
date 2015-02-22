@@ -56,7 +56,7 @@ class ItemModeCustom extends ItemMode with TCache
 
 	override def onItemRightClick(Item: Item, world: World, entityPlayer: EntityPlayer): Item =
   {
-    if (!world.isRemote)
+	  if (Game.instance.networkManager.isServer)
     {
       if (entityPlayer.isSneaking)
       {
@@ -146,7 +146,7 @@ class ItemModeCustom extends ItemMode with TCache
 
 	override def onItemUse(Item: Item, player: EntityPlayer, world: World, x: Int, y: Int, z: Int, par7: Int, par8: Float, par9: Float, par10: Float): Boolean =
   {
-    if (!world.isRemote)
+	  if (Game.instance.networkManager.isServer)
     {
 		val nbt: NBTTagCompound = NBTUtility.getNBTTagCompound(Item)
       if (nbt != null)

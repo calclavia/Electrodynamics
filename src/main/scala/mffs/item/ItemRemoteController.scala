@@ -45,7 +45,7 @@ class ItemRemoteController extends ItemCardFrequency with ICoordLink
 
 	override def onItemUse(Item: Item, player: EntityPlayer, world: World, x: Int, y: Int, z: Int, par7: Int, par8: Float, par9: Float, par10: Float): Boolean =
   {
-    if (!world.isRemote && player.isSneaking)
+	  if (Game.instance.networkManager.isServer && player.isSneaking)
     {
       val vector: VectorWorld = new VectorWorld(world, x, y, z)
 		setLink(Item, vector)
@@ -59,13 +59,6 @@ class ItemRemoteController extends ItemCardFrequency with ICoordLink
     }
     return true
   }
-
-	def setLink(Item: Item, vec: VectorWorld) {
-		if (Item.getTagCompound == null) {
-			Item.setTagCompound(new NBTTagCompound)
-		}
-		Item.getTagCompound.setTag("link", vec.toNBT)
-	}
 
 	def clearLink(Item: Item)
   {
@@ -117,7 +110,7 @@ class ItemRemoteController extends ItemCardFrequency with ICoordLink
 				  return Item
               }
             }
-            if (!world.isRemote)
+			  if (Game.instance.networkManager.isServer)
             {
 				entityPlayer.addChatMessage(new ChatComponentText(Game.instance.get.languageManager.getLocal("message.remoteController.fail").replaceAll("#p", new
 						UnitDisplay(UnitDisplay.Unit.JOULES, requiredEnergy).toString)))
@@ -166,5 +159,12 @@ class ItemRemoteController extends ItemCardFrequency with ICoordLink
       }
     }
   }
+
+	def setLink(Item: Item, vec: VectorWorld) {
+		if (Item.getTagCompound == null) {
+			Item.setTagCompound(new NBTTagCompound)
+		}
+		Item.getTagCompound.setTag("link", vec.toNBT)
+	}
 
 }

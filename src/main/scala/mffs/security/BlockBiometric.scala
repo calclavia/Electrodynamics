@@ -34,13 +34,14 @@ class BlockBiometric extends TileFrequency with TRotatable
 
   override def hasPermission(profile: GameProfile, permission: Permission): Boolean =
   {
-    if (!isActive || ModularForceFieldSystem.proxy.isOp(profile) && Settings.allowOpOverride)
-      return true
+	  if (!isActive || ModularForceFieldSystem.proxy.isOp(profile) && Settings.allowOpOverride) {
+		  return true
+	  }
 
-    return getCards map (stack => stack.getItem.asInstanceOf[IAccessCard].getAccess(stack)) filter (_ != null) exists (_.hasPermission(profile.getName, permission))
+	  return getConnectionCards map (stack => stack.getItem.asInstanceOf[IAccessCard].getAccess(stack)) filter (_ != null) exists (_.hasPermission(profile.getName, permission))
   }
 
-	override def getCards: Set[Item] = (getInventory().getContainedItems filter (_ != null) filter (_.getItem.isInstanceOf[IAccessCard])).toSet
+	override def getConnectionCards: Set[Item] = (getInventory().getContainedItems filter (_ != null) filter (_.getItem.isInstanceOf[IAccessCard])).toSet
 
 	override def isItemValidForSlot(slotID: Int, Item: Item): Boolean =
   {

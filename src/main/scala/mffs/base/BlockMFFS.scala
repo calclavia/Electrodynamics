@@ -5,13 +5,17 @@ import java.util.Optional
 import com.resonant.wrapper.core.api.tile.IPlayerUsing
 import mffs.Content
 import mffs.api.machine.IActivatable
+import mffs.item.card.ItemCardLink
 import nova.core.block.Block
 import nova.core.block.components.Stateful
+import nova.core.entity.Entity
 import nova.core.game.Game
 import nova.core.network.{Packet, PacketReceiver, PacketSender}
+import nova.core.player.Player
 import nova.core.render.texture.Texture
 import nova.core.util.Direction
 import nova.core.util.components.{Storable, Stored}
+import nova.core.util.transform.Vector3d
 
 /**
  * A base block class for all MFFS blocks to inherit.
@@ -108,9 +112,9 @@ abstract class BlockMFFS extends Block with PacketReceiver with PacketSender wit
 
 	def isActive: Boolean = active
 
-	override protected def use(player: EntityPlayer, side: Int, hit: Vector3d): Boolean = {
-		if (!world.isRemote) {
-			if (player.getCurrentEquippedItem != null) {
+	override def onRightClick(entity: Entity, side: Int, hit: Vector3d): Boolean = {
+		if (Game.instance.networkManager.isServer) {
+			if (entity.isInstanceOf[Player] && entity.asInstanceOf[Player].getInventory.getHeldItem.isPresent) {
 				if (player.getCurrentEquippedItem().getItem().isInstanceOf[ItemCardLink]) {
 					return false
 				}
@@ -123,7 +127,7 @@ abstract class BlockMFFS extends Block with PacketReceiver with PacketSender wit
 
 	override protected def configure(player: EntityPlayer, side: Int, hit: Vector3d): Boolean = {
 		if (player.isSneaking) {
-			if (!world.isRemote) {
+			if (Game.instance.networkManager.isServer) {
 				InventoryUtility.dropBlockAsItem(world, position)
 				world.setBlock(x, y, z, Blocks.air)
 				return true

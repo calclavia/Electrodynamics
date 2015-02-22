@@ -7,7 +7,7 @@ class BlockInventoryDropDelayedEvent(handler: IDelayedEventHandler, ticks: Int, 
 {
   protected override def onEvent
   {
-    if (!world.isRemote)
+	  if (Game.instance.networkManager.isServer)
     {
       if (position.getBlock(this.world) == block)
       {

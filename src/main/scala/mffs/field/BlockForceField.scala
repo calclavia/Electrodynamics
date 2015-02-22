@@ -184,7 +184,7 @@ class BlockForceField extends ResonantTile(Material.glass) with TPacketReceiver 
 
 		if (center.distance(new Vector3d(entity)) < 0.5)
       {
-        if (!world.isRemote && entity.isInstanceOf[EntityLiving])
+		  if (Game.instance.networkManager.isServer && entity.isInstanceOf[EntityLiving])
         {
           val entityLiving = entity.asInstanceOf[EntityLiving]
 
@@ -330,7 +330,7 @@ class BlockForceField extends ResonantTile(Material.glass) with TPacketReceiver 
       projector.provideFortron(energy, true)
     }
 
-    if (!world.isRemote)
+	  if (Game.instance.networkManager.isServer)
     {
       world.setBlockToAir(x, y, z)
     }
@@ -378,7 +378,7 @@ class BlockForceField extends ResonantTile(Material.glass) with TPacketReceiver 
   {
     projector = position
 
-    if (!world.isRemote)
+	  if (Game.instance.networkManager.isServer)
     {
       refreshCamoBlock()
     }

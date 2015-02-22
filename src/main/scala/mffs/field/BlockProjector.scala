@@ -242,8 +242,9 @@ class BlockProjector extends TileFieldMatrix with IProjector
                 /**
                  * Default force field block placement action.
                  */
-                if (!world.isRemote)
-                  vector.setBlock(world, Content.forceField)
+				  if (Game.instance.networkManager.isServer) {
+					  vector.setBlock(world, Content.forceField)
+				  }
 
                 forceFields += vector
 
@@ -272,7 +273,7 @@ class BlockProjector extends TileFieldMatrix with IProjector
 
   def destroyField()
   {
-    if (!world.isRemote && calculatedField != null && !isCalculating)
+	  if (Game.instance.networkManager.isServer && calculatedField != null && !isCalculating)
     {
       getModules(getModuleSlots: _*).forall(!_.onDestroy(this, calculatedField))
       //TODO: Parallelism?

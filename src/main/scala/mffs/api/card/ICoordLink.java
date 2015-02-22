@@ -1,10 +1,11 @@
 package mffs.api.card;
 
-import net.minecraft.item.Item;
-import resonantengine.lib.transform.vector.VectorWorld;
+import nova.core.util.collection.Pair;
+import nova.core.util.transform.Vector3i;
+import nova.core.world.World;
 
 public interface ICoordLink {
-	public void setLink(Item Item, VectorWorld position);
+	public void setLink(World world, Vector3i position);
 
-	public VectorWorld getLink(Item Item);
+	public Pair<World, Vector3i> getLink();
 }

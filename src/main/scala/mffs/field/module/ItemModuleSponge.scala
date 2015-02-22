@@ -14,7 +14,7 @@ class ItemModuleSponge extends ItemModule
     {
       val world = projector.asInstanceOf[TileEntity].getWorldObj
 
-      if (!world.isRemote)
+		if (Game.instance.networkManager.isServer)
       {
         for (point <- projector.getInteriorPoints)
         {

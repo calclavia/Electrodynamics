@@ -26,9 +26,4 @@ abstract class TileMFFSInventory extends BlockMFFS with InventorySimpleProvider 
 			getInventory.load(buf.readTag())
 		}
 	}
-
-	/**
-	 * Inventory Methods
-	 */
-	def getCards: Set[Item] = Set(getStackInSlot(0))
 }

@@ -63,7 +63,7 @@ class BlockMobilizer extends TileFieldMatrix with IEffectController
 
   def checkActivation()
   {
-    if (!world.isRemote)
+	  if (Game.instance.networkManager.isServer)
     {
       if (isActive && !performingMove)
       {
@@ -191,7 +191,7 @@ class BlockMobilizer extends TileFieldMatrix with IEffectController
 
   def executePreviews()
   {
-    if (!world.isRemote)
+	  if (Game.instance.networkManager.isServer)
     {
       if (previewMode > 0 && Settings.highGraphics && !performingMove)
       {
@@ -689,7 +689,7 @@ class BlockMobilizer extends TileFieldMatrix with IEffectController
    */
   protected def moveBlock(position: Vector3d): Boolean =
   {
-    if (!world.isRemote)
+	  if (Game.instance.networkManager.isServer)
     {
       val relativePosition = position - getAbsoluteAnchor
       val newPosition = getTargetPosition + relativePosition
