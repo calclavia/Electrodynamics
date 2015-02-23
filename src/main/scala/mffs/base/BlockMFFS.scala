@@ -22,7 +22,7 @@ import nova.core.util.transform.{Vector3d, Vector3i}
  * A base block class for all MFFS blocks to inherit.
  * @author Calclavia
  */
-abstract class BlockMFFS extends Block with PacketHandler with PacketSender with IActivatable with IPlayerUsing with Stateful with Storable {
+abstract class BlockMFFS extends Block with PacketHandler with IActivatable with IPlayerUsing with Stateful with Storable {
 	/**
 	 * Used for client side animations.
 	 */
