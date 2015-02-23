@@ -12,7 +12,7 @@ import nova.core.block.components.Stateful
 import nova.core.entity.Entity
 import nova.core.game.Game
 import nova.core.gui.KeyManager.Key
-import nova.core.network.{Packet, PacketReceiver, PacketSender}
+import nova.core.network.{Packet, PacketHandler}
 import nova.core.render.texture.Texture
 import nova.core.util.Direction
 import nova.core.util.components.{Storable, Stored}
@@ -22,7 +22,7 @@ import nova.core.util.transform.{Vector3d, Vector3i}
  * A base block class for all MFFS blocks to inherit.
  * @author Calclavia
  */
-abstract class BlockMFFS extends Block with PacketReceiver with PacketSender with IActivatable with IPlayerUsing with Stateful with Storable {
+abstract class BlockMFFS extends Block with PacketHandler with PacketSender with IActivatable with IPlayerUsing with Stateful with Storable {
 	/**
 	 * Used for client side animations.
 	 */
@@ -98,15 +98,15 @@ abstract class BlockMFFS extends Block with PacketReceiver with PacketSender wit
 		this.setActive(true)
 	}
 
-	def setActive(flag: Boolean) {
-		active = flag
-		world().markStaticRender(position())
-	}
-
 	def powerOff() {
 		if (!this.isRedstoneActive && Game.instance.networkManager.isServer) {
 			this.setActive(false)
 		}
+	}
+
+	def setActive(flag: Boolean) {
+		active = flag
+		world().markStaticRender(position())
 	}
 
 	def isPoweredByRedstone: Boolean = false

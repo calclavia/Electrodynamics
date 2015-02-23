@@ -1,31 +1,10 @@
 package mffs
 
-import java.util.{HashMap, UUID}
+import java.util.UUID
 
 object SubscribeEventHandler
 {
-  val fluidIconMap = new HashMap[String, IIcon]
 
-  @SubscribeEvent
-  @SideOnly(Side.CLIENT)
-  def preTextureHook(event: TextureStitchEvent.Pre)
-  {
-    if (event.map.getTextureType() == 0)
-    {
-      registerIcon(Reference.prefix + "fortron", event)
-    }
-  }
-
-	def registerIcon(name: String, event: TextureStitchEvent.Pre) {
-		fluidIconMap.put(name, event.map.registerIcon(name))
-	}
-
-  @SubscribeEvent
-  @SideOnly(Side.CLIENT)
-  def textureHook(event: TextureStitchEvent.Post)
-  {
-    FortronUtility.fluidFortron.setIcons(fluidIconMap.get(Reference.prefix + "fortron"))
-  }
 
   @SubscribeEvent
   def onConfigChange(evt: OnConfigChangedEvent)

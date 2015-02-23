@@ -9,10 +9,10 @@ import mffs.item.gui.EnumGui
 import nova.core.entity.Entity
 import nova.core.game.Game
 import nova.core.item.Item
-import nova.core.network.PacketReceiver
+import nova.core.network.PacketHandler
 import nova.core.player.Player
 
-class ItemCardIdentification extends ItemCardAccess with PacketReceiver {
+class ItemCardIdentification extends ItemCardAccess with PacketHandler {
 	override var access = new AccessUser
 
 	override def hitEntity(Item: Item, entityLiving: EntityLivingBase, par3EntityLiving: EntityLivingBase): Boolean = {

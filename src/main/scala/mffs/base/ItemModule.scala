@@ -13,13 +13,13 @@ import nova.core.item.Item
 import nova.core.player.Player
 import nova.core.util.transform.{Cuboid, Vector3d}
 
-class ItemModule extends Item with TooltipItem with Module {
+abstract class ItemModule extends Item with TooltipItem with Module {
 	private var fortronCost = 0.5f
 	private var maxCount = 64
 
 	override def getTooltips(player: Optional[Player]): JList[String] = {
 		val tooltips = super.getTooltips(player)
-		tooltips.add(Game.instance.get.languageManager.getLocal("info.item.fortron") + " " + new UnitDisplay(UnitDisplay.Unit.LITER, getFortronCost(1) * 20) + "/s")
+		tooltips.add(Game.instance.languageManager.getLocal("info.item.fortron") + " " + new UnitDisplay(UnitDisplay.Unit.LITER, getFortronCost(1) * 20) + "/s")
 		return tooltips
 	}
 
@@ -42,6 +42,6 @@ class ItemModule extends Item with TooltipItem with Module {
 	def getEntitiesInField(projector: Projector): JSet[Entity] = {
 		val blockProjector = projector.asInstanceOf[BlockProjector]
 		val volume = new Cuboid(-projector.getNegativeScale, projector.getPositiveScale + Vector3d.one) + (new Vector3d(blockProjector) + projector.getTranslation)
-		return (blockProjector.getWorldObj.getEntitiesWithinAABB(classOf[Entity], volume.toAABB) map (_.asInstanceOf[Entity])).toSet
+		return (blockProjector.world.getEntitiesWithinAABB(classOf[Entity], volume.toAABB) map (_.asInstanceOf[Entity])).toSet
 	}
 }

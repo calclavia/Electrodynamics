@@ -1,21 +1,21 @@
 package mffs.field.mode
 
-abstract class ItemMode extends ItemMFFS with IProjectorMode
-{
-  this.setMaxStackSize(1)
+import mffs.api.modules.IProjectorMode
+import nova.core.item.Item
+import nova.core.util.transform.Vector3d
 
-  @SideOnly(Side.CLIENT)
-  def render(projector: IProjector, x: Double, y: Double, z: Double, f: Float, ticks: Long)
-  {
-  }
+abstract class ItemMode extends Item with IProjectorMode {
 
-	def isInField(projector: IFieldMatrix, position: Vector3d): Boolean =
-  {
-    return false
-  }
+	override def getMaxCount: Int = 1
 
-  def getFortronCost(amplifier: Float): Float =
-  {
-    return 8
-  }
+	def render(projector: IProjector, x: Double, y: Double, z: Double, f: Float, ticks: Long) {
+	}
+
+	def isInField(projector: IFieldMatrix, position: Vector3d): Boolean = {
+		return false
+	}
+
+	def getFortronCost(amplifier: Float): Float = {
+		return 8
+	}
 }

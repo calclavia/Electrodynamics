@@ -1,6 +1,7 @@
 package mffs.field.mode
 
 import java.util.{HashSet, Set}
+import javax.vecmath.Vector3d
 
 class ItemModeCube extends ItemMode
 {

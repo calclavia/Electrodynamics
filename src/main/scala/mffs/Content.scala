@@ -15,7 +15,6 @@ import mffs.security.card.ItemCardIdentification
 import mffs.security.module._
 import nova.core.block.Block
 import nova.core.item.Item
-import nova.core.render.texture.BlockTexture
 
 /**
  * The main content of MFFS
@@ -36,76 +35,57 @@ object Content extends ContentLoader with RecipeHolder {
 	 * Misc Items
 	 */
 	val remoteController: Item = classOf[ItemRemoteController]
-	val focusMatrix = () => (new Item with Named).setName("focusMatrix")
+	val focusMatrix: Item = () => (new Item with Named).setName("focusMatrix")
 
 	/**
 	 * Cards
 	 */
-	val cardBlank = classOf[ItemCard]
-	val cardInfinite = classOf[ItemCardInfinite]
-	val cardFrequency = classOf[ItemCardFrequency]
-	val cardID = classOf[ItemCardIdentification]
-	val cardLink = classOf[ItemCardLink]
+	val cardBlank: Item = classOf[ItemCard]
+	val cardInfinite: Item = classOf[ItemCardInfinite]
+	val cardFrequency: Item = classOf[ItemCardFrequency]
+	val cardID: Item = classOf[ItemCardIdentification]
+	val cardLink: Item = classOf[ItemCardLink]
 
 	/**
-	 * Modes
+	 * Shapes
 	 */
-	val modeCube = classOf[ItemModeCube]
-	val modeSphere = classOf[ItemModeSphere]
-	val modeTube = classOf[ItemModeTube]
-	val modeCylinder = classOf[ItemModeCylinder]
-	val modePyramid = classOf[ItemModePyramid]
-	val modeCustom = classOf[ItemModeCustom]
+	val modeCube: Item = classOf[ItemModeCube]
+	val modeSphere: Item = classOf[ItemModeSphere]
+	val modeTube: Item = classOf[ItemModeTube]
+	val modeCylinder: Item = classOf[ItemModeCylinder]
+	val modePyramid: Item = classOf[ItemModePyramid]
+	val modeCustom: Item = classOf[ItemModeCustom]
 
 	/**
 	 * Modules
 	 */
-	@ExplicitContentName
-	val moduleTranslate = new ItemModule().setCost(3f)
-	@ExplicitContentName
-	val moduleScale = new ItemModule().setCost(2.5f)
-	@ExplicitContentName
-	val moduleRotate = new ItemModule().setCost(0.5f)
-	@ExplicitContentName
-	val moduleSpeed = new ItemModule().setCost(1.5f)
-	@ExplicitContentName
-	val moduleCapacity = new ItemModule().setCost(0.5f)
-	@ExplicitContentName
-	val moduleCollection = new ItemModule().setMaxStackSize(1).setCost(15)
-	@ExplicitContentName
-	val moduleInvert = new ItemModule().setMaxStackSize(1).setCost(15)
-	@ExplicitContentName
-	val moduleSilence = new ItemModule().setMaxStackSize(1).setCost(1)
-	val moduleFusion = new ItemModuleFusion
-	val moduleDome = new ItemModuleDome
-	@ExplicitContentName
-	val moduleCamouflage = new ItemModule().setCost(1.5f).setMaxStackSize(1)
-	@ExplicitContentName
-	val moduleApproximation = new ItemModule().setMaxStackSize(1).setCost(1f)
-	val moduleArray = new ItemModuleArray().setCost(3f)
-	val moduleDisintegration = new ItemModuleDisintegration
-	val moduleShock = new ItemModuleShock
-	@ExplicitContentName
-	val moduleGlow = new ItemModule
-	val moduleSponge = new ItemModuleSponge
-	val moduleStabilize = new ItemModuleStabilize
-	val moduleRepulsion = new ItemModuleRepulsion
-	val moduleAntiHostile = new ItemModuleAntiHostile().setCost(10)
-	val moduleAntiFriendly = new ItemModuleAntiFriendly().setCost(5)
-	val moduleAntiPersonnel = new ItemModuleAntiPersonnel().setCost(15)
-	val moduleConfiscate = new ItemModuleConfiscate
-	val moduleWarn = new ItemModuleBroadcast
-	@ExplicitContentName
-	val moduleBlockAccess = new ItemModuleDefense().setCost(10)
-	@ExplicitContentName
-	val moduleBlockAlter = new ItemModuleDefense().setCost(15)
-	@ExplicitContentName
-	val moduleAntiSpawn = new ItemModuleDefense().setCost(10)
-
-	/**
-	 * Textures
-	 */
-	val machineTexture = new BlockTexture(Reference.id, "machine")
+	val moduleTranslate: Item = () => (new ItemModule with Named).setName("moduleTranslate").setCost(3f)
+	val moduleScale: Item = () => (new ItemModule with Named).setName("moduleScale").setCost(2.5f)
+	val moduleRotate: Item = () => (new ItemModule with Named).setName("moduleRotate").setCost(0.5f)
+	val moduleSpeed: Item = () => (new ItemModule with Named).setName("moduleSpeed").setCost(1.5f)
+	val moduleCapacity: Item = () => (new ItemModule with Named).setName("moduleCapacity").setCost(0.5f)
+	val moduleCollection: Item = () => (new ItemModule with Named).setName("moduleCollection").setMaxCount(1).setCost(15)
+	val moduleInvert: Item = () => (new ItemModule with Named).setName("moduleInvert").setMaxCount(1).setCost(15)
+	val moduleSilence: Item = () => (new ItemModule with Named).setName("moduleSilence").setMaxCount(1).setCost(1)
+	val moduleFusion: Item = new ItemModuleFusion
+	val moduleDome: Item = classOf[ItemModuleDome]
+	val moduleCamouflage: Item = () => (new ItemModule with Named).setName("moduleCamouflage").setCost(1.5f).setMaxCount(1)
+	val moduleApproximation: Item = () => (new ItemModule with Named).setName("moduleApproximation").setMaxCount(1).setCost(1f)
+	val moduleArray: Item = new ItemModuleArray().setCost(3f)
+	val moduleDisintegration: Item = new ItemModuleDisintegration
+	val moduleShock: Item = new ItemModuleShock
+	val moduleGlow: Item = () => new ItemModule
+	val moduleSponge: Item = classOf[ItemModuleSponge]
+	val moduleStabilize: Item = classOf[ItemModuleStabilize]
+	val moduleRepulsion: Item = classOf[ItemModuleRepulsion]
+	val moduleAntiHostile: Item = () => new ItemModuleAntiHostile().setCost(10)
+	val moduleAntiFriendly: Item = () => new ItemModuleAntiFriendly().setCost(5)
+	val moduleAntiPersonnel: Item = () => new ItemModuleAntiPersonnel().setCost(15)
+	val moduleConfiscate: Item = classOf[ItemModuleConfiscate]
+	val moduleWarn: Item = classOf[ItemModuleBroadcast]
+	val moduleBlockAccess: Item = () => new ItemModuleDefense().setCost(10)
+	val moduleBlockAlter: Item = () => new ItemModuleDefense().setCost(15)
+	val moduleAntiSpawn: Item = () => new ItemModuleDefense().setCost(10)
 
 	override def postInit() {
 		/**
