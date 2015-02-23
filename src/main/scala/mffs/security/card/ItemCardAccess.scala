@@ -5,7 +5,7 @@ import java.util.{Set => JSet}
 import com.resonant.core.access.AbstractAccess
 import mffs.api.card.AccessCard
 import mffs.item.card.ItemCard
-import nova.core.util.components.{Storable, Stored}
+import nova.core.retention.{Storable, Stored}
 
 /**
  * @author Calclavia

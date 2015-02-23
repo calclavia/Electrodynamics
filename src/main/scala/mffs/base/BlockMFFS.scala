@@ -14,8 +14,8 @@ import nova.core.game.Game
 import nova.core.gui.KeyManager.Key
 import nova.core.network.{Packet, PacketHandler}
 import nova.core.render.texture.Texture
+import nova.core.retention.{Storable, Stored}
 import nova.core.util.Direction
-import nova.core.util.components.{Storable, Stored}
 import nova.core.util.transform.{Vector3d, Vector3i}
 
 /**
