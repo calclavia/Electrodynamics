@@ -8,10 +8,10 @@ import mffs.api.machine.{FieldMatrix, IPermissionProvider}
 import mffs.field.mobilize.event.{DelayedEvent, IDelayedEventHandler}
 import mffs.field.module.ItemModuleArray
 import mffs.item.card.ItemCard
-import mffs.util.TCache
+import mffs.util.CacheHandler
 import nova.core.network.Packet
 
-abstract class TileFieldMatrix extends TileModuleAcceptor with FieldMatrix with IDelayedEventHandler with Rotatable with IPermissionProvider
+abstract class TileFieldMatrix extends BlockModuleAcceptor with FieldMatrix with IDelayedEventHandler with Rotatable with IPermissionProvider
 {
   protected final val delayedEvents = new mutable.SynchronizedQueue[DelayedEvent]()
   val _getModuleSlots = (14 until 25).toArray
@@ -194,9 +194,9 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with FieldMatrix with 
 
 	  if (hasCache(classOf[Set[Vector3d]], cacheID)) return getCache(classOf[Set[Vector3d]], cacheID)
 
-    if (getModeStack != null && getModeStack.getItem.isInstanceOf[TCache])
+	  if (getModeStack != null && getModeStack.getItem.isInstanceOf[CacheHandler])
     {
-      (getModeStack.getItem.asInstanceOf[TCache]).clearCache
+		(getModeStack.getItem.asInstanceOf[CacheHandler]).clearCache
     }
 
     val newField = getMode.getInteriorPoints(this)
@@ -344,8 +344,8 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with FieldMatrix with 
 		if (Game.instance.networkManager.isServer && !isCalculating) {
 			if (getMode != null) {
 				//Clear mode cache
-				if (getModeStack.getItem.isInstanceOf[TCache]) {
-					getModeStack.getItem.asInstanceOf[TCache].clearCache()
+				if (getModeStack.getItem.isInstanceOf[CacheHandler]) {
+					getModeStack.getItem.asInstanceOf[CacheHandler].clearCache()
 				}
 
 				isCalculating = true

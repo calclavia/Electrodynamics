@@ -1,7 +1,7 @@
 package mffs.production
 
 import com.resonant.core.graph.internal.electric.TTEBridge
-import mffs.base.{PacketBlock, TileModuleAcceptor}
+import mffs.base.{BlockModuleAcceptor, PacketBlock}
 import mffs.item.card.ItemCardFrequency
 import mffs.util.FortronUtility
 import mffs.{Content, Settings}
@@ -32,7 +32,7 @@ object BlockCoercionDeriver
   val power = 5000000
 }
 
-class BlockCoercionDeriver extends TileModuleAcceptor with TTEBridge
+class BlockCoercionDeriver extends BlockModuleAcceptor with TTEBridge
 {
   var processTime: Int = 0
   var isInversed = false

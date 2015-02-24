@@ -7,7 +7,7 @@ import mffs.field.mode.ItemModeCustom
 import mffs.item.card.ItemCard
 import mffs.render.FieldColor
 import mffs.security.MFFSPermissions
-import mffs.util.TCache
+import mffs.util.CacheHandler
 import mffs.{Content, ModularForceFieldSystem, Reference, Settings}
 
 class BlockProjector extends TileFieldMatrix with IProjector
@@ -195,9 +195,9 @@ class BlockProjector extends TileFieldMatrix with IProjector
 
           if (forceFields.size <= 0)
           {
-            if (getModeStack.getItem.isInstanceOf[TCache])
+			  if (getModeStack.getItem.isInstanceOf[CacheHandler])
             {
-              (getModeStack.getItem.asInstanceOf[TCache]).clearCache
+				(getModeStack.getItem.asInstanceOf[CacheHandler]).clearCache
             }
           }
 
@@ -271,19 +271,6 @@ class BlockProjector extends TileFieldMatrix with IProjector
 
   def getProjectionSpeed: Int = 28 + 28 * getModuleCount(Content.moduleSpeed, getModuleSlots: _*)
 
-	override def markDirty() {
-		super.markDirty()
-
-		if (world != null) {
-			destroyField()
-		}
-	}
-
-	override def invalidate {
-		destroyField()
-		super.invalidate
-	}
-
   def destroyField()
   {
 	  if (Game.instance.networkManager.isServer && calculatedField != null && !isCalculating)
@@ -298,6 +285,19 @@ class BlockProjector extends TileFieldMatrix with IProjector
       fieldRequireTicks = false
     }
   }
+
+	override def markDirty() {
+		super.markDirty()
+
+		if (world != null) {
+			destroyField()
+		}
+	}
+
+	override def invalidate {
+		destroyField()
+		super.invalidate
+	}
 
 	override def getForceFields: JSet[Vector3d] = forceFields
 

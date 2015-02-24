@@ -5,10 +5,10 @@ import java.util
 import java.util.{Set => JSet}
 
 import mffs.field.module.ItemModuleArray
-import mffs.util.TCache
+import mffs.util.CacheHandler
 import mffs.{Content, Settings}
 
-class ItemModeCustom extends ItemMode with TCache
+class ItemModeCustom extends ItemMode with CacheHandler
 {
   private final val NBT_ID: String = "id"
   private final val NBT_MODE: String = "mode"
