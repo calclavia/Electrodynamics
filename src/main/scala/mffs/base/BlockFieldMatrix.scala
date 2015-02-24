@@ -5,7 +5,7 @@ import java.util.{Set => JSet}
 import com.resonant.core.prefab.block.Rotatable
 import com.resonant.lib.util.RotationUtility
 import mffs.api.machine.{FieldMatrix, IPermissionProvider}
-import mffs.api.modules.IProjectorMode
+import mffs.api.modules.ProjectorMode
 import mffs.content.Content
 import mffs.util.CacheHandler
 import nova.core.game.Game
@@ -149,11 +149,11 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 			return newField.par.map(pos => pos.transform(transformationMatrix).round).seq.toSet
 		})
 
-	def getShape: Item with IProjectorMode = {
+	def getShape: Item with ProjectorMode = {
 		val optional = inventory.get(modeSlotID)
 		if (optional.isPresent) {
-			if (optional.get().isInstanceOf[Item with IProjectorMode]) {
-				return optional.asInstanceOf[Item with IProjectorMode]
+			if (optional.get().isInstanceOf[Item with ProjectorMode]) {
+				return optional.asInstanceOf[Item with ProjectorMode]
 			}
 		}
 		return null

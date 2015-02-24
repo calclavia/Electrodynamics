@@ -1,7 +1,7 @@
 package mffs.api.machine;
 
-import mffs.api.modules.IProjectorMode;
 import mffs.api.modules.Module;
+import mffs.api.modules.ProjectorMode;
 import net.minecraft.item.Item;
 import nova.core.util.Direction;
 import nova.core.util.transform.Vector3d;
@@ -12,7 +12,7 @@ public interface FieldMatrix extends IActivatable, IPermissionProvider {
 	/**
 	 * Gets the mode of the projector, mainly the shape and size of it.
 	 */
-	public IProjectorMode getShape();
+	public ProjectorMode getShape();
 
 	public Item getShape();
 
