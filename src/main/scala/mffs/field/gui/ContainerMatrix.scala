@@ -1,14 +1,11 @@
 package mffs.field.gui
 
-import mffs.base.TileFieldMatrix
+import mffs.base.BlockFieldMatrix
 import mffs.item.card.ItemCardFrequency
 import mffs.slot.SlotBase
 import net.minecraft.entity.player.EntityPlayer
-import resonantengine.lib.transform.vector.Vector2
-import resonantengine.prefab.gui.ContainerBase
-import resonantengine.prefab.gui.slot.SlotSpecific
 
-class ContainerMatrix(player: EntityPlayer, tileEntity: TileFieldMatrix, val matrixCenter: Vector2 = new Vector2(110, 55)) extends ContainerBase(tileEntity)
+class ContainerMatrix(player: EntityPlayer, tileEntity: BlockFieldMatrix, val matrixCenter: Vector2 = new Vector2(110, 55)) extends ContainerBase(tileEntity)
 {
   //Frequency
   addSlotToContainer(new SlotSpecific(tileEntity, 0, 8, 114, classOf[ItemCardFrequency]))

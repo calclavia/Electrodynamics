@@ -64,6 +64,9 @@ public interface Module extends FortronCost {
 
 	}
 
+	default void onPreCalculateInterior(FieldMatrix projector, Set<Vector3d> calculatedField) {
+
+	}
 	/**
 	 * @return Does this module require ticking from the force field projector?
 	 */

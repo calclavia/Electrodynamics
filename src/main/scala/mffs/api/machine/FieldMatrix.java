@@ -12,9 +12,9 @@ public interface FieldMatrix extends IActivatable, IPermissionProvider {
 	/**
 	 * Gets the mode of the projector, mainly the shape and size of it.
 	 */
-	public IProjectorMode getMode();
+	public IProjectorMode getShape();
 
-	public Item getModeStack();
+	public Item getShape();
 
 	/**
 	 * Gets the slot IDs based on the direction given.

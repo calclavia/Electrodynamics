@@ -2,7 +2,7 @@ package mffs.field
 
 import java.util.{Set => JSet}
 
-import mffs.base.{PacketBlock, TileFieldMatrix}
+import mffs.base.{BlockFieldMatrix, PacketBlock}
 import mffs.content.Content
 import mffs.field.mode.ItemModeCustom
 import mffs.item.card.ItemCard
@@ -12,7 +12,7 @@ import mffs.util.CacheHandler
 import mffs.{ModularForceFieldSystem, Reference, Settings}
 import nova.core.util.transform.Cuboid
 
-class BlockProjector extends TileFieldMatrix with IProjector
+class BlockProjector extends BlockFieldMatrix with IProjector
 {
   /** A set containing all positions of all force field blocks generated. */
   val forceFields = mutable.Set.empty[Vector3d]
@@ -53,7 +53,7 @@ class BlockProjector extends TileFieldMatrix with IProjector
     calculateField(postCalculation)
   }
 
-  override def getLightValue(access: IBlockAccess) = if (getMode() != null) 10 else 0
+	override def getLightValue(access: IBlockAccess) = if (getShape() != null) 10 else 0
 
 	override def write(buf: Packet, id: Int)
   {
@@ -112,7 +112,7 @@ class BlockProjector extends TileFieldMatrix with IProjector
   {
     super.update()
 
-	  if (isActive && getMode != null && removeFortron(getFortronCost, false) >= this.getFortronCost)
+	  if (isActive && getShape != null && removeFortron(getFortronCost, false) >= this.getFortronCost)
     {
       consumeCost()
 
@@ -166,7 +166,7 @@ class BlockProjector extends TileFieldMatrix with IProjector
   {
 	  if (Game.instance.networkManager.isServer && !isCalculating)
     {
-      if (getMode != null)
+		if (getShape != null)
       {
         forceFields.clear
       }
@@ -198,9 +198,9 @@ class BlockProjector extends TileFieldMatrix with IProjector
 
           if (forceFields.size <= 0)
           {
-			  if (getModeStack.getItem.isInstanceOf[CacheHandler])
+			  if (getShape.getItem.isInstanceOf[CacheHandler])
             {
-				(getModeStack.getItem.asInstanceOf[CacheHandler]).clearCache
+				(getShape.getItem.asInstanceOf[CacheHandler]).clearCache
             }
           }
 
@@ -306,7 +306,7 @@ class BlockProjector extends TileFieldMatrix with IProjector
 
   def getTicks: Long = ticks
 
-	def isInField(position: Vector3d) = if (getMode != null) getMode.isInField(this, position) else false
+	def isInField(position: Vector3d) = if (getShape != null) getShape.isInField(this, position) else false
 
 	def isAccessGranted(checkWorld: World, checkPos: Vector3d, player: EntityPlayer, action: PlayerInteractEvent.Action): Boolean =
   {
@@ -363,18 +363,18 @@ class BlockProjector extends TileFieldMatrix with IProjector
    */
   protected override def doGetFortronCost: Int =
   {
-    if (this.getMode != null)
+	  if (this.getShape != null)
     {
-      return Math.round(super.doGetFortronCost + this.getMode.getFortronCost(this.getAmplifier))
+		return Math.round(super.doGetFortronCost + this.getShape.getFortronCost(this.getAmplifier))
     }
     return 0
   }
 
   protected override def getAmplifier: Float =
   {
-    if (this.getMode.isInstanceOf[ItemModeCustom])
+	  if (this.getShape.isInstanceOf[ItemModeCustom])
     {
-      return Math.max((this.getMode.asInstanceOf[ItemModeCustom]).getFieldBlocks(this, this.getModeStack).size / 100, 1)
+		return Math.max((this.getShape.asInstanceOf[ItemModeCustom]).getFieldBlocks(this, this.getShape).size / 100, 1)
     }
     return Math.max(Math.min((if (calculatedField != null) calculatedField.size else 0) / 1000, 10), 1)
   }

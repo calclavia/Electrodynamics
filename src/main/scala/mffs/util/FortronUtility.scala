@@ -14,6 +14,7 @@ import nova.core.util.transform.Vector3d
  *
  * @author Calclavia
  */
+//TODO: Make this OOP FortronTransferProtocol
 object FortronUtility {
 	def transferFortron(source: FortronFrequency, frequencyBlocks: Set[FortronFrequency], transferMode: TransferMode, limit: Int) {
 		if (frequencyBlocks.size > 1 && Settings.allowFortronTeleport) {

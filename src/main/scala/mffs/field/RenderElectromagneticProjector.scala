@@ -35,7 +35,7 @@ final object RenderElectromagneticProjector
     //.render(tileEntity.animation, 0.0625F)
     glPopMatrix
 
-    if (tileEntity.getMode != null)
+	  if (tileEntity.getShape != null)
     {
       val tessellator: Tessellator = Tessellator.instance
       RenderHelper.disableStandardItemLighting
@@ -93,7 +93,7 @@ final object RenderElectromagneticProjector
         glTranslatef(0, Math.sin(Math.toRadians(tileEntity.getTicks * 3)).toFloat / 7, 0)
         glRotatef(tileEntity.getTicks * 4, 0, 1, 0)
         glRotatef(36f + tileEntity.getTicks * 4, 0, 1, 1)
-        tileEntity.getMode.render(tileEntity, x, y, z, frame, tileEntity.getTicks)
+		  tileEntity.getShape.render(tileEntity, x, y, z, frame, tileEntity.getTicks)
         glPopMatrix
         RenderUtility.enableLighting
         RenderUtility.disableBlending

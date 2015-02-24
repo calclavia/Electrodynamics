@@ -101,7 +101,7 @@ abstract class BlockModuleHandler extends BlockFortron with CacheHandler {
 	 * @param compareModule The module to compare against
 	 * @return Null if no such module exists
 	 */
-	def getModule(compareModule: Item): Item =
+	def getModule(compareModule: Item): Item with Module =
 		getOrSetCache(
 			"getModule_" + compareModule.hashCode,
 			() => {

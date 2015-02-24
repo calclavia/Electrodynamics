@@ -1,6 +1,6 @@
 package mffs.field.mobilize
 
-import mffs.base.{PacketBlock, TileFieldMatrix}
+import mffs.base.{BlockFieldMatrix, PacketBlock}
 import mffs.content.Content
 import mffs.field.mobilize.event.{BlockPreMoveDelayedEvent, DelayedEvent}
 import mffs.item.card.ItemCard
@@ -10,7 +10,7 @@ import mffs.security.MFFSPermissions
 import mffs.util.MFFSUtility
 import mffs.{ModularForceFieldSystem, Reference, Settings}
 
-class BlockMobilizer extends TileFieldMatrix with IEffectController
+class BlockMobilizer extends BlockFieldMatrix with IEffectController
 {
   val packetRange = 60
   val animationTime = 20
@@ -45,7 +45,7 @@ class BlockMobilizer extends TileFieldMatrix with IEffectController
   {
     super.update()
 
-    if (getMode != null && Settings.enableForceManipulator)
+	  if (getShape != null && Settings.enableForceManipulator)
     {
       if (delayedEvents.size == 0)
         performingMove = false

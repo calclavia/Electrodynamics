@@ -6,7 +6,7 @@ import mffs.GraphFrequency
 import mffs.api.card.ICoordLink
 import mffs.api.fortron.{Fortron, FortronCapacitor, FortronFrequency}
 import mffs.base.{BlockModuleHandler, PacketBlock}
-import mffs.content.{Content, Models, Textures}
+import mffs.content.Content
 import mffs.util.{FortronUtility, TransferMode}
 import nova.core.block.Block
 import nova.core.fluid.TankProvider
@@ -99,11 +99,13 @@ class BlockFortronCapacitor extends BlockModuleHandler with FortronCapacitor {
 
 	def getTransmissionRate: Int = 500 + 100 * getModuleCount(Content.moduleSpeed)
 
-	override def getFrequencyDevices: Set[FortronFrequency with Block] =
+	override def getFrequencyDevices: Set[FortronFrequency] =
 		GraphFrequency.instance.get(getFrequency)
+			.view
 			.collect { case f: FortronFrequency with Block => f}
 			.filter(_.world.equals(world()))
 			.filter(_.position().distance(position()) < getTransmissionRange)
+			.toSet[FortronFrequency]
 
 	def getTransmissionRange: Int = 15 + getModuleCount(Content.moduleScale)
 
@@ -150,7 +152,6 @@ class BlockFortronCapacitor extends BlockModuleHandler with FortronCapacitor {
 
 	def getTransferMode: TransferMode = transferMode
 
-
 	override def renderDynamic(model: Model) {
 		model.matrix = new MatrixStack()
 			.loadMatrix(model.matrix)
@@ -171,5 +172,8 @@ class BlockFortronCapacitor extends BlockModuleHandler with FortronCapacitor {
 	override def renderStatic(model: Model) {
 
 	}
+
 	override def renderItem(model: Model) = renderDynamic(model)
+
+	override def getID: String = "fortronCapacitor"
 }

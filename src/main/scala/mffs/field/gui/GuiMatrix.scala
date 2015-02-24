@@ -1,12 +1,12 @@
 package mffs.field.gui
 
-import mffs.base.{GuiMFFS, TileFieldMatrix}
+import mffs.base.{BlockFieldMatrix, GuiMFFS}
 
 /**
  * Anything that has a field matrix within it.
  * @author Calclavia
  */
-abstract class GuiMatrix(container: ContainerMatrix, tile: TileFieldMatrix) extends GuiMFFS(container, tile)
+abstract class GuiMatrix(container: ContainerMatrix, tile: BlockFieldMatrix) extends GuiMFFS(container, tile)
 {
   val matrixCenter = container.matrixCenter
 
