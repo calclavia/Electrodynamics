@@ -275,7 +275,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController
     }
   }
 
-	override def generateCalculatedField: mutable.Set[Vector3d] =
+	override def generateField: mutable.Set[Vector3d] =
   {
 	  var moveField: mutable.Set[Vector3d] = null
 

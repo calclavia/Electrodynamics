@@ -3,7 +3,7 @@ package mffs.field.mode
 import java.util.{HashSet, Set}
 import javax.vecmath.Vector3d
 
-import com.resonant.wrapper.lib.schematic.{Structure, StructureCube}
+import com.resonant.core.structure.{Structure, StructureCube}
 import mffs.api.machine.Projector
 import nova.core.render.model.{BlockModelUtil, Model}
 import nova.core.util.transform.{Cuboid, MatrixStack}

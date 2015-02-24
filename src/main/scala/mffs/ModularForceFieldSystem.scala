@@ -7,7 +7,7 @@ import nova.core.event.EventManager.EmptyEvent
 import nova.core.game.Game
 import nova.core.loader.{Loadable, NovaMod}
 
-@NovaMod(id = Reference.id, name = Reference.name, version = Reference.version, dependencies = Array("resonantengine"))
+@NovaMod(id = Reference.id, name = Reference.name, version = Reference.version, novaVersion = "0.0.1", dependencies = Array("resonantengine"))
 object ModularForceFieldSystem extends Loadable {
 
 	override def preInit() {

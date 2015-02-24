@@ -8,6 +8,7 @@ import mffs.content.{Content, Textures}
 import mffs.render.FieldColor
 import mffs.util.CacheHandler
 import mffs.{ModularForceFieldSystem, Settings}
+import nova.core.block.Block
 import nova.core.block.components.LightEmitter
 import nova.core.game.Game
 import nova.core.inventory.InventorySimple
@@ -181,7 +182,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter {
 					val evaluateField = potentialField
 						.view.par
 						.filter(!_.equals(position))
-						.filter(v => canReplaceBlock(v, world.getBlock(v)))
+						.filter(v => !world.getBlock(v).isPresent || canReplaceBlock(v, world.getBlock(v).get()))
 						.filter(v => world.getBlock(v).isPresent && world.getBlock(v).get().sameType(Content.forceField))
 						.take(constructionSpeed)
 
@@ -269,7 +270,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter {
 
 	def getTicks: Long = ticks
 
-	def isInField(position: Vector3d) = if (getShape != null) getShape.isInField(this, position) else false
+	def isInField(position: Vector3d) = if (getShape != null) getStructure.intersects(position) else false
 
 	def isAccessGranted(checkWorld: World, checkPos: Vector3d, player: EntityPlayer, action: PlayerInteractEvent.Action): Boolean = {
 		var hasPerm = true

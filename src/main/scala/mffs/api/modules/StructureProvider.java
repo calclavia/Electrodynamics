@@ -1,10 +1,10 @@
 package mffs.api.modules;
 
-import com.resonant.wrapper.lib.schematic.Structure;
+import com.resonant.core.structure.Structure;
 import mffs.api.machine.Projector;
 import nova.core.render.model.Model;
 
-public interface ProjectorMode extends FortronCost {
+public interface StructureProvider extends FortronCost {
 
 	Structure getStructure();
 

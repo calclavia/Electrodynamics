@@ -1,11 +1,12 @@
 package mffs.base
 
-import java.util.{Set => JSet}
+import java.util.{Optional, Set => JSet}
 
 import com.resonant.core.prefab.block.Rotatable
+import com.resonant.core.structure.Structure
 import com.resonant.lib.util.RotationUtility
 import mffs.api.machine.{FieldMatrix, IPermissionProvider}
-import mffs.api.modules.ProjectorMode
+import mffs.api.modules.StructureProvider
 import mffs.content.Content
 import mffs.util.CacheHandler
 import nova.core.game.Game
@@ -15,7 +16,6 @@ import nova.core.retention.Stored
 import nova.core.util.Direction
 import nova.core.util.transform._
 
-import scala.collection.convert.wrapAll._
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
@@ -46,6 +46,8 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 		return Item.getItem.isInstanceOf[IModule]
 	}*/
 
+	def getModuleSlots: Array[Int] = _getModuleSlots
+
 	def getSidedModuleCount(module: Item, directions: Direction*): Int = {
 		var actualDirs = directions
 
@@ -73,6 +75,21 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 			case _ =>
 				Array[Int]()
 		}
+
+	/**
+	 * @return Gets the item that provides a shape
+	 */
+	def getShape: Item with StructureProvider = {
+		val optional = inventory.get(modeSlotID)
+		if (optional.isPresent) {
+			if (optional.get().isInstanceOf[Item with StructureProvider]) {
+				return optional.asInstanceOf[Item with StructureProvider]
+			}
+		}
+		return null
+	}
+
+	def getScale = (getPositiveScale + getNegativeScale) / 2
 
 	def getPositiveScale: Vector3d =
 		getOrSetCache("getPositiveScale", () => {
@@ -102,8 +119,6 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 			return new Vector3d(xScalePos, yScalePos, zScalePos)
 		})
 
-	def getModuleSlots: Array[Int] = _getModuleSlots
-
 	def getNegativeScale: Vector3d =
 		getOrSetCache("getNegativeScale", () => {
 			var zScaleNeg = 0
@@ -131,33 +146,7 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 			return new Vector3d(xScaleNeg, yScaleNeg, zScaleNeg)
 		})
 
-	def getInteriorPoints: Set[Vector3i] =
-		getOrSetCache("getInteriorPoints", () => {
-			if (getShape.isInstanceOf[CacheHandler]) {
-				getShape.asInstanceOf[CacheHandler].clearCache
-			}
 
-			val newField = getShape.getInteriorPoints(this)
-
-			val arrayModule = getModule(Content.moduleArray)
-			if (arrayModule != null) {
-				//TODO: Look into this
-				//arrayModule.onPreCalculateInterior(this, getShape.getExteriorPoints(this), newField)
-			}
-
-			val transformationMatrix = getTransformationMatrix
-			return newField.par.map(pos => pos.transform(transformationMatrix).round).seq.toSet
-		})
-
-	def getShape: Item with ProjectorMode = {
-		val optional = inventory.get(modeSlotID)
-		if (optional.isPresent) {
-			if (optional.get().isInstanceOf[Item with ProjectorMode]) {
-				return optional.asInstanceOf[Item with ProjectorMode]
-			}
-		}
-		return null
-	}
 
 	def getTranslation: Vector3d =
 		getOrSetCache("getTranslation", () => {
@@ -212,12 +201,61 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 
 	def getRotationPitch: Int =
 		getOrSetCache("getRotationPitch", () => {
-
-			var verticalRotation = getModuleCount(Content.moduleRotate, getDirectionSlots(Direction.UP): _*) - getModuleCount(Content.moduleRotate, getDirectionSlots(Direction.DOWN): _*)
+			val verticalRotation = getModuleCount(Content.moduleRotate, getDirectionSlots(Direction.UP): _*) - getModuleCount(Content.moduleRotate, getDirectionSlots(Direction.DOWN): _*)
 			return verticalRotation * 2
 		})
 
-	def getCalculatedField: JSet[Vector3d] = if (calculatedField != null) calculatedField else Set.empty[Vector3d]
+	def getRotation = Quaternion.fromEuler(Math.toRadians(getRotationYaw), Math.toRadians(getRotationPitch), 0)
+
+	def getInteriorPoints: Set[Vector3i] =
+		getOrSetCache("getInteriorPoints", () => {
+			if (getShape.isInstanceOf[CacheHandler]) {
+				getShape.asInstanceOf[CacheHandler].clearCache
+			}
+
+			val structure = getStructure
+			val blockStructure = structure.getBlockStructure
+
+			val arrayModule = getModule(Content.moduleArray)
+			if (arrayModule != null) {
+				//TODO: Look into this
+				//arrayModule.onPreCalculateInterior(this, getShape.getExteriorPoints(this), newField)
+			}
+
+			return blockStructure.keySet
+		})
+
+	/**
+	 * Gets the exterior points of the field based on the matrix.
+	 */
+	protected def getExteriorPoints: Set[Vector3i] = {
+		val structure = getStructure
+
+		val field = {
+			if (getModuleCount(Content.moduleInvert) > 0) {
+				structure.getInteriorStructure
+			}
+			else {
+				structure.getStructure
+			}
+		}
+
+		//getModules().foreach(_.onPreCalculate(this, field))
+		//getModules().foreach(_.onPostCalculate(this, transformed))
+
+		return field
+	}
+
+	def getStructure: Structure = {
+		val structure = getShape.getStructure
+		structure.setBlock(Optional.of(Content.forceField))
+		structure.setTranslate(getTranslation)
+		structure.setScale(getScale)
+		structure.setRotation(getRotation)
+		return structure
+	}
+
+	def getCalculatedField: Set[Vector3i] = if (calculatedField != null) calculatedField else Set.empty
 
 	/**
 	 * Calculates the force field
@@ -234,7 +272,7 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 				isCalculating = true
 
 				Future {
-					generateCalculatedField
+					generateField
 				}.onComplete {
 					case Success(field) =>
 						calculatedField = field
@@ -251,45 +289,5 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 		}
 	}
 
-	protected def generateCalculatedField = getExteriorPoints
-
-	/**
-	 * Gets the exterior points of the field based on the matrix.
-	 */
-	protected def getExteriorPoints: Set[Vector3i] = {
-		val field = {
-			if (getModuleCount(Content.moduleInvert) > 0) {
-				getShape.getInteriorPoints(this)
-			}
-			else {
-				getShape.getExteriorPoints(this)
-			}
-		}
-
-		getModules().foreach(_.onPreCalculate(this, field))
-
-		val transformationMatrix = getTransformationMatrix
-		val transformed = field.par.map(pos => pos.transform(transformationMatrix).round()).seq.toSet
-		getModules().foreach(_.onPostCalculate(this, transformed))
-
-		return transformed
-	}
-
-	def getTransformationMatrix: Matrix4x4 =
-		getOrSetCache("getTransformationMatrix", () => {
-			val translation = getTranslation
-			val rotationYaw = getRotationYaw
-			val rotationPitch = getRotationPitch
-			val rotation = Quaternion.fromEuler(Math.toRadians(rotationYaw), Math.toRadians(rotationPitch), 0)
-
-			val posScale = getPositiveScale
-			val negScale = getNegativeScale
-			val scale = (posScale - negScale) / 2
-
-			return new MatrixStack()
-				.translate(translation)
-				.scale(scale)
-				.rotate(rotation)
-				.getMatrix
-		})
+	protected def generateField = getExteriorPoints
 }

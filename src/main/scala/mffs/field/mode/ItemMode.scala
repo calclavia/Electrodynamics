@@ -1,9 +1,9 @@
 package mffs.field.mode
 
-import mffs.api.modules.ProjectorMode
+import mffs.api.modules.StructureProvider
 import nova.core.item.Item
 
-abstract class ItemMode extends Item with ProjectorMode {
+abstract class ItemMode extends Item with StructureProvider {
 
 	override def getMaxCount: Int = 1
 
