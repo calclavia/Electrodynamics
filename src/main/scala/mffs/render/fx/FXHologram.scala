@@ -1,6 +1,6 @@
 package mffs.render.fx
 
-import mffs.Content
+import mffs.content.Content
 
 @SideOnly(Side.CLIENT)
 class FXHologram(par1World: World, position: Vector3d, red: Float, green: Float, blue: Float, age: Int) extends FXMFFS(par1World, position.x, position.y, position.z)

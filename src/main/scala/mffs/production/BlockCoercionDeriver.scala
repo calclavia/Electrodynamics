@@ -1,10 +1,11 @@
 package mffs.production
 
 import com.resonant.core.graph.internal.electric.TTEBridge
+import mffs.Settings
 import mffs.base.{BlockModuleHandler, PacketBlock}
+import mffs.content.Content
 import mffs.item.card.ItemCardFrequency
 import mffs.util.FortronUtility
-import mffs.{Content, Settings}
 
 /**
  * A TileEntity that extract energy into Fortron.

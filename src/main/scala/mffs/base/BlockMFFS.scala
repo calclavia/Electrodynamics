@@ -5,8 +5,8 @@ import java.util.Optional
 import com.resonant.core.prefab.block.Rotatable
 import com.resonant.wrapper.core.Placeholder
 import com.resonant.wrapper.core.api.tile.IPlayerUsing
-import mffs.Content
 import mffs.api.machine.IActivatable
+import mffs.content.Content
 import nova.core.block.Block
 import nova.core.block.components.Stateful
 import nova.core.entity.Entity

@@ -2,7 +2,7 @@ package mffs.field.mode
 
 import java.util.{HashSet, Set}
 
-import mffs.Content
+import mffs.content.Content
 
 class ItemModeSphere extends ItemMode
 {

@@ -1,6 +1,6 @@
 package mffs.render.fx
 
-import mffs.Content
+import mffs.content.Content
 
 /**
  * @author Calclavia

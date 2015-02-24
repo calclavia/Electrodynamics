@@ -3,8 +3,8 @@ package mffs.base
 import java.util.{Set => JSet}
 
 import com.resonant.core.prefab.block.Rotatable
-import mffs.Content
 import mffs.api.machine.{FieldMatrix, IPermissionProvider}
+import mffs.content.Content
 import mffs.field.mobilize.event.{DelayedEvent, IDelayedEventHandler}
 import mffs.field.module.ItemModuleArray
 import mffs.item.card.ItemCard

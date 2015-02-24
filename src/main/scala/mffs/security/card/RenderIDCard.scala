@@ -1,6 +1,6 @@
 package mffs.security.card
 
-import mffs.Content
+import mffs.content.Content
 
 /**
  * All thanks to Briman for the id card face rendering! Check out the mod MineForver!

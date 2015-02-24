@@ -2,6 +2,8 @@ package mffs
 
 import java.util.UUID
 
+import mffs.content.Content
+
 object SubscribeEventHandler
 {
 

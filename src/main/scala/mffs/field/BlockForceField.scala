@@ -1,9 +1,10 @@
 package mffs.field
 
+import mffs.ModularForceFieldSystem
 import mffs.api.machine.ForceField
+import mffs.content.Content
 import mffs.security.MFFSPermissions
 import mffs.util.MFFSUtility
-import mffs.{Content, ModularForceFieldSystem}
 import nova.core.block.Block
 import nova.core.entity.Entity
 import nova.core.game.Game

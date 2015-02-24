@@ -4,9 +4,10 @@ import java.io.File
 import java.util
 import java.util.{Set => JSet}
 
+import mffs.Settings
+import mffs.content.Content
 import mffs.field.module.ItemModuleArray
 import mffs.util.CacheHandler
-import mffs.{Content, Settings}
 
 class ItemModeCustom extends ItemMode with CacheHandler
 {

@@ -1,14 +1,13 @@
 package mffs.util
 
 import mffs.api.fortron.FortronFrequency
-import mffs.api.modules.Module
+import mffs.base.BlockModuleHandler
+import mffs.content.Content
 import mffs.render.FieldColor
-import mffs.util.TransferMode._
-import mffs.{Content, ModularForceFieldSystem, Settings}
+import mffs.{ModularForceFieldSystem, Settings}
 import nova.core.block.Block
 import nova.core.game.Game
-
-import scala.collection.mutable
+import nova.core.util.transform.Vector3d
 
 /**
  * A class with useful functions related to Fortron.
@@ -16,64 +15,48 @@ import scala.collection.mutable
  * @author Calclavia
  */
 object FortronUtility {
-	def transferFortron(source: FortronFrequency, frequencyTiles: mutable.Set[FortronFrequency], transferMode: TransferMode, limit: Int) {
-		if (frequencyTiles.size > 1 && Settings.allowFortronTeleport) {
-			var totalFortron = 0
-			var totalCapacity = 0
+	def transferFortron(source: FortronFrequency, frequencyBlocks: Set[FortronFrequency], transferMode: TransferMode, limit: Int) {
+		if (frequencyBlocks.size > 1 && Settings.allowFortronTeleport) {
+			val totalFortron = frequencyBlocks.foldLeft(0)(_ + _.getFortron)
+			val totalCapacity = frequencyBlocks.foldLeft(0)(_ + _.getFortronCapacity)
 
-			for (machine <- frequencyTiles) {
-				if (machine != null) {
-					totalFortron += machine.getFortron
-					totalCapacity += machine.getFortronCapacity
-				}
-			}
 			if (totalFortron > 0 && totalCapacity > 0) {
 				transferMode match {
-					case TransferMode.`equalize` => {
-						for (machine <- frequencyTiles) {
-							if (machine != null) {
-								val capacityPercentage: Double = machine.getFortronCapacity.asInstanceOf[Double] / totalCapacity.asInstanceOf[Double]
-								val amountToSet: Int = (totalFortron * capacityPercentage).asInstanceOf[Int]
-								doTransferFortron(source, machine, amountToSet - machine.getFortron, limit)
-							}
-						}
-					}
-					case TransferMode.`distribute` => {
-						val amountToSet: Int = totalFortron / frequencyTiles.size
-						for (machine <- frequencyTiles) {
-							if (machine != null) {
-								doTransferFortron(source, machine, amountToSet - machine.getFortron, limit)
-							}
-						}
+					case TransferMode.equalize =>
+						frequencyBlocks.foreach(machine => {
+							val capacityPercentage = machine.getFortronCapacity.toDouble / totalCapacity.toDouble
+							val amountToSet = (totalFortron * capacityPercentage).toInt
+							doTransferFortron(source, machine, amountToSet - machine.getFortron, limit)
+						})
+					case TransferMode.distribute => {
+						val amountToSet: Int = totalFortron / frequencyBlocks.size
+						frequencyBlocks.foreach(machine => doTransferFortron(source, machine, amountToSet - machine.getFortron, limit))
 					}
 					case TransferMode.drain => {
-						frequencyTiles.remove(source)
+						val frequencyWithoutSource = frequencyBlocks - source
 
-						for (machine <- frequencyTiles) {
-							if (machine != null) {
-								val capacityPercentage: Double = machine.getFortronCapacity.asInstanceOf[Double] / totalCapacity.asInstanceOf[Double]
-								val amountToSet: Int = (totalFortron * capacityPercentage).asInstanceOf[Int]
+						frequencyWithoutSource.foreach(machine => {
+							val capacityPercentage = machine.getFortronCapacity.toDouble / totalCapacity.toDouble
+							val amountToSet = (totalFortron * capacityPercentage).toInt
 
-								if (amountToSet - machine.getFortron > 0) {
+							if (amountToSet - machine.getFortron > 0) {
+								doTransferFortron(source, machine, amountToSet - machine.getFortron, limit)
+							}
+						})
+					}
+					case TransferMode.fill => {
+						if (source.getFortron < source.getFortronCapacity) {
+							val frequencyWithoutSource = frequencyBlocks - source
+
+							val requiredFortron = source.getFortronCapacity - source.getFortron
+
+							frequencyWithoutSource.foreach(machine => {
+								val amountToConsume = Math.min(requiredFortron, machine.getFortron)
+								val amountToSet = -machine.getFortron - amountToConsume
+								if (amountToConsume > 0) {
 									doTransferFortron(source, machine, amountToSet - machine.getFortron, limit)
 								}
-							}
-						}
-					}
-					case TransferMode.`fill` => {
-						if (source.getFortron < source.getFortronCapacity) {
-							frequencyTiles.remove(source)
-							val requiredFortron: Int = source.getFortronCapacity - source.getFortron
-
-							for (machine <- frequencyTiles) {
-								if (machine != null) {
-									val amountToConsume: Int = Math.min(requiredFortron, machine.getFortron)
-									val amountToSet: Int = -machine.getFortron - amountToConsume
-									if (amountToConsume > 0) {
-										doTransferFortron(source, machine, amountToSet - machine.getFortron, limit)
-									}
-								}
-							}
+							})
 						}
 					}
 				}
@@ -94,8 +77,8 @@ object FortronUtility {
 			val world = block.world()
 
 			val isCamo = {
-				if (transferer.isInstanceOf[IModuleProvider]) {
-					transferer.asInstanceOf[IModuleProvider].getModuleCount(Content.moduleCamouflage.asInstanceOf[Module]) > 0
+				if (transferer.isInstanceOf[BlockModuleHandler]) {
+					transferer.asInstanceOf[BlockModuleHandler].getModuleCount(Content.moduleCamouflage) > 0
 				}
 				else {
 					false
@@ -107,7 +90,7 @@ object FortronUtility {
 				var toBeInjected: Int = receiver.removeFortron(transferer.addFortron(transferEnergy, false), false)
 				toBeInjected = transferer.addFortron(receiver.removeFortron(toBeInjected, true), true)
 				if (Game.instance.networkManager.isClient && toBeInjected > 0 && !isCamo) {
-					ModularForceFieldSystem.proxy.renderBeam(world, new Vector3d(block) + 0.5, new Vector3d(receiver.asInstanceOf[TileEntity]) + 0.5, FieldColor.blue, 20)
+					ModularForceFieldSystem.proxy.renderBeam(world, block.position().toDouble + 0.5, new Vector3d(receiver.asInstanceOf[TileEntity]) + 0.5, FieldColor.blue, 20)
 				}
 			}
 			else {

@@ -2,19 +2,18 @@ package mffs.production
 
 import java.util.{HashSet => JHashSet, Set => JSet}
 
+import mffs.GraphFrequency
 import mffs.api.card.ICoordLink
 import mffs.api.fortron.{Fortron, FortronCapacitor, FortronFrequency}
 import mffs.base.{BlockModuleHandler, PacketBlock}
-import mffs.util.TransferMode.TransferMode
+import mffs.content.{Content, Models, Textures}
 import mffs.util.{FortronUtility, TransferMode}
-import mffs.{Content, GraphFrequency, Reference}
 import nova.core.block.Block
 import nova.core.fluid.TankProvider
 import nova.core.inventory.InventorySimple
 import nova.core.item.Item
 import nova.core.network.Sync
-import nova.core.render.model.{Model, TechneModel}
-import nova.core.render.texture.BlockTexture
+import nova.core.render.model.Model
 import nova.core.retention.Stored
 import nova.core.util.transform.MatrixStack
 
@@ -151,13 +150,6 @@ class BlockFortronCapacitor extends BlockModuleHandler with FortronCapacitor {
 
 	def getTransferMode: TransferMode = transferMode
 
-	val textureOn = new BlockTexture(Reference.domain, "fortronCapacitor_on.png")
-	val textureOff = new BlockTexture(Reference.domain, "fortronCapacitor_off.png")
-	val model = new TechneModel(Reference.domain, "fortronCapacitor.tcn")
-
-	override def renderStatic(model: Model) {
-
-	}
 
 	override def renderDynamic(model: Model) {
 		model.matrix = new MatrixStack()
@@ -166,15 +158,18 @@ class BlockFortronCapacitor extends BlockModuleHandler with FortronCapacitor {
 			.scale(1.3, 1.3, 1.3)
 			.getMatrix
 
-		model.children.add(model)
+		model.children.add(Models.fortronCapacitor.getModel)
 
 		if (isActive) {
-			model.bind(textureOn)
+			model.bind(Textures.fortronCapacitorOn)
 		}
 		else {
-			model.bind(textureOff)
+			model.bind(Textures.fortronCapacitorOff)
 		}
 	}
 
+	override def renderStatic(model: Model) {
+
+	}
 	override def renderItem(model: Model) = renderDynamic(model)
 }

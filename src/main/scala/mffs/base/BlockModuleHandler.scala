@@ -2,8 +2,8 @@ package mffs.base
 
 import java.util.{Optional, Set => JSet}
 
-import mffs.Content
 import mffs.api.modules.Module
+import mffs.content.Content
 import mffs.util.CacheHandler
 import nova.core.fluid.Fluid
 import nova.core.game.Game

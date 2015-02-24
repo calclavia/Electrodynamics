@@ -3,12 +3,13 @@ package mffs.field
 import java.util.{Set => JSet}
 
 import mffs.base.{PacketBlock, TileFieldMatrix}
+import mffs.content.Content
 import mffs.field.mode.ItemModeCustom
 import mffs.item.card.ItemCard
 import mffs.render.FieldColor
 import mffs.security.MFFSPermissions
 import mffs.util.CacheHandler
-import mffs.{Content, ModularForceFieldSystem, Reference, Settings}
+import mffs.{ModularForceFieldSystem, Reference, Settings}
 import nova.core.util.transform.Cuboid
 
 class BlockProjector extends TileFieldMatrix with IProjector

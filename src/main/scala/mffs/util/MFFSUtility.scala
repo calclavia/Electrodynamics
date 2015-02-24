@@ -1,6 +1,6 @@
 package mffs.util
 
-import mffs.Content
+import mffs.content.Content
 import mffs.field.BlockProjector
 import mffs.field.mode.ItemModeCustom
 

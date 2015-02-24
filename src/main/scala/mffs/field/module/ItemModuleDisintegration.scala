@@ -2,11 +2,12 @@ package mffs.field.module
 
 import java.util.Set
 
+import mffs.ModularForceFieldSystem
 import mffs.base.{BlockInventory, ItemModule, PacketBlock}
+import mffs.content.Content
 import mffs.field.BlockProjector
 import mffs.field.mobilize.event.{BlockDropDelayedEvent, BlockInventoryDropDelayedEvent, IDelayedEventHandler}
 import mffs.util.MFFSUtility
-import mffs.{Content, ModularForceFieldSystem}
 
 class ItemModuleDisintegration extends ItemModule
 {

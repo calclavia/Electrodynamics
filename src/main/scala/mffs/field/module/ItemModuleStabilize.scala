@@ -3,8 +3,9 @@ package mffs.field.module
 import java.util.Set
 
 import mffs.base.{ItemModule, PacketBlock}
+import mffs.content.Content
 import mffs.field.mode.ItemModeCustom
-import mffs.{Content, ModularForceFieldSystem, Reference}
+import mffs.{ModularForceFieldSystem, Reference}
 
 class ItemModuleStabilize extends ItemModule
 {

@@ -1,5 +1,6 @@
 package mffs
 
+import mffs.content.Content
 import mffs.security.MFFSPermissions
 import nova.core.event.EventListener
 import nova.core.event.EventManager.EmptyEvent
