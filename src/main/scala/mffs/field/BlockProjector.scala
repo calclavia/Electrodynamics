@@ -9,6 +9,7 @@ import mffs.render.FieldColor
 import mffs.security.MFFSPermissions
 import mffs.util.CacheHandler
 import mffs.{Content, ModularForceFieldSystem, Reference, Settings}
+import nova.core.util.transform.Cuboid
 
 class BlockProjector extends TileFieldMatrix with IProjector
 {
@@ -27,11 +28,12 @@ class BlockProjector extends TileFieldMatrix with IProjector
   /** Are the filters in the projector inverted? */
   private var isInverted = false
 
-  bounds = new Cuboid(0, 0, 0, 1, 0.8, 1)
   capacityBase = 30
   startModuleIndex = 1
 
-  override def getSizeInventory = 1 + 25 + 6
+	override def getBoundingBox: Cuboid = new Cuboid(0, 0, 0, 1, 0.8, 1)
+
+	override def getSizeInventory = 1 + 25 + 6
 
 	override def isItemValidForSlot(slotID: Int, Item: Item): Boolean =
   {
@@ -271,6 +273,19 @@ class BlockProjector extends TileFieldMatrix with IProjector
 
   def getProjectionSpeed: Int = 28 + 28 * getModuleCount(Content.moduleSpeed, getModuleSlots: _*)
 
+	override def markDirty() {
+		super.markDirty()
+
+		if (world != null) {
+			destroyField()
+		}
+	}
+
+	override def invalidate {
+		destroyField()
+		super.invalidate
+	}
+
   def destroyField()
   {
 	  if (Game.instance.networkManager.isServer && calculatedField != null && !isCalculating)
@@ -285,19 +300,6 @@ class BlockProjector extends TileFieldMatrix with IProjector
       fieldRequireTicks = false
     }
   }
-
-	override def markDirty() {
-		super.markDirty()
-
-		if (world != null) {
-			destroyField()
-		}
-	}
-
-	override def invalidate {
-		destroyField()
-		super.invalidate
-	}
 
 	override def getForceFields: JSet[Vector3d] = forceFields
 

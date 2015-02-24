@@ -5,14 +5,15 @@ import java.util.{Set => JSet}
 import mffs.Content
 import mffs.api.modules.IModuleProvider
 import mffs.util.CacheHandler
+import nova.core.fluid.Fluid
 import nova.core.game.Game
 import nova.core.network.Packet
 
 abstract class BlockModuleAcceptor extends BlockFortron with IModuleProvider with CacheHandler {
-	
+
 	var startModuleIndex = 1
 	var endModuleIndex = inventory.size() - 1
-	
+
 	/**
 	 * Client side only.
 	 */
@@ -39,7 +40,11 @@ abstract class BlockModuleAcceptor extends BlockFortron with IModuleProvider wit
 
 	override def start() {
 		super.start()
-		fortronTank.setCapacity((this.getModuleCount(Content.moduleCapacity) * this.capacityBoost + this.capacityBase) * FluidContainerRegistry.BUCKET_VOLUME)
+		refresh()
+	}
+
+	def refresh() {
+		fortronTank.setCapacity((this.getModuleCount(Content.moduleCapacity) * this.capacityBoost + this.capacityBase) * Fluid.bucketVolume)
 	}
 
 	def consumeCost() {
@@ -82,29 +87,6 @@ abstract class BlockModuleAcceptor extends BlockFortron with IModuleProvider wit
 
 		cache(cacheID, returnStack.copy)
 		return returnStack
-	}
-
-	def getModuleStacks(slots: Int*): JSet[Item] = {
-		var cacheID: String = "getModuleStacks_"
-
-		if (slots != null) {
-			cacheID += slots.hashCode()
-		}
-
-		if (hasCache(classOf[Set[Item]], cacheID)) return getCache(classOf[Set[Item]], cacheID)
-
-		var modules: Set[Item] = null
-
-		if (slots == null || slots.length <= 0) {
-			modules = ((startModuleIndex until endModuleIndex) map (getStackInSlot(_)) filter (_ != null) filter (_.getItem.isInstanceOf[IModule])).toSet
-		}
-		else {
-			modules = (slots map (getStackInSlot(_)) filter (_ != null) filter (_.getItem.isInstanceOf[IModule])).toSet
-		}
-
-		cache(cacheID, modules)
-
-		return modules
 	}
 
 	@SuppressWarnings(Array("unchecked"))
@@ -157,6 +139,29 @@ abstract class BlockModuleAcceptor extends BlockFortron with IModuleProvider wit
 		cache(cacheID, count)
 
 		return count
+	}
+
+	def getModuleStacks(slots: Int*): JSet[Item] = {
+		var cacheID: String = "getModuleStacks_"
+
+		if (slots != null) {
+			cacheID += slots.hashCode()
+		}
+
+		if (hasCache(classOf[Set[Item]], cacheID)) return getCache(classOf[Set[Item]], cacheID)
+
+		var modules: Set[Item] = null
+
+		if (slots == null || slots.length <= 0) {
+			modules = ((startModuleIndex until endModuleIndex) map (getStackInSlot(_)) filter (_ != null) filter (_.getItem.isInstanceOf[IModule])).toSet
+		}
+		else {
+			modules = (slots map (getStackInSlot(_)) filter (_ != null) filter (_.getItem.isInstanceOf[IModule])).toSet
+		}
+
+		cache(cacheID, modules)
+
+		return modules
 	}
 
 	override def readFromNBT(nbt: NBTTagCompound) {
