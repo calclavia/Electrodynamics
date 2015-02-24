@@ -3,7 +3,7 @@ package mffs.production
 import java.util.{HashSet => JHashSet, Set => JSet}
 
 import mffs.Content
-import mffs.api.fortron.{FortronCapacitor, FortronFrequency}
+import mffs.api.fortron.{Fortron, FortronCapacitor, FortronFrequency}
 import mffs.base.{BlockModuleHandler, PacketBlock}
 import mffs.item.card.ItemCardFrequency
 import mffs.util.TransferMode.TransferMode
@@ -36,7 +36,7 @@ class BlockFortronCapacitor extends BlockModuleHandler with FortronCapacitor {
 			 * Handle fortron item inputs
 			 */
 			getInputStacks
-				.collect { case p: TankProvider if p.getTanks.exists(_.getFluid) => p}
+				.collect { case p: TankProvider if p.getTanks.exists(_.hasFluidType(Fortron)) => p}
 				.foreach(stack => addFortron(stack.drain(stack, Math.min(getFortronEmpty, getTransmissionRate), true), true))
 
 			/**
