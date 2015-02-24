@@ -48,26 +48,6 @@ abstract class BlockModuleHandler extends BlockFortron with CacheHandler {
 		fortronTank.setCapacity((this.getModuleCount(Content.moduleCapacity) * this.capacityBoost + this.capacityBase) * Fluid.bucketVolume)
 	}
 
-	/**
-	 * Gets the number of modules in this block that are in specific slots
-	 * @param slots The slot IDs. Providing null will search all slots
-	 * @return The number of all item modules in the slots.
-	 */
-	def getModuleCount(compareModule: Item, slots: Int*): Int =
-		getOrSetCache(
-			"getModuleCount_" + compareModule.hashCode + (if (slots != null) slots.hashCode() else ""),
-			() => {
-				val iterSlots = if (slots == null || slots.length <= 0) startModuleIndex until endModuleIndex else slots
-
-				return iterSlots
-					.view
-					.map(inventory.get)
-					.collect { case item: Optional[Item] if item.isPresent => item.get()}
-					.collect { case item: Item with Module if compareModule.sameItemType(item) => item}
-					.foldLeft(0)(_ + _.count)
-			}
-		)
-
 	def markDirty() {
 		refresh()
 		clearCache()
@@ -95,6 +75,26 @@ abstract class BlockModuleHandler extends BlockFortron with CacheHandler {
 		)
 
 	protected def getAmplifier: Float = 1f
+
+	/**
+	 * Gets the number of modules in this block that are in specific slots
+	 * @param slots The slot IDs. Providing null will search all slots
+	 * @return The number of all item modules in the slots.
+	 */
+	def getModuleCount(compareModule: Item, slots: Int*): Int =
+		getOrSetCache(
+			"getModuleCount_" + compareModule.hashCode + (if (slots != null) slots.hashCode() else ""),
+			() => {
+				val iterSlots = if (slots == null || slots.length <= 0) startModuleIndex until endModuleIndex else slots
+
+				return iterSlots
+					.view
+					.map(inventory.get)
+					.collect { case item: Optional[Item] if item.isPresent => item.get()}
+					.collect { case item: Item with Module if compareModule.sameItemType(item) => item}
+					.foldLeft(0)(_ + _.count)
+			}
+		)
 
 	/**
 	 * Gets the module, if it exists, in this block based on a compareModule.
