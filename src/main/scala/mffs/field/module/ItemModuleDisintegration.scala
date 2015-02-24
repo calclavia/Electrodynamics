@@ -6,7 +6,7 @@ import mffs.ModularForceFieldSystem
 import mffs.base.{BlockInventory, ItemModule, PacketBlock}
 import mffs.content.Content
 import mffs.field.BlockProjector
-import mffs.field.mobilize.event.{BlockDropDelayedEvent, BlockInventoryDropDelayedEvent, IDelayedEventHandler}
+import mffs.field.mobilize.event.{BlockDropDelayedEvent, BlockInventoryDropDelayedEvent}
 import mffs.util.MFFSUtility
 
 class ItemModuleDisintegration extends ItemModule
@@ -33,7 +33,7 @@ class ItemModuleDisintegration extends ItemModule
     {
       val blockMetadata = position.getBlockMetadata(tileEntity.getWorldObj)
 
-      val filterMatch = !proj.getFilterStacks.exists(
+		val filterMatch = !proj.getFilterItems.exists(
 		  Item =>
         {
 			MFFSUtility.getFilterBlock(Item) != null &&

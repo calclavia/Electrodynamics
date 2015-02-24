@@ -10,4 +10,5 @@ import nova.core.render.model.TechneModel
  */
 object Models extends ContentLoader {
 	val fortronCapacitor = new TechneModel(Reference.domain, "fortronCapacitor.tcn")
+	val projector = new TechneModel(Reference.domain, "electromagneticProjector.tcn")
 }

@@ -9,9 +9,14 @@ import nova.core.render.texture.BlockTexture
  * @author Calclavia
  */
 object Textures extends ContentLoader {
-	val machine = new BlockTexture(Reference.id, "machine")
-	val fortron = new BlockTexture(Reference.id, "fortron")
+	val machine = new BlockTexture(Reference.domain, "machine")
+	val fortron = new BlockTexture(Reference.domain, "fortron")
+	val hologram = new BlockTexture(Reference.domain, "hologram.png")
 
 	val fortronCapacitorOn = new BlockTexture(Reference.domain, "fortronCapacitor_on.png")
 	val fortronCapacitorOff = new BlockTexture(Reference.domain, "fortronCapacitor_off.png")
+
+	val projectorOn = new BlockTexture(Reference.domain, "electromagneticProjector_on.png")
+	val projectorOff = new BlockTexture(Reference.domain, "electromagneticProjector_off.png")
+
 }

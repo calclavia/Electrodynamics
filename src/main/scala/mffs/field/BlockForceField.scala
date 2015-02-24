@@ -10,7 +10,7 @@ import nova.core.entity.Entity
 import nova.core.game.Game
 import nova.core.item.Item
 import nova.core.network.PacketHandler
-import nova.core.util.transform.Vector3d
+import nova.core.util.transform.{Vector3d, Vector3i}
 
 class BlockForceField extends Block with PacketHandler with ForceField
 {
@@ -382,7 +382,7 @@ class BlockForceField extends Block with PacketHandler with ForceField
     }
   }
 
-	def setProjector(position: Vector3d)
+	def setProjector(position: Vector3i)
   {
     projector = position
 

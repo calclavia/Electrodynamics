@@ -1,13 +1,11 @@
 package mffs.field
 
-import java.util.{Set => JSet}
+import java.util.{Optional, Set => JSet}
 
 import mffs.api.machine.Projector
 import mffs.base.{BlockFieldMatrix, PacketBlock}
-import mffs.content.Content
-import mffs.field.mode.ItemModeCustom
+import mffs.content.{Content, Textures}
 import mffs.render.FieldColor
-import mffs.security.MFFSPermissions
 import mffs.util.CacheHandler
 import mffs.{ModularForceFieldSystem, Settings}
 import nova.core.block.components.LightEmitter
@@ -15,7 +13,11 @@ import nova.core.game.Game
 import nova.core.inventory.InventorySimple
 import nova.core.item.Item
 import nova.core.network.{Packet, Sync}
-import nova.core.util.transform.{Cuboid, Vector3i}
+import nova.core.render.Color
+import nova.core.render.model.{Model, Vertex}
+import nova.core.util.transform.{Cuboid, MatrixStack, Vector3d, Vector3i}
+
+import scala.collection.convert.wrapAll._
 
 class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter {
 
@@ -211,15 +213,10 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter {
 								 */
 								if (Game.instance.networkManager.isServer) {
 									world.setBlock(pos, Content.forceField)
+									world.getBlock(pos).get().asInstanceOf[BlockForceField].setProjector(position)
 								}
 
 								forceFields += pos
-
-								val tileEntity = pos.getTileEntity(world)
-
-								if (tileEntity.isInstanceOf[BlockForceField]) {
-									tileEntity.asInstanceOf[BlockForceField].setProjector(position)
-								}
 							})
 					}
 
@@ -229,10 +226,12 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter {
 		}
 	}
 
-	private def canReplaceBlock(vector: Vector3d, block: Block): Boolean = {
-		return block == null ||
-			(getModuleCount(Content.moduleDisintegration) > 0 && block.getBlockHardness(this.worldObj, vector.xi, vector.yi, vector.zi) != -1) ||
-			(block.getMaterial.isLiquid || block == Blocks.snow || block == Blocks.vine || block == Blocks.tallgrass || block == Blocks.deadbush || block.isReplaceable(world, vector.xi, vector.yi, vector.zi))
+	private def canReplaceBlock(vector: Vector3i, block: Block): Boolean = {
+		/*	return block == null ||
+				(getModuleCount(Content.moduleDisintegration) > 0 && block.getBlockHardness(this.worldObj, vector.xi, vector.yi, vector.zi) != -1) ||
+				(block.getMaterial.isLiquid || block == Blocks.snow || block == Blocks.vine || block == Blocks.tallgrass || block == Blocks.deadbush || block.isReplaceable(world, vector.xi, vector.yi, vector.zi))
+	*/
+		return true
 	}
 
 	def getProjectionSpeed: Int = 28 + 28 * getModuleCount(Content.moduleSpeed, getModuleSlots: _*)
@@ -241,9 +240,12 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter {
 		if (Game.instance.networkManager.isServer && calculatedField != null && !isCalculating) {
 			getModules(getModuleSlots: _*).forall(!_.onDestroy(this, calculatedField))
 			//TODO: Parallelism?
-			calculatedField.view filter (_.getBlock(world) == Content.forceField) foreach (_.setBlock(world, Blocks.air))
+			calculatedField
+				.view
+				.filter(v => world.getBlock(v).isPresent && world.getBlock(v).get().sameType(Content.forceField))
+				.foreach(v => world.setBlock(v, Blocks.air))
 
-			forceFields.clear()
+			forceFields = Set.empty
 			calculatedField = null
 			isCompleteConstructing = false
 			fieldRequireTicks = false
@@ -258,12 +260,12 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter {
 		}
 	}
 
-	override def invalidate {
+	override def unload() {
 		destroyField()
-		super.invalidate
+		super.unload()
 	}
 
-	override def getForceFields: JSet[Vector3d] = forceFields
+	override def getForceFields: JSet[Vector3i] = forceFields
 
 	def getTicks: Long = ticks
 
@@ -287,43 +289,118 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter {
 		return hasPerm
 	}
 
-	def getFilterItems: Set[Item] = getFilterStacks map (_.getItem)
-
-	def getFilterStacks: Set[Item] = ((26 until 32) map (getStackInSlot(_)) filter (_ != null)).toSet
+	def getFilterItems: Set[Item] = (26 until 32).map(inventory.get).collect { case op: Optional[Item] if op.isPresent => op.get}.toSet
 
 	def isInvertedFilter: Boolean = isInverted
 
 	/**
 	 * Rendering
 	 */
-	@SideOnly(Side.CLIENT)
-	override def renderStatic(renderer: RenderBlocks, pos: Vector3d, pass: Int): Boolean = {
-		return false
+	override def renderDynamic(model: Model) {
+		/**
+		 * Rends the model 
+		 */
+		model.matrix = new MatrixStack()
+			.loadMatrix(model.matrix)
+			.translate(0, 0.15, 0)
+			.scale(1.3, 1.3, 1.3)
+			.rotate(direction.rotation)
+			.getMatrix
+
+		model.children.add(Models.projector.getModel)
+
+		if (isActive) {
+			model.bind(Textures.projectorOn)
+		}
+		else {
+			model.bind(Textures.projectorOff)
+		}
+
+		/**
+		 * Render the light beam 
+		 */
+		if (getShape != null) {
+			val lightBeam = new Model()
+			//TODO: Lighting, RenderHelper.disableStandardItemLighting
+
+			val xDifference: Double = Minecraft.getMinecraft.thePlayer.posX - (x + 0.5)
+			val zDifference: Double = Minecraft.getMinecraft.thePlayer.posZ - (y + 0.5)
+			val rotatation = Math.atan2(zDifference, xDifference)
+			lightBeam.matrix = new MatrixStack().rotate(Vector3d.yAxis, -rotatation + Math.toRadians(27)).getMatrix
+			/*
+			glDisable(GL_TEXTURE_2D)
+			glShadeModel(GL_SMOOTH)
+			glEnable(GL_BLEND)
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE)
+			glDisable(GL_ALPHA_TEST)
+			glEnable(GL_CULL_FACE)
+			glDepthMask(false)
+			glPushMatrix*/
+
+			val height: Float = 2
+			val width: Float = 2
+
+			val face = lightBeam.createFace()
+			//tessellator.setColorRGBA_I(0, 0)
+			face.drawVertex(new Vertex(0, 0, 0, 0, 0))
+			face.drawVertex(new Vertex(-0.866D * width, height, -0.5F * width, 0, 0))
+			face.drawVertex(new Vertex(0.866D * width, height, -0.5F * width, 0, 0))
+			face.drawVertex(new Vertex(0.0D, height, 1.0F * width, 0, 0))
+			face.drawVertex(new Vertex(-0.866D * width, height, -0.5F * width, 0, 0))
+			face.vertices.foreach(_.setColor(new Color(72, 198, 255, 255)))
+			lightBeam.drawFace(face)
+
+			/*
+			glPopMatrix
+			glDepthMask(true)
+			glDisable(GL_CULL_FACE)
+			glDisable(GL_BLEND)
+			glShadeModel(GL_FLAT)
+			glColor4f(1.0F, 1.0F, 1.0F, 1.0F)
+			glEnable(GL_TEXTURE_2D)
+			glEnable(GL_ALPHA_TEST)
+			RenderHelper.enableStandardItemLighting
+			glPopMatrix*/
+
+			model.children.add(lightBeam)
+
+			/**
+			 * Render hologram
+			 */
+			if (Settings.highGraphics) {
+
+				val hologram = new Model()
+				hologram.matrix = new MatrixStack()
+					.translate(0, 0.85 + Math.sin(Math.toRadians(ticks * 3)).toFloat / 7, 0)
+					.rotate(Vector3d.yAxis, Math.toRadians(ticks * 4))
+					.rotate(new Vector3d(0, 1, 1), Math.toRadians(36f + ticks * 4))
+					.getMatrix
+
+				getShape.render(this, model)
+
+				val color = if (isActive) FieldColor.blue else FieldColor.red
+				val rgba = new Color(color._1, color._2, color._3, Math.sin(ticks.toDouble / 10) / 2 + 0.8)
+				hologram.faces.foreach(_.vertices.foreach(_.setColor(rgba)))
+				hologram.bind(Textures.hologram)
+
+			}
+		}
 	}
 
-	@SideOnly(Side.CLIENT)
-	override def renderDynamic(pos: Vector3d, frame: Float, pass: Int) {
-		RenderElectromagneticProjector.render(this, pos.x, pos.y, pos.z, frame, isActive, false)
+	override def renderStatic(model: Model) {
+
 	}
 
-	@SideOnly(Side.CLIENT)
-	override def renderInventory(Item: Item) {
-		RenderElectromagneticProjector.render(this, -0.5, -0.5, -0.5, 0, true, true)
-	}
+	override def renderItem(model: Model) = renderDynamic(model)
 
 	/**
 	 * Returns Fortron cost in ticks.
 	 */
-	protected override def doGetFortronCost: Int = {
-		if (this.getShape != null) {
-			return Math.round(super.doGetFortronCost + this.getShape.getFortronCost(this.getAmplifier))
-		}
-		return 0
-	}
+	protected override def doGetFortronCost: Int = if (this.getShape != null) Math.round(super.doGetFortronCost + this.getShape.getFortronCost(this.getAmplifier)) else 0
 
 	protected override def getAmplifier: Float = {
-		if (this.getShape.isInstanceOf[ItemModeCustom]) {
-			return Math.max((this.getShape.asInstanceOf[ItemModeCustom]).getFieldBlocks(this, this.getShape).size / 100, 1)
+		if (getShape.isInstanceOf[ItemModeCustom]) {
+			return Math.max(getShape.asInstanceOf[ItemModeCustom].getFieldBlocks(this, this.getShape).size / 100, 1)
 		}
 		return Math.max(Math.min((if (calculatedField != null) calculatedField.size else 0) / 1000, 10), 1)
 	}

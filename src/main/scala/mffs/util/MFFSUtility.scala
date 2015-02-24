@@ -107,7 +107,7 @@ object MFFSUtility
             }
           }
 
-          projector.getFilterStacks filter (getFilterBlock(_) != null) headOption match
+			projector.getFilterItems filter (getFilterBlock(_) != null) headOption match
           {
             case Some(entry) => return entry
             case _ => return null
