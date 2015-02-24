@@ -4,12 +4,13 @@ MFFS v3.0 is a complete ground-up rewrite inspired by MFFS v2.0 by ThunderDark.
 
 Copyright (c) Calclavia
 
+### Contribution
 By committing to the project, you fully agree to the Contribution Agreement:
 http://calclavia.com/contribution-agreement/
 
-### Note on Transfer
-Modular Force Field System v3 is an original complete ground up rewrite of Modular Force Field System v2 which was originally created by ThunderDark.
-This mod is therefore _not_ derived work of MFFS v2, but is simply a mod that used some ideas from the original MFFS.
+MFFS is dependent on the following libraries and API:
+* NOVA API
+* Resonant Engine
 
 ### Website & Download
 The mod can be found and downloaded at: http://calclavia.com/mffs/
