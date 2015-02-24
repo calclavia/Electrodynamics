@@ -1,7 +1,7 @@
 package mffs.util
 
 import mffs.api.fortron.IFortronFrequency
-import mffs.api.modules.{IModuleProvider, Module}
+import mffs.api.modules.Module
 import mffs.render.FieldColor
 import mffs.util.TransferMode._
 import mffs.{Content, ModularForceFieldSystem, Settings}
@@ -104,16 +104,16 @@ object FortronUtility {
 
 			if (joules > 0) {
 				val transferEnergy = Math.min(joules, limit)
-				var toBeInjected: Int = receiver.addFortron(transferer.removeFortron(transferEnergy, false), false)
-				toBeInjected = transferer.removeFortron(receiver.addFortron(toBeInjected, true), true)
+				var toBeInjected: Int = receiver.removeFortron(transferer.addFortron(transferEnergy, false), false)
+				toBeInjected = transferer.addFortron(receiver.removeFortron(toBeInjected, true), true)
 				if (Game.instance.networkManager.isClient && toBeInjected > 0 && !isCamo) {
 					ModularForceFieldSystem.proxy.renderBeam(world, new Vector3d(block) + 0.5, new Vector3d(receiver.asInstanceOf[TileEntity]) + 0.5, FieldColor.blue, 20)
 				}
 			}
 			else {
 				val transferEnergy = Math.min(Math.abs(joules), limit)
-				var toBeEjected: Int = transferer.addFortron(receiver.removeFortron(transferEnergy, false), false)
-				toBeEjected = receiver.removeFortron(transferer.addFortron(toBeEjected, true), true)
+				var toBeEjected: Int = transferer.removeFortron(receiver.addFortron(transferEnergy, false), false)
+				toBeEjected = receiver.addFortron(transferer.removeFortron(toBeEjected, true), true)
 				if (Game.instance.networkManager.isClient && toBeEjected > 0 && !isCamo) {
 					ModularForceFieldSystem.proxy.renderBeam(world, new Vector3d(receiver.asInstanceOf[TileEntity]) + 0.5, new Vector3d(block) + 0.5, FieldColor.blue, 20)
 				}

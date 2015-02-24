@@ -1,7 +1,7 @@
 package mffs.production
 
 import com.resonant.core.graph.internal.electric.TTEBridge
-import mffs.base.{BlockModuleAcceptor, PacketBlock}
+import mffs.base.{BlockModuleHandler, PacketBlock}
 import mffs.item.card.ItemCardFrequency
 import mffs.util.FortronUtility
 import mffs.{Content, Settings}
@@ -32,7 +32,7 @@ object BlockCoercionDeriver
   val power = 5000000
 }
 
-class BlockCoercionDeriver extends BlockModuleAcceptor with TTEBridge
+class BlockCoercionDeriver extends BlockModuleHandler with TTEBridge
 {
   var processTime: Int = 0
   var isInversed = false
@@ -55,7 +55,7 @@ class BlockCoercionDeriver extends BlockModuleAcceptor with TTEBridge
       {
         if (isInversed && Settings.enableElectricity)
         {
-			val withdrawnElectricity = addFortron(productionRate / 20, true) / BlockCoercionDeriver.ueToFortronRatio
+			val withdrawnElectricity = removeFortron(productionRate / 20, true) / BlockCoercionDeriver.ueToFortronRatio
 			energy += withdrawnElectricity * BlockCoercionDeriver.energyConversionPercentage
 
           //          recharge(getStackInSlot(TileCoercionDeriver.slotBattery))

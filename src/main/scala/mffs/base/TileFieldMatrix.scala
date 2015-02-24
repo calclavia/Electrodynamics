@@ -11,7 +11,7 @@ import mffs.item.card.ItemCard
 import mffs.util.CacheHandler
 import nova.core.network.Packet
 
-abstract class TileFieldMatrix extends BlockModuleAcceptor with FieldMatrix with IDelayedEventHandler with Rotatable with IPermissionProvider
+abstract class TileFieldMatrix extends BlockModuleHandler with FieldMatrix with IDelayedEventHandler with Rotatable with IPermissionProvider
 {
   protected final val delayedEvents = new mutable.SynchronizedQueue[DelayedEvent]()
   val _getModuleSlots = (14 until 25).toArray

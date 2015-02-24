@@ -159,9 +159,9 @@ class BlockMobilizer extends TileFieldMatrix with IEffectController
   {
 	  if (Game.instance.networkManager.isServer && performingMove)
     {
-		if (addFortron(getFortronCost, false) >= getFortronCost)
+		if (removeFortron(getFortronCost, false) >= getFortronCost)
       {
-		  addFortron(getFortronCost, true)
+		  removeFortron(getFortronCost, true)
 
         if (moveTime > 0)
         {

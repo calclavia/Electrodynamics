@@ -41,12 +41,22 @@ public interface Fortron extends TankProvider {
 	}
 
 	/**
-	 * Called to use and consume fortron energy from this storage unit.
-	 * @param energy - Amount of fortron energy to use.
+	 * Adds fortron to this object
+	 * @param energy - Amount of fortron.
 	 * @param doUse - True if actually using, false if just simulating.
-	 * @return joules - The amount of energy that was actually provided.
+	 * @return The amount of fortron that was added.
 	 */
 	default int addFortron(int energy, boolean doUse) {
+		return getFortronTank().addFluid(fortronFactory.makeFluid().withAmount(energy), !doUse);
+	}
+
+	/**
+	 * Removes fortron from this object
+	 * @param energy - Amount of fortron energy to give.
+	 * @param doUse - True if actually using, false if just simulating.
+	 * @return The amount of fortron that was removed.
+	 */
+	default int removeFortron(int energy, boolean doUse) {
 		Optional<Fluid> fluid = getFortronTank().removeFluid(energy, !doUse);
 		if (fluid.isPresent()) {
 			return fluid.get().amount();
@@ -55,13 +65,4 @@ public interface Fortron extends TankProvider {
 		return 0;
 	}
 
-	/**
-	 * Called to use and give fortron energy from this storage unit.
-	 * @param energy - Amount of fortron energy to give.
-	 * @param doUse - True if actually using, false if just simulating.
-	 * @return joules - The amount of energy that was actually transfered.
-	 */
-	default int removeFortron(int energy, boolean doUse) {
-		return getFortronTank().addFluid(fortronFactory.makeFluid().withAmount(energy), !doUse);
-	}
 }

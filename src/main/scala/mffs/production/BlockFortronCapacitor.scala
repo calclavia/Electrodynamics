@@ -4,7 +4,7 @@ import java.util.{HashSet => JHashSet, Set => JSet}
 
 import mffs.Content
 import mffs.api.fortron.{Fortron, IFortronCapacitor, IFortronFrequency}
-import mffs.base.{BlockModuleAcceptor, PacketBlock}
+import mffs.base.{BlockModuleHandler, PacketBlock}
 import mffs.item.card.ItemCardFrequency
 import mffs.util.TransferMode.TransferMode
 import mffs.util.{FortronUtility, TransferMode}
@@ -12,7 +12,7 @@ import net.minecraftforge.fluids.IFluidContainerItem
 import nova.core.inventory.InventorySimple
 import nova.core.network.Sync
 
-class BlockFortronCapacitor extends BlockModuleAcceptor with Fortron with IFortronCapacitor {
+class BlockFortronCapacitor extends BlockModuleHandler with Fortron with IFortronCapacitor {
 
 	override protected val inventory: InventorySimple = new InventorySimple(3 + 4 * 2 + 1)
 	private val tickRate = 10

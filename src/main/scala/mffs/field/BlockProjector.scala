@@ -111,7 +111,7 @@ class BlockProjector extends TileFieldMatrix with IProjector
   {
     super.update()
 
-	  if (isActive && getMode != null && addFortron(getFortronCost, false) >= this.getFortronCost)
+	  if (isActive && getMode != null && removeFortron(getFortronCost, false) >= this.getFortronCost)
     {
       consumeCost()
 
@@ -273,19 +273,6 @@ class BlockProjector extends TileFieldMatrix with IProjector
 
   def getProjectionSpeed: Int = 28 + 28 * getModuleCount(Content.moduleSpeed, getModuleSlots: _*)
 
-	override def markDirty() {
-		super.markDirty()
-
-		if (world != null) {
-			destroyField()
-		}
-	}
-
-	override def invalidate {
-		destroyField()
-		super.invalidate
-	}
-
   def destroyField()
   {
 	  if (Game.instance.networkManager.isServer && calculatedField != null && !isCalculating)
@@ -300,6 +287,19 @@ class BlockProjector extends TileFieldMatrix with IProjector
       fieldRequireTicks = false
     }
   }
+
+	override def markDirty() {
+		super.markDirty()
+
+		if (world != null) {
+			destroyField()
+		}
+	}
+
+	override def invalidate {
+		destroyField()
+		super.invalidate
+	}
 
 	override def getForceFields: JSet[Vector3d] = forceFields
 
