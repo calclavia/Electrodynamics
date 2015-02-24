@@ -1,7 +1,7 @@
 package mffs.production
 
 import mffs.ModularForceFieldSystem
-import mffs.base.{GuiMFFS, TilePacketType}
+import mffs.base.{GuiMFFS, PacketBlock}
 import mffs.render.button.GuiTransferModeButton
 
 class GuiFortronCapacitor(player: EntityPlayer, tile: BlockFortronCapacitor) extends GuiMFFS(new ContainerFortronCapacitor(player, tile), tile)
@@ -52,7 +52,7 @@ class GuiFortronCapacitor(player: EntityPlayer, tile: BlockFortronCapacitor) ext
 
     if (guiButton.id == 1)
     {
-      ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(this.tile, TilePacketType.toggleMoe.id: Integer))
+		ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(this.tile, PacketBlock.toggleMode.id: Integer))
     }
   }
 }

@@ -1,7 +1,7 @@
 package mffs.field.gui
 
 import mffs.ModularForceFieldSystem
-import mffs.base.TilePacketType
+import mffs.base.PacketBlock
 import mffs.field.mobilize.BlockMobilizer
 import mffs.render.button.GuiIcon
 
@@ -43,19 +43,19 @@ class GuiForceMobilizer(player: EntityPlayer, tile: BlockMobilizer) extends GuiM
     if (guiButton.id == 1)
     {
 
-      ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(tile, TilePacketType.toggleMoe.id: Integer))
+		ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(tile, PacketBlock.toggleMode.id: Integer))
     }
     else if (guiButton.id == 2)
     {
-      ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(tile, TilePacketType.toggleMode2.id: Integer))
+		ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(tile, PacketBlock.toggleMode2.id: Integer))
     }
     else if (guiButton.id == 3)
     {
-      ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(tile, TilePacketType.toggleMode3.id: Integer))
+		ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(tile, PacketBlock.toggleMode3.id: Integer))
     }
     else if (guiButton.id == 4)
     {
-      ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(tile, TilePacketType.toggleMode4.id: Integer))
+		ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(tile, PacketBlock.toggleMode4.id: Integer))
     }
   }
 

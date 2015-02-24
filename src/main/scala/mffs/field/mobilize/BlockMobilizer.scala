@@ -1,6 +1,6 @@
 package mffs.field.mobilize
 
-import mffs.base.{TileFieldMatrix, TilePacketType}
+import mffs.base.{PacketBlock, TileFieldMatrix}
 import mffs.field.mobilize.event.{BlockPreMoveDelayedEvent, DelayedEvent}
 import mffs.item.card.ItemCard
 import mffs.render.FieldColor
@@ -104,7 +104,7 @@ class BlockMobilizer extends TileFieldMatrix with IEffectController
       queueEvent(new DelayedEvent(this, getMoveTime, () =>
       {
         moveEntities
-		  ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(BlockMobilizer.this, TilePacketType.field.id: Integer))
+		  ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(BlockMobilizer.this, PacketBlock.field.id: Integer))
 
         if (!isTeleport && doAnchor)
         {
@@ -124,7 +124,7 @@ class BlockMobilizer extends TileFieldMatrix with IEffectController
         val coordPacketData = renderBlocks.toSeq flatMap (_.toIntList)
 
         val packet = new PacketTile(this)
-        packet <<< TilePacketType.effect.id
+		  packet <<< PacketBlock.effect.id
 
         if (!isTeleport)
         {
@@ -159,9 +159,9 @@ class BlockMobilizer extends TileFieldMatrix with IEffectController
   {
 	  if (Game.instance.networkManager.isServer && performingMove)
     {
-      if (requestFortron(getFortronCost, false) >= getFortronCost)
+		if (addFortron(getFortronCost, false) >= getFortronCost)
       {
-        requestFortron(getFortronCost, true)
+		  addFortron(getFortronCost, true)
 
         if (moveTime > 0)
         {
@@ -207,7 +207,7 @@ class BlockMobilizer extends TileFieldMatrix with IEffectController
           val coordPacketData = renderBlocks.toSeq flatMap (_.toIntList)
 
           val packet = new PacketTile(this)
-          packet <<< TilePacketType.effect.id
+			packet <<< PacketBlock.effect.id
 
           if (isTeleport)
           {
@@ -256,7 +256,7 @@ class BlockMobilizer extends TileFieldMatrix with IEffectController
       worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, Reference.prefix + "powerdown", 0.6f, 1 - this.worldObj.rand.nextFloat * 0.1f)
       val playPoint = position + anchor + 0.5
       worldObj.playSoundEffect(playPoint.x, playPoint.y, playPoint.z, Reference.prefix + "powerdown", 0.6f, 1 - this.worldObj.rand.nextFloat * 0.1f)
-      ModularForceFieldSystem.packetHandler.sendToAllAround(new PacketTile(this) <<< TilePacketType.render.id, world, position, packetRange)
+		ModularForceFieldSystem.packetHandler.sendToAllAround(new PacketTile(this) <<< PacketBlock.render.id, world, position, packetRange)
 
 
       if (failedPositions.size > 0)
@@ -265,7 +265,7 @@ class BlockMobilizer extends TileFieldMatrix with IEffectController
          * Send failure coordinates to client
          */
         val coords = failedPositions.toSeq flatMap (_.toIntList)
-        val packetTile = new PacketTile(this) <<< TilePacketType.effect.id <<< 3 <<< coords.size <<< coords
+		  val packetTile = new PacketTile(this) <<< PacketBlock.effect.id <<< 3 <<< coords.size <<< coords
         ModularForceFieldSystem.packetHandler.sendToAllAround(packetTile, world, position, packetRange)
       }
 
@@ -398,7 +398,7 @@ class BlockMobilizer extends TileFieldMatrix with IEffectController
   {
     super.write(buf, id)
 
-    if (id == TilePacketType.description.id)
+	  if (id == PacketBlock.description.id)
     {
       buf <<< anchor
       buf <<< previewMode
@@ -430,7 +430,7 @@ class BlockMobilizer extends TileFieldMatrix with IEffectController
 
     if (world.isRemote)
     {
-      if (id == TilePacketType.effect.id)
+		if (id == PacketBlock.effect.id)
       {
         buf.readInt() match
         {
@@ -497,15 +497,15 @@ class BlockMobilizer extends TileFieldMatrix with IEffectController
           }
         }
       }
-      else if (id == TilePacketType.render.id)
+		else if (id == PacketBlock.render.id)
       {
         canRenderMove = false
       }
-      else if (id == TilePacketType.field.id)
+		else if (id == PacketBlock.field.id)
       {
         this.moveEntities
       }
-      else if (id == TilePacketType.description.id)
+		else if (id == PacketBlock.description.id)
       {
 		  anchor = new Vector3d(buf)
         previewMode = buf.readInt()
@@ -515,16 +515,16 @@ class BlockMobilizer extends TileFieldMatrix with IEffectController
     }
     else
     {
-      if (id == TilePacketType.toggleMoe.id)
+		if (id == PacketBlock.toggleMode.id)
       {
 		  anchor = new Vector3d()
         markDirty()
       }
-      else if (id == TilePacketType.toggleMode2.id)
+		else if (id == PacketBlock.toggleMode2.id)
       {
         previewMode = (previewMode + 1) % 3
       }
-      else if (id == TilePacketType.toggleMode3.id)
+		else if (id == PacketBlock.toggleMode3.id)
       {
         doAnchor = !doAnchor
       }

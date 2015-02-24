@@ -20,10 +20,9 @@ class ItemCardFrequency extends ItemCard with Frequency {
 	@BeanProperty
 	val frequency: Int = 0
 
-	override def getTooltips(player: Optional[Player]): util.List[String] = {
-		val tooltips = super.getTooltips(player)
+	override def getTooltips(player: Optional[Player], tooltips: util.List[String]) {
+		super.getTooltips(player, tooltips)
 		tooltips.add(Game.instance.languageManager.getLocal("info.cardFrequency.freq") + " " + getEncodedFrequency(Item))
-		return tooltips
 	}
 
 	def getEncodedFrequency = Hashing.md5().hashInt(frequency).toString.take(12)

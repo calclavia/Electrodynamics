@@ -1,7 +1,7 @@
 package mffs.production
 
 import com.resonant.core.graph.internal.electric.TTEBridge
-import mffs.base.{TileModuleAcceptor, TilePacketType}
+import mffs.base.{PacketBlock, TileModuleAcceptor}
 import mffs.item.card.ItemCardFrequency
 import mffs.util.FortronUtility
 import mffs.{Content, Settings}
@@ -55,14 +55,14 @@ class BlockCoercionDeriver extends TileModuleAcceptor with TTEBridge
       {
         if (isInversed && Settings.enableElectricity)
         {
-			val withdrawnElectricity = requestFortron(productionRate / 20, true) / BlockCoercionDeriver.ueToFortronRatio
+			val withdrawnElectricity = addFortron(productionRate / 20, true) / BlockCoercionDeriver.ueToFortronRatio
 			energy += withdrawnElectricity * BlockCoercionDeriver.energyConversionPercentage
 
           //          recharge(getStackInSlot(TileCoercionDeriver.slotBattery))
         }
         else
         {
-          if (getFortronEnergy < getFortronCapacity)
+			if (getFortron < getFortronCapacity)
           {
             //            discharge(getStackInSlot(TileCoercionDeriver.slotBattery))
             energy.max = getPower
@@ -169,7 +169,7 @@ class BlockCoercionDeriver extends TileModuleAcceptor with TTEBridge
   {
     super.write(buf, id)
 
-    if (id == TilePacketType.description.id)
+	  if (id == PacketBlock.description.id)
     {
       buf <<< isInversed
       buf <<< processTime
@@ -182,7 +182,7 @@ class BlockCoercionDeriver extends TileModuleAcceptor with TTEBridge
 
     if (world.isRemote)
     {
-      if (id == TilePacketType.description.id)
+		if (id == PacketBlock.description.id)
       {
         isInversed = buf.readBoolean()
         processTime = buf.readInt()
@@ -190,7 +190,7 @@ class BlockCoercionDeriver extends TileModuleAcceptor with TTEBridge
     }
     else
     {
-      if (id == TilePacketType.toggleMoe.id)
+		if (id == PacketBlock.toggleMode.id)
       {
         isInversed = !isInversed
       }

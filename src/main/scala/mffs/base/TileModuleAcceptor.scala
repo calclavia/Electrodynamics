@@ -6,7 +6,7 @@ import mffs.Content
 import mffs.api.modules.IModuleProvider
 import mffs.util.TCache
 
-abstract class TileModuleAcceptor extends TileFortron with IModuleProvider with TCache
+abstract class TileModuleAcceptor extends BlockFortron with IModuleProvider with TCache
 {
 	var startModuleIndex = 1
 	var endModuleIndex = getSizeInventory - 1
@@ -21,28 +21,9 @@ abstract class TileModuleAcceptor extends TileFortron with IModuleProvider with 
 	{
 		super.write(buf, id)
 
-		if (id == TilePacketType.description.id)
+		if (id == PacketBlock.description.id)
 		{
 			buf <<< getFortronCost
-		}
-	}
-
-	override def read(buf: Packet, id: Int, packetType: PacketType) {
-		super.read(buf, id, packetType)
-
-		if (id == TilePacketType.description.id) {
-			clientFortronCost = buf.readInt()
-		}
-	}
-
-	override def start() {
-		super.start()
-		fortronTank.setCapacity((this.getModuleCount(Content.moduleCapacity) * this.capacityBoost + this.capacityBase) * FluidContainerRegistry.BUCKET_VOLUME)
-	}
-
-	def consumeCost() {
-		if (getFortronCost() > 0) {
-			requestFortron(getFortronCost(), true)
 		}
 	}
 
@@ -70,6 +51,49 @@ abstract class TileModuleAcceptor extends TileFortron with IModuleProvider with 
 	protected def doGetFortronCost: Int = Math.round((getModuleStacks() foldLeft 0f)((a: Float, b: Item) => a + b.stackSize * b.getItem.asInstanceOf[IModule].getFortronCost(getAmplifier)))
 
 	protected def getAmplifier: Float = 1f
+
+	override def read(buf: Packet, id: Int, packetType: PacketType) {
+		super.read(buf, id, packetType)
+
+		if (id == PacketBlock.description.id) {
+			clientFortronCost = buf.readInt()
+		}
+	}
+
+	override def start() {
+		super.start()
+		fortronTank.setCapacity((this.getModuleCount(Content.moduleCapacity) * this.capacityBoost + this.capacityBase) * FluidContainerRegistry.BUCKET_VOLUME)
+	}
+
+	@unchecked
+	override def getModuleCount(module: IModule, slots: Int*): Int = {
+		var cacheID = "getModuleCount_" + module.hashCode
+
+		if (slots != null) {
+			cacheID += "_" + slots.hashCode()
+		}
+
+		if (hasCache(classOf[Integer], cacheID)) return getCache(classOf[Integer], cacheID)
+
+		var count = 0
+
+		if (slots != null && slots.length > 0) {
+			count = (slots.view map (getStackInSlot(_)) filter (_ != null) filter (_.getItem == module) foldLeft 0)(_ + _.stackSize)
+		}
+		else {
+			count = (getModuleStacks() filter (_.getItem == module) foldLeft 0)(_ + _.stackSize)
+		}
+
+		cache(cacheID, count)
+
+		return count
+	}
+
+	def consumeCost() {
+		if (getFortronCost() > 0) {
+			addFortron(getFortronCost(), true)
+		}
+	}
 
 	override def getModule(module: IModule): Item =
 	{
@@ -135,30 +159,6 @@ abstract class TileModuleAcceptor extends TileFortron with IModuleProvider with 
 		super.markDirty()
 		this.fortronTank.setCapacity((this.getModuleCount(Content.moduleCapacity) * this.capacityBoost + this.capacityBase) * FluidContainerRegistry.BUCKET_VOLUME)
 		clearCache()
-	}
-
-	@unchecked
-	override def getModuleCount(module: IModule, slots: Int*): Int =
-	{
-		var cacheID = "getModuleCount_" + module.hashCode
-
-		if (slots != null)
-		{
-			cacheID += "_" + slots.hashCode()
-		}
-
-		if (hasCache(classOf[Integer], cacheID)) return getCache(classOf[Integer], cacheID)
-
-		var count = 0
-
-		if (slots != null && slots.length > 0)
-			count = (slots.view map (getStackInSlot(_)) filter (_ != null) filter (_.getItem == module) foldLeft 0)(_ + _.stackSize)
-		else
-			count = (getModuleStacks() filter (_.getItem == module) foldLeft 0)(_ + _.stackSize)
-
-		cache(cacheID, count)
-
-		return count
 	}
 
 	override def readFromNBT(nbt: NBTTagCompound)

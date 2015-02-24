@@ -2,7 +2,7 @@ package mffs.field.module
 
 import java.util.Set
 
-import mffs.base.{BlockInventory, ItemModule, TilePacketType}
+import mffs.base.{BlockInventory, ItemModule, PacketBlock}
 import mffs.field.BlockProjector
 import mffs.field.mobilize.event.{BlockDropDelayedEvent, BlockInventoryDropDelayedEvent, IDelayedEventHandler}
 import mffs.util.MFFSUtility
@@ -42,10 +42,11 @@ class ItemModuleDisintegration extends ItemModule
       if (proj.isInvertedFilter != filterMatch)
         return 1
 
-      if (Blacklist.disintegrationBlacklist.contains(block) || block.isInstanceOf[BlockLiquid] || block.isInstanceOf[IFluidBlock])
-        return 1
+		if (Blacklist.disintegrationBlacklist.contains(block) || block.isInstanceOf[BlockLiquid] || block.isInstanceOf[IFluidBlock]) {
+			return 1
+		}
 
-      ModularForceFieldSystem.packetHandler.sendToAllInDimension(new PacketTile(proj) <<< TilePacketType.effect.id <<< 2 <<< position.xi <<< position.yi <<< position.zi, world)
+		ModularForceFieldSystem.packetHandler.sendToAllInDimension(new PacketTile(proj) <<< PacketBlock.effect.id <<< 2 <<< position.xi <<< position.yi <<< position.zi, world)
 
       if (projector.getModuleCount(Content.moduleCollection) > 0)
       {

@@ -3,8 +3,8 @@ package mffs.production
 import java.util.{HashSet => JHashSet, Set => JSet}
 
 import mffs.Content
-import mffs.api.fortron.{IFortronCapacitor, IFortronFrequency, IFortronStorage}
-import mffs.base.{TileModuleAcceptor, TilePacketType}
+import mffs.api.fortron.{Fortron, IFortronCapacitor, IFortronFrequency}
+import mffs.base.{PacketBlock, TileModuleAcceptor}
 import mffs.item.card.ItemCardFrequency
 import mffs.util.TransferMode.TransferMode
 import mffs.util.{FortronUtility, TransferMode}
@@ -12,7 +12,7 @@ import net.minecraftforge.fluids.IFluidContainerItem
 import nova.core.inventory.InventorySimple
 import nova.core.network.Sync
 
-class BlockFortronCapacitor extends TileModuleAcceptor with IFortronStorage with IFortronCapacitor {
+class BlockFortronCapacitor extends TileModuleAcceptor with Fortron with IFortronCapacitor {
 
 	override protected val inventory: InventorySimple = new InventorySimple(3 + 4 * 2 + 1)
 	private val tickRate = 10
@@ -20,12 +20,14 @@ class BlockFortronCapacitor extends TileModuleAcceptor with IFortronStorage with
 	capacityBase = 700
 	capacityBoost = 10
 	startModuleIndex = 1
-	@Sync
+
+	@Sync(ids = Array(PacketBlock.description.ordinal(), PacketBlock.toggleMode.ordinal()))
 	private var transferMode = TransferMode.equalize
 
-	override def update() {
-		super.update()
-		this.consumeCost()
+	override def update(deltaTime: Double) {
+		super.update(deltaTime)
+
+		consumeCost()
 
 		if (isActive) {
 			/**
@@ -81,29 +83,6 @@ class BlockFortronCapacitor extends TileModuleAcceptor with IFortronStorage with
 	def getOutputStacks: Set[Item] = ((8 to 11) map (i => getStackInSlot(i)) filter (_ != null)).toSet
 
 	override def getAmplifier: Float = 0f
-
-	/**
-	 * Packet Methods
-	 */
-
-	override def write(buf: Packet, id: Int) {
-		super.write(buf, id)
-
-		if (id == TilePacketType.description.id) {
-			buf <<< transferMode.id
-		}
-	}
-
-	override def read(buf: Packet, id: Int, packetType: PacketType) {
-		super.read(buf, id, packetType)
-
-		if (id == TilePacketType.description.id) {
-			transferMode = TransferMode(buf.readInt)
-		}
-		else if (id == TilePacketType.toggleMoe.id) {
-			transferMode = transferMode.toggle
-		}
-	}
 
 	override def readFromNBT(nbt: NBTTagCompound) {
 		super.readFromNBT(nbt)

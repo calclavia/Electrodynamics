@@ -37,16 +37,17 @@ class GuiMFFS(container: Container, tile: BlockMFFS) extends GuiContainerBase(co
 
     if (tile != null && guiButton.id == 0)
     {
-      ModularForceFieldSystem.packetHandler.sendToServer(new PacketTile(tile, TilePacketType.toggleActivation.id: Integer))
+		ModularForceFieldSystem.packetHandler.sendToServer(new PacketTile(tile, PacketBlock.toggleActivation.id: Integer))
     }
   }
 
   protected def drawFortronText(x: Int, y: Int)
   {
-    if (tile.isInstanceOf[TileFortron])
+	  if (tile.isInstanceOf[BlockFortron])
     {
-      val fortronTile = tile.asInstanceOf[TileFortron]
-      drawTextWithTooltip("fortron", EnumColor.WHITE + "" + new UnitDisplay(UnitDisplay.Unit.LITER, fortronTile.getFortronEnergy).symbol() + "/" + new UnitDisplay(UnitDisplay.Unit.LITER, fortronTile.getFortronCapacity).symbol(), 35, 119, x, y)
+		val fortronTile = tile.asInstanceOf[BlockFortron]
+		drawTextWithTooltip("fortron", EnumColor.WHITE + "" + new UnitDisplay(UnitDisplay.Unit.LITER, fortronTile.getFortron).symbol() + "/" + new
+				UnitDisplay(UnitDisplay.Unit.LITER, fortronTile.getFortronCapacity).symbol(), 35, 119, x, y)
     }
   }
 
@@ -55,12 +56,12 @@ class GuiMFFS(container: Container, tile: BlockMFFS) extends GuiContainerBase(co
     //Frequency Card
     drawSlot(7, 113)
 
-    if (tile.isInstanceOf[TileFortron])
+	  if (tile.isInstanceOf[BlockFortron])
     {
-      val fortronTile = tile.asInstanceOf[TileFortron]
+		val fortronTile = tile.asInstanceOf[BlockFortron]
 
       //Fortron Bar
-      drawLongBlueBar(30, 115, Math.min(fortronTile.getFortronEnergy.asInstanceOf[Float] / fortronTile.getFortronCapacity.asInstanceOf[Float], 1))
+		drawLongBlueBar(30, 115, Math.min(fortronTile.getFortron.asInstanceOf[Float] / fortronTile.getFortronCapacity.asInstanceOf[Float], 1))
     }
   }
 

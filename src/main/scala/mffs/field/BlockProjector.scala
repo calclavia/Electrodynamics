@@ -2,7 +2,7 @@ package mffs.field
 
 import java.util.{Set => JSet}
 
-import mffs.base.{TileFieldMatrix, TilePacketType}
+import mffs.base.{PacketBlock, TileFieldMatrix}
 import mffs.field.mode.ItemModeCustom
 import mffs.item.card.ItemCard
 import mffs.render.FieldColor
@@ -56,7 +56,7 @@ class BlockProjector extends TileFieldMatrix with IProjector
   {
     super.write(buf, id)
 
-    if (id == TilePacketType.description.id)
+	  if (id == PacketBlock.description.id)
     {
       buf <<< isInverted
     }
@@ -68,11 +68,11 @@ class BlockProjector extends TileFieldMatrix with IProjector
 
     if (worldObj.isRemote)
     {
-      if (id == TilePacketType.description.id)
+		if (id == PacketBlock.description.id)
       {
         isInverted = buf.readBoolean()
       }
-      else if (id == TilePacketType.effect.id)
+		else if (id == PacketBlock.effect.id)
       {
         val packetType = buf.readInt
 		  val vector = new Vector3d(buf.readInt, buf.readInt, buf.readInt) + 0.5
@@ -89,7 +89,7 @@ class BlockProjector extends TileFieldMatrix with IProjector
           ModularForceFieldSystem.proxy.renderHologramMoving(this.worldObj, vector, FieldColor.red, 50)
         }
       }
-      else if (id == TilePacketType.field.id)
+		else if (id == PacketBlock.field.id)
       {
 		  val nbt = PacketUtils.readTag(buf)
         val nbtList = nbt.getTagList("blockList", 10)
@@ -98,7 +98,7 @@ class BlockProjector extends TileFieldMatrix with IProjector
     }
     else
     {
-      if (id == TilePacketType.toggleMode2.id)
+		if (id == PacketBlock.toggleMode2.id)
       {
         isInverted = !isInverted
       }
@@ -109,7 +109,7 @@ class BlockProjector extends TileFieldMatrix with IProjector
   {
     super.update()
 
-    if (isActive && getMode != null && requestFortron(getFortronCost, false) >= this.getFortronCost)
+	  if (isActive && getMode != null && addFortron(getFortronCost, false) >= this.getFortronCost)
     {
       consumeCost()
 
@@ -148,7 +148,7 @@ class BlockProjector extends TileFieldMatrix with IProjector
     val nbtList = new NBTTagList
     calculatedField foreach (vec => nbtList.appendTag(vec.toNBT))
     nbt.setTag("blockList", nbtList)
-    ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(this, TilePacketType.field.id: Integer, nbt))
+	  ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(this, PacketBlock.field.id: Integer, nbt))
   }
 
   private def clientSideSimulationRequired: Boolean =
@@ -271,6 +271,19 @@ class BlockProjector extends TileFieldMatrix with IProjector
 
   def getProjectionSpeed: Int = 28 + 28 * getModuleCount(Content.moduleSpeed, getModuleSlots: _*)
 
+	override def markDirty() {
+		super.markDirty()
+
+		if (world != null) {
+			destroyField()
+		}
+	}
+
+	override def invalidate {
+		destroyField()
+		super.invalidate
+	}
+
   def destroyField()
   {
 	  if (Game.instance.networkManager.isServer && calculatedField != null && !isCalculating)
@@ -284,20 +297,6 @@ class BlockProjector extends TileFieldMatrix with IProjector
       isCompleteConstructing = false
       fieldRequireTicks = false
     }
-  }
-
-  override def markDirty()
-  {
-    super.markDirty()
-
-    if (world != null)
-      destroyField()
-  }
-
-  override def invalidate
-  {
-    destroyField()
-    super.invalidate
   }
 
 	override def getForceFields: JSet[Vector3d] = forceFields

@@ -51,7 +51,7 @@ abstract class BlockMFFS extends Block with PacketHandler with IActivatable with
 	//	override def getExplosionResistance(entity: Entity): Float = 100
 
 	override def read(id: Int, buf: Packet) {
-		if (id == TilePacketType.description.id) {
+		if (id == PacketBlock.description.id) {
 			val prevActive = active
 			active = buf.readBoolean()
 			isRedstoneActive = buf.readBoolean()
@@ -60,7 +60,7 @@ abstract class BlockMFFS extends Block with PacketHandler with IActivatable with
 				world.markStaticRender(position())
 			}
 		}
-		else if (id == TilePacketType.toggleActivation.id) {
+		else if (id == PacketBlock.toggleActivation.id) {
 			isRedstoneActive = !isRedstoneActive
 
 			if (isRedstoneActive) {
@@ -72,16 +72,21 @@ abstract class BlockMFFS extends Block with PacketHandler with IActivatable with
 		}
 	}
 
+	def setActive(flag: Boolean) {
+		active = flag
+		world().markStaticRender(position())
+	}
+
+	//TODO: Implement redstone support
+
 	override def write(id: Int, packet: Packet) {
 		super.write(id, packet)
 
-		if (id == TilePacketType.description.id) {
+		if (id == PacketBlock.description.id) {
 			packet <<< active
 			packet <<< isRedstoneActive
 		}
 	}
-
-	//TODO: Implement redstone support
 
 	override def onNeighborChange(neighborPosition: Vector3i) = {
 		if (Game.instance.networkManager.isServer) {
@@ -102,11 +107,6 @@ abstract class BlockMFFS extends Block with PacketHandler with IActivatable with
 		if (!this.isRedstoneActive && Game.instance.networkManager.isServer) {
 			this.setActive(false)
 		}
-	}
-
-	def setActive(flag: Boolean) {
-		active = flag
-		world().markStaticRender(position())
 	}
 
 	def isPoweredByRedstone: Boolean = false

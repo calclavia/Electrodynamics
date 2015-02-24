@@ -2,7 +2,7 @@ package mffs.field.module
 
 import java.util.Set
 
-import mffs.base.{ItemModule, TilePacketType}
+import mffs.base.{ItemModule, PacketBlock}
 import mffs.field.mode.ItemModeCustom
 import mffs.{Content, ModularForceFieldSystem, Reference}
 
@@ -74,7 +74,7 @@ class ItemModuleStabilize extends ItemModule
                       val copyStack = checkStack.copy
                       inventory.decrStackSize(i, 1)
                       copyStack.getItem.asInstanceOf[ItemBlock].placeBlockAt(copyStack, null, world, position.xi, position.yi, position.zi, 0, 0, 0, 0, metadata)
-                      ModularForceFieldSystem.packetHandler.sendToAllInDimension(new PacketTile(tile) <<< TilePacketType.effect.id <<< 1 <<< position.xi <<< position.yi <<< position.zi, world)
+						ModularForceFieldSystem.packetHandler.sendToAllInDimension(new PacketTile(tile) <<< PacketBlock.effect.id <<< 1 <<< position.xi <<< position.yi <<< position.zi, world)
 
                       blockCount += 1
 

@@ -34,6 +34,11 @@ abstract class BlockFrequency extends BlockInventory with Frequency {
 
 	def hasPermission(playerID: String, permission: Permission): Boolean = !isActive || getBiometricIdentifiers.forall(_.hasPermission(playerID, permission))
 
+	/**
+	 * Gets the first linked biometric identifier, based on the card slots and frequency.
+	 */
+	def getBiometricIdentifier: BlockBiometric = if (getBiometricIdentifiers.size > 0) getBiometricIdentifiers.head else null
+
 	def getBiometricIdentifiers: Set[BlockBiometric] = {
 		val cardLinks = getConnectionCards.view
 			.filter(item => item != null && item.isInstanceOf[ICoordLink])
@@ -51,43 +56,36 @@ abstract class BlockFrequency extends BlockInventory with Frequency {
 
 	override def getFrequency: Int = {
 		val frequencyCard = getFrequencyCard
-
-		if (frequencyCard != null) {
-			return frequencyCard.asInstanceOf[ItemCardFrequency].getFrequency(frequencyCard)
-		}
-
-		return 0
+		return if (frequencyCard != null) frequencyCard.getFrequency else 0
 	}
 
 	override def setFrequency(frequency: Int) {
-
+		val frequencyCard = getFrequencyCard
+		if (frequencyCard != null) {
+			frequencyCard.setFrequency(frequency)
+		}
 	}
 
 	def getFrequencyCard: ItemCardFrequency = {
-		val stack = inventory.get(frequencySlot)
+		val item = inventory.get(frequencySlot)
 
-		if (stack != null && stack.isInstanceOf[ItemCardFrequency]) {
-			return stack.asInstanceOf[ItemCardFrequency]
+		if (item.isPresent && item.get().isInstanceOf[ItemCardFrequency]) {
+			return item.get().asInstanceOf[ItemCardFrequency]
 		}
 
 		return null
 	}
 
 	/**
-	 * Gets a set of cards that define connections.
+	 * Gets a set of cards that define frequency or link connections.
 	 */
 	def getConnectionCards: Set[Item] = Set(inventory.get(0).orElseGet(null))
-
-	/**
-	 * Gets the first linked biometric identifier, based on the card slots and frequency.
-	 */
-	def getBiometricIdentifier: BlockBiometric = if (getBiometricIdentifiers.size > 0) getBiometricIdentifiers.head else null
 
 	override def onRightClick(entity: Entity, side: Int, hit: Vector3d): Boolean = {
 		if (entity.isInstanceOf[Player]) {
 			if (!hasPermission(entity.asInstanceOf[Player].getID, MFFSPermissions.configure)) {
 				//TODO: Add chat
-				//				player.addChatMessage(new ChatComponentText("[" + Reference.name + "]" + " Access denied!"))
+				//player.addChatMessage(new ChatComponentText("[" + Reference.name + "]" + " Access denied!"))
 				return false
 			}
 		}

@@ -2,15 +2,16 @@ package mffs.base
 
 import java.util.{Set => JSet}
 
+import com.resonant.core.prefab.block.Rotatable
 import mffs.Content
-import mffs.api.machine.FieldMatrix
+import mffs.api.machine.{FieldMatrix, IPermissionProvider}
 import mffs.field.mobilize.event.{DelayedEvent, IDelayedEventHandler}
 import mffs.field.module.ItemModuleArray
 import mffs.item.card.ItemCard
 import mffs.util.TCache
 import nova.core.network.Packet
 
-abstract class TileFieldMatrix extends TileModuleAcceptor with FieldMatrix with IDelayedEventHandler with TRotatable with IPermissionProvider
+abstract class TileFieldMatrix extends TileModuleAcceptor with FieldMatrix with IDelayedEventHandler with Rotatable with IPermissionProvider
 {
   protected final val delayedEvents = new mutable.SynchronizedQueue[DelayedEvent]()
   val _getModuleSlots = (14 until 25).toArray
@@ -39,7 +40,7 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with FieldMatrix with 
   {
     super.write(buf, id)
 
-    if (id == TilePacketType.description.id)
+	  if (id == PacketBlock.description.id)
     {
       buf <<< absoluteDirection
     }
@@ -51,14 +52,14 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with FieldMatrix with 
 
     if (world.isRemote)
     {
-      if (id == TilePacketType.description.id)
+		if (id == PacketBlock.description.id)
       {
         absoluteDirection = buf.readBoolean()
       }
     }
     else
     {
-      if (id == TilePacketType.toggleMode4.id)
+		if (id == PacketBlock.toggleMode4.id)
       {
         absoluteDirection = !absoluteDirection
       }
@@ -148,6 +149,8 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with FieldMatrix with 
     return positiveScale
   }
 
+	def getModuleSlots: Array[Int] = _getModuleSlots
+
 	def getNegativeScale: Vector3d =
   {
     val cacheID = "getNegativeScale"
@@ -184,8 +187,6 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with FieldMatrix with 
 
     return negativeScale
   }
-
-	def getModuleSlots: Array[Int] = _getModuleSlots
 
 	def getInteriorPoints: JSet[Vector3d] =
   {
@@ -225,6 +226,15 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with FieldMatrix with 
     }
     return null
   }
+
+	def getModeStack: Item = {
+		if (this.getStackInSlot(modeSlotID) != null) {
+			if (this.getStackInSlot(modeSlotID).getItem.isInstanceOf[IProjectorMode]) {
+				return this.getStackInSlot(modeSlotID)
+			}
+		}
+		return null
+	}
 
 	def getTranslation: Vector3d =
   {
@@ -303,18 +313,6 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with FieldMatrix with 
     cache(cacheID, verticalRotation)
 
     return verticalRotation
-  }
-
-	def getModeStack: Item =
-  {
-    if (this.getStackInSlot(modeSlotID) != null)
-    {
-      if (this.getStackInSlot(modeSlotID).getItem.isInstanceOf[IProjectorMode])
-      {
-        return this.getStackInSlot(modeSlotID)
-      }
-    }
-    return null
   }
 
 	def getCalculatedField: JSet[Vector3d] = {

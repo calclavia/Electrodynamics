@@ -28,11 +28,6 @@ class GraphFrequency extends Graph[Frequency] {
 		build()
 	}
 
-	override def remove(node: Frequency) {
-		_nodes -= node
-		build()
-	}
-
 	override def build() {
 		frequencyMap = Map.empty
 
@@ -42,6 +37,11 @@ class GraphFrequency extends Graph[Frequency] {
 	}
 
 	override def nodes(): util.Set[Frequency] = _nodes
+
+	override def remove(node: Frequency) {
+		_nodes -= node
+		build()
+	}
 
 	override def markBuild() {
 		build()

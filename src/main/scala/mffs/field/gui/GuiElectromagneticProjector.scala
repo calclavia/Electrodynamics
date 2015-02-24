@@ -1,7 +1,7 @@
 package mffs.field.gui
 
 import mffs.ModularForceFieldSystem
-import mffs.base.TilePacketType
+import mffs.base.PacketBlock
 import mffs.field.BlockProjector
 import mffs.render.button.GuiIcon
 
@@ -54,12 +54,12 @@ class GuiElectromagneticProjector(player: EntityPlayer, tile: BlockProjector) ex
 
     if (guiButton.id == 1)
     {
-      ModularForceFieldSystem.packetHandler.sendToServer(new PacketTile(tile) <<< TilePacketType.toggleMode4.id)
+		ModularForceFieldSystem.packetHandler.sendToServer(new PacketTile(tile) <<< PacketBlock.toggleMode4.id)
     }
 
     if (guiButton.id == 2)
     {
-      ModularForceFieldSystem.packetHandler.sendToServer(new PacketTile(tile) <<< TilePacketType.toggleMode2.id)
+		ModularForceFieldSystem.packetHandler.sendToServer(new PacketTile(tile) <<< PacketBlock.toggleMode2.id)
     }
   }
 

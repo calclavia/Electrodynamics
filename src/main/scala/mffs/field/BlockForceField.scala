@@ -304,7 +304,7 @@ class BlockForceField extends Block with PacketHandler with ForceField
 
     if (projector != null)
     {
-      projector.provideFortron(energy, true)
+		projector.removeFortron(energy, true)
     }
 
 	  if (Game.instance.networkManager.isServer)
@@ -336,36 +336,6 @@ class BlockForceField extends Block with PacketHandler with ForceField
 
     return null
   }
-
-	/**
-	 * @return Gets the projector block controlling this force field. Removes the force field if no
-	 *         projector can be found.
-	 */
-	def getProjector: BlockProjector = {
-		if (this.getProjectorSafe != null) {
-			return getProjectorSafe
-		}
-
-		if (Game.instance.networkManager.isServer) {
-			world.setBlock(xCoord, yCoord, zCoord, Blocks.air)
-		}
-
-		return null
-	}
-
-	def getProjectorSafe: BlockProjector = {
-		if (projector != null) {
-			val projTile = projector.getTileEntity(world)
-
-			if (projTile.isInstanceOf[BlockProjector]) {
-				val projector = projTile.asInstanceOf[IProjector]
-				if (world.isRemote || (projector.getCalculatedField != null && projector.getCalculatedField.contains(position))) {
-					return projTile.asInstanceOf[BlockProjector]
-				}
-			}
-		}
-		return null
-	}
 
 	override def read(buf: Packet, id: Int, packetType: PacketType)
   {
@@ -420,4 +390,34 @@ class BlockForceField extends Block with PacketHandler with ForceField
       nbt.setTag("projector", projector.toNBT)
     }
   }
+
+	/**
+	 * @return Gets the projector block controlling this force field. Removes the force field if no
+	 *         projector can be found.
+	 */
+	def getProjector: BlockProjector = {
+		if (this.getProjectorSafe != null) {
+			return getProjectorSafe
+		}
+
+		if (Game.instance.networkManager.isServer) {
+			world.setBlock(xCoord, yCoord, zCoord, Blocks.air)
+		}
+
+		return null
+	}
+
+	def getProjectorSafe: BlockProjector = {
+		if (projector != null) {
+			val projTile = projector.getTileEntity(world)
+
+			if (projTile.isInstanceOf[BlockProjector]) {
+				val projector = projTile.asInstanceOf[IProjector]
+				if (world.isRemote || (projector.getCalculatedField != null && projector.getCalculatedField.contains(position))) {
+					return projTile.asInstanceOf[BlockProjector]
+				}
+			}
+		}
+		return null
+	}
 }

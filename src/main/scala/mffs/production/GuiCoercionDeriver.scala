@@ -1,7 +1,7 @@
 package mffs.production
 
 import mffs.ModularForceFieldSystem
-import mffs.base.{GuiMFFS, TilePacketType}
+import mffs.base.{GuiMFFS, PacketBlock}
 
 class GuiCoercionDeriver(player: EntityPlayer, tile: BlockCoercionDeriver) extends GuiMFFS(new ContainerCoercionDeriver(player, tile), tile)
 {
@@ -58,7 +58,7 @@ class GuiCoercionDeriver(player: EntityPlayer, tile: BlockCoercionDeriver) exten
 
     if (guibutton.id == 1)
     {
-      ModularForceFieldSystem.packetHandler.sendToServer(new PacketTile(tile, TilePacketType.toggleMoe.id: Integer))
+		ModularForceFieldSystem.packetHandler.sendToServer(new PacketTile(tile, PacketBlock.toggleMode.id: Integer))
     }
   }
 }
