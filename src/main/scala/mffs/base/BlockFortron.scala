@@ -2,10 +2,10 @@ package mffs.base
 
 import com.resonant.core.prefab.block.Updater
 import mffs.GraphFrequency
-import mffs.api.fortron.IFortronFrequency
+import mffs.api.fortron.FortronFrequency
 import mffs.util.{FortronUtility, TransferMode}
 import nova.core.block.Block
-import nova.core.fluid.{Fluid, Tank, TankProvider, TankSimple}
+import nova.core.fluid.{Fluid, SidedTankProvider, Tank, TankSimple}
 import nova.core.game.Game
 import nova.core.network.Sync
 import nova.core.retention.Storable
@@ -15,7 +15,7 @@ import nova.core.retention.Storable
  *
  * @author Calclavia
  */
-abstract class BlockFortron extends BlockFrequency with TankProvider with IFortronFrequency with Updater {
+abstract class BlockFortron extends BlockFrequency with SidedTankProvider with FortronFrequency with Updater {
 	var markSendFortron = true
 
 	@Sync(ids = Array(PacketBlock.fortron.ordinal()))
@@ -42,7 +42,7 @@ abstract class BlockFortron extends BlockFrequency with TankProvider with IFortr
 			FortronUtility.transferFortron(
 				this,
 				GraphFrequency.instance.get(getFrequency)
-					.collect { case f: IFortronFrequency with Block => f}
+					.collect { case f: FortronFrequency with Block => f}
 					.filter(_.world() == world())
 					.filter(_.position().distance(position()) < 100),
 				TransferMode.drain,

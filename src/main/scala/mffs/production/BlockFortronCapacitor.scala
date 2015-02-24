@@ -3,16 +3,18 @@ package mffs.production
 import java.util.{HashSet => JHashSet, Set => JSet}
 
 import mffs.Content
-import mffs.api.fortron.{Fortron, IFortronCapacitor, IFortronFrequency}
+import mffs.api.fortron.{FortronCapacitor, FortronFrequency}
 import mffs.base.{BlockModuleHandler, PacketBlock}
 import mffs.item.card.ItemCardFrequency
 import mffs.util.TransferMode.TransferMode
 import mffs.util.{FortronUtility, TransferMode}
 import net.minecraftforge.fluids.IFluidContainerItem
+import nova.core.fluid.TankProvider
 import nova.core.inventory.InventorySimple
 import nova.core.network.Sync
 
-class BlockFortronCapacitor extends BlockModuleHandler with Fortron with IFortronCapacitor {
+import scala.collection.convert.wrapAll._
+class BlockFortronCapacitor extends BlockModuleHandler with FortronCapacitor {
 
 	override protected val inventory: InventorySimple = new InventorySimple(3 + 4 * 2 + 1)
 	private val tickRate = 10
@@ -31,10 +33,15 @@ class BlockFortronCapacitor extends BlockModuleHandler with Fortron with IFortro
 
 		if (isActive) {
 			/**
-			 * Draw from input slots and eject from output slots
+			 * Handle fortron item inputs
 			 */
-			getInputStacks filter (_.getItem.isInstanceOf[IFluidContainerItem]) foreach (stack => fortronTank.fill(stack.getItem.asInstanceOf[IFluidContainerItem].drain(stack, Math.min(getFortronEmpty, getTransmissionRate), true), true))
+			getInputStacks
+				.collect { case p: TankProvider if p.getTanks.exists(_.getFluid) => p}
+				.foreach(stack => addFortron(stack.drain(stack, Math.min(getFortronEmpty, getTransmissionRate), true), true))
 
+			/**
+			 * Handle fortron item outputs
+			 */
 			if (fortronTank.getFluidAmount > 0) {
 				val transferFluid = fortronTank.getFluid.copy()
 				transferFluid.amount = Math.min(transferFluid.amount, getTransmissionRate)
@@ -58,27 +65,27 @@ class BlockFortronCapacitor extends BlockModuleHandler with Fortron with IFortro
 
 	def getTransmissionRate: Int = 300 + 60 * getModuleCount(Content.moduleSpeed)
 
-	override def getFrequencyDevices: JSet[IFortronFrequency] = FrequencyGridRegistry.instance.getNodes(classOf[IFortronFrequency], world, position, getTransmissionRange, getFrequency)
+	override def getFrequencyDevices: JSet[FortronFrequency] = FrequencyGridRegistry.instance.getNodes(classOf[FortronFrequency], world, position, getTransmissionRange, getFrequency)
 
 	def getTransmissionRange: Int = 15 + getModuleCount(Content.moduleScale)
 
-	def getInputDevices: JSet[IFortronFrequency] = getDevicesFromStacks(getInputStacks)
+	def getInputDevices: JSet[FortronFrequency] = getDevicesFromStacks(getInputStacks)
 
-	def getDevicesFromStacks(stacks: Set[Item]): JSet[IFortronFrequency] = {
-		val devices = new JHashSet[IFortronFrequency]()
+	def getDevicesFromStacks(stacks: Set[Item]): JSet[FortronFrequency] = {
+		val devices = new JHashSet[FortronFrequency]()
 
 		stacks
 			.filter(_.getItem.isInstanceOf[ICoordLink])
 			.map(Item => Item.getItem.asInstanceOf[ICoordLink].getLink(Item))
-			.filter(linkPosition => linkPosition != null && linkPosition.getTileEntity(world).isInstanceOf[IFortronFrequency])
-			.foreach(linkPosition => devices.add(linkPosition.getTileEntity(world).asInstanceOf[IFortronFrequency]))
+			.filter(linkPosition => linkPosition != null && linkPosition.getTileEntity(world).isInstanceOf[FortronFrequency])
+			.foreach(linkPosition => devices.add(linkPosition.getTileEntity(world).asInstanceOf[FortronFrequency]))
 
 		return devices
 	}
 
 	def getInputStacks: Set[Item] = ((4 to 7) map (i => getStackInSlot(i)) filter (_ != null)).toSet
 
-	def getOutputDevices: JSet[IFortronFrequency] = getDevicesFromStacks(getOutputStacks)
+	def getOutputDevices: JSet[FortronFrequency] = getDevicesFromStacks(getOutputStacks)
 
 	def getOutputStacks: Set[Item] = ((8 to 11) map (i => getStackInSlot(i)) filter (_ != null)).toSet
 

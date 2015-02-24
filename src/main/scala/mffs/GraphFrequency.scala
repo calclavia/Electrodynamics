@@ -1,8 +1,12 @@
 package mffs
 
+import java.util.{Set => JSet}
+
 import com.resonant.core.graph.internal.Graph
 import mffs.api.Frequency
 import mffs.api.fortron.IServerThread
+
+import scala.collection.convert.wrapAll._
 
 object GraphFrequency {
 	var client = new GraphFrequency
@@ -36,7 +40,7 @@ class GraphFrequency extends Graph[Frequency] {
 		)
 	}
 
-	override def nodes(): util.Set[Frequency] = _nodes
+	override def nodes: JSet[Frequency] = _nodes
 
 	override def remove(node: Frequency) {
 		_nodes -= node

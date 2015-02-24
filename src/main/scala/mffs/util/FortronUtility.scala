@@ -1,6 +1,6 @@
 package mffs.util
 
-import mffs.api.fortron.IFortronFrequency
+import mffs.api.fortron.FortronFrequency
 import mffs.api.modules.Module
 import mffs.render.FieldColor
 import mffs.util.TransferMode._
@@ -16,7 +16,7 @@ import scala.collection.mutable
  * @author Calclavia
  */
 object FortronUtility {
-	def transferFortron(source: IFortronFrequency, frequencyTiles: mutable.Set[IFortronFrequency], transferMode: TransferMode, limit: Int) {
+	def transferFortron(source: FortronFrequency, frequencyTiles: mutable.Set[FortronFrequency], transferMode: TransferMode, limit: Int) {
 		if (frequencyTiles.size > 1 && Settings.allowFortronTeleport) {
 			var totalFortron = 0
 			var totalCapacity = 0
@@ -88,7 +88,7 @@ object FortronUtility {
 	 * @param receiver : The machine to be transfered to.
 	 * @param joules   : The amount of energy to be transfered.
 	 */
-	def doTransferFortron(transferer: IFortronFrequency, receiver: IFortronFrequency, joules: Int, limit: Int) {
+	def doTransferFortron(transferer: FortronFrequency, receiver: FortronFrequency, joules: Int, limit: Int) {
 		if (transferer != null && receiver != null) {
 			val block = transferer.asInstanceOf[Block]
 			val world = block.world()

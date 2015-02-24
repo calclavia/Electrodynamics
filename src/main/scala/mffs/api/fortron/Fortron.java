@@ -2,8 +2,8 @@ package mffs.api.fortron;
 
 import nova.core.fluid.Fluid;
 import nova.core.fluid.FluidFactory;
+import nova.core.fluid.SidedTankProvider;
 import nova.core.fluid.Tank;
-import nova.core.fluid.TankProvider;
 import nova.core.game.Game;
 
 import java.util.Optional;
@@ -11,7 +11,7 @@ import java.util.Optional;
 /**
  * Blocks that can handle Fortron fluid energy.
  */
-public interface Fortron extends TankProvider {
+public interface Fortron extends SidedTankProvider {
 
 	public static final String fortronID = "fortron";
 
