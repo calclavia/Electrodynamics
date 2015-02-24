@@ -1,70 +1,37 @@
 package mffs.item.card
 
-import java.util.List
+import java.util
+import java.util.Optional
 
 import com.google.common.hash.Hashing
-import com.resonant.wrapper.core.api.item.IItemFrequency
-import mffs.ModularForceFieldSystem
-import mffs.item.gui.EnumGui
+import mffs.Reference
+import mffs.api.Frequency
+import nova.core.entity.Entity
 import nova.core.game.Game
 import nova.core.item.Item
+import nova.core.player.Player
+import nova.core.retention.Stored
 
-class ItemCardFrequency extends ItemCard with IItemFrequency with IPacketReceiver
-{
-	override def addInformation(Item: Item, par2EntityPlayer: EntityPlayer, list: List[_], par4: Boolean)
-  {
-	  list.add(Game.instance.get.languageManager.getLocal("info.cardFrequency.freq") + " " + getEncodedFrequency(Item))
-  }
+import scala.beans.BeanProperty
 
-	def getEncodedFrequency(Item: Item): String =
-  {
-	  return Hashing.md5().hashInt(getFrequency(Item)).toString.take(12)
-  }
+class ItemCardFrequency extends ItemCard with Frequency {
 
-  /**
-   * Frequency methods
-   **/
-  override def getFrequency(Item: Item): Int =
-  {
-	  if (Item != null)
-    {
-		if (Item.getTagCompound == null)
-      {
-		  Item.setTagCompound(new NBTTagCompound)
-      }
-		return Item.getTagCompound.getInteger("frequency")
-    }
-    return 0
-  }
+	@Stored
+	@BeanProperty
+	val frequency: Int = 0
 
-	override def onItemRightClick(Item: Item, world: World, player: EntityPlayer): Item =
-  {
-	  if (Game.instance.networkManager.isServer)
-    {
-      /**
-       * Open item GUI
-       */
-      player.openGui(ModularForceFieldSystem, EnumGui.frequency.id, world, 0, 0, 0)
-    }
+	override def getTooltips(player: Optional[Player]): util.List[String] = {
+		val tooltips = super.getTooltips(player)
+		tooltips.add(Game.instance.languageManager.getLocal("info.cardFrequency.freq") + " " + getEncodedFrequency(Item))
+		return tooltips
+	}
 
-	  return Item
-  }
+	def getEncodedFrequency = Hashing.md5().hashInt(frequency).toString.take(12)
 
-	override def read(data: Packet, player: EntityPlayer, packet: PacketType)
-  {
-    setFrequency(data.readInt(), player.getCurrentEquippedItem)
-  }
-
-	override def setFrequency(frequency: Int, Item: Item)
-  {
-	  if (Item != null)
-    {
-		if (Item.getTagCompound == null)
-      {
-		  Item.setTagCompound(new NBTTagCompound)
-      }
-		Item.getTagCompound.setInteger("frequency", frequency)
-    }
-  }
+	override def onRightClick(entity: Entity) {
+		if (Game.instance.networkManager.isServer) {
+			Game.instance.guiFactory.get().showGui(Reference.id, "cardFrequency", entity)
+		}
+	}
 
 }

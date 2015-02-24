@@ -8,6 +8,7 @@ import mffs.base.{TileModuleAcceptor, TilePacketType}
 import mffs.item.card.ItemCardFrequency
 import mffs.util.TransferMode.TransferMode
 import mffs.util.{FortronUtility, TransferMode}
+import net.minecraftforge.fluids.IFluidContainerItem
 import nova.core.inventory.InventorySimple
 import nova.core.network.Sync
 
@@ -61,8 +62,6 @@ class BlockFortronCapacitor extends TileModuleAcceptor with IFortronStorage with
 
 	def getInputDevices: JSet[IFortronFrequency] = getDevicesFromStacks(getInputStacks)
 
-	def getInputStacks: Set[Item] = ((4 to 7) map (i => getStackInSlot(i)) filter (_ != null)).toSet
-
 	def getDevicesFromStacks(stacks: Set[Item]): JSet[IFortronFrequency] = {
 		val devices = new JHashSet[IFortronFrequency]()
 
@@ -74,6 +73,8 @@ class BlockFortronCapacitor extends TileModuleAcceptor with IFortronStorage with
 
 		return devices
 	}
+
+	def getInputStacks: Set[Item] = ((4 to 7) map (i => getStackInSlot(i)) filter (_ != null)).toSet
 
 	def getOutputDevices: JSet[IFortronFrequency] = getDevicesFromStacks(getOutputStacks)
 
