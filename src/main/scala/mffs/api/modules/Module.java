@@ -19,11 +19,11 @@ public interface Module extends FortronCost {
 	 * @param projector
 	 * @return True to stop projecting.
 	 */
-	default boolean onCreateField(Projector projector, Set<Vector3d> field) {
+	default boolean onCreateField(Projector projector, Set<Vector3i> field) {
 		return false;
 	}
 
-	default boolean onDestroyField(Projector projector, Set<Vector3d> field) {
+	default boolean onDestroyField(Projector projector, Set<Vector3i> field) {
 		return false;
 	}
 
@@ -32,7 +32,7 @@ public interface Module extends FortronCost {
 	 *
 	 * @return 0 - Do nothing; 1 - Skip this block and continue; 2 - Cancel rest of projection;
 	 */
-	default int onProject(Projector projector, Vector3d position) {
+	default int onProject(Projector projector, Vector3i position) {
 		return 0;
 	}
 
