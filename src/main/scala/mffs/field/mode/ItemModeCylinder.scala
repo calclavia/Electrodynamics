@@ -1,104 +1,43 @@
 package mffs.field.mode
 
-import java.util.{HashSet, Set}
+import com.resonant.core.structure.Structure
+import mffs.api.machine.Projector
+import mffs.field.structure.StructureCylinder
+import nova.core.render.model.{BlockModelUtil, Model}
+import nova.core.util.transform.Vector3d
 
 /**
  * A cylinder mode.
  *
  * @author Calclavia, Thutmose
  */
-class ItemModeCylinder extends ItemMode
-{
-  private val step = 1
-  private val radiusExpansion: Int = 0
+class ItemModeCylinder extends ItemMode {
+	private val step = 1
+	private val radiusExpansion: Int = 0
 
-	def getExteriorPoints(projector: IFieldMatrix): Set[Vector3d] =
-  {
-	  val fieldBlocks = new HashSet[Vector3d]
-    val posScale = projector.getPositiveScale
-    val negScale = projector.getNegativeScale
-    val radius = (posScale.xi + negScale.xi + posScale.zi + negScale.zi) / 2
-    val height = posScale.yi + negScale.yi
+	override def getID: String = "modeCylinder"
 
-    for (x <- -radius to radius by step; y <- 0 to height by step; z <- -radius to radius by step)
-    {
-      if ((y == 0 || y == height - 1) && (x * x + z * z + radiusExpansion) <= (radius * radius))
-      {
-		  fieldBlocks.add(new Vector3d(x, y, z))
-      }
+	override def getStructure: Structure = new StructureCylinder
 
-      if ((x * x + z * z + radiusExpansion) <= (radius * radius) && (x * x + z * z + radiusExpansion) >= ((radius - 1) * (radius - 1)))
-      {
-		  fieldBlocks.add(new Vector3d(x, y, z))
-      }
-    }
+	override def render(projector: Projector, model: Model) {
+		val scale = 0.15f
+		val detail = 0.5f
+		val radius = (1.5f * detail).toInt
 
-    return fieldBlocks
-  }
+		model.scale(scale, scale, scale)
 
-	def getInteriorPoints(projector: IFieldMatrix): Set[Vector3d] =
-  {
-	  val fieldBlocks = new HashSet[Vector3d]
-    val translation = projector.getTranslation
-    val posScale = projector.getPositiveScale
-    val negScale = projector.getNegativeScale
-    val radius = (posScale.xi + negScale.xi + posScale.zi + negScale.zi) / 2
-    val height = posScale.yi + negScale.yi
+		var i = 0
 
-    for (x <- -radius to radius by step; y <- 0 to height by step; z <- -radius to radius by step)
-    {
-		val position = new Vector3d(x, y, z)
-
-		if (isInField(projector, position + new Vector3d(projector.asInstanceOf[TileEntity]) + translation))
-      {
-        fieldBlocks.add(position)
-      }
-    }
-
-    return fieldBlocks
-  }
-
-	override def isInField(projector: IFieldMatrix, position: Vector3d): Boolean =
-  {
-	  val posScale: Vector3d = projector.getPositiveScale
-	  val negScale: Vector3d = projector.getNegativeScale
-    val radius: Int = (posScale.xi + negScale.xi + posScale.zi + negScale.zi) / 2
-	  val projectorPos: Vector3d = new Vector3d(projector.asInstanceOf[TileEntity])
-    projectorPos.add(projector.getTranslation)
-	  val relativePosition: Vector3d = position.clone.subtract(projectorPos)
-    relativePosition.transform(new EulerAngle(-projector.getRotationYaw, -projector.getRotationPitch, 0))
-    if (relativePosition.x * relativePosition.x + relativePosition.z * relativePosition.z + radiusExpansion <= radius * radius)
-    {
-      return true
-    }
-    return false
-  }
-
-  @SideOnly(Side.CLIENT)
-  override def render(projector: IProjector, x: Double, y: Double, z: Double, f: Float, ticks: Long)
-  {
-    val scale = 0.15f
-    val detail = 0.5f
-    GL11.glScalef(scale, scale, scale)
-
-    val radius = (1.5f * detail).toInt
-
-    var i = 0
-
-    //TODO: Check scale and detail
-    for (renderX <- -radius to radius; renderY <- -radius to radius; renderZ <- -radius to radius)
-    {
-      if (((renderX * renderX + renderZ * renderZ + radiusExpansion) <= (radius * radius) && (renderX * renderX + renderZ * renderZ + radiusExpansion) >= ((radius - 1) * (radius - 1))) || ((renderY == 0 || renderY == radius - 1) && (renderX * renderX + renderZ * renderZ + radiusExpansion) <= (radius * radius)))
-      {
-        if (i % 2 == 0)
-        {
-			val vector = new Vector3d(renderX / detail, renderY / detail, renderZ / detail)
-          GL11.glTranslated(vector.x, vector.y, vector.z)
-          ModelCube.INSTNACE.render
-          GL11.glTranslated(-vector.x, -vector.y, -vector.z)
-        }
-        i += 1
-      }
-    }
-  }
+		for (renderX <- -radius to radius; renderY <- -radius to radius; renderZ <- -radius to radius) {
+			if (((renderX * renderX + renderZ * renderZ + radiusExpansion) <= (radius * radius) && (renderX * renderX + renderZ * renderZ + radiusExpansion) >= ((radius - 1) * (radius - 1))) || ((renderY == 0 || renderY == radius - 1) && (renderX * renderX + renderZ * renderZ + radiusExpansion) <= (radius * radius))) {
+				if (i % 2 == 0) {
+					val vector = new Vector3d(renderX / detail, renderY / detail, renderZ / detail)
+					val cube = BlockModelUtil.drawCube(new Model())
+					cube.translate(vector.x, vector.y, vector.z)
+					model.children.add(cube)
+				}
+				i += 1
+			}
+		}
+	}
 }
