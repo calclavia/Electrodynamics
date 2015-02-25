@@ -33,6 +33,8 @@ public interface FieldMatrix extends IActivatable, IPermissionProvider {
 	 */
 	public int getSidedModuleCount(Module module, Direction... direction);
 
+	public int getModuleCount(Module module, int... slots);
+
 	/**
 	 * Transformation information functions. Returns CACHED information unless the cache is cleared.
 	 * Note that these are all RELATIVE to the projector's position.

@@ -8,7 +8,6 @@ import java.util.Set;
 
 /**
  * Also extends IDisableable, IFortronFrequency
- *
  * @author Calclavia
  */
 public interface Projector extends IInventory, FieldMatrix, Frequency {
@@ -34,9 +33,14 @@ public interface Projector extends IInventory, FieldMatrix, Frequency {
 
 	/**
 	 * DO NOT modify this list. Read-only.
-	 *
 	 * @return The actual force field block coordinates in the world.
 	 */
 	Set<Vector3d> getForceFields();
 
+	/**
+	 * Checks if this specific position is in the field.
+	 * @param pos World position
+	 * @return True if so
+	 */
+	boolean isInField(Vector3d pos);
 }

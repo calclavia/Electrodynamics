@@ -37,7 +37,8 @@ abstract class ItemModule extends Item with TooltipItem with Module {
 
 	def getEntitiesInField(projector: Projector): JSet[Entity] = {
 		val blockProjector = projector.asInstanceOf[BlockProjector]
-		val volume = new Cuboid(-projector.getNegativeScale, projector.getPositiveScale + Vector3d.one) + (new Vector3d(blockProjector) + projector.getTranslation)
+		blockProjector.isInField(projector.isInstanceOf)
+		val volume = new Cuboid(-projector.getNegativeScale, projector.getPositiveScale + Vector3d.one) + blockProjector.position() + projector.getTranslation
 		return (blockProjector.world.getEntitiesWithinAABB(classOf[Entity], volume.toAABB) map (_.asInstanceOf[Entity])).toSet
 	}
 }

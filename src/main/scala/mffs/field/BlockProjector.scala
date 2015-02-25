@@ -268,9 +268,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter {
 
 	override def getForceFields: JSet[Vector3i] = forceFields
 
-	def getTicks: Long = ticks
-
-	def isInField(position: Vector3d) = if (getShapeItem != null) getStructure.intersects(position) else false
+	override def isInField(position: Vector3d) = if (getShapeItem != null) getStructure.intersects(position) else false
 
 	def isAccessGranted(checkWorld: World, checkPos: Vector3d, player: EntityPlayer, action: PlayerInteractEvent.Action): Boolean = {
 		var hasPerm = true
