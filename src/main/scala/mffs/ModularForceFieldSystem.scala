@@ -1,9 +1,10 @@
 package mffs
 
+import com.resonant.wrapper.lib.wrapper.wrapCollections._
 import mffs.content.Content
 import mffs.security.MFFSPermissions
 import nova.core.event.EventListener
-import nova.core.event.EventManager.EmptyEvent
+import nova.core.event.EventManager.{BlockChangeEvent, EmptyEvent}
 import nova.core.game.Game
 import nova.core.loader.{Loadable, NovaMod}
 
@@ -14,6 +15,12 @@ object ModularForceFieldSystem extends Loadable {
 		/**
 		 * Registration
 		 */
+		Game.instance.eventManager.blockChange.add(new EventListener[BlockChangeEvent] {
+			override def onEvent(event: BlockChangeEvent)
+			{
+				EventHandler.onBlockChange(event)
+			}
+		})
 		//		MinecraftForge.EVENT_BUS.register(SubscribeEventHandler)
 		//		MinecraftForge.EVENT_BUS.register(Settings)
 		//		MinecraftForge.EVENT_BUS.register(Content.remoteController)
