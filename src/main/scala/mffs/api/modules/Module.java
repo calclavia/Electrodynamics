@@ -30,8 +30,8 @@ public interface Module extends FortronCost {
 	 * Called right before the projector creates a force field block.
 	 * @return 0 - Do nothing; 1 - Skip this block and continue; 2 - Cancel rest of projection;
 	 */
-	default int onProject(Projector projector, Vector3i position) {
-		return 0;
+	default ProjectState onProject(Projector projector, Vector3i position) {
+		return ProjectState.pass;
 	}
 
 	/**
@@ -62,4 +62,12 @@ public interface Module extends FortronCost {
 		return false;
 	}
 
+	public static enum ProjectState {
+		//Does nothing
+		pass,
+		//Skips the current block
+		skip,
+		//Cancels the projection
+		cancel
+	}
 }

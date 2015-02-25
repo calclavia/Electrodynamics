@@ -1,25 +1,37 @@
 package mffs.field.module
 
-import java.util.Set
-
+import mffs.GraphFrequency
+import mffs.api.machine.Projector
+import mffs.api.modules.Module.ProjectState
 import mffs.base.ItemModule
 import mffs.field.BlockProjector
+import nova.core.block.Block
+import nova.core.util.transform.Vector3i
 
-class ItemModuleFusion extends ItemModule
-{
-  setMaxStackSize(1)
-  setCost(1f)
+/**
+ * The fusion module attempts to fuse a force field with another.
+ * This is done by checking all other force fields with THE SAME FREQUENCY,
+ * and trying to fuse them together. 
+ * @author Calclavia
+ */
+class ItemModuleFusion extends ItemModule {
+	setCost(1f)
+	setMaxCount(1)
 
-	override def onProject(projector: IProjector, fieldBlocks: Set[Vector3d]): Boolean =
-  {
-    val tile = projector.asInstanceOf[TileEntity]
-	  val projectors = FrequencyGridRegistry.instance.getNodes(classOf[BlockProjector], projector.getFrequency)
+	override def getID: String = "moduleFusion"
 
-    //TOOD: Check threading efficiency
-    val checkProjectors = projectors.par filter (proj => proj.getWorldObj == tile.getWorldObj && proj.isActive && proj.getMode != null)
-    val removeFields = (fieldBlocks.par filter (pos => checkProjectors exists (proj => proj.getInteriorPoints.contains(pos) || proj.getMode.isInField(proj, pos)))).seq
-    fieldBlocks --= removeFields
+	override def onProject(projector: Projector, position: Vector3i): ProjectState = {
+		if (GraphFrequency.instance
+			.get(projector.getFrequency)
+			.view
+			.collect { case proj: BlockProjector => proj}
+			.filter(_.world() == projector.asInstanceOf[Block].world())
+			.filter(_.isActive)
+			.filter(_.getShapeItem != null)
+			.exists(_.isInField(position.toDouble))) {
+			return ProjectState.skip
+		}
 
-    return false
-  }
+		return ProjectState.pass
+	}
 }
