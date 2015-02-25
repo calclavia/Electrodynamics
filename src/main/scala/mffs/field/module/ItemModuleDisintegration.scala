@@ -1,74 +1,73 @@
 package mffs.field.module
 
-import java.util.Set
+import java.util
 
-import mffs.ModularForceFieldSystem
+import mffs.api.Blacklist
+import mffs.api.machine.Projector
+import mffs.api.modules.Module.ProjectState
 import mffs.base.{BlockInventory, ItemModule, PacketBlock}
 import mffs.content.Content
 import mffs.field.BlockProjector
 import mffs.field.mobilize.event.{BlockDropDelayedEvent, BlockInventoryDropDelayedEvent}
 import mffs.util.MFFSUtility
+import nova.core.game.Game
+import nova.core.util.transform.Vector3i
 
-class ItemModuleDisintegration extends ItemModule
-{
-  private var blockCount: Int = 0
-  setMaxStackSize(1)
-  setCost(20)
+class ItemModuleDisintegration extends ItemModule {
+	private var blockCount = 0
+	setMaxCount(1)
+	setCost(20)
 
-	override def onProject(projector: IProjector, fields: Set[Vector3d]): Boolean =
-  {
-    this.blockCount = 0
-    return false
-  }
+	override def getID: String = "moduleDisintegration"
 
-	override def onProject(projector: IProjector, position: Vector3d): Int =
-  {
-	  val proj = projector.asInstanceOf[BlockProjector]
-    val world = proj.world
+	override def onCreateField(projector: Projector, field: util.Set[Vector3i]): Boolean = {
+		blockCount = 0
+		super.onCreateField(projector, field)
+	}
 
-    val tileEntity = projector.asInstanceOf[TileEntity]
-    val block = position.getBlock(world)
+	override def onProject(projector: Projector, position: Vector3i): ProjectState = {
+		val proj = projector.asInstanceOf[BlockProjector]
+		val world = proj.world
 
-    if (block != null)
-    {
-      val blockMetadata = position.getBlockMetadata(tileEntity.getWorldObj)
+		val opBlock = world.getBlock(position)
 
-		val filterMatch = !proj.getFilterItems.exists(
-		  Item =>
-        {
-			MFFSUtility.getFilterBlock(Item) != null &&
-				(Item.isItemEqual(new Item(block, 1, blockMetadata)) || (Item.getItem.asInstanceOf[ItemBlock].field_150939_a == block && projector.getModuleCount(Content.moduleApproximation) > 0))
-        })
+		if (opBlock.isPresent) {
+			val block = opBlock.get()
 
-      if (proj.isInvertedFilter != filterMatch)
-        return 1
+			//TODO: Check this
+			val filterMatch = !proj.getFilterItems.exists(item => MFFSUtility.getFilterBlock(item) != null && item.sameItemType(item))
 
-		if (Blacklist.disintegrationBlacklist.contains(block) || block.isInstanceOf[BlockLiquid] || block.isInstanceOf[IFluidBlock]) {
-			return 1
+			if (proj.isInvertedFilter != filterMatch) {
+				return ProjectState.pass
+			}
+
+			//|| block.isInstanceOf[BlockLiquid] || block.isInstanceOf[IFluidBlock]
+			if (Blacklist.disintegrationBlacklist.contains(block)) {
+				return ProjectState.pass
+			}
+
+			Game.instance.networkManager.sync(PacketBlock.effect.ordinal(), proj)
+
+			if (projector.getModuleCount(Content.moduleCollection) > 0) {
+				Game.instance.syncTicker.preQueue(new BlockInventoryDropDelayedEvent(39, block, world, position, projector.asInstanceOf[BlockInventory]))
+			}
+			else {
+				Game.instance.syncTicker.preQueue(new BlockDropDelayedEvent(39, block, world, position)))
+			}
+
+			blockCount += 1
+
+			if (blockCount >= projector.getModuleCount(Content.moduleSpeed) / 3) {
+				return ProjectState.cancel
+			}
+			else {
+				return ProjectState.pass
+			}
 		}
 
-		ModularForceFieldSystem.packetHandler.sendToAllInDimension(new PacketTile(proj) <<< PacketBlock.effect.id <<< 2 <<< position.xi <<< position.yi <<< position.zi, world)
+		return ProjectState.pass
+	}
 
-      if (projector.getModuleCount(Content.moduleCollection) > 0)
-      {
-		  proj.queueEvent(new BlockInventoryDropDelayedEvent(projector.asInstanceOf[IDelayedEventHandler], 39, block, world, position, projector.asInstanceOf[BlockInventory]))
-      }
-      else
-      {
-        proj.queueEvent(new BlockDropDelayedEvent(projector.asInstanceOf[IDelayedEventHandler], 39, block, world, position))
-      }
-
-      blockCount += 1
-
-      if (blockCount >= projector.getModuleCount(Content.moduleSpeed) / 3)
-        return 2
-      else
-        return 1
-    }
-
-    return 1
-  }
-
-  override def getFortronCost(amplifier: Float): Float = super.getFortronCost(amplifier) + (super.getFortronCost(amplifier) * amplifier)
+	override def getFortronCost(amplifier: Float): Float = super.getFortronCost(amplifier) + (super.getFortronCost(amplifier) * amplifier)
 
 }

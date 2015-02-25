@@ -1,22 +1,20 @@
 package mffs.field.mobilize.event
 
-class DelayedEvent(val handler: IDelayedEventHandler, var ticks: Int, val evtMethod: (() => Unit) = null)
-{
-  protected def onEvent = evtMethod.apply()
+class DelayedEvent(var ticks: Int, val evtMethod: (() => Unit) = null) extends Runnable {
 
-  def update()
-  {
-    if (ticks == 0)
-    {
-      onEvent
-    }
+	protected def onEvent = evtMethod.apply()
 
-    ticks -= 1
-  }
+	override def run() {
+		if (ticks == 0) {
+			onEvent
+		}
 
-  /**
-   * The higher the number, the higher the priority.
-   * @return
-   */
-  def priority: Int = 0
+		ticks -= 1
+	}
+
+	/**
+	 * The higher the number, the higher the priority.
+	 * @return
+	 */
+	def priority: Int = 0
 }

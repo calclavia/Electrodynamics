@@ -1,8 +1,15 @@
 package mffs.util
 
+import com.resonant.core.access.Permission
 import mffs.content.Content
 import mffs.field.BlockProjector
 import mffs.field.mode.ItemShapeCustom
+import nova.core.block.Block
+import nova.core.entity.Entity
+import nova.core.item.{Item, ItemBlock}
+import nova.core.player.Player
+import nova.core.util.transform.Vector3d
+import nova.core.world.World
 
 /**
  * A class containing some general helpful functions.
@@ -133,13 +140,13 @@ object MFFSUtility
   {
     if (item.isInstanceOf[ItemBlock])
     {
-      return item.asInstanceOf[ItemBlock].field_150939_a
+		return item.asInstanceOf[ItemBlock].block
     }
 
     return null
   }
 
-	def hasPermission(world: World, position: Vector3d, permission: Permission, player: EntityPlayer): Boolean =
+	def hasPermission(world: World, position: Vector3d, permission: Permission, player: Entity with Player): Boolean =
   {
     return hasPermission(world, position, permission, player.getGameProfile())
   }

@@ -2,7 +2,7 @@ package mffs.api.machine;
 
 import mffs.api.modules.Module;
 import mffs.api.modules.StructureProvider;
-import net.minecraft.item.Item;
+import nova.core.item.Item;
 import nova.core.util.Direction;
 import nova.core.util.transform.Vector3d;
 
@@ -34,6 +34,10 @@ public interface FieldMatrix extends IActivatable, IPermissionProvider {
 	public int getSidedModuleCount(Module module, Direction... direction);
 
 	public int getModuleCount(Module module, int... slots);
+
+	default int getModuleCount(Item module, int... slots) {
+		return getModuleCount((Module) module, slots);
+	}
 
 	/**
 	 * Transformation information functions. Returns CACHED information unless the cache is cleared.

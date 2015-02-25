@@ -64,13 +64,17 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter {
 
 	override def write(packet: Packet) {
 		super.write(packet)
-		if (packet.getID == PacketBlock.field.ordinal()) {
+		packet.getID match {
+			case PacketBlock.field.ordinal =>
 			/*
 			val nbt = new NBTTagCompound
 			val nbtList = new NBTTagList
 			calculatedField foreach (vec => nbtList.appendTag(vec.toNBT))
 			nbt.setTag("blockList", nbtList)
 			ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(this, PacketBlock.field.id: Integer, nbt))*/
+			case PacketBlock.effect.ordinal =>
+				packet <<< 2
+				packet <<< position
 		}
 	}
 
