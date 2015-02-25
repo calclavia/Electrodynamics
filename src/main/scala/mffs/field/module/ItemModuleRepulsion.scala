@@ -4,9 +4,10 @@ import java.util.{Set => JSet}
 
 import mffs.api.machine.Projector
 import mffs.base.ItemModule
-import mffs.field.BlockProjector
 import mffs.security.MFFSPermissions
-import nova.core.util.transform.Vector3i
+import nova.core.entity.Entity
+import nova.core.player.Player
+import nova.core.util.transform.{Vector3d, Vector3i}
 
 import scala.collection.convert.wrapAll._
 
@@ -21,42 +22,25 @@ class ItemModuleRepulsion extends ItemModule {
 	override def getID: String = "moduleRepulsion"
 
 	override def onCreateField(projector: Projector, field: JSet[Vector3i]): Boolean = {
-		val repulsionVelocity = Math.max(projector.getSidedModuleCount(this) / 20, 1.2)
+		val repellForce = Vector3d.one * Math.max(projector.getSidedModuleCount(this) / 20, 1.2)
 
 		getEntitiesInField(projector).par
-			.filter(
-				entity => {
-					if (fields.contains(new Vector3d(entity).floor) || projector.getMode.isInField(projector, new Vector3d(entity))) {
-						if (entity.isInstanceOf[EntityPlayer]) {
-							val entityPlayer = entity.asInstanceOf[EntityPlayer]
-							return entityPlayer.capabilities.isCreativeMode || projector.hasPermission(entityPlayer.getGameProfile, MFFSPermissions.forceFieldWarp)
-						}
-						return true
-					}
-
-					return false
-				})
+			.collect {
+			case player: Player if projector.hasPermission(player.getID, MFFSPermissions.forceFieldWarp) => player
+			case entity: Entity => entity
+		}
 			.foreach(
 				entity => {
-					val repelDirection = new Vector3d(entity) - ((new Vector3d(entity).floor + 0.5).normalize)
-					entity.motionX = repelDirection.x * Math.max(repulsionVelocity, Math.abs(entity.motionX))
-					entity.motionY = repelDirection.y * Math.max(repulsionVelocity, Math.abs(entity.motionY))
-					entity.motionZ = repelDirection.z * Math.max(repulsionVelocity, Math.abs(entity.motionZ))
+					val repelDirection = entity.position() - (entity.position.toInt.toDouble + 0.5).normalize
+					val velocity = entity.rigidBody.velocity
+					val force = repelDirection * repellForce.max(velocity.abs)
+					entity.rigidBody.addForce(force)
 					//TODO: May NOT be thread safe!
-					entity.moveEntity(entity.motionX, entity.motionY, entity.motionZ)
-					entity.onGround = true
-
-					if (entity.isInstanceOf[EntityPlayerMP]) {
-						entity.asInstanceOf[EntityPlayerMP].playerNetServerHandler.setPlayerLocation(entity.posX, entity.posY, entity.posZ, entity.rotationYaw, entity.rotationPitch)
-					}
 				})
 		return true
 	}
 
-	override def onDestroy(projector: IProjector, field: JSet[Vector3d]): Boolean = {
-		projector.asInstanceOf[BlockProjector].sendFieldToClient
-		return false
-	}
+	//TODO: Send field to client
 
-	override def requireTicks(moduleStack: Item): Boolean = true
+	override def requireTicks(): Boolean = true
 }

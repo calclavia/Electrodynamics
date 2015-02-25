@@ -1,7 +1,6 @@
 package mffs.api.machine;
 
-import com.mojang.authlib.GameProfile;
-import com.resonant.access.Permission;
+import com.resonant.core.access.Permission;
 
 /**
  * Used by tiles that provide permissions.
@@ -11,5 +10,5 @@ public interface IPermissionProvider {
 	/**
 	 * Does this field matrix provide a specific permission?
 	 */
-	public boolean hasPermission(GameProfile profile, Permission permission);
+	public boolean hasPermission(String id, Permission permission);
 }

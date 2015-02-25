@@ -13,6 +13,8 @@ import nova.core.item.Item
 import nova.core.player.Player
 import nova.core.util.transform.{Cuboid, Vector3d}
 
+import scala.collection.convert.wrapAll._
+
 abstract class ItemModule extends Item with TooltipItem with Module {
 	private var fortronCost = 0.5f
 	private var maxCount = 64
@@ -37,8 +39,10 @@ abstract class ItemModule extends Item with TooltipItem with Module {
 
 	def getEntitiesInField(projector: Projector): JSet[Entity] = {
 		val blockProjector = projector.asInstanceOf[BlockProjector]
-		blockProjector.isInField(projector.isInstanceOf)
-		val volume = new Cuboid(-projector.getNegativeScale, projector.getPositiveScale + Vector3d.one) + blockProjector.position() + projector.getTranslation
-		return (blockProjector.world.getEntitiesWithinAABB(classOf[Entity], volume.toAABB) map (_.asInstanceOf[Entity])).toSet
+		val bound = new Cuboid(-projector.getNegativeScale, projector.getPositiveScale + Vector3d.one) + blockProjector.position() + projector.getTranslation
+
+		return blockProjector.world.getEntities(bound)
+			.filter(entity => projector.isInField(entity.position()))
+			.toSet
 	}
 }
