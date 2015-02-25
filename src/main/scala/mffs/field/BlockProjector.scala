@@ -4,7 +4,7 @@ import java.util.{Optional, Set => JSet}
 
 import mffs.api.machine.Projector
 import mffs.base.{BlockFieldMatrix, PacketBlock}
-import mffs.content.{Content, Textures}
+import mffs.content.{Content, Models, Textures}
 import mffs.render.FieldColor
 import mffs.util.CacheHandler
 import mffs.{ModularForceFieldSystem, Settings}
@@ -311,10 +311,10 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter {
 		model.children.add(Models.projector.getModel)
 
 		if (isActive) {
-			model.bind(Textures.projectorOn)
+			model.bindAll(Textures.projectorOn)
 		}
 		else {
-			model.bind(Textures.projectorOff)
+			model.bindAll(Textures.projectorOff)
 		}
 
 		/**
