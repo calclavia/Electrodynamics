@@ -73,7 +73,8 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter {
 			nbt.setTag("blockList", nbtList)
 			ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(this, PacketBlock.field.id: Integer, nbt))*/
 			case PacketBlock.effect.ordinal =>
-				packet <<< 2
+				packet <<< position
+			case PacketBlock.effect2.ordinal =>
 				packet <<< position
 		}
 	}
