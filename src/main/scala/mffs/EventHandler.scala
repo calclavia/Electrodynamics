@@ -6,9 +6,10 @@ import mffs.content.Content
 import mffs.field.BlockProjector
 import nova.core.event.EventManager
 import nova.core.game.Game
+
 import scala.collection.convert.wrapAll._
 object EventHandler {
-	@SubscribeEvent
+
 	def eventPreForceManipulate(evt: EventForceMobilize.EventPreForceManipulate) {
 		val tileEntity: TileEntity = evt.world.getTileEntity(evt.beforeX, evt.beforeY, evt.beforeZ)
 
@@ -22,7 +23,6 @@ object EventHandler {
 	 *
 	 * @param evt
 	 */
-	@SubscribeEvent
 	def eventStabilize(evt: EventStabilize) {
 		if (evt.Item.getItem.isInstanceOf[ItemSkull]) {
 			evt.world.setBlock(evt.x, evt.y, evt.z, Blocks.skull, evt.Item.getItemDamage, 2)
@@ -98,7 +98,6 @@ object EventHandler {
 		}
 	}
 
-	@SubscribeEvent
 	def livingSpawnEvent(evt: LivingSpawnEvent) {
 		if (!evt.entity.isInstanceOf[EntityPlayer]) {
 			if (MFFSUtility.getRelevantProjectors(evt.world, new Vector3d(evt.entityLiving)).exists(_.getModuleCount(Content.moduleAntiSpawn) > 0)) {

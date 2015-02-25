@@ -50,12 +50,12 @@ object Content extends ContentLoader with RecipeHolder {
 	/**
 	 * Shapes
 	 */
-	val modeCube: Item = classOf[ItemModeCube]
-	val modeSphere: Item = classOf[ItemModeSphere]
-	val modeTube: Item = classOf[ItemModeTube]
-	val modeCylinder: Item = classOf[ItemModeCylinder]
-	val modePyramid: Item = classOf[ItemModePyramid]
-	val modeCustom: Item = classOf[ItemModeCustom]
+	val modeCube: Item = classOf[ItemShapeCube]
+	val modeSphere: Item = classOf[ItemShapeSphere]
+	val modeTube: Item = classOf[ItemShapeTube]
+	val modeCylinder: Item = classOf[ItemShapeCylinder]
+	val modePyramid: Item = classOf[ItemShapePyramid]
+	val modeCustom: Item = classOf[ItemShapeCustom]
 
 	/**
 	 * Modules

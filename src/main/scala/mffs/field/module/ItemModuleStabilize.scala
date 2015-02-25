@@ -4,7 +4,7 @@ import java.util.Set
 
 import mffs.base.{ItemModule, PacketBlock}
 import mffs.content.Content
-import mffs.field.mode.ItemModeCustom
+import mffs.field.mode.ItemShapeCustom
 import mffs.{ModularForceFieldSystem, Reference}
 
 class ItemModuleStabilize extends ItemModule
@@ -26,9 +26,9 @@ class ItemModuleStabilize extends ItemModule
     val world = tile.getWorldObj
     var blockInfo: (Block, Int) = null
 
-    if (projector.getMode.isInstanceOf[ItemModeCustom] && !(projector.getModuleCount(Content.moduleCamouflage) > 0))
+	  if (projector.getMode.isInstanceOf[ItemShapeCustom] && !(projector.getModuleCount(Content.moduleCamouflage) > 0))
     {
-      val fieldBlocks = projector.getMode.asInstanceOf[ItemModeCustom].getFieldBlockMap(projector, projector.getModeStack)
+		val fieldBlocks = projector.getMode.asInstanceOf[ItemShapeCustom].getFieldBlockMap(projector, projector.getModeStack)
 		val fieldCenter: Vector3d = new Vector3d(tile) + projector.getTranslation
 		val relativePosition: Vector3d = position.clone.subtract(fieldCenter)
       relativePosition.transform(new EulerAngle(-projector.getRotationYaw, -projector.getRotationPitch, 0))

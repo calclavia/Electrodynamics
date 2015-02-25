@@ -11,7 +11,7 @@ import nova.core.util.transform.Vector3d
  *
  * @author Calclavia, Thutmose
  */
-class ItemModeCylinder extends ItemMode {
+class ItemShapeCylinder extends ItemShape {
 	private val step = 1
 	private val radiusExpansion: Int = 0
 

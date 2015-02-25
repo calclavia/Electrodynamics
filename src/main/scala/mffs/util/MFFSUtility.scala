@@ -2,7 +2,7 @@ package mffs.util
 
 import mffs.content.Content
 import mffs.field.BlockProjector
-import mffs.field.mode.ItemModeCustom
+import mffs.field.mode.ItemShapeCustom
 
 /**
  * A class containing some general helpful functions.
@@ -88,9 +88,9 @@ object MFFSUtility
       {
         if (projector.getModuleCount(Content.moduleCamouflage) > 0)
         {
-			if (projector.getShape.isInstanceOf[ItemModeCustom])
+			if (projector.getShape.isInstanceOf[ItemShapeCustom])
           {
-			  val fieldMap = (projector.getShape.asInstanceOf[ItemModeCustom]).getFieldBlockMap(projector, projector.getShape)
+			  val fieldMap = (projector.getShape.asInstanceOf[ItemShapeCustom]).getFieldBlockMap(projector, projector.getShape)
 
             if (fieldMap != null)
             {

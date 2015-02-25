@@ -9,7 +9,7 @@ import mffs.content.Content
 import mffs.field.module.ItemModuleArray
 import mffs.util.CacheHandler
 
-class ItemModeCustom extends ItemMode with CacheHandler
+class ItemShapeCustom extends ItemShape with CacheHandler
 {
   private final val NBT_ID: String = "id"
   private final val NBT_MODE: String = "mode"
