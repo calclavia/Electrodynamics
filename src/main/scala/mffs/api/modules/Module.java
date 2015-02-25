@@ -3,9 +3,9 @@ package mffs.api.modules;
 import com.resonant.core.structure.Structure;
 import mffs.api.machine.FieldMatrix;
 import mffs.api.machine.Projector;
+import nova.core.block.Block;
 import nova.core.entity.Entity;
 import nova.core.util.transform.Vector3i;
-import nova.core.world.World;
 
 import java.util.Set;
 
@@ -28,7 +28,7 @@ public interface Module extends FortronCost {
 
 	/**
 	 * Called right before the projector creates a force field block.
-	 * @return 0 - Do nothing; 1 - Skip this block and continue; 2 - Cancel rest of projection;
+	 * @return The ProjectState, an instruction for the projector.
 	 */
 	default ProjectState onProject(Projector projector, Vector3i position) {
 		return ProjectState.pass;
@@ -36,9 +36,11 @@ public interface Module extends FortronCost {
 
 	/**
 	 * Called when an entity collides with a force field block.
+	 * @param block Block being collided with
+	 * @param entity Entity colliding with block
 	 * @return False to stop the default process of entity collision.
 	 */
-	default boolean onCollideWithForceField(World world, Vector3i position, Entity entity) {
+	default boolean onFieldCollide(Block block, Entity entity) {
 		return true;
 	}
 
