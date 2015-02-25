@@ -1,38 +1,38 @@
 package mffs.field.module
 
-import java.util.Set
+import java.util
 
+import mffs.api.machine.Projector
 import mffs.base.ItemModule
+import mffs.field.BlockProjector
+import nova.core.fluid.FluidBlock
+import nova.core.game.Game
+import nova.core.util.transform.Vector3i
 
-class ItemModuleSponge extends ItemModule
-{
-  setMaxStackSize(1)
+class ItemModuleSponge extends ItemModule {
+	setMaxCount(1)
 
-	override def onProject(projector: IProjector, fields: Set[Vector3d]): Boolean =
-  {
-    if (projector.getTicks % 60 == 0)
-    {
-      val world = projector.asInstanceOf[TileEntity].getWorldObj
+	override def getID: String = "moduleSponge"
 
-		if (Game.instance.networkManager.isServer)
-      {
-        for (point <- projector.getInteriorPoints)
-        {
-          val block = point.getBlock(world)
+	override def onCreateField(projector: Projector, field: util.Set[Vector3i]): Boolean = {
+		val proj = projector.asInstanceOf[BlockProjector]
 
-          if (block.isInstanceOf[BlockLiquid] || block.isInstanceOf[BlockFluidBase])
-          {
-            point.setBlock(world, Blocks.air)
-          }
-        }
-      }
-    }
+		if (projector.getTicks % 60 == 0) {
+			val world = proj.world
 
-	  return super.onCreateField(projector, fields)
-  }
+			if (Game.instance.networkManager.isServer) {
+				for (point <- projector.getInteriorPoints) {
+					val block = world.getBlock(point)
 
-	override def requireTicks(moduleStack: Item): Boolean =
-  {
-    return true
-  }
+					if (block.isInstanceOf[FluidBlock]) {
+						world.setBlock(point, Game.instance.blockManager.getAirBlock)
+					}
+				}
+			}
+		}
+
+		return super.onCreateField(projector, field)
+	}
+
+	override def requireTicks = true
 }

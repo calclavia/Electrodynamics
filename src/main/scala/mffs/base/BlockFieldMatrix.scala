@@ -241,7 +241,7 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 	def getStructure: Structure = {
 		val structure = getShapeItem.getStructure
 		structure.setBlock(Optional.of(Content.forceField))
-		structure.setTranslate(getTranslation)
+		structure.setTranslate(getTranslation + position.toDouble)
 		structure.setScale(getScale)
 		structure.setRotation(getRotation)
 		return structure
