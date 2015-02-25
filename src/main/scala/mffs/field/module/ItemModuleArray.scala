@@ -1,87 +1,82 @@
 package mffs.field.module
 
-import java.util.{HashSet, Set}
+import java.util.{Set => JSet}
 
+import com.resonant.core.structure.Structure
+import mffs.api.machine.FieldMatrix
 import mffs.base.ItemModule
+import nova.core.util.Direction
+import nova.core.util.transform.{Vector3d, Vector3i}
 
-class ItemModuleArray extends ItemModule
-{
-	override def onPreCalculate(projector: IFieldMatrix, fieldBlocks: Set[Vector3d])
-  {
-    onPreCalculateInterior(projector, fieldBlocks, fieldBlocks)
-  }
+class ItemModuleArray extends ItemModule {
 
-	def onPreCalculateInterior(projector: IFieldMatrix, exterior: Set[Vector3d], interior: Set[Vector3d])
-  {
-	  val originalField: Set[Vector3d] = new HashSet(interior)
-    val longestDirectional = getDirectionWidthMap(exterior)
+	override def onCalculateExterior(projector: FieldMatrix, structure: Structure) {
+		generateArray(projector, structure)
+	}
 
-    ForgeDirection.VALID_DIRECTIONS.foreach(
-      direction =>
-      {
-        val copyAmount = projector.getSidedModuleCount(this, direction)
+	override def onCalculateInterior(projector: FieldMatrix, structure: Structure) {
+		generateArray(projector, structure)
+	}
 
-        val directionalDisplacement = Math.abs(longestDirectional(direction)) + Math.abs(longestDirectional(direction.getOpposite)) + 1
+	def generateArray(projector: FieldMatrix, structure: Structure) {
+		structure.postStructure = (field: Set[Vector3i]) => {
+			val longestDirectional = getDirectionWidthMap(field)
 
-        (0 until copyAmount).foreach(
-          i =>
-          {
-            val directionalDisplacementScale = directionalDisplacement * (i + 1)
+			Direction.DIRECTIONS.foreach(
+				dir => {
+					val copyAmount = projector.getSidedModuleCount(this, dir)
+					val directionalDisplacement = Math.abs(longestDirectional(dir)) + Math.abs(longestDirectional(dir.getOpposite)) + 1
 
-            originalField.foreach(originalFieldBlock =>
-                                  {
-									  val newFieldBlock: Vector3d = originalFieldBlock.clone + (new Vector3d(direction) * directionalDisplacementScale)
-                                    interior.add(newFieldBlock)
-                                  })
-          }
-        )
-      }
-    )
-  }
+					(0 until copyAmount).foreach(
+						i => {
+							val dirDisplacementScale = directionalDisplacement * (i + 1)
 
-	def getDirectionWidthMap(field: Set[Vector3d]): mutable.Map[ForgeDirection, Integer] =
-  {
-    val longestDirectional = mutable.Map.empty[ForgeDirection, Integer]
+							field.foreach(
+								originalFieldBlock => {
+									val newFieldBlock: Vector3d = originalFieldBlock.clone + (new Vector3i(dir) * dirDisplacementScale)
+									interior.add(newFieldBlock)
+								}
+							)
+						}
+					)
+				}
+			)
+		}
+	}
 
-    longestDirectional.put(ForgeDirection.DOWN, 0)
-    longestDirectional.put(ForgeDirection.UP, 0)
-    longestDirectional.put(ForgeDirection.NORTH, 0)
-    longestDirectional.put(ForgeDirection.SOUTH, 0)
-    longestDirectional.put(ForgeDirection.WEST, 0)
-    longestDirectional.put(ForgeDirection.EAST, 0)
+	def getDirectionWidthMap(field: Set[Vector3i]): Map[Direction, Int] = {
+		var longestDirectional = Map.empty[Direction, Int]
 
-    for (fieldPosition <- field)
-    {
-      if (fieldPosition.xi > 0 && fieldPosition.xi > longestDirectional(ForgeDirection.EAST))
-      {
-        longestDirectional.put(ForgeDirection.EAST, fieldPosition.xi)
-      }
-      else if (fieldPosition.xi < 0 && fieldPosition.xi < longestDirectional(ForgeDirection.WEST))
-      {
-        longestDirectional.put(ForgeDirection.WEST, fieldPosition.xi)
-      }
-      if (fieldPosition.yi > 0 && fieldPosition.yi > longestDirectional(ForgeDirection.UP))
-      {
-        longestDirectional.put(ForgeDirection.UP, fieldPosition.yi)
-      }
-      else if (fieldPosition.yi < 0 && fieldPosition.yi < longestDirectional(ForgeDirection.DOWN))
-      {
-        longestDirectional.put(ForgeDirection.DOWN, fieldPosition.yi)
-      }
-      if (fieldPosition.zi > 0 && fieldPosition.zi > longestDirectional(ForgeDirection.SOUTH))
-      {
-        longestDirectional.put(ForgeDirection.SOUTH, fieldPosition.zi)
-      }
-      else if (fieldPosition.zi < 0 && fieldPosition.zi < longestDirectional(ForgeDirection.NORTH))
-      {
-        longestDirectional.put(ForgeDirection.NORTH, fieldPosition.zi)
-      }
-    }
-    return longestDirectional
-  }
+		longestDirectional += (Direction.DOWN -> 0)
+		longestDirectional += (Direction.UP -> 0)
+		longestDirectional += (Direction.NORTH -> 0)
+		longestDirectional += (Direction.SOUTH -> 0)
+		longestDirectional += (Direction.WEST -> 0)
+		longestDirectional += (Direction.EAST -> 0)
 
-  override def getFortronCost(amplifier: Float): Float =
-  {
-    return super.getFortronCost(amplifier) + (super.getFortronCost(amplifier) * amplifier) / 100f
-  }
+		for (fieldPosition <- field) {
+			if (fieldPosition.x > 0 && fieldPosition.x > longestDirectional(Direction.EAST)) {
+				longestDirectional += (Direction.EAST -> fieldPosition.x)
+			}
+			else if (fieldPosition.x < 0 && fieldPosition.x < longestDirectional(Direction.WEST)) {
+				longestDirectional += (Direction.WEST -> fieldPosition.x)
+			}
+			if (fieldPosition.y > 0 && fieldPosition.y > longestDirectional(Direction.UP)) {
+				longestDirectional += (Direction.UP -> fieldPosition.y)
+			}
+			else if (fieldPosition.y < 0 && fieldPosition.y < longestDirectional(Direction.DOWN)) {
+				longestDirectional += (Direction.DOWN -> fieldPosition.y)
+			}
+			if (fieldPosition.z > 0 && fieldPosition.z > longestDirectional(Direction.SOUTH)) {
+				longestDirectional += (Direction.SOUTH -> fieldPosition.z)
+			}
+			else if (fieldPosition.z < 0 && fieldPosition.z < longestDirectional(Direction.NORTH)) {
+				longestDirectional += (Direction.NORTH -> fieldPosition.z)
+			}
+		}
+
+		return longestDirectional
+	}
+
+	override def getFortronCost(amplifier: Float): Float = super.getFortronCost(amplifier) + (super.getFortronCost(amplifier) * amplifier) / 100f
 }

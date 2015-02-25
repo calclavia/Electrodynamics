@@ -60,7 +60,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter {
 		calculateField(postCalculation)
 	}
 
-	override def getEmittedLightLevel: Float = if (getShape() != null) 1 else 0
+	override def getEmittedLightLevel: Float = if (getShapeItem() != null) 1 else 0
 
 	override def write(packet: Packet) {
 		super.write(packet)
@@ -110,7 +110,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter {
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)
 
-		if (isActive && getShape != null && removeFortron(getFortronCost, false) >= this.getFortronCost) {
+		if (isActive && getShapeItem != null && removeFortron(getFortronCost, false) >= this.getFortronCost) {
 			consumeCost()
 
 			if (ticks % 10 == 0 || markFieldUpdate || fieldRequireTicks) {
@@ -147,7 +147,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter {
 	 */
 	protected override def calculateField(callBack: () => Unit = null) {
 		if (Game.instance.networkManager.isServer && !isCalculating) {
-			if (getShape != null) {
+			if (getShapeItem != null) {
 				forceFields = Set.empty
 			}
 
@@ -171,8 +171,8 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter {
 					markFieldUpdate = false
 
 					if (forceFields.size <= 0) {
-						if (getShape.isInstanceOf[CacheHandler]) {
-							getShape.asInstanceOf[CacheHandler].clearCache
+						if (getShapeItem.isInstanceOf[CacheHandler]) {
+							getShapeItem.asInstanceOf[CacheHandler].clearCache
 						}
 					}
 
@@ -270,7 +270,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter {
 
 	def getTicks: Long = ticks
 
-	def isInField(position: Vector3d) = if (getShape != null) getStructure.intersects(position) else false
+	def isInField(position: Vector3d) = if (getShapeItem != null) getStructure.intersects(position) else false
 
 	def isAccessGranted(checkWorld: World, checkPos: Vector3d, player: EntityPlayer, action: PlayerInteractEvent.Action): Boolean = {
 		var hasPerm = true
@@ -320,7 +320,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter {
 		/**
 		 * Render the light beam 
 		 */
-		if (getShape != null) {
+		if (getShapeItem != null) {
 			val lightBeam = new Model()
 			//TODO: Lighting, RenderHelper.disableStandardItemLighting
 
@@ -377,7 +377,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter {
 					.rotate(new Vector3d(0, 1, 1), Math.toRadians(36f + ticks * 4))
 					.getMatrix
 
-				getShape.render(this, model)
+				getShapeItem.render(this, model)
 
 				val color = if (isActive) FieldColor.blue else FieldColor.red
 				val rgba = new Color(color._1, color._2, color._3, Math.sin(ticks.toDouble / 10) / 2 + 0.8)
@@ -397,11 +397,11 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter {
 	/**
 	 * Returns Fortron cost in ticks.
 	 */
-	protected override def doGetFortronCost: Int = if (this.getShape != null) Math.round(super.doGetFortronCost + this.getShape.getFortronCost(this.getAmplifier)) else 0
+	protected override def doGetFortronCost: Int = if (this.getShapeItem != null) Math.round(super.doGetFortronCost + this.getShapeItem.getFortronCost(this.getAmplifier)) else 0
 
 	protected override def getAmplifier: Float = {
-		if (getShape.isInstanceOf[ItemModeCustom]) {
-			return Math.max(getShape.asInstanceOf[ItemModeCustom].getFieldBlocks(this, this.getShape).size / 100, 1)
+		if (getShapeItem.isInstanceOf[ItemModeCustom]) {
+			return Math.max(getShapeItem.asInstanceOf[ItemModeCustom].getFieldBlocks(this, this.getShapeItem).size / 100, 1)
 		}
 		return Math.max(Math.min((if (calculatedField != null) calculatedField.size else 0) / 1000, 10), 1)
 	}

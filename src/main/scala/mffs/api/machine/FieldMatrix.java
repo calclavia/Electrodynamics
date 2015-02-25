@@ -14,7 +14,7 @@ public interface FieldMatrix extends IActivatable, IPermissionProvider {
 	 */
 	public StructureProvider getShape();
 
-	public Item getShape();
+	public Item getShapeItem();
 
 	/**
 	 * Gets the slot IDs based on the direction given.

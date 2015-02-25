@@ -17,15 +17,11 @@ abstract class ItemModule extends Item with TooltipItem with Module {
 	private var fortronCost = 0.5f
 	private var maxCount = 64
 
-	override def getTooltips(player: Optional[Player]): JList[String] = {
-		val tooltips = super.getTooltips(player)
+	override def getTooltips(player: Optional[Player], tooltips: JList[String]) {
 		tooltips.add(Game.instance.languageManager.getLocal("info.item.fortron") + " " + new UnitDisplay(UnitDisplay.Unit.LITER, getFortronCost(1) * 20) + "/s")
-		return tooltips
 	}
 
-	override def getFortronCost(amplifier: Float): Float = {
-		return fortronCost
-	}
+	override def getFortronCost(amplifier: Float) = fortronCost
 
 	def setCost(cost: Float): this.type = {
 		this.fortronCost = cost

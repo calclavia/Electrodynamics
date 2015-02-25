@@ -1,18 +1,18 @@
 package mffs.field.module
 
-import java.util.Set
-
+import com.resonant.core.structure.Structure
+import mffs.api.machine.FieldMatrix
 import mffs.base.ItemModule
 
-class ItemModuleDome extends ItemModule
-{
-  setMaxStackSize(1)
+class ItemModuleDome extends ItemModule {
+	override def getID: String = "moduleDome"
 
-	override def onPostCalculate(projector: IFieldMatrix, fieldBlocks: Set[Vector3d])
-  {
-	  val absoluteTranslation = new Vector3d(projector.asInstanceOf[TileEntity]) + projector.getTranslation
-    val newField = fieldBlocks.par.filter(_.y > absoluteTranslation.y).seq
-    fieldBlocks.clear()
-    fieldBlocks.addAll(newField)
-  }
+	override def getMaxCount: Int = 1
+
+	override def onCalculateInterior(projector: FieldMatrix, structure: Structure) {
+		//Cuts the field in half.
+		structure.postMapper = structure.postMapper.andThen({
+			case vec if vec.y > 0 => vec
+		})
+	}
 }

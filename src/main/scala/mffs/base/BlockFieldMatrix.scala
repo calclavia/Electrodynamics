@@ -79,7 +79,7 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 	/**
 	 * @return Gets the item that provides a shape
 	 */
-	def getShape: Item with StructureProvider = {
+	def getShapeItem: Item with StructureProvider = {
 		val optional = inventory.get(modeSlotID)
 		if (optional.isPresent) {
 			if (optional.get().isInstanceOf[Item with StructureProvider]) {
@@ -209,20 +209,13 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 
 	def getInteriorPoints: Set[Vector3i] =
 		getOrSetCache("getInteriorPoints", () => {
-			if (getShape.isInstanceOf[CacheHandler]) {
-				getShape.asInstanceOf[CacheHandler].clearCache
+			if (getShapeItem.isInstanceOf[CacheHandler]) {
+				getShapeItem.asInstanceOf[CacheHandler].clearCache
 			}
 
 			val structure = getStructure
-			val blockStructure = structure.getBlockStructure
-
-			val arrayModule = getModule(Content.moduleArray)
-			if (arrayModule != null) {
-				//TODO: Look into this
-				//arrayModule.onPreCalculateInterior(this, getShape.getExteriorPoints(this), newField)
-			}
-
-			return blockStructure.keySet
+			getModules().foreach(_.onCalculateInterior(this, structure))
+			return structure.getExteriorStructure
 		})
 
 	/**
@@ -231,23 +224,22 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 	protected def getExteriorPoints: Set[Vector3i] = {
 		val structure = getStructure
 
+		getModules().foreach(_.onCalculateExterior(this, structure))
+
 		val field = {
 			if (getModuleCount(Content.moduleInvert) > 0) {
 				structure.getInteriorStructure
 			}
 			else {
-				structure.getStructure
+				structure.getExteriorStructure
 			}
 		}
-
-		//getModules().foreach(_.onPreCalculate(this, field))
-		//getModules().foreach(_.onPostCalculate(this, transformed))
 
 		return field
 	}
 
 	def getStructure: Structure = {
-		val structure = getShape.getStructure
+		val structure = getShapeItem.getStructure
 		structure.setBlock(Optional.of(Content.forceField))
 		structure.setTranslate(getTranslation)
 		structure.setScale(getScale)
@@ -263,10 +255,10 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 	 */
 	protected def calculateField(callBack: () => Unit = null) {
 		if (Game.instance.networkManager.isServer && !isCalculating) {
-			if (getShape != null) {
+			if (getShapeItem != null) {
 				//Clear mode cache
-				if (getShape.isInstanceOf[CacheHandler]) {
-					getShape.asInstanceOf[CacheHandler].clearCache()
+				if (getShapeItem.isInstanceOf[CacheHandler]) {
+					getShapeItem.asInstanceOf[CacheHandler].clearCache()
 				}
 
 				isCalculating = true

@@ -45,7 +45,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController
   {
     super.update()
 
-	  if (getShape != null && Settings.enableForceManipulator)
+	  if (getShapeItem != null && Settings.enableForceManipulator)
     {
       if (delayedEvents.size == 0)
         performingMove = false

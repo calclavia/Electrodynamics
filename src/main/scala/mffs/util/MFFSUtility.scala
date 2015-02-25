@@ -88,9 +88,9 @@ object MFFSUtility
       {
         if (projector.getModuleCount(Content.moduleCamouflage) > 0)
         {
-			if (projector.getShape.isInstanceOf[ItemShapeCustom])
+			if (projector.getShapeItem.isInstanceOf[ItemShapeCustom])
           {
-			  val fieldMap = (projector.getShape.asInstanceOf[ItemShapeCustom]).getFieldBlockMap(projector, projector.getShape)
+			  val fieldMap = (projector.getShapeItem.asInstanceOf[ItemShapeCustom]).getFieldBlockMap(projector, projector.getShapeItem)
 
             if (fieldMap != null)
             {
