@@ -6,9 +6,11 @@ import com.resonant.core.structure.Structure
 import mffs.api.machine.FieldMatrix
 import mffs.base.ItemModule
 import nova.core.util.Direction
-import nova.core.util.transform.{Vector3d, Vector3i}
+import nova.core.util.transform.Vector3i
 
 class ItemModuleArray extends ItemModule {
+
+	override def getID: String = "moduleArray"
 
 	override def onCalculateExterior(projector: FieldMatrix, structure: Structure) {
 		generateArray(projector, structure)
@@ -19,29 +21,35 @@ class ItemModuleArray extends ItemModule {
 	}
 
 	def generateArray(projector: FieldMatrix, structure: Structure) {
-		structure.postStructure = (field: Set[Vector3i]) => {
-			val longestDirectional = getDirectionWidthMap(field)
+		structure.postStructure = structure.postStructure.compose(
+			(field: Set[Vector3i]) => {
+				var newField = Set.empty[Vector3i]
+				val longestDirectional = getDirectionWidthMap(field)
 
-			Direction.DIRECTIONS.foreach(
-				dir => {
-					val copyAmount = projector.getSidedModuleCount(this, dir)
-					val directionalDisplacement = Math.abs(longestDirectional(dir)) + Math.abs(longestDirectional(dir.getOpposite)) + 1
+				//TODO: Execute concurrently. Test speed.
+				Direction.DIRECTIONS.foreach(
+					dir => {
+						val copyAmount = projector.getSidedModuleCount(this, dir)
+						val directionalDisplacement = Math.abs(longestDirectional(dir)) + Math.abs(longestDirectional(dir.opposite)) + 1
 
-					(0 until copyAmount).foreach(
-						i => {
-							val dirDisplacementScale = directionalDisplacement * (i + 1)
+						(0 until copyAmount).foreach(
+							i => {
+								val dirDisplacementScale = directionalDisplacement * (i + 1)
 
-							field.foreach(
-								originalFieldBlock => {
-									val newFieldBlock: Vector3d = originalFieldBlock.clone + (new Vector3i(dir) * dirDisplacementScale)
-									interior.add(newFieldBlock)
-								}
-							)
-						}
-					)
-				}
-			)
-		}
+								field.foreach(
+									originalFieldBlock => {
+										val newFieldBlock = originalFieldBlock + (dir.toVector * dirDisplacementScale)
+										newField += newFieldBlock
+									}
+								)
+							}
+						)
+					}
+				)
+
+				return newField
+			}
+		)
 	}
 
 	def getDirectionWidthMap(field: Set[Vector3i]): Map[Direction, Int] = {
