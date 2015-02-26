@@ -19,4 +19,7 @@ object Textures extends ContentLoader {
 	val projectorOn = new BlockTexture(Reference.domain, "electromagneticProjector_on.png")
 	val projectorOff = new BlockTexture(Reference.domain, "electromagneticProjector_off.png")
 
+	val biometricOn = new BlockTexture(Reference.domain, "biometricIdentifier_on.png")
+	val biometricOff = new BlockTexture(Reference.domain, "biometricIdentifier_off.png")
+
 }

@@ -9,6 +9,7 @@ import nova.core.render.model.TechneModel
  * @author Calclavia
  */
 object Models extends ContentLoader {
-	val fortronCapacitor = new TechneModel(Reference.domain, "fortronCapacitor.tcn")
-	val projector = new TechneModel(Reference.domain, "electromagneticProjector.tcn")
+	val fortronCapacitor = new TechneModel(Reference.domain, "fortronCapacitor")
+	val projector = new TechneModel(Reference.domain, "electromagneticProjector")
+	val biometric = new TechneModel(Reference.domain, "biometricIdentifier")
 }

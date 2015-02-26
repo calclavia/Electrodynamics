@@ -6,7 +6,7 @@ import mffs.GraphFrequency
 import mffs.api.card.ICoordLink
 import mffs.api.fortron.{Fortron, FortronCapacitor, FortronFrequency}
 import mffs.base.{BlockModuleHandler, PacketBlock}
-import mffs.content.Content
+import mffs.content.{Content, Models, Textures}
 import mffs.util.{FortronUtility, TransferMode}
 import nova.core.block.Block
 import nova.core.fluid.TankProvider

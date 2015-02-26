@@ -244,7 +244,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter {
 
 	def destroyField() {
 		if (Game.instance.networkManager.isServer && calculatedField != null && !isCalculating) {
-			getModules(getModuleSlots: _*).forall(!_.onDestroy(this, calculatedField))
+			getModules(getModuleSlots: _*).forall(!_.onDestroyField(this, calculatedField))
 			//TODO: Parallelism?
 			calculatedField
 				.view

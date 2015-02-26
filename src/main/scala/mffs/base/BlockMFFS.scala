@@ -4,9 +4,8 @@ import java.util.Optional
 
 import com.resonant.core.prefab.block.Rotatable
 import com.resonant.wrapper.core.Placeholder
-import com.resonant.wrapper.core.api.tile.IPlayerUsing
 import mffs.api.machine.IActivatable
-import mffs.content.Content
+import mffs.content.Textures
 import nova.core.block.Block
 import nova.core.block.components.Stateful
 import nova.core.entity.Entity
@@ -22,7 +21,7 @@ import nova.core.util.transform.{Vector3d, Vector3i}
  * A base block class for all MFFS blocks to inherit.
  * @author Calclavia
  */
-abstract class BlockMFFS extends Block with PacketHandler with IActivatable with IPlayerUsing with Stateful with Storable {
+abstract class BlockMFFS extends Block with PacketHandler with IActivatable with Stateful with Storable {
 	/**
 	 * Used for client side animations.
 	 */
@@ -44,23 +43,25 @@ abstract class BlockMFFS extends Block with PacketHandler with IActivatable with
 	//	blockResistance = 100f
 	//	stepSound = Block.soundTypeMetal
 
-	override def getTexture(side: Direction): Optional[Texture] = Optional.of(Content.machineTexture)
+	override def getTexture(side: Direction): Optional[Texture] = Optional.of(Textures.machine)
 
 	override def isOpaqueCube: Boolean = false
 
 	//	override def getExplosionResistance(entity: Entity): Float = 100
 
-	override def read(id: Int, buf: Packet) {
-		if (id == PacketBlock.description.id) {
+	override def read(packet: Packet) {
+		super.read(packet)
+
+		if (packet.getID == PacketBlock.description.ordinal) {
 			val prevActive = active
-			active = buf.readBoolean()
-			isRedstoneActive = buf.readBoolean()
+			active = packet.readBoolean()
+			isRedstoneActive = packet.readBoolean()
 
 			if (prevActive != this.active) {
 				world.markStaticRender(position())
 			}
 		}
-		else if (id == PacketBlock.toggleActivation.id) {
+		else if (packet.getID == PacketBlock.toggleActivation.ordinal) {
 			isRedstoneActive = !isRedstoneActive
 
 			if (isRedstoneActive) {
@@ -79,10 +80,10 @@ abstract class BlockMFFS extends Block with PacketHandler with IActivatable with
 
 	//TODO: Implement redstone support
 
-	override def write(id: Int, packet: Packet) {
-		super.write(id, packet)
+	override def write(packet: Packet) {
+		super.write(packet)
 
-		if (id == PacketBlock.description.id) {
+		if (packet.getID == PacketBlock.description.ordinal) {
 			packet <<< active
 			packet <<< isRedstoneActive
 		}
@@ -115,7 +116,7 @@ abstract class BlockMFFS extends Block with PacketHandler with IActivatable with
 
 	override def onRightClick(entity: Entity, side: Int, hit: Vector3d): Boolean = {
 		if (Placeholder.isHoldingConfigurator(entity)) {
-			if (Placeholder.isKeyDown(Key.KEY_LSHIFT)) {
+			if (Game.instance.keyManager.isKeyDown(Key.KEY_LSHIFT)) {
 				if (Game.instance.networkManager.isServer) {
 					//TODO: Fix this
 					// InventoryUtility.dropBlockAsItem(world, position)

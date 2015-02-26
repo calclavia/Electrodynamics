@@ -1,9 +1,9 @@
 package mffs.render.fx
 
 import mffs.content.Content
+import nova.core.util.transform.Vector3d
 
-@SideOnly(Side.CLIENT)
-class FXHologram(par1World: World, position: Vector3d, red: Float, green: Float, blue: Float, age: Int) extends FXMFFS(par1World, position.x, position.y, position.z)
+class FXHologram(position: Vector3d, red: Float, green: Float, blue: Float, age: Int) extends FXMFFS(wo, position.x, position.y, position.z)
 {
 	private var targetPosition: Vector3d = null
 
