@@ -37,7 +37,7 @@ abstract class ItemModule extends Item with TooltipItem with Module {
 		return this
 	}
 
-	def getEntitiesInField(projector: Projector): JSet[Entity] = {
+	def getEntitiesInField(projector: Projector): Set[Entity] = {
 		val blockProjector = projector.asInstanceOf[BlockProjector]
 		val bound = new Cuboid(-projector.getNegativeScale, projector.getPositiveScale + Vector3d.one) + blockProjector.position() + projector.getTranslation
 

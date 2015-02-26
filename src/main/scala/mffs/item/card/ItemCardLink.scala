@@ -1,76 +1,69 @@
 package mffs.item.card
 
-import java.util.List
+import java.util
+import java.util.Optional
+
+import mffs.api.card.ICoordLink
+import nova.core.entity.Entity
+import nova.core.game.Game
+import nova.core.player.Player
+import nova.core.retention.{Storable, Stored}
+import nova.core.util.Direction
+import nova.core.util.collection.Pair
+import nova.core.util.transform.{Vector3d, Vector3i}
+import nova.core.world.World
 
 /**
  * A linking card used to link machines in specific positions.
  *
  * @author Calclavia
  */
-class ItemCardLink extends ItemCard with ICoordLink
-{
-  @SideOnly(Side.CLIENT)
-  override def addInformation(Item: Item, entityplayer: EntityPlayer, list: List[_], flag: Boolean)
-  {
-	  super.addInformation(Item, entityplayer, list, flag)
+class ItemCardLink extends ItemCard with ICoordLink with Storable {
 
-	  if (hasLink(Item))
-    {
-		val vec: VectorWorld = getLink(Item)
-      val block = vec.getBlock(entityplayer.worldObj)
+	@Stored
+	var linkWorld: World = null
+	@Stored
+	var linkPos: Vector3i = null
 
-      if (block != null)
-      {
-        list.add("info.item.linkedWith".getLocal + " " + block.getLocalizedName)
-      }
+	override def setLink(world: World, position: Vector3i) {
+		linkWorld = world
+		linkPos = position
+	}
 
-      list.add(vec.xi + ", " + vec.yi + ", " + vec.zi)
-      list.add("info.item.dimension".getLocal + " " + vec.world.provider.getDimensionName)
-    }
-    else
-    {
-      list.add("info.item.notLinked".getLocal)
-    }
-  }
+	override def getLink: Pair[World, Vector3i] = new Pair(linkWorld, linkPos)
 
-	def hasLink(Item: Item): Boolean = getLink(Item) != null
+	override def getTooltips(player: Optional[Player], tooltips: util.List[String]) {
+		super.getTooltips(player, tooltips)
 
-	def getLink(Item: Item): VectorWorld =
-  {
-	  if (Item.stackTagCompound == null || !Item.getTagCompound.hasKey("link"))
-    {
-      return null
-    }
-	  return new VectorWorld(Item.getTagCompound.getCompoundTag("link"))
-  }
+		if (linkWorld != null && linkPos != null) {
+			val block = linkWorld.getBlock(linkPos)
 
-	override def onItemUse(Item: Item, player: EntityPlayer, world: World, x: Int, y: Int, z: Int, par7: Int, par8: Float, par9: Float, par10: Float): Boolean =
-  {
-	  if (Game.instance.networkManager.isServer)
-    {
-      val vector: VectorWorld = new VectorWorld(world, x, y, z)
-		this.setLink(Item, vector)
+			if (block.isPresent) {
+				tooltips.add(Game.instance.languageManager.getLocal("info.item.linkedWith") + " " + block.get().getID)
+			}
 
-      if (vector.getBlock(world) != null)
-      {
-        player.addChatMessage(new ChatComponentTranslation("info.item.linkedWith", x + ", " + y + ", " + z + " - " + vector.getBlock(world).getLocalizedName))
-      }
-    }
-    return true
-  }
+			tooltips.add(linkPos.x + ", " + linkPos.y + ", " + linkPos.z)
+			tooltips.add(Game.instance.languageManager.getLocal("info.item.dimension") + " " + linkWorld.getID)
+		}
+		else {
+			tooltips.add(Game.instance.languageManager.getLocal("info.item.notLinked"))
+		}
+	}
 
-	def setLink(Item: Item, vec: VectorWorld)
-  {
-	  if (Item.getTagCompound == null)
-    {
-		Item.setTagCompound(new NBTTagCompound)
-    }
+	override def onUse(entity: Entity, world: World, position: Vector3i, side: Direction, hit: Vector3d): Boolean = {
+		super.onUse(entity, world, position, side, hit)
 
-	  Item.getTagCompound.setTag("link", vec.toNBT)
-  }
+		if (Game.instance.networkManager.isServer) {
 
-	def clearLink(Item: Item)
-  {
-	  Item.getTagCompound.removeTag("link")
-  }
+			val block = world.getBlock(position)
+			if (block.isPresent) {
+				linkWorld = world
+				linkPos = position
+				//TODO: Fix chat msg
+				//player.addChatMessage(new ChatComponentTranslation("info.item.linkedWith", x + ", " + y + ", " + z + " - " + vector.getBlock(world).getLocalizedName))
+			}
+		}
+		return true
+	}
+
 }

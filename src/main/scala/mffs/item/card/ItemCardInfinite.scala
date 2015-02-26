@@ -1,8 +1,7 @@
-package mffs.item.fortron
+package mffs.item.card
 
 import java.util.Optional
 
-import mffs.item.card.ItemCard
 import nova.core.fluid.{Tank, TankProvider, TankSimple}
 
 /**
