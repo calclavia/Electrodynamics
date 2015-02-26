@@ -1,15 +1,14 @@
 package mffs.render.fx
 
-import mffs.Reference
+import mffs.content.Textures
+import nova.core.render.Color
+import nova.core.util.transform.Vector3d
 
 /**
  * Based off Thaumcraft's Beam Renderer.
  *
  * @author Calclavia, Azanor
  */
-@SideOnly(Side.CLIENT)
-class FXFortronBeam(world: World, position: Vector3d, target: Vector3d, red: Float, green: Float, blue: Float, age: Int)
-	extends FXBeam(new ResourceLocation(Reference.domain, Reference.blockDirectory + "fortron.png"), world, position, target, red, green, blue, age)
-{
-  noClip = true
+class FXFortronBeam(position: Vector3d, target: Vector3d, color: Color, maxAge: Double)
+	extends FXBeam(Textures.fortron, position, target, color, maxAge) {
 }
