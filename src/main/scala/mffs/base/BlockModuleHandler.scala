@@ -23,18 +23,18 @@ abstract class BlockModuleHandler extends BlockFortron with CacheHandler {
 	protected var capacityBase = 500
 	protected var capacityBoost = 5
 
-	override def write(id: Int, packet: Packet) {
-		super.write(id, packet)
+	override def write(packet: Packet) {
+		super.write(packet)
 
-		if (id == PacketBlock.description.ordinal()) {
+		if (packet.getID == PacketBlock.description) {
 			packet <<< getFortronCost
 		}
 	}
 
-	override def read(id: Int, packet: Packet) {
-		super.read(id, packet)
+	override def read(packet: Packet) {
+		super.read(packet)
 
-		if (id == PacketBlock.description.ordinal()) {
+		if (packet.getID == PacketBlock.description) {
 			clientFortronCost = packet.readInt()
 		}
 	}
@@ -81,6 +81,7 @@ abstract class BlockModuleHandler extends BlockFortron with CacheHandler {
 	 * @param slots The slot IDs. Providing null will search all slots
 	 * @return The number of all item modules in the slots.
 	 */
+
 	def getModuleCount(compareModule: Item, slots: Int*): Int =
 		getOrSetCache(
 			"getModuleCount_" + compareModule.hashCode + (if (slots != null) slots.hashCode() else ""),

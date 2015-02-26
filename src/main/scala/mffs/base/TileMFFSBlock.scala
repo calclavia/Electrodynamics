@@ -1,6 +1,6 @@
 package mffs.base
 
-class TileMFFSBlock extends BlockMFFS
+class TileMFFSBlock extends BlockMachine
 {
   protected var blockIconTop: IIcon = null
   protected var blockIconOn: IIcon = null

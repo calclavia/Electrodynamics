@@ -16,6 +16,7 @@ import nova.core.retention.Stored
 import nova.core.util.Direction
 import nova.core.util.transform._
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
@@ -26,7 +27,7 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 	/**
 	 * Are the directions on the GUI absolute values?
 	 */
-	@Sync(ids = Array(PacketBlock.description.ordinal(), PacketBlock.toggleMode4.ordinal()))
+	@Sync(ids = Array(PacketBlock.description, PacketBlock.toggleMode4))
 	@Stored
 	var absoluteDirection = false
 
@@ -57,6 +58,13 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 
 		return actualDirs.foldLeft(0)((b, a) => b + getModuleCount(module, getDirectionSlots(a): _*))
 	}
+
+	/**
+	 * Gets the number of modules in this block that are in specific slots
+	 * @param slots The slot IDs. Providing null will search all slots
+	 * @return The number of all item modules in the slots.
+	 */
+	override def getModuleCount(compareModule: Item, slots: Int*): Int = super[BlockModuleHandler].getModuleCount(compareModule, slots: _*)
 
 	override def getDirectionSlots(direction: Direction): Array[Int] =
 		direction match {

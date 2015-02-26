@@ -12,61 +12,57 @@ public interface FieldMatrix extends IActivatable, IPermissionProvider {
 	/**
 	 * Gets the mode of the projector, mainly the shape and size of it.
 	 */
-	public StructureProvider getShape();
+	StructureProvider getShape();
 
-	public Item getShapeItem();
+	Item getShapeItem();
 
 	/**
 	 * Gets the slot IDs based on the direction given.
 	 */
-	public int[] getDirectionSlots(Direction direction);
+	int[] getDirectionSlots(Direction direction);
 
 	/**
 	 * Gets the unspecified, direction-unspecific module slots on the left side of the GUI.
 	 */
-	public int[] getModuleSlots();
+	int[] getModuleSlots();
 
 	/**
 	 * @param module - The module instance.
 	 * @param direction - The direction facing.
 	 * @return Gets the amount of modules based on the side.
 	 */
-	public int getSidedModuleCount(Module module, Direction... direction);
+	int getSidedModuleCount(Module module, Direction... direction);
 
-	public int getModuleCount(Module module, int... slots);
-
-	default int getModuleCount(Item module, int... slots) {
-		return getModuleCount((Module) module, slots);
-	}
+	int getModuleCount(Item module, int... slots);
 
 	/**
 	 * Transformation information functions. Returns CACHED information unless the cache is cleared.
 	 * Note that these are all RELATIVE to the projector's position.
 	 */
-	public Vector3d getTranslation();
+	Vector3d getTranslation();
 
-	public Vector3d getPositiveScale();
+	Vector3d getPositiveScale();
 
-	public Vector3d getNegativeScale();
+	Vector3d getNegativeScale();
 
-	public int getRotationYaw();
+	int getRotationYaw();
 
-	public int getRotationPitch();
+	int getRotationPitch();
 
 	/**
 	 * @return Gets all the absolute block coordinates that are occupying the force field. Note that this is a copy of the actual field set.
 	 */
-	public Set<Vector3d> getCalculatedField();
+	Set<Vector3d> getCalculatedField();
 
 	/**
 	 * Gets the absolute interior points of the projector. This might cause lag so call sparingly.
 	 * @return
 	 */
-	public Set<Vector3d> getInteriorPoints();
+	Set<Vector3d> getInteriorPoints();
 
 	/**
 	 * @return Gets the facing direction. Always returns the front side of the block.
 	 */
-	public Direction getDirection();
+	Direction getDirection();
 
 }

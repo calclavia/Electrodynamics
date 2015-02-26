@@ -8,7 +8,7 @@ import nova.core.block.Block
 import nova.core.fluid.{Fluid, SidedTankProvider, Tank, TankSimple}
 import nova.core.game.Game
 import nova.core.network.Sync
-import nova.core.retention.Storable
+import nova.core.retention.Stored
 
 /**
  * A TileEntity that is powered by FortronHelper.
@@ -18,22 +18,16 @@ import nova.core.retention.Storable
 abstract class BlockFortron extends BlockFrequency with SidedTankProvider with FortronFrequency with Updater {
 	var markSendFortron = true
 
-	@Sync(ids = Array(PacketBlock.fortron.ordinal()))
-	@Storable
+	@Sync(ids = Array(PacketBlock.fortron))
+	@Stored
 	protected var fortronTank = new TankSimple(Fluid.bucketVolume)
 
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)
 
 		if (Game.instance.networkManager.isServer && ticks % 60 == 0) {
-			sendFortronToClients
+			Game.instance.networkManager.sync(PacketBlock.fortron, this)
 		}
-	}
-
-	@deprecated
-	def sendFortronToClients {
-		Game.instance.networkManager.sync(PacketBlock.fortron.ordinal(), this)
-		//this.worldObj, position, 25)
 	}
 
 	override def unload() {
@@ -44,7 +38,8 @@ abstract class BlockFortron extends BlockFrequency with SidedTankProvider with F
 				GraphFrequency.instance.get(getFrequency)
 					.collect { case f: FortronFrequency with Block => f}
 					.filter(_.world() == world())
-					.filter(_.position().distance(position()) < 100),
+					.filter(_.position().distance(position()) < 100)
+					.map(_.asInstanceOf[FortronFrequency]),
 				TransferMode.drain,
 				Integer.MAX_VALUE
 			)

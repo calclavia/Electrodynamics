@@ -21,7 +21,7 @@ import nova.core.util.transform.{Vector3d, Vector3i}
  * A base block class for all MFFS blocks to inherit.
  * @author Calclavia
  */
-abstract class BlockMFFS extends Block with PacketHandler with IActivatable with Stateful with Storable {
+abstract class BlockMachine extends Block with PacketHandler with IActivatable with Stateful with Storable {
 	/**
 	 * Used for client side animations.
 	 */
@@ -52,7 +52,7 @@ abstract class BlockMFFS extends Block with PacketHandler with IActivatable with
 	override def read(packet: Packet) {
 		super.read(packet)
 
-		if (packet.getID == PacketBlock.description.ordinal) {
+		if (packet.getID == PacketBlock.description) {
 			val prevActive = active
 			active = packet.readBoolean()
 			isRedstoneActive = packet.readBoolean()
@@ -61,7 +61,7 @@ abstract class BlockMFFS extends Block with PacketHandler with IActivatable with
 				world.markStaticRender(position())
 			}
 		}
-		else if (packet.getID == PacketBlock.toggleActivation.ordinal) {
+		else if (packet.getID == PacketBlock.toggleActivation) {
 			isRedstoneActive = !isRedstoneActive
 
 			if (isRedstoneActive) {
@@ -83,7 +83,7 @@ abstract class BlockMFFS extends Block with PacketHandler with IActivatable with
 	override def write(packet: Packet) {
 		super.write(packet)
 
-		if (packet.getID == PacketBlock.description.ordinal) {
+		if (packet.getID == PacketBlock.description) {
 			packet <<< active
 			packet <<< isRedstoneActive
 		}

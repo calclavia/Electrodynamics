@@ -2,6 +2,7 @@ package mffs.base
 
 import java.util.{Set => JSet}
 
+import com.resonant.core.prefab.block.InventorySimpleProvider
 import mffs.GraphFrequency
 import mffs.api.Frequency
 import mffs.item.card.ItemCardFrequency
@@ -11,7 +12,7 @@ import nova.core.item.Item
  * All blocks that have a frequency value should extend this
  * @author Calclavia
  */
-abstract class BlockFrequency extends BlockInventory with Frequency {
+abstract class BlockFrequency extends BlockMachine with Frequency with InventorySimpleProvider {
 	val frequencySlot = 0
 
 	override def load() {

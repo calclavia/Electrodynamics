@@ -16,6 +16,7 @@ import nova.core.item.Item
 import nova.core.network.{Packet, Sync}
 import nova.core.render.Color
 import nova.core.render.model.{Model, Vertex}
+import nova.core.retention.Stored
 import nova.core.util.transform.{Cuboid, MatrixStack, Vector3d, Vector3i}
 
 import scala.collection.convert.wrapAll._
@@ -35,12 +36,14 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter {
 	private var fieldRequireTicks = false
 
 	/** Are the filters in the projector inverted? */
-	@Sync(ids = Array(PacketBlock.description.ordinal()))
+	@Sync(ids = Array(PacketBlock.description))
 	private var isInverted = false
 
 	capacityBase = 30
 	startModuleIndex = 1
 
+	@Stored
+	@Sync(ids = Array(PacketBlock.description, PacketBlock.inventory))
 	override protected val inventory = new InventorySimple(1 + 25 + 6)
 
 	override def getBoundingBox: Cuboid = new Cuboid(0, 0, 0, 1, 0.8, 1)
