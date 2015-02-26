@@ -6,6 +6,7 @@ import mffs.api.machine.Projector
 import mffs.base.{BlockFieldMatrix, PacketBlock}
 import mffs.content.{Content, Models, Textures}
 import mffs.particle.FieldColor
+import mffs.security.PermissionHandler
 import mffs.util.CacheHandler
 import mffs.{ModularForceFieldSystem, Settings}
 import nova.core.block.Block
@@ -21,7 +22,7 @@ import nova.core.util.transform.{Cuboid, MatrixStack, Vector3d, Vector3i}
 
 import scala.collection.convert.wrapAll._
 
-class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter {
+class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter with PermissionHandler {
 
 	/** A set containing all positions of all force field blocks generated. */
 	var forceFields = Set.empty[Vector3i]
@@ -93,7 +94,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter {
 				val pos = position.toDouble + 0.5
 
 				if (packetType == 1) {
-					world.createClientEntity(Content.fxFortron)
+					world.createClientEntity(Content.fxFortron).setPosition(pos)
 					ModularForceFieldSystem.proxy.renderBeam(this.worldObj, pos, target, FieldColor.blue, 40)
 					ModularForceFieldSystem.proxy.renderHologramMoving(this.worldObj, target, FieldColor.blue, 50)
 				}

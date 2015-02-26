@@ -1,199 +1,125 @@
 package mffs.field
 
 import java.util
+import java.util.Optional
 
-import mffs.ModularForceFieldSystem
 import mffs.api.machine.ForceField
-import mffs.content.Content
+import mffs.api.modules.Module
+import mffs.content.{Content, Textures}
 import mffs.security.MFFSPermissions
 import mffs.util.MFFSUtility
 import nova.core.block.Block
+import nova.core.block.components.LightEmitter
 import nova.core.entity.Entity
+import nova.core.entity.components.Damageable
 import nova.core.game.Game
-import nova.core.item.Item
-import nova.core.network.PacketHandler
-import nova.core.util.transform.{Vector3d, Vector3i}
+import nova.core.item.{Item, ItemBlock}
+import nova.core.network.{PacketHandler, Sync}
+import nova.core.player.Player
+import nova.core.render.model.Model
+import nova.core.render.texture.Texture
+import nova.core.retention.{Storable, Stored}
+import nova.core.util.Direction
+import nova.core.util.transform.{Cuboid, Vector3i}
 
 import scala.collection.convert.wrapAll._
 
-class BlockForceField extends Block with PacketHandler with ForceField {
-	private var camoStack: Item = null
-	private var projector: Vector3d = null
+class BlockForceField extends Block with PacketHandler with ForceField with LightEmitter with Storable {
+
+	@Stored
+	@Sync
+	private var camoItem: ItemBlock = null
+	@Stored
+	@Sync
+	private var projector: Vector3i = null
 
 	/**
 	 * Constructor
 	 */
-	blockHardness = -1
-	blockResistance = Float.MaxValue
-	creativeTab = null
-	normalRender = false
+	override def getHardness: Double = Double.PositiveInfinity
+
+	override def getResistance: Double = Double.PositiveInfinity
 
 	override def isCube: Boolean = false
-
-	override def canSilkHarvest(player: EntityPlayer, metadata: Int): Boolean = false
 
 	override def getDrops: util.Collection[Item] = List.empty
 
 	/**
 	 * Rendering
 	 */
-	override def getRenderBlockPass: Int = 1
+	override def renderStatic(model: Model) {
+		//TODO: Render pass?
 
-	@SideOnly(Side.CLIENT)
-	override def renderStatic(renderer: RenderBlocks, pos: Vector3d, pass: Int): Boolean = {
-		var renderType = 0
-		var camoBlock: Block = null
-		val tileEntity = access.getTileEntity(x, y, z)
-
-		if (camoStack != null && camoStack.getItem().isInstanceOf[ItemBlock]) {
-			camoBlock = camoStack.getItem().asInstanceOf[ItemBlock].field_150939_a
-
-			if (camoBlock != null) {
-				renderType = camoBlock.getRenderType()
-			}
+		if (camoItem != null) {
+			val camoBlock = camoItem.block
+			camoBlock.renderStatic(model)
 		}
+		else {
+			super.renderStatic(model)
+		}
+	}
 
-		if (renderType >= 0) {
+	override def shouldRenderSide(side: Direction): Boolean = {
+		if (camoItem != null) {
 			try {
-				if (camoBlock != null) {
-					renderer.setRenderBoundsFromBlock(camoBlock)
-				}
-
-				renderType match {
-					case 4 =>
-						renderer.renderBlockLiquid(block, x, y, z)
-					case 31 =>
-						renderer.renderBlockLog(block, x, y, z)
-					case 1 =>
-						renderer.renderCrossedSquares(block, x, y, z)
-					case 20 =>
-						renderer.renderBlockVine(block, x, y, z)
-					case 39 =>
-						renderer.renderBlockQuartz(block, x, y, z)
-					case 5 =>
-						renderer.renderBlockRedstoneWire(block, x, y, z)
-					case 13 =>
-						renderer.renderBlockCactus(block, x, y, z)
-					case 23 =>
-						renderer.renderBlockLilyPad(block, x, y, z)
-					case 6 =>
-						renderer.renderBlockCrops(block, x, y, z)
-					case 7 =>
-						renderer.renderBlockDoor(block, x, y, z)
-					case 12 =>
-						renderer.renderBlockLever(block, x, y, z)
-					case 29 =>
-						renderer.renderBlockTripWireSource(block, x, y, z)
-					case 30 =>
-						renderer.renderBlockTripWire(block, x, y, z)
-					case 14 =>
-						renderer.renderBlockBed(block, x, y, z)
-					case 16 =>
-						renderer.renderPistonBase(block, x, y, z, false)
-					case 17 =>
-						renderer.renderPistonExtension(block, x, y, z, true)
-					case _ =>
-						super.renderStatic(renderer, pos, pass)
-				}
+				val block = camoItem.block
+				return block.shouldRenderSide(side)
 			}
 			catch {
-				case e: Exception => {
-					if (camoStack != null && camoBlock != null) {
-						renderer.renderBlockAsItem(camoBlock, camoStack.getItemDamage, 1)
-					}
-				}
+				case e: Exception =>
+					e.printStackTrace()
 			}
 			return true
 		}
 
-		return false
+		val block = blockAccess().getBlock(position + side.toVector)
+		return if (block.isPresent) sameType(block.get()) else true
 	}
 
-	/**
-	 * Block Logic
-	 */
-	@SideOnly(Side.CLIENT)
-	override def shouldSideBeRendered(access: IBlockAccess, x: Int, y: Int, z: Int, side: Int): Boolean = {
-		if (camoStack != null) {
-			try {
-				val block = camoStack.getItem.asInstanceOf[ItemBlock].field_150939_a
-				return block.shouldSideBeRendered(access, x, y, z, side)
-			}
-			catch {
-				case e: Exception => {
-					e.printStackTrace
-				}
-			}
-			return true
-		}
-
-		return if (access.getBlock(x, y, z) == block) false else super.shouldSideBeRendered(access, x, y, z, side)
-	}
-
-	override def click(player: EntityPlayer) {
-		val projector = getProjector
-
-		if (projector != null) {
-			projector.getModuleStacks(projector.getModuleSlots(): _*) forall (stack => stack.getItem.asInstanceOf[IModule].onCollideWithForceField(world, x, y, z, player, stack))
-		}
-	}
-
-	override def getCollisionBoxes(intersect: Cuboid, entity: Entity): Iterable[Cuboid] = {
-		//TODO: Check if the entity filter actually works...
+	override def getCollidingBoxes(intersect: Cuboid, entity: Optional[Entity]): util.Set[Cuboid] = {
 		val projector = getProjector()
 
-		if (projector != null && entity.isInstanceOf[EntityPlayer]) {
+		if (projector != null && entity.isPresent && entity.get.isInstanceOf[Player]) {
 			val biometricIdentifier = projector.getBiometricIdentifier
-			val entityPlayer = entity.asInstanceOf[EntityPlayer]
+			val entityPlayer = entity.get.asInstanceOf[Player]
 
-			if (entityPlayer.isSneaking) {
-				if (entityPlayer.capabilities.isCreativeMode) {
+			if (biometricIdentifier != null) {
+				if (biometricIdentifier.hasPermission(entityPlayer.getID, MFFSPermissions.forceFieldWarp)) {
 					return null
 				}
-				else if (biometricIdentifier != null) {
-					if (biometricIdentifier.hasPermission(entityPlayer.getGameProfile, MFFSPermissions.forceFieldWarp)) {
-						return null
-					}
-				}
 			}
+
 		}
 
-		return super.getCollisionBoxes(intersect, entity)
+		super.getCollidingBoxes(intersect, entity)
 	}
 
-	override def collide(entity: Entity) {
+	override def onEntityCollide(entity: Entity) {
 		val projector = getProjector()
 
 		if (projector != null) {
-			if (!projector.getModuleStacks(projector.getModuleSlots(): _*).forall(stack => stack.getItem().asInstanceOf[IModule].onCollideWithForceField(world, x, y, z, entity, stack))) {
+			if (!projector.getModules().forall(stack => stack.asInstanceOf[Module].onFieldCollide(this, entity))) {
 				return
 			}
 
 			val biometricIdentifier = projector.getBiometricIdentifier
 
-			if (center.distance(new Vector3d(entity)) < 0.5) {
-				if (Game.instance.networkManager.isServer && entity.isInstanceOf[EntityLiving]) {
-					val entityLiving = entity.asInstanceOf[EntityLiving]
+			if ((position().toDouble + 0.5).distance(entity.position()) < 0.5) {
+				if (Game.instance.networkManager.isServer && entity.isInstanceOf[Damageable]) {
+					val entityLiving = entity.asInstanceOf[Damageable]
 
-					entityLiving.addPotionEffect(new PotionEffect(Potion.confusion.id, 4 * 20, 3))
-					entityLiving.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 20, 1))
+					//					entityLiving.addPotionEffect(new PotionEffect(Potion.confusion.id, 4 * 20, 3))
+					//					entityLiving.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 20, 1))
 
-					if (entity.isInstanceOf[EntityPlayer]) {
-						val player = entity.asInstanceOf[EntityPlayer]
+					if (entity.isInstanceOf[Player]) {
+						val player = entity.asInstanceOf[Player]
 
-						if (player.isSneaking) {
-							if (player.capabilities.isCreativeMode) {
+						if (biometricIdentifier != null) {
+							if (biometricIdentifier.hasPermission(player.getID, MFFSPermissions.forceFieldWarp)) {
 								return
-							}
-							else if (biometricIdentifier != null) {
-								if (biometricIdentifier.hasPermission(player.getGameProfile, MFFSPermissions.forceFieldWarp)) {
-									return
-								}
 							}
 						}
 					}
-
-					entity.attackEntityFrom(ModularForceFieldSystem.damageFieldShock, 100)
 				}
 			}
 		}
@@ -210,7 +136,7 @@ class BlockForceField extends Block with PacketHandler with ForceField {
 		}
 
 		if (Game.instance.networkManager.isServer) {
-			world.setBlock(xCoord, yCoord, zCoord, Blocks.air)
+			world.setBlock(position, Game.instance.blockManager.getAirBlock)
 		}
 
 		return null
@@ -218,74 +144,31 @@ class BlockForceField extends Block with PacketHandler with ForceField {
 
 	def getProjectorSafe: BlockProjector = {
 		if (projector != null) {
-			val projTile = projector.getTileEntity(world)
 
-			if (projTile.isInstanceOf[BlockProjector]) {
-				val projector = projTile.asInstanceOf[IProjector]
-				if (world.isRemote || (projector.getCalculatedField != null && projector.getCalculatedField.contains(position))) {
-					return projTile.asInstanceOf[BlockProjector]
+			val projBlock = world.getBlock(projector)
+			if (projBlock.isPresent) {
+				val proj = projBlock.get().asInstanceOf[BlockProjector]
+				if (Game.instance.networkManager.isClient || (proj.getCalculatedField != null && proj.getCalculatedField.contains(position))) {
+					return proj
 				}
 			}
 		}
+
 		return null
 	}
 
-	@SideOnly(Side.CLIENT)
-	override def getIcon(access: IBlockAccess, side: Int): IIcon = {
-		if (camoStack != null) {
-			try {
-				val block = camoStack.getItem().asInstanceOf[ItemBlock].field_150939_a
-				val icon = block.getIcon(side, camoStack.getItemDamage)
+	override def getTexture(side: Direction): Optional[Texture] = Optional.of(Textures.forceField)
 
-				if (icon != null) {
-					return icon
-				}
-			}
-			catch {
-				case e: Exception => {
-					e.printStackTrace
-				}
-			}
-		}
-
-		return super.getIcon(access, side)
-	}
-
-	/**
-	 * Returns a integer with hex for 0xrrggbb with this color multiplied against the blocks color.
-	 * Note only called when first determining what to render.
-	 */
-	override def colorMultiplier: Int = {
-		if (camoStack != null) {
-			try {
-				return camoStack.getItem().asInstanceOf[ItemBlock].field_150939_a.colorMultiplier(access, x, y, z)
-			}
-			catch {
-				case e: Exception => {
-					e.printStackTrace
-				}
-			}
-		}
-		return super.colorMultiplier
-	}
-
-	override def getLightValue(access: IBlockAccess): Int = {
-		try {
-			val projector = getProjectorSafe
-			if (projector != null) {
-				return ((Math.min(projector.getModuleCount(Content.moduleGlow), 64).asInstanceOf[Float] / 64) * 15f).toInt
-			}
-		}
-		catch {
-			case e: Exception => {
-				e.printStackTrace
-			}
+	override def getEmittedLightLevel: Float = {
+		val projector = getProjectorSafe
+		if (projector != null) {
+			return Math.min(projector.getModuleCount(Content.moduleGlow), 64) / 64f
 		}
 
 		return 0
 	}
 
-	override def getExplosionResistance(entity: Entity): Float = Float.MaxValue
+	override def getID: String = "forceField"
 
 	override def weakenForceField(energy: Int) {
 		val projector = getProjector
@@ -295,40 +178,7 @@ class BlockForceField extends Block with PacketHandler with ForceField {
 		}
 
 		if (Game.instance.networkManager.isServer) {
-			world.setBlockToAir(x, y, z)
-		}
-	}
-
-	override def getPickBlock(target: MovingObjectPosition): Item = null
-
-	/**
-	 * Tile Logic
-	 */
-	override def canUpdate: Boolean = false
-
-	override def getDescriptionPacket: Packet = {
-		if (getProjector() != null) {
-			if (camoStack != null) {
-				val nbt = new NBTTagCompound
-				camoStack.writeToNBT(nbt)
-				return ModularForceFieldSystem.packetHandler.toMCPacket(new PacketTile(this) <<< projector.xi <<< projector.yi <<< projector.zi <<< true <<< nbt)
-			}
-
-			return ModularForceFieldSystem.packetHandler.toMCPacket(new PacketTile(this) <<< projector.xi <<< projector.yi <<< projector.zi <<< false)
-		}
-
-		return null
-	}
-
-	override def read(buf: Packet, id: Int, packetType: PacketType) {
-		super.read(buf, id, packetType)
-
-		setProjector(new Vector3d(buf.readInt, buf.readInt, buf.readInt))
-		markRender()
-		camoStack = null
-
-		if (buf.readBoolean) {
-			camoStack = Item.loadItemFromNBT(buf.readTag())
+			world.setBlock(position(), Game.instance.blockManager.getAirBlock)
 		}
 	}
 
@@ -340,28 +190,9 @@ class BlockForceField extends Block with PacketHandler with ForceField {
 		}
 	}
 
-	/**
-	 * Server Side Only
-	 */
 	def refreshCamoBlock() {
 		if (getProjectorSafe != null) {
-			camoStack = MFFSUtility.getCamoBlock(getProjector, position)
-		}
-	}
-
-	override def readFromNBT(nbt: NBTTagCompound) {
-		super.readFromNBT(nbt)
-		projector = new Vector3d(nbt.getCompoundTag("projector"))
-	}
-
-	/**
-	 * Writes a block entity to NBT.
-	 */
-	override def writeToNBT(nbt: NBTTagCompound) {
-		super.writeToNBT(nbt)
-
-		if (getProjector != null) {
-			nbt.setTag("projector", projector.toNBT)
+			camoItem = MFFSUtility.getCamoBlock(getProjector, position)
 		}
 	}
 }

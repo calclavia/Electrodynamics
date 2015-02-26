@@ -3,7 +3,7 @@ package mffs.production
 import java.util.{HashSet => JHashSet, Set => JSet}
 
 import mffs.GraphFrequency
-import mffs.api.card.ICoordLink
+import mffs.api.card.CoordLink
 import mffs.api.fortron.{Fortron, FortronCapacitor, FortronFrequency}
 import mffs.base.{BlockModuleHandler, PacketBlock}
 import mffs.content.{Content, Models, Textures}
@@ -114,7 +114,7 @@ class BlockFortronCapacitor extends BlockModuleHandler with FortronCapacitor {
 	def getDevicesFromStacks(stacks: Set[Item]): Set[FortronFrequency] =
 		stacks
 			.view
-			.collect { case item: ICoordLink if item.getLink != null => item.getLink}
+			.collect { case item: CoordLink if item.getLink != null => item.getLink}
 			.map(linkPos => linkPos._1.getBlock(linkPos._2))
 			.collect { case op if op.isPresent => op.get()}
 			.collect { case freqBlock: FortronFrequency => freqBlock}

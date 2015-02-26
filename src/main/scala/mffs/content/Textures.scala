@@ -12,6 +12,7 @@ object Textures extends ContentLoader {
 	val machine = new BlockTexture(Reference.domain, "machine")
 	val fortron = new BlockTexture(Reference.domain, "fortron")
 	val hologram = new BlockTexture(Reference.domain, "hologram.png")
+	val forceField = new BlockTexture(Reference.domain, "forceField.png")
 
 	val fortronCapacitorOn = new BlockTexture(Reference.domain, "fortronCapacitor_on.png")
 	val fortronCapacitorOff = new BlockTexture(Reference.domain, "fortronCapacitor_off.png")

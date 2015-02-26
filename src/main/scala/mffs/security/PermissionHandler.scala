@@ -2,7 +2,7 @@ package mffs.security
 
 import com.resonant.core.access.Permission
 import mffs.GraphFrequency
-import mffs.api.card.ICoordLink
+import mffs.api.card.CoordLink
 import mffs.base.BlockFrequency
 import nova.core.entity.Entity
 import nova.core.player.Player
@@ -24,8 +24,8 @@ trait PermissionHandler extends BlockFrequency {
 
 	def getBiometricIdentifiers: Set[BlockBiometric] = {
 		val cardLinks = getConnectionCards.view
-			.filter(item => item != null && item.isInstanceOf[ICoordLink])
-			.map(item => item.asInstanceOf[ICoordLink].getLink())
+			.filter(item => item != null && item.isInstanceOf[CoordLink])
+			.map(item => item.asInstanceOf[CoordLink].getLink())
 			.filter(_ != null)
 			.filter(_.isInstanceOf[BlockBiometric])
 			.map(_.asInstanceOf[BlockBiometric])

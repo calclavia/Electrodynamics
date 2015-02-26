@@ -39,9 +39,11 @@ abstract class BlockMachine extends Block with PacketHandler with IActivatable w
 	@Stored
 	private var active = false
 
-	//	blockHardness = Float.MaxValue
-	//	blockResistance = 100f
 	//	stepSound = Block.soundTypeMetal
+
+	override def getHardness: Double = Double.PositiveInfinity
+
+	override def getResistance: Double = 100
 
 	override def getTexture(side: Direction): Optional[Texture] = Optional.of(Textures.machine)
 

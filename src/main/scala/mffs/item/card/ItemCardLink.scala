@@ -3,7 +3,7 @@ package mffs.item.card
 import java.util
 import java.util.Optional
 
-import mffs.api.card.ICoordLink
+import mffs.api.card.CoordLink
 import nova.core.entity.Entity
 import nova.core.game.Game
 import nova.core.player.Player
@@ -18,7 +18,7 @@ import nova.core.world.World
  *
  * @author Calclavia
  */
-class ItemCardLink extends ItemCard with ICoordLink with Storable {
+class ItemCardLink extends ItemCard with CoordLink with Storable {
 
 	@Stored
 	var linkWorld: World = null

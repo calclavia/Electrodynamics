@@ -3,14 +3,14 @@ package mffs.item
 import java.util.{HashSet, List, Set}
 
 import mffs.ModularForceFieldSystem
-import mffs.api.card.ICoordLink
+import mffs.api.card.CoordLink
 import mffs.item.card.ItemCardFrequency
 import mffs.particle.FieldColor
 import mffs.security.MFFSPermissions
 import mffs.util.MFFSUtility
 import nova.core.item.Item
 
-class ItemRemoteController extends ItemCardFrequency with ICoordLink
+class ItemRemoteController extends ItemCardFrequency with CoordLink
 {
 	private final val remotesCached = new HashSet[Item]
 	private final val temporaryRemoteBlacklist = new HashSet[Item]

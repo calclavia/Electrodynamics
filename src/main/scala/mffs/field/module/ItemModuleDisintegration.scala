@@ -5,12 +5,13 @@ import java.util
 import mffs.api.Blacklist
 import mffs.api.machine.Projector
 import mffs.api.modules.Module.ProjectState
-import mffs.base.{BlockInventory, ItemModule, PacketBlock}
+import mffs.base.{ItemModule, PacketBlock}
 import mffs.content.Content
 import mffs.field.BlockProjector
 import mffs.field.mobilize.event.{BlockDropDelayedEvent, BlockInventoryDropDelayedEvent}
 import mffs.util.MFFSUtility
 import nova.core.game.Game
+import nova.core.inventory.components.InventoryProvider
 import nova.core.util.transform.Vector3i
 
 class ItemModuleDisintegration extends ItemModule {
@@ -46,10 +47,10 @@ class ItemModuleDisintegration extends ItemModule {
 				return ProjectState.pass
 			}
 
-			Game.instance.networkManager.sync(PacketBlock.effect.ordinal(), proj)
+			Game.instance.networkManager.sync(PacketBlock.effect, proj)
 
 			if (projector.getModuleCount(Content.moduleCollection) > 0) {
-				Game.instance.syncTicker.preQueue(new BlockInventoryDropDelayedEvent(39, block, world, position, projector.asInstanceOf[BlockInventory]))
+				Game.instance.syncTicker.preQueue(new BlockInventoryDropDelayedEvent(39, block, world, position, projector.asInstanceOf[InventoryProvider]))
 			}
 			else {
 				Game.instance.syncTicker.preQueue(new BlockDropDelayedEvent(39, block, world, position))
