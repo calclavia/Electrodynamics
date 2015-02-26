@@ -1,4 +1,4 @@
-package mffs.render.fx
+package mffs.particle
 
 import mffs.content.Textures
 import nova.core.render.Color

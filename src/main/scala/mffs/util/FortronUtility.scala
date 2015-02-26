@@ -3,7 +3,7 @@ package mffs.util
 import mffs.api.fortron.FortronFrequency
 import mffs.base.BlockModuleHandler
 import mffs.content.Content
-import mffs.render.FieldColor
+import mffs.particle.FieldColor
 import mffs.{ModularForceFieldSystem, Settings}
 import nova.core.block.Block
 import nova.core.game.Game

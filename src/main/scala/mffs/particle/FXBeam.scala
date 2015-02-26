@@ -1,4 +1,4 @@
-package mffs.render.fx
+package mffs.particle
 
 import com.resonant.core.prefab.block.Updater
 import net.minecraft.util.MathHelper

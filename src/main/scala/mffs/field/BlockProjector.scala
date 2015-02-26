@@ -5,7 +5,7 @@ import java.util.{Optional, Set => JSet}
 import mffs.api.machine.Projector
 import mffs.base.{BlockFieldMatrix, PacketBlock}
 import mffs.content.{Content, Models, Textures}
-import mffs.render.FieldColor
+import mffs.particle.FieldColor
 import mffs.util.CacheHandler
 import mffs.{ModularForceFieldSystem, Settings}
 import nova.core.block.Block

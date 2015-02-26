@@ -1,4 +1,4 @@
-package mffs.render
+package mffs.particle
 
 import nova.core.render.Color
 

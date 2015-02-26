@@ -5,7 +5,7 @@ import java.util.{HashSet, List, Set}
 import mffs.ModularForceFieldSystem
 import mffs.api.card.ICoordLink
 import mffs.item.card.ItemCardFrequency
-import mffs.render.FieldColor
+import mffs.particle.FieldColor
 import mffs.security.MFFSPermissions
 import mffs.util.MFFSUtility
 import nova.core.item.Item

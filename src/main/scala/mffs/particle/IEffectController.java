@@ -1,4 +1,4 @@
-package mffs.render.fx;
+package mffs.particle;
 
 /**
  * A class that controls the behaviour of an EntityFx.

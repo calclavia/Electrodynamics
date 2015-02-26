@@ -4,8 +4,7 @@ import mffs.base.{BlockFieldMatrix, PacketBlock}
 import mffs.content.Content
 import mffs.field.mobilize.event.{BlockPreMoveDelayedEvent, DelayedEvent}
 import mffs.item.card.ItemCard
-import mffs.render.FieldColor
-import mffs.render.fx.IEffectController
+import mffs.particle.{FieldColor, IEffectController}
 import mffs.security.MFFSPermissions
 import mffs.util.MFFSUtility
 import mffs.{ModularForceFieldSystem, Reference, Settings}

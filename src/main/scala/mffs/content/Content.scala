@@ -9,9 +9,8 @@ import mffs.field.{BlockForceField, BlockProjector}
 import mffs.item.ItemRemoteController
 import mffs.item.card.{ItemCard, ItemCardFrequency, ItemCardLink}
 import mffs.item.fortron.ItemCardInfinite
+import mffs.particle.{FXFortronBeam, FieldColor}
 import mffs.production.{BlockCoercionDeriver, BlockFortronCapacitor}
-import mffs.render.FieldColor
-import mffs.render.fx.FXFortronBeam
 import mffs.security.BlockBiometric
 import mffs.security.card.ItemCardIdentification
 import mffs.security.module._
