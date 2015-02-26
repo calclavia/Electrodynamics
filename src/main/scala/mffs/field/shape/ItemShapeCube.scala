@@ -1,4 +1,4 @@
-package mffs.field.mode
+package mffs.field.shape
 
 import com.resonant.core.structure.{Structure, StructureCube}
 import mffs.api.machine.Projector

@@ -3,7 +3,7 @@ package mffs.util
 import com.resonant.core.access.Permission
 import mffs.content.Content
 import mffs.field.BlockProjector
-import mffs.field.mode.ItemShapeCustom
+import mffs.field.shape.ItemShapeCustom
 import nova.core.block.Block
 import nova.core.entity.Entity
 import nova.core.item.{Item, ItemBlock}

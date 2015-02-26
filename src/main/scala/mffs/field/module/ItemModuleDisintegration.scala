@@ -52,7 +52,7 @@ class ItemModuleDisintegration extends ItemModule {
 				Game.instance.syncTicker.preQueue(new BlockInventoryDropDelayedEvent(39, block, world, position, projector.asInstanceOf[BlockInventory]))
 			}
 			else {
-				Game.instance.syncTicker.preQueue(new BlockDropDelayedEvent(39, block, world, position)))
+				Game.instance.syncTicker.preQueue(new BlockDropDelayedEvent(39, block, world, position))
 			}
 
 			blockCount += 1

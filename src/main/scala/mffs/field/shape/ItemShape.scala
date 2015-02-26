@@ -1,4 +1,4 @@
-package mffs.field.mode
+package mffs.field.shape
 
 import mffs.api.modules.StructureProvider
 import nova.core.item.Item

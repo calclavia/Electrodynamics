@@ -4,8 +4,8 @@ import com.resonant.core.prefab.modcontent.{ContentLoader, RecipeHolder}
 import mffs.Settings
 import mffs.base.{ItemModule, Named}
 import mffs.field.mobilize.BlockMobilizer
-import mffs.field.mode._
 import mffs.field.module._
+import mffs.field.shape._
 import mffs.field.{BlockForceField, BlockProjector}
 import mffs.item.ItemRemoteController
 import mffs.item.card.{ItemCard, ItemCardFrequency, ItemCardLink}

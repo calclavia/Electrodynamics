@@ -8,7 +8,7 @@ import mffs.api.modules.Module.ProjectState
 import mffs.base.{ItemModule, PacketBlock}
 import mffs.content.Content
 import mffs.field.BlockProjector
-import mffs.field.mode.ItemShapeCustom
+import mffs.field.shape.ItemShapeCustom
 import nova.core.block.Block
 import nova.core.game.Game
 import nova.core.inventory.Inventory
