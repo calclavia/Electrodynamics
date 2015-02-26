@@ -1,52 +1,50 @@
 package mffs.render.fx
 
-import mffs.content.Content
+import com.resonant.core.prefab.block.Updater
+import mffs.content.Textures
+import nova.core.entity.Entity
+import nova.core.render.Color
+import nova.core.render.model.{BlockModelUtil, Model}
+import nova.core.util.transform.Vector3d
 
-@SideOnly(Side.CLIENT)
-class FXHologramMoving(par1World: World, position: Vector3d, red: Float, green: Float, blue: Float, age: Int) extends EntityFX(par1World, position.x, position.y, position.z)
-{
-  this.setRBGColorF(red, green, blue)
-  this.particleMaxAge = age
-  this.noClip = true
+import scala.collection.convert.wrapAll._
 
-  override def onUpdate
-  {
-    prevPosX = posX
-    prevPosY = posY
-    prevPosZ = posZ
-    particleAge += 1
+class FXHologramMoving(pos: Vector3d, color: Color, maxAge: Double) extends Entity with Updater {
+	var prevPos = pos
+	var age = 0d
 
-    if (particleAge - 1 >= this.particleMaxAge)
-    {
-      setDead()
-    }
-  }
+	setPosition(pos)
 
-  override def renderParticle(tessellator: Tessellator, f: Float, f1: Float, f2: Float, f3: Float, f4: Float, f5: Float)
-  {
-    tessellator.draw
-    GL11.glPushMatrix
-    val xx: Float = (this.prevPosX + (this.posX - this.prevPosX) * f - EntityFX.interpPosX).asInstanceOf[Float]
-    val yy: Float = (this.prevPosY + (this.posY - this.prevPosY) * f - EntityFX.interpPosY).asInstanceOf[Float]
-    val zz: Float = (this.prevPosZ + (this.posZ - this.prevPosZ) * f - EntityFX.interpPosZ).asInstanceOf[Float]
-    GL11.glTranslated(xx, yy, zz)
-    GL11.glScalef(1.01f, 1.01f, 1.01f)
-    val completion: Double = this.particleAge.asInstanceOf[Double] / this.particleMaxAge.asInstanceOf[Double]
-    GL11.glTranslated(0, (completion - 1) / 2, 0)
-    GL11.glScaled(1, completion, 1)
-    var op: Float = 0.5f
-    if ((this.particleMaxAge - this.particleAge <= 4))
-    {
-      op = 0.5f - (5 - (this.particleMaxAge - this.particleAge)) * 0.1F
-    }
-    GL11.glColor4d(this.particleRed, this.particleGreen, this.particleBlue, op * 2)
-    OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F)
-    RenderUtility.enableBlending
-    RenderUtility.setTerrainTexture
-    RenderUtility.renderNormalBlockAsItem(Content.forceField, 0, new RenderBlocks)
-    RenderUtility.disableBlending
-    GL11.glPopMatrix
-    tessellator.startDrawingQuads
-    FMLClientHandler.instance.getClient.renderEngine.bindTexture(RenderUtility.PARTICLE_RESOURCE)
-  }
+	override def getID: String = "hologramMoving"
+
+	override def update(deltaTime: Double) {
+		super.update(deltaTime)
+		prevPos = position
+
+		age += deltaTime
+
+		if (age > maxAge) {
+			world.destroyEntity(this)
+		}
+	}
+
+	override def render(model: Model) {
+		//		GL11.glPushMatrix
+		val completion = age / maxAge
+		model.translate(0, (completion - 1) / 2, 0)
+		model.scale(1, completion, 1)
+
+		var op = 0.5
+
+		if (maxAge - age <= 4) {
+			op = 0.5f - (5 - (maxAge - age)) * 0.1F
+		}
+
+		//		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F)
+		//		RenderUtility.enableBlending
+		BlockModelUtil.drawCube(model)
+		model.bindAll(Textures.hologram)
+		model.faces.foreach(_.vertices.foreach(_.setColor(color.alpha((op * 255).toInt))))
+		//		RenderUtility.disableBlending
+	}
 }
