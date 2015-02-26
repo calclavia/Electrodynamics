@@ -99,7 +99,7 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 
 	def getScale = (getPositiveScale + getNegativeScale) / 2
 
-	def getPositiveScale: Vector3d =
+	def getPositiveScale: Vector3i =
 		getOrSetCache("getPositiveScale", () => {
 			var zScalePos = 0
 			var xScalePos = 0
@@ -124,10 +124,10 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 			xScalePos += omnidirectionalScale
 			yScalePos += omnidirectionalScale
 
-			return new Vector3d(xScalePos, yScalePos, zScalePos)
+			return new Vector3i(xScalePos, yScalePos, zScalePos)
 		})
 
-	def getNegativeScale: Vector3d =
+	def getNegativeScale: Vector3i =
 		getOrSetCache("getNegativeScale", () => {
 			var zScaleNeg = 0
 			var xScaleNeg = 0
@@ -151,12 +151,10 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 			xScaleNeg += omnidirectionalScale
 			yScaleNeg += omnidirectionalScale
 
-			return new Vector3d(xScaleNeg, yScaleNeg, zScaleNeg)
+			return new Vector3i(xScaleNeg, yScaleNeg, zScaleNeg)
 		})
 
-
-
-	def getTranslation: Vector3d =
+	def getTranslation: Vector3i =
 		getOrSetCache("getTranslation", () => {
 
 			val direction = getDirection
@@ -185,7 +183,7 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 				yTranslationNeg = getModuleCount(Content.moduleTranslate, getDirectionSlots(Direction.DOWN): _*)
 			}
 
-			return new Vector3d(xTranslationPos - xTranslationNeg, yTranslationPos - yTranslationNeg, zTranslationPos - zTranslationNeg)
+			return new Vector3i(xTranslationPos - xTranslationNeg, yTranslationPos - yTranslationNeg, zTranslationPos - zTranslationNeg)
 		})
 
 	/**
@@ -249,8 +247,8 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 	def getStructure: Structure = {
 		val structure = getShapeItem.getStructure
 		structure.setBlock(Optional.of(Content.forceField))
-		structure.setTranslate(getTranslation + position.toDouble)
-		structure.setScale(getScale)
+		structure.setTranslate((getTranslation + position).toDouble)
+		structure.setScale(getScale.toDouble)
 		structure.setRotation(getRotation)
 		return structure
 	}

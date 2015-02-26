@@ -23,4 +23,7 @@ object Textures extends ContentLoader {
 	val biometricOn = new BlockTexture(Reference.domain, "biometricIdentifier_on.png")
 	val biometricOff = new BlockTexture(Reference.domain, "biometricIdentifier_off.png")
 
+	val mobilizerOn = new BlockTexture(Reference.domain, "forceMobilizer_on.png")
+	val mobilizerOff = new BlockTexture(Reference.domain, "forceMobilizer_off.png")
+
 }

@@ -102,7 +102,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter w
 					ModularForceFieldSystem.proxy.renderHologramMoving(this.worldObj, vector, FieldColor.red, 50)
 				}
 			}
-			else if (packet.getID == PacketBlock.field.ordinal()) {
+			else if (packet.getID == PacketBlock.field) {
 				//Receives the entire force field
 				//				val nbt = PacketUtils.readTag(packet)
 				//				val nbtList = nbt.getTagList("blockList", 10)
