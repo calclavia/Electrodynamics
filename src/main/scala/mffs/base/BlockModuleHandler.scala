@@ -109,10 +109,10 @@ abstract class BlockModuleHandler extends BlockFortron with CacheHandler {
 				val modules = getModules()
 
 				if (modules.size > 0) {
-					compareModule.withAmount(modules.count(compareModule.sameItemType))
+					return compareModule.withAmount(modules.count(compareModule.sameItemType)).asInstanceOf[Item with Module]
 				}
 				else {
-					null
+					return null
 				}
 			}
 		)

@@ -68,40 +68,41 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter {
 	override def write(packet: Packet) {
 		super.write(packet)
 		packet.getID match {
-			case PacketBlock.field.ordinal =>
+			case PacketBlock.field =>
 			/*
 			val nbt = new NBTTagCompound
 			val nbtList = new NBTTagList
 			calculatedField foreach (vec => nbtList.appendTag(vec.toNBT))
 			nbt.setTag("blockList", nbtList)
 			ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(this, PacketBlock.field.id: Integer, nbt))*/
-			case PacketBlock.effect.ordinal =>
+			case PacketBlock.effect =>
 				packet <<< position
-			case PacketBlock.effect2.ordinal =>
+			case PacketBlock.effect2 =>
 				packet <<< position
 		}
 	}
 
-	override def read(id: Int, packet: Packet) {
-		super.read(id, packet)
+	override def read(packet: Packet) {
+		super.read(packet)
 
 		if (Game.instance.networkManager.isClient) {
-			if (id == PacketBlock.effect.ordinal()) {
+			if (packet.getID == PacketBlock.effect) {
 				//Spawns a holographic beam
 				val packetType = packet.readInt
-				val vector = new Vector3i(packet.readInt, packet.readInt, packet.readInt) + 0.5
-				val root = position.toDouble + 0.5
+				val target = new Vector3i(packet.readInt, packet.readInt, packet.readInt) + 0.5
+				val pos = position.toDouble + 0.5
 
 				if (packetType == 1) {
-					ModularForceFieldSystem.proxy.renderBeam(this.worldObj, root, vector, FieldColor.blue, 40)
-					ModularForceFieldSystem.proxy.renderHologramMoving(this.worldObj, vector, FieldColor.blue, 50)
+					world.createClientEntity(Content.fxFortron)
+					ModularForceFieldSystem.proxy.renderBeam(this.worldObj, pos, target, FieldColor.blue, 40)
+					ModularForceFieldSystem.proxy.renderHologramMoving(this.worldObj, target, FieldColor.blue, 50)
 				}
 				else if (packetType == 2) {
 					ModularForceFieldSystem.proxy.renderBeam(this.worldObj, vector, root, FieldColor.red, 40)
 					ModularForceFieldSystem.proxy.renderHologramMoving(this.worldObj, vector, FieldColor.red, 50)
 				}
 			}
-			else if (id == PacketBlock.field.ordinal()) {
+			else if (packet.getID == PacketBlock.field.ordinal()) {
 				//Receives the entire force field
 				//				val nbt = PacketUtils.readTag(packet)
 				//				val nbtList = nbt.getTagList("blockList", 10)
@@ -109,7 +110,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter {
 			}
 		}
 		else {
-			if (id == PacketBlock.toggleMode2.ordinal()) {
+			if (packet.getID == PacketBlock.toggleMode2.ordinal()) {
 				isInverted = !isInverted
 			}
 		}

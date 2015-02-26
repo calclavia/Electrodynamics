@@ -1,7 +1,6 @@
 package mffs.content
 
 import com.resonant.core.prefab.modcontent.{ContentLoader, RecipeHolder}
-import mffs.Settings
 import mffs.base.{ItemModule, Named}
 import mffs.field.mobilize.BlockMobilizer
 import mffs.field.module._
@@ -11,10 +10,13 @@ import mffs.item.ItemRemoteController
 import mffs.item.card.{ItemCard, ItemCardFrequency, ItemCardLink}
 import mffs.item.fortron.ItemCardInfinite
 import mffs.production.{BlockCoercionDeriver, BlockFortronCapacitor}
+import mffs.render.FieldColor
+import mffs.render.fx.FXFortronBeam
 import mffs.security.BlockBiometric
 import mffs.security.card.ItemCardIdentification
 import mffs.security.module._
 import nova.core.block.Block
+import nova.core.entity.EntityFactory
 import nova.core.item.Item
 
 /**
@@ -75,7 +77,7 @@ object Content extends ContentLoader with RecipeHolder {
 	val moduleArray: Item = new ItemModuleArray().setCost(3f)
 	val moduleDisintegration: Item = new ItemModuleDisintegration
 	val moduleShock: Item = new ItemModuleShock
-	val moduleGlow: Item = () => new ItemModule
+	val moduleGlow: Item = () => (new ItemModule with Named).setName("moduleGlow")
 	val moduleSponge: Item = classOf[ItemModuleSponge]
 	val moduleStabilize: Item = classOf[ItemModuleStabilize]
 	val moduleRepulsion: Item = classOf[ItemModuleRepulsion]
@@ -88,10 +90,12 @@ object Content extends ContentLoader with RecipeHolder {
 	val moduleBlockAlter: Item = () => new ItemModuleDefense().setCost(15)
 	val moduleAntiSpawn: Item = () => new ItemModuleDefense().setCost(10)
 
+	val fxFortron: EntityFactory = () => new FXFortronBeam(FieldColor.blue, 40)
+
 	override def postInit() {
 		/**
 		 * Add recipe.
-		 */
+		
 		recipes += shaped(new Item(focusMatrix, 8), "RMR", "MDM", "RMR", 'M', UniversalRecipe.PRIMARY_METAL.get, 'D', Items.diamond, 'R', Items.redstone)
 		recipes += shaped(new Item(remoteController), "WWW", "MCM", "MCM", 'W', UniversalRecipe.WIRE.get, 'C', UniversalRecipe.BATTERY.get, 'M', UniversalRecipe.PRIMARY_METAL.get)
 		recipes += shaped(new Item(coercionDeriver), "FMF", "FCF", "FMF", 'C', UniversalRecipe.BATTERY.get, 'M', UniversalRecipe.PRIMARY_METAL.get, 'F', focusMatrix)
@@ -138,5 +142,6 @@ object Content extends ContentLoader with RecipeHolder {
 		recipes += shaped(new Item(moduleBlockAccess), " C ", "BFB", " C ", 'F', focusMatrix, 'B', Blocks.iron_block, 'C', Blocks.chest)
 		recipes += shaped(new Item(moduleBlockAlter), " G ", "GFG", " G ", 'F', moduleBlockAccess, 'G', Blocks.gold_block)
 		recipes += shaped(new Item(moduleAntiSpawn), " H ", "G G", " H ", 'H', moduleAntiHostile, 'G', moduleAntiFriendly)
+		 */
 	}
 }

@@ -14,9 +14,10 @@ import scala.collection.convert.wrapAll._
  * MFFS Beam Renderer.
  * @author Calclavia, Azanor
  */
-abstract class FXBeam(texture: Texture, position: Vector3d, target: Vector3d, color: Color, maxAge: Double) extends Entity with Updater {
+abstract class FXBeam(texture: Texture, color: Color, maxAge: Double) extends Entity with Updater {
 
-	private var length = position.distance(this.target)
+	private var target: Vector3d = _
+	private var length: Double = _
 
 	/**
 	 * Angles are in radians
@@ -35,15 +36,19 @@ abstract class FXBeam(texture: Texture, position: Vector3d, target: Vector3d, co
 
 	private var prevPos: Vector3d = null
 
-	setPosition(position)
 	rigidBody.setVelocity(Vector3d.zero)
 
-	val diff = position - target
-	val horizontalDist = Math.sqrt(diff.x * diff.x + diff.z * diff.z)
-	this.rotYaw = Math.atan2(diff.x, diff.z)
-	this.rotPitch = Math.atan2(diff.y, horizontalDist)
-	this.prevYaw = this.rotYaw
-	this.prevPitch = this.rotPitch
+	def setTarget(target: Vector3d) {
+		this.target = target
+		length = position.distance(this.target)
+
+		val diff = position - target
+		val horizontalDist = Math.sqrt(diff.x * diff.x + diff.z * diff.z)
+		this.rotYaw = Math.atan2(diff.x, diff.z)
+		this.rotPitch = Math.atan2(diff.y, horizontalDist)
+		this.prevYaw = this.rotYaw
+		this.prevPitch = this.rotPitch
+	}
 
 	override def getID: String = "fxBeam"
 
