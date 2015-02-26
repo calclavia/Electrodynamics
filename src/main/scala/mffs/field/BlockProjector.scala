@@ -5,7 +5,7 @@ import java.util.{Optional, Set => JSet}
 import mffs.api.machine.Projector
 import mffs.base.{BlockFieldMatrix, PacketBlock}
 import mffs.content.{Content, Models, Textures}
-import mffs.particle.FieldColor
+import mffs.particle.{FXFortronBeam, FieldColor}
 import mffs.security.PermissionHandler
 import mffs.util.CacheHandler
 import mffs.{ModularForceFieldSystem, Settings}
@@ -90,12 +90,11 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter w
 			if (packet.getID == PacketBlock.effect) {
 				//Spawns a holographic beam
 				val packetType = packet.readInt
-				val target = new Vector3i(packet.readInt, packet.readInt, packet.readInt) + 0.5
+				val target = new Vector3d(packet.readInt, packet.readInt, packet.readInt) + 0.5
 				val pos = position.toDouble + 0.5
 
 				if (packetType == 1) {
-					world.createClientEntity(Content.fxFortron).setPosition(pos)
-					ModularForceFieldSystem.proxy.renderBeam(this.worldObj, pos, target, FieldColor.blue, 40)
+					world.createClientEntity(Content.fxFortron).setPosition(pos).asInstanceOf[FXFortronBeam].setTarget(target)
 					ModularForceFieldSystem.proxy.renderHologramMoving(this.worldObj, target, FieldColor.blue, 50)
 				}
 				else if (packetType == 2) {
@@ -146,7 +145,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter w
 		}
 	}
 
-	def postCalculation() = if (clientSideSimulationRequired) Game.instance.networkManager.sync(PacketBlock.field.ordinal(), this)
+	def postCalculation() = if (clientSideSimulationRequired) Game.instance.networkManager.sync(PacketBlock.field, this)
 
 	private def clientSideSimulationRequired: Boolean = {
 		return getModuleCount(Content.moduleRepulsion) > 0
