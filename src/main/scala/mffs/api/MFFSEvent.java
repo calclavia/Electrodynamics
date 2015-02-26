@@ -18,7 +18,7 @@ public class MFFSEvent {
 	public EventBus<EventForceMobilize> preMobilize = new EventBus<>();
 	public EventBus<EventForceMobilize> postMobilize = new EventBus<>();
 
-	public class EventStabilize {
+	public static class EventStabilize {
 		public final Item item;
 		public final World world;
 		public final Vector3i pos;
@@ -30,7 +30,7 @@ public class MFFSEvent {
 		}
 	}
 
-	public abstract class EventForceMobilize {
+	public static abstract class EventForceMobilize {
 		public final World world;
 		public final Vector3i before;
 		public final Vector3i after;

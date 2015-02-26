@@ -1,28 +1,26 @@
 package mffs
 
-import java.util.UUID
-
-import mffs.content.Content
+import mffs.api.MFFSEvent.EventForceMobilize
+import mffs.base.BlockFortron
 import mffs.field.BlockProjector
 import nova.core.event.EventManager
 import nova.core.game.Game
 
 import scala.collection.convert.wrapAll._
+
 object EventHandler {
 
-	def eventPreForceManipulate(evt: EventForceMobilize.EventPreForceManipulate) {
-		val tileEntity: TileEntity = evt.world.getTileEntity(evt.beforeX, evt.beforeY, evt.beforeZ)
+	def eventPreForceManipulate(evt: EventForceMobilize) {
+		val block = evt.world.getBlock(evt.before)
 
-		if (tileEntity.isInstanceOf[TileFortron]) {
-			tileEntity.asInstanceOf[TileFortron].markSendFortron = false
+		if (block.isPresent && block.get().isInstanceOf[BlockFortron]) {
+			block.get().asInstanceOf[BlockFortron].markSendFortron = false
 		}
 	}
 
 	/**
 	 * Special stabilization cases.
 	 *
-	 * @param evt
-	 */
 	def eventStabilize(evt: EventStabilize) {
 		if (evt.Item.getItem.isInstanceOf[ItemSkull]) {
 			evt.world.setBlock(evt.x, evt.y, evt.z, Blocks.skull, evt.Item.getItemDamage, 2)
@@ -57,7 +55,6 @@ object EventHandler {
 		}
 	}
 
-	@SubscribeEvent
 	def playerInteractEvent(evt: PlayerInteractEvent) {
 		// Cancel if we click on a force field.
 		if (evt.action == Action.LEFT_CLICK_BLOCK && evt.entityPlayer.worldObj.getBlock(evt.x, evt.y, evt.z) == Content.forceField) {
@@ -82,15 +79,23 @@ object EventHandler {
 		}
 	}
 
+	def livingSpawnEvent(evt: LivingSpawnEvent) {
+		if (!evt.entity.isInstanceOf[EntityPlayer]) {
+			if (MFFSUtility.getRelevantProjectors(evt.world, new Vector3d(evt.entityLiving)).exists(_.getModuleCount(Content.moduleAntiSpawn) > 0)) {
+				evt.setResult(Event.Result.DENY)
+			}
+		}
+	}*/
+
 	/**
 	 * When a block breaks, mark force field projectors for an update.
 	 */
 	def onBlockChange(evt: EventManager.BlockChangeEvent) {
-		if (Game.instance.networkManager.isServer && evt.newBlock == Blocks.air) {
+		if (Game.instance.networkManager.isServer && evt.newBlock.sameType(Game.instance.blockManager.getAirBlock)) {
 			GraphFrequency.instance
 				.nodes
 				.view
-				.collect{case p : BlockProjector => p}
+				.collect { case p: BlockProjector => p}
 				.filter(_.world == evt.world)
 				.filter(_.getCalculatedField != null)
 				.filter(_.getCalculatedField.contains(evt.position))
@@ -98,11 +103,4 @@ object EventHandler {
 		}
 	}
 
-	def livingSpawnEvent(evt: LivingSpawnEvent) {
-		if (!evt.entity.isInstanceOf[EntityPlayer]) {
-			if (MFFSUtility.getRelevantProjectors(evt.world, new Vector3d(evt.entityLiving)).exists(_.getModuleCount(Content.moduleAntiSpawn) > 0)) {
-				evt.setResult(Event.Result.DENY)
-			}
-		}
-	}
 }
