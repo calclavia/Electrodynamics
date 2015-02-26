@@ -1,73 +1,59 @@
 package mffs.render.fx
 
-import mffs.content.Content
+import mffs.content.Textures
+import nova.core.render.Color
+import nova.core.render.model.{BlockModelUtil, Model}
 import nova.core.util.transform.Vector3d
 
-class FXHologram(position: Vector3d, red: Float, green: Float, blue: Float, age: Int) extends FXMFFS(wo, position.x, position.y, position.z)
-{
+import scala.collection.convert.wrapAll._
+
+class FXHologram(pos: Vector3d, color: Color, maxAge: Double) extends FXMFFS {
 	private var targetPosition: Vector3d = null
 
-  this.setRBGColorF(red, green, blue)
-  this.particleMaxAge = age
-  this.noClip = true
+	var prevPos = pos
+	var age = 0d
 
-  /**
-   * The target the hologram is going to translate to.
-   *
-   * @param targetPosition
-   * @return
-   */
-  def setTarget(targetPosition: Vector3d): FXHologram =
-  {
-    this.targetPosition = targetPosition
-    this.motionX = (this.targetPosition.x - this.posX) / this.particleMaxAge
-    this.motionY = (this.targetPosition.y - this.posY) / this.particleMaxAge
-    this.motionZ = (this.targetPosition.z - this.posZ) / this.particleMaxAge
-    return this
-  }
+	setPosition(pos)
 
-  override def onUpdate
-  {
-    super.onUpdate
-    this.prevPosX = this.posX
-    this.prevPosY = this.posY
-    this.prevPosZ = this.posZ
+	override def getID: String = "hologram"
 
-    particleAge += 1
+	/**
+	 * The target the hologram is going to translate to.
+	 *
+	 * @param targetPosition
+	 * @return
+	 */
+	def setTarget(targetPosition: Vector3d): FXHologram = {
+		this.targetPosition = targetPosition
+		rigidBody.setVelocity((targetPosition - position) / maxAge)
+		return this
+	}
 
-    if (particleAge - 1 >= this.particleMaxAge)
-    {
-      this.setDead
-      return
-    }
-    if (this.targetPosition != null)
-    {
-      this.moveEntity(this.motionX, this.motionY, this.motionZ)
-    }
-  }
+	override def update(deltaTime: Double) {
+		super.update(deltaTime)
+		prevPos = position
 
-  override def renderParticle(tessellator: Tessellator, f: Float, f1: Float, f2: Float, f3: Float, f4: Float, f5: Float)
-  {
-    tessellator.draw
-    GL11.glPushMatrix
-    val xx: Float = (this.prevPosX + (this.posX - this.prevPosX) * f - EntityFX.interpPosX).asInstanceOf[Float]
-    val yy: Float = (this.prevPosY + (this.posY - this.prevPosY) * f - EntityFX.interpPosY).asInstanceOf[Float]
-    val zz: Float = (this.prevPosZ + (this.posZ - this.prevPosZ) * f - EntityFX.interpPosZ).asInstanceOf[Float]
-    GL11.glTranslated(xx, yy, zz)
-    GL11.glScalef(1.01f, 1.01f, 1.01f)
-    var op: Float = 0.5f
-    if ((this.particleMaxAge - this.particleAge <= 4))
-    {
-      op = 0.5f - (5 - (this.particleMaxAge - this.particleAge)) * 0.1F
-    }
-    GL11.glColor4d(this.particleRed, this.particleGreen, this.particleBlue, op * 2)
-    OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F)
-    RenderUtility.enableBlending
-    RenderUtility.setTerrainTexture
-    RenderUtility.renderNormalBlockAsItem(Content.forceField, 0, new RenderBlocks)
-    RenderUtility.disableBlending
-    GL11.glPopMatrix
-    tessellator.startDrawingQuads
-    FMLClientHandler.instance.getClient.renderEngine.bindTexture(RenderUtility.PARTICLE_RESOURCE)
-  }
+		age += deltaTime
+
+		if (age > maxAge) {
+			world.destroyEntity(this)
+		}
+	}
+
+	override def render(model: Model) {
+		model.scale(1.01, 1.01, 1.01)
+
+		var op = 0.5
+
+		if (maxAge - age <= 4) {
+			op = 0.5f - (5 - (maxAge - age)) * 0.1F
+		}
+
+		//		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F)
+		//		RenderUtility.enableBlending
+		BlockModelUtil.drawCube(model)
+		model.bindAll(Textures.hologram)
+		model.faces.foreach(_.vertices.foreach(_.setColor(color.alpha((op * 255).toInt))))
+		//		RenderUtility.disableBlending
+	}
 }

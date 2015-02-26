@@ -9,7 +9,7 @@ import nova.core.util.transform.Vector3d
 
 import scala.collection.convert.wrapAll._
 
-class FXHologramMoving(pos: Vector3d, color: Color, maxAge: Double) extends Entity with Updater {
+class FXHologramProgress(pos: Vector3d, color: Color, maxAge: Double) extends Entity with Updater {
 	var prevPos = pos
 	var age = 0d
 
@@ -31,6 +31,7 @@ class FXHologramMoving(pos: Vector3d, color: Color, maxAge: Double) extends Enti
 	override def render(model: Model) {
 		//		GL11.glPushMatrix
 		val completion = age / maxAge
+		model.scale(1.01, 1.01, 1.01)
 		model.translate(0, (completion - 1) / 2, 0)
 		model.scale(1, completion, 1)
 
