@@ -1,6 +1,6 @@
 package mffs
 
-import com.resonant.wrapper.lib.wrapper.wrapCollections._
+import com.resonant.lib.misc.MovementManager
 import mffs.content.Content
 import mffs.security.MFFSPermissions
 import nova.core.event.EventListener
@@ -10,6 +10,8 @@ import nova.core.loader.{Loadable, NovaMod}
 
 @NovaMod(id = Reference.id, name = Reference.name, version = Reference.version, novaVersion = "0.0.1", dependencies = Array("resonantengine"))
 object ModularForceFieldSystem extends Loadable {
+
+	var movementManager: MovementManager = null
 
 	override def preInit() {
 		/**

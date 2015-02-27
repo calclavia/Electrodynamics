@@ -1,18 +1,26 @@
 package mffs.field.mobilize
 
+import java.util.{Set => JSet}
+
 import com.resonant.core.prefab.block.InventorySimpleProvider
+import mffs.api.MFFSEvent.EventForceMobilize
 import mffs.api.card.CoordLink
+import mffs.api.{Blacklist, MFFSEvent}
 import mffs.base.{BlockFieldMatrix, PacketBlock}
-import mffs.content.Content
+import mffs.content.{Content, Models, Textures}
 import mffs.field.mobilize.event.DelayedEvent
 import mffs.particle.IEffectController
-import mffs.{ModularForceFieldSystem, Reference, Settings}
+import mffs.util.MFFSUtility
+import mffs.{ModularForceFieldSystem, Settings}
+import nova.core.entity.Entity
 import nova.core.game.Game
 import nova.core.inventory.InventorySimple
 import nova.core.item.Item
-import nova.core.network.Sync
-import nova.core.retention.Stored
-import nova.core.util.transform.Vector3i
+import nova.core.network.{Packet, Sync}
+import nova.core.render.model.Model
+import nova.core.retention.{Data, Storable, Stored}
+import nova.core.util.Direction
+import nova.core.util.transform.{Cuboid, MatrixStack, Vector3d, Vector3i}
 import nova.core.world.World
 
 import scala.collection.convert.wrapAll._
@@ -95,7 +103,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 		/**
 		 * Check if there is a valid field that has been calculated. If so, we will move this field.
 		 */
-		val movedBlocks = calculatedField filter moveBlock
+		val movedBlocks = moveBlocks(calculatedField)
 
 		if (movedBlocks.size > 0) {
 			/**
@@ -139,7 +147,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 					packet <<< 2
 					packet <<< getMoveTime
 					packet <<< (getAbsoluteAnchor + 0.5)
-					packet <<< (getTargetPosition + 0.5)
+					packet <<< (getTargetPosition._2 + 0.5)
 					packet <<< false
 					packet <<< renderBlocks
 
@@ -195,32 +203,38 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 				 * Send preview field packet
 				 */
 				if (ticks % 120 == 0 && calculatedField != null) {
-					val renderBlocks = getInteriorPoints.view filter isVisibleToPlayer filter (pos => previewMode == 2 || !world.isAirBlock(pos.xi, pos.yi, pos.zi)) take Settings.maxForceFieldsPerTick
-					val coordPacketData = renderBlocks.toSeq flatMap (_.toIntList)
+					val renderBlocks = getInteriorPoints.view
+						.filter(isVisibleToPlayer)
+						.filter(pos => previewMode == 2 || !Game.instance.blockManager.getAirBlock.sameType(world.getBlock(pos).get()))
+						.take(Settings.maxForceFieldsPerTick)
 
-					val packet = new PacketTile(this)
-					packet <<< PacketBlock.effect.id
+					val packet = Game.instance.networkManager.newPacket()
+					packet <<< PacketBlock.effect
 
 					if (isTeleport) {
-						var targetPosition: Vector3d = null
-
-						if (getTargetPosition.world == null) {
-							targetPosition = new Vector3d(getTargetPosition)
+						val targetPosition: Vector3i = {
+							if (getTargetPosition._1 == null) {
+								getTargetPosition._2
+							}
+							else {
+								getTargetPosition._2
+							}
 						}
-						else {
-							targetPosition = getTargetPosition
-						}
 
-						packet <<< 2 <<< 60 <<< (getAbsoluteAnchor + 0.5) <<< (targetPosition + 0.5) <<< true
+						packet <<< 2
+						packet <<< 60
+						packet <<< (getAbsoluteAnchor + 0.5)
+						packet <<< (targetPosition + 0.5)
+						packet <<< true
 
 					}
 					else {
-						packet <<< 1 <<< 1
+						packet <<< 1
+						packet <<< 1
 					}
 
-					packet <<< coordPacketData.size <<< coordPacketData
-
-					ModularForceFieldSystem.packetHandler.sendToAllAround(packet, world, position, packetRange)
+					packet <<< renderBlocks
+					Game.instance.networkManager.sendPacket(this, packet)
 					markDirty()
 				}
 			}
@@ -238,20 +252,23 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 			moveTime = 0
 			performingMove = false
 
-			delayedEvents.clear()
-			worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, Reference.prefix + "powerdown", 0.6f, 1 - this.worldObj.rand.nextFloat * 0.1f)
-			val playPoint = position + anchor + 0.5
-			worldObj.playSoundEffect(playPoint.x, playPoint.y, playPoint.z, Reference.prefix + "powerdown", 0.6f, 1 - this.worldObj.rand.nextFloat * 0.1f)
-			ModularForceFieldSystem.packetHandler.sendToAllAround(new PacketTile(this) <<< PacketBlock.render.id, world, position, packetRange)
+			//			delayedEvents.clear()
+			//			worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, Reference.prefix + "powerdown", 0.6f, 1 - this.worldObj.rand.nextFloat * 0.1f)
+			//			val playPoint = position + anchor + 0.5
+			//			worldObj.playSoundEffect(playPoint.x, playPoint.y, playPoint.z, Reference.prefix + "powerdown", 0.6f, 1 - this.worldObj.rand.nextFloat * 0.1f)
+			//			ModularForceFieldSystem.packetHandler.sendToAllAround(new PacketTile(this) <<< PacketBlock.render.id, world, position, packetRange)
 
 
 			if (failedPositions.size > 0) {
 				/**
 				 * Send failure coordinates to client
 				 */
-				val coords = failedPositions.toSeq flatMap (_.toIntList)
-				val packetTile = new PacketTile(this) <<< PacketBlock.effect.id <<< 3 <<< coords.size <<< coords
-				ModularForceFieldSystem.packetHandler.sendToAllAround(packetTile, world, position, packetRange)
+				val packet = Game.instance.networkManager.newPacket()
+				packet <<< PacketBlock.effect
+				packet <<< 3
+				packet <<< failedPositions.asInstanceOf[JSet]
+				Game.instance.networkManager.sendPacket(this, packet)
+				//				ModularForceFieldSystem.packetHandler.sendToAllAround(packet, world, position, packetRange)
 			}
 
 			failedMove = false
@@ -277,11 +294,11 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 		val targetCenterPosition = getTargetPosition
 
 		for (position <- mobilizationPoints) {
-			if (world.isAirBlock(position.xi, position.yi, position.zi)) {
+			if (Game.instance.blockManager.getAirBlock.sameType(world.getBlock(position).get())) {
 				val relativePosition = position - getAbsoluteAnchor
-				val targetPosition = (targetCenterPosition + relativePosition)
+				val targetPosition = targetCenterPosition._2 + relativePosition
 
-				if (!canMove(new VectorWorld(this.worldObj, position), targetPosition)) {
+				if (!canMove(world(), position, targetCenterPosition._1, targetPosition)) {
 					failedPositions.add(position)
 					return false
 				}
@@ -296,12 +313,12 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 	 * @param target - The target position
 	 * @return True if the block can be moved.
 	 */
-	def canMove(position: VectorWorld, target: VectorWorld): Boolean = {
-		if (Blacklist.mobilizerBlacklist.contains(position.getBlock)) {
+	def canMove(startWorld: World, position: Vector3i, targetWorld: World, target: Vector3i): Boolean = {
+		if (Blacklist.mobilizerBlacklist.contains(startWorld.getBlock(position).get())) {
 			return false
 		}
-		val evt = new EventForceMobilize.EventCheckForceManipulate(position.world, position.xi, position.yi, position.zi, target.xi, target.yi, target.zi)
-		MinecraftForge.EVENT_BUS.post(evt)
+		val evt = new EventForceMobilize(startWorld, position, targetWorld, target)
+		MFFSEvent.instance.checkMobilize.publish(evt)
 
 		if (evt.isCanceled) {
 			return false
@@ -311,7 +328,9 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 			return false
 		}
 
-		if (target.getTileEntity == this) {
+		val targetBlock = targetWorld.getBlock(target).get()
+
+		if (targetBlock.equals(this)) {
 			return false
 		}
 		for (checkPos <- this.getInteriorPoints) {
@@ -320,8 +339,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 			}
 		}
 
-		val targetBlock = target.getBlock
-		return target.world.isAirBlock(target.xi, target.yi, target.zi) || (targetBlock.isReplaceable(target.world, target.xi, target.yi, target.zi))
+		return Game.instance.blockManager.getAirBlock.sameType(targetBlock)
 	}
 
 	/**
@@ -334,7 +352,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 			val cardStack = getLinkCard
 
 			if (cardStack != null) {
-				val link = cardStack.asInstanceOf[CoordLink].getLink()
+				val link = cardStack.asInstanceOf[CoordLink].getLink
 				return (link._1, link._2)
 			}
 		}
@@ -514,25 +532,18 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 
 	override def getTranslation: Vector3i = super.getTranslation + anchor
 
-	protected def moveEntity(entity: Entity, location: VectorWorld) {
-		if (entity != null && location != null) {
-			if (entity.worldObj.provider.dimensionId != location.world.provider.dimensionId) {
-				entity.travelToDimension(location.world.provider.dimensionId)
+	protected def moveEntity(entity: Entity, targetWorld: World, targetPos: Vector3i) {
+		if (entity != null && targetPos != null) {
+			if (!entity.world().sameType(targetWorld)) {
+				entity.setWorld(targetWorld)
+				//entity.travelToDimension(targetPos.world.provider.dimensionId)
 			}
-			entity.motionX = 0
-			entity.motionY = 0
-			entity.motionZ = 0
 
-			if (entity.isInstanceOf[EntityPlayerMP]) {
-				entity.asInstanceOf[EntityPlayerMP].playerNetServerHandler.setPlayerLocation(location.x, location.y, location.z, entity.rotationYaw, entity.rotationPitch)
-			}
-			else {
-				entity.setPositionAndRotation(location.x, location.y, location.z, entity.rotationYaw, entity.rotationPitch)
-			}
+			entity.rigidBody.setVelocity(Vector3d.zero)
 		}
 	}
 
-	override def doGetFortronCost: Int = round(super.doGetFortronCost + (if (this.anchor != null) this.anchor.magnitude * 1000 else 0)).toInt
+	override def doGetFortronCost: Int = Math.round(super.doGetFortronCost + (if (this.anchor != null) this.anchor.magnitude * 1000 else 0)).toInt
 
 	/*
 	override def isItemValidForSlot(slotID: Int, item: Item): Boolean = {
@@ -609,24 +620,86 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 	}
 
 	/**
-	 * Called to queue a block move from its position to a target.
-	 * @param blockPos - The position of the block to be moved.
-	 * @return True if move is successful.
+	 * Called to start the block moving operation to move a set of blocks to a target.
+	 * @param blockPositions - The set of block positions to be moved.
+	 * @return The set of block positions actually moved
 	 */
-	protected def moveBlock(blockPos: Vector3i): Boolean = {
+	protected def moveBlocks(blockPositions: Set[Vector3i]): Set[Vector3i] = {
 		if (Game.instance.networkManager.isServer) {
-			val relativePosition = blockPos - getAbsoluteAnchor
-			val newPosition = getTargetPosition._2 + relativePosition
-			val opBlock = world.getBlock(blockPos)
-			if (opBlock.isPresent) {
-				val block = opBlock.get()
-				if (!world.isAirBlock(blockPos.xi, blockPos.yi, blockPos.zi) && block != this) {
-					queueEvent(new BlockPreMoveDelayedEvent(this, getMoveTime, new VectorWorld(world, blockPos), newPosition))
-					return true
-				}
-			}
+			val actualMovables = blockPositions
+				.filter(blockPos => {
+				val opBlock = world.getBlock(blockPos)
+				opBlock.isPresent && Game.instance.blockManager.getAirBlock.sameType(opBlock.get()) && !sameType(opBlock.get())
+			})
+
+			var from = List.empty[(World, Vector3i)]
+			var to = List.empty[(World, Vector3i)]
+
+			actualMovables.foreach(blockPos => {
+				val relativePosition = blockPos - getAbsoluteAnchor
+				val newPosition = getTargetPosition._2 + relativePosition
+
+				from :+=(world, blockPos)
+				to :+=(getTargetPosition._1, newPosition)
+			})
+
+			Game.instance.syncTicker.preQueue(new DelayedEvent(getMoveTime, () => doMove(from, to)))
 		}
 
-		return false
+		return Set.empty
+	}
+
+	private def doMove(moveMap: Map[(World, Vector3i), (World, Vector3i)]) {
+
+		//TODO: Check if parallel is ok.
+		//Time has passed. Check if we can still move the blocks.
+		val failedPos = moveMap
+			.par
+			.filterNot {
+			case ((fromWorld, fromPos), (toWorld, toPos)) =>
+				val evt = new EventForceMobilize(fromWorld, fromPos, toWorld, toPos)
+				MFFSEvent.instance.preMobilize.publish(evt)
+				!evt.isCanceled && canMove(fromWorld, fromPos, toWorld, toPos)
+		}
+
+		if (failedPos.size > 0) {
+			failedPositions ++= failedPos
+			markFailMove()
+			return
+		}
+
+		var newDataMap = Map.empty[(World, Vector3i), (String, Data)]
+
+		//Do the pre-move, which sets all blocks to air first.
+		moveMap.foreach {
+			case ((fromWorld, fromPos), (toWorld, toPos)) =>
+
+				//Serialize the block
+				val fromBlock = fromWorld.getBlock(fromPos).get()
+				val id = fromBlock.getID
+
+				if (fromBlock.isInstanceOf[Storable]) {
+					val data = Data.serialize(fromBlock.asInstanceOf[Storable])
+					newDataMap += (toWorld, toPos) ->(id, data)
+				}
+				else {
+					newDataMap += (toWorld, toPos) ->(id, null)
+				}
+
+				ModularForceFieldSystem.movementManager.setSneaky(fromWorld, fromPos, Game.instance.blockManager.getAirBlock)
+		}
+
+		//Do the post-move, which sets all blocks to what they should be
+		newDataMap.foreach {
+			case ((world, pos), (id, data)) =>
+				ModularForceFieldSystem.movementManager.setSneaky(world, pos, Game.instance.blockManager.getBlock(id).get(), data)
+		}
+
+		//Notify block chang in both the old and new positions
+		moveMap.foreach {
+			case ((fromWorld, fromPos), (toWorld, toPos)) =>
+				fromWorld.markChange(fromPos)
+				toWorld.markChange(toPos)
+		}
 	}
 }

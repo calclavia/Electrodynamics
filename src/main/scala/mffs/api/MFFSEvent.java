@@ -1,5 +1,6 @@
 package mffs.api;
 
+import nova.core.event.CancelableEvent;
 import nova.core.event.EventBus;
 import nova.core.item.Item;
 import nova.core.util.transform.Vector3i;
@@ -30,14 +31,17 @@ public class MFFSEvent {
 		}
 	}
 
-	public static abstract class EventForceMobilize {
-		public final World world;
+	@CancelableEvent.Cancelable
+	public static class EventForceMobilize extends CancelableEvent {
+		public final World worldBefore;
 		public final Vector3i before;
+		public final World worldAfter;
 		public final Vector3i after;
 
-		public EventForceMobilize(World world, Vector3i before, Vector3i after) {
-			this.world = world;
+		public EventForceMobilize(World worldBefore, Vector3i before, World worldAfter, Vector3i after) {
+			this.worldBefore = worldBefore;
 			this.before = before;
+			this.worldAfter = worldAfter;
 			this.after = after;
 		}
 	}
