@@ -11,9 +11,9 @@ import scala.collection.convert.wrapAll._
 object EventHandler {
 
 	def eventPreForceManipulate(evt: EventForceMobilize) {
-		val block = evt.world.getBlock(evt.before)
+		val block = evt.worldBefore.getBlock(evt.before)
 
-		if (block.isPresent && block.get().isInstanceOf[BlockFortron]) {
+		if (block.get().isInstanceOf[BlockFortron]) {
 			block.get().asInstanceOf[BlockFortron].markSendFortron = false
 		}
 	}

@@ -8,13 +8,14 @@ import nova.core.render.model.{Model, Vertex}
 import nova.core.render.texture.Texture
 import nova.core.util.transform.Vector3d
 
+import scala.beans.BeanProperty
 import scala.collection.convert.wrapAll._
 
 /**
  * MFFS Beam Renderer.
  * @author Calclavia, Azanor
  */
-abstract class FXBeam(texture: Texture, color: Color, maxAge: Double) extends Entity with Updater {
+abstract class FXBeam(texture: Texture, @BeanProperty var color: Color, maxAge: Double) extends Entity with Updater {
 
 	private var target: Vector3d = _
 	private var length: Double = _
@@ -38,7 +39,7 @@ abstract class FXBeam(texture: Texture, color: Color, maxAge: Double) extends En
 
 	rigidBody.setVelocity(Vector3d.zero)
 
-	def setTarget(target: Vector3d) {
+	def setTarget(target: Vector3d): this.type = {
 		this.target = target
 		length = position.distance(this.target)
 
@@ -48,6 +49,7 @@ abstract class FXBeam(texture: Texture, color: Color, maxAge: Double) extends En
 		this.rotPitch = Math.atan2(diff.y, horizontalDist)
 		this.prevYaw = this.rotYaw
 		this.prevPitch = this.rotPitch
+		return this
 	}
 
 	override def getID: String = "fxBeam"

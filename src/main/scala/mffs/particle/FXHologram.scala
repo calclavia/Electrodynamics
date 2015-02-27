@@ -7,13 +7,10 @@ import nova.core.util.transform.Vector3d
 
 import scala.collection.convert.wrapAll._
 
-class FXHologram(pos: Vector3d, color: Color, maxAge: Double) extends FXMFFS {
+class FXHologram(color: Color, maxAge: Double) extends FXMFFS {
 	private var targetPosition: Vector3d = null
 
-	var prevPos = pos
 	var age = 0d
-
-	setPosition(pos)
 
 	override def getID: String = "hologram"
 
@@ -31,7 +28,6 @@ class FXHologram(pos: Vector3d, color: Color, maxAge: Double) extends FXMFFS {
 
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)
-		prevPos = position
 
 		age += deltaTime
 

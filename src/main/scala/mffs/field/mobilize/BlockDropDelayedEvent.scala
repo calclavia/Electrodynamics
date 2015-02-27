@@ -1,4 +1,4 @@
-package mffs.field.mobilize.event
+package mffs.field.mobilize
 
 import nova.core.block.Block
 import nova.core.game.Game
@@ -7,6 +7,7 @@ import nova.core.world.World
 
 import scala.collection.convert.wrapAll._
 
+@deprecated
 class BlockDropDelayedEvent(ticks: Int, block: Block, world: World, position: Vector3i) extends DelayedEvent(ticks) {
 	protected override def onEvent {
 		if (Game.instance.networkManager.isServer) {

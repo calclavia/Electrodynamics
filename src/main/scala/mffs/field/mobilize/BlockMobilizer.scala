@@ -8,7 +8,6 @@ import mffs.api.card.CoordLink
 import mffs.api.{Blacklist, MFFSEvent}
 import mffs.base.{BlockFieldMatrix, PacketBlock}
 import mffs.content.{Content, Models, Textures}
-import mffs.field.mobilize.event.DelayedEvent
 import mffs.particle.IEffectController
 import mffs.util.MFFSUtility
 import mffs.{ModularForceFieldSystem, Settings}

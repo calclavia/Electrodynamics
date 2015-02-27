@@ -8,7 +8,7 @@ import mffs.field.shape._
 import mffs.field.{BlockForceField, BlockProjector}
 import mffs.item.ItemRemoteController
 import mffs.item.card.{ItemCard, ItemCardFrequency, ItemCardInfinite, ItemCardLink}
-import mffs.particle.{FXFortronBeam, FieldColor}
+import mffs.particle.{FXFortronBeam, FXHologram, FXHologramProgress, FieldColor}
 import mffs.production.{BlockCoercionDeriver, BlockFortronCapacitor}
 import mffs.security.BlockBiometric
 import mffs.security.card.ItemCardIdentification
@@ -88,7 +88,9 @@ object Content extends ContentLoader with RecipeHolder {
 	val moduleBlockAlter: Item = () => new ItemModuleDefense().setCost(15)
 	val moduleAntiSpawn: Item = () => new ItemModuleDefense().setCost(10)
 
-	val fxFortron: EntityFactory = () => new FXFortronBeam(FieldColor.blue, 40)
+	val fxFortronBeam: EntityFactory = () => new FXFortronBeam(FieldColor.blue, 40)
+	val fxHologram: EntityFactory = () => new FXHologram(FieldColor.blue, 40)
+	val fxHologramProgress: EntityFactory = () => new FXHologramProgress(FieldColor.blue, 40)
 
 	override def postInit() {
 		/**

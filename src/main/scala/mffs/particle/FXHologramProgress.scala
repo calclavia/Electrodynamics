@@ -2,24 +2,19 @@ package mffs.particle
 
 import com.resonant.core.prefab.block.Updater
 import mffs.content.Textures
-import nova.core.entity.Entity
 import nova.core.render.Color
 import nova.core.render.model.{BlockModelUtil, Model}
-import nova.core.util.transform.Vector3d
 
+import scala.beans.BeanProperty
 import scala.collection.convert.wrapAll._
 
-class FXHologramProgress(pos: Vector3d, color: Color, maxAge: Double) extends Entity with Updater {
-	var prevPos = pos
+class FXHologramProgress(@BeanProperty var color: Color, maxAge: Double) extends FXMFFS with Updater {
 	var age = 0d
-
-	setPosition(pos)
 
 	override def getID: String = "hologramMoving"
 
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)
-		prevPos = position
 
 		age += deltaTime
 

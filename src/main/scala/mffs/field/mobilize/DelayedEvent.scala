@@ -1,4 +1,4 @@
-package mffs.field.mobilize.event
+package mffs.field.mobilize
 
 class DelayedEvent(var ticks: Int, val evtMethod: (() => Unit) = null) extends Runnable {
 

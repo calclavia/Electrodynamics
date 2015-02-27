@@ -2,13 +2,14 @@ package mffs.field
 
 import java.util.{Optional, Set => JSet}
 
+import mffs.Settings
 import mffs.api.machine.Projector
+import mffs.api.modules.Module.ProjectState
 import mffs.base.{BlockFieldMatrix, PacketBlock}
 import mffs.content.{Content, Models, Textures}
-import mffs.particle.{FXFortronBeam, FieldColor}
+import mffs.particle.{FXFortronBeam, FXHologramProgress, FieldColor}
 import mffs.security.PermissionHandler
 import mffs.util.CacheHandler
-import mffs.{ModularForceFieldSystem, Settings}
 import nova.core.block.Block
 import nova.core.block.components.LightEmitter
 import nova.core.game.Game
@@ -94,12 +95,12 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter w
 				val pos = position.toDouble + 0.5
 
 				if (packetType == 1) {
-					world.createClientEntity(Content.fxFortron).setPosition(pos).asInstanceOf[FXFortronBeam].setTarget(target)
-					ModularForceFieldSystem.proxy.renderHologramMoving(this.worldObj, target, FieldColor.blue, 50)
+					world.createClientEntity(Content.fxFortronBeam).setPosition(pos).asInstanceOf[FXFortronBeam].setTarget(target)
+					world.createClientEntity(Content.fxHologramProgress).setPosition(pos)
 				}
 				else if (packetType == 2) {
-					ModularForceFieldSystem.proxy.renderBeam(this.worldObj, vector, root, FieldColor.red, 40)
-					ModularForceFieldSystem.proxy.renderHologramMoving(this.worldObj, vector, FieldColor.red, 50)
+					world.createClientEntity(Content.fxFortronBeam).setPosition(pos).asInstanceOf[FXFortronBeam].setTarget(target).setColor(FieldColor.red)
+					world.createClientEntity(Content.fxHologramProgress).setPosition(pos).asInstanceOf[FXHologramProgress].setColor(FieldColor.red)
 				}
 			}
 			else if (packet.getID == PacketBlock.field) {
@@ -110,7 +111,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter w
 			}
 		}
 		else {
-			if (packet.getID == PacketBlock.toggleMode2.ordinal()) {
+			if (packet.getID == PacketBlock.toggleMode2) {
 				isInverted = !isInverted
 			}
 		}
@@ -200,19 +201,19 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter w
 
 					val result = evaluateField.forall(
 						vector => {
-							var flag = 0
+							var flag = ProjectState.pass
 
 							for (module <- relevantModules) {
-								if (flag == 0) {
+								if (flag == ProjectState.pass) {
 									flag = module.onProject(this, vector)
 								}
 							}
 
-							if (flag != 1 && flag != 2) {
+							if (flag == ProjectState.pass) {
 								constructField += vector
 							}
 
-							flag != 2
+							flag != ProjectState.cancel
 						})
 
 					if (result) {
@@ -253,7 +254,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter w
 			calculatedField
 				.view
 				.filter(v => world.getBlock(v).isPresent && world.getBlock(v).get().sameType(Content.forceField))
-				.foreach(v => world.setBlock(v, Blocks.air))
+				.foreach(v => world.setBlock(v, Game.instance.blockManager.getAirBlock))
 
 			forceFields = Set.empty
 			calculatedField = null

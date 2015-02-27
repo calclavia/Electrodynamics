@@ -8,7 +8,7 @@ import mffs.api.modules.Module.ProjectState
 import mffs.base.{ItemModule, PacketBlock}
 import mffs.content.Content
 import mffs.field.BlockProjector
-import mffs.field.mobilize.event.{BlockDropDelayedEvent, BlockInventoryDropDelayedEvent}
+import mffs.field.mobilize.{BlockDropDelayedEvent, BlockInventoryDropDelayedEvent}
 import mffs.util.MFFSUtility
 import nova.core.game.Game
 import nova.core.inventory.components.InventoryProvider
