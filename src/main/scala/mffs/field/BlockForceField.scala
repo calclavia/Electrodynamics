@@ -42,7 +42,7 @@ class BlockForceField extends Block with PacketHandler with ForceField with Ligh
 
 	override def isCube: Boolean = false
 
-	override def getDrops: util.Collection[Item] = List.empty
+	override def getDrops: util.Set[Item] = Set.empty[Item]
 
 	/**
 	 * Rendering

@@ -3,21 +3,15 @@ package mffs.field.mobilize
 import com.resonant.core.prefab.block.InventorySimpleProvider
 import mffs.api.card.CoordLink
 import mffs.base.{BlockFieldMatrix, PacketBlock}
-import mffs.content.{Content, Models, Textures}
-import mffs.field.mobilize.event.{BlockPreMoveDelayedEvent, DelayedEvent}
-import mffs.particle.{FieldColor, IEffectController}
-import mffs.security.MFFSPermissions
-import mffs.util.MFFSUtility
+import mffs.field.mobilize.event.DelayedEvent
+import mffs.particle.IEffectController
 import mffs.{ModularForceFieldSystem, Reference, Settings}
-import nova.core.entity.Entity
 import nova.core.game.Game
 import nova.core.inventory.InventorySimple
 import nova.core.item.Item
-import nova.core.network.{Packet, Sync}
-import nova.core.render.model.Model
+import nova.core.network.Sync
 import nova.core.retention.Stored
-import nova.core.util.Direction
-import nova.core.util.transform.{Cuboid, MatrixStack, Vector3d, Vector3i}
+import nova.core.util.transform.Vector3i
 import nova.core.world.World
 
 import scala.collection.convert.wrapAll._
@@ -106,16 +100,18 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 			/**
 			 * Queue an entity move event.
 			 */
-			queueEvent(new DelayedEvent(this, getMoveTime, () => {
-				moveEntities
-				ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(BlockMobilizer.this, PacketBlock.field.id: Integer))
+			Game.instance.syncTicker.preQueue(new DelayedEvent(getMoveTime, () => {
+				moveEntities()
+				Game.instance.networkManager.sync(PacketBlock.field, this)
 
 				if (!isTeleport && doAnchor) {
-					anchor += getDirection
+					anchor += direction.toVector
 				}
 			}))
 
-			val renderBlocks = movedBlocks filter isVisibleToPlayer take Settings.maxForceFieldsPerTick
+			val renderBlocks = movedBlocks
+				.filter(isVisibleToPlayer)
+				.take(Settings.maxForceFieldsPerTick)
 
 			if (renderBlocks.size > 0) {
 				/**
@@ -123,16 +119,15 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 				 *
 				 * Packet Params: id, Type1, Type2, Size, the coordinate
 				 */
-				val coordPacketData = renderBlocks.toSeq flatMap (_.toIntList)
-
-				val packet = new PacketTile(this)
+				val coordPacketData = renderBlocks
+				val packet = Game.instance.networkManager.newPacket(this)
 				packet <<< PacketBlock.effect.id
 
 				if (!isTeleport) {
 					packet <<< 1 <<< 2 <<< coordPacketData.size <<< coordPacketData
 
 					if (getModuleCount(Content.moduleSilence) <= 0) {
-						worldObj.playSoundEffect(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D, Reference.prefix + "fieldmove", 0.6f, 1 - this.worldObj.rand.nextFloat * 0.1f)
+						//worldObj.playSoundEffect(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D, Reference.prefix + "fieldmove", 0.6f, 1 - this.worldObj.rand.nextFloat * 0.1f)
 					}
 
 					ModularForceFieldSystem.packetHandler.sendToAllAround(packet, world, position, packetRange)
