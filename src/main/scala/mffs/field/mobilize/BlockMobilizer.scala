@@ -3,6 +3,7 @@ package mffs.field.mobilize
 import com.resonant.core.prefab.block.InventorySimpleProvider
 import mffs.api.card.CoordLink
 import mffs.base.{BlockFieldMatrix, PacketBlock}
+import mffs.content.Content
 import mffs.field.mobilize.event.DelayedEvent
 import mffs.particle.IEffectController
 import mffs.{ModularForceFieldSystem, Reference, Settings}
@@ -119,23 +120,31 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 				 *
 				 * Packet Params: id, Type1, Type2, Size, the coordinate
 				 */
-				val coordPacketData = renderBlocks
-				val packet = Game.instance.networkManager.newPacket(this)
-				packet <<< PacketBlock.effect.id
+				val packet = Game.instance.networkManager.newPacket()
+				packet.setID(PacketBlock.effect)
 
 				if (!isTeleport) {
-					packet <<< 1 <<< 2 <<< coordPacketData.size <<< coordPacketData
+					packet <<< 1
+					packet <<< 2
+					packet <<< renderBlocks
 
 					if (getModuleCount(Content.moduleSilence) <= 0) {
 						//worldObj.playSoundEffect(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D, Reference.prefix + "fieldmove", 0.6f, 1 - this.worldObj.rand.nextFloat * 0.1f)
 					}
 
-					ModularForceFieldSystem.packetHandler.sendToAllAround(packet, world, position, packetRange)
+					Game.instance.networkManager.sendPacket(this, packet)
+					//ModularForceFieldSystem.packetHandler.sendToAllAround(packet, world, position, packetRange)
 				}
 				else {
-					packet <<< 2 <<< getMoveTime <<< (getAbsoluteAnchor + 0.5) <<< (getTargetPosition + 0.5) <<< false <<< coordPacketData.size <<< coordPacketData
+					packet <<< 2
+					packet <<< getMoveTime
+					packet <<< (getAbsoluteAnchor + 0.5)
+					packet <<< (getTargetPosition + 0.5)
+					packet <<< false
+					packet <<< renderBlocks
+
 					moveTime = getMoveTime
-					ModularForceFieldSystem.packetHandler.sendToAllAround(packet, world, position, packetRange)
+					Game.instance.networkManager.sendPacket(this, packet)
 				}
 			}
 
