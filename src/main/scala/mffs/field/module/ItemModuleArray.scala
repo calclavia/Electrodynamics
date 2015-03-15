@@ -47,7 +47,7 @@ class ItemModuleArray extends ItemModule {
 					}
 				)
 
-				return newField
+				newField
 			}
 		)
 	}

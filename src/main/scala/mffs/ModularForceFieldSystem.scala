@@ -11,6 +11,7 @@ import nova.core.loader.{Loadable, NovaMod}
 @NovaMod(id = Reference.id, name = Reference.name, version = Reference.version, novaVersion = "0.0.1", dependencies = Array("resonantengine"))
 object ModularForceFieldSystem extends Loadable {
 
+	val tempID = ""
 	var movementManager: MovementManager = null
 
 	override def preInit() {

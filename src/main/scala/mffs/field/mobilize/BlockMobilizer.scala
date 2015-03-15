@@ -8,7 +8,8 @@ import mffs.api.card.CoordLink
 import mffs.api.{Blacklist, MFFSEvent}
 import mffs.base.{BlockFieldMatrix, PacketBlock}
 import mffs.content.{Content, Models, Textures}
-import mffs.particle.IEffectController
+import mffs.particle.{FXHologramProgress, FieldColor, IEffectController}
+import mffs.security.MFFSPermissions
 import mffs.util.MFFSUtility
 import mffs.{ModularForceFieldSystem, Settings}
 import nova.core.entity.Entity
@@ -173,13 +174,13 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 					if (isTeleport) {
 						if (getModuleCount(Content.moduleSilence) <= 0 && ticks % 10 == 0) {
 							val moveTime = getMoveTime
-							//							worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, Reference.prefix + "fieldmove", 1.5f, 0.5f + 0.8f * (moveTime - this.moveTime) / moveTime)
+							//worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, Reference.prefix + "fieldmove", 1.5f, 0.5f + 0.8f * (moveTime - this.moveTime) / moveTime)
 						}
 
 						moveTime -= 1
 
 						if (moveTime <= 0) {
-							//							worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, Reference.prefix + "teleport", 0.6f, 1 - this.worldObj.rand.nextFloat * 0.1f)
+							//worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, Reference.prefix + "teleport", 0.6f, 1 - this.worldObj.rand.nextFloat * 0.1f)
 						}
 					}
 				}
@@ -265,7 +266,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 				val packet = Game.instance.networkManager.newPacket()
 				packet <<< PacketBlock.effect
 				packet <<< 3
-				packet <<< failedPositions.asInstanceOf[JSet]
+				packet <<< failedPositions.asInstanceOf[JSet[Vector3i]]
 				Game.instance.networkManager.sendPacket(this, packet)
 				//				ModularForceFieldSystem.packetHandler.sendToAllAround(packet, world, position, packetRange)
 			}
@@ -323,7 +324,8 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 			return false
 		}
 
-		if (!MFFSUtility.hasPermission(worldObj, position, MFFSPermissions.blockAlter, ModularForceFieldSystem.fakeProfile) && !MFFSUtility.hasPermission(target.world, target, MFFSPermissions.blockAlter, ModularForceFieldSystem.fakeProfile)) {
+		//TODO: Check the username ID for the Mobilizer
+		if (!MFFSUtility.hasPermission(startWorld, position.toDouble, MFFSPermissions.blockAlter, ModularForceFieldSystem.tempID) && !MFFSUtility.hasPermission(targetWorld, target.toDouble, MFFSPermissions.blockAlter, ModularForceFieldSystem.tempID)) {
 			return false
 		}
 
@@ -401,37 +403,46 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 							val isTeleportPacket = packet.readInt()
 							val vecSize = packet.readInt()
 
-							val hologramRenderPoints = ((0 until vecSize) map (i => packet.readInt().toDouble + 0.5)).toList grouped 3 map (new Vector3d(_))
+							val hologramRenderPoints = packet.readSet().toSet[Vector3i]
 
 							/**
 							 * Movement Rendering
 							 */
 							val direction = getDirection
 
-							isTeleportPacket match {
-								case 1 => hologramRenderPoints.foreach(vector => ModularForceFieldSystem.proxy.renderHologram(world, vector, FieldColor.blue, 30, vector + direction))
-								case 2 => hologramRenderPoints.foreach(vector => ModularForceFieldSystem.proxy.renderHologram(world, vector, FieldColor.green, 30, vector + direction))
-							}
+							hologramRenderPoints.foreach(
+								pos =>
+									world
+										.createClientEntity(Content.fxHologramProgress).asInstanceOf[FXHologramProgress]
+										.setColor(
+											isTeleportPacket match {
+												case 1 => FieldColor.blue
+												case 2 => FieldColor.green
+											}
+										))
 						}
 						case 2 => {
 							/**
 							 * Teleportation Rendering
 							 */
 							val animationTime = packet.readInt()
-							val anchorPosition = new Vector3d(packet)
-							val targetPosition = new VectorWorld(packet)
+							val anchorPosition = packet.readStorable()
+							val targetPosition = packet.readStorable()
 							val isPreview = packet.readBoolean()
 							val vecSize = packet.readInt()
-							val hologramRenderPoints = ((0 until vecSize) map (i => packet.readInt().toDouble + 0.5)).toList grouped 3 map (new Vector3d(_))
+							val hologramRenderPoints = packet.readSet().toSet[Vector3i]
+
 							val color = if (isPreview) FieldColor.blue else FieldColor.green
 
-							hologramRenderPoints foreach (vector => {
+							hologramRenderPoints.foreach(pos => {
 								//Render teleport start
-								ModularForceFieldSystem.proxy.renderHologramOrbit(this, world, anchorPosition, vector, color, animationTime, 30f)
-
+								val hologram = world.createClientEntity(Content.fxHologramProgress).asInstanceOf[FXHologramProgress]
+								hologram.setColor(color)
+								hologram.setPosition(pos.toDouble + 0.5)
+								//TODO: Not clean
 								if (targetPosition.world != null && targetPosition.world.getChunkProvider.chunkExists(targetPosition.xi, targetPosition.zi)) {
 									//Render teleport end
-									val destination = vector - anchorPosition + targetPosition
+									val destination = pos - anchorPosition + targetPosition
 									ModularForceFieldSystem.proxy.renderHologramOrbit(this, targetPosition.world, targetPosition, destination, color, animationTime, 30f)
 								}
 							})
@@ -493,8 +504,8 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 	 */
 	def getMoveTime: Int = {
 		if (isTeleport) {
-			var time = (20 * this.getTargetPosition.distance(this.getAbsoluteAnchor)).toInt
-			if (this.getTargetPosition.world ne this.worldObj) {
+			var time = (20 * getTargetPosition._2.distance(this.getAbsoluteAnchor)).toInt
+			if (this.getTargetPosition._1 != world) {
 				time += 20 * 60
 			}
 			return time
@@ -517,7 +528,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 
 		if (bounds != null) {
 			val entities = world.getEntities(bounds)
-			entities.foreach(entity => moveEntity(entity, targetLocation._2.toDouble + 0.5 + entity.position() - (getAbsoluteAnchor.toDouble + 0.5)))
+			entities.foreach(entity => moveEntity(entity, targetLocation._1, targetLocation._2.toDouble + 0.5 + entity.position() - (getAbsoluteAnchor.toDouble + 0.5)))
 		}
 	}
 
@@ -531,7 +542,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 
 	override def getTranslation: Vector3i = super.getTranslation + anchor
 
-	protected def moveEntity(entity: Entity, targetWorld: World, targetPos: Vector3i) {
+	protected def moveEntity(entity: Entity, targetWorld: World, targetPos: Vector3d) {
 		if (entity != null && targetPos != null) {
 			if (!entity.world().sameType(targetWorld)) {
 				entity.setWorld(targetWorld)
@@ -631,18 +642,15 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 				opBlock.isPresent && Game.instance.blockManager.getAirBlock.sameType(opBlock.get()) && !sameType(opBlock.get())
 			})
 
-			var from = List.empty[(World, Vector3i)]
-			var to = List.empty[(World, Vector3i)]
+			var moveMap = Map.empty[(World, Vector3i), (World, Vector3i)]
 
 			actualMovables.foreach(blockPos => {
 				val relativePosition = blockPos - getAbsoluteAnchor
 				val newPosition = getTargetPosition._2 + relativePosition
-
-				from :+=(world, blockPos)
-				to :+=(getTargetPosition._1, newPosition)
+				moveMap += (world, blockPos) ->(getTargetPosition._1, newPosition)
 			})
 
-			Game.instance.syncTicker.preQueue(new DelayedEvent(getMoveTime, () => doMove(from, to)))
+			Game.instance.syncTicker.preQueue(new DelayedEvent(getMoveTime, () => doMove(moveMap)))
 		}
 
 		return Set.empty

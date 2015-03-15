@@ -15,8 +15,7 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink
 	private final val remotesCached = new HashSet[Item]
 	private final val temporaryRemoteBlacklist = new HashSet[Item]
 
-  @SideOnly(Side.CLIENT)
-  override def addInformation(Item: Item, entityplayer: EntityPlayer, list: List[_], flag: Boolean)
+	override def addInformation(Item: Item, entityplayer: EntityPlayer, list: List[_], flag: Boolean)
   {
 	  super.addInformation(Item, entityplayer, list, flag)
 

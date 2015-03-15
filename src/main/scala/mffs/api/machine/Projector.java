@@ -1,7 +1,6 @@
 package mffs.api.machine;
 
 import mffs.api.Frequency;
-import net.minecraft.inventory.IInventory;
 import nova.core.util.transform.Vector3d;
 
 import java.util.Set;
@@ -10,7 +9,7 @@ import java.util.Set;
  * Also extends IDisableable, IFortronFrequency
  * @author Calclavia
  */
-public interface Projector extends IInventory, FieldMatrix, Frequency {
+public interface Projector extends FieldMatrix, Frequency {
 	/**
 	 * Projects the force field.
 	 */

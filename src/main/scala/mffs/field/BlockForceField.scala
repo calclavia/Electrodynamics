@@ -13,7 +13,7 @@ import nova.core.block.components.LightEmitter
 import nova.core.entity.Entity
 import nova.core.entity.components.Damageable
 import nova.core.game.Game
-import nova.core.item.{Item, ItemBlock}
+import nova.core.item.Item
 import nova.core.network.{PacketHandler, Sync}
 import nova.core.player.Player
 import nova.core.render.model.Model
@@ -28,7 +28,7 @@ class BlockForceField extends Block with PacketHandler with ForceField with Ligh
 
 	@Stored
 	@Sync
-	private var camoItem: ItemBlock = null
+	private var camoBlock: Block = null
 	@Stored
 	@Sync
 	private var projector: Vector3i = null
@@ -50,8 +50,7 @@ class BlockForceField extends Block with PacketHandler with ForceField with Ligh
 	override def renderStatic(model: Model) {
 		//TODO: Render pass?
 
-		if (camoItem != null) {
-			val camoBlock = camoItem.block
+		if (camoBlock != null) {
 			camoBlock.renderStatic(model)
 		}
 		else {
@@ -60,10 +59,9 @@ class BlockForceField extends Block with PacketHandler with ForceField with Ligh
 	}
 
 	override def shouldRenderSide(side: Direction): Boolean = {
-		if (camoItem != null) {
+		if (camoBlock != null) {
 			try {
-				val block = camoItem.block
-				return block.shouldRenderSide(side)
+				return camoBlock.shouldRenderSide(side)
 			}
 			catch {
 				case e: Exception =>
@@ -192,7 +190,7 @@ class BlockForceField extends Block with PacketHandler with ForceField with Ligh
 
 	def refreshCamoBlock() {
 		if (getProjectorSafe != null) {
-			camoItem = MFFSUtility.getCamoBlock(getProjector, position)
+			camoBlock = MFFSUtility.getCamoBlock(getProjector, position)
 		}
 	}
 }

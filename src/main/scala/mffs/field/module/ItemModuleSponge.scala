@@ -7,7 +7,10 @@ import mffs.base.ItemModule
 import mffs.field.BlockProjector
 import nova.core.fluid.FluidBlock
 import nova.core.game.Game
+import nova.core.network.NetworkTarget.Side
 import nova.core.util.transform.Vector3i
+
+import scala.collection.convert.wrapAll._
 
 class ItemModuleSponge extends ItemModule {
 	setMaxCount(1)
@@ -20,7 +23,7 @@ class ItemModuleSponge extends ItemModule {
 		if (projector.getTicks % 60 == 0) {
 			val world = proj.world
 
-			if (Game.instance.networkManager.isServer) {
+			if (Side.get().isServer) {
 				for (point <- projector.getInteriorPoints) {
 					val block = world.getBlock(point)
 

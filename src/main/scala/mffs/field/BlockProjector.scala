@@ -7,15 +7,18 @@ import mffs.api.machine.Projector
 import mffs.api.modules.Module.ProjectState
 import mffs.base.{BlockFieldMatrix, PacketBlock}
 import mffs.content.{Content, Models, Textures}
+import mffs.field.shape.ItemShapeCustom
 import mffs.particle.{FXFortronBeam, FXHologramProgress, FieldColor}
 import mffs.security.PermissionHandler
 import mffs.util.CacheHandler
 import nova.core.block.Block
 import nova.core.block.components.LightEmitter
+import nova.core.entity.Entity
 import nova.core.game.Game
 import nova.core.inventory.InventorySimple
 import nova.core.item.Item
 import nova.core.network.{Packet, Sync}
+import nova.core.player.Player
 import nova.core.render.Color
 import nova.core.render.model.{Model, Vertex}
 import nova.core.retention.Stored
@@ -280,6 +283,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter w
 
 	override def isInField(position: Vector3d) = if (getShapeItem != null) getStructure.intersects(position) else false
 
+	/*
 	def isAccessGranted(checkWorld: World, checkPos: Vector3d, player: EntityPlayer, action: PlayerInteractEvent.Action): Boolean = {
 		var hasPerm = true
 
@@ -296,7 +300,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter w
 		}
 
 		return hasPerm
-	}
+	}*/
 
 	def getFilterItems: Set[Item] = (26 until 32).map(inventory.get).collect { case op: Optional[Item] if op.isPresent => op.get}.toSet
 
@@ -332,10 +336,12 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter w
 			val lightBeam = new Model()
 			//TODO: Lighting, RenderHelper.disableStandardItemLighting
 
-			val xDifference: Double = Minecraft.getMinecraft.thePlayer.posX - (x + 0.5)
-			val zDifference: Double = Minecraft.getMinecraft.thePlayer.posZ - (y + 0.5)
-			val rotatation = Math.atan2(zDifference, xDifference)
-			lightBeam.matrix = new MatrixStack().rotate(Vector3d.yAxis, -rotatation + Math.toRadians(27)).getMatrix
+			val player = Game.instance.clientManager.getPlayer.asInstanceOf[Entity with Player]
+			val xDifference: Double = player.position.x - (x + 0.5)
+			val zDifference: Double = player.position.z - (y + 0.5)
+			val rot = Math.atan2(zDifference, xDifference)
+			lightBeam.matrix = new MatrixStack().rotate(Vector3d.yAxis, -rot + Math.toRadians(27)).getMatrix
+
 			/*
 			glDisable(GL_TEXTURE_2D)
 			glShadeModel(GL_SMOOTH)
@@ -356,7 +362,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter w
 			face.drawVertex(new Vertex(0.866D * width, height, -0.5F * width, 0, 0))
 			face.drawVertex(new Vertex(0.0D, height, 1.0F * width, 0, 0))
 			face.drawVertex(new Vertex(-0.866D * width, height, -0.5F * width, 0, 0))
-			face.vertices.foreach(_.setColor(new Color(72, 198, 255, 255)))
+			face.vertices.foreach(_.setColor(Color.rgb(72, 198, 255)))
 			lightBeam.drawFace(face)
 
 			/*
@@ -388,10 +394,8 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter w
 				getShapeItem.render(this, model)
 
 				val color = if (isActive) FieldColor.blue else FieldColor.red
-				val rgba = new Color(color._1, color._2, color._3, Math.sin(ticks.toDouble / 10) / 2 + 0.8)
-				hologram.faces.foreach(_.vertices.foreach(_.setColor(rgba)))
+				hologram.faces.foreach(_.vertices.foreach(_.setColor(color.alpha((Math.sin(ticks.toDouble / 10) * 255).toInt))))
 				hologram.bind(Textures.hologram)
-
 			}
 		}
 	}
@@ -408,8 +412,8 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter w
 	protected override def doGetFortronCost: Int = if (this.getShapeItem != null) Math.round(super.doGetFortronCost + this.getShapeItem.getFortronCost(this.getAmplifier)) else 0
 
 	protected override def getAmplifier: Float = {
-		if (getShapeItem.isInstanceOf[ItemModeCustom]) {
-			return Math.max(getShapeItem.asInstanceOf[ItemModeCustom].getFieldBlocks(this, this.getShapeItem).size / 100, 1)
+		if (getShapeItem.isInstanceOf[ItemShapeCustom]) {
+			return Math.max(getShapeItem.asInstanceOf[ItemShapeCustom].fieldSize / 100, 1)
 		}
 		return Math.max(Math.min((if (calculatedField != null) calculatedField.size else 0) / 1000, 10), 1)
 	}

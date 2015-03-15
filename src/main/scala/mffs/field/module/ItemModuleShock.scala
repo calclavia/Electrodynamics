@@ -13,7 +13,7 @@ class ItemModuleShock extends ItemModule {
 
 	override def getID: String = "moduleShock"
 
-	override def onFieldCollide(block: Block, entity: Entity) {
+	override def onFieldCollide(block: Block, entity: Entity): Boolean = {
 		if (entity.isInstanceOf[Damageable]) {
 			if (entity.isInstanceOf[Player]) {
 				val entityPlayer = entity.asInstanceOf[Entity with Player]

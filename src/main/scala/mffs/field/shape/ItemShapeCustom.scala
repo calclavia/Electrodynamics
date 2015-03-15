@@ -23,13 +23,6 @@ import scala.util.Random
 
 class ItemShapeCustom extends ItemShape with CacheHandler {
 
-	private final val NBT_MODE: String = "mode"
-	private final val NBT_POINT_1: String = "point1"
-	private final val NBT_POINT_2: String = "point2"
-	private final val NBT_FIELD_BLOCK_LIST: String = "fieldPoints"
-	private final val NBT_FIELD_BLOCK_NAME: String = "blockID"
-	private final val NBT_FIELD_BLOCK_METADATA: String = "blockMetadata"
-	private final val NBT_FIELD_SIZE: String = "fieldSize"
 	private final val saveFilePrefix: String = "custom_mode_"
 
 	@Stored

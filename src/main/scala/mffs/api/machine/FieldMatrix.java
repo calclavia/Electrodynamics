@@ -5,6 +5,7 @@ import mffs.api.modules.StructureProvider;
 import nova.core.item.Item;
 import nova.core.util.Direction;
 import nova.core.util.transform.Vector3d;
+import nova.core.util.transform.Vector3i;
 
 import java.util.Set;
 
@@ -52,13 +53,13 @@ public interface FieldMatrix extends IActivatable, IPermissionProvider {
 	/**
 	 * @return Gets all the absolute block coordinates that are occupying the force field. Note that this is a copy of the actual field set.
 	 */
-	Set<Vector3d> getCalculatedField();
+	Set<Vector3i> getCalculatedField();
 
 	/**
 	 * Gets the absolute interior points of the projector. This might cause lag so call sparingly.
 	 * @return
 	 */
-	Set<Vector3d> getInteriorPoints();
+	Set<Vector3i> getInteriorPoints();
 
 	/**
 	 * @return Gets the facing direction. Always returns the front side of the block.
