@@ -7,7 +7,6 @@ import mffs.content.Content
 import mffs.field.BlockProjector
 import mffs.field.shape.ItemShapeCustom
 import nova.core.block.Block
-import nova.core.entity.Entity
 import nova.core.inventory.Inventory
 import nova.core.inventory.components.InventoryProvider
 import nova.core.item.{Item, ItemBlock}
@@ -121,7 +120,7 @@ object MFFSUtility {
 		return null
 	}
 
-	def hasPermission(world: World, position: Vector3d, permission: Permission, player: Entity with Player): Boolean =
+	def hasPermission(world: World, position: Vector3d, permission: Permission, player: Player): Boolean =
 		hasPermission(world, position, permission, player.getID())
 
 	/*
