@@ -13,4 +13,5 @@ object Models extends ContentLoader {
 	val projector = new TechneModel(Reference.domain, "electromagneticProjector")
 	val biometric = new TechneModel(Reference.domain, "biometricIdentifier")
 	val mobilizer = new TechneModel(Reference.domain, "forceMobilizer")
+	val deriver = new TechneModel(Reference.domain, "coercionDeriver")
 }

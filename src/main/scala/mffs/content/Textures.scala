@@ -11,19 +11,22 @@ import nova.core.render.texture.BlockTexture
 object Textures extends ContentLoader {
 	val machine = new BlockTexture(Reference.domain, "machine")
 	val fortron = new BlockTexture(Reference.domain, "fortron")
-	val hologram = new BlockTexture(Reference.domain, "hologram.png")
-	val forceField = new BlockTexture(Reference.domain, "forceField.png")
+	val hologram = new BlockTexture(Reference.domain, "hologram")
+	val forceField = new BlockTexture(Reference.domain, "forceField")
 
-	val fortronCapacitorOn = new BlockTexture(Reference.domain, "fortronCapacitor_on.png")
-	val fortronCapacitorOff = new BlockTexture(Reference.domain, "fortronCapacitor_off.png")
+	val coercionDeriverOn = new BlockTexture(Reference.domain, "coercionDeriver_on")
+	val coercionDeriverOff = new BlockTexture(Reference.domain, "coercionDeriver_off")
 
-	val projectorOn = new BlockTexture(Reference.domain, "electromagneticProjector_on.png")
-	val projectorOff = new BlockTexture(Reference.domain, "electromagneticProjector_off.png")
+	val fortronCapacitorOn = new BlockTexture(Reference.domain, "fortronCapacitor_on")
+	val fortronCapacitorOff = new BlockTexture(Reference.domain, "fortronCapacitor_off")
 
-	val biometricOn = new BlockTexture(Reference.domain, "biometricIdentifier_on.png")
-	val biometricOff = new BlockTexture(Reference.domain, "biometricIdentifier_off.png")
+	val projectorOn = new BlockTexture(Reference.domain, "electromagneticProjector_on")
+	val projectorOff = new BlockTexture(Reference.domain, "electromagneticProjector_off")
 
-	val mobilizerOn = new BlockTexture(Reference.domain, "forceMobilizer_on.png")
-	val mobilizerOff = new BlockTexture(Reference.domain, "forceMobilizer_off.png")
+	val biometricOn = new BlockTexture(Reference.domain, "biometricIdentifier_on")
+	val biometricOff = new BlockTexture(Reference.domain, "biometricIdentifier_off")
+
+	val mobilizerOn = new BlockTexture(Reference.domain, "forceMobilizer_on")
+	val mobilizerOff = new BlockTexture(Reference.domain, "forceMobilizer_off")
 
 }
