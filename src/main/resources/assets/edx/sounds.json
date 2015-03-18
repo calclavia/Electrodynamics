@@ -1,0 +1,20 @@
+{
+  "hammer": {
+    "category": "ambient",
+    "sounds": [
+      "hammer"
+    ]
+  },
+  "gearCrank": {
+    "category": "ambient",
+    "sounds": [
+      "gearCrank"
+    ]
+  },
+  "siren": {
+    "category": "ambient",
+    "sounds": [
+      "siren"
+    ]
+  }
+}

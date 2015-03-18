@@ -1,0 +1,18 @@
+[{
+    "modid": "EDX",
+    "name": "Electrodynamics",
+    "description": "Electrodynamics is a mod that brings in realistic, world-based technological advancement experience into Minecraft.",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "http://www.calclavia.com/electrodynamics",
+    "updateUrl": "",
+    "authors": ["Calclavia", "CyanideX"],
+    "credits": "",
+    "logoFile": "edx-logo.png",
+    "screenshots": [],
+    "parent": "",
+    "requiredMods": [],
+    "dependencies": [],
+    "dependants": [],
+    "useDependencyInformation": "false"
+}]

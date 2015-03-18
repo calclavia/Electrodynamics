@@ -1,0 +1,385 @@
+# English @author Calclavia, Alex_hawks
+# If a localization includes %v it is some data that is calculated. Such as attributes on a cable. 
+# The %v may be followed by a number if there are multiple pieces of calculated data, but it will be explained in a comment.
+# A % followed by a number is used for colors. The exact usage will be outlined in the comment above the localization.
+
+itemGroup.edx=Electrodynamics
+meta.edx.description=Electrodynamics is a Minecraft mod focusing on the manipulation of electricity and wireless technology. Ever wanted blazing electrical shocks flying off your evil lairs? You've came to the right place!
+meta.edx.credits=Visit website for credits.
+
+fluid.mixture=Mixture
+toolmode.link.name=Linking
+
+### Schematics
+schematic.windTurbine.name=Wind Turbine
+schematic.waterTurbine.name=Water Turbine
+
+### Core
+item.edx:ingot.name=%v Ingot
+item.edx:oreDust.name=%v Dust
+item.edx:alloyDust.name=Alloy Dust
+item.edx:oreDust.tooltip=Shift-right click on a cauldron to refine.
+item.edx:oreRefinedDust.name=%v Refined Dust
+item.edx:oreRubble.name=%v Rubble
+item.edx:bucketMixture.name=%v Bucket
+item.edx:bucketMolten.name=%v Bucket
+item.edx:bucketMolten.name=%v Bucket
+
+#Misc
+misc.ingot=Ingot
+misc.ingot=Ingot
+misc.rubble=Rubble
+misc.dust=Dust
+misc.refinedDust=Refined Dust
+misc.bucketMolten=Molten Bucket
+
+# Blocks
+tile.edx:oreCopper.name=Copper Ore
+tile.edx:oreTin.name=Tin Ore
+tile.edx:glassJar.name=Glass Jar
+tile.edx:sieve.name=Sieve
+
+# Items
+item.edx:circuitBasic.name=Basic Circuit
+item.edx:circuitAdvanced.name=Advanced Circuit
+item.edx:circuitElite.name=Elite Circuit
+item.edx:screwdriver.name=Screwdriver
+item.edx:screwdriver.tooltip=Used to configure blocks. Shift-right click to change mode.
+item.edx:motor.name=Motor
+
+item.edx:plateCopper.name=Copper Plate
+item.edx:plateTin.name=Tin Plate
+item.edx:plateBronze.name=Bronze Plate
+item.edx:plateSteel.name=Steel Plate
+item.edx:plateIron.name=Iron Plate
+item.edx:plateGold.name=Gold Plate
+
+item.edx:ingotCopper.name=Copper Ingot
+item.edx:ingotTin.name=Tin Ingot
+item.edx:ingotBronze.name=Bronze Ingot
+item.edx:ingotSteel.name=Steel Ingot
+
+item.edx:dustBronze.name=Bronze Dust
+item.edx:dustSteel.name=Steel Dust
+
+### Archaic Module
+tile.edx:gutter.name=Gutter
+tile.edx:gutter.tooltip=A primitive way of transferring fluid.
+
+## Industrial Stone Blocks
+tile.edx:industrialStone.0.name=Industrial Brick
+tile.edx:industrialStone.1.name=Industrial Double Slab Brick
+tile.edx:industrialStone.2.name=Industrial Chiseled Brick
+tile.edx:industrialStone.3.name=Industrial Cobblestone
+tile.edx:industrialStone.4.name=Industrial Cracked Stone
+tile.edx:industrialStone.5.name=Industrial Stone
+tile.edx:industrialStone.6.name=Industrial Stone Slab
+tile.edx:industrialStone.7.name=Industrial Mossy Stone
+tile.edx:industrialStone.8.name=Dark Iron
+tile.edx:industrialStone.9.name=Tinted Steel
+tile.edx:industrialStone.10.name=Steel
+
+## Items
+item.edx:imprint.name=Imprint
+item.edx:hammer.name=Hammer
+item.edx:handCrank.name=Hand Crank
+item.edx:biomass.name=Biomass
+item.edx:focusingMatrix.name=Focusing Matrix
+
+## Machines
+tile.edx:castingMold.name=Casting Mold
+tile.edx:castingMold.tooltip=Pour molten metal into the cast to form an ingot.
+tile.edx:millstone.name=Millstone
+tile.edx:millstone.tooltip=Put some rubble in the millstone and use a hand crank to grind rubble into dust.
+tile.edx:imprinter.name=Imprinter
+
+tile.edx:firebox.name=Firebox
+tile.edx:firebox.0.name=Firebox
+tile.edx:firebox.1.name=Electric Firebox
+
+tile.edx:hotPlate.name=Hot Plate
+
+tile.edx:workbench.name=Workbench
+tile.edx:workbench.tooltip=The workbench is used for hammering and sawing resources.
+tile.edx:engineeringTable.name=Engineering Table
+engineerTable.config.inventory.true=Engineering table is now connected to nearby inventories.
+engineerTable.config.inventory.false=Engineering table is now disconnected from nearby inventories.
+
+## Transport
+tile.edx:turntable.name=Turntable
+tile.edx:crate.0.name=Wooden Crate
+tile.edx:crate.1.name=Iron Crate
+tile.edx:crate.2.name=Steel Crate
+
+info.waila.crate.stack=Item:
+info.waila.crate.stored=Stored:
+info.waila.crate.empty=Empty
+
+crate.orefilter.true= Same OreName stacking enabled
+crate.orefilter.false= Same OreName stacking disabled
+crate.tooltip.amount= Amount: 
+
+tile.edx:crate.0.tooltip=Right click to add items Left click to remove items Ctrl Click sets itemstack filter
+tile.edx:crate.1.tooltip=Right click to add items Left click to remove items Ctrl Click sets itemstack filter
+tile.edx:crate.2.tooltip=Right click to add items Left click to remove items Ctrl Click sets itemstack filter
+
+tile.edx:tank.name=Tank
+tile.edx:tank.0.name=Tank
+tile.edx:tank.tooltip=Shift right click to pick up with fluid contained within.
+info.waila.tank.fluid=Fluid:
+info.waila.tank.vol=Volume:
+info.waila.tank.empty=Empty
+
+### Mechanical Module
+## Energy
+item.edx:gear.0.name=Wooden Gear
+item.edx:gear.1.name=Stone Gear
+item.edx:gear.2.name=Metal Gear
+
+item.edx:gearShaft.0.name=Wooden Gear Shaft
+item.edx:gearShaft.1.name=Stone Gear Shaft
+item.edx:gearShaft.2.name=Metal Gear Shaft
+
+tile.edx:windTurbine.name=Wind Turbine
+tile.edx:windTurbine.0.name=Wooden Wind Turbine
+tile.edx:windTurbine.0.tooltip=The wooden wind turbine is light, fragile and spins fast.
+tile.edx:windTurbine.1.name=Stone Wind Turbine
+tile.edx:windTurbine.1.tooltip=The stone turbine is heavy, strong and durable.
+tile.edx:windTurbine.2.name=Metal Wind Turbine
+tile.edx:windTurbine.2.tooltip=The metal wind turbine is strong and agile.
+
+tile.edx:waterTurbine.name=Water Turbine
+tile.edx:waterTurbine.0.name=Wooden Water Turbine
+tile.edx:waterTurbine.0.tooltip=The wooden water turbine is light and moves fast.
+tile.edx:waterTurbine.1.name=Stone Water Turbine
+tile.edx:waterTurbine.1.tooltip=The stone water turbine is heavy, strong and durable.
+tile.edx:waterTurbine.2.name=Metal Water Turbine
+tile.edx:waterTurbine.2.tooltip=The metal water turbine is strong and agile.
+
+## Transport
+item.edx:pipe.ceramic.name=Ceramic Pipe
+item.edx:pipe.bronze.name=Bronze Pipe
+item.edx:pipe.plastic.name=Plastic Pipe
+item.edx:pipe.iron.name=Iron Pipe
+item.edx:pipe.steel.name=Steel Pipe
+item.edx:pipe.fiberglass.name=Fiberglass Pipe
+tile.edx:pump.name=Pump
+tile.edx:grate.name=Grate
+tile.edx:conveyorBelt.name=Conveyor Belt
+
+tile.edx:detector.name=Detector
+tile.edx:detector.tooltip=Outputs a Redstone signal upon item detection. Configure to invert imprint filter.
+tile.edx:manipulator.name=Manipulator
+tile.edx:rejector.name=Rejector
+tile.edx:sorter.name=Sorter
+tile.edx:breaker.name=Breaker
+tile.edx:placer.name=Placer
+
+## Machines and Processing
+tile.edx:mixer.name=Mixer
+tile.edx:mixer.tooltip=The mixer mixes dusts with water to wash and refine the ore dust. Mixer prefers more angular velocity (spin) to process dusts.
+tile.edx:mechanicalPiston.name=Mechanical Piston
+tile.edx:grindingWheel.name=Grinding Wheel
+tile.edx:grindingWheel.tooltip=The grinding wheel grinds ores into rubble and dust. Larger torque allows faster grinding.
+tile.edx:filter.name=Filter
+edx.machine.grinder=Grinder
+edx.machine.crusher=Crusher
+edx.machine.mixer=Mixer
+edx.machine.sawmill=Saw-mill
+edx.machine.smelter=Smelter
+
+### Electrical
+## Blocks
+tile.edx:tesla.name=Tesla Coil
+tile.edx:tesla.tooltip=Transfer electricity wirelessly. Link with a configurator for cross dimension teleportation.
+item.edx:levitator.name=Electromagnetic Levitator
+tile.edx:battery.name=Battery
+tile.edx:armbot.name=Armbot
+tile.edx:encoder.name=Encoder
+item.edx:charger.name=Charging Plate
+item.edx:insulation.name=Insulation
+tile.edx:laserEmitter.name=Laser Emitter
+tile.edx:laserReceiver.name=Laser Receiver
+tile.edx:focusCrystal.name=Focus Crystal
+tile.edx:mirror.name=Mirror
+
+tool.mode.set=Mode set to:
+laser.toolmode.remove=Remove
+laser.toolmode.smelt=Smelt
+laser.toolmode.damage=Damage
+
+## Generators
+tile.edx:solarPanel.name=Solar Panel
+tile.edx:motor.name=Electric Motor
+tile.edx:thermopile.name=Thermopile
+tile.edx:thermopile.tooltip=Generates a voltage proportional to local temperature difference.
+
+#Transport
+item.edx:disk.name=Program Disk
+
+## Energy
+item.edx:wire.copper.name=Copper Wire
+item.edx:wire.tin.name=Tin Wire
+item.edx:wire.iron.name=Iron Wire
+item.edx:wire.aluminum.name=Aluminum Wire
+item.edx:wire.silver.name=Silver Wire
+item.edx:wire.superconductor.name=Superconductor Wire
+item.edx:electricTransformer.name=Transformer
+item.edx:multimeter.name=Multimeter
+item.edx:multimeter.tooltip=Multimeter is a panel that display the energy and fluid information of a block.
+
+### Quantum Tier
+tile.edx:quantumGate.name=Quantum Gate
+item.edx:quantumGlyph.0.name=Nought Glyph
+item.edx:quantumGlyph.1.name=Monogon Glyph
+item.edx:quantumGlyph.2.name=Digon Glyph
+item.edx:quantumGlyph.3.name=Trigon Glyph
+item.edx:quantumGlyph.4.name=Tetragon Glyph
+
+##	Tool-tips
+tooltip.pipe.rate=Flow Rate: #v
+tooltip.pipe.pressure=Max Pressure: #v
+
+tooltip.wire.resistance=Resistance: #v
+tooltip.wire.current=Current: #v
+tooltip.wire.damage=Damage: #v
+tooltip.wire.helpText=Higher voltages will increase transfer rate and decrease energy loss. Shift right click to place a framed wire.
+# %0 is the color for the charge level, %1 is grey to reset it back to normal (optional), %v0 is the current charge, %v1 is the max charge
+tooltip.battery.energy=Energy: %0%v0 / %v1
+tooltip.noInformation=No Information
+tooltip.tier=Tier
+tooltip.empty=Empty
+tooltip.noOutput=No Output
+tooltip.noImprint=No Imprint
+
+tooltip.graph.energy=Energy
+tooltip.graph.power=Power
+tooltip.graph.capacity=Capacity
+tooltip.graph.voltage=Voltage
+tooltip.graph.torque=Torque
+tooltip.graph.speed=Speed
+tooltip.graph.fluid=Fluid
+tooltip.graph.temperature=Temperature
+tooltip.graph.pressure=Pressure
+
+##	GUI Strings that can't be any other localization
+gui.edx.multimeter.toggle=Toggle
+gui.edx.multimeter.toggleDetection=Toggle Detection
+gui.edx.multimeter.toggleGraph=Toggle Graph
+gui.edx.multimeter.capacity=Capacity:
+gui.edx.multimeter.energy=Energy:
+gui.edx.multimeter.redstone=Output Redstone If... 
+gui.edx.multimeter.logic=Logic:
+
+gui.edx.multimeter.none=None
+gui.edx.multimeter.lessThan=Less Than
+gui.edx.multimeter.lessThanOrEqual=Less Than or Equal
+gui.edx.multimeter.equal=Equal
+gui.edx.multimeter.greaterThanOrEqual=Greater Than or Equal
+gui.edx.multimeter.greaterThan=Greater Than
+
+##	Messages to players
+message.multimeter.onUse=Energy: %v J
+message.tesla.toggleAttack=Toggled entity attack to: %v
+# %v0 is the tile that's linking to the other (usually %v0 is a tesla), the others are coordinates in the standard [x, y, z]
+message.tesla.pair=Linked %v0 with [%v1, %v2, %v3]
+message.tesla.mode=Tesla receive mode is now %v
+
+### Atomic Module
+potion.radiation=Radiation
+death.attack.radiation=%1$s died from radiation.
+
+## Schematic
+schematic.accelerator.name=Particle Accelerator
+schematic.breedingReactor.name=Breeding Reactor
+schematic.fissionReactor.name=Fission Reactor
+schematic.fusionReactor.name=Fusion Reactor
+
+## Fluids
+fluid.uraniumhexafluoride=Uranium Hexafluoride
+fluid.deuterium=Deuterium
+fluid.tritium=Tritium
+fluid.plasma=Plasma
+fluid.steam=Steam
+fluid.toxicwaste=Toxic Waste
+fluid.tile.water=Water
+
+item.edx:hazmatMask.name=Hazmat Mask
+item.edx:hazmatBody.name=Hazmat Body
+item.edx:hazmatLeggings.name=Hazmat Leggings
+item.edx:hazmatBoots.name=Hazmat Boots
+item.edx:bucketToxicWaste.name=Toxic Waste Bucket
+
+## Cells
+item.edx:cellEmpty.0.name=Empty Cell
+item.edx:cellWater.0.name=Water Cell
+item.edx:cellDeuterium.0.name=Deuterium Cell
+item.edx:cellTritium.0.name=Tritium Cell
+item.edx:darkMatter.0.name=Dark Matter
+item.edx:antimatter.0.name=Antimatter
+item.edx:antimatter.0.tooltip=125 Milligrams
+item.edx:antimatter.1.name=Antimatter
+item.edx:antimatter.1.tooltip=1 Gram
+
+## Uranium Related Items
+item.edx:yellowCake.name=Yellowcake
+item.edx:uranium.0.name=Uranium-235
+item.edx:uranium.0.tooltip=Enriched Uranium
+item.edx:uranium.1.name=Uranium-238
+item.edx:uranium.1.tooltip=Breeding Uranium
+item.edx:fuelRod.name=Fissile Fuel Rod
+item.edx:fuelRod.tooltip=The primary fuel source for fission reactors.
+item.edx:breederFuel.name=Breeder Fuel Rod
+item.edx:breederFuel.tooltip=The fuel source for re-breeding decayed fissile fuels.
+item.edx:uraniumHexafluoride.name=Uranium Hexafluoride
+item.edx:steam.name=Steam
+
+## Blocks
+tile.edx:oreUranium.name=Uranium Ore
+tile.edx:oreUraniumOre.tooltip=A precious and useful ore used for fission reactions.
+tile.edx:reactorDrain.name=Reactor Drain
+tile.edx:reactorDrain.tooltip=Extracts fluids out of the reactor, such as toxic waste.
+tile.edx:nuclearBoiler.name=Nuclear Boiler
+tile.edx:nuclearBoiler.tooltip=Boils yellowcake into uranium hexaflouride gas.
+tile.edx:centrifuge.name=Centrifuge
+tile.edx:centrifuge.tooltip=Refines Uranium Hexafluoride gas into usable uranium.
+tile.edx:reactorCell.name=Reactor Cell
+tile.edx:reactorCell.tooltip=The primary components for all types of reactors. Fuel rods or plasma may be injected into the cell.
+tile.edx:plasmaHeater.name=Plasma Heater
+tile.edx:plasmaHeater.tooltip=A plasma heater is used to heat deuterium and tritium to plasma state for fusion power. Plasma must be moved into the reactor cell.
+tile.edx:electricTurbine.name=Electric Turbine
+tile.edx:electricTurbine.tooltip=Transform the kinetic energy from moving steam into electrical energy.
+tile.edx:radioactive.name=Radioactive Waste
+tile.edx:radioactive.tooltip=Generates harmful radiation and spreads around the world, mutating organisms.
+tile.edx:thermometer.name=Thermometer
+tile.edx:thermometer.tooltip=Reads the temperature at the current coordinate. Shift-right click to lock the reading to a specific coordinate.
+tile.edx:electromagnet.name=Electromagnet
+tile.edx:electromagnet.0.name=Electromagnet
+tile.edx:electromagnet.1.name=Electromagnet
+tile.edx:electromagnet.tooltip=Creates an electromagnetic field preventing plasma and particles from getting near.
+tile.edx:chemicalExtractor.name=Chemical Extractor
+tile.edx:chemicalExtractor.tooltip=Extracts uranium ores to yellowcake, water to deuterium and deuterium to tritium.
+tile.edx:siren.name=Siren
+tile.edx:siren.tooltip=Creates an alarm with customizable pitch and volume with a Redstone signal.
+tile.edx:controlRod.name=Control Rod
+tile.edx:controlRod.tooltip=Suppresses fission reaction in adjacent reactor cells.
+tile.edx:plasma.name=Plasma
+tile.edx:plasma.tooltip=Generates extreme heat for boiling water.
+tile.edx:funnel.name=Gas Funnel
+tile.edx:funnel.tooltip=Captures gas to allow it to be transported with piping.
+tile.edx:accelerator.name=Particle Accelerator
+tile.edx:accelerator.tooltip=Accelerates particles and creates antimatter and dark matter.
+tile.edx:fulmination.name=Fulmination Generator
+tile.edx:fulmination.tooltip=Transforms the kinetic energy from explosions into electrical energy.
+tile.edx:quantumAssembler.name=Quantum Assembler
+tile.edx:quantumAssembler.tooltip=Reassembles Dark Matter atoms into usable materials.
+tile.edx:toxicWaste.name=Toxic Waste
+tile.edx:toxicWaste.tooltip=Toxic, nuclear waste that pollutes the world.
+tile.edx:mirror.name = Mirror
+
+## Tooltips
+tooltip.energy=Energy
+tooltip.temperature=Temperature
+tooltip.remainingTime=Remaining Time
+tooltip.trackingTemperature=Tracking temperature at:
+tooltip.notTrackingTemperature=Not tracking temperature.
