@@ -1,6 +1,6 @@
-Resonant Induction
+Electrodynamics
 ======
-Resonant Induction is a Minecraft mod that brings in realistic, world-based technology advancement experience into Minecraft.
+Electrodynamics is a Minecraft mod that brings in realistic, world-based technology advancement experience into Minecraft.
 
 By committing to the project, you fully agree to the Contribution Agreement:
 http://calclavia.com/contribution-agreement/
@@ -21,4 +21,4 @@ Support
 * CyanideX
 
 ### License
-"Resonant Induction" is under the Calclavia Mod License: http://calclavia.com/calclavia-mod-license/
+"Electrodynamics" is under the Calclavia Mod License: http://calclavia.com/calclavia-mod-license/
