@@ -3,65 +3,58 @@ package mffs.security.card
 import java.util
 import java.util.Optional
 
-import com.resonant.core.access.AccessUser
+import com.resonant.core.access.{AccessUser, Permissions}
 import mffs.ModularForceFieldSystem
-import mffs.item.gui.EnumGui
 import nova.core.entity.Entity
 import nova.core.game.Game
+import nova.core.gui.KeyManager.Key
 import nova.core.item.Item
-import nova.core.network.PacketHandler
+import nova.core.network.NetworkTarget.Side
+import nova.core.network.{Packet, PacketHandler}
 import nova.core.player.Player
 
 class ItemCardIdentification extends ItemCardAccess with PacketHandler {
-	override var access = new AccessUser
 
 	override def hitEntity(Item: Item, entityLiving: EntityLivingBase, par3EntityLiving: EntityLivingBase): Boolean = {
-		if (entityLiving.isInstanceOf[EntityPlayer]) {
-			val access = getAccess(Item)
-			access.username = entityLiving.asInstanceOf[EntityPlayer].getGameProfile.getName
-			setAccess(Item, access)
+		if (entityLiving.isInstanceOf[Player]) {
+			access = new AccessUser(entityLiving.asInstanceOf[Player].getDisplayName)
 		}
 
 		return false
 	}
 
-	override def getTooltips(player: Optional[Player]): util.List[String] = {
-		val tooltip = super.getTooltips(player)
-		val access = getAccess(Item)
+	override def getTooltips(player: Optional[Player], tooltips: util.List[String]) {
+		super.getTooltips(player, tooltips)
 
 		if (access != null) {
-			tooltip.add(Game.instance.languageManager.getLocal("info.cardIdentification.username") + " " + access.username)
+			tooltips.add(Game.instance.languageManager.getLocal("info.cardIdentification.username") + " " + access.username)
 		}
 		else {
-			tooltip.add(Game.instance.languageManager.getLocal("info.cardIdentification.empty"))
+			tooltips.add(Game.instance.languageManager.getLocal("info.cardIdentification.empty"))
 		}
-		return tooltip
+		return tooltips
 	}
-
-	override def getAccess(Item: Item): AccessUser = access
 
 	override def onRightClick(entity: Entity) {
 		super.onRightClick(entity)
-		if (Game.instance.networkManager.isServer) {
+		if (Side.get.isServer) {
 			if (entity.isInstanceOf[Player]) {
 				val player = entity.asInstanceOf[Player]
-				if (player.issneaking) {
-					var access = getAccess(Item)
+				if (Game.instance.keyManager.isKeyDown(Key.KEY_LSHIFT)) {
 
 					if (access != null) {
-						access.username = player.getUsername
+						access = new AccessUser(player.getUsername)
 					}
 					else {
 						access = new AccessUser(player.getUsername)
 					}
-
-					setAccess(Item, access)
 				}
 				else {
 					/**
 					 * Open item GUI
 					 */
 					player.openGui(ModularForceFieldSystem, EnumGui.cardID.id, world, 0, 0, 0)
+					//Game.instance.guiFactory.showGui()
 				}
 			}
 		}
@@ -69,22 +62,15 @@ class ItemCardIdentification extends ItemCardAccess with PacketHandler {
 		return Item
 	}
 
-	/**
-	 * Reads a packet
-	 * @param buf   - data encoded into the packet
-	 * @param player - player that is receiving the packet
-	 * @param packet - The packet instance that was sending this packet.
-	 */
-	override def read(buf: Packet, player: EntityPlayer, packet: PacketType) {
-		val Item = player.getCurrentEquippedItem
-		var access = getAccess(Item)
+	override def read(packet: Packet) {
+		super.read(packet)
 
-		buf.readInt() match {
+		packet.getID match {
 			case 0 => {
 				/**
 				 * Permission toggle packet
 				 */
-				val perm = Permissions.find(buf.readString())
+				val perm = Permissions.find(packet.readString())
 
 				if (access == null) {
 					access = new AccessUser(player)
@@ -104,14 +90,12 @@ class ItemCardIdentification extends ItemCardAccess with PacketHandler {
 				 * Username packet
 				 */
 				if (access != null) {
-					access.username = buf.readString()
+					access = new AccessUser(packet.readString())
 				}
 				else {
-					access = new AccessUser(buf.readString())
+					access = new AccessUser(packet.readString())
 				}
 			}
 		}
-
-		setAccess(Item, access)
 	}
 }

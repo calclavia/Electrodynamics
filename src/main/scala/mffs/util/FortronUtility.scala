@@ -1,13 +1,12 @@
 package mffs.util
 
+import mffs.Settings
 import mffs.api.fortron.FortronFrequency
 import mffs.base.BlockModuleHandler
 import mffs.content.Content
-import mffs.particle.FieldColor
-import mffs.{ModularForceFieldSystem, Settings}
+import mffs.particle.{FXFortronBeam, FieldColor}
 import nova.core.block.Block
-import nova.core.game.Game
-import nova.core.util.transform.Vector3d
+import nova.core.network.NetworkTarget.Side
 
 /**
  * A class with useful functions related to Fortron.
@@ -90,16 +89,20 @@ object FortronUtility {
 				val transferEnergy = Math.min(joules, limit)
 				var toBeInjected: Int = receiver.removeFortron(transferer.addFortron(transferEnergy, false), false)
 				toBeInjected = transferer.addFortron(receiver.removeFortron(toBeInjected, true), true)
-				if (Game.instance.networkManager.isClient && toBeInjected > 0 && !isCamo) {
-					ModularForceFieldSystem.proxy.renderBeam(world, block.position().toDouble + 0.5, new Vector3d(receiver.asInstanceOf[TileEntity]) + 0.5, FieldColor.blue, 20)
+				if (Side.get().isClient && toBeInjected > 0 && !isCamo) {
+					val particle = world.createClientEntity(new FXFortronBeam(FieldColor.blue, 20))
+					particle.setPosition(block.position.toDouble + 0.5)
+					particle.setTarget(receiver.asInstanceOf[Block].position.toDouble + 0.5)
 				}
 			}
 			else {
 				val transferEnergy = Math.min(Math.abs(joules), limit)
 				var toBeEjected: Int = transferer.removeFortron(receiver.addFortron(transferEnergy, false), false)
 				toBeEjected = receiver.addFortron(transferer.removeFortron(toBeEjected, true), true)
-				if (Game.instance.networkManager.isClient && toBeEjected > 0 && !isCamo) {
-					ModularForceFieldSystem.proxy.renderBeam(world, new Vector3d(receiver.asInstanceOf[TileEntity]) + 0.5, new Vector3d(block) + 0.5, FieldColor.blue, 20)
+				if (Side.get().isClient && toBeEjected > 0 && !isCamo) {
+					val particle = world.createClientEntity(new FXFortronBeam(FieldColor.blue, 20))
+					particle.setTarget(block.position.toDouble + 0.5)
+					particle.setPosition(receiver.asInstanceOf[Block].position.toDouble + 0.5)
 				}
 			}
 		}
