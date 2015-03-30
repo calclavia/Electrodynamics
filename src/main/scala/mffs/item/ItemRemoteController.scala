@@ -4,14 +4,14 @@ import java.util
 import java.util.Optional
 
 import com.resonant.wrapper.lib.utility.science.UnitDisplay
+import mffs.GraphFrequency
 import mffs.api.MFFSEvent.EventForceMobilize
 import mffs.api.card.CoordLink
 import mffs.base.BlockFortron
 import mffs.item.card.ItemCardFrequency
-import mffs.particle.FieldColor
+import mffs.particle.{FXFortronBeam, FieldColor}
 import mffs.security.MFFSPermissions
 import mffs.util.MFFSUtility
-import mffs.{GraphFrequency, ModularForceFieldSystem}
 import nova.core.entity.Entity
 import nova.core.fluid.Fluid
 import nova.core.game.Game
@@ -20,6 +20,7 @@ import nova.core.item.Item
 import nova.core.network.NetworkTarget.Side
 import nova.core.player.Player
 import nova.core.retention.{Storable, Stored}
+import nova.core.util.Direction
 import nova.core.util.collection.Pair
 import nova.core.util.transform.{Vector3d, Vector3i}
 import nova.core.world.World
@@ -52,17 +53,19 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 
 	def hasLink(Item: Item): Boolean = getLink(Item) != null
 
-	override def onItemUse(Item: Item, player: EntityPlayer, world: World, x: Int, y: Int, z: Int, par7: Int, par8: Float, par9: Float, par10: Float): Boolean = {
-		if (Game.instance.networkManager.isServer && player.isSneaking) {
-			val vector: VectorWorld = new VectorWorld(world, x, y, z)
-			setLink(Item, vector)
-			val block = vector.getBlock
+	override def onUse(entity: Entity, world: World, position: Vector3i, side: Direction, hit: Vector3d): Boolean = {
+		super.onUse(entity, world, position, side, hit)
+
+		if (Side.get().isServer && Game.instance.keyManager.isKeyDown(Key.KEY_LSHIFT)) {
+			linkWorld = world
+			linkPos = position
+			val block = linkWorld.getBlock(linkPos).get()
 
 			if (block != null) {
-				player.addChatMessage(new
-						ChatComponentText(Game.instance.get.languageManager.getLocal("message.remoteController.linked").replaceAll("#p", x + ", " + y + ", " + z).replaceAll("#q", block.getLocalizedName)))
+				Game.instance.networkManager.sendChat(entity.asInstanceOf[Player], Game.instance.languageManager.getLocal("message.remoteController.linked").replaceAll("#p", position.x + ", " + position.y + ", " + position.z).replaceAll("#q", block.getID))
 			}
 		}
+
 		return true
 	}
 
@@ -86,16 +89,17 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 						val fortronBlocks = GraphFrequency
 							.instance
 							.get(frequency)
-							.collect { case block: BlockFortron => block}
+							.collect { case block: BlockFortron => block }
 							.filter(_.position().distance(entity.position()) < 50)
 
 						for (fortronBlock <- fortronBlocks) {
 							val consumedEnergy = fortronBlock.removeFortron(Math.ceil(requiredEnergy / fortronBlocks.size).toInt, true)
 
 							if (consumedEnergy > 0) {
-								if (world.isRemote) {
-									ModularForceFieldSystem.proxy.renderBeam(world, new Vector3d(entity).add(new Vector3d(0, entity.getEyeHeight - 0.2, 0)), new
-											Vector3d(fortronBlock.asInstanceOf[TileEntity]).add(0.5), FieldColor.blue, 20)
+								if (Side.get().isServer) {
+									val newFX = entity.world.createClientEntity(new FXFortronBeam(FieldColor.blue, 20))
+									newFX.setPosition(entity.position /*.add(new Vector3d(0, entity.getEyeHeight - 0.2, 0))*/)
+									newFX.setTarget(fortronBlock.position.toDouble.add(0.5))
 								}
 								receivedEnergy += consumedEnergy
 							}
@@ -112,8 +116,8 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 							}
 						}
 						if (Side.get().isServer) {
-							entity.addChatMessage(new ChatComponentText(Game.instance.languageManager.getLocal("message.remoteController.fail").replaceAll("#p", new
-									UnitDisplay(UnitDisplay.Unit.JOULES, requiredEnergy).toString)))
+							Game.instance.networkManager.sendChat(entity.asInstanceOf[Player], Game.instance.languageManager.getLocal("message.remoteController.fail").replaceAll("#p", new
+									UnitDisplay(UnitDisplay.Unit.JOULES, requiredEnergy).toString))
 						}
 					}
 				}
