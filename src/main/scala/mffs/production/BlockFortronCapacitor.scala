@@ -28,7 +28,7 @@ class BlockFortronCapacitor extends BlockModuleHandler with FortronCapacitor {
 	capacityBoost = 10
 	startModuleIndex = 1
 
-	@Sync(ids = Array(PacketBlock.description.ordinal(), PacketBlock.toggleMode.ordinal()))
+	@Sync(ids = Array(PacketBlock.description, PacketBlock.toggleMode))
 	@Stored
 	private var transferMode = TransferMode.equalize
 

@@ -25,7 +25,7 @@ class ItemModuleSponge extends ItemModule {
 
 			if (Side.get().isServer) {
 				for (point <- projector.getInteriorPoints) {
-					val block = world.getBlock(point)
+					val block = world.getBlock(point).get
 
 					if (block.isInstanceOf[FluidBlock]) {
 						world.setBlock(point, Game.instance.blockManager.getAirBlock)

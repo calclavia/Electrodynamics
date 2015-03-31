@@ -394,7 +394,8 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 			packet.getID match {
 				case PacketBlock.effect => {
 					packet.readInt() match {
-						case 1 => {
+						case 1 =>
+
 							/**
 							 * If we have more than one block that is visible that was moved, we will tell the client to render it.
 							 *
@@ -403,7 +404,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 							val isTeleportPacket = packet.readInt()
 							val vecSize = packet.readInt()
 
-							val hologramRenderPoints = packet.readSet().toSet[Vector3i]
+							val hologramRenderPoints = packet.readSet[Vector3i]()
 
 							/**
 							 * Movement Rendering
@@ -420,7 +421,6 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 												case 2 => FieldColor.green
 											}
 										))
-						}
 						case 2 => {
 							/**
 							 * Teleportation Rendering
@@ -430,21 +430,22 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 							val targetPosition = packet.readStorable()
 							val isPreview = packet.readBoolean()
 							val vecSize = packet.readInt()
-							val hologramRenderPoints = packet.readSet().toSet[Vector3i]
+							val hologramRenderPoints = packet.readSet[Vector3i]()
 
 							val color = if (isPreview) FieldColor.blue else FieldColor.green
 
 							hologramRenderPoints.foreach(pos => {
 								//Render teleport start
-								val hologram = world.createClientEntity(Content.fxHologramProgress).asInstanceOf[FXHologramProgress]
-								hologram.setColor(color)
-								hologram.setPosition(pos.toDouble + 0.5)
+								val hologramA = world.createClientEntity(Content.fxHologramProgress).asInstanceOf[FXHologramProgress]
+								hologramA.setColor(color)
+								hologramA.setPosition(pos.toDouble + 0.5)
 								//TODO: Not clean
+								/*
 								if (targetPosition.world != null && targetPosition.world.getChunkProvider.chunkExists(targetPosition.xi, targetPosition.zi)) {
 									//Render teleport end
 									val destination = pos - anchorPosition + targetPosition
 									ModularForceFieldSystem.proxy.renderHologramOrbit(this, targetPosition.world, targetPosition, destination, color, animationTime, 30f)
-								}
+								}*/
 							})
 
 							canRenderMove = true
@@ -454,9 +455,8 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 							 * Fail hologram rendering
 							 */
 							val vecSize = packet.readInt()
-							val hologramRenderPoints = ((0 until vecSize) map (i => packet.readInt().toDouble + 0.5)).toList grouped 3 map (new Vector3d(_))
-
-							hologramRenderPoints foreach (ModularForceFieldSystem.proxy.renderHologram(world, _, FieldColor.red, 30, null))
+							val hologramRenderPoints = packet.readSet[Vector3i]()
+							hologramRenderPoints.foreach(p => world.createClientEntity(new FXHologramProgress(FieldColor.red, 30)).setPosition(p.toDouble + 0.5))
 						}
 					}
 				}
@@ -668,6 +668,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 				MFFSEvent.instance.preMobilize.publish(evt)
 				!evt.isCanceled && canMove(fromWorld, fromPos, toWorld, toPos)
 		}
+			.map { case ((fromWorld, fromPos), (toWorld, toPos)) => fromPos }
 
 		if (failedPos.size > 0) {
 			failedPositions ++= failedPos

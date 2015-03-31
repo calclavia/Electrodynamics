@@ -32,7 +32,7 @@ trait PermissionHandler extends BlockFrequency {
 			.force
 			.toSet
 
-		val frequencyLinks = GraphFrequency.instance.get(getFrequency).filter(_.isInstanceOf[BlockBiometric]).toSet[BlockBiometric]
+		val frequencyLinks = GraphFrequency.instance.get(getFrequency).collect { case b: BlockBiometric => b }
 
 		return frequencyLinks ++ cardLinks
 	}

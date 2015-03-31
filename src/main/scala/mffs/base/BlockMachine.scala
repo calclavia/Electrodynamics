@@ -25,7 +25,7 @@ abstract class BlockMachine extends Block with PacketHandler with IActivatable w
 	/**
 	 * Used for client side animations.
 	 */
-	var animation = 0f
+	var animation = 0d
 
 	/**
 	 * Is this machine switched on internally via GUI?

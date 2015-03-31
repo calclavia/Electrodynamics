@@ -37,7 +37,7 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 	override def getTooltips(player: Optional[Player], tooltips: util.List[String]) {
 		super.getTooltips(player, tooltips)
 
-		if (hasLink(Item)) {
+		if (linkWorld != null) {
 			val block = linkWorld.getBlock(linkPos)
 			if (block.isPresent) {
 				//TODO: Get the real block name?
@@ -51,7 +51,7 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 		}
 	}
 
-	def hasLink(Item: Item): Boolean = getLink(Item) != null
+	def hasLink: Boolean = linkWorld != null
 
 	override def onUse(entity: Entity, world: World, position: Vector3i, side: Direction, hit: Vector3d): Boolean = {
 		super.onUse(entity, world, position, side, hit)
@@ -112,7 +112,7 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 										e.printStackTrace()
 									}
 								}
-								return Item
+								return
 							}
 						}
 						if (Side.get().isServer) {
@@ -125,7 +125,7 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 		}
 	}
 
-	def getLink(Item: Item): Pair[World, Vector3i] = {
+	def getLink: Pair[World, Vector3i] = {
 		return new Pair(linkWorld, linkPos)
 	}
 
@@ -141,10 +141,10 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 	 */
 	def postMove(evt: EventForceMobilize) {
 		if (Side.get().isServer) {
-			for (Item <- this.remotesCached) {
-				if (!temporaryRemoteBlacklist.contains(Item) && evt.before.equals(linkPos)) {
+			for (item <- this.remotesCached) {
+				if (!temporaryRemoteBlacklist.contains(item) && evt.before.equals(linkPos)) {
 					setLink(evt.worldAfter, evt.after)
-					temporaryRemoteBlacklist += Item
+					temporaryRemoteBlacklist += item
 				}
 			}
 		}
