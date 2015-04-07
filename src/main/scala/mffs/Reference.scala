@@ -1,7 +1,5 @@
 package mffs
 
-import net.minecraft.util.ResourceLocation
-
 /**
  * A static variable reference file.
  * @author Calclavia
@@ -31,6 +29,4 @@ final object Reference {
 	final val modelPath = "models/"
 	final val modelDirectory = resourceDirectory + "models/"
 	final val guiDirectory = textureDirectory + "gui/"
-
-	final val guiButtonTexture = new ResourceLocation(domain, guiDirectory + "gui_button.png")
 }

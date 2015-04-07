@@ -4,35 +4,34 @@ import java.util
 import java.util.Optional
 
 import com.resonant.core.access.{AccessUser, Permissions}
-import mffs.ModularForceFieldSystem
+import mffs.Reference
 import nova.core.entity.Entity
 import nova.core.game.Game
 import nova.core.gui.KeyManager.Key
-import nova.core.item.Item
 import nova.core.network.NetworkTarget.Side
 import nova.core.network.{Packet, PacketHandler}
 import nova.core.player.Player
+import nova.core.util.transform.Vector3i
 
 class ItemCardIdentification extends ItemCardAccess with PacketHandler {
-
+	/*
 	override def hitEntity(Item: Item, entityLiving: EntityLivingBase, par3EntityLiving: EntityLivingBase): Boolean = {
 		if (entityLiving.isInstanceOf[Player]) {
 			access = new AccessUser(entityLiving.asInstanceOf[Player].getDisplayName)
 		}
 
 		return false
-	}
+	}*/
 
 	override def getTooltips(player: Optional[Player], tooltips: util.List[String]) {
 		super.getTooltips(player, tooltips)
 
 		if (access != null) {
-			tooltips.add(Game.instance.languageManager.getLocal("info.cardIdentification.username") + " " + access.username)
+			tooltips.add(Game.instance.languageManager.getLocal("info.cardIdentification.username") + " " + access.asInstanceOf[AccessUser].username)
 		}
 		else {
 			tooltips.add(Game.instance.languageManager.getLocal("info.cardIdentification.empty"))
 		}
-		return tooltips
 	}
 
 	override def onRightClick(entity: Entity) {
@@ -53,13 +52,10 @@ class ItemCardIdentification extends ItemCardAccess with PacketHandler {
 					/**
 					 * Open item GUI
 					 */
-					player.openGui(ModularForceFieldSystem, EnumGui.cardID.id, world, 0, 0, 0)
-					//Game.instance.guiFactory.showGui()
+					Game.instance.guiFactory.showGui(Reference.id, "idCard", entity, new Vector3i(0, 0, 0))
 				}
 			}
 		}
-
-		return Item
 	}
 
 	override def read(packet: Packet) {
@@ -71,17 +67,15 @@ class ItemCardIdentification extends ItemCardAccess with PacketHandler {
 				 * Permission toggle packet
 				 */
 				val perm = Permissions.find(packet.readString())
-
-				if (access == null) {
-					access = new AccessUser(player)
-				}
-
-				if (perm != null) {
-					if (access.permissions.contains(perm)) {
-						access.permissions -= perm
-					}
-					else {
-						access.permissions += perm
+				//TODO: Create new access if current doesn't exist.
+				if (access != null) {
+					if (perm != null) {
+						if (access.permissions.contains(perm)) {
+							access.permissions -= perm
+						}
+						else {
+							access.permissions += perm
+						}
 					}
 				}
 			}

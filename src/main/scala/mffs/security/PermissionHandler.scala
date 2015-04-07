@@ -26,9 +26,8 @@ trait PermissionHandler extends BlockFrequency {
 		val cardLinks = getConnectionCards.view
 			.filter(item => item != null && item.isInstanceOf[CoordLink])
 			.map(item => item.asInstanceOf[CoordLink].getLink())
-			.filter(_ != null)
-			.filter(_.isInstanceOf[BlockBiometric])
-			.map(_.asInstanceOf[BlockBiometric])
+			.map(link => link._1.getBlock(link._2).get())
+			.collect { case b: BlockBiometric => b }
 			.force
 			.toSet
 

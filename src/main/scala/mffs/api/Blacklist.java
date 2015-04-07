@@ -1,6 +1,7 @@
 package mffs.api;
 
-import net.minecraft.block.Block;
+
+import nova.core.block.Block;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -1,7 +1,6 @@
 package mffs.particle
 
 import com.resonant.core.prefab.block.Updater
-import net.minecraft.util.MathHelper
 import nova.core.entity.Entity
 import nova.core.render.Color
 import nova.core.render.model.{Model, Vertex}
@@ -17,9 +16,12 @@ import scala.collection.convert.wrapAll._
  */
 abstract class FXBeam(texture: Texture, @BeanProperty var color: Color, maxAge: Double) extends Entity with Updater {
 
+	private val endModifier: Float = 1.0F
+	private val reverse: Boolean = false
+	private val pulse: Boolean = true
+	private val rotationSpeed: Int = 20
 	private var target: Vector3d = _
 	private var length: Double = _
-
 	/**
 	 * Angles are in radians
 	 */
@@ -27,11 +29,6 @@ abstract class FXBeam(texture: Texture, @BeanProperty var color: Color, maxAge: 
 	private var rotPitch = 0d
 	private var prevYaw = 0d
 	private var prevPitch = 0d
-
-	private val endModifier: Float = 1.0F
-	private val reverse: Boolean = false
-	private val pulse: Boolean = true
-	private val rotationSpeed: Int = 20
 	private var prevSize = 0d
 	private var age: Double = 0
 
@@ -63,8 +60,8 @@ abstract class FXBeam(texture: Texture, @BeanProperty var color: Color, maxAge: 
 		val xd: Float = (position.x - target.x).asInstanceOf[Float]
 		val yd: Float = (position.y - target.y).asInstanceOf[Float]
 		val zd: Float = (position.z - target.z).asInstanceOf[Float]
-		this.length = MathHelper.sqrt_float(xd * xd + yd * yd + zd * zd)
-		val var7: Double = MathHelper.sqrt_double(xd * xd + zd * zd)
+		this.length = Math.sqrt(xd * xd + yd * yd + zd * zd)
+		val var7 = Math.sqrt(xd * xd + zd * zd)
 		this.rotYaw = Math.atan2(xd, zd)
 		this.rotPitch = Math.atan2(yd, var7)
 
@@ -99,7 +96,7 @@ abstract class FXBeam(texture: Texture, @BeanProperty var color: Color, maxAge: 
 		if (this.reverse) {
 			var11 *= -1.0F
 		}
-		val var12: Float = -var11 * 0.2F - MathHelper.floor_float(-var11 * 0.1F)
+		val var12 = -var11 * 0.2F - Math.floor(-var11 * 0.1F)
 		//		GL11.glEnable(3042)
 		//		GL11.glBlendFunc(770, 1)
 		//		GL11.glDepthMask(false)
