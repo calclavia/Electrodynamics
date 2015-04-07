@@ -1,42 +1,46 @@
 package mffs.security.module
 
-import java.util.Set
+import java.util
 
-import mffs.ModularForceFieldSystem
+import mffs.api.machine.Projector
 import mffs.field.BlockProjector
 import mffs.security.MFFSPermissions
+import nova.core.entity.components.Damageable
+import nova.core.game.Game
+import nova.core.player.Player
+import nova.core.util.transform.Vector3i
 
-class ItemModuleAntiPersonnel extends ItemModuleDefense
-{
-	override def onProject(projector: IProjector, fields: Set[Vector3d]): Boolean =
-  {
-	  val proj = projector.asInstanceOf[BlockProjector]
-    val entities = getEntitiesInField(projector)
+import scala.collection.convert.wrapAll._
 
-    entities.view
-    .filter(entity => entity.isInstanceOf[EntityPlayer])
-    .map(_.asInstanceOf[EntityPlayer])
-    .filter(player => !player.capabilities.isCreativeMode && !player.isEntityInvulnerable)
-    .filter(p => !projector.hasPermission(p.getGameProfile, MFFSPermissions.defense))
-    .foreach(
-        player =>
-        {
-          (0 until player.inventory.getSizeInventory)
-          .filter(player.inventory.getStackInSlot(_) != null)
-          .foreach(
-              i =>
-              {
-                proj.mergeIntoInventory(player.inventory.getStackInSlot(i))
-                player.inventory.setInventorySlotContents(i, null)
-              }
-            )
+class ItemModuleAntiPersonnel extends ItemModuleDefense {
 
-          player.attackEntityFrom(ModularForceFieldSystem.damageFieldShock, 1000)
-          player.addChatMessage(new ChatComponentTranslation("message.moduleAntiPersonnel.death"))
-        }
-      )
+	override def onCreateField(projector: Projector, field: util.Set[Vector3i]): Boolean = {
+		val proj = projector.asInstanceOf[BlockProjector]
+		val entities = getEntitiesInField(projector)
 
-    return false
-  }
+		entities.view
+			.collect { case player: Player with Damageable => player }
+			.filter(p => !projector.hasPermission(p.getID, MFFSPermissions.defense))
+			.foreach(
+				player => {
+					(0 until player.getInventory.size())
+						.filter(player.getInventory.get(_) != null)
+						.foreach(
+							i => {
+								val stackInSlot = player.getInventory.get(i)
+								if (stackInSlot.isPresent) {
+									proj.getInventory.head.add(stackInSlot.get)
+									player.getInventory.remove(i, stackInSlot.get().count)
+								}
+							}
+						)
+
+					player.damage(1000)
+					Game.instance.networkManager.sendChat(player, Game.instance.languageManager.getLocal("message.moduleAntiPersonnel.death"))
+				}
+			)
+
+		return false
+	}
 
 }

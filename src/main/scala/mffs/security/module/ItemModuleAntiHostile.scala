@@ -1,19 +1,22 @@
 package mffs.security.module
 
-import java.util.Set
+import java.util
 
-import mffs.ModularForceFieldSystem
+import mffs.api.machine.Projector
+import nova.core.entity.components.Damageable
+import nova.core.util.transform.Vector3i
 
 class ItemModuleAntiHostile extends ItemModuleDefense
 {
-	override def onProject(projector: IProjector, fields: Set[Vector3d]): Boolean =
-  {
+
+  override def onCreateField(projector: Projector, field: util.Set[Vector3i]): Boolean = {
     val entities = getEntitiesInField(projector)
 
+    //Check entity IDs.
     entities.view
-      .filter(entity => entity.isInstanceOf[EntityLivingBase] && entity.isInstanceOf[IMob] && !entity.isInstanceOf[INpc])
-      .map(_.asInstanceOf[EntityLivingBase])
-      .foreach(_.attackEntityFrom(ModularForceFieldSystem.damageFieldShock, 20))
+        .filter(entity => entity.isInstanceOf[Damageable] /* && entity.isInstanceOf[IMob] && !entity.isInstanceOf[INpc]*/)
+        .map(_.asInstanceOf[Damageable])
+        .foreach(_.damage(20))
 
     return false
   }
