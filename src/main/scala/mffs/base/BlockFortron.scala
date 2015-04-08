@@ -1,5 +1,7 @@
 package mffs.base
 
+import java.util.{Collections, Set => JSet}
+
 import com.resonant.core.prefab.block.Updater
 import mffs.GraphFrequency
 import mffs.api.fortron.FortronFrequency
@@ -9,6 +11,7 @@ import nova.core.fluid.{Fluid, SidedTankProvider, Tank, TankSimple}
 import nova.core.game.Game
 import nova.core.network.Sync
 import nova.core.retention.Stored
+import nova.core.util.Direction
 
 /**
  * A TileEntity that is powered by FortronHelper.
@@ -36,7 +39,7 @@ abstract class BlockFortron extends BlockFrequency with SidedTankProvider with F
 			FortronUtility.transferFortron(
 				this,
 				GraphFrequency.instance.get(getFrequency)
-					.collect { case f: FortronFrequency with Block => f}
+					.collect { case f: FortronFrequency with Block => f }
 					.filter(_.world() == world())
 					.filter(_.position().distance(position()) < 100)
 					.map(_.asInstanceOf[FortronFrequency]),
@@ -49,4 +52,6 @@ abstract class BlockFortron extends BlockFrequency with SidedTankProvider with F
 	}
 
 	override def getFortronTank: Tank = fortronTank
+
+	override def getTank(dir: Direction): JSet[Tank] = Collections.singleton(fortronTank)
 }

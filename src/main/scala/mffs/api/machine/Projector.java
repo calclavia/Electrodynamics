@@ -2,6 +2,7 @@ package mffs.api.machine;
 
 import mffs.api.Frequency;
 import nova.core.util.transform.Vector3d;
+import nova.core.util.transform.Vector3i;
 
 import java.util.Set;
 
@@ -26,15 +27,10 @@ public interface Projector extends FieldMatrix, Frequency {
 	int getProjectionSpeed();
 
 	/**
-	 * @return The amount of ticks this projector has existed in the world.
-	 */
-	long getTicks();
-
-	/**
 	 * DO NOT modify this list. Read-only.
 	 * @return The actual force field block coordinates in the world.
 	 */
-	Set<Vector3d> getForceFields();
+	Set<Vector3i> getForceFields();
 
 	/**
 	 * Checks if this specific position is in the field.

@@ -9,7 +9,7 @@ import mffs.api.{Blacklist, MFFSEvent}
 import mffs.base.{BlockFieldMatrix, PacketBlock}
 import mffs.content.{Content, Models, Textures}
 import mffs.particle.{FXHologramProgress, FieldColor, IEffectController}
-import mffs.security.MFFSPermissions
+import mffs.security.{MFFSPermissions, PermissionHandler}
 import mffs.util.MFFSUtility
 import mffs.{ModularForceFieldSystem, Settings}
 import nova.core.entity.Entity
@@ -25,15 +25,15 @@ import nova.core.world.World
 
 import scala.collection.convert.wrapAll._
 
-class BlockMobilizer extends BlockFieldMatrix with IEffectController with InventorySimpleProvider {
+class BlockMobilizer extends BlockFieldMatrix with IEffectController with InventorySimpleProvider with PermissionHandler {
+	@Stored
+	@Sync(ids = Array(PacketBlock.description, PacketBlock.inventory))
+	override protected val inventory = new InventorySimple(1 + 25)
 	val packetRange = 60
 	val animationTime = 20
-
 	var failedPositions = Set.empty[Vector3i]
-
 	@Stored
 	var anchor = new Vector3i()
-
 	/**
 	 * The display mode. 0 = none, 1 = minimal, 2 = maximal.
 	 */
@@ -53,13 +53,11 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 	private var moveTime = 0
 	private var canRenderMove = true
 
-	def markFailMove() = failedMove = true
-
 	rotationMask = 63
 
-	@Stored
-	@Sync(ids = Array(PacketBlock.description, PacketBlock.inventory))
-	override protected val inventory = new InventorySimple(1 + 25)
+	def markFailMove() = failedMove = true
+
+	override def getID: String = "Mobilizer"
 
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)
@@ -276,9 +274,9 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 		}
 	}
 
-	override def generateField: Set[Vector3i] = {
+	override def generateField: JSet[Vector3i] = {
 		if (!canMove) {
-			return Set.empty
+			return Set.empty[Vector3i]
 		}
 		/*else
 			markFailMove()*/
@@ -485,34 +483,6 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 		}
 	}
 
-	override def write(packet: Packet) {
-		super.write(packet)
-
-		if (packet.getID == PacketBlock.description) {
-			packet <<< anchor
-			packet <<< previewMode
-			packet <<< doAnchor
-			packet <<< (if (moveTime > 0) moveTime else getMoveTime)
-		}
-	}
-
-	/**
-	 * Gets the movement time required in TICKS.
-	 *
-	 * @return The time it takes to teleport (using a link card) to another coordinate OR
-	 *         ANIMATION_TIME for default move.
-	 */
-	def getMoveTime: Int = {
-		if (isTeleport) {
-			var time = (20 * getTargetPosition._2.distance(this.getAbsoluteAnchor)).toInt
-			if (this.getTargetPosition._1 != world) {
-				time += 20 * 60
-			}
-			return time
-		}
-		return animationTime
-	}
-
 	override def markDirty() {
 		super.markDirty()
 
@@ -551,6 +521,34 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 
 			entity.rigidBody.setVelocity(Vector3d.zero)
 		}
+	}
+
+	override def write(packet: Packet) {
+		super.write(packet)
+
+		if (packet.getID == PacketBlock.description) {
+			packet <<< anchor
+			packet <<< previewMode
+			packet <<< doAnchor
+			packet <<< (if (moveTime > 0) moveTime else getMoveTime)
+		}
+	}
+
+	/**
+	 * Gets the movement time required in TICKS.
+	 *
+	 * @return The time it takes to teleport (using a link card) to another coordinate OR
+	 *         ANIMATION_TIME for default move.
+	 */
+	def getMoveTime: Int = {
+		if (isTeleport) {
+			var time = (20 * getTargetPosition._2.distance(this.getAbsoluteAnchor)).toInt
+			if (this.getTargetPosition._1 != world) {
+				time += 20 * 60
+			}
+			return time
+		}
+		return animationTime
 	}
 
 	override def doGetFortronCost: Int = Math.round(super.doGetFortronCost + (if (this.anchor != null) this.anchor.magnitude * 1000 else 0)).toInt
@@ -604,6 +602,15 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 	  }
 	*/
 
+	override def renderStatic(model: Model) {
+
+	}
+
+	override def renderItem(model: Model) = {
+		model.rotate(Vector3d.yAxis, -Math.PI)
+		renderDynamic(model)
+	}
+
 	override def renderDynamic(model: Model) {
 		model.matrix = new MatrixStack()
 			.loadMatrix(model.matrix)
@@ -618,15 +625,6 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 		else {
 			model.bind(Textures.mobilizerOff)
 		}
-	}
-
-	override def renderStatic(model: Model) {
-
-	}
-
-	override def renderItem(model: Model) = {
-		model.rotate(Vector3d.yAxis, -Math.PI)
-		renderDynamic(model)
 	}
 
 	/**

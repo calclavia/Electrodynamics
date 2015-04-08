@@ -1,10 +1,8 @@
 package mffs.api.machine;
 
-import mffs.api.modules.Module;
 import mffs.api.modules.StructureProvider;
 import nova.core.item.Item;
 import nova.core.util.Direction;
-import nova.core.util.transform.Vector3d;
 import nova.core.util.transform.Vector3i;
 
 import java.util.Set;
@@ -32,7 +30,7 @@ public interface FieldMatrix extends IActivatable, IPermissionProvider {
 	 * @param direction - The direction facing.
 	 * @return Gets the amount of modules based on the side.
 	 */
-	int getSidedModuleCount(Module module, Direction... direction);
+	int getSidedModuleCount(Item module, Direction... direction);
 
 	int getModuleCount(Item module, int... slots);
 
@@ -40,11 +38,11 @@ public interface FieldMatrix extends IActivatable, IPermissionProvider {
 	 * Transformation information functions. Returns CACHED information unless the cache is cleared.
 	 * Note that these are all RELATIVE to the projector's position.
 	 */
-	Vector3d getTranslation();
+	Vector3i getTranslation();
 
-	Vector3d getPositiveScale();
+	Vector3i getPositiveScale();
 
-	Vector3d getNegativeScale();
+	Vector3i getNegativeScale();
 
 	int getRotationYaw();
 

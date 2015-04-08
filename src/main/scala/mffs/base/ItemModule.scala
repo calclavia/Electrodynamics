@@ -11,7 +11,7 @@ import nova.core.entity.Entity
 import nova.core.game.Game
 import nova.core.item.Item
 import nova.core.player.Player
-import nova.core.util.transform.{Cuboid, Vector3d}
+import nova.core.util.transform.{Cuboid, Vector3i}
 
 import scala.collection.convert.wrapAll._
 
@@ -39,7 +39,7 @@ abstract class ItemModule extends Item with TooltipItem with Module {
 
 	def getEntitiesInField(projector: Projector): Set[Entity] = {
 		val blockProjector = projector.asInstanceOf[BlockProjector]
-		val bound = new Cuboid(-projector.getNegativeScale, projector.getPositiveScale + Vector3d.one) + blockProjector.position() + projector.getTranslation
+		val bound = new Cuboid(-projector.getNegativeScale, projector.getPositiveScale + Vector3i.one) + blockProjector.position() + projector.getTranslation
 
 		return blockProjector.world.getEntities(bound)
 			.filter(entity => projector.isInField(entity.position()))

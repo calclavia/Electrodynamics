@@ -20,7 +20,7 @@ class ItemModuleSponge extends ItemModule {
 	override def onCreateField(projector: Projector, field: util.Set[Vector3i]): Boolean = {
 		val proj = projector.asInstanceOf[BlockProjector]
 
-		if (projector.getTicks % 60 == 0) {
+		if (proj.getTicks % 60 == 0) {
 			val world = proj.world
 
 			if (Side.get().isServer) {
@@ -34,7 +34,7 @@ class ItemModuleSponge extends ItemModule {
 			}
 		}
 
-		return super.onCreateField(projector, field)
+		return false
 	}
 
 	override def requireTicks = true

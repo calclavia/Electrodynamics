@@ -1,6 +1,6 @@
 package mffs.content
 
-import com.resonant.core.prefab.modcontent.{ContentLoader, RecipeHolder}
+import com.resonant.core.prefab.modcontent.ContentLoader
 import mffs.base.{ItemModule, Named}
 import mffs.field.mobilize.BlockMobilizer
 import mffs.field.module._
@@ -21,7 +21,7 @@ import nova.core.item.Item
  * The main mffs.content of MFFS
  * @author Calclavia
  */
-object Content extends ContentLoader with RecipeHolder {
+object Content extends ContentLoader {
 	/**
 	 * Blocks
 	 */

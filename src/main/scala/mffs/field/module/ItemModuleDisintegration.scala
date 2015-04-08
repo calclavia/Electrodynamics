@@ -23,7 +23,7 @@ class ItemModuleDisintegration extends ItemModule {
 
 	override def onCreateField(projector: Projector, field: util.Set[Vector3i]): Boolean = {
 		blockCount = 0
-		super.onCreateField(projector, field)
+		return false
 	}
 
 	override def onProject(projector: Projector, position: Vector3i): ProjectState = {

@@ -1,6 +1,5 @@
 package mffs.security
 
-import java.util
 import java.util.{Set => JSet}
 
 import com.resonant.core.access.Permission
@@ -22,17 +21,16 @@ object BlockBiometric {
 class BlockBiometric extends BlockFrequency with Rotatable with Updater with PermissionHandler {
 
 	/**
-	 * Rendering
-	 */
-	var lastFlicker = 0L
-
-	/**
 	 * 2 slots: Card copying
 	 * 9 x 4 slots: Access Cards
 	 * Under access cards we have a permission selector
 	 */
 	override
 	protected val inventory = new InventorySimple(1 + 45)
+	/**
+	 * Rendering
+	 */
+	var lastFlicker = 0L
 
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)
@@ -65,11 +63,13 @@ class BlockBiometric extends BlockFrequency with Rotatable with Updater with Per
 
 	override def getInventoryStackLimit: Int = 1*/
 
-	override def getBiometricIdentifiers: JSet[BlockBiometric] = {
-		val set = new util.HashSet[BlockBiometric]()
-		set.add(this)
-		return set
+	override def getBiometricIdentifiers: Set[BlockBiometric] = Set(this)
+
+	override def renderStatic(model: Model) {
+
 	}
+
+	override def renderItem(model: Model) = renderDynamic(model)
 
 	override def renderDynamic(model: Model) {
 		model.matrix = new MatrixStack()
@@ -110,12 +110,6 @@ class BlockBiometric extends BlockFrequency with Rotatable with Updater with Per
 			model.bindAll(Textures.biometricOff)
 		}
 	}
-
-	override def renderStatic(model: Model) {
-
-	}
-
-	override def renderItem(model: Model) = renderDynamic(model)
 
 	override def getID: String = "biometric"
 

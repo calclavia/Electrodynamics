@@ -33,8 +33,6 @@ class ItemModuleStabilize extends ItemModule {
 	}
 
 	override def onProject(projector: Projector, position: Vector3i): ProjectState = {
-		super.onProject(projector, position)
-
 		val proj = projector.asInstanceOf[BlockProjector]
 		val world = proj.world()
 
@@ -44,10 +42,10 @@ class ItemModuleStabilize extends ItemModule {
 		val sampleBlock: Block = {
 			if (projector.getShape.isInstanceOf[ItemShapeCustom] && !(projector.getModuleCount(Content.moduleCamouflage) > 0)) {
 				val fieldBlockMap = projector.getShape.asInstanceOf[ItemShapeCustom].getStructure.getBlockStructure
-				val fieldCenter = proj.position.toDouble + projector.getTranslation
-				val relativePosition = position.toDouble - fieldCenter
+				val fieldCenter = proj.position + projector.getTranslation
+				val relativePosition = position - fieldCenter
 				relativePosition.transform(Quaternion.fromEuler(-projector.getRotationYaw, -projector.getRotationPitch, 0))
-				fieldBlockMap(relativePosition.round)
+				fieldBlockMap(relativePosition)
 			} else {
 				null
 			}

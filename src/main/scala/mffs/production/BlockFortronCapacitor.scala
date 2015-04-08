@@ -4,7 +4,7 @@ import java.util.{HashSet => JHashSet, Set => JSet}
 
 import mffs.GraphFrequency
 import mffs.api.card.CoordLink
-import mffs.api.fortron.{Fortron, FortronCapacitor, FortronFrequency}
+import mffs.api.fortron.{Fortron, FortronFrequency}
 import mffs.base.{BlockModuleHandler, PacketBlock}
 import mffs.content.{Content, Models, Textures}
 import mffs.util.{FortronUtility, TransferMode}
@@ -19,7 +19,7 @@ import nova.core.util.transform.MatrixStack
 
 import scala.collection.convert.wrapAll._
 
-class BlockFortronCapacitor extends BlockModuleHandler with FortronCapacitor {
+class BlockFortronCapacitor extends BlockModuleHandler {
 
 	override protected val inventory: InventorySimple = new InventorySimple(3 + 4 * 2 + 1)
 	private var tickAccumulator = 0d
@@ -31,6 +31,7 @@ class BlockFortronCapacitor extends BlockModuleHandler with FortronCapacitor {
 	@Sync(ids = Array(PacketBlock.description, PacketBlock.toggleMode))
 	@Stored
 	private var transferMode = TransferMode.equalize
+
 
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)
@@ -99,10 +100,10 @@ class BlockFortronCapacitor extends BlockModuleHandler with FortronCapacitor {
 
 	def getTransmissionRate: Int = 500 + 100 * getModuleCount(Content.moduleSpeed)
 
-	override def getFrequencyDevices: Set[FortronFrequency] =
+	def getFrequencyDevices: Set[FortronFrequency] =
 		GraphFrequency.instance.get(getFrequency)
 			.view
-			.collect { case f: FortronFrequency with Block => f}
+			.collect { case f: FortronFrequency with Block => f }
 			.filter(_.world.equals(world()))
 			.filter(_.position().distance(position()) < getTransmissionRange)
 			.toSet[FortronFrequency]
@@ -111,27 +112,27 @@ class BlockFortronCapacitor extends BlockModuleHandler with FortronCapacitor {
 
 	def getInputDevices: Set[FortronFrequency] = getDevicesFromStacks(getInputStacks)
 
-	def getDevicesFromStacks(stacks: Set[Item]): Set[FortronFrequency] =
-		stacks
-			.view
-			.collect { case item: CoordLink if item.getLink != null => item.getLink}
-			.map(linkPos => linkPos._1.getBlock(linkPos._2))
-			.collect { case op if op.isPresent => op.get()}
-			.collect { case freqBlock: FortronFrequency => freqBlock}
-			.toSet
-
 	def getInputStacks: Set[Item] =
 		(4 to 7)
 			.map(inventory.get)
-			.collect { case op if op.isPresent => op.get}
+			.collect { case op if op.isPresent => op.get }
 			.toSet
 
 	def getOutputDevices: Set[FortronFrequency] = getDevicesFromStacks(getOutputStacks)
 
+	def getDevicesFromStacks(stacks: Set[Item]): Set[FortronFrequency] =
+		stacks
+			.view
+			.collect { case item: CoordLink if item.getLink != null => item.getLink }
+			.map(linkPos => linkPos._1.getBlock(linkPos._2))
+			.collect { case op if op.isPresent => op.get() }
+			.collect { case freqBlock: FortronFrequency => freqBlock }
+			.toSet
+
 	def getOutputStacks: Set[Item] =
 		(8 to 11)
 			.map(inventory.get)
-			.collect { case op if op.isPresent => op.get}
+			.collect { case op if op.isPresent => op.get }
 			.toSet
 
 	override def getAmplifier: Float = 0f
@@ -152,6 +153,12 @@ class BlockFortronCapacitor extends BlockModuleHandler with FortronCapacitor {
 
 	def getTransferMode: TransferMode = transferMode
 
+	override def renderStatic(model: Model) {
+
+	}
+
+	override def renderItem(model: Model) = renderDynamic(model)
+
 	override def renderDynamic(model: Model) {
 		model.matrix = new MatrixStack()
 			.loadMatrix(model.matrix)
@@ -168,12 +175,6 @@ class BlockFortronCapacitor extends BlockModuleHandler with FortronCapacitor {
 			model.bind(Textures.fortronCapacitorOff)
 		}
 	}
-
-	override def renderStatic(model: Model) {
-
-	}
-
-	override def renderItem(model: Model) = renderDynamic(model)
 
 	override def getID: String = "fortronCapacitor"
 }
