@@ -12,7 +12,7 @@ import mffs.field.shape.ItemShapeCustom
 import nova.core.block.Block
 import nova.core.game.Game
 import nova.core.inventory.Inventory
-import nova.core.inventory.components.InventoryProvider
+import nova.core.inventory.components.SidedInventoryProvider
 import nova.core.item.ItemBlock
 import nova.core.util.Direction
 import nova.core.util.transform.{Quaternion, Vector3i}
@@ -110,8 +110,8 @@ class ItemModuleStabilize extends ItemModule {
 			.map(dir => (dir, dir.toVector + pos))
 			.map(kv => (kv._1, world.getBlock(kv._2)))
 			.collect { case kv if kv._2.isPresent => (kv._1, kv._2.get) }
-			.collect { case (dir: Direction, inven: InventoryProvider) => inven.getInventory(dir.opposite) }
-			.collect { case opt if opt.isPresent => opt.get }
+			.collect { case (dir: Direction, inven: SidedInventoryProvider) => inven.getInventory(dir.opposite) }
+			.flatten
 
 	def findOptimalBlock(inventories: Iterable[Inventory], condition: PartialFunction[Block, Block]): Option[(Inventory, ItemBlock)] = {
 		inventories

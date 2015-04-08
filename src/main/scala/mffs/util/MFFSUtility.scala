@@ -34,19 +34,21 @@ object MFFSUtility {
 				val firstItemBlock = projector
 					.getModuleSlots()
 					.view
-					.map(projector.getInventory(Direction.UNKNOWN).get().get)
-					.collect { case op if op.isPresent => op.get()}
-					.collect { case item: ItemBlock => item}
+					.map(projector.getInventory(Direction.UNKNOWN).head.get)
+					.collect { case op if op.isPresent => op.get() }
+					.collect { case item: ItemBlock => item }
 					.headOption
 					.orNull
 
 				if (firstItemBlock != null) {
 					return firstItemBlock
 				}
+			//TODO: Check with Sided
 			case invProvider: InventoryProvider =>
 				Direction.DIRECTIONS
 					.view
-					.collect { case dir if invProvider.getInventory(dir).isPresent => invProvider.getInventory(dir).get()}
+					//TODO: Check all inventories
+					.collect { case dir if invProvider.getInventory.size() > 0 => invProvider.getInventory.head }
 					.flatten
 					.headOption match {
 					case Some(entry) => return entry
@@ -100,7 +102,7 @@ object MFFSUtility {
 
 					projector.getFilterItems
 						.filter(getFilterBlock(_) != null)
-						.collect { case item: ItemBlock => item.block}
+						.collect { case item: ItemBlock => item.block }
 						.headOption match {
 						case Some(block) => return block
 						case _ => return null
@@ -128,6 +130,10 @@ object MFFSUtility {
 			getRelevantProjectors(world, position) forall (_.isAccessGranted(world, position, player, action))
 	*/
 
+	def hasPermission(world: World, position: Vector3d, permission: Permission, id: String): Boolean =
+		getRelevantProjectors(world, position)
+			.forall(_.hasPermission(id, permission))
+
 	/**
 	 * Gets the set of projectors that have an intersect in this position.
 	 */
@@ -135,12 +141,8 @@ object MFFSUtility {
 		GraphFrequency
 			.instance
 			.nodes
-			.collect { case proj: BlockProjector if proj.world.equals(world) => proj}
+			.collect { case proj: BlockProjector if proj.world.equals(world) => proj }
 			.filter(_.isInField(position))
 			.toSet
-
-	def hasPermission(world: World, position: Vector3d, permission: Permission, id: String): Boolean =
-		getRelevantProjectors(world, position)
-			.forall(_.hasPermission(id, permission))
 
 }

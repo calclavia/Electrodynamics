@@ -3,7 +3,6 @@ package mffs.field.mobilize
 import nova.core.block.Block
 import nova.core.game.Game
 import nova.core.inventory.components.InventoryProvider
-import nova.core.util.Direction
 import nova.core.util.transform.Vector3i
 import nova.core.world.World
 
@@ -17,7 +16,7 @@ class BlockInventoryDropDelayedEvent(ticks: Int, block: Block, world: World, pos
 
 			if (checkBlock.isPresent && checkBlock.get == block) {
 				val drops = block.getDrops()
-				drops.foreach(inv.getInventory(Direction.UNKNOWN).get().add)
+				drops.foreach(inv.getInventory().head.add)
 				world.setBlock(position, Game.instance.blockManager.getAirBlock)
 			}
 		}

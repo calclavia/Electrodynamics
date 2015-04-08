@@ -11,6 +11,8 @@ import nova.core.player.Player
 import nova.core.util.Direction
 import nova.core.util.transform.Vector3i
 
+import scala.collection.convert.wrapAll._
+
 class ItemModuleConfiscate extends ItemModuleDefense {
 
 	override def onCreateField(projector: Projector, field: util.Set[Vector3i]): Boolean = {
@@ -24,8 +26,7 @@ class ItemModuleConfiscate extends ItemModuleDefense {
 			.foreach(
 				player => {
 					val filterItems = proj.getFilterItems
-					//TODO: Support inventory entities
-					val inventory = player.asInstanceOf[InventoryProvider].getInventory(Direction.UNKNOWN).get
+					val inventory = player.asInstanceOf[InventoryProvider].getInventory.head
 
 					val relevantSlots = (0 until inventory.size)
 						.filter(
@@ -38,7 +39,7 @@ class ItemModuleConfiscate extends ItemModuleDefense {
 					relevantSlots foreach (i => {
 						val opItem = inventory.get(i)
 						if (opItem.isPresent) {
-							proj.getInventory(Direction.UNKNOWN).get().add(opItem.get())
+							proj.getInventory(Direction.UNKNOWN).head.add(opItem.get())
 							inventory.remove(i, opItem.get().count())
 						}
 
