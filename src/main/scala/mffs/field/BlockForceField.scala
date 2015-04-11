@@ -9,7 +9,7 @@ import mffs.content.{Content, Textures}
 import mffs.security.MFFSPermissions
 import mffs.util.MFFSUtility
 import nova.core.block.Block
-import nova.core.block.components.{LightEmitter, Modelled}
+import nova.core.block.components.{LightEmitter, StaticRenderer}
 import nova.core.entity.Entity
 import nova.core.entity.components.Damageable
 import nova.core.game.Game
@@ -24,7 +24,7 @@ import nova.core.util.transform.{Cuboid, Vector3i}
 
 import scala.collection.convert.wrapAll._
 
-class BlockForceField extends Block with PacketHandler with ForceField with LightEmitter with Storable with Modelled {
+class BlockForceField extends Block with PacketHandler with ForceField with LightEmitter with Storable with StaticRenderer {
 
 	@Stored
 	@Sync
@@ -50,7 +50,7 @@ class BlockForceField extends Block with PacketHandler with ForceField with Ligh
 	override def renderStatic(model: Model) {
 		//TODO: Render pass?
 		camoBlock match {
-			case block: Modelled => block.renderStatic(model)
+			case block: StaticRenderer => block.renderStatic(model)
 			case _ => BlockModelUtil.drawBlock(model, this)
 		}
 	}

@@ -153,10 +153,6 @@ class BlockFortronCapacitor extends BlockModuleHandler {
 
 	def getTransferMode: TransferMode = transferMode
 
-	override def renderStatic(model: Model) {
-
-	}
-
 	override def renderItem(model: Model) = renderDynamic(model)
 
 	override def renderDynamic(model: Model) {

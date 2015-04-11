@@ -211,9 +211,5 @@ class BlockCoercionDeriver extends BlockModuleHandler with TTEBridge {
 		model.bind(if (isActive) Textures.coercionDeriverOn else Textures.fortronCapacitorOff)
 	}
 
-	override def renderStatic(model: Model) {
-
-	}
-
 	override def renderItem(model: Model) = renderDynamic(model)
 }

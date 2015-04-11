@@ -602,10 +602,6 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 	  }
 	*/
 
-	override def renderStatic(model: Model) {
-
-	}
-
 	override def renderItem(model: Model) = {
 		model.rotate(Vector3d.yAxis, -Math.PI)
 		renderDynamic(model)

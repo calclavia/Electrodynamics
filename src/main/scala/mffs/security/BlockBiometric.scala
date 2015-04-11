@@ -65,10 +65,6 @@ class BlockBiometric extends BlockFrequency with Rotatable with Updater with Per
 
 	override def getBiometricIdentifiers: Set[BlockBiometric] = Set(this)
 
-	override def renderStatic(model: Model) {
-
-	}
-
 	override def renderItem(model: Model) = renderDynamic(model)
 
 	override def renderDynamic(model: Model) {
