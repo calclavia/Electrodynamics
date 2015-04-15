@@ -9,8 +9,6 @@ import nova.core.entity.Entity
 import nova.core.player.Player
 import nova.core.util.transform.{Vector3d, Vector3i}
 
-import scala.collection.convert.wrapAll._
-
 /**
  * Generates a repulsion field instead of a solid one made out of blocks.
  * Entities are repelled from entering the force field.
