@@ -35,12 +35,12 @@ class GraphFrequency extends Graph[Frequency] {
 	override def build() {
 		frequencyMap = Map.empty
 
-		nodes.map(n => (n.getFrequency, n)).foreach(kv =>
+		getNodes.map(n => (n.getFrequency, n)).foreach(kv =>
 			frequencyMap += (kv._1 -> (frequencyMap(kv._1) + kv._2))
 		)
 	}
 
-	override def nodes: JSet[Frequency] = _nodes
+	override def getNodes: JSet[Frequency] = _nodes
 
 	override def remove(node: Frequency) {
 		_nodes -= node

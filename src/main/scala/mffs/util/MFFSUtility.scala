@@ -140,7 +140,7 @@ object MFFSUtility {
 	def getRelevantProjectors(world: World, position: Vector3d): Set[BlockProjector] =
 		GraphFrequency
 			.instance
-			.nodes
+			.getNodes
 			.collect { case proj: BlockProjector if proj.world.equals(world) => proj }
 			.filter(_.isInField(position))
 			.toSet

@@ -93,7 +93,7 @@ object EventHandler {
 	def onBlockChange(evt: EventManager.BlockChangeEvent) {
 		if (Game.instance.networkManager.isServer && evt.newBlock.sameType(Game.instance.blockManager.getAirBlock)) {
 			GraphFrequency.instance
-				.nodes
+				.getNodes
 				.view
 				.collect { case p: BlockProjector => p}
 				.filter(_.world == evt.world)
