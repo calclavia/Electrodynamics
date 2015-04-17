@@ -1,6 +1,6 @@
 package mffs
 
-import java.util.{Set => JSet}
+import java.util.{List => JList}
 
 import com.resonant.core.graph.internal.Graph
 import mffs.api.Frequency
@@ -24,11 +24,11 @@ object GraphFrequency {
 
 class GraphFrequency extends Graph[Frequency] {
 
-	private var _nodes = Set.empty[Frequency]
+	private var nodes = Set.empty[Frequency]
 	private var frequencyMap = Map.empty[Int, Set[Frequency]].withDefaultValue(Set.empty)
 
 	override def add(node: Frequency) {
-		_nodes += node
+		nodes += node
 		build()
 	}
 
@@ -40,14 +40,10 @@ class GraphFrequency extends Graph[Frequency] {
 		)
 	}
 
-	override def getNodes: JSet[Frequency] = _nodes
+	override def getNodes: JList[Frequency] = nodes.toList
 
 	override def remove(node: Frequency) {
-		_nodes -= node
-		build()
-	}
-
-	override def markBuild() {
+		nodes -= node
 		build()
 	}
 
