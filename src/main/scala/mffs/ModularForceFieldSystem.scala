@@ -1,10 +1,14 @@
 package mffs
 
+import java.util.function.Supplier
+
 import com.resonant.lib.misc.MovementManager
+import mffs.api.fortron.Fortron
 import mffs.content.Content
 import mffs.security.MFFSPermissions
 import nova.core.event.EventListener
 import nova.core.event.EventManager.{BlockChangeEvent, EmptyEvent}
+import nova.core.fluid.Fluid
 import nova.core.game.Game
 import nova.core.loader.{Loadable, NovaMod}
 
@@ -19,8 +23,7 @@ object ModularForceFieldSystem extends Loadable {
 		 * Registration
 		 */
 		Game.instance.eventManager.blockChange.add(new EventListener[BlockChangeEvent] {
-			override def onEvent(event: BlockChangeEvent)
-			{
+			override def onEvent(event: BlockChangeEvent) {
 				EventHandler.onBlockChange(event)
 			}
 		})
@@ -33,6 +36,10 @@ object ModularForceFieldSystem extends Loadable {
 				GraphFrequency.client = new GraphFrequency
 				GraphFrequency.server = new GraphFrequency
 			}
+		})
+
+		Game.instance.fluidManager.register(new Supplier[Fluid] {
+			override def get(): Fluid = new Fluid(Fortron.fortronID)
 		})
 
 		Content.preInit()

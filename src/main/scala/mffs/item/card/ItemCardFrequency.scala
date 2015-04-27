@@ -33,4 +33,5 @@ class ItemCardFrequency extends ItemCard with Frequency {
 		}
 	}
 
+	override def getID: String = "cardFrequency"
 }

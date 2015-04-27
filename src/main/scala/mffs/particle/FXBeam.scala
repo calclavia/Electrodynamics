@@ -34,8 +34,6 @@ abstract class FXBeam(texture: Texture, @BeanProperty var color: Color, maxAge: 
 
 	private var prevPos: Vector3d = null
 
-	rigidBody.setVelocity(Vector3d.zero)
-
 	def setTarget(target: Vector3d): this.type = {
 		this.target = target
 		length = position.distance(this.target)

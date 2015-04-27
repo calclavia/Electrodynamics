@@ -66,4 +66,5 @@ class ItemCardLink extends ItemCard with CoordLink with Storable {
 		return true
 	}
 
+	override def getID: String = "cardLink"
 }

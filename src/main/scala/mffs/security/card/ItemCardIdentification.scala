@@ -99,4 +99,6 @@ class ItemCardIdentification extends ItemCardAccess with PacketHandler {
 			}
 		}
 	}
+
+	override def getID: String = "cardIdentification"
 }

@@ -15,4 +15,6 @@ class ItemCardInfinite extends ItemCard with TankProvider {
 	val tank = new TankSimple(Fluid.bucketVolume)
 
 	override def getTanks: util.Set[Tank] = Set[Tank](tank)
+
+	override def getID: String = "cardInfinite"
 }

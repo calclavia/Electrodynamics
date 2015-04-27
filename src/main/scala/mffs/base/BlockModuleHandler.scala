@@ -13,7 +13,7 @@ import nova.core.network.Packet
 abstract class BlockModuleHandler extends BlockFortron with CacheHandler {
 
 	var startModuleIndex = 1
-	var endModuleIndex = inventory.size() - 1
+	lazy val endModuleIndex = inventory.size() - 1
 
 	/**
 	 * Client side only.
@@ -91,8 +91,8 @@ abstract class BlockModuleHandler extends BlockFortron with CacheHandler {
 				return iterSlots
 					.view
 					.map(inventory.get)
-					.collect { case item: Optional[Item] if item.isPresent => item.get()}
-					.collect { case item: Item with Module if compareModule.sameItemType(item) => item}
+					.collect { case item: Optional[Item] if item.isPresent => item.get() }
+					.collect { case item: Item with Module if compareModule.sameItemType(item) => item }
 					.foldLeft(0)(_ + _.count)
 			}
 		)
@@ -131,8 +131,8 @@ abstract class BlockModuleHandler extends BlockFortron with CacheHandler {
 				return iterSlots
 					.view
 					.map(inventory.get)
-					.collect { case item: Optional[Item] if item.isPresent => item.get()}
-					.collect { case item: Item with Module => item}
+					.collect { case item: Optional[Item] if item.isPresent => item.get() }
+					.collect { case item: Item with Module => item }
 					.toSet
 			}
 		)
