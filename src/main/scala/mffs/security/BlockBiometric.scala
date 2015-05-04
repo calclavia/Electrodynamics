@@ -13,7 +13,6 @@ import nova.core.game.Game
 import nova.core.inventory.InventorySimple
 import nova.core.item.Item
 import nova.core.render.model.Model
-import nova.core.util.transform.MatrixStack
 
 import scala.collection.convert.wrapAll._
 
@@ -69,7 +68,8 @@ class BlockBiometric extends BlockFrequency with Rotatable with Updater with Per
 
 	override def isCube: Boolean = false
 
-	override def renderDynamic(model: Model): Unit = {
+	override def renderDynamic(model: Model) {
+		model.rotate(direction.rotation)
 		/**
 		 * Simulate flicker and, hovering
 		 */
@@ -78,10 +78,10 @@ class BlockBiometric extends BlockFrequency with Rotatable with Updater with Per
 
 		if (dist < 3) {
 			if (Math.random() > 0.05 || (lastFlicker - t) > 200) {
-				model.matrix = new MatrixStack().loadMatrix(model.matrix).translate(0, Math.sin(Math.toRadians(animation)) * 0.05, 0).getMatrix
+				model.translate(0, Math.sin(Math.toRadians(animation)) * 0.05, 0)
 				//RenderUtility.enableBlending()
 				val screenModel = Models.biometric.getModel
-				screenModel.children.remove(screenModel.filterNot(_.name.equals("hologram")))
+				screenModel.children.removeAll(screenModel.filterNot(_.name.equals("holoScreen")))
 				model.children.add(screenModel)
 				//RenderUtility.disableBlending()
 				lastFlicker = t
@@ -92,14 +92,10 @@ class BlockBiometric extends BlockFrequency with Rotatable with Updater with Per
 	}
 
 	override def renderStatic(model: Model) {
-		model.matrix = new MatrixStack()
-			.loadMatrix(model.matrix)
-			.translate(0, 0.15, 0)
-			.scale(1, 1, 1)
-			.rotate(direction.rotation)
-			.getMatrix
-
-		model.children.add(Models.biometric.getModel)
+		model.rotate(direction.rotation)
+		val modelBiometric: Model = Models.biometric.getModel
+		modelBiometric.children.removeAll(modelBiometric.children.filter(_.name.equals("holoScreen")))
+		model.children.add(modelBiometric)
 		model.bindAll(if (isActive) Textures.biometricOn else Textures.biometricOff)
 	}
 

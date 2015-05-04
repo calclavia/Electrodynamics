@@ -86,6 +86,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter w
 				packet <<< position
 			case PacketBlock.effect2 =>
 				packet <<< position
+			case _ =>
 		}
 	}
 
@@ -311,15 +312,8 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter w
 	override def isCube: Boolean = false
 
 	override def renderStatic(model: Model) {
-		model.matrix = new MatrixStack()
-			.loadMatrix(model.matrix)
-			.translate(0, 0.15, 0)
-			.scale(1, 1, 1)
-			.rotate(direction.rotation)
-			.getMatrix
-
+		model.rotate(direction.rotation)
 		model.children.add(Models.projector.getModel)
-
 		model.bindAll(if (isActive) Textures.projectorOn else Textures.projectorOff)
 	}
 

@@ -207,16 +207,21 @@ class BlockCoercionDeriver extends BlockModuleHandler with TTEBridge with Static
 	}
 
 	override def renderDynamic(model: Model) {
+		model.translate(0, (0.3 + Math.sin(Math.toRadians(animation)) * 0.08) * animationTween - 0.1, 0)
+		model.rotate(Vector3d.yAxis, animation)
+
 		val originalModel = Models.deriver.getModel
 		val crystalModel = new Model
 		crystalModel.children.addAll(originalModel.filter(_.name.equals("crystal")))
-		crystalModel.translate(0, (0.3 + Math.sin(Math.toRadians(animation)) * 0.08) * animationTween - 0.1, 0)
-		crystalModel.rotate(Vector3d.yAxis, animation)
 		//Enable Blending
 		model.children.add(crystalModel)
 		//Disable Blending
 		model.bindAll(if (isActive) Textures.coercionDeriverOn else Textures.coercionDeriverOff)
 	}
 
-	override def renderItem(model: Model) = renderDynamic(model)
+	override def renderItem(model: Model) {
+		model.translate(0, 0.1, 0)
+		renderStatic(model)
+		renderDynamic(model)
+	}
 }
