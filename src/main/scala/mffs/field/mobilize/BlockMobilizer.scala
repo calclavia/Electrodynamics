@@ -58,7 +58,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 
 	def markFailMove() = failedMove = true
 
-	override def getID: String = "Mobilizer"
+	override def getID: String = "mobilizer"
 
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)
@@ -469,6 +469,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 					previewMode = packet.readInt()
 					doAnchor = packet.readBoolean()
 					clientMoveTime = packet.readInt
+				case _ =>
 			}
 		}
 		else {
