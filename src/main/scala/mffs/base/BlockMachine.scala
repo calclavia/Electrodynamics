@@ -7,7 +7,7 @@ import com.resonant.wrapper.core.Placeholder
 import mffs.api.machine.IActivatable
 import mffs.content.Textures
 import nova.core.block.Block
-import nova.core.block.components.{DynamicRenderer, ItemRenderer, Stateful}
+import nova.core.block.components.{ItemRenderer, Stateful}
 import nova.core.entity.Entity
 import nova.core.game.Game
 import nova.core.gui.KeyManager.Key
@@ -21,7 +21,7 @@ import nova.core.util.transform.{Vector3d, Vector3i}
  * A base block class for all MFFS blocks to inherit.
  * @author Calclavia
  */
-abstract class BlockMachine extends Block with PacketHandler with IActivatable with Stateful with Storable with DynamicRenderer with ItemRenderer with CategoryMFFS {
+abstract class BlockMachine extends Block with PacketHandler with IActivatable with Stateful with Storable with ItemRenderer with CategoryMFFS {
 	/**
 	 * Used for client side animations.
 	 */

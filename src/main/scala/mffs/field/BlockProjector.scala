@@ -12,7 +12,7 @@ import mffs.particle.{FXFortronBeam, FXHologramProgress, FieldColor}
 import mffs.security.PermissionHandler
 import mffs.util.CacheHandler
 import nova.core.block.Block
-import nova.core.block.components.LightEmitter
+import nova.core.block.components.{DynamicRenderer, LightEmitter, StaticRenderer}
 import nova.core.entity.Entity
 import nova.core.game.Game
 import nova.core.inventory.InventorySimple
@@ -26,7 +26,7 @@ import nova.core.util.transform.{Cuboid, MatrixStack, Vector3d, Vector3i}
 
 import scala.collection.convert.wrapAll._
 
-class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter with PermissionHandler {
+class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter with PermissionHandler with StaticRenderer with DynamicRenderer {
 
 	/** A set containing all positions of all force field blocks generated. */
 	var forceFields = Set.empty[Vector3i]
@@ -304,17 +304,13 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter w
 		return hasPerm
 	}*/
 
-	def getFilterItems: Set[Item] = (26 until 32).map(inventory.get).collect { case op: Optional[Item] if op.isPresent => op.get}.toSet
+	def getFilterItems: Set[Item] = (26 until 32).map(inventory.get).collect { case op: Optional[Item] if op.isPresent => op.get }.toSet
 
 	def isInvertedFilter: Boolean = isInverted
 
-	/**
-	 * Rendering
-	 */
-	override def renderDynamic(model: Model) {
-		/**
-		 * Rends the model 
-		 */
+	override def isCube: Boolean = false
+
+	override def renderStatic(model: Model) {
 		model.matrix = new MatrixStack()
 			.loadMatrix(model.matrix)
 			.translate(0, 0.15, 0)
@@ -324,13 +320,13 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter w
 
 		model.children.add(Models.projector.getModel)
 
-		if (isActive) {
-			model.bindAll(Textures.projectorOn)
-		}
-		else {
-			model.bindAll(Textures.projectorOff)
-		}
+		model.bindAll(if (isActive) Textures.projectorOn else Textures.projectorOff)
+	}
 
+	/**
+	 * Rendering
+	 */
+	override def renderDynamic(model: Model) {
 		/**
 		 * Render the light beam 
 		 */

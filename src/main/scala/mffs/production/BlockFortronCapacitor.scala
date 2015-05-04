@@ -9,6 +9,7 @@ import mffs.base.{BlockModuleHandler, PacketBlock}
 import mffs.content.{Content, Models, Textures}
 import mffs.util.{FortronUtility, TransferMode}
 import nova.core.block.Block
+import nova.core.block.components.StaticRenderer
 import nova.core.fluid.TankProvider
 import nova.core.inventory.InventorySimple
 import nova.core.item.Item
@@ -19,7 +20,7 @@ import nova.core.util.transform.MatrixStack
 
 import scala.collection.convert.wrapAll._
 
-class BlockFortronCapacitor extends BlockModuleHandler {
+class BlockFortronCapacitor extends BlockModuleHandler with StaticRenderer {
 
 	override protected val inventory: InventorySimple = new InventorySimple(3 + 4 * 2 + 1)
 	private var tickAccumulator = 0d
@@ -150,9 +151,11 @@ class BlockFortronCapacitor extends BlockModuleHandler {
 		return true
 	}*/
 
+	override def isCube: Boolean = false
+
 	def getTransferMode: TransferMode = transferMode
 
-	override def renderDynamic(model: Model) {
+	override def renderStatic(model: Model) {
 		model.matrix = new MatrixStack()
 			.loadMatrix(model.matrix)
 			.translate(0, 0.15, 0)
@@ -160,13 +163,7 @@ class BlockFortronCapacitor extends BlockModuleHandler {
 			.getMatrix
 
 		model.children.add(Models.fortronCapacitor.getModel)
-
-		if (isActive) {
-			model.bindAll(Textures.fortronCapacitorOn)
-		}
-		else {
-			model.bindAll(Textures.fortronCapacitorOff)
-		}
+		model.bindAll(if (isActive) Textures.fortronCapacitorOn else Textures.fortronCapacitorOff)
 	}
 
 	override def getID: String = "fortronCapacitor"

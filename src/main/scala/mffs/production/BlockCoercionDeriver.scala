@@ -10,6 +10,7 @@ import mffs.api.modules.Module
 import mffs.base.{BlockModuleHandler, PacketBlock}
 import mffs.content.{Content, Models, Textures}
 import mffs.item.card.ItemCardFrequency
+import nova.core.block.components.{DynamicRenderer, StaticRenderer}
 import nova.core.fluid.Tank
 import nova.core.inventory.InventorySimple
 import nova.core.item.Item
@@ -47,7 +48,7 @@ object BlockCoercionDeriver {
 	val power = 5000000
 }
 
-class BlockCoercionDeriver extends BlockModuleHandler with TTEBridge {
+class BlockCoercionDeriver extends BlockModuleHandler with TTEBridge with StaticRenderer with DynamicRenderer {
 	@Stored
 	var processTime: Int = 0
 	@Stored
@@ -195,12 +196,18 @@ class BlockCoercionDeriver extends BlockModuleHandler with TTEBridge {
 		}
 	}
 
-	override def renderDynamic(model: Model) {
+	override def isCube: Boolean = false
+
+	override def renderStatic(model: Model) {
 		val originalModel = Models.deriver.getModel
 		val capacitorModel = new Model
 		capacitorModel.children.addAll(originalModel.filterNot(_.name.equals("crystal")))
 		model.children.add(capacitorModel)
+		model.bindAll(if (isActive) Textures.coercionDeriverOn else Textures.coercionDeriverOff)
+	}
 
+	override def renderDynamic(model: Model) {
+		val originalModel = Models.deriver.getModel
 		val crystalModel = new Model
 		crystalModel.children.addAll(originalModel.filter(_.name.equals("crystal")))
 		crystalModel.translate(0, (0.3 + Math.sin(Math.toRadians(animation)) * 0.08) * animationTween - 0.1, 0)

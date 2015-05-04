@@ -68,11 +68,7 @@ abstract class BlockModuleHandler extends BlockFortron with CacheHandler {
 		return getOrSetCache("getFortronCost", doGetFortronCost)
 	}
 
-	protected def doGetFortronCost(): Int =
-		Math.round(
-			getModules()
-				.foldLeft(0f)((a, b) => a + b.count * b.asInstanceOf[Module].getFortronCost(getAmplifier))
-		)
+	protected def doGetFortronCost(): Int = Math.round(getModules().foldLeft(0f)((a, b) => a + b.count * b.asInstanceOf[Module].getFortronCost(getAmplifier)))
 
 	protected def getAmplifier: Float = 1f
 

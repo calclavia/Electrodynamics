@@ -7,6 +7,9 @@ import com.resonant.core.prefab.block.{Rotatable, Updater}
 import mffs.api.card.AccessCard
 import mffs.base.BlockFrequency
 import mffs.content.{Models, Textures}
+import nova.core.block.components.{DynamicRenderer, StaticRenderer}
+import nova.core.entity.Entity
+import nova.core.game.Game
 import nova.core.inventory.InventorySimple
 import nova.core.item.Item
 import nova.core.render.model.Model
@@ -18,7 +21,7 @@ object BlockBiometric {
 	val SLOT_COPY = 12
 }
 
-class BlockBiometric extends BlockFrequency with Rotatable with Updater with PermissionHandler {
+class BlockBiometric extends BlockFrequency with Rotatable with Updater with PermissionHandler with StaticRenderer with DynamicRenderer {
 
 	/**
 	 * 2 slots: Card copying
@@ -64,9 +67,31 @@ class BlockBiometric extends BlockFrequency with Rotatable with Updater with Per
 
 	override def getBiometricIdentifiers: Set[BlockBiometric] = Set(this)
 
-	override def renderItem(model: Model) = renderDynamic(model)
+	override def isCube: Boolean = false
 
-	override def renderDynamic(model: Model) {
+	override def renderDynamic(model: Model): Unit = {
+		/**
+		 * Simulate flicker and, hovering
+		 */
+		val t = System.currentTimeMillis()
+		val dist = position.distance(Game.instance.clientManager.getPlayer.asInstanceOf[Entity].position)
+
+		if (dist < 3) {
+			if (Math.random() > 0.05 || (lastFlicker - t) > 200) {
+				model.matrix = new MatrixStack().loadMatrix(model.matrix).translate(0, Math.sin(Math.toRadians(animation)) * 0.05, 0).getMatrix
+				//RenderUtility.enableBlending()
+				val screenModel = Models.biometric.getModel
+				screenModel.children.remove(screenModel.filterNot(_.name.equals("hologram")))
+				model.children.add(screenModel)
+				//RenderUtility.disableBlending()
+				lastFlicker = t
+			}
+		}
+
+		model.bindAll(if (isActive) Textures.biometricOn else Textures.biometricOff)
+	}
+
+	override def renderStatic(model: Model) {
 		model.matrix = new MatrixStack()
 			.loadMatrix(model.matrix)
 			.translate(0, 0.15, 0)
@@ -75,35 +100,7 @@ class BlockBiometric extends BlockFrequency with Rotatable with Updater with Per
 			.getMatrix
 
 		model.children.add(Models.biometric.getModel)
-
-		/**
-		 * Simulate flicker and, hovering
-		 */
-		val t = System.currentTimeMillis()
-
-		/*
-		val look = Minecraft.getMinecraft.thePlayer.rayTrace(8, 1)
-
-		if (look != null && tile.position.equals(new Vector3d(look).floor))
-		{
-			if (Math.random() > 0.05 || (tile.lastFlicker - t) > 200)
-			{
-				glPushMatrix()
-				glTranslated(0, Math.sin(Math.toRadians(tile.animation)) * 0.05, 0)
-				RenderUtility.enableBlending()
-				model.renderOnly("holoScreen")
-				RenderUtility.disableBlending()
-				glPopMatrix()
-				tile.lastFlicker = t
-			}
-		}
-		*/
-		if (isActive) {
-			model.bindAll(Textures.biometricOn)
-		}
-		else {
-			model.bindAll(Textures.biometricOff)
-		}
+		model.bindAll(if (isActive) Textures.biometricOn else Textures.biometricOff)
 	}
 
 	override def getID: String = "biometric"

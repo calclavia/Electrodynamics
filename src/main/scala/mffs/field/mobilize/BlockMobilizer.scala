@@ -12,6 +12,7 @@ import mffs.particle.{FXHologramProgress, FieldColor, IEffectController}
 import mffs.security.{MFFSPermissions, PermissionHandler}
 import mffs.util.MFFSUtility
 import mffs.{ModularForceFieldSystem, Settings}
+import nova.core.block.components.StaticRenderer
 import nova.core.entity.Entity
 import nova.core.game.Game
 import nova.core.inventory.InventorySimple
@@ -25,7 +26,7 @@ import nova.core.world.World
 
 import scala.collection.convert.wrapAll._
 
-class BlockMobilizer extends BlockFieldMatrix with IEffectController with InventorySimpleProvider with PermissionHandler {
+class BlockMobilizer extends BlockFieldMatrix with IEffectController with InventorySimpleProvider with PermissionHandler with StaticRenderer {
 	@Stored
 	@Sync(ids = Array(PacketBlock.description, PacketBlock.inventory))
 	override protected val inventory = new InventorySimple(1 + 25)
@@ -602,12 +603,9 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 	  }
 	*/
 
-	override def renderItem(model: Model) = {
-		model.rotate(Vector3d.yAxis, -Math.PI)
-		renderDynamic(model)
-	}
+	override def isCube: Boolean = false
 
-	override def renderDynamic(model: Model) {
+	override def renderStatic(model: Model) {
 		model.matrix = new MatrixStack()
 			.loadMatrix(model.matrix)
 			.rotate(direction.rotation)
