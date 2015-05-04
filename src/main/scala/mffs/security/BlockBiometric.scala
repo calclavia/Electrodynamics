@@ -70,7 +70,7 @@ class BlockBiometric extends BlockFrequency with Rotatable with Updater with Per
 		model.matrix = new MatrixStack()
 			.loadMatrix(model.matrix)
 			.translate(0, 0.15, 0)
-			.scale(1.3, 1.3, 1.3)
+			.scale(1, 1, 1)
 			.rotate(direction.rotation)
 			.getMatrix
 

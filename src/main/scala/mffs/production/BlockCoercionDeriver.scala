@@ -196,7 +196,7 @@ class BlockCoercionDeriver extends BlockModuleHandler with TTEBridge {
 	}
 
 	override def renderDynamic(model: Model) {
-		val originalModel = Models.fortronCapacitor.getModel
+		val originalModel = Models.deriver.getModel
 		val capacitorModel = new Model
 		capacitorModel.children.addAll(originalModel.filterNot(_.name.equals("crystal")))
 		model.children.add(capacitorModel)
@@ -208,7 +208,7 @@ class BlockCoercionDeriver extends BlockModuleHandler with TTEBridge {
 		//Enable Blending
 		model.children.add(crystalModel)
 		//Disable Blending
-		model.bindAll(if (isActive) Textures.coercionDeriverOn else Textures.fortronCapacitorOff)
+		model.bindAll(if (isActive) Textures.coercionDeriverOn else Textures.coercionDeriverOff)
 	}
 
 	override def renderItem(model: Model) = renderDynamic(model)
