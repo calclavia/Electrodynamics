@@ -20,7 +20,7 @@ trait CacheHandler {
 			return getCache(cacheID)
 		}
 
-		val result = f.apply()
+		val result = f()
 		cache(cacheID, result)
 		return result
 	}
@@ -33,10 +33,8 @@ trait CacheHandler {
 
 	def getCache[C](cacheID: String): C = {
 		if (Settings.useCache) {
-			if (cache.contains(cacheID)) {
-				if (cache.get(cacheID) != null) {
-					return cache.get(cacheID).asInstanceOf[C]
-				}
+			if (hasCache(cacheID)) {
+				return cache(cacheID).asInstanceOf[C]
 			}
 		}
 
@@ -46,7 +44,7 @@ trait CacheHandler {
 	def hasCache[C](cacheID: String): Boolean = {
 		if (Settings.useCache) {
 			if (cache.contains(cacheID)) {
-				return cache.get(cacheID) != null
+				return cache(cacheID) != null
 			}
 		}
 
