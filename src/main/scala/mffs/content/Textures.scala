@@ -9,6 +9,9 @@ import nova.core.render.texture.BlockTexture
  * @author Calclavia
  */
 object Textures extends ContentLoader {
+
+	override def id: String = Reference.id
+
 	val machine = new BlockTexture(Reference.domain, "machine")
 	val fortron = new BlockTexture(Reference.domain, "fortron")
 	val hologram = new BlockTexture(Reference.domain, "hologram")

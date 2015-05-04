@@ -3,6 +3,7 @@ package mffs.base
 import java.util.{List => JList, Optional, Set => JSet}
 
 import com.resonant.core.prefab.itemblock.TooltipItem
+import com.resonant.core.prefab.modcontent.AutoItemTexture
 import com.resonant.wrapper.lib.utility.science.UnitDisplay
 import mffs.api.machine.Projector
 import mffs.api.modules.Module
@@ -15,7 +16,7 @@ import nova.core.util.transform.{Cuboid, Vector3i}
 
 import scala.collection.convert.wrapAll._
 
-abstract class ItemModule extends Item with TooltipItem with Module with CategoryMFFS {
+abstract class ItemModule extends Item with TooltipItem with Module with CategoryMFFS with AutoItemTexture {
 	private var fortronCost = 0.5f
 	private var maxCount = 64
 

@@ -1,6 +1,7 @@
 package mffs.content
 
 import com.resonant.core.prefab.modcontent.ContentLoader
+import mffs.Reference
 import mffs.base.{ItemModule, Named}
 import mffs.field.mobilize.BlockMobilizer
 import mffs.field.module._
@@ -22,6 +23,9 @@ import nova.core.item.Item
  * @author Calclavia
  */
 object Content extends ContentLoader {
+
+	override def id: String = Reference.id
+
 	/**
 	 * Blocks
 	 */
@@ -86,7 +90,7 @@ object Content extends ContentLoader {
 	val moduleWarn: Item = classOf[ItemModuleBroadcast]
 	val moduleBlockAccess: Item = () => (new ItemModuleDefense with Named).setCost(10).setName("moduleBlockAccess")
 	val moduleBlockAlter: Item = () => (new ItemModuleDefense with Named).setCost(15).setName("moduleBlockAlter")
-	val moduleAntiSpawn: Item = () => (new ItemModuleDefense with Named).setCost(10).setName("moduleBlockSpawn")
+	val moduleAntiSpawn: Item = () => (new ItemModuleDefense with Named).setCost(10).setName("moduleAntiSpawn")
 
 	val fxFortronBeam: EntityFactory = () => new FXFortronBeam(FieldColor.blue, 40)
 	val fxHologram: EntityFactory = () => new FXHologram(FieldColor.blue, 40)
