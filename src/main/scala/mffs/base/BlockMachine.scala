@@ -21,7 +21,7 @@ import nova.core.util.transform.{Vector3d, Vector3i}
  * A base block class for all MFFS blocks to inherit.
  * @author Calclavia
  */
-abstract class BlockMachine extends Block with PacketHandler with IActivatable with Stateful with Storable with DynamicRenderer with ItemRenderer with CategoryMFFS{
+abstract class BlockMachine extends Block with PacketHandler with IActivatable with Stateful with Storable with DynamicRenderer with ItemRenderer with CategoryMFFS {
 	/**
 	 * Used for client side animations.
 	 */

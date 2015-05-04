@@ -32,7 +32,6 @@ class BlockFortronCapacitor extends BlockModuleHandler {
 	@Stored
 	private var transferMode = TransferMode.equalize
 
-
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)
 
@@ -153,8 +152,6 @@ class BlockFortronCapacitor extends BlockModuleHandler {
 
 	def getTransferMode: TransferMode = transferMode
 
-	override def renderItem(model: Model) = renderDynamic(model)
-
 	override def renderDynamic(model: Model) {
 		model.matrix = new MatrixStack()
 			.loadMatrix(model.matrix)
@@ -165,10 +162,10 @@ class BlockFortronCapacitor extends BlockModuleHandler {
 		model.children.add(Models.fortronCapacitor.getModel)
 
 		if (isActive) {
-			model.bind(Textures.fortronCapacitorOn)
+			model.bindAll(Textures.fortronCapacitorOn)
 		}
 		else {
-			model.bind(Textures.fortronCapacitorOff)
+			model.bindAll(Textures.fortronCapacitorOff)
 		}
 	}
 

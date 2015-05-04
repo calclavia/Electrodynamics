@@ -208,7 +208,7 @@ class BlockCoercionDeriver extends BlockModuleHandler with TTEBridge {
 		//Enable Blending
 		model.children.add(crystalModel)
 		//Disable Blending
-		model.bind(if (isActive) Textures.coercionDeriverOn else Textures.fortronCapacitorOff)
+		model.bindAll(if (isActive) Textures.coercionDeriverOn else Textures.fortronCapacitorOff)
 	}
 
 	override def renderItem(model: Model) = renderDynamic(model)

@@ -20,7 +20,7 @@ import nova.core.network.{Packet, Sync}
 import nova.core.render.model.Model
 import nova.core.retention.{Data, Storable, Stored}
 import nova.core.util.Direction
-import nova.core.util.transform.{Cuboid, MatrixStack, Vector3d, Vector3i}
+import nova.core.util.transform._
 import nova.core.world.World
 
 import scala.collection.convert.wrapAll._
@@ -464,7 +464,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 				case PacketBlock.field =>
 					moveEntities()
 				case PacketBlock.description =>
-					anchor = packet.readStorable()
+					anchor = packet.readStorable().asInstanceOf[Vector3i]
 					previewMode = packet.readInt()
 					doAnchor = packet.readBoolean()
 					clientMoveTime = packet.readInt
@@ -614,13 +614,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 			.getMatrix
 
 		model.children.add(Models.mobilizer.getModel)
-
-		if (isActive) {
-			model.bind(Textures.mobilizerOn)
-		}
-		else {
-			model.bind(Textures.mobilizerOff)
-		}
+		model.bindAll(if (isActive) Textures.mobilizerOn else Textures.mobilizerOff)
 	}
 
 	/**

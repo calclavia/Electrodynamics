@@ -4,7 +4,7 @@ import java.util.function.Supplier
 
 import com.resonant.lib.misc.MovementManager
 import mffs.api.fortron.Fortron
-import mffs.content.Content
+import mffs.content.{Content, Models, Textures}
 import mffs.security.MFFSPermissions
 import nova.core.event.EventListener
 import nova.core.event.EventManager.{BlockChangeEvent, EmptyEvent}
@@ -43,11 +43,15 @@ object ModularForceFieldSystem extends Loadable {
 		})
 
 		Content.preInit()
+		Models.preInit()
+		Textures.preInit()
 
 	}
 
 	override def init() {
 		Content.init()
+		Models.init()
+		Textures.init()
 	}
 
 	override def postInit() {
@@ -80,6 +84,8 @@ object ModularForceFieldSystem extends Loadable {
 		MFFSPermissions
 
 		Content.postInit()
+		Models.postInit()
+		Textures.postInit()
 	}
 
 }

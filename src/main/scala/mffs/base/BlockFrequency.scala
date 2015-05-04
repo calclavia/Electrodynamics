@@ -16,12 +16,10 @@ abstract class BlockFrequency extends BlockMachine with Frequency with Inventory
 	val frequencySlot = 0
 
 	override def load() {
-		super.load()
 		GraphFrequency.instance.add(this)
 	}
 
 	override def unload() {
-		super.unload()
 		GraphFrequency.instance.remove(this)
 	}
 

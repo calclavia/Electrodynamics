@@ -33,7 +33,7 @@ class GraphFrequency extends Graph[Frequency] {
 	}
 
 	override def build() {
-		frequencyMap = Map.empty
+		frequencyMap = Map.empty.withDefaultValue(Set.empty)
 
 		getNodes.map(n => (n.getFrequency, n)).foreach(kv =>
 			frequencyMap += (kv._1 -> (frequencyMap(kv._1) + kv._2))
