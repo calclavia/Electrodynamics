@@ -6,5 +6,5 @@ import nova.core.item.Item
 class ItemCard extends Item with Card {
 	override def getMaxCount: Int = 1
 
-	override def getID: String = "card"
+	override def getID: String = "cardBlank"
 }

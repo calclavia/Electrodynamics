@@ -44,4 +44,6 @@ class ItemModuleAntiPersonnel extends ItemModuleDefense {
 		return false
 	}
 
+	override def getID: String = "moduleAntiPersonnel"
+
 }

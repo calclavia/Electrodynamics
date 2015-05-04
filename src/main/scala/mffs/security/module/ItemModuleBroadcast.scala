@@ -22,4 +22,6 @@ class ItemModuleBroadcast extends ItemModuleDefense {
 			.foreach(Game.instance.networkManager.sendChat(_, Game.instance.languageManager.getLocal("message.moduleWarn.warn")))
 		return false
 	}
+
+	override def getID: String = "moduleBroadcast"
 }

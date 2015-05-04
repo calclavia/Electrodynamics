@@ -84,9 +84,9 @@ object Content extends ContentLoader {
 	val moduleAntiPersonnel: Item = () => new ItemModuleAntiPersonnel().setCost(15)
 	val moduleConfiscate: Item = classOf[ItemModuleConfiscate]
 	val moduleWarn: Item = classOf[ItemModuleBroadcast]
-	val moduleBlockAccess: Item = () => new ItemModuleDefense().setCost(10)
-	val moduleBlockAlter: Item = () => new ItemModuleDefense().setCost(15)
-	val moduleAntiSpawn: Item = () => new ItemModuleDefense().setCost(10)
+	val moduleBlockAccess: Item = () => (new ItemModuleDefense with Named).setCost(10).setName("moduleBlockAccess")
+	val moduleBlockAlter: Item = () => (new ItemModuleDefense with Named).setCost(15).setName("moduleBlockAlter")
+	val moduleAntiSpawn: Item = () => (new ItemModuleDefense with Named).setCost(10).setName("moduleBlockSpawn")
 
 	val fxFortronBeam: EntityFactory = () => new FXFortronBeam(FieldColor.blue, 40)
 	val fxHologram: EntityFactory = () => new FXHologram(FieldColor.blue, 40)
