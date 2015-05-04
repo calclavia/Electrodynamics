@@ -26,6 +26,7 @@ import nova.core.util.transform.{Vector3d, Vector3i}
 import nova.core.world.World
 
 class ItemRemoteController extends ItemCardFrequency with CoordLink with Storable {
+	//TODO: Is this needed?
 	private var remotesCached = Set.empty[Item]
 	private var temporaryRemoteBlacklist = Set.empty[Item]
 

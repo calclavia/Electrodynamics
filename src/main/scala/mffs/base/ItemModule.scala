@@ -15,7 +15,7 @@ import nova.core.util.transform.{Cuboid, Vector3i}
 
 import scala.collection.convert.wrapAll._
 
-abstract class ItemModule extends Item with TooltipItem with Module {
+abstract class ItemModule extends Item with TooltipItem with Module with CategoryMFFS {
 	private var fortronCost = 0.5f
 	private var maxCount = 64
 

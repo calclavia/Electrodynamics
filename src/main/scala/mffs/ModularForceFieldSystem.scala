@@ -76,7 +76,7 @@ object ModularForceFieldSystem extends Loadable {
 		}
 		 */
 
-		//Inititate MFFS Permissions
+		//Initiate MFFS Permissions
 		MFFSPermissions
 
 		Content.postInit()
