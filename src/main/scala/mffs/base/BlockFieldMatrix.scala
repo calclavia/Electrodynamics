@@ -10,7 +10,7 @@ import mffs.api.modules.StructureProvider
 import mffs.content.Content
 import mffs.util.CacheHandler
 import nova.core.game.Game
-import nova.core.item.Item
+import nova.core.item.{Item, ItemFactory}
 import nova.core.network.Sync
 import nova.core.retention.Stored
 import nova.core.util.Direction
@@ -49,7 +49,7 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 
 	override def getShape: StructureProvider = getShapeItem
 
-	override def getSidedModuleCount(module: Item, directions: Direction*): Int = {
+	override def getSidedModuleCount(module: ItemFactory, directions: Direction*): Int = {
 		var actualDirs = directions
 
 		if (directions == null || directions.length > 0) {
@@ -64,7 +64,7 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 	 * @param slots The slot IDs. Providing null will search all slots
 	 * @return The number of all item modules in the slots.
 	 */
-	override def getModuleCount(compareModule: Item, slots: Int*): Int = super[BlockModuleHandler].getModuleCount(compareModule, slots: _*)
+	override def getModuleCount(compareModule: ItemFactory, slots: Int*): Int = super[BlockModuleHandler].getModuleCount(compareModule, slots: _*)
 
 	override def getDirectionSlots(direction: Direction): Array[Int] =
 		direction match {
@@ -153,7 +153,7 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 
 	def getStructure: Structure = {
 		val structure = getShapeItem.getStructure
-		structure.setBlock(Optional.of(Content.forceField))
+		structure.setBlockFactory(Optional.of(Content.forceField))
 		structure.setTranslate((getTranslation + position).toDouble)
 		structure.setScale(getScale.toDouble)
 		structure.setRotation(getRotation)

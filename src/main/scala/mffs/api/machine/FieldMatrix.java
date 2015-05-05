@@ -2,6 +2,7 @@ package mffs.api.machine;
 
 import mffs.api.modules.StructureProvider;
 import nova.core.item.Item;
+import nova.core.item.ItemFactory;
 import nova.core.util.Direction;
 import nova.core.util.transform.Vector3i;
 
@@ -30,9 +31,9 @@ public interface FieldMatrix extends IActivatable, IPermissionProvider {
 	 * @param direction - The direction facing.
 	 * @return Gets the amount of modules based on the side.
 	 */
-	int getSidedModuleCount(Item module, Direction... direction);
+	int getSidedModuleCount(ItemFactory module, Direction... direction);
 
-	int getModuleCount(Item module, int... slots);
+	int getModuleCount(ItemFactory module, int... slots);
 
 	/**
 	 * Transformation information functions. Returns CACHED information unless the cache is cleared.

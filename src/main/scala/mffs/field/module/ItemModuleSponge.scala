@@ -6,7 +6,6 @@ import mffs.api.machine.Projector
 import mffs.base.ItemModule
 import mffs.field.BlockProjector
 import nova.core.fluid.FluidBlock
-import nova.core.game.Game
 import nova.core.network.NetworkTarget.Side
 import nova.core.util.transform.Vector3i
 
@@ -28,7 +27,7 @@ class ItemModuleSponge extends ItemModule {
 					val block = world.getBlock(point).get
 
 					if (block.isInstanceOf[FluidBlock]) {
-						world.setBlock(point, Game.instance.blockManager.getAirBlock)
+						world.removeBlock(point)
 					}
 				}
 			}

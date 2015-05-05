@@ -20,7 +20,7 @@ class ItemModuleRepulsion extends ItemModule {
 	override def getID: String = "moduleRepulsion"
 
 	override def onCreateField(projector: Projector, field: JSet[Vector3i]): Boolean = {
-		val repellForce = Vector3d.one * Math.max(projector.getSidedModuleCount(this) / 20, 1.2)
+		val repellForce = Vector3d.one * Math.max(projector.getSidedModuleCount(factory()) / 20, 1.2)
 
 		getEntitiesInField(projector).par
 			.collect {

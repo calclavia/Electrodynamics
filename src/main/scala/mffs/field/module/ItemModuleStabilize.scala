@@ -9,7 +9,7 @@ import mffs.base.{ItemModule, PacketBlock}
 import mffs.content.Content
 import mffs.field.BlockProjector
 import mffs.field.shape.ItemShapeCustom
-import nova.core.block.Block
+import nova.core.block.{Block, BlockFactory}
 import nova.core.game.Game
 import nova.core.inventory.Inventory
 import nova.core.inventory.components.SidedInventoryProvider
@@ -39,7 +39,7 @@ class ItemModuleStabilize extends ItemModule {
 		/**
 		 * Handle custom shape block placement
 		 */
-		val sampleBlock: Block = {
+		val sampleBlock: BlockFactory = {
 			if (projector.getShape.isInstanceOf[ItemShapeCustom] && !(projector.getModuleCount(Content.moduleCamouflage) > 0)) {
 				val fieldBlockMap = projector.getShape.asInstanceOf[ItemShapeCustom].getStructure.getBlockStructure
 				val fieldCenter = proj.position + projector.getTranslation
@@ -72,12 +72,12 @@ class ItemModuleStabilize extends ItemModule {
 		optimalInvItemPair match {
 			case Some((inv: Inventory, item: ItemBlock)) =>
 				try {
-					val block = item.block
+					val blockFactory = item.blockFactory
 					//TODO: Call block stabilize event
 					//Do the block placement
 					inv.remove(item.withAmount(1))
 					//copyStack.getItem.asInstanceOf[ItemBlock].placeBlockAt(copyStack, null, world, position.xi, position.yi, position.zi, 0, 0, 0, 0, metadata)
-					world.setBlock(position, block)
+					world.setBlock(position, blockFactory)
 					Game.instance.networkManager.sync(PacketBlock.effect2, proj)
 
 					blockCount += 1

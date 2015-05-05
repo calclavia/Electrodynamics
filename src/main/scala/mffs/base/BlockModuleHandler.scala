@@ -7,7 +7,7 @@ import mffs.content.Content
 import mffs.util.CacheHandler
 import nova.core.fluid.Fluid
 import nova.core.game.Game
-import nova.core.item.Item
+import nova.core.item.{Item, ItemFactory}
 import nova.core.network.Packet
 
 abstract class BlockModuleHandler extends BlockFortron with CacheHandler {
@@ -78,7 +78,7 @@ abstract class BlockModuleHandler extends BlockFortron with CacheHandler {
 	 * @return The number of all item modules in the slots.
 	 */
 
-	def getModuleCount(compareModule: Item, slots: Int*): Int =
+	def getModuleCount(compareModule: ItemFactory, slots: Int*): Int =
 		getOrSetCache(
 			"getModuleCount_" + compareModule.hashCode + (if (slots != null) slots.hashCode() else ""),
 			() => {
@@ -88,7 +88,7 @@ abstract class BlockModuleHandler extends BlockFortron with CacheHandler {
 					.view
 					.map(inventory.get)
 					.collect { case item: Optional[Item] if item.isPresent => item.get() }
-					.collect { case item: Item with Module if compareModule.sameItemType(item) => item }
+					.collect { case item: Item with Module if compareModule.sameType(item) => item }
 					.foldLeft(0)(_ + _.count)
 			}
 		)

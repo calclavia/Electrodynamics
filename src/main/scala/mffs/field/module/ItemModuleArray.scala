@@ -29,7 +29,7 @@ class ItemModuleArray extends ItemModule {
 				//TODO: Execute concurrently. Test speed.
 				Direction.DIRECTIONS.foreach(
 					dir => {
-						val copyAmount = projector.getSidedModuleCount(this, dir)
+						val copyAmount = projector.getSidedModuleCount(factory(), dir)
 						val directionalDisplacement = Math.abs(longestDirectional(dir)) + Math.abs(longestDirectional(dir.opposite)) + 1
 
 						(0 until copyAmount).foreach(

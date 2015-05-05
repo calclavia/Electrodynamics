@@ -14,9 +14,9 @@ import mffs.production.{BlockCoercionDeriver, BlockFortronCapacitor}
 import mffs.security.BlockBiometric
 import mffs.security.card.ItemCardIdentification
 import mffs.security.module._
-import nova.core.block.Block
+import nova.core.block.BlockFactory
 import nova.core.entity.EntityFactory
-import nova.core.item.Item
+import nova.core.item.{Item, ItemFactory}
 
 /**
  * The main mffs.content of MFFS
@@ -29,68 +29,68 @@ object Content extends ContentLoader {
 	/**
 	 * Blocks
 	 */
-	val coercionDeriver: Block = classOf[BlockCoercionDeriver]
-	val fortronCapacitor: Block = classOf[BlockFortronCapacitor]
-	val electromagneticProjector: Block = classOf[BlockProjector]
-	val biometricIdentifier: Block = classOf[BlockBiometric]
-	val forceMobilizer: Block = classOf[BlockMobilizer]
-	val forceField: Block = classOf[BlockForceField]
+	val coercionDeriver: BlockFactory = classOf[BlockCoercionDeriver]
+	val fortronCapacitor: BlockFactory = classOf[BlockFortronCapacitor]
+	val electromagneticProjector: BlockFactory = classOf[BlockProjector]
+	val biometricIdentifier: BlockFactory = classOf[BlockBiometric]
+	val forceMobilizer: BlockFactory = classOf[BlockMobilizer]
+	val forceField: BlockFactory = classOf[BlockForceField]
 
 	/**
 	 * Misc Items
 	 */
-	val remoteController: Item = classOf[ItemRemoteController]
-	val focusMatrix: Item = () => (new Item with Named).setName("focusMatrix")
+	val remoteController: ItemFactory = classOf[ItemRemoteController]
+	val focusMatrix: ItemFactory = () => (new Item with Named).setName("focusMatrix")
 
 	/**
 	 * Cards
 	 */
-	val cardBlank: Item = classOf[ItemCard]
-	val cardInfinite: Item = classOf[ItemCardInfinite]
-	val cardFrequency: Item = classOf[ItemCardFrequency]
-	val cardID: Item = classOf[ItemCardIdentification]
-	val cardLink: Item = classOf[ItemCardLink]
+	val cardBlank: ItemFactory = classOf[ItemCard]
+	val cardInfinite: ItemFactory = classOf[ItemCardInfinite]
+	val cardFrequency: ItemFactory = classOf[ItemCardFrequency]
+	val cardID: ItemFactory = classOf[ItemCardIdentification]
+	val cardLink: ItemFactory = classOf[ItemCardLink]
 
 	/**
 	 * Shapes
 	 */
-	val modeCube: Item = classOf[ItemShapeCube]
-	val modeSphere: Item = classOf[ItemShapeSphere]
-	val modeTube: Item = classOf[ItemShapeTube]
-	val modeCylinder: Item = classOf[ItemShapeCylinder]
-	val modePyramid: Item = classOf[ItemShapePyramid]
-	val modeCustom: Item = classOf[ItemShapeCustom]
+	val modeCube: ItemFactory = classOf[ItemShapeCube]
+	val modeSphere: ItemFactory = classOf[ItemShapeSphere]
+	val modeTube: ItemFactory = classOf[ItemShapeTube]
+	val modeCylinder: ItemFactory = classOf[ItemShapeCylinder]
+	val modePyramid: ItemFactory = classOf[ItemShapePyramid]
+	val modeCustom: ItemFactory = classOf[ItemShapeCustom]
 
 	/**
 	 * Modules
 	 */
-	val moduleTranslate: Item = () => (new ItemModule with Named).setName("moduleTranslate").setCost(3f)
-	val moduleScale: Item = () => (new ItemModule with Named).setName("moduleScale").setCost(2.5f)
-	val moduleRotate: Item = () => (new ItemModule with Named).setName("moduleRotate").setCost(0.5f)
-	val moduleSpeed: Item = () => (new ItemModule with Named).setName("moduleSpeed").setCost(1.5f)
-	val moduleCapacity: Item = () => (new ItemModule with Named).setName("moduleCapacity").setCost(0.5f)
-	val moduleCollection: Item = () => (new ItemModule with Named).setName("moduleCollection").setMaxCount(1).setCost(15)
-	val moduleInvert: Item = () => (new ItemModule with Named).setName("moduleInvert").setMaxCount(1).setCost(15)
-	val moduleSilence: Item = () => (new ItemModule with Named).setName("moduleSilence").setMaxCount(1).setCost(1)
-	val moduleFusion: Item = new ItemModuleFusion
-	val moduleDome: Item = classOf[ItemModuleDome]
-	val moduleCamouflage: Item = () => (new ItemModule with Named).setName("moduleCamouflage").setCost(1.5f).setMaxCount(1)
-	val moduleApproximation: Item = () => (new ItemModule with Named).setName("moduleApproximation").setMaxCount(1).setCost(1f)
-	val moduleArray: Item = new ItemModuleArray().setCost(3f)
-	val moduleDisintegration: Item = new ItemModuleDisintegration
-	val moduleShock: Item = new ItemModuleShock
-	val moduleGlow: Item = () => (new ItemModule with Named).setName("moduleGlow")
-	val moduleSponge: Item = classOf[ItemModuleSponge]
-	val moduleStabilize: Item = classOf[ItemModuleStabilize]
-	val moduleRepulsion: Item = classOf[ItemModuleRepulsion]
-	val moduleAntiHostile: Item = () => new ItemModuleAntiHostile().setCost(10)
-	val moduleAntiFriendly: Item = () => new ItemModuleAntiFriendly().setCost(5)
-	val moduleAntiPersonnel: Item = () => new ItemModuleAntiPersonnel().setCost(15)
-	val moduleConfiscate: Item = classOf[ItemModuleConfiscate]
-	val moduleWarn: Item = classOf[ItemModuleBroadcast]
-	val moduleBlockAccess: Item = () => (new ItemModuleDefense with Named).setCost(10).setName("moduleBlockAccess")
-	val moduleBlockAlter: Item = () => (new ItemModuleDefense with Named).setCost(15).setName("moduleBlockAlter")
-	val moduleAntiSpawn: Item = () => (new ItemModuleDefense with Named).setCost(10).setName("moduleAntiSpawn")
+	val moduleTranslate: ItemFactory = () => (new ItemModule with Named).setName("moduleTranslate").setCost(3f)
+	val moduleScale: ItemFactory = () => (new ItemModule with Named).setName("moduleScale").setCost(2.5f)
+	val moduleRotate: ItemFactory = () => (new ItemModule with Named).setName("moduleRotate").setCost(0.5f)
+	val moduleSpeed: ItemFactory = () => (new ItemModule with Named).setName("moduleSpeed").setCost(1.5f)
+	val moduleCapacity: ItemFactory = () => (new ItemModule with Named).setName("moduleCapacity").setCost(0.5f)
+	val moduleCollection: ItemFactory = () => (new ItemModule with Named).setName("moduleCollection").setMaxCount(1).setCost(15)
+	val moduleInvert: ItemFactory = () => (new ItemModule with Named).setName("moduleInvert").setMaxCount(1).setCost(15)
+	val moduleSilence: ItemFactory = () => (new ItemModule with Named).setName("moduleSilence").setMaxCount(1).setCost(1)
+	val moduleFusion: ItemFactory = classOf[ItemModuleFusion]
+	val moduleDome: ItemFactory = classOf[ItemModuleDome]
+	val moduleCamouflage: ItemFactory = () => (new ItemModule with Named).setName("moduleCamouflage").setCost(1.5f).setMaxCount(1)
+	val moduleApproximation: ItemFactory = () => (new ItemModule with Named).setName("moduleApproximation").setMaxCount(1).setCost(1f)
+	val moduleArray: ItemFactory = () => new ItemModuleArray().setCost(3f)
+	val moduleDisintegration: ItemFactory = classOf[ItemModuleDisintegration]
+	val moduleShock: ItemFactory = classOf[ItemModuleShock]
+	val moduleGlow: ItemFactory = () => (new ItemModule with Named).setName("moduleGlow")
+	val moduleSponge: ItemFactory = classOf[ItemModuleSponge]
+	val moduleStabilize: ItemFactory = classOf[ItemModuleStabilize]
+	val moduleRepulsion: ItemFactory = classOf[ItemModuleRepulsion]
+	val moduleAntiHostile: ItemFactory = () => new ItemModuleAntiHostile().setCost(10)
+	val moduleAntiFriendly: ItemFactory = () => new ItemModuleAntiFriendly().setCost(5)
+	val moduleAntiPersonnel: ItemFactory = () => new ItemModuleAntiPersonnel().setCost(15)
+	val moduleConfiscate: ItemFactory = classOf[ItemModuleConfiscate]
+	val moduleWarn: ItemFactory = classOf[ItemModuleBroadcast]
+	val moduleBlockAccess: ItemFactory = () => (new ItemModuleDefense with Named).setCost(10).setName("moduleBlockAccess")
+	val moduleBlockAlter: ItemFactory = () => (new ItemModuleDefense with Named).setCost(15).setName("moduleBlockAlter")
+	val moduleAntiSpawn: ItemFactory = () => (new ItemModuleDefense with Named).setCost(10).setName("moduleAntiSpawn")
 
 	val fxFortronBeam: EntityFactory = () => new FXFortronBeam(FieldColor.blue, 40)
 	val fxHologram: EntityFactory = () => new FXHologram(FieldColor.blue, 40)

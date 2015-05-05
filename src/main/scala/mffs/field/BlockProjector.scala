@@ -260,7 +260,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter w
 			calculatedField
 				.view
 				.filter(v => world.getBlock(v).isPresent && world.getBlock(v).get().sameType(Content.forceField))
-				.foreach(v => world.setBlock(v, Game.instance.blockManager.getAirBlock))
+				.foreach(v => world.removeBlock(v))
 
 			forceFields = Set.empty
 			calculatedField = null

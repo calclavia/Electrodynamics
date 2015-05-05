@@ -1,6 +1,6 @@
 package mffs
 
-import java.util.function.Supplier
+import java.util.function.{Function => JFunction}
 
 import com.resonant.lib.misc.MovementManager
 import mffs.api.fortron.Fortron
@@ -11,7 +11,6 @@ import nova.core.event.EventManager.{BlockChangeEvent, EmptyEvent}
 import nova.core.fluid.Fluid
 import nova.core.game.Game
 import nova.core.loader.{Loadable, NovaMod}
-
 @NovaMod(id = Reference.id, name = Reference.name, version = Reference.version, novaVersion = "0.0.1", dependencies = Array("resonantengine"))
 object ModularForceFieldSystem extends Loadable {
 
@@ -38,8 +37,8 @@ object ModularForceFieldSystem extends Loadable {
 			}
 		})
 
-		Game.instance.fluidManager.register(new Supplier[Fluid] {
-			override def get(): Fluid = new Fluid(Fortron.fortronID)
+		Game.instance.fluidManager.register(new JFunction[Array[AnyRef], Fluid] {
+			override def apply(args: Array[AnyRef]): Fluid = new Fluid(Fortron.fortronID)
 		})
 
 		Content.preInit()

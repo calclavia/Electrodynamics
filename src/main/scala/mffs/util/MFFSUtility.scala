@@ -6,7 +6,8 @@ import mffs.api.machine.Projector
 import mffs.content.Content
 import mffs.field.BlockProjector
 import mffs.field.shape.ItemShapeCustom
-import nova.core.block.Block
+import nova.core.block.{Block, BlockFactory}
+import nova.core.game.Game
 import nova.core.inventory.Inventory
 import nova.core.inventory.components.InventoryProvider
 import nova.core.item.{Item, ItemBlock}
@@ -78,7 +79,7 @@ object MFFSUtility {
 		return inventory.toSet.headOption.orNull
 	}
 
-	def getCamoBlock(proj: Projector, position: Vector3i): Block = {
+	def getCamoBlock(proj: Projector, position: Vector3i): BlockFactory = {
 		val projector = proj.asInstanceOf[BlockProjector]
 
 		if (projector != null) {
@@ -92,7 +93,7 @@ object MFFSUtility {
 							var relativePosition = position - fieldCenter
 							relativePosition = relativePosition.transform(Quaternion.fromEuler(-projector.getRotationYaw, -projector.getRotationPitch, 0))
 
-							val theBlock = fieldMap.getBlock(relativePosition)
+							val theBlock = fieldMap.getBlockFactory(relativePosition)
 
 							if (theBlock.isPresent) {
 								return theBlock.get()
@@ -102,7 +103,7 @@ object MFFSUtility {
 
 					projector.getFilterItems
 						.filter(getFilterBlock(_) != null)
-						.collect { case item: ItemBlock => item.block }
+						.collect { case item: ItemBlock => item.blockFactory }
 						.headOption match {
 						case Some(block) => return block
 						case _ => return null
@@ -114,11 +115,12 @@ object MFFSUtility {
 		return null
 	}
 
-	def getFilterBlock(item: Item): Block = {
-		if (item.isInstanceOf[ItemBlock]) {
-			return item.asInstanceOf[ItemBlock].block
-
+	def getFilterBlock(item: Item): BlockFactory = {
+		val opItem = Game.instance.itemManager.getBlockFromItem(item)
+		if (opItem.isPresent) {
+			return opItem.get()
 		}
+
 		return null
 	}
 

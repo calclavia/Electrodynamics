@@ -131,7 +131,7 @@ class BlockForceField extends Block with PacketHandler with ForceField with Ligh
 		}
 
 		if (Game.instance.networkManager.isServer) {
-			world.setBlock(position, Game.instance.blockManager.getAirBlock)
+			world.removeBlock(position)
 		}
 
 		return null
@@ -173,7 +173,7 @@ class BlockForceField extends Block with PacketHandler with ForceField with Ligh
 		}
 
 		if (Game.instance.networkManager.isServer) {
-			world.setBlock(position(), Game.instance.blockManager.getAirBlock)
+			world.removeBlock(position)
 		}
 	}
 
@@ -187,7 +187,7 @@ class BlockForceField extends Block with PacketHandler with ForceField with Ligh
 
 	def refreshCamoBlock() {
 		if (getProjectorSafe != null) {
-			camoBlock = MFFSUtility.getCamoBlock(getProjector, position)
+			camoBlock = MFFSUtility.getCamoBlock(getProjector, position).getDummy
 		}
 	}
 }

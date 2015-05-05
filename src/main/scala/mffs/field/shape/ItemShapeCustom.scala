@@ -36,7 +36,7 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 	@Stored
 	var fieldSize = 0
 
-	val modes = Array(Content.modeCube.asInstanceOf[ItemShape], Content.modeSphere.asInstanceOf[ItemShape], Content.modeTube.asInstanceOf[ItemShape], Content.modePyramid.asInstanceOf[ItemShape])
+	val modes = Array(Content.modeCube, Content.modeSphere, Content.modeTube, Content.modePyramid)
 
 	override def getID: String = "shapeCustom"
 
@@ -163,7 +163,7 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 	}
 
 	override def render(projector: Projector, model: Model) {
-		modes(new Random().nextInt(modes.length - 1)).render(projector, model)
+		modes(new Random().nextInt(modes.length - 1)).getDummy.asInstanceOf[ItemShape].render(projector, model)
 	}
 
 	override def getFortronCost(amplifier: Float): Float = super.getFortronCost(amplifier) * amplifier
