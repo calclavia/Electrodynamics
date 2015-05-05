@@ -67,7 +67,7 @@ class BlockForceField extends Block with PacketHandler with ForceField with Ligh
 			return true
 		}
 
-		val block = blockAccess().getBlock(position + side.toVector)
+		val block = world.getBlock(position + side.toVector)
 		return if (block.isPresent) sameType(block.get()) else true
 	}
 

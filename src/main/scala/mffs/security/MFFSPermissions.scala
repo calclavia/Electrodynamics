@@ -12,7 +12,7 @@ object MFFSPermissions {
 	/** Place Access - Allows to open GUIs and activate blocks. */
 	val blockAlter = defense.addChild("blockPlaceAccess")
 	/** Block Access - Allows block access and opening GUIs. */
-	val blockAccess = defense.addChild("blockAccess")
+	val blockAccess = defense.addChild("world")
 	/** Bypass Confiscation - Allows the bypassing of interdiction matrix confiscation. */
 	val bypassConfiscation = defense.addChild("bypassConfiscation")
 

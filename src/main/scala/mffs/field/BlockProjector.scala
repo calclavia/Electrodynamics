@@ -292,7 +292,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter w
 
 		if (action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK && checkPos.getTileEntity(checkWorld) != null) {
 			if (getModuleCount(Content.moduleBlockAccess) > 0) {
-				hasPerm = hasPermission(player.getGameProfile, MFFSPermissions.blockAccess)
+				hasPerm = hasPermission(player.getGameProfile, MFFSPermissions.world)
 			}
 		}
 

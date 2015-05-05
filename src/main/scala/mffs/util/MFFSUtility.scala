@@ -60,7 +60,7 @@ object MFFSUtility {
 			Direction.DIRECTIONS.foreach(
 				direction => {
 					val checkPos = block.position() + direction.toVector
-					val checkBlock = block.blockAccess().getBlock(checkPos)
+					val checkBlock = block.world.getBlock(checkPos)
 
 					if (checkBlock.isPresent) {
 						val checkStack = getFirstItemBlock(checkBlock.get(), Item, false)
