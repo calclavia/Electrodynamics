@@ -101,12 +101,12 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter w
 				val pos = position.toDouble + 0.5
 
 				if (packetType == 1) {
-					world.createClientEntity(Content.fxFortronBeam).setPosition(pos).asInstanceOf[FXFortronBeam].setTarget(target)
-					world.createClientEntity(Content.fxHologramProgress).setPosition(pos)
+					world.addClientEntity(Content.fxFortronBeam).setPosition(pos).asInstanceOf[FXFortronBeam].setTarget(target)
+					world.addClientEntity(Content.fxHologramProgress).setPosition(pos)
 				}
 				else if (packetType == 2) {
-					world.createClientEntity(Content.fxFortronBeam).setPosition(pos).asInstanceOf[FXFortronBeam].setTarget(target).setColor(FieldColor.red)
-					world.createClientEntity(Content.fxHologramProgress).setPosition(pos).asInstanceOf[FXHologramProgress].setColor(FieldColor.red)
+					world.addClientEntity(Content.fxFortronBeam).setPosition(pos).asInstanceOf[FXFortronBeam].setTarget(target).setColor(FieldColor.red)
+					world.addClientEntity(Content.fxHologramProgress).setPosition(pos).asInstanceOf[FXHologramProgress].setColor(FieldColor.red)
 				}
 			}
 			else if (packet.getID == PacketBlock.field) {

@@ -14,7 +14,7 @@ abstract class FXMFFS extends Entity with Updater {
 
 		if (this.controller != null) {
 			if (!this.controller.canContinueEffect) {
-				world.destroyEntity(this)
+				world.removeEntity(this)
 			}
 		}
 	}

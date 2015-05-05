@@ -90,7 +90,7 @@ object FortronUtility {
 				var toBeInjected: Int = receiver.removeFortron(transferer.addFortron(transferEnergy, false), false)
 				toBeInjected = transferer.addFortron(receiver.removeFortron(toBeInjected, true), true)
 				if (Side.get().isClient && toBeInjected > 0 && !isCamo) {
-					val particle = world.createClientEntity(new FXFortronBeam(FieldColor.blue, 20))
+					val particle = world.addClientEntity(new FXFortronBeam(FieldColor.blue, 20))
 					particle.setPosition(block.position.toDouble + 0.5)
 					particle.setTarget(receiver.asInstanceOf[Block].position.toDouble + 0.5)
 				}
@@ -100,7 +100,7 @@ object FortronUtility {
 				var toBeEjected: Int = transferer.removeFortron(receiver.addFortron(transferEnergy, false), false)
 				toBeEjected = receiver.addFortron(transferer.removeFortron(toBeEjected, true), true)
 				if (Side.get().isClient && toBeEjected > 0 && !isCamo) {
-					val particle = world.createClientEntity(new FXFortronBeam(FieldColor.blue, 20))
+					val particle = world.addClientEntity(new FXFortronBeam(FieldColor.blue, 20))
 					particle.setTarget(block.position.toDouble + 0.5)
 					particle.setPosition(receiver.asInstanceOf[Block].position.toDouble + 0.5)
 				}

@@ -413,7 +413,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 							hologramRenderPoints.foreach(
 								pos =>
 									world
-										.createClientEntity(Content.fxHologramProgress).asInstanceOf[FXHologramProgress]
+										.addClientEntity(Content.fxHologramProgress).asInstanceOf[FXHologramProgress]
 										.setColor(
 											isTeleportPacket match {
 												case 1 => FieldColor.blue
@@ -435,7 +435,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 
 							hologramRenderPoints.foreach(pos => {
 								//Render teleport start
-								val hologramA = world.createClientEntity(Content.fxHologramProgress).asInstanceOf[FXHologramProgress]
+								val hologramA = world.addClientEntity(Content.fxHologramProgress).asInstanceOf[FXHologramProgress]
 								hologramA.setColor(color)
 								hologramA.setPosition(pos.toDouble + 0.5)
 								//TODO: Not clean
@@ -455,7 +455,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 							 */
 							val vecSize = packet.readInt()
 							val hologramRenderPoints = packet.readSet[Vector3i]()
-							hologramRenderPoints.foreach(p => world.createClientEntity(new FXHologramProgress(FieldColor.red, 30)).setPosition(p.toDouble + 0.5))
+							hologramRenderPoints.foreach(p => world.addClientEntity(new FXHologramProgress(FieldColor.red, 30)).setPosition(p.toDouble + 0.5))
 						}
 					}
 				}

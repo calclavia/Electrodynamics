@@ -20,7 +20,7 @@ class FXHologramProgress(@BeanProperty var color: Color, maxAge: Double) extends
 		age += deltaTime
 
 		if (age > maxAge) {
-			world.destroyEntity(this)
+			world.removeEntity(this)
 		}
 	}
 

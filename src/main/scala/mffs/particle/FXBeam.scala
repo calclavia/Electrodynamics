@@ -67,7 +67,7 @@ abstract class FXBeam(texture: Texture, @BeanProperty var color: Color, maxAge: 
 		age += deltaTime
 
 		if (age >= maxAge) {
-			world.destroyEntity(this)
+			world.removeEntity(this)
 		}
 	}
 

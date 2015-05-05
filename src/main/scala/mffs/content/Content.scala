@@ -92,6 +92,7 @@ object Content extends ContentLoader {
 	val moduleBlockAlter: ItemFactory = () => (new ItemModuleDefense with Named).setCost(15).setName("moduleBlockAlter")
 	val moduleAntiSpawn: ItemFactory = () => (new ItemModuleDefense with Named).setCost(10).setName("moduleAntiSpawn")
 
+	//TODO: Allow args.
 	val fxFortronBeam: EntityFactory = () => new FXFortronBeam(FieldColor.blue, 40)
 	val fxHologram: EntityFactory = () => new FXHologram(FieldColor.blue, 40)
 	val fxHologramProgress: EntityFactory = () => new FXHologramProgress(FieldColor.blue, 40)

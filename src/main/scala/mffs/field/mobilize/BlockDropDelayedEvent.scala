@@ -15,7 +15,7 @@ class BlockDropDelayedEvent(ticks: Int, block: Block, world: World, position: Ve
 
 			if (checkBlock.isPresent && checkBlock.get == block) {
 				val drops = block.getDrops
-				drops.foreach(drop => world.createEntity(position.toDouble + 0.5, drop))
+				drops.foreach(drop => world.addEntity(position.toDouble + 0.5, drop))
 				world.removeBlock(position)
 			}
 		}

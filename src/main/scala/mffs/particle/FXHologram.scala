@@ -33,7 +33,7 @@ class FXHologram(color: Color, maxAge: Double) extends FXMFFS with DynamicRender
 		age += deltaTime
 
 		if (age > maxAge) {
-			world.destroyEntity(this)
+			world.removeEntity(this)
 		}
 	}
 

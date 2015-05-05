@@ -98,7 +98,7 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 
 							if (consumedEnergy > 0) {
 								if (Side.get().isServer) {
-									val newFX = entity.world.createClientEntity(new FXFortronBeam(FieldColor.blue, 20))
+									val newFX = entity.world.addClientEntity(new FXFortronBeam(FieldColor.blue, 20))
 									newFX.setPosition(entity.position /*.add(new Vector3d(0, entity.getEyeHeight - 0.2, 0))*/)
 									newFX.setTarget(fortronBlock.position.toDouble.add(0.5))
 								}
