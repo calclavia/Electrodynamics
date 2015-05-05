@@ -687,7 +687,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 		//Do the post-move, which sets all blocks to what they should be
 		newDataMap.foreach {
 			case ((world, pos), (id, data)) =>
-				ModularForceFieldSystem.movementManager.setSneaky(world, pos, Game.instance.blockManager.getBlock(id).get(), data)
+				ModularForceFieldSystem.movementManager.setSneaky(world, pos, Game.instance.blockManager.get(id).get(), data)
 		}
 
 		//Notify block chang in both the old and new positions
