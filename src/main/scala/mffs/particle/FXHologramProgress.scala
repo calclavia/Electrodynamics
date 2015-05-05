@@ -2,13 +2,14 @@ package mffs.particle
 
 import com.resonant.core.prefab.block.Updater
 import mffs.content.Textures
+import nova.core.block.components.DynamicRenderer
 import nova.core.render.Color
 import nova.core.render.model.{BlockModelUtil, Model}
 
 import scala.beans.BeanProperty
 import scala.collection.convert.wrapAll._
 
-class FXHologramProgress(@BeanProperty var color: Color, maxAge: Double) extends FXMFFS with Updater {
+class FXHologramProgress(@BeanProperty var color: Color, maxAge: Double) extends FXMFFS with Updater with DynamicRenderer {
 	var age = 0d
 
 	override def getID: String = "hologramMoving"
@@ -23,7 +24,7 @@ class FXHologramProgress(@BeanProperty var color: Color, maxAge: Double) extends
 		}
 	}
 
-	override def render(model: Model) {
+	override def renderDynamic(model: Model) {
 		//		GL11.glPushMatrix
 		val completion = age / maxAge
 		model.scale(1.01, 1.01, 1.01)

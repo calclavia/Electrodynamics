@@ -46,7 +46,7 @@ class BlockFortronCapacitor extends BlockModuleHandler with StaticRenderer {
 				.collect {
 				case provider: TankProvider =>
 					provider.getTanks.collect {
-						case tank if tank.hasFluidType(Fortron.fortronFactory) => tank
+						case tank if tank.hasFluidType(Fortron.fortronID) => tank
 					}
 			}
 				.flatten
@@ -66,7 +66,7 @@ class BlockFortronCapacitor extends BlockModuleHandler with StaticRenderer {
 					.collect {
 					case provider: TankProvider =>
 						provider.getTanks.collect {
-							case tank if tank.hasFluidType(Fortron.fortronFactory) => tank
+							case tank if tank.hasFluidType(Fortron.fortronID) => tank
 						}
 				}
 					.flatten

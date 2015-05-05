@@ -1,6 +1,7 @@
 package mffs.particle
 
 import com.resonant.core.prefab.block.Updater
+import nova.core.block.components.DynamicRenderer
 import nova.core.entity.Entity
 import nova.core.render.Color
 import nova.core.render.model.{Model, Vertex}
@@ -14,7 +15,7 @@ import scala.collection.convert.wrapAll._
  * MFFS Beam Renderer.
  * @author Calclavia, Azanor
  */
-abstract class FXBeam(texture: Texture, @BeanProperty var color: Color, maxAge: Double) extends Entity with Updater {
+abstract class FXBeam(texture: Texture, @BeanProperty var color: Color, maxAge: Double) extends Entity with DynamicRenderer with Updater {
 
 	private val endModifier: Float = 1.0F
 	private val reverse: Boolean = false
@@ -70,7 +71,7 @@ abstract class FXBeam(texture: Texture, @BeanProperty var color: Color, maxAge: 
 		}
 	}
 
-	override def render(model: Model) {
+	override def renderDynamic(model: Model) {
 
 		//		GL11.glPushMatrix
 		var f = 1

@@ -1,13 +1,14 @@
 package mffs.particle
 
 import mffs.content.Textures
+import nova.core.block.components.DynamicRenderer
 import nova.core.render.Color
 import nova.core.render.model.{BlockModelUtil, Model}
 import nova.core.util.transform.Vector3d
 
 import scala.collection.convert.wrapAll._
 
-class FXHologram(color: Color, maxAge: Double) extends FXMFFS {
+class FXHologram(color: Color, maxAge: Double) extends FXMFFS with DynamicRenderer {
 	private var targetPosition: Vector3d = null
 
 	var age = 0d
@@ -36,7 +37,7 @@ class FXHologram(color: Color, maxAge: Double) extends FXMFFS {
 		}
 	}
 
-	override def render(model: Model) {
+	override def renderDynamic(model: Model) {
 		model.scale(1.01, 1.01, 1.01)
 
 		var op = 0.5
