@@ -521,7 +521,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 				//entity.travelToDimension(targetPos.world.provider.dimensionId)
 			}
 
-			entity.rigidBody.setVelocity(Vector3d.zero)
+			entity.setVelocity(Vector3d.zero)
 		}
 	}
 

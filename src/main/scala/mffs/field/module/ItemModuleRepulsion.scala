@@ -30,9 +30,9 @@ class ItemModuleRepulsion extends ItemModule {
 			.foreach(
 				entity => {
 					val repelDirection = entity.position() - (entity.position.toInt.toDouble + 0.5).normalize
-					val velocity = entity.rigidBody.velocity
+					val velocity = entity.velocity
 					val force = repelDirection * repellForce.max(velocity.abs)
-					entity.rigidBody.addForce(force)
+					entity.addForce(force)
 					//TODO: May NOT be thread safe!
 				})
 		return true
