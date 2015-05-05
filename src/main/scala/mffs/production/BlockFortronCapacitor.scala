@@ -2,27 +2,31 @@ package mffs.production
 
 import java.util.{HashSet => JHashSet, Set => JSet}
 
-import mffs.GraphFrequency
 import mffs.api.card.CoordLink
 import mffs.api.fortron.{Fortron, FortronFrequency}
 import mffs.base.{BlockModuleHandler, PacketBlock}
 import mffs.content.{Content, Models, Textures}
+import mffs.gui.GuiFortronCapacitor
 import mffs.util.{FortronUtility, TransferMode}
+import mffs.{GraphFrequency, Reference}
 import nova.core.block.Block
 import nova.core.block.components.StaticRenderer
+import nova.core.entity.Entity
 import nova.core.fluid.TankProvider
+import nova.core.game.Game
 import nova.core.inventory.InventorySimple
 import nova.core.item.Item
+import nova.core.network.NetworkTarget.Side
 import nova.core.network.Sync
 import nova.core.render.model.Model
 import nova.core.retention.Stored
-import nova.core.util.transform.MatrixStack
+import nova.core.util.transform.{MatrixStack, Vector3d}
 
 import scala.collection.convert.wrapAll._
 
 class BlockFortronCapacitor extends BlockModuleHandler with StaticRenderer {
 
-	override protected val inventory: InventorySimple = new InventorySimple(3 + 4 * 2 + 1)
+	override val inventory: InventorySimple = new InventorySimple(3 + 4 * 2 + 1)
 	private var tickAccumulator = 0d
 
 	capacityBase = 700
@@ -32,6 +36,19 @@ class BlockFortronCapacitor extends BlockModuleHandler with StaticRenderer {
 	@Sync(ids = Array(PacketBlock.description, PacketBlock.toggleMode))
 	@Stored
 	private var transferMode = TransferMode.equalize
+
+	override def onRightClick(entity: Entity, side: Int, hit: Vector3d): Boolean = {
+		if (!super.onRightClick(entity, side, hit)) {
+
+			Game.instance.guiFactory.registerGui(new GuiFortronCapacitor, Reference.id)
+
+			if (Side.get().isServer) {
+				Game.instance.guiFactory.showGui(Reference.id, getID, entity, position)
+			}
+		}
+
+		return true
+	}
 
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)

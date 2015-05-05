@@ -7,6 +7,7 @@ import mffs.field.mobilize.BlockMobilizer
 import mffs.field.module._
 import mffs.field.shape._
 import mffs.field.{BlockForceField, BlockProjector}
+import mffs.gui.GuiFortronCapacitor
 import mffs.item.ItemRemoteController
 import mffs.item.card.{ItemCard, ItemCardFrequency, ItemCardInfinite, ItemCardLink}
 import mffs.particle.{FXFortronBeam, FXHologram, FXHologramProgress, FieldColor}
@@ -96,6 +97,9 @@ object Content extends ContentLoader {
 	val fxFortronBeam: EntityFactory = () => new FXFortronBeam(FieldColor.blue, 40)
 	val fxHologram: EntityFactory = () => new FXHologram(FieldColor.blue, 40)
 	val fxHologramProgress: EntityFactory = () => new FXHologramProgress(FieldColor.blue, 40)
+
+	//GUI
+	val guiFortronCapacitor = new GuiFortronCapacitor
 
 	override def postInit() {
 		/**
