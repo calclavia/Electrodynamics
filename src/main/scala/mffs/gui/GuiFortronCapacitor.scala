@@ -42,12 +42,13 @@ class GuiFortronCapacitor extends GuiMFFS("fortronCapacitor") {
 		new Container("container")
 			//.add(new Label("linkedDevice", Game.instance.languageManager.getLocal("linkedDevice", Map("%1" -> (block.getDeviceCount + "")))))
 			//.add(new Label("transmissionRate", Game.instance.languageManager.getLocal("transmissionRate", Map("%1" -> (new UnitDisplay(UnitDisplay.Unit.LITER, block.getTransmissionRate * 20).symbol() + "/s")))))
-			//.add(upgrades)
+			.add(upgrades)
 			//.add(inputs)
 			//.add(outputs)
 			//Toggle button
 			.add(
-				new Button("toggle", "Toggle Mode").onEvent((evt: ActionEvent, component: Button) => block.toggleTransferMode(), classOf[ComponentEvent.ActionEvent], Side.SERVER)
+				new
+						Button("toggle", "Toggle Mode").setPreferredSize(80, 20).onEvent((evt: ActionEvent, component: Button) => block.toggleTransferMode(), classOf[ComponentEvent.ActionEvent], Side.SERVER)
 			)
 	)
 
@@ -55,14 +56,13 @@ class GuiFortronCapacitor extends GuiMFFS("fortronCapacitor") {
 		drawTextWithTooltip("range", "%1: " + tile.getTransmissionRange, 8, 44, x, y)
 		drawTextWithTooltip("input", EnumColor.DARK_GREEN + "%1", 12, 62, x, y)
 		drawTextWithTooltip("output", EnumColor.RED + "%1", 92, 62, x, y)
-
 		 drawFrequencyGui()
 		 drawFortron()
-
 		 Toggle button
 	 */
+
 	onGuiEvent((evt: GuiEvent.BindEvent) => {
-		block = evt.block.get().asInstanceOf
+		block = evt.block.get().asInstanceOf[BlockFortronCapacitor]
 		addInventory("main", evt.block.get().asInstanceOf[BlockFortronCapacitor].inventory)
 	}, classOf[GuiEvent.BindEvent])
 }
