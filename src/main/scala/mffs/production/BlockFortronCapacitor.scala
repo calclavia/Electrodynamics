@@ -172,6 +172,10 @@ class BlockFortronCapacitor extends BlockModuleHandler with StaticRenderer {
 
 	def getTransferMode: TransferMode = transferMode
 
+	def toggleTransferMode() {
+		transferMode = transferMode.toggle()
+	}
+
 	override def renderStatic(model: Model) {
 		model.matrix = new MatrixStack()
 			.loadMatrix(model.matrix)
