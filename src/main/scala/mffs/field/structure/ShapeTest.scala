@@ -42,12 +42,14 @@ class ShapeTest {
 	@Test
 	def testSphere() {
 		val struct = new StructureSphere
-		for (scale <- 1 to 500 by 25) {
+		struct.stepSize = 0.5
+		struct.error = 0.134
+		for (scale <- 10 to 500 by 25) {
 			val extStructProf = new Profiler("Sphere " + scale)
 			for (trial <- 1 to 10) {
 				struct.setScale(Vector3d.one * scale)
 				val extStruct = struct.getExteriorStructure
-				extStruct.foreach(v => assertThat(v.magnitude()).isEqualTo(scale))
+				extStruct.foreach(v => assertThat(v.magnitude()).isBetween(scale - 1d, scale + 1d))
 				assertThat(extStruct.size).isEqualTo(4 * Math.PI * scale * scale)
 				extStructProf.lap()
 			}
