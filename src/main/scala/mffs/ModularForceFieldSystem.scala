@@ -3,10 +3,10 @@ package mffs
 import java.util.function.{Function => JFunction}
 
 import com.resonant.lib.misc.MovementManager
+import com.resonant.lib.wrapper.WrapFunctions._
 import mffs.api.fortron.Fortron
 import mffs.content.{Content, Models, Textures}
 import mffs.security.MFFSPermissions
-import nova.core.event.EventListener
 import nova.core.event.EventManager.{BlockChangeEvent, EmptyEvent}
 import nova.core.fluid.Fluid
 import nova.core.game.Game
@@ -14,6 +14,7 @@ import nova.core.loader.{Loadable, NovaMod}
 @NovaMod(id = Reference.id, name = Reference.name, version = Reference.version, novaVersion = "0.0.1", dependencies = Array("resonantengine"))
 object ModularForceFieldSystem extends Loadable {
 
+	//TODO: Remove tempID
 	val tempID = ""
 	var movementManager: MovementManager = null
 
@@ -21,30 +22,21 @@ object ModularForceFieldSystem extends Loadable {
 		/**
 		 * Registration
 		 */
-		Game.instance.eventManager.blockChange.add(new EventListener[BlockChangeEvent] {
-			override def onEvent(event: BlockChangeEvent) {
-				EventHandler.onBlockChange(event)
-			}
-		})
+		Game.instance.eventManager.blockChange.add((evt: BlockChangeEvent) => EventHandler.onBlockChange(evt))
 		//		MinecraftForge.EVENT_BUS.register(SubscribeEventHandler)
 		//		MinecraftForge.EVENT_BUS.register(Settings)
 		//		MinecraftForge.EVENT_BUS.register(Content.remoteController)
 
-		Game.instance.eventManager.serverStarting.add(new EventListener[EmptyEvent] {
-			override def onEvent(event: EmptyEvent) {
+		Game.instance.eventManager.serverStarting.add((evt: EmptyEvent) => {
 				GraphFrequency.client = new GraphFrequency
 				GraphFrequency.server = new GraphFrequency
-			}
 		})
 
-		Game.instance.fluidManager.register(new JFunction[Array[AnyRef], Fluid] {
-			override def apply(args: Array[AnyRef]): Fluid = new Fluid(Fortron.fortronID)
-		})
+		Game.instance.fluidManager.register((args: Array[AnyRef]) => new Fluid(Fortron.fortronID))
 
 		Content.preInit()
 		Models.preInit()
 		Textures.preInit()
-
 	}
 
 	override def init() {

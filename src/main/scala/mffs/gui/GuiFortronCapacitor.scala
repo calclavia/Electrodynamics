@@ -1,8 +1,7 @@
 package mffs.gui
 
+import com.resonant.lib.wrapper.WrapFunctions._
 import mffs.production.BlockFortronCapacitor
-import nova.core.event.EventListener
-import nova.core.gui.GuiEvent.BindEvent
 import nova.core.gui.components.inventory.{PlayerInventory, Slot}
 import nova.core.gui.components.{Container, Label}
 import nova.core.gui.layout.{Anchor, FlowLayout}
@@ -24,9 +23,5 @@ class GuiFortronCapacitor extends Gui("fortronCapacitor") {
 	)
 	add(new PlayerInventory("inventory"), Anchor.SOUTH)
 
-	onGuiEvent(new EventListener[GuiEvent.BindEvent] {
-		override def onEvent(event: BindEvent) {
-			addInventory("main", event.block.get().asInstanceOf[BlockFortronCapacitor].inventory)
-		}
-	}, classOf[GuiEvent.BindEvent])
+	onGuiEvent((evt: GuiEvent.BindEvent) => addInventory("main", evt.block.get().asInstanceOf[BlockFortronCapacitor].inventory), classOf[GuiEvent.BindEvent])
 }
