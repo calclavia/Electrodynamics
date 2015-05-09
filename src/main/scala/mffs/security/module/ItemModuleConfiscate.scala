@@ -44,7 +44,7 @@ class ItemModuleConfiscate extends ItemModuleDefense {
 						}
 
 						if (relevantSlots.size > 0) {
-							Game.instance.networkManager.sendChat(player, Game.instance.languageManager.getLocal("message.moduleConfiscate.confiscate"))
+							Game.instance.networkManager.sendChat(player, Game.instance.languageManager.translate("message.moduleConfiscate.confiscate"))
 						}
 					})
 				})

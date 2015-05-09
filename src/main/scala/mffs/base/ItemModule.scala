@@ -21,7 +21,7 @@ abstract class ItemModule extends Item with TooltipItem with Module with Categor
 	private var maxCount = 64
 
 	override def getTooltips(player: Optional[Player], tooltips: JList[String]) {
-		tooltips.add(Game.instance.languageManager.getLocal("info.item.fortron") + " " + new UnitDisplay(UnitDisplay.Unit.LITER, getFortronCost(1) * 20) + "/s")
+		tooltips.add(Game.instance.languageManager.translate("info.item.fortron") + " " + new UnitDisplay(UnitDisplay.Unit.LITER, getFortronCost(1) * 20) + "/s")
 	}
 
 	override def getFortronCost(amplifier: Float) = fortronCost

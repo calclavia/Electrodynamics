@@ -42,13 +42,13 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 			val block = linkWorld.getBlock(linkPos)
 			if (block.isPresent) {
 				//TODO: Get the real block name?
-				tooltips.add(Game.instance.languageManager.getLocal("info.item.linkedWith") + " " + block.get().getID)
+				tooltips.add(Game.instance.languageManager.translate("info.item.linkedWith") + " " + block.get().getID)
 			}
 			tooltips.add(linkPos.xi + ", " + linkPos.yi + ", " + linkPos.zi)
-			tooltips.add(Game.instance.languageManager.getLocal("info.item.dimension") + " '" + linkWorld.getID + "'")
+			tooltips.add(Game.instance.languageManager.translate("info.item.dimension") + " '" + linkWorld.getID + "'")
 		}
 		else {
-			tooltips.add(Game.instance.languageManager.getLocal("info.item.notLinked"))
+			tooltips.add(Game.instance.languageManager.translate("info.item.notLinked"))
 		}
 	}
 
@@ -63,7 +63,7 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 			val block = linkWorld.getBlock(linkPos).get()
 
 			if (block != null) {
-				Game.instance.networkManager.sendChat(entity.asInstanceOf[Player], Game.instance.languageManager.getLocal("message.remoteController.linked").replaceAll("#p", position.x + ", " + position.y + ", " + position.z).replaceAll("#q", block.getID))
+				Game.instance.networkManager.sendChat(entity.asInstanceOf[Player], Game.instance.languageManager.translate("message.remoteController.linked").replaceAll("#p", position.x + ", " + position.y + ", " + position.z).replaceAll("#q", block.getID))
 			}
 		}
 
@@ -117,7 +117,7 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 							}
 						}
 						if (Side.get().isServer) {
-							Game.instance.networkManager.sendChat(entity.asInstanceOf[Player], Game.instance.languageManager.getLocal("message.remoteController.fail").replaceAll("#p", new
+							Game.instance.networkManager.sendChat(entity.asInstanceOf[Player], Game.instance.languageManager.translate("message.remoteController.fail").replaceAll("#p", new
 									UnitDisplay(UnitDisplay.Unit.JOULES, requiredEnergy).toString))
 						}
 					}

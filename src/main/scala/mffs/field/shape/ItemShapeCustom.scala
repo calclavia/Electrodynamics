@@ -50,17 +50,17 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 	override def getTooltips(player: Optional[Player], tooltips: util.List[String]) {
 		super.getTooltips(player, tooltips)
 
-		tooltips.add(Game.instance.languageManager.getLocal("info.modeCustom.mode") + " " + (if (isAdditive) Game.instance.languageManager.getLocal("info.modeCustom.additive") else Game.instance.languageManager.getLocal("info.modeCustom.substraction")))
-		tooltips.add(Game.instance.languageManager.getLocal("info.modeCustom.point1") + " " + pointA.xi + ", " + pointA.yi + ", " + pointA.zi)
-		tooltips.add(Game.instance.languageManager.getLocal("info.modeCustom.point2") + " " + pointB.xi + ", " + pointB.yi + ", " + pointB.zi)
+		tooltips.add(Game.instance.languageManager.translate("info.modeCustom.mode") + " " + (if (isAdditive) Game.instance.languageManager.translate("info.modeCustom.additive") else Game.instance.languageManager.translate("info.modeCustom.substraction")))
+		tooltips.add(Game.instance.languageManager.translate("info.modeCustom.point1") + " " + pointA.xi + ", " + pointA.yi + ", " + pointA.zi)
+		tooltips.add(Game.instance.languageManager.translate("info.modeCustom.point2") + " " + pointB.xi + ", " + pointB.yi + ", " + pointB.zi)
 
 		if (saveID > 0) {
-			tooltips.add(Game.instance.languageManager.getLocal("info.modeCustom.modeID") + " " + saveID)
+			tooltips.add(Game.instance.languageManager.translate("info.modeCustom.modeID") + " " + saveID)
 			if (fieldSize > 0) {
-				tooltips.add(Game.instance.languageManager.getLocal("info.modeCustom.fieldSize") + " " + fieldSize)
+				tooltips.add(Game.instance.languageManager.translate("info.modeCustom.fieldSize") + " " + fieldSize)
 			}
 			else {
-				tooltips.add(Game.instance.languageManager.getLocal("info.modeCustom.notSaved"))
+				tooltips.add(Game.instance.languageManager.translate("info.modeCustom.notSaved"))
 			}
 		}
 
@@ -68,7 +68,7 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 			super.getTooltips(player, tooltips)
 		}
 		else {
-			tooltips.add(Game.instance.languageManager.getLocal("info.modeCustom.shift"))
+			tooltips.add(Game.instance.languageManager.translate("info.modeCustom.shift"))
 		}
 	}
 
@@ -117,7 +117,7 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 						}
 
 						fieldSize = customStructure.structure.size
-						//entityPlayer.addChatMessage(new ChatComponentText(Game.instance.get.languageManager.getLocal("message.modeCustom.saved")))
+						//entityPlayer.addChatMessage(new ChatComponentText(Game.instance.get.languageManager.translate("message.modeCustom.saved")))
 						Game.instance.saveManager.queueSave(saveFilePrefix + saveID, customStructure)
 						clearCache()
 					}
@@ -126,7 +126,7 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 			}
 			else {
 				isAdditive = !isAdditive
-				//entityPlayer.addChatMessage(new ChatComponentText(Game.instance.get.languageManager.getLocal("message.modeCustom.modeChange").replaceAll("#p", (if (nbt.getBoolean(NBT_MODE)) Game.instance.get.languageManager.getLocal("info.modeCustom.substraction") else Game.instance.get.languageManager.getLocal("info.modeCustom.additive")))))
+				//entityPlayer.addChatMessage(new ChatComponentText(Game.instance.get.languageManager.translate("message.modeCustom.modeChange").replaceAll("#p", (if (nbt.getBoolean(NBT_MODE)) Game.instance.get.languageManager.translate("info.modeCustom.substraction") else Game.instance.get.languageManager.translate("info.modeCustom.additive")))))
 			}
 		}
 	}

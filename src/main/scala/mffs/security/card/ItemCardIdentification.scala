@@ -34,10 +34,10 @@ class ItemCardIdentification extends ItemCardAccess with PacketHandler {
 		super.getTooltips(player, tooltips)
 
 		if (access != null) {
-			tooltips.add(Game.instance.languageManager.getLocal("info.cardIdentification.username") + " " + access.asInstanceOf[AccessUser].username)
+			tooltips.add(Game.instance.languageManager.translate("info.cardIdentification.username") + " " + access.asInstanceOf[AccessUser].username)
 		}
 		else {
-			tooltips.add(Game.instance.languageManager.getLocal("info.cardIdentification.empty"))
+			tooltips.add(Game.instance.languageManager.translate("info.cardIdentification.empty"))
 		}
 	}
 

@@ -10,7 +10,7 @@ import nova.core.player.Player
 class ItemModuleDefense extends ItemModule {
 	override def getTooltips(player: Optional[Player], tooltips: util.List[String]) {
 		super.getTooltips(player, tooltips)
-		tooltips.add("\u00a74" + Game.instance.languageManager.getLocal("info.module.defense"))
+		tooltips.add("\u00a74" + Game.instance.languageManager.translate("info.module.defense"))
 	}
 
 	override def getID: String = "moduleDefense"

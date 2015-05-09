@@ -22,7 +22,7 @@ class ItemCardFrequency extends ItemCard with Frequency {
 
 	override def getTooltips(player: Optional[Player], tooltips: util.List[String]) {
 		super.getTooltips(player, tooltips)
-		tooltips.add(Game.instance.languageManager.getLocal("info.cardFrequency.freq") + " " + getEncodedFrequency)
+		tooltips.add(Game.instance.languageManager.translate("info.cardFrequency.freq") + " " + getEncodedFrequency)
 	}
 
 	def getEncodedFrequency = Hashing.md5().hashInt(frequency).toString.take(12)

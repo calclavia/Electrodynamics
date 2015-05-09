@@ -58,8 +58,8 @@ class GuiFortronCapacitor extends GuiMFFS("fortronCapacitor") {
 		 */
 		add(
 			new Container().setLayout(new FlowLayout)
-				.add(new Label("linkedDevice", Game.instance.languageManager.getLocal("linkedDevice", Map("%1" -> (block.getDeviceCount + "")))))
-				//.add(new Label("transmissionRate", Game.instance.languageManager.getLocal("transmissionRate", Map("%1" -> (new UnitDisplay(UnitDisplay.Unit.LITER, block.getTransmissionRate * 20).symbol() + "/s")))))
+				.add(new Label("linkedDevice", Game.instance.languageManager.translate("linkedDevice", Map("%1" -> (block.getDeviceCount + "")))))
+				//.add(new Label("transmissionRate", Game.instance.languageManager.translate("transmissionRate", Map("%1" -> (new UnitDisplay(UnitDisplay.Unit.LITER, block.getTransmissionRate * 20).symbol() + "/s")))))
 				.add(upgrades)
 				.add(inputs)
 				.add(outputs)

@@ -39,14 +39,14 @@ class ItemCardLink extends ItemCard with CoordLink with Storable {
 			val block = linkWorld.getBlock(linkPos)
 
 			if (block.isPresent) {
-				tooltips.add(Game.instance.languageManager.getLocal("info.item.linkedWith") + " " + block.get().getID)
+				tooltips.add(Game.instance.languageManager.translate("info.item.linkedWith") + " " + block.get().getID)
 			}
 
 			tooltips.add(linkPos.x + ", " + linkPos.y + ", " + linkPos.z)
-			tooltips.add(Game.instance.languageManager.getLocal("info.item.dimension") + " " + linkWorld.getID)
+			tooltips.add(Game.instance.languageManager.translate("info.item.dimension") + " " + linkWorld.getID)
 		}
 		else {
-			tooltips.add(Game.instance.languageManager.getLocal("info.item.notLinked"))
+			tooltips.add(Game.instance.languageManager.translate("info.item.notLinked"))
 		}
 	}
 
