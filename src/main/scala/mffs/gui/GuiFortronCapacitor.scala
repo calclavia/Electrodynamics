@@ -7,8 +7,7 @@ import nova.core.game.Game
 import nova.core.gui.ComponentEvent.ActionEvent
 import nova.core.gui.components.inventory.Slot
 import nova.core.gui.components.{Button, Container, Label}
-import nova.core.gui.layout.Constraints.GridLayoutConstraints
-import nova.core.gui.layout.{Anchor, FlowLayout, GridLayout}
+import nova.core.gui.layout.{Anchor, FlowLayout}
 import nova.core.gui.{ComponentEvent, GuiEvent}
 import nova.core.network.NetworkTarget.Side
 
@@ -47,7 +46,7 @@ class GuiFortronCapacitor extends GuiMFFS("fortronCapacitor") {
 		(0 to 2) foreach (i => upgrades.add(new Slot("main", i)))
 
 		//Input slots
-		val inputs = new Container("inputs").setLayout(new GridLayout(classOf[GridLayoutConstraints]))
+		val inputs = new Container("inputs").setLayout(new FlowLayout)
 		for (x <- 0 to 1; y <- 0 to 1)
 			inputs.add(new Slot("main", x + y))
 
