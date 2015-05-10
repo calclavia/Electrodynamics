@@ -1,15 +1,16 @@
 package mffs.gui
 
-import nova.core.gui.Gui
+import com.resonant.lib.wrapper.WrapFunctions._
 import nova.core.gui.components.inventory.PlayerInventory
 import nova.core.gui.layout.Anchor
+import nova.core.gui.{Gui, GuiEvent}
 
 /**
  * @author Calclavia
  */
 class GuiMFFS(id: String) extends Gui(id) {
 	add(new PlayerInventory("inventory"), Anchor.SOUTH)
-
+	onGuiEvent((evt: GuiEvent.BindEvent) => reset(), classOf[GuiEvent.BindEvent])
 	/*
 	Machine activate button
 

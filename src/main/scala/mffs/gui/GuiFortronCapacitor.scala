@@ -5,7 +5,7 @@ import com.resonant.wrapper.lib.utility.science.UnitDisplay
 import mffs.production.BlockFortronCapacitor
 import nova.core.game.Game
 import nova.core.gui.ComponentEvent.ActionEvent
-import nova.core.gui.components.inventory.Slot
+import nova.core.gui.components.inventory.{PlayerInventory, Slot}
 import nova.core.gui.components.{Button, Container, Label}
 import nova.core.gui.layout.{Anchor, FlowLayout}
 import nova.core.gui.{ComponentEvent, GuiEvent}
@@ -33,13 +33,10 @@ class GuiFortronCapacitor extends GuiMFFS("fortronCapacitor") {
 	onGuiEvent((evt: GuiEvent.BindEvent) => reset(evt), classOf[GuiEvent.BindEvent])
 
 	def reset(evt: GuiEvent.BindEvent) {
-		reset()
 		block = evt.block.get().asInstanceOf[BlockFortronCapacitor]
 		addInventory("main", evt.block.get().asInstanceOf[BlockFortronCapacitor].inventory)
 
 		setPreferredSize(180, 200)
-
-		add(new Label("title", "Fortron Capacitor"))
 
 		val upgrades = new Container("upgrades").setLayout(new FlowLayout)
 		//Upgrades
@@ -58,25 +55,35 @@ class GuiFortronCapacitor extends GuiMFFS("fortronCapacitor") {
 		/**
 		 * Layout
 		 */
+		add(new Label("title", "Fortron Capacitor"), Anchor.NORTH)
+
 		add(
-			new Container().setLayout(new FlowLayout)
-				.add(new Label("linkedDevice", Game.instance.languageManager.translate("gui.linkedDevice", Map("%1" -> (block.getDeviceCount + "")))))
+			new Container()
 				.add(
-					new Label(
-						"transmissionRate",
-						Game.instance.languageManager.translate("gui.transmissionRate", Map("%1" -> (new UnitDisplay(UnitDisplay.Unit.LITER, block.getTransmissionRate * 20).symbol() + "/s")))
-					)
+					new Container()
+						.add(new Label(Game.instance.languageManager.translate("gui.linkedDevice", Map("%1" -> (block.getDeviceCount + "")))))
+						.add(new
+							Label(Game.instance.languageManager.translate("gui.transmissionRate", Map("%1" -> (new
+									UnitDisplay(UnitDisplay.Unit.LITER, block.getTransmissionRate * 20).symbol() + "/s")))))
+
+					, Anchor.NORTH
 				)
-				.add(upgrades)
-				.add(inputs)
-				.add(outputs)
-				//Toggle button
 				.add(
-					new Button("toggle", "Toggle Mode")
-						.setPreferredSize(80, 20)
-						.onEvent((evt: ActionEvent, component: Button) => block.toggleTransferMode(), classOf[ComponentEvent.ActionEvent], Side.SERVER)
+					new Container()
+						.add(upgrades)
+						//.add(inputs)
+						//.add(outputs)
+						//Toggle button
+						.add(
+							new Button("toggle", "Toggle Mode")
+								.setPreferredSize(80, 20)
+								.onEvent((evt: ActionEvent, component: Button) => block.toggleTransferMode(), classOf[ComponentEvent.ActionEvent], Side.SERVER)
+						)
+					, Anchor.SOUTH
 				)
 			, Anchor.CENTER
 		)
+
+		add(new PlayerInventory("inventory"), Anchor.SOUTH)
 	}
 }
