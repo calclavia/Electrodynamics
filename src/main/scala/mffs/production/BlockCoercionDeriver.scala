@@ -2,9 +2,9 @@ package mffs.production
 
 import java.util
 
+import com.calclavia.graph.api.Node
+import com.calclavia.graph.core.electric.TTEBridge
 import com.resonant.core.energy.EnergyStorage
-import com.resonant.core.graph.internal.Node
-import com.resonant.core.graph.internal.electric.TTEBridge
 import mffs.Settings
 import mffs.api.modules.Module
 import mffs.base.{BlockModuleHandler, PacketBlock}
@@ -49,20 +49,17 @@ object BlockCoercionDeriver {
 }
 
 class BlockCoercionDeriver extends BlockModuleHandler with TTEBridge with StaticRenderer with DynamicRenderer {
+	override val inventory = new InventorySimple(6)
+	override val energy = new EnergyStorage(BlockCoercionDeriver.power)
 	@Stored
 	var processTime: Int = 0
-	@Stored
-	var isInversed = false
-
-	//Client
-	var animationTween = 0f
 
 	capacityBase = 30
 	startModuleIndex = 3
-
-	override protected val inventory = new InventorySimple(6)
-
-	override val energy = new EnergyStorage(BlockCoercionDeriver.power)
+	@Stored
+	var isInversed = false
+	//Client
+	var animationTween = 0f
 
 	override def getID: String = "coercionDeriver"
 
@@ -198,6 +195,12 @@ class BlockCoercionDeriver extends BlockModuleHandler with TTEBridge with Static
 
 	override def isCube: Boolean = false
 
+	override def renderItem(model: Model) {
+		model.translate(0, 0.1, 0)
+		renderStatic(model)
+		renderDynamic(model)
+	}
+
 	override def renderStatic(model: Model) {
 		val originalModel = Models.deriver.getModel
 		val capacitorModel = new Model
@@ -217,11 +220,5 @@ class BlockCoercionDeriver extends BlockModuleHandler with TTEBridge with Static
 		model.children.add(crystalModel)
 		//Disable Blending
 		model.bindAll(if (isActive) Textures.coercionDeriverOn else Textures.coercionDeriverOff)
-	}
-
-	override def renderItem(model: Model) {
-		model.translate(0, 0.1, 0)
-		renderStatic(model)
-		renderDynamic(model)
 	}
 }

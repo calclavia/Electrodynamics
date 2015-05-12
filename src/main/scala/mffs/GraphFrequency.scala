@@ -2,7 +2,7 @@ package mffs
 
 import java.util.{List => JList}
 
-import com.resonant.core.graph.internal.Graph
+import com.calclavia.graph.core.base.Graph
 import mffs.api.Frequency
 import mffs.api.fortron.IServerThread
 
@@ -32,6 +32,11 @@ class GraphFrequency extends Graph[Frequency] {
 		build()
 	}
 
+	override def remove(node: Frequency) {
+		nodes -= node
+		build()
+	}
+
 	override def build() {
 		frequencyMap = Map.empty.withDefaultValue(Set.empty)
 
@@ -41,11 +46,6 @@ class GraphFrequency extends Graph[Frequency] {
 	}
 
 	override def getNodes: JList[Frequency] = nodes.toList
-
-	override def remove(node: Frequency) {
-		nodes -= node
-		build()
-	}
 
 	def get(frequency: Int) = frequencyMap(frequency)
 }
