@@ -2,11 +2,13 @@ package mffs.production
 
 import java.util.{HashSet => JHashSet, Set => JSet}
 
+import com.resonant.lib.wrapper.WrapFunctions._
 import mffs.api.card.CoordLink
 import mffs.api.fortron.{Fortron, FortronFrequency}
+import mffs.api.modules.Module
 import mffs.base.{BlockModuleHandler, PacketBlock}
 import mffs.content.{Content, Models, Textures}
-import mffs.gui.GuiFortronCapacitor
+import mffs.item.card.ItemCardFrequency
 import mffs.util.{FortronUtility, TransferMode}
 import mffs.{GraphFrequency, Reference}
 import nova.core.block.Block
@@ -29,19 +31,26 @@ class BlockFortronCapacitor extends BlockModuleHandler with StaticRenderer {
 	override val inventory: InventorySimple = new InventorySimple(3 + 4 * 2 + 1)
 	private var tickAccumulator = 0d
 
-	capacityBase = 700
-	capacityBoost = 10
-	startModuleIndex = 1
-
 	@Sync(ids = Array(PacketBlock.description, PacketBlock.toggleMode))
 	@Stored
 	private var transferMode = TransferMode.equalize
 
+	inventory.isItemValidForSlot = biFunc((slot: Integer, item: Item) => {
+		if (slot == 0) {
+			item.isInstanceOf[ItemCardFrequency]
+		}
+		else if (slot < 4) {
+			item.isInstanceOf[Module]
+		}
+		true
+	})
+
+	capacityBase = 700
+	capacityBoost = 10
+	startModuleIndex = 1
+
 	override def onRightClick(entity: Entity, side: Int, hit: Vector3d): Boolean = {
 		if (!super.onRightClick(entity, side, hit)) {
-
-			Game.instance.guiFactory.registerGui(new GuiFortronCapacitor, Reference.id)
-
 			if (Side.get().isServer) {
 				Game.instance.guiFactory.showGui(Reference.id, getID, entity, position)
 			}
@@ -49,6 +58,8 @@ class BlockFortronCapacitor extends BlockModuleHandler with StaticRenderer {
 
 		return true
 	}
+
+	override def getID: String = "fortronCapacitor"
 
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)
@@ -117,6 +128,10 @@ class BlockFortronCapacitor extends BlockModuleHandler with StaticRenderer {
 
 	def getTransmissionRate: Int = 500 + 100 * getModuleCount(Content.moduleSpeed)
 
+	override def getAmplifier: Float = 0f
+
+	def getDeviceCount = getFrequencyDevices.size + getInputDevices.size + getOutputDevices.size
+
 	def getFrequencyDevices: Set[FortronFrequency] =
 		GraphFrequency.instance.get(getFrequency)
 			.view
@@ -135,8 +150,6 @@ class BlockFortronCapacitor extends BlockModuleHandler with StaticRenderer {
 			.collect { case op if op.isPresent => op.get }
 			.toSet
 
-	def getOutputDevices: Set[FortronFrequency] = getDevicesFromStacks(getOutputStacks)
-
 	def getDevicesFromStacks(stacks: Set[Item]): Set[FortronFrequency] =
 		stacks
 			.view
@@ -146,27 +159,13 @@ class BlockFortronCapacitor extends BlockModuleHandler with StaticRenderer {
 			.collect { case freqBlock: FortronFrequency => freqBlock }
 			.toSet
 
+	def getOutputDevices: Set[FortronFrequency] = getDevicesFromStacks(getOutputStacks)
+
 	def getOutputStacks: Set[Item] =
 		(8 to 11)
 			.map(inventory.get)
 			.collect { case op if op.isPresent => op.get }
 			.toSet
-
-	override def getAmplifier: Float = 0f
-
-	def getDeviceCount = getFrequencyDevices.size + getInputDevices.size + getOutputDevices.size
-
-	/*
-	override def isItemValidForSlot(slotID: Int, Item: Item): Boolean = {
-		if (slotID == 0) {
-			return Item.getItem.isInstanceOf[ItemCardFrequency]
-		}
-		else if (slotID < 4) {
-			return Item.getItem.isInstanceOf[IModule]
-		}
-
-		return true
-	}*/
 
 	override def isCube: Boolean = false
 
@@ -186,6 +185,4 @@ class BlockFortronCapacitor extends BlockModuleHandler with StaticRenderer {
 		model.children.add(Models.fortronCapacitor.getModel)
 		model.bindAll(if (isActive) Textures.fortronCapacitorOn else Textures.fortronCapacitorOff)
 	}
-
-	override def getID: String = "fortronCapacitor"
 }

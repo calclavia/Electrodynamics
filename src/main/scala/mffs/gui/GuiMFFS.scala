@@ -1,14 +1,11 @@
 package mffs.gui
 
 import nova.core.gui.Gui
-import nova.core.gui.components.inventory.PlayerInventory
-import nova.core.gui.layout.Anchor
 
 /**
  * @author Calclavia
  */
 class GuiMFFS(id: String) extends Gui(id) {
-	add(new PlayerInventory("inventory"), Anchor.SOUTH)
 
 	/*
 	Machine activate button
