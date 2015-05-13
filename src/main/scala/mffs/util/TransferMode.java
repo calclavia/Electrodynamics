@@ -7,6 +7,6 @@ public enum TransferMode {
 	equalize, distribute, drain, fill;
 
 	public TransferMode toggle() {
-		return TransferMode.values()[ordinal() + 1 % TransferMode.values().length];
+		return TransferMode.values()[(ordinal() + 1) % (TransferMode.values().length - 1)];
 	}
 }
