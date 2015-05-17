@@ -28,28 +28,23 @@ import scala.collection.convert.wrapAll._
 
 class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter with PermissionHandler with StaticRenderer with DynamicRenderer {
 
+	@Stored
+	@Sync(ids = Array(PacketBlock.description, PacketBlock.inventory))
+	override val inventory = new InventorySimple(1 + 25 + 6)
 	/** A set containing all positions of all force field blocks generated. */
 	var forceFields = Set.empty[Vector3i]
-
 	/** Marks the field for an update call */
 	var markFieldUpdate = true
-
 	/** True if the field is done constructing and the projector is simply maintaining the field  */
 	private var isCompleteConstructing = false
-
 	/** True to make the field constantly tick */
 	private var fieldRequireTicks = false
 
+	capacityBase = 30
+	startModuleIndex = 1
 	/** Are the filters in the projector inverted? */
 	@Sync(ids = Array(PacketBlock.description))
 	private var isInverted = false
-
-	capacityBase = 30
-	startModuleIndex = 1
-
-	@Stored
-	@Sync(ids = Array(PacketBlock.description, PacketBlock.inventory))
-	override protected val inventory = new InventorySimple(1 + 25 + 6)
 
 	override def getID: String = "projector"
 
@@ -68,6 +63,27 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter w
 	override def start() {
 		super.start()
 		calculateField(postCalculation)
+	}
+
+	def postCalculation() = if (clientSideSimulationRequired) Game.instance.networkManager.sync(PacketBlock.field, this)
+
+	private def clientSideSimulationRequired: Boolean = {
+		return getModuleCount(Content.moduleRepulsion) > 0
+	}
+
+	/**
+	 * Initiate a field calculation
+	 */
+	protected override def calculateField(callBack: () => Unit = null) {
+		if (Game.instance.networkManager.isServer && !isCalculating) {
+			if (getShapeItem != null) {
+				forceFields = Set.empty
+			}
+
+			super.calculateField(callBack)
+			isCompleteConstructing = false
+			fieldRequireTicks = getModules().exists(_.requireTicks)
+		}
 	}
 
 	override def getEmittedLightLevel: Float = if (getShapeItem() != null) 1 else 0
@@ -149,27 +165,6 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter w
 		}
 		else if (Game.instance.networkManager.isServer) {
 			destroyField()
-		}
-	}
-
-	def postCalculation() = if (clientSideSimulationRequired) Game.instance.networkManager.sync(PacketBlock.field, this)
-
-	private def clientSideSimulationRequired: Boolean = {
-		return getModuleCount(Content.moduleRepulsion) > 0
-	}
-
-	/**
-	 * Initiate a field calculation
-	 */
-	protected override def calculateField(callBack: () => Unit = null) {
-		if (Game.instance.networkManager.isServer && !isCalculating) {
-			if (getShapeItem != null) {
-				forceFields = Set.empty
-			}
-
-			super.calculateField(callBack)
-			isCompleteConstructing = false
-			fieldRequireTicks = getModules().exists(_.requireTicks)
 		}
 	}
 

@@ -1,9 +1,13 @@
 package mffs.base
 
+import java.util
 import java.util.Optional
 
+import com.calclavia.graph.api.energy.NodeRedstone
+import com.calclavia.graph.api.{Node, NodeProvider}
 import com.resonant.core.prefab.block.Rotatable
 import com.resonant.wrapper.core.Placeholder
+import mffs.ModularForceFieldSystem
 import mffs.api.machine.IActivatable
 import mffs.content.Textures
 import nova.core.block.Block
@@ -17,11 +21,13 @@ import nova.core.retention.{Storable, Stored}
 import nova.core.util.Direction
 import nova.core.util.transform.{Vector3d, Vector3i}
 
+import scala.collection.convert.wrapAll._
+
 /**
  * A base block class for all MFFS blocks to inherit.
  * @author Calclavia
  */
-abstract class BlockMachine extends Block with PacketHandler with IActivatable with Stateful with Storable with ItemRenderer with CategoryMFFS {
+abstract class BlockMachine extends Block with PacketHandler with IActivatable with Stateful with Storable with ItemRenderer with CategoryMFFS with NodeProvider {
 	/**
 	 * Used for client side animations.
 	 */
@@ -32,7 +38,7 @@ abstract class BlockMachine extends Block with PacketHandler with IActivatable w
 	 */
 	@Stored
 	var isRedstoneActive = false
-
+	var redstoneNode = ModularForceFieldSystem.nodeManager.make(classOf[NodeRedstone], this)
 	/**
 	 * Is the machine active and working?
 	 */
@@ -136,41 +142,44 @@ abstract class BlockMachine extends Block with PacketHandler with IActivatable w
 		return false
 	}
 
+	override def getNodes(from: Direction): util.Set[Node[_ <: Node[_]]] = Set[Node[_ <: Node[_]]](redstoneNode)
+
 	/**
-	 * ComputerCraft
+	 *
+	ComputerCraft
+	  def getType: String =
+	  {
+		return this.getInvName
+	  }
 
-  def getType: String =
-  {
-    return this.getInvName
-  }
+	  def getMethodNames: Array[String] =
+	  {
+		return Array[String]("isActivate", "setActivate")
+	  }
 
-  def getMethodNames: Array[String] =
-  {
-    return Array[String]("isActivate", "setActivate")
-  }
+	  def callMethod(computer: Nothing, context: Nothing, method: Int, arguments: Array[AnyRef]): Array[AnyRef] =
+	  {
+		method match
+		{
+		  case 0 =>
+		  {
+			return Array[AnyRef](this.isActive)
+		  }
+		  case 1 =>
+		  {
+			this.setActive(arguments(0).asInstanceOf[Boolean])
+			return null
+		  }
+		}
+		throw new Exception("Invalid method.")
+	  }
 
-  def callMethod(computer: Nothing, context: Nothing, method: Int, arguments: Array[AnyRef]): Array[AnyRef] =
-  {
-    method match
-    {
-      case 0 =>
-      {
-        return Array[AnyRef](this.isActive)
-      }
-      case 1 =>
-      {
-        this.setActive(arguments(0).asInstanceOf[Boolean])
-        return null
-      }
-    }
-    throw new Exception("Invalid method.")
-  }
+	  def attach(computer: Nothing)
+	  {
+	  }
 
-  def attach(computer: Nothing)
-  {
-  }
-
-  def detach(computer: Nothing)
-  {
-  }*/
+	  def detach(computer: Nothing)
+	  {
+	  }
+	 */
 }

@@ -27,7 +27,8 @@ class BlockBiometric extends BlockFrequency with Rotatable with Updater with Per
 	 * 9 x 4 slots: Access Cards
 	 * Under access cards we have a permission selector
 	 */
-	override protected val inventory = new InventorySimple(1 + 45)
+	override val inventory = new InventorySimple(1 + 45)
+
 	/**
 	 * Rendering
 	 */

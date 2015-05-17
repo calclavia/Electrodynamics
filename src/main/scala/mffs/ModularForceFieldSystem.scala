@@ -2,6 +2,7 @@ package mffs
 
 import java.util.function.{Function => JFunction}
 
+import com.calclavia.graph.api.NodeManager
 import com.resonant.lib.misc.MovementManager
 import com.resonant.lib.wrapper.WrapFunctions._
 import mffs.api.fortron.Fortron
@@ -13,10 +14,10 @@ import nova.core.game.Game
 import nova.core.loader.{Loadable, NovaMod}
 @NovaMod(id = Reference.id, name = Reference.name, version = Reference.version, novaVersion = "0.0.1", dependencies = Array("resonantengine"))
 object ModularForceFieldSystem extends Loadable {
-
 	//TODO: Remove tempID
 	val tempID = ""
 	var movementManager: MovementManager = null
+	var nodeManager: NodeManager = null
 
 	override def preInit() {
 		/**
@@ -24,7 +25,6 @@ object ModularForceFieldSystem extends Loadable {
 		 */
 		Game.instance.eventManager.blockChange.add((evt: BlockChangeEvent) => EventHandler.onBlockChange(evt))
 		//		MinecraftForge.EVENT_BUS.register(SubscribeEventHandler)
-		//		MinecraftForge.EVENT_BUS.register(Settings)
 		//		MinecraftForge.EVENT_BUS.register(Content.remoteController)
 
 		Game.instance.eventManager.serverStarting.add((evt: EmptyEvent) => {
