@@ -2,7 +2,6 @@ package mffs.production
 
 import java.util
 
-import com.calclavia.graph.api.Node
 import com.calclavia.graph.core.electric.TTEBridge
 import com.resonant.core.energy.EnergyStorage
 import mffs.Settings
@@ -64,9 +63,6 @@ class BlockCoercionDeriver extends BlockModuleHandler with TTEBridge with Static
 	override def getID: String = "coercionDeriver"
 
 	override def getTank(dir: Direction): util.Set[Tank] = Set.empty[Tank]
-
-	//TODO: Implement this
-	override def getNodes(from: Direction): util.Set[Node[_ <: Node[_]]] = null
 
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)

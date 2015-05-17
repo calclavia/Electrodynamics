@@ -6,6 +6,7 @@ import java.util.Optional
 import com.calclavia.graph.api.energy.NodeRedstone
 import com.calclavia.graph.api.{Node, NodeProvider}
 import com.resonant.core.prefab.block.Rotatable
+import com.resonant.lib.wrapper.WrapFunctions._
 import com.resonant.wrapper.core.Placeholder
 import mffs.ModularForceFieldSystem
 import mffs.api.machine.IActivatable
@@ -19,7 +20,7 @@ import nova.core.network.{Packet, PacketHandler}
 import nova.core.render.texture.Texture
 import nova.core.retention.{Storable, Stored}
 import nova.core.util.Direction
-import nova.core.util.transform.{Vector3d, Vector3i}
+import nova.core.util.transform.Vector3d
 
 import scala.collection.convert.wrapAll._
 
@@ -33,11 +34,6 @@ abstract class BlockMachine extends Block with PacketHandler with IActivatable w
 	 */
 	var animation = 0d
 
-	/**
-	 * Is this machine switched on internally via GUI?
-	 */
-	@Stored
-	var isRedstoneActive = false
 	var redstoneNode = ModularForceFieldSystem.nodeManager.make(classOf[NodeRedstone], this)
 	/**
 	 * Is the machine active and working?
@@ -57,70 +53,40 @@ abstract class BlockMachine extends Block with PacketHandler with IActivatable w
 
 	//	override def getExplosionResistance(entity: Entity): Float = 100
 
+	redstoneNode.onInputPowerChange((node: NodeRedstone) => {
+		if (node.getWeakPower > 0)
+			setActive(true)
+		else
+			setActive(false)
+	})
+
 	override def read(packet: Packet) {
 		super.read(packet)
 
 		if (packet.getID == PacketBlock.description) {
 			val prevActive = active
 			active = packet.readBoolean()
-			isRedstoneActive = packet.readBoolean()
 
-			if (prevActive != this.active) {
+			if (prevActive != this.active)
 				world.markStaticRender(position())
-			}
-		}
-		else if (packet.getID == PacketBlock.toggleActivation) {
-			isRedstoneActive = !isRedstoneActive
-
-			if (isRedstoneActive) {
-				setActive(true)
-			}
-			else {
-				setActive(false)
-			}
 		}
 	}
-
-	def setActive(flag: Boolean) {
-		active = flag
-		world().markStaticRender(position())
-	}
-
-	//TODO: Implement redstone support
 
 	override def write(packet: Packet) {
 		super.write(packet)
 
 		if (packet.getID == PacketBlock.description) {
 			packet <<< active
-			packet <<< isRedstoneActive
 		}
 	}
-
-	override def onNeighborChange(neighborPosition: Vector3i) = {
-		if (Game.instance.networkManager.isServer) {
-			if (isPoweredByRedstone) {
-				powerOn()
-			}
-			else {
-				powerOff()
-			}
-		}
-	}
-
-	def powerOn() {
-		this.setActive(true)
-	}
-
-	def powerOff() {
-		if (!this.isRedstoneActive && Game.instance.networkManager.isServer) {
-			this.setActive(false)
-		}
-	}
-
-	def isPoweredByRedstone: Boolean = false
 
 	def isActive: Boolean = active
+
+	def setActive(flag: Boolean) {
+		active = flag
+		Game.instance.networkManager.sync(PacketBlock.description, this)
+		world().markStaticRender(position())
+	}
 
 	override def onRightClick(entity: Entity, side: Int, hit: Vector3d): Boolean = {
 		if (Placeholder.isHoldingConfigurator(entity)) {
