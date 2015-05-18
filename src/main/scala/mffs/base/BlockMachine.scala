@@ -4,7 +4,7 @@ import java.util
 import java.util.Optional
 
 import com.calclavia.graph.api.energy.NodeRedstone
-import com.calclavia.graph.api.{Node, NodeProvider}
+import com.calclavia.graph.api.node.{Node, NodeProvider}
 import com.resonant.core.prefab.block.Rotatable
 import com.resonant.lib.wrapper.WrapFunctions._
 import com.resonant.wrapper.core.Placeholder

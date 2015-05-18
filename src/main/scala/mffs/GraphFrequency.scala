@@ -2,7 +2,7 @@ package mffs
 
 import java.util.{List => JList}
 
-import com.calclavia.graph.core.base.Graph
+import com.calclavia.graph.api.graph.Graph
 import mffs.api.Frequency
 import mffs.api.fortron.IServerThread
 

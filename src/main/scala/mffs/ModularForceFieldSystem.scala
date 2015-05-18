@@ -2,7 +2,7 @@ package mffs
 
 import java.util.function.{Function => JFunction}
 
-import com.calclavia.graph.api.NodeManager
+import com.calclavia.graph.api.node.NodeManager
 import com.resonant.lib.misc.MovementManager
 import com.resonant.lib.wrapper.WrapFunctions._
 import mffs.api.fortron.Fortron
