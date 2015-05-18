@@ -12,7 +12,8 @@ import nova.core.event.EventManager.{BlockChangeEvent, EmptyEvent}
 import nova.core.fluid.Fluid
 import nova.core.game.Game
 import nova.core.loader.{Loadable, NovaMod}
-@NovaMod(id = Reference.id, name = Reference.name, version = Reference.version, novaVersion = "0.0.1", dependencies = Array("resonantengine"))
+
+@NovaMod(id = Reference.id, name = Reference.name, version = Reference.version, novaVersion = "0.0.1", dependencies = Array("resonantengine", "nodeAPI"))
 object ModularForceFieldSystem extends Loadable {
 	//TODO: Remove tempID
 	val tempID = ""
@@ -28,8 +29,8 @@ object ModularForceFieldSystem extends Loadable {
 		//		MinecraftForge.EVENT_BUS.register(Content.remoteController)
 
 		Game.instance.eventManager.serverStarting.add((evt: EmptyEvent) => {
-				GraphFrequency.client = new GraphFrequency
-				GraphFrequency.server = new GraphFrequency
+			GraphFrequency.client = new GraphFrequency
+			GraphFrequency.server = new GraphFrequency
 		})
 
 		Game.instance.fluidManager.register((args: Array[AnyRef]) => new Fluid(Fortron.fortronID))

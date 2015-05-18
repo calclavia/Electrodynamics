@@ -28,6 +28,7 @@ import scala.collection.convert.wrapAll._
  * A base block class for all MFFS blocks to inherit.
  * @author Calclavia
  */
+//TODO: Redstone state is not properly saved
 abstract class BlockMachine extends Block with PacketHandler with IActivatable with Stateful with Storable with ItemRenderer with CategoryMFFS with NodeProvider {
 	/**
 	 * Used for client side animations.
@@ -35,6 +36,7 @@ abstract class BlockMachine extends Block with PacketHandler with IActivatable w
 	var animation = 0d
 
 	var redstoneNode = ModularForceFieldSystem.nodeManager.make(classOf[NodeRedstone], this)
+
 	/**
 	 * Is the machine active and working?
 	 */
