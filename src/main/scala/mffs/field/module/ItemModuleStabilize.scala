@@ -15,7 +15,7 @@ import nova.core.inventory.Inventory
 import nova.core.inventory.components.SidedInventoryProvider
 import nova.core.item.ItemBlock
 import nova.core.util.Direction
-import nova.core.util.transform.Quaternion
+import nova.core.util.transform.matrix.Quaternion
 import nova.core.util.transform.vector.Vector3i
 import nova.core.world.World
 

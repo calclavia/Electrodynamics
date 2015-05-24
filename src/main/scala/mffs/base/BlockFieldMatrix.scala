@@ -14,7 +14,7 @@ import nova.core.item.{Item, ItemFactory}
 import nova.core.network.Sync
 import nova.core.retention.Stored
 import nova.core.util.Direction
-import nova.core.util.transform._
+import nova.core.util.transform.matrix.Quaternion
 import nova.core.util.transform.vector.Vector3i
 
 import scala.collection.convert.wrapAll._
@@ -136,19 +136,6 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 		return structure
 	}
 
-	/**
-	 * @return Gets the item that provides a shape
-	 */
-	def getShapeItem: Item with StructureProvider = {
-		val optional = inventory.get(modeSlotID)
-		if (optional.isPresent) {
-			if (optional.get().isInstanceOf[Item with StructureProvider]) {
-				return optional.asInstanceOf[Item with StructureProvider]
-			}
-		}
-		return null
-	}
-
 	def getScale = (getPositiveScale + getNegativeScale) / 2
 
 	def getPositiveScale: Vector3i =
@@ -179,8 +166,6 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 			return new Vector3i(xScalePos, yScalePos, zScalePos)
 		})
 
-	def getModuleSlots: Array[Int] = _getModuleSlots
-
 	def getNegativeScale: Vector3i =
 		getOrSetCache("getNegativeScale", () => {
 			var zScaleNeg = 0
@@ -207,6 +192,8 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 
 			return new Vector3i(xScaleNeg, yScaleNeg, zScaleNeg)
 		})
+
+	def getModuleSlots: Array[Int] = _getModuleSlots
 
 	def getTranslation: Vector3i =
 		getOrSetCache("getTranslation", () => {
@@ -240,6 +227,24 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 			return new Vector3i(xTranslationPos - xTranslationNeg, yTranslationPos - yTranslationNeg, zTranslationPos - zTranslationNeg)
 		})
 
+	override def getDirectionSlots(direction: Direction): Array[Int] =
+		direction match {
+			case Direction.UP =>
+				Array(10, 11)
+			case Direction.DOWN =>
+				Array(12, 13)
+			case Direction.SOUTH =>
+				Array(2, 3)
+			case Direction.NORTH =>
+				Array(4, 5)
+			case Direction.WEST =>
+				Array(6, 7)
+			case Direction.EAST =>
+				Array(8, 9)
+			case _ =>
+				Array[Int]()
+		}
+
 	def getRotation = Quaternion.fromEuler(Math.toRadians(getRotationYaw), Math.toRadians(getRotationPitch), 0)
 
 	/**
@@ -261,6 +266,12 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 			return horizontalRotation * 2
 		})
 
+	def getRotationPitch: Int =
+		getOrSetCache("getRotationPitch", () => {
+			val verticalRotation = getModuleCount(Content.moduleRotate, getDirectionSlots(Direction.UP): _*) - getModuleCount(Content.moduleRotate, getDirectionSlots(Direction.DOWN): _*)
+			return verticalRotation * 2
+		})
+
 	/**
 	 * Gets the number of modules in this block that are in specific slots
 	 * @param slots The slot IDs. Providing null will search all slots
@@ -268,27 +279,16 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 	 */
 	override def getModuleCount(compareModule: ItemFactory, slots: Int*): Int = super[BlockModuleHandler].getModuleCount(compareModule, slots: _*)
 
-	override def getDirectionSlots(direction: Direction): Array[Int] =
-		direction match {
-			case Direction.UP =>
-				Array(10, 11)
-			case Direction.DOWN =>
-				Array(12, 13)
-			case Direction.SOUTH =>
-				Array(2, 3)
-			case Direction.NORTH =>
-				Array(4, 5)
-			case Direction.WEST =>
-				Array(6, 7)
-			case Direction.EAST =>
-				Array(8, 9)
-			case _ =>
-				Array[Int]()
+	/**
+	 * @return Gets the item that provides a shape
+	 */
+	def getShapeItem: Item with StructureProvider = {
+		val optional = inventory.get(modeSlotID)
+		if (optional.isPresent) {
+			if (optional.get().isInstanceOf[Item with StructureProvider]) {
+				return optional.asInstanceOf[Item with StructureProvider]
+			}
 		}
-
-	def getRotationPitch: Int =
-		getOrSetCache("getRotationPitch", () => {
-			val verticalRotation = getModuleCount(Content.moduleRotate, getDirectionSlots(Direction.UP): _*) - getModuleCount(Content.moduleRotate, getDirectionSlots(Direction.DOWN): _*)
-			return verticalRotation * 2
-		})
+		return null
+	}
 }
