@@ -1,14 +1,11 @@
 package mffs.base
 
-import java.util
 import java.util.Optional
 
 import com.calclavia.graph.api.energy.NodeRedstone
-import com.calclavia.graph.api.node.{Node, NodeProvider}
 import com.resonant.core.prefab.block.Rotatable
 import com.resonant.lib.wrapper.WrapFunctions._
 import com.resonant.wrapper.core.Placeholder
-import mffs.ModularForceFieldSystem
 import mffs.api.machine.IActivatable
 import mffs.content.Textures
 import nova.core.block.Block
@@ -22,20 +19,18 @@ import nova.core.retention.{Storable, Stored}
 import nova.core.util.Direction
 import nova.core.util.transform.vector.Vector3d
 
-import scala.collection.convert.wrapAll._
-
 /**
  * A base block class for all MFFS blocks to inherit.
  * @author Calclavia
  */
 //TODO: Redstone state is not properly saved
-abstract class BlockMachine extends Block with PacketHandler with IActivatable with Stateful with Storable with ItemRenderer with CategoryMFFS with NodeProvider {
+abstract class BlockMachine extends Block with PacketHandler with IActivatable with Stateful with Storable with ItemRenderer with CategoryMFFS {
 	/**
 	 * Used for client side animations.
 	 */
 	var animation = 0d
 
-	var redstoneNode = ModularForceFieldSystem.nodeManager.make(classOf[NodeRedstone], this)
+	var redstoneNode = Game.instance.componentManager.make(classOf[NodeRedstone], this)
 
 	/**
 	 * Is the machine active and working?
@@ -43,7 +38,18 @@ abstract class BlockMachine extends Block with PacketHandler with IActivatable w
 	@Stored
 	private var active = false
 
+	add(redstoneNode)
+
+	redstoneNode.onInputPowerChange((node: NodeRedstone) => {
+		if (node.getWeakPower > 0)
+			setActive(true)
+		else
+			setActive(false)
+	})
+
 	//	stepSound = Block.soundTypeMetal
+
+	//	override def getExplosionResistance(entity: Entity): Float = 100
 
 	override def getHardness: Double = Double.PositiveInfinity
 
@@ -52,15 +58,6 @@ abstract class BlockMachine extends Block with PacketHandler with IActivatable w
 	override def getTexture(side: Direction): Optional[Texture] = Optional.of(Textures.machine)
 
 	override def isOpaqueCube: Boolean = false
-
-	//	override def getExplosionResistance(entity: Entity): Float = 100
-
-	redstoneNode.onInputPowerChange((node: NodeRedstone) => {
-		if (node.getWeakPower > 0)
-			setActive(true)
-		else
-			setActive(false)
-	})
 
 	override def read(packet: Packet) {
 		super.read(packet)
@@ -109,8 +106,6 @@ abstract class BlockMachine extends Block with PacketHandler with IActivatable w
 
 		return false
 	}
-
-	override def getNodes(from: Direction): util.Set[Node[_ <: Node[_]]] = Set[Node[_ <: Node[_]]](redstoneNode)
 
 	/**
 	 *

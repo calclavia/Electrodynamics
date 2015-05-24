@@ -1,6 +1,5 @@
 package mffs
 
-import com.calclavia.graph.api.node.NodeManager
 import com.resonant.lib.misc.MovementManager
 import com.resonant.lib.wrapper.WrapFunctions._
 import mffs.api.fortron.Fortron
@@ -16,7 +15,6 @@ object ModularForceFieldSystem extends Loadable {
 	//TODO: Remove tempID
 	val tempID = ""
 	var movementManager: MovementManager = null
-	var nodeManager: NodeManager = null
 
 	override def preInit() {
 		/**
