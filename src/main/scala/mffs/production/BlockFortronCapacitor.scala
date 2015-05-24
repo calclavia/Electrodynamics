@@ -5,7 +5,7 @@ import java.util.{HashSet => JHashSet, Set => JSet}
 import com.resonant.lib.wrapper.WrapFunctions._
 import mffs.GraphFrequency
 import mffs.api.card.CoordLink
-import mffs.api.fortron.{Fortron, FortronFrequency}
+import mffs.api.fortron.FortronFrequency
 import mffs.api.modules.Module
 import mffs.base.{BlockModuleHandler, PacketBlock}
 import mffs.content.{Content, Models, Textures}
@@ -14,7 +14,7 @@ import mffs.util.{FortronUtility, TransferMode}
 import nova.core.block.Block
 import nova.core.block.components.StaticRenderer
 import nova.core.entity.Entity
-import nova.core.fluid.TankProvider
+import nova.core.fluid.Tank
 import nova.core.game.Game
 import nova.core.inventory.InventorySimple
 import nova.core.item.Item
@@ -24,8 +24,6 @@ import nova.core.render.model.Model
 import nova.core.retention.Stored
 import nova.core.util.transform.matrix.MatrixStack
 import nova.core.util.transform.vector.Vector3d
-
-import scala.collection.convert.wrapAll._
 
 class BlockFortronCapacitor extends BlockModuleHandler with StaticRenderer {
 
@@ -72,19 +70,16 @@ class BlockFortronCapacitor extends BlockModuleHandler with StaticRenderer {
 			 * Handle fortron item inputs
 			 */
 			getInputStacks
-				.collect {
-				case provider: TankProvider =>
-					provider.getTanks.collect {
-						case tank if tank.hasFluidType(Fortron.fortronID) => tank
-					}
-			}
-				.flatten
-				.foreach(tank => {
-				val fluid = tank.removeFluid(Math.min(getFortronEmpty, getTransmissionRate), true)
-				if (fluid.isPresent) {
-					addFortron(fluid.get().amount(), true)
-				}
-			})
+				.map(_.getComponent(classOf[Tank]))
+				.collect { case op if op.isPresent => op.get }
+				.foreach(
+			    tank => {
+				    val fluid = tank.removeFluid(Math.min(getFortronEmpty, getTransmissionRate), true)
+				    if (fluid.isPresent) {
+					    addFortron(fluid.get().amount(), true)
+				    }
+			    }
+				)
 
 			/**
 			 * Handle fortron item outputs
@@ -92,20 +87,15 @@ class BlockFortronCapacitor extends BlockModuleHandler with StaticRenderer {
 			if (fortronTank.getFluidAmount > 0) {
 
 				getOutputStacks
-					.collect {
-					case provider: TankProvider =>
-						provider.getTanks.collect {
-							case tank if tank.hasFluidType(Fortron.fortronID) => tank
-						}
-				}
-					.flatten
+					.map(_.getComponent(classOf[Tank]))
+					.collect { case op if op.isPresent => op.get }
 					.foreach(
-						tank => {
-							val fluid = fortronTank.removeFluid(Math.min(fortronTank.getFluidAmount, getTransmissionRate), true)
-							if (fluid.isPresent) {
-								tank.addFluid(fluid.get, true)
-							}
-						}
+				    tank => {
+					    val fluid = fortronTank.removeFluid(Math.min(fortronTank.getFluidAmount, getTransmissionRate), true)
+					    if (fluid.isPresent) {
+						    tank.addFluid(fluid.get, true)
+					    }
+				    }
 					)
 			}
 
@@ -128,6 +118,10 @@ class BlockFortronCapacitor extends BlockModuleHandler with StaticRenderer {
 	}
 
 	def getTransmissionRate: Int = 500 + 100 * getModuleCount(Content.moduleSpeed)
+
+	override def getAmplifier: Float = 0f
+
+	def getDeviceCount = getFrequencyDevices.size + getInputDevices.size + getOutputDevices.size
 
 	def getFrequencyDevices: Set[FortronFrequency] =
 		GraphFrequency.instance.get(getFrequency)
@@ -163,10 +157,6 @@ class BlockFortronCapacitor extends BlockModuleHandler with StaticRenderer {
 			.map(inventory.get)
 			.collect { case op if op.isPresent => op.get }
 			.toSet
-
-	override def getAmplifier: Float = 0f
-
-	def getDeviceCount = getFrequencyDevices.size + getInputDevices.size + getOutputDevices.size
 
 	override def isCube: Boolean = false
 
