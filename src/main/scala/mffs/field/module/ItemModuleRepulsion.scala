@@ -5,7 +5,7 @@ import java.util.{Set => JSet}
 import mffs.api.machine.Projector
 import mffs.base.ItemModule
 import mffs.security.MFFSPermissions
-import nova.core.entity.Entity
+import nova.core.entity.{Entity, RigidBody}
 import nova.core.player.Player
 import nova.core.util.transform.vector.{Vector3d, Vector3i}
 
@@ -30,9 +30,10 @@ class ItemModuleRepulsion extends ItemModule {
 			.foreach(
 				entity => {
 					val repelDirection = entity.position() - (entity.position.toInt.toDouble + 0.5).normalize
-					val velocity = entity.velocity
+					val rigidBody = entity.getComponent(classOf[RigidBody]).get
+					val velocity = rigidBody.velocity
 					val force = repelDirection * repellForce.max(velocity.abs)
-					entity.addForce(force)
+					rigidBody.addForce(force)
 					//TODO: May NOT be thread safe!
 				})
 		return true

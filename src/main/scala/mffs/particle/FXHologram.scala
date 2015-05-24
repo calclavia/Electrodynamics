@@ -2,6 +2,7 @@ package mffs.particle
 
 import mffs.content.Textures
 import nova.core.block.components.DynamicRenderer
+import nova.core.entity.RigidBody
 import nova.core.render.Color
 import nova.core.render.model.{BlockModelUtil, Model}
 import nova.core.util.transform.vector.Vector3d
@@ -22,7 +23,7 @@ class FXHologram(color: Color, maxAge: Double) extends FXMFFS with DynamicRender
 	 */
 	def setTarget(targetPosition: Vector3d): FXHologram = {
 		this.targetPosition = targetPosition
-		setVelocity((targetPosition - position) / maxAge)
+		getComponent(classOf[RigidBody]).get().setVelocity((targetPosition - position) / maxAge)
 		return this
 	}
 
