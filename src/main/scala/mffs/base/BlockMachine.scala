@@ -13,6 +13,7 @@ import nova.core.block.components.{ItemRenderer, Stateful}
 import nova.core.entity.Entity
 import nova.core.game.Game
 import nova.core.gui.KeyManager.Key
+import nova.core.network.NetworkTarget.Side
 import nova.core.network.{Packet, PacketHandler}
 import nova.core.render.texture.Texture
 import nova.core.retention.{Storable, Stored}
@@ -62,12 +63,14 @@ abstract class BlockMachine extends Block with PacketHandler with IActivatable w
 	override def read(packet: Packet) {
 		super.read(packet)
 
-		if (packet.getID == PacketBlock.description) {
-			val prevActive = active
-			active = packet.readBoolean()
+		if (Side.get().isClient) {
+			if (packet.getID == PacketBlock.description) {
+				val prevActive = active
+				active = packet.readBoolean()
 
-			if (prevActive != this.active)
-				world.markStaticRender(position())
+				if (prevActive != this.active)
+					world.markStaticRender(position())
+			}
 		}
 	}
 
@@ -88,9 +91,10 @@ abstract class BlockMachine extends Block with PacketHandler with IActivatable w
 	}
 
 	override def onRightClick(entity: Entity, side: Int, hit: Vector3d): Boolean = {
+		active = !active
 		if (Placeholder.isHoldingConfigurator(entity)) {
 			if (Game.instance.keyManager.isKeyDown(Key.KEY_LSHIFT)) {
-				if (Game.instance.networkManager.isServer) {
+				if (Side.get().isServer) {
 					//TODO: Fix this
 					// InventoryUtility.dropBlockAsItem(world, position)
 					world.setBlock(position, null)
@@ -106,43 +110,4 @@ abstract class BlockMachine extends Block with PacketHandler with IActivatable w
 
 		return false
 	}
-
-	/**
-	 *
-	ComputerCraft
-	  def getType: String =
-	  {
-		return this.getInvName
-	  }
-
-	  def getMethodNames: Array[String] =
-	  {
-		return Array[String]("isActivate", "setActivate")
-	  }
-
-	  def callMethod(computer: Nothing, context: Nothing, method: Int, arguments: Array[AnyRef]): Array[AnyRef] =
-	  {
-		method match
-		{
-		  case 0 =>
-		  {
-			return Array[AnyRef](this.isActive)
-		  }
-		  case 1 =>
-		  {
-			this.setActive(arguments(0).asInstanceOf[Boolean])
-			return null
-		  }
-		}
-		throw new Exception("Invalid method.")
-	  }
-
-	  def attach(computer: Nothing)
-	  {
-	  }
-
-	  def detach(computer: Nothing)
-	  {
-	  }
-	 */
 }

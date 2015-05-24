@@ -15,10 +15,8 @@ import nova.core.block.Block
 import nova.core.block.components.StaticRenderer
 import nova.core.entity.Entity
 import nova.core.fluid.Tank
-import nova.core.game.Game
 import nova.core.inventory.InventorySimple
 import nova.core.item.Item
-import nova.core.network.NetworkTarget.Side
 import nova.core.network.Sync
 import nova.core.render.model.Model
 import nova.core.retention.Stored
@@ -49,11 +47,11 @@ class BlockFortronCapacitor extends BlockModuleHandler with StaticRenderer {
 	startModuleIndex = 1
 
 	override def onRightClick(entity: Entity, side: Int, hit: Vector3d): Boolean = {
-		if (!super.onRightClick(entity, side, hit)) {
+		/*if (!super.onRightClick(entity, side, hit)) {
 			if (Side.get().isServer) {
 				Game.instance.guiFactory.showGui(getID, entity, position)
 			}
-		}
+		}*/
 
 		return true
 	}
@@ -119,10 +117,6 @@ class BlockFortronCapacitor extends BlockModuleHandler with StaticRenderer {
 
 	def getTransmissionRate: Int = 500 + 100 * getModuleCount(Content.moduleSpeed)
 
-	override def getAmplifier: Float = 0f
-
-	def getDeviceCount = getFrequencyDevices.size + getInputDevices.size + getOutputDevices.size
-
 	def getFrequencyDevices: Set[FortronFrequency] =
 		GraphFrequency.instance.get(getFrequency)
 			.view
@@ -157,6 +151,10 @@ class BlockFortronCapacitor extends BlockModuleHandler with StaticRenderer {
 			.map(inventory.get)
 			.collect { case op if op.isPresent => op.get }
 			.toSet
+
+	override def getAmplifier: Float = 0f
+
+	def getDeviceCount = getFrequencyDevices.size + getInputDevices.size + getOutputDevices.size
 
 	override def isCube: Boolean = false
 
