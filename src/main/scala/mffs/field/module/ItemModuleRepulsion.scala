@@ -5,7 +5,8 @@ import java.util.{Set => JSet}
 import mffs.api.machine.Projector
 import mffs.base.ItemModule
 import mffs.security.MFFSPermissions
-import nova.core.entity.{Entity, RigidBody}
+import nova.core.entity.Entity
+import nova.core.entity.component.RigidBody
 import nova.core.player.Player
 import nova.core.util.transform.vector.{Vector3d, Vector3i}
 

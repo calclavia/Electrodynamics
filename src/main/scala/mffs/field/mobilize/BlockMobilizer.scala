@@ -13,7 +13,8 @@ import mffs.security.{MFFSPermissions, PermissionHandler}
 import mffs.util.MFFSUtility
 import mffs.{ModularForceFieldSystem, Settings}
 import nova.core.block.components.StaticRenderer
-import nova.core.entity.{Entity, RigidBody}
+import nova.core.entity.Entity
+import nova.core.entity.component.RigidBody
 import nova.core.game.Game
 import nova.core.inventory.InventorySimple
 import nova.core.item.Item

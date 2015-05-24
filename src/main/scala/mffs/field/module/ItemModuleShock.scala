@@ -5,8 +5,8 @@ import mffs.field.BlockForceField
 import mffs.security.MFFSPermissions
 import nova.core.block.Block
 import nova.core.entity.Entity
-import nova.core.entity.components.Damageable
-import nova.core.entity.components.Damageable.DamageType
+import nova.core.entity.component.Damageable
+import nova.core.entity.component.Damageable.DamageType
 import nova.core.player.Player
 
 class ItemModuleShock extends ItemModule {

@@ -2,7 +2,7 @@ package mffs.particle
 
 import mffs.content.Textures
 import nova.core.block.components.DynamicRenderer
-import nova.core.entity.RigidBody
+import nova.core.entity.component.RigidBody
 import nova.core.render.Color
 import nova.core.render.model.{BlockModelUtil, Model}
 import nova.core.util.transform.vector.Vector3d

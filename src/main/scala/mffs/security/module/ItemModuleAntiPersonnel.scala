@@ -5,7 +5,7 @@ import java.util
 import mffs.api.machine.Projector
 import mffs.field.BlockProjector
 import mffs.security.MFFSPermissions
-import nova.core.entity.components.Damageable
+import nova.core.entity.component.Damageable
 import nova.core.game.Game
 import nova.core.player.Player
 import nova.core.util.Direction
