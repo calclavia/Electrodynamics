@@ -12,7 +12,8 @@ import nova.core.entity.Entity
 import nova.core.game.Game
 import nova.core.item.Item
 import nova.core.player.Player
-import nova.core.util.transform.{Cuboid, Vector3i}
+import nova.core.util.transform.shape.Cuboid
+import nova.core.util.transform.vector.Vector3i
 
 import scala.collection.convert.wrapAll._
 

@@ -10,7 +10,7 @@ import nova.core.player.Player
 import nova.core.retention.{Storable, Stored}
 import nova.core.util.Direction
 import nova.core.util.collection.Pair
-import nova.core.util.transform.{Vector3d, Vector3i}
+import nova.core.util.transform.vector.{Vector3d, Vector3i}
 import nova.core.world.World
 
 /**

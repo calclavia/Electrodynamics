@@ -6,7 +6,7 @@ import mffs.api.machine.Projector
 import nova.core.entity.components.Damageable
 import nova.core.entity.components.Damageable.DamageType
 import nova.core.player.Player
-import nova.core.util.transform.Vector3i
+import nova.core.util.transform.vector.Vector3i
 
 class ItemModuleAntiFriendly extends ItemModuleDefense {
 

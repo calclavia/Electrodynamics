@@ -3,7 +3,7 @@ package mffs.api;
 import nova.core.event.CancelableEvent;
 import nova.core.event.EventBus;
 import nova.core.item.Item;
-import nova.core.util.transform.Vector3i;
+import nova.core.util.transform.vector.Vector3i;
 import nova.core.world.World;
 
 /**

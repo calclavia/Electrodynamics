@@ -2,7 +2,7 @@ package mffs.field.mobilize
 
 import nova.core.block.Block
 import nova.core.game.Game
-import nova.core.util.transform.Vector3i
+import nova.core.util.transform.vector.Vector3i
 import nova.core.world.World
 
 import scala.collection.convert.wrapAll._

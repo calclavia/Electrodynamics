@@ -1,8 +1,8 @@
 package mffs.api.machine;
 
 import mffs.api.Frequency;
-import nova.core.util.transform.Vector3d;
-import nova.core.util.transform.Vector3i;
+import nova.core.util.transform.vector.Vector3d;
+import nova.core.util.transform.vector.Vector3i;
 
 import java.util.Set;
 

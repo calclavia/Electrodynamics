@@ -4,7 +4,7 @@ import java.util
 
 import mffs.api.machine.Projector
 import nova.core.entity.components.Damageable
-import nova.core.util.transform.Vector3i
+import nova.core.util.transform.vector.Vector3i
 
 class ItemModuleAntiHostile extends ItemModuleDefense
 {

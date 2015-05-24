@@ -7,7 +7,7 @@ import mffs.field.BlockProjector
 import mffs.security.MFFSPermissions
 import nova.core.game.Game
 import nova.core.player.Player
-import nova.core.util.transform.Vector3i
+import nova.core.util.transform.vector.Vector3i
 
 class ItemModuleBroadcast extends ItemModuleDefense {
 	override def onCreateField(projector: Projector, field: util.Set[Vector3i]): Boolean = {

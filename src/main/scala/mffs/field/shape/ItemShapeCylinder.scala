@@ -4,7 +4,7 @@ import com.resonant.core.structure.Structure
 import mffs.api.machine.Projector
 import mffs.field.structure.StructureCylinder
 import nova.core.render.model.{BlockModelUtil, Model}
-import nova.core.util.transform.Vector3d
+import nova.core.util.transform.vector.Vector3d
 
 /**
  * A cylinder mode.

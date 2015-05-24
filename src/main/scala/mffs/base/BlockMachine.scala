@@ -20,7 +20,7 @@ import nova.core.network.{Packet, PacketHandler}
 import nova.core.render.texture.Texture
 import nova.core.retention.{Storable, Stored}
 import nova.core.util.Direction
-import nova.core.util.transform.Vector3d
+import nova.core.util.transform.vector.Vector3d
 
 import scala.collection.convert.wrapAll._
 

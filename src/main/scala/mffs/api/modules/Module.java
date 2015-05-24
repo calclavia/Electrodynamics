@@ -5,7 +5,7 @@ import mffs.api.machine.FieldMatrix;
 import mffs.api.machine.Projector;
 import nova.core.block.Block;
 import nova.core.entity.Entity;
-import nova.core.util.transform.Vector3i;
+import nova.core.util.transform.vector.Vector3i;
 
 import java.util.Set;
 

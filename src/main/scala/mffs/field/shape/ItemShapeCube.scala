@@ -3,7 +3,7 @@ package mffs.field.shape
 import com.resonant.core.structure.{Structure, StructureCube}
 import mffs.api.machine.Projector
 import nova.core.render.model.{BlockModelUtil, Model}
-import nova.core.util.transform.MatrixStack
+import nova.core.util.transform.matrix.MatrixStack
 
 class ItemShapeCube extends ItemShape {
 

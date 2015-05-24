@@ -18,7 +18,7 @@ import nova.core.network.Packet
 import nova.core.render.model.Model
 import nova.core.retention.Stored
 import nova.core.util.Direction
-import nova.core.util.transform.Vector3d
+import nova.core.util.transform.vector.Vector3d
 
 import scala.collection.convert.wrapAll._
 

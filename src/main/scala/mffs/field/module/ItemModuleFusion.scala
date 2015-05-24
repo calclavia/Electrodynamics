@@ -6,7 +6,7 @@ import mffs.api.modules.Module.ProjectState
 import mffs.base.ItemModule
 import mffs.field.BlockProjector
 import nova.core.block.Block
-import nova.core.util.transform.Vector3i
+import nova.core.util.transform.vector.Vector3i
 
 /**
  * The fusion module attempts to fuse a force field with another.

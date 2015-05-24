@@ -4,7 +4,7 @@ import com.resonant.core.structure.Structure
 import mffs.api.machine.Projector
 import mffs.field.structure.StructurePyramid
 import nova.core.render.model.{Model, Vertex}
-import nova.core.util.transform.Vector3d
+import nova.core.util.transform.vector.Vector3d
 
 class ItemShapePyramid extends ItemShape {
 	override def getID: String = "modePyramid"

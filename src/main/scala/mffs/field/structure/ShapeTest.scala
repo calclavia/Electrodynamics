@@ -5,7 +5,7 @@ import java.lang.Math.abs
 import com.resonant.core.structure.StructureCube
 import com.resonant.wrapper.core.debug.Profiler
 import nova.core.util.math.MathUtil._
-import nova.core.util.transform.{Vector3d, Vector3i}
+import nova.core.util.transform.vector.{Vector3d, Vector3i}
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 

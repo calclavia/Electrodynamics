@@ -1,7 +1,7 @@
 package mffs.api.card;
 
 import nova.core.util.collection.Pair;
-import nova.core.util.transform.Vector3i;
+import nova.core.util.transform.vector.Vector3i;
 import nova.core.world.World;
 
 public interface CoordLink {

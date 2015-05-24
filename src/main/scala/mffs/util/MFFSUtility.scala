@@ -14,7 +14,8 @@ import nova.core.item.{Item, ItemBlock}
 import nova.core.network.NetworkTarget.Side
 import nova.core.player.Player
 import nova.core.util.Direction
-import nova.core.util.transform.{Quaternion, Vector3d, Vector3i}
+import nova.core.util.transform.Quaternion
+import nova.core.util.transform.vector.{Vector3d, Vector3i}
 import nova.core.world.World
 
 import scala.collection.convert.wrapAll._

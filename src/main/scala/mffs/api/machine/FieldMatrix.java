@@ -4,7 +4,7 @@ import mffs.api.modules.StructureProvider;
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
 import nova.core.util.Direction;
-import nova.core.util.transform.Vector3i;
+import nova.core.util.transform.vector.Vector3i;
 
 import java.util.Set;
 

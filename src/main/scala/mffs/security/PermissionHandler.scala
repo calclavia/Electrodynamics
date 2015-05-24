@@ -6,7 +6,7 @@ import mffs.api.card.CoordLink
 import mffs.base.BlockFrequency
 import nova.core.entity.Entity
 import nova.core.player.Player
-import nova.core.util.transform.Vector3d
+import nova.core.util.transform.vector.Vector3d
 
 /**
  * @author Calclavia

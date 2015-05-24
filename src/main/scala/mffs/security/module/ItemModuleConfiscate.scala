@@ -9,7 +9,7 @@ import nova.core.game.Game
 import nova.core.inventory.components.InventoryProvider
 import nova.core.player.Player
 import nova.core.util.Direction
-import nova.core.util.transform.Vector3i
+import nova.core.util.transform.vector.Vector3i
 
 import scala.collection.convert.wrapAll._
 

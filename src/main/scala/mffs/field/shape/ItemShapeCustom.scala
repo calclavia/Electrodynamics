@@ -16,7 +16,7 @@ import nova.core.player.Player
 import nova.core.render.model.Model
 import nova.core.retention.Stored
 import nova.core.util.Direction
-import nova.core.util.transform.{Vector3d, Vector3i}
+import nova.core.util.transform.vector.{Vector3d, Vector3i}
 import nova.core.world.World
 
 import scala.util.Random
@@ -24,7 +24,7 @@ import scala.util.Random
 class ItemShapeCustom extends ItemShape with CacheHandler {
 
 	private final val saveFilePrefix: String = "custom_mode_"
-
+	val modes = Array(Content.modeCube, Content.modeSphere, Content.modeTube, Content.modePyramid)
 	@Stored
 	var saveID = -1
 	@Stored
@@ -35,8 +35,6 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 	var isAdditive = true
 	@Stored
 	var fieldSize = 0
-
-	val modes = Array(Content.modeCube, Content.modeSphere, Content.modeTube, Content.modePyramid)
 
 	override def getID: String = "shapeCustom"
 
@@ -131,6 +129,21 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 		}
 	}
 
+	def getNextAvaliableID: Int = getSaveDirectory.listFiles.length
+
+	def getSaveDirectory: File = {
+		val saveDirectory: File = Game.instance.saveManager.getSaveDirectory
+		if (!saveDirectory.exists) {
+			saveDirectory.mkdir
+		}
+		/*
+		val file: File = new File(saveDirectory, "mffs")
+		if (!file.exists) {
+			file.mkdir
+		}*/
+		return saveDirectory
+	}
+
 	override def onUse(entity: Entity, world: World, position: Vector3i, side: Direction, hit: Vector3d): Boolean = {
 		if (Game.instance.networkManager.isServer) {
 
@@ -145,21 +158,6 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 		}
 
 		return true
-	}
-
-	def getNextAvaliableID: Int = getSaveDirectory.listFiles.length
-
-	def getSaveDirectory: File = {
-		val saveDirectory: File = Game.instance.saveManager.getSaveDirectory
-		if (!saveDirectory.exists) {
-			saveDirectory.mkdir
-		}
-		/*
-		val file: File = new File(saveDirectory, "mffs")
-		if (!file.exists) {
-			file.mkdir
-		}*/
-		return saveDirectory
 	}
 
 	override def render(projector: Projector, model: Model) {

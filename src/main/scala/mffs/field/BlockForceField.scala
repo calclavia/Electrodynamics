@@ -20,7 +20,8 @@ import nova.core.render.model.{BlockModelUtil, Model}
 import nova.core.render.texture.Texture
 import nova.core.retention.{Storable, Stored}
 import nova.core.util.Direction
-import nova.core.util.transform.{Cuboid, Vector3i}
+import nova.core.util.transform.shape.Cuboid
+import nova.core.util.transform.vector.Vector3i
 
 import scala.collection.convert.wrapAll._
 
@@ -121,6 +122,8 @@ class BlockForceField extends Block with PacketHandler with ForceField with Ligh
 
 	}
 
+	override def getTexture(side: Direction): Optional[Texture] = Optional.of(Textures.forceField)
+
 	/**
 	 * @return Gets the projector block controlling this force field. Removes the force field if no
 	 *         projector can be found.
@@ -137,6 +140,15 @@ class BlockForceField extends Block with PacketHandler with ForceField with Ligh
 		return null
 	}
 
+	override def getEmittedLightLevel: Float = {
+		val projector = getProjectorSafe
+		if (projector != null) {
+			return Math.min(projector.getModuleCount(Content.moduleGlow), 64) / 64f
+		}
+
+		return 0
+	}
+
 	def getProjectorSafe: BlockProjector = {
 		if (projector != null) {
 
@@ -150,17 +162,6 @@ class BlockForceField extends Block with PacketHandler with ForceField with Ligh
 		}
 
 		return null
-	}
-
-	override def getTexture(side: Direction): Optional[Texture] = Optional.of(Textures.forceField)
-
-	override def getEmittedLightLevel: Float = {
-		val projector = getProjectorSafe
-		if (projector != null) {
-			return Math.min(projector.getModuleCount(Content.moduleGlow), 64) / 64f
-		}
-
-		return 0
 	}
 
 	override def getID: String = "forceField"

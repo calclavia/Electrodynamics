@@ -4,14 +4,13 @@ import mffs.content.Textures
 import nova.core.block.components.DynamicRenderer
 import nova.core.render.Color
 import nova.core.render.model.{BlockModelUtil, Model}
-import nova.core.util.transform.Vector3d
+import nova.core.util.transform.vector.Vector3d
 
 import scala.collection.convert.wrapAll._
 
 class FXHologram(color: Color, maxAge: Double) extends FXMFFS with DynamicRenderer {
-	private var targetPosition: Vector3d = null
-
 	var age = 0d
+	private var targetPosition: Vector3d = null
 
 	override def getID: String = "hologram"
 

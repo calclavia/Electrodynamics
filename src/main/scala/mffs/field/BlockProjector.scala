@@ -22,7 +22,9 @@ import nova.core.player.Player
 import nova.core.render.Color
 import nova.core.render.model.{Model, Vertex}
 import nova.core.retention.Stored
-import nova.core.util.transform.{Cuboid, MatrixStack, Vector3d, Vector3i}
+import nova.core.util.transform.matrix.MatrixStack
+import nova.core.util.transform.shape.Cuboid
+import nova.core.util.transform.vector.{Vector3d, Vector3i}
 
 import scala.collection.convert.wrapAll._
 
@@ -248,6 +250,14 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter w
 
 	def getProjectionSpeed: Int = 28 + 28 * getModuleCount(Content.moduleSpeed, getModuleSlots: _*)
 
+	override def markDirty() {
+		super.markDirty()
+
+		if (world != null) {
+			destroyField()
+		}
+	}
+
 	def destroyField() {
 		if (Game.instance.networkManager.isServer && calculatedField != null && !isCalculating) {
 			getModules(getModuleSlots: _*).forall(!_.onDestroyField(this, calculatedField))
@@ -261,14 +271,6 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter w
 			calculatedField = null
 			isCompleteConstructing = false
 			fieldRequireTicks = false
-		}
-	}
-
-	override def markDirty() {
-		super.markDirty()
-
-		if (world != null) {
-			destroyField()
 		}
 	}
 

@@ -12,7 +12,7 @@ import mffs.field.mobilize.{BlockDropDelayedEvent, BlockInventoryDropDelayedEven
 import mffs.util.MFFSUtility
 import nova.core.game.Game
 import nova.core.inventory.components.InventoryProvider
-import nova.core.util.transform.Vector3i
+import nova.core.util.transform.vector.Vector3i
 
 class ItemModuleDisintegration extends ItemModule {
 	private var blockCount = 0

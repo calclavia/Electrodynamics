@@ -6,7 +6,7 @@ import nova.core.entity.Entity
 import nova.core.render.Color
 import nova.core.render.model.{Model, Vertex}
 import nova.core.render.texture.Texture
-import nova.core.util.transform.Vector3d
+import nova.core.util.transform.vector.Vector3d
 
 import scala.beans.BeanProperty
 import scala.collection.convert.wrapAll._

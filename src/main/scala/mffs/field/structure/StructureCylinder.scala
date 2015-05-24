@@ -1,7 +1,7 @@
 package mffs.field.structure
 
 import com.resonant.core.structure.Structure
-import nova.core.util.transform.Vector3d
+import nova.core.util.transform.vector.Vector3d
 
 /**
  * @author Calclavia

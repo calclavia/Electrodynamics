@@ -12,7 +12,7 @@ import nova.core.network.NetworkTarget.Side
 import nova.core.network.{Packet, PacketHandler}
 import nova.core.player.Player
 import nova.core.retention.Stored
-import nova.core.util.transform.Vector3i
+import nova.core.util.transform.vector.Vector3i
 
 import scala.beans.BeanProperty
 

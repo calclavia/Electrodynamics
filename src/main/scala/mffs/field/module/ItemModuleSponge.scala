@@ -7,7 +7,7 @@ import mffs.base.ItemModule
 import mffs.field.BlockProjector
 import nova.core.fluid.FluidBlock
 import nova.core.network.NetworkTarget.Side
-import nova.core.util.transform.Vector3i
+import nova.core.util.transform.vector.Vector3i
 
 import scala.collection.convert.wrapAll._
 

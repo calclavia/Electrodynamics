@@ -10,7 +10,7 @@ import nova.core.entity.Entity
 import nova.core.game.Game
 import nova.core.player.Player
 import nova.core.retention.Stored
-import nova.core.util.transform.Vector3i
+import nova.core.util.transform.vector.Vector3i
 
 import scala.beans.BeanProperty
 

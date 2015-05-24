@@ -6,17 +6,13 @@ import com.resonant.core.structure.Structure
 import mffs.api.machine.FieldMatrix
 import mffs.base.ItemModule
 import nova.core.util.Direction
-import nova.core.util.transform.Vector3i
+import nova.core.util.transform.vector.Vector3i
 
 class ItemModuleArray extends ItemModule {
 
 	override def getID: String = "moduleArray"
 
 	override def onCalculateExterior(projector: FieldMatrix, structure: Structure) {
-		generateArray(projector, structure)
-	}
-
-	override def onCalculateInterior(projector: FieldMatrix, structure: Structure) {
 		generateArray(projector, structure)
 	}
 
@@ -84,6 +80,10 @@ class ItemModuleArray extends ItemModule {
 		}
 
 		return longestDirectional
+	}
+
+	override def onCalculateInterior(projector: FieldMatrix, structure: Structure) {
+		generateArray(projector, structure)
 	}
 
 	override def getFortronCost(amplifier: Float): Float = super.getFortronCost(amplifier) + (super.getFortronCost(amplifier) * amplifier) / 100f
