@@ -5,8 +5,8 @@ import com.resonant.wrapper.lib.utility.science.UnitDisplay
 import mffs.production.BlockFortronCapacitor
 import nova.core.game.Game
 import nova.core.gui.ComponentEvent.ActionEvent
-import nova.core.gui.components.inventory.{PlayerInventory, Slot}
-import nova.core.gui.components.{Button, Container, Label}
+import nova.core.gui.component.inventory.{PlayerInventory, Slot}
+import nova.core.gui.component.{Button, Container, Label}
 import nova.core.gui.layout.{Anchor, FlowLayout}
 import nova.core.gui.render.Graphics
 import nova.core.gui.{ComponentEvent, GuiEvent}
