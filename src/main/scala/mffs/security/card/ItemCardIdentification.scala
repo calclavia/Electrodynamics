@@ -4,7 +4,6 @@ import java.util
 import java.util.Optional
 
 import com.resonant.core.access.{AbstractAccess, AccessUser, Permissions}
-import mffs.Reference
 import nova.core.entity.Entity
 import nova.core.game.Game
 import nova.core.gui.KeyManager.Key
@@ -59,7 +58,7 @@ class ItemCardIdentification extends ItemCardAccess with PacketHandler {
 					/**
 					 * Open item GUI
 					 */
-					Game.instance.guiFactory.showGui(Reference.id, "idCard", entity, new Vector3i(0, 0, 0))
+					Game.instance.guiFactory.showGui("idCard", entity, new Vector3i(0, 0, 0))
 				}
 			}
 		}

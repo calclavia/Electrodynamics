@@ -3,6 +3,7 @@ package mffs.production
 import java.util.{HashSet => JHashSet, Set => JSet}
 
 import com.resonant.lib.wrapper.WrapFunctions._
+import mffs.GraphFrequency
 import mffs.api.card.CoordLink
 import mffs.api.fortron.{Fortron, FortronFrequency}
 import mffs.api.modules.Module
@@ -10,7 +11,6 @@ import mffs.base.{BlockModuleHandler, PacketBlock}
 import mffs.content.{Content, Models, Textures}
 import mffs.item.card.ItemCardFrequency
 import mffs.util.{FortronUtility, TransferMode}
-import mffs.{GraphFrequency, Reference}
 import nova.core.block.Block
 import nova.core.block.components.StaticRenderer
 import nova.core.entity.Entity
@@ -53,7 +53,7 @@ class BlockFortronCapacitor extends BlockModuleHandler with StaticRenderer {
 	override def onRightClick(entity: Entity, side: Int, hit: Vector3d): Boolean = {
 		if (!super.onRightClick(entity, side, hit)) {
 			if (Side.get().isServer) {
-				Game.instance.guiFactory.showGui(Reference.id, getID, entity, position)
+				Game.instance.guiFactory.showGui(getID, entity, position)
 			}
 		}
 
@@ -129,10 +129,6 @@ class BlockFortronCapacitor extends BlockModuleHandler with StaticRenderer {
 
 	def getTransmissionRate: Int = 500 + 100 * getModuleCount(Content.moduleSpeed)
 
-	override def getAmplifier: Float = 0f
-
-	def getDeviceCount = getFrequencyDevices.size + getInputDevices.size + getOutputDevices.size
-
 	def getFrequencyDevices: Set[FortronFrequency] =
 		GraphFrequency.instance.get(getFrequency)
 			.view
@@ -151,6 +147,8 @@ class BlockFortronCapacitor extends BlockModuleHandler with StaticRenderer {
 			.collect { case op if op.isPresent => op.get }
 			.toSet
 
+	def getOutputDevices: Set[FortronFrequency] = getDevicesFromStacks(getOutputStacks)
+
 	def getDevicesFromStacks(stacks: Set[Item]): Set[FortronFrequency] =
 		stacks
 			.view
@@ -160,13 +158,15 @@ class BlockFortronCapacitor extends BlockModuleHandler with StaticRenderer {
 			.collect { case freqBlock: FortronFrequency => freqBlock }
 			.toSet
 
-	def getOutputDevices: Set[FortronFrequency] = getDevicesFromStacks(getOutputStacks)
-
 	def getOutputStacks: Set[Item] =
 		(8 to 11)
 			.map(inventory.get)
 			.collect { case op if op.isPresent => op.get }
 			.toSet
+
+	override def getAmplifier: Float = 0f
+
+	def getDeviceCount = getFrequencyDevices.size + getInputDevices.size + getOutputDevices.size
 
 	override def isCube: Boolean = false
 

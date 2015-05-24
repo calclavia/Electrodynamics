@@ -17,6 +17,7 @@ import mffs.security.card.ItemCardIdentification
 import mffs.security.module._
 import nova.core.block.BlockFactory
 import nova.core.entity.EntityFactory
+import nova.core.gui.factory.GuiFactory
 import nova.core.item.{Item, ItemFactory}
 
 /**
@@ -24,8 +25,6 @@ import nova.core.item.{Item, ItemFactory}
  * @author Calclavia
  */
 object Content extends ContentLoader {
-
-	override def id: String = Reference.id
 
 	/**
 	 * Blocks
@@ -36,13 +35,11 @@ object Content extends ContentLoader {
 	val biometricIdentifier: BlockFactory = classOf[BlockBiometric]
 	val forceMobilizer: BlockFactory = classOf[BlockMobilizer]
 	val forceField: BlockFactory = classOf[BlockForceField]
-
 	/**
 	 * Misc Items
 	 */
 	val remoteController: ItemFactory = classOf[ItemRemoteController]
 	val focusMatrix: ItemFactory = () => (new Item with Named).setName("focusMatrix")
-
 	/**
 	 * Cards
 	 */
@@ -51,7 +48,6 @@ object Content extends ContentLoader {
 	val cardFrequency: ItemFactory = classOf[ItemCardFrequency]
 	val cardID: ItemFactory = classOf[ItemCardIdentification]
 	val cardLink: ItemFactory = classOf[ItemCardLink]
-
 	/**
 	 * Shapes
 	 */
@@ -61,7 +57,6 @@ object Content extends ContentLoader {
 	val modeCylinder: ItemFactory = classOf[ItemShapeCylinder]
 	val modePyramid: ItemFactory = classOf[ItemShapePyramid]
 	val modeCustom: ItemFactory = classOf[ItemShapeCustom]
-
 	/**
 	 * Modules
 	 */
@@ -92,14 +87,14 @@ object Content extends ContentLoader {
 	val moduleBlockAccess: ItemFactory = () => (new ItemModuleDefense with Named).setCost(10).setName("moduleBlockAccess")
 	val moduleBlockAlter: ItemFactory = () => (new ItemModuleDefense with Named).setCost(15).setName("moduleBlockAlter")
 	val moduleAntiSpawn: ItemFactory = () => (new ItemModuleDefense with Named).setCost(10).setName("moduleAntiSpawn")
-
 	//TODO: Allow args.
 	val fxFortronBeam: EntityFactory = () => new FXFortronBeam(FieldColor.blue, 40)
 	val fxHologram: EntityFactory = () => new FXHologram(FieldColor.blue, 40)
 	val fxHologramProgress: EntityFactory = () => new FXHologramProgress(FieldColor.blue, 40)
-
 	//GUI
-	val guiFortronCapacitor = new GuiFortronCapacitor
+	val guiFortronCapacitor: GuiFactory = classOf[GuiFortronCapacitor]
+
+	override def id: String = Reference.id
 
 	override def postInit() {
 		/**

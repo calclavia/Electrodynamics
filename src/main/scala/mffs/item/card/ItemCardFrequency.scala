@@ -4,7 +4,6 @@ import java.util
 import java.util.Optional
 
 import com.google.common.hash.Hashing
-import mffs.Reference
 import mffs.api.Frequency
 import nova.core.entity.Entity
 import nova.core.game.Game
@@ -29,7 +28,7 @@ class ItemCardFrequency extends ItemCard with Frequency {
 
 	override def onRightClick(entity: Entity) {
 		if (Game.instance.networkManager.isServer) {
-			Game.instance.guiFactory.showGui(Reference.id, "cardFrequency", entity, Vector3i.zero)
+			Game.instance.guiFactory.showGui("cardFrequency", entity, Vector3i.zero)
 		}
 	}
 
