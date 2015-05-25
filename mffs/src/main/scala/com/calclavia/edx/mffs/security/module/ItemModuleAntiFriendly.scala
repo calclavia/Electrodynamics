@@ -3,8 +3,9 @@ package com.calclavia.edx.mffs.security.module
 import java.util
 
 import com.calclavia.edx.mffs.api.machine.Projector
-import nova.core.entity.component.Damageable.DamageType
-import nova.core.entity.component.{Damageable, Player}
+import nova.core.component.misc.Damageable
+import nova.core.component.misc.Damageable.DamageType
+import nova.core.entity.component.Player
 import nova.core.util.transform.vector.Vector3i
 
 class ItemModuleAntiFriendly extends ItemModuleDefense {
@@ -13,8 +14,8 @@ class ItemModuleAntiFriendly extends ItemModuleDefense {
 		val entities = getEntitiesInField(projector)
 
 		entities.view
-			.filter(entity => entity.isInstanceOf[Damageable] && /*!(entity.isInstanceOf[IMob] && !entity.isInstanceOf[INpc]) && */ !entity.isInstanceOf[Player])
-			.map(_.asInstanceOf[Damageable])
+			.filter(entity => entity.get(classOf[Damageable]).isPresent && /*!(entity.isInstanceOf[IMob] && !entity.isInstanceOf[INpc]) && */ !entity.get(classOf[Player]).isPresent)
+			.map(_.get(classOf[Damageable]).get())
 			.foreach(entity => {
 			entity.damage(Double.PositiveInfinity, DamageType.generic)
 		})

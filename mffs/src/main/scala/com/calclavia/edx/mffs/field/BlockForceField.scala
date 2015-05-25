@@ -11,9 +11,10 @@ import com.calclavia.edx.mffs.util.MFFSUtility
 import com.resonant.lib.wrapper.WrapFunctions._
 import nova.core.block.Block
 import nova.core.block.component.{BlockCollider, LightEmitter, StaticBlockRenderer}
+import nova.core.component.misc.Damageable
 import nova.core.component.renderer.StaticRenderer
 import nova.core.entity.Entity
-import nova.core.entity.component.{Damageable, Player}
+import nova.core.entity.component.Player
 import nova.core.game.Game
 import nova.core.item.Item
 import nova.core.network.{PacketHandler, Sync}
@@ -40,12 +41,12 @@ class BlockForceField extends Block with PacketHandler with ForceField with Stor
 		override def getCollidingBoxes(intersect: Cuboid, entity: Optional[Entity]): util.Set[Cuboid] = {
 			val projector = getProjector()
 
-			if (projector != null && entity.isPresent && entity.get.isInstanceOf[Player]) {
+			if (projector != null && entity.isPresent && entity.get.get(classOf[Player]).isPresent) {
 				val biometricIdentifier = projector.getBiometricIdentifier
-				val entityPlayer = entity.get.asInstanceOf[Player]
+				val entityPlayer = entity.get.get(classOf[Player]).get()
 
 				if (biometricIdentifier != null) {
-					if (biometricIdentifier.hasPermission(entityPlayer.getID, MFFSPermissions.forceFieldWarp)) {
+					if (biometricIdentifier.hasPermission(entityPlayer.getPlayerID, MFFSPermissions.forceFieldWarp)) {
 						return null
 					}
 				}
@@ -53,6 +54,7 @@ class BlockForceField extends Block with PacketHandler with ForceField with Stor
 			super.getCollidingBoxes(intersect, entity)
 		}
 	}
+		.setCube(false)
 		.setEntityCollide(consumer(
 		(entity: Entity) => {
 			val projector = getProjector()
@@ -64,8 +66,8 @@ class BlockForceField extends Block with PacketHandler with ForceField with Stor
 						if (Game.instance.networkManager.isServer && entity.isInstanceOf[Damageable]) {
 							val entityLiving = entity.asInstanceOf[Damageable]
 
-							if (entity.isInstanceOf[Player]) {
-								val player = entity.asInstanceOf[Player]
+							if (entity.get(classOf[Player]).isPresent) {
+								val player = entity.get(classOf[Player]).get
 
 								if (biometricIdentifier != null) {
 									if (biometricIdentifier.hasPermission(player.getID, MFFSPermissions.forceFieldWarp)) {
@@ -78,7 +80,6 @@ class BlockForceField extends Block with PacketHandler with ForceField with Stor
 				}
 			}
 		}))
-		.setCube(false)
 	)
 
 	add(new LightEmitter().setEmittedLevel(supplier(() => {

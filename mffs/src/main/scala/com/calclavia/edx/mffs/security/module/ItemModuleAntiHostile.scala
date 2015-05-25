@@ -3,7 +3,7 @@ package com.calclavia.edx.mffs.security.module
 import java.util
 
 import com.calclavia.edx.mffs.api.machine.Projector
-import nova.core.entity.component.Damageable
+import nova.core.component.misc.Damageable
 import nova.core.util.transform.vector.Vector3i
 
 class ItemModuleAntiHostile extends ItemModuleDefense {
@@ -13,8 +13,8 @@ class ItemModuleAntiHostile extends ItemModuleDefense {
 
 		//Check entity IDs.
 		entities.view
-			.filter(entity => entity.isInstanceOf[Damageable] /* && entity.isInstanceOf[IMob] && !entity.isInstanceOf[INpc]*/)
-			.map(_.asInstanceOf[Damageable])
+			.filter(entity => entity.get(classOf[Damageable]).isPresent /* && entity.isInstanceOf[IMob] && !entity.isInstanceOf[INpc]*/)
+			.map(_.get(classOf[Damageable]).get())
 			.foreach(_.damage(20))
 
 		return false

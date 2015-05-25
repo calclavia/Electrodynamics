@@ -5,7 +5,8 @@ import java.util
 import com.calclavia.edx.mffs.api.machine.Projector
 import com.calclavia.edx.mffs.field.BlockProjector
 import com.calclavia.edx.mffs.security.MFFSPermissions
-import nova.core.entity.component.{Damageable, Player}
+import nova.core.component.misc.Damageable
+import nova.core.entity.component.Player
 import nova.core.game.Game
 import nova.core.util.Direction
 import nova.core.util.transform.vector.Vector3i
@@ -19,10 +20,11 @@ class ItemModuleAntiPersonnel extends ItemModuleDefense {
 		val entities = getEntitiesInField(projector)
 
 		entities.view
-			.collect { case player: Player with Damageable => player }
+			.collect { case entity if entity.has(classOf[Player]) && entity.has(classOf[Damageable]) => entity }
 			.filter(p => !projector.hasPermission(p.getID, MFFSPermissions.defense))
 			.foreach(
-		    player => {
+		    entity => {
+			    val player = entity.get(classOf[Player]).get()
 			    (0 until player.getInventory.size())
 				    .filter(player.getInventory.get(_) != null)
 				    .foreach(
@@ -35,7 +37,7 @@ class ItemModuleAntiPersonnel extends ItemModuleDefense {
 			        }
 				    )
 
-			    player.damage(1000)
+			    entity.get(classOf[Damageable]).get().damage(1000)
 			    Game.instance.networkManager.sendChat(player, Game.instance.languageManager.translate("message.moduleAntiPersonnel.death"))
 		    }
 			)

@@ -20,9 +20,9 @@ class ItemModuleConfiscate extends ItemModuleDefense {
 		val entities = getEntitiesInField(projector)
 
 		entities.view
-			.filter(_.isInstanceOf[Player])
-			.map(_.asInstanceOf[Player])
-			.filter(player => !proj.hasPermission(player.getID, MFFSPermissions.bypassConfiscation))
+			.filter(_.has(classOf[Player]))
+			.map(_.get(classOf[Player]).get())
+			.filter(player => !proj.hasPermission(player.getPlayerID, MFFSPermissions.bypassConfiscation))
 			.foreach(
 		    player => {
 			    val filterItems = proj.getFilterItems

@@ -24,7 +24,7 @@ class ItemModuleRepulsion extends ItemModule {
 
 		getEntitiesInField(projector).par
 			.collect {
-			case player: Player if projector.hasPermission(player.getID, MFFSPermissions.forceFieldWarp) => player
+			case entity if entity.get(classOf[Player]).isPresent && projector.hasPermission(entity.get(classOf[Player]).get().getPlayerID, MFFSPermissions.forceFieldWarp) => entity
 			case entity: Entity => entity
 		}
 			.foreach(
@@ -40,6 +40,5 @@ class ItemModuleRepulsion extends ItemModule {
 	}
 
 	//TODO: Send field to client
-
 	override def requireTicks(): Boolean = true
 }

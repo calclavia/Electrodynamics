@@ -29,7 +29,7 @@ class ItemCardIdentification extends ItemCardAccess with PacketHandler {
 	@Stored
 	override var access: AbstractAccess = null
 
-	override def getTooltips(player: Optional[Player], tooltips: util.List[String]) {
+	override def getTooltips(player: Optional[Entity], tooltips: util.List[String]) {
 		super.getTooltips(player, tooltips)
 
 		if (access != null) {

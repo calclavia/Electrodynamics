@@ -16,8 +16,8 @@ class ItemModuleBroadcast extends ItemModuleDefense {
 
 		//TODO: Add custom broadcast messages
 		entities.view
-			.filter(_.isInstanceOf[Player])
-			.map(_.asInstanceOf[Player])
+			.filter(_.has(classOf[Player]))
+			.map(_.get(classOf[Player]).get())
 			.filter(p => !projector.hasPermission(p.getID, MFFSPermissions.defense))
 			.foreach(Game.instance.networkManager.sendChat(_, Game.instance.languageManager.translate("message.moduleWarn.warn")))
 		return false

@@ -9,7 +9,6 @@ import com.resonant.core.prefab.itemblock.TooltipItem
 import com.resonant.core.prefab.modcontent.AutoItemTexture
 import com.resonant.wrapper.lib.utility.science.UnitDisplay
 import nova.core.entity.Entity
-import nova.core.entity.component.Player
 import nova.core.game.Game
 import nova.core.item.Item
 import nova.core.util.transform.shape.Cuboid
@@ -21,7 +20,7 @@ abstract class ItemModule extends Item with TooltipItem with Module with Categor
 	private var fortronCost = 0.5f
 	private var maxCount = 64
 
-	override def getTooltips(player: Optional[Player], tooltips: JList[String]) {
+	override def getTooltips(player: Optional[Entity], tooltips: JList[String]) {
 		tooltips.add(Game.instance.languageManager.translate("info.item.fortron") + " " + new UnitDisplay(UnitDisplay.Unit.LITER, getFortronCost(1) * 20) + "/s")
 	}
 

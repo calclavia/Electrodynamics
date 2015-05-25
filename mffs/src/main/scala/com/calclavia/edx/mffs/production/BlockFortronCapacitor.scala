@@ -20,6 +20,7 @@ import nova.core.network.Sync
 import nova.core.render.model.Model
 import nova.core.retention.Stored
 import nova.core.util.transform.matrix.MatrixStack
+
 class BlockFortronCapacitor extends BlockModuleHandler {
 
 	override val inventory: InventorySimple = new InventorySimple(3 + 4 * 2 + 1)
@@ -138,6 +139,8 @@ class BlockFortronCapacitor extends BlockModuleHandler {
 			.collect { case op if op.isPresent => op.get }
 			.toSet
 
+	def getOutputDevices: Set[FortronFrequency] = getDevicesFromStacks(getOutputStacks)
+
 	def getDevicesFromStacks(stacks: Set[Item]): Set[FortronFrequency] =
 		stacks
 			.view
@@ -146,8 +149,6 @@ class BlockFortronCapacitor extends BlockModuleHandler {
 			.collect { case op if op.isPresent => op.get() }
 			.collect { case freqBlock: FortronFrequency => freqBlock }
 			.toSet
-
-	def getOutputDevices: Set[FortronFrequency] = getDevicesFromStacks(getOutputStacks)
 
 	def getOutputStacks: Set[Item] =
 		(8 to 11)

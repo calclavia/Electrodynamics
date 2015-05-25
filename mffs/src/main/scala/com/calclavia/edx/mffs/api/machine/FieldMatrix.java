@@ -59,10 +59,4 @@ public interface FieldMatrix extends IActivatable, IPermissionProvider {
 	 * @return
 	 */
 	Set<Vector3i> getInteriorPoints();
-
-	/**
-	 * @return Gets the facing direction. Always returns the front side of the block.
-	 */
-	Direction getDirection();
-
 }
