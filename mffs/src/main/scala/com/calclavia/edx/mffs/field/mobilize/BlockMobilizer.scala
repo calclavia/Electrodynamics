@@ -59,8 +59,8 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 	private var moveTime = 0
 	private var canRenderMove = true
 
-	getComponent(classOf[Oriented]).get.setMask(63)
-	getComponent(classOf[BlockCollider]).get.setCube(false)
+	get(classOf[Oriented]).get.setMask(63)
+	get(classOf[BlockCollider]).get.setCube(false)
 
 	def markFailMove() = failedMove = true
 
@@ -119,7 +119,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 				Game.instance.networkManager.sync(PacketBlock.field, this)
 
 				if (!isTeleport && doAnchor) {
-					anchor += getComponent(classOf[Oriented]).get().direction.toVector
+					anchor += get(classOf[Oriented]).get().direction.toVector
 				}
 			}))
 
@@ -363,7 +363,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 			}
 		}
 
-		return (world(), getAbsoluteAnchor + getComponent(classOf[Oriented]).get().direction.toVector)
+		return (world(), getAbsoluteAnchor + get(classOf[Oriented]).get().direction.toVector)
 	}
 
 	private def isTeleport: Boolean = {
@@ -389,7 +389,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 	def getAbsoluteAnchor: Vector3i = position + anchor
 
 	def isVisibleToPlayer(position: Vector3i): Boolean = {
-		return Direction.DIRECTIONS.count(dir => world.getBlock(position + dir.toVector).get.getComponent(classOf[BlockCollider]).get.isOpaqueCube) < 6
+		return Direction.DIRECTIONS.count(dir => world.getBlock(position + dir.toVector).get.get(classOf[BlockCollider]).get.isOpaqueCube) < 6
 	}
 
 	override def read(packet: Packet) {
@@ -527,7 +527,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 				//entity.travelToDimension(targetPos.world.provider.dimensionId)
 			}
 
-			entity.getComponent(classOf[RigidBody]).get().setVelocity(Vector3d.zero)
+			entity.get(classOf[RigidBody]).get().setVelocity(Vector3d.zero)
 		}
 	}
 
@@ -613,7 +613,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 	override def renderStatic(model: Model) {
 		model.matrix = new MatrixStack()
 			.loadMatrix(model.matrix)
-			.rotate(getComponent(classOf[Oriented]).get().direction.rotation)
+			.rotate(get(classOf[Oriented]).get().direction.rotation)
 			.getMatrix
 
 		model.children.add(Models.mobilizer.getModel)

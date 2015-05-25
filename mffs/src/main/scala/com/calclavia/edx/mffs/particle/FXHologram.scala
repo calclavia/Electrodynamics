@@ -23,7 +23,7 @@ class FXHologram(color: Color, maxAge: Double) extends FXMFFS with DynamicRender
 	 */
 	def setTarget(targetPosition: Vector3d): FXHologram = {
 		this.targetPosition = targetPosition
-		getComponent(classOf[RigidBody]).get().setVelocity((targetPosition - position) / maxAge)
+		get(classOf[RigidBody]).get().setVelocity((targetPosition - position) / maxAge)
 		return this
 	}
 

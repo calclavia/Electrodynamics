@@ -103,7 +103,7 @@ abstract class BlockMachine extends Block with PacketHandler with IActivatable w
 			}
 		}
 
-		val opOriented = getComponent(classOf[Oriented])
+		val opOriented = get(classOf[Oriented])
 
 		if (opOriented.isPresent) {
 			return opOriented.get().rotate(side, hit)

@@ -98,7 +98,7 @@ class BlockForceField extends Block with PacketHandler with ForceField with Stor
 
 	add(new StaticRenderer(this) {
 		override def renderStatic(model: Model) {
-			val opRenderer = camoBlock.getComponent(classOf[StaticRenderer])
+			val opRenderer = camoBlock.get(classOf[StaticRenderer])
 
 			if (opRenderer.isPresent)
 				opRenderer.get.renderStatic(model)

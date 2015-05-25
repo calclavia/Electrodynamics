@@ -68,7 +68,7 @@ class BlockFortronCapacitor extends BlockModuleHandler with StaticRenderer {
 			 * Handle fortron item inputs
 			 */
 			getInputStacks
-				.map(_.getComponent(classOf[Tank]))
+				.map(_.get(classOf[Tank]))
 				.collect { case op if op.isPresent => op.get }
 				.foreach(
 			    tank => {
@@ -85,7 +85,7 @@ class BlockFortronCapacitor extends BlockModuleHandler with StaticRenderer {
 			if (fortronTank.getFluidAmount > 0) {
 
 				getOutputStacks
-					.map(_.getComponent(classOf[Tank]))
+					.map(_.get(classOf[Tank]))
 					.collect { case op if op.isPresent => op.get }
 					.foreach(
 				    tank => {
@@ -117,10 +117,6 @@ class BlockFortronCapacitor extends BlockModuleHandler with StaticRenderer {
 
 	def getTransmissionRate: Int = 500 + 100 * getModuleCount(Content.moduleSpeed)
 
-	override def getAmplifier: Float = 0f
-
-	def getDeviceCount = getFrequencyDevices.size + getInputDevices.size + getOutputDevices.size
-
 	def getFrequencyDevices: Set[FortronFrequency] =
 		GraphFrequency.instance.get(getFrequency)
 			.view
@@ -139,8 +135,6 @@ class BlockFortronCapacitor extends BlockModuleHandler with StaticRenderer {
 			.collect { case op if op.isPresent => op.get }
 			.toSet
 
-	def getOutputDevices: Set[FortronFrequency] = getDevicesFromStacks(getOutputStacks)
-
 	def getDevicesFromStacks(stacks: Set[Item]): Set[FortronFrequency] =
 		stacks
 			.view
@@ -150,11 +144,17 @@ class BlockFortronCapacitor extends BlockModuleHandler with StaticRenderer {
 			.collect { case freqBlock: FortronFrequency => freqBlock }
 			.toSet
 
+	def getOutputDevices: Set[FortronFrequency] = getDevicesFromStacks(getOutputStacks)
+
 	def getOutputStacks: Set[Item] =
 		(8 to 11)
 			.map(inventory.get)
 			.collect { case op if op.isPresent => op.get }
 			.toSet
+
+	override def getAmplifier: Float = 0f
+
+	def getDeviceCount = getFrequencyDevices.size + getInputDevices.size + getOutputDevices.size
 
 	override def isCube: Boolean = false
 
