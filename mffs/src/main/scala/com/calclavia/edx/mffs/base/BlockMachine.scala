@@ -7,25 +7,23 @@ import com.calclavia.edx.mffs.content.Textures
 import com.calclavia.graph.api.energy.NodeRedstone
 import com.resonant.lib.wrapper.WrapFunctions._
 import com.resonant.wrapper.core.Placeholder
-import nova.core.block.component.{BlockCollider, Oriented}
-import nova.core.block.{Block, Stateful}
+import nova.core.block.Block.RightClickEvent
+import nova.core.block.component.{BlockCollider, Oriented, StaticBlockRenderer}
+import nova.core.block.{BlockDefault, Stateful}
 import nova.core.component.renderer.ItemRenderer
-import nova.core.entity.Entity
 import nova.core.game.Game
 import nova.core.gui.KeyManager.Key
 import nova.core.network.NetworkTarget.Side
 import nova.core.network.{Packet, PacketHandler}
-import nova.core.render.texture.Texture
 import nova.core.retention.{Storable, Stored}
 import nova.core.util.Direction
-import nova.core.util.transform.vector.Vector3d
 
 /**
  * A base block class for all MFFS blocks to inherit.
  * @author Calclavia
  */
 //TODO: Redstone state is not properly saved
-abstract class BlockMachine extends Block with PacketHandler with IActivatable with Stateful with Storable with CategoryMFFS {
+abstract class BlockMachine extends BlockDefault with PacketHandler with IActivatable with Stateful with Storable with CategoryMFFS {
 	/**
 	 * Used for client side animations.
 	 */
@@ -47,20 +45,22 @@ abstract class BlockMachine extends Block with PacketHandler with IActivatable w
 	})
 
 	add(redstoneNode)
-	add(new BlockCollider(this).setCube(false))
 	add(new ItemRenderer(this))
+	add(new StaticBlockRenderer(this))
+		.setTexture(func((side: Direction) => Optional.of(Textures.machine)))
+
+	get(classOf[BlockCollider]).get
+		.setCube(false)
+		.setOpaqueCube(false)
+
+	rightClickEvent.add((evt: RightClickEvent) => onRightClick(evt))
 
 	//	stepSound = Block.soundTypeMetal
-
 	//	override def getExplosionResistance(entity: Entity): Float = 100
 
 	override def getHardness: Double = Double.PositiveInfinity
 
 	override def getResistance: Double = 100
-
-	override def getTexture(side: Direction): Optional[Texture] = Optional.of(Textures.machine)
-
-	override def isOpaqueCube: Boolean = false
 
 	override def read(packet: Packet) {
 		super.read(packet)
@@ -92,26 +92,29 @@ abstract class BlockMachine extends Block with PacketHandler with IActivatable w
 		world().markStaticRender(position())
 	}
 
-	override def onRightClick(entity: Entity, side: Int, hit: Vector3d): Boolean = {
+	def onRightClick(evt: RightClickEvent) {
 		active = !active
-		if (Placeholder.isHoldingConfigurator(entity)) {
+		if (Placeholder.isHoldingConfigurator(evt.entity)) {
 			if (Game.instance.keyManager.isKeyDown(Key.KEY_LSHIFT)) {
 				if (Side.get().isServer) {
 					//TODO: Fix this
 					// InventoryUtility.dropBlockAsItem(world, position)
 					world.setBlock(position, null)
-					return true
+					evt.result = true
+					return
 				}
-				return false
+				evt.result = false
+				return
 			}
 		}
 
 		val opOriented = get(classOf[Oriented])
 
 		if (opOriented.isPresent) {
-			return opOriented.get().rotate(side, hit)
+			evt.result = opOriented.get().rotate(evt.side.ordinal(), evt.position)
+			return
 		}
 
-		return false
+		evt.result = false
 	}
 }

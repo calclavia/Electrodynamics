@@ -1,7 +1,7 @@
 package com.calclavia.edx.mffs.item.card
 
 import nova.core.fluid.Fluid
-import nova.core.fluid.component.TankSimple
+import nova.core.fluid.component.{FluidHandler, TankSimple}
 
 /**
  * A card used by admins or players to cheat infinite energy.
@@ -11,7 +11,7 @@ import nova.core.fluid.component.TankSimple
 class ItemCardInfinite extends ItemCard {
 	val tank = new TankSimple(Fluid.bucketVolume)
 
-	add(tank)
+	add(new FluidHandler(tank))
 
 	override def getID: String = "cardInfinite"
 }

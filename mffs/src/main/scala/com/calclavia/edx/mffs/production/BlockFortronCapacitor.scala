@@ -13,16 +13,13 @@ import com.calclavia.edx.mffs.util.{FortronUtility, TransferMode}
 import com.resonant.lib.wrapper.WrapFunctions._
 import nova.core.block.Block
 import nova.core.component.renderer.StaticRenderer
-import nova.core.entity.Entity
-import nova.core.fluid.component.Tank
+import nova.core.fluid.component.{FluidHandler, Tank}
 import nova.core.inventory.InventorySimple
 import nova.core.item.Item
 import nova.core.network.Sync
 import nova.core.render.model.Model
 import nova.core.retention.Stored
 import nova.core.util.transform.matrix.MatrixStack
-import nova.core.util.transform.vector.Vector3d
-
 class BlockFortronCapacitor extends BlockModuleHandler {
 
 	override val inventory: InventorySimple = new InventorySimple(3 + 4 * 2 + 1)
@@ -60,16 +57,6 @@ class BlockFortronCapacitor extends BlockModuleHandler {
 	}
 	)
 
-	override def onRightClick(entity: Entity, side: Int, hit: Vector3d): Boolean = {
-		/*if (!super.onRightClick(entity, side, hit)) {
-			if (Side.get().isServer) {
-				Game.instance.guiFactory.showGui(getID, entity, position)
-			}
-		}*/
-
-		return true
-	}
-
 	override def getID: String = "fortronCapacitor"
 
 	override def update(deltaTime: Double) {
@@ -82,8 +69,9 @@ class BlockFortronCapacitor extends BlockModuleHandler {
 			 * Handle fortron item inputs
 			 */
 			getInputStacks
-				.map(_.get(classOf[Tank]))
+				.map(_.get(classOf[FluidHandler]))
 				.collect { case op if op.isPresent => op.get }
+				.flatMap(_.tanks)
 				.foreach(
 			    tank => {
 				    val fluid = tank.removeFluid(Math.min(getFortronEmpty, getTransmissionRate), true)
