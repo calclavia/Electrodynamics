@@ -9,7 +9,7 @@ import nova.core.game.Game
 import nova.core.player.Player
 import nova.core.retention.{Storable, Stored}
 import nova.core.util.Direction
-import nova.core.util.collection.Pair
+import nova.core.util.collection.Tuple2
 import nova.core.util.transform.vector.{Vector3d, Vector3i}
 import nova.core.world.World
 
@@ -30,7 +30,7 @@ class ItemCardLink extends ItemCard with CoordLink with Storable {
 		linkPos = position
 	}
 
-	override def getLink: Pair[World, Vector3i] = new Pair(linkWorld, linkPos)
+	override def getLink: Tuple2[World, Vector3i] = new Tuple2(linkWorld, linkPos)
 
 	override def getTooltips(player: Optional[Player], tooltips: util.List[String]) {
 		super.getTooltips(player, tooltips)

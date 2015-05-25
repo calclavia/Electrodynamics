@@ -21,7 +21,7 @@ import nova.core.network.NetworkTarget.Side
 import nova.core.player.Player
 import nova.core.retention.{Storable, Stored}
 import nova.core.util.Direction
-import nova.core.util.collection.Pair
+import nova.core.util.collection.Tuple2
 import nova.core.util.transform.vector.{Vector3d, Vector3i}
 import nova.core.world.World
 
@@ -126,8 +126,8 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 		}
 	}
 
-	def getLink: Pair[World, Vector3i] = {
-		return new Pair(linkWorld, linkPos)
+	def getLink: Tuple2[World, Vector3i] = {
+		return new Tuple2(linkWorld, linkPos)
 	}
 
 	def preMove(evt: EventForceMobilize) {
