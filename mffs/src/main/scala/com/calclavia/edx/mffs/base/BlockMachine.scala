@@ -5,9 +5,9 @@ import java.util.Optional
 import com.calclavia.edx.mffs.api.machine.IActivatable
 import com.calclavia.edx.mffs.content.Textures
 import com.calclavia.graph.api.energy.NodeRedstone
-import com.resonant.core.prefab.block.Rotatable
 import com.resonant.lib.wrapper.WrapFunctions._
 import com.resonant.wrapper.core.Placeholder
+import nova.core.block.component.Oriented
 import nova.core.block.{Block, Stateful}
 import nova.core.component.renderer.ItemRenderer
 import nova.core.entity.Entity
@@ -19,13 +19,12 @@ import nova.core.render.texture.Texture
 import nova.core.retention.{Storable, Stored}
 import nova.core.util.Direction
 import nova.core.util.transform.vector.Vector3d
-
 /**
  * A base block class for all MFFS blocks to inherit.
  * @author Calclavia
  */
 //TODO: Redstone state is not properly saved
-abstract class BlockMachine extends Block with PacketHandler with IActivatable with Stateful with Storable with ItemRenderer with CategoryMFFS {
+abstract class BlockMachine extends Block with PacketHandler with IActivatable with Stateful with Storable with CategoryMFFS {
 	/**
 	 * Used for client side animations.
 	 */
@@ -39,14 +38,15 @@ abstract class BlockMachine extends Block with PacketHandler with IActivatable w
 	@Stored
 	private var active = false
 
-	add(redstoneNode)
-
 	redstoneNode.onInputPowerChange((node: NodeRedstone) => {
 		if (node.getWeakPower > 0)
 			setActive(true)
 		else
 			setActive(false)
 	})
+
+	add(redstoneNode)
+	add(new ItemRenderer(this))
 
 	//	stepSound = Block.soundTypeMetal
 
@@ -89,7 +89,6 @@ abstract class BlockMachine extends Block with PacketHandler with IActivatable w
 		Game.instance.networkManager.sync(PacketBlock.description, this)
 		world().markStaticRender(position())
 	}
-
 	override def onRightClick(entity: Entity, side: Int, hit: Vector3d): Boolean = {
 		active = !active
 		if (Placeholder.isHoldingConfigurator(entity)) {
@@ -104,8 +103,10 @@ abstract class BlockMachine extends Block with PacketHandler with IActivatable w
 			}
 		}
 
-		if (this.isInstanceOf[Rotatable]) {
-			return this.asInstanceOf[Rotatable].rotate(side, hit)
+		val opOriented = getComponent(classOf[Oriented])
+
+		if (opOriented.isPresent) {
+			return opOriented.get().rotate(side, hit)
 		}
 
 		return false

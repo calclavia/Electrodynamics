@@ -6,7 +6,6 @@ import com.calclavia.edx.mffs.api.machine.{FieldMatrix, IPermissionProvider}
 import com.calclavia.edx.mffs.api.modules.StructureProvider
 import com.calclavia.edx.mffs.content.Content
 import com.calclavia.edx.mffs.util.CacheHandler
-import com.resonant.core.prefab.block.Rotatable
 import com.resonant.core.structure.Structure
 import com.resonant.lib.util.RotationUtility
 import nova.core.game.Game
@@ -22,7 +21,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
-abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with Rotatable with IPermissionProvider {
+abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix  with IPermissionProvider {
 	val _getModuleSlots = (14 until 25).toArray
 	protected val modeSlotID = 1
 
@@ -37,6 +36,8 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 
 	protected var isCalculating = false
 
+	add(new Rotatable(this))
+
 	/*
 	override def isItemValidForSlot(slotID: Int, Item: Item): Boolean = {
 		if (slotID == 0) {
@@ -50,19 +51,6 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 	}*/
 
 	override def getShape: StructureProvider = getShapeItem
-
-	/**
-	 * @return Gets the item that provides a shape
-	 */
-	def getShapeItem: Item with StructureProvider = {
-		val optional = inventory.get(modeSlotID)
-		if (optional.isPresent) {
-			if (optional.get().isInstanceOf[Item with StructureProvider]) {
-				return optional.asInstanceOf[Item with StructureProvider]
-			}
-		}
-		return null
-	}
 
 	override def getSidedModuleCount(module: ItemFactory, directions: Direction*): Int = {
 		var actualDirs = directions
@@ -85,62 +73,6 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 			return structure.getExteriorStructure
 		})
 
-	def getCalculatedField: JSet[Vector3i] = if (calculatedField != null) calculatedField else Set.empty[Vector3i]
-
-	/**
-	 * Calculates the force field
-	 * @param callBack - Optional callback
-	 */
-	protected def calculateField(callBack: () => Unit = null) {
-		if (Game.instance.networkManager.isServer && !isCalculating) {
-			if (getShapeItem != null) {
-				//Clear mode cache
-				if (getShapeItem.isInstanceOf[CacheHandler]) {
-					getShapeItem.asInstanceOf[CacheHandler].clearCache()
-				}
-
-				isCalculating = true
-
-				Future {
-					generateField
-				}.onComplete {
-					case Success(field) =>
-						calculatedField = field.toSet
-						isCalculating = false
-
-						if (callBack != null) {
-							callBack.apply()
-						}
-					case Failure(t) =>
-						//println(getClass.getName + ": An error has occurred upon field calculation: " + t.getMessage)
-						isCalculating = false
-				}
-			}
-		}
-	}
-
-	protected def generateField = getExteriorPoints
-
-	/**
-	 * Gets the exterior points of the field based on the matrix.
-	 */
-	protected def getExteriorPoints: JSet[Vector3i] = {
-		val structure = getStructure
-
-		getModules().foreach(_.onCalculateExterior(this, structure))
-
-		val field = {
-			if (getModuleCount(Content.moduleInvert) > 0) {
-				structure.getInteriorStructure
-			}
-			else {
-				structure.getExteriorStructure
-			}
-		}
-
-		return field
-	}
-
 	def getStructure: Structure = {
 		val structure = getShapeItem.getStructure
 		structure.setBlockFactory(Optional.of(Content.forceField))
@@ -148,6 +80,19 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 		structure.setScale(getScale.toDouble)
 		structure.setRotation(getRotation)
 		return structure
+	}
+
+	/**
+	 * @return Gets the item that provides a shape
+	 */
+	def getShapeItem: Item with StructureProvider = {
+		val optional = inventory.get(modeSlotID)
+		if (optional.isPresent) {
+			if (optional.get().isInstanceOf[Item with StructureProvider]) {
+				return optional.asInstanceOf[Item with StructureProvider]
+			}
+		}
+		return null
 	}
 
 	def getScale = (getPositiveScale + getNegativeScale) / 2
@@ -262,12 +207,6 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 			return horizontalRotation * 2
 		})
 
-	def getRotationPitch: Int =
-		getOrSetCache("getRotationPitch", () => {
-			val verticalRotation = getModuleCount(Content.moduleRotate, getDirectionSlots(Direction.UP): _*) - getModuleCount(Content.moduleRotate, getDirectionSlots(Direction.DOWN): _*)
-			return verticalRotation * 2
-		})
-
 	override def getDirectionSlots(direction: Direction): Array[Int] =
 		direction match {
 			case Direction.UP =>
@@ -292,4 +231,66 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 	 * @return The number of all item modules in the slots.
 	 */
 	override def getModuleCount(compareModule: ItemFactory, slots: Int*): Int = super[BlockModuleHandler].getModuleCount(compareModule, slots: _*)
+
+	def getRotationPitch: Int =
+		getOrSetCache("getRotationPitch", () => {
+			val verticalRotation = getModuleCount(Content.moduleRotate, getDirectionSlots(Direction.UP): _*) - getModuleCount(Content.moduleRotate, getDirectionSlots(Direction.DOWN): _*)
+			return verticalRotation * 2
+		})
+
+	def getCalculatedField: JSet[Vector3i] = if (calculatedField != null) calculatedField else Set.empty[Vector3i]
+
+	/**
+	 * Calculates the force field
+	 * @param callBack - Optional callback
+	 */
+	protected def calculateField(callBack: () => Unit = null) {
+		if (Game.instance.networkManager.isServer && !isCalculating) {
+			if (getShapeItem != null) {
+				//Clear mode cache
+				if (getShapeItem.isInstanceOf[CacheHandler]) {
+					getShapeItem.asInstanceOf[CacheHandler].clearCache()
+				}
+
+				isCalculating = true
+
+				Future {
+					generateField
+				}.onComplete {
+					case Success(field) =>
+						calculatedField = field.toSet
+						isCalculating = false
+
+						if (callBack != null) {
+							callBack.apply()
+						}
+					case Failure(t) =>
+						//println(getClass.getName + ": An error has occurred upon field calculation: " + t.getMessage)
+						isCalculating = false
+				}
+			}
+		}
+	}
+
+	protected def generateField = getExteriorPoints
+
+	/**
+	 * Gets the exterior points of the field based on the matrix.
+	 */
+	protected def getExteriorPoints: JSet[Vector3i] = {
+		val structure = getStructure
+
+		getModules().foreach(_.onCalculateExterior(this, structure))
+
+		val field = {
+			if (getModuleCount(Content.moduleInvert) > 0) {
+				structure.getInteriorStructure
+			}
+			else {
+				structure.getExteriorStructure
+			}
+		}
+
+		return field
+	}
 }
