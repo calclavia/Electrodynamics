@@ -8,9 +8,10 @@ import com.calclavia.graph.api.energy.NodeRedstone
 import com.resonant.lib.wrapper.WrapFunctions._
 import com.resonant.wrapper.core.Placeholder
 import nova.core.block.Block.RightClickEvent
-import nova.core.block.component.{BlockCollider, Oriented, StaticBlockRenderer}
+import nova.core.block.component.{BlockCollider, StaticBlockRenderer}
 import nova.core.block.{BlockDefault, Stateful}
 import nova.core.component.renderer.ItemRenderer
+import nova.core.component.transform.Orientation
 import nova.core.game.Game
 import nova.core.gui.KeyManager.Key
 import nova.core.network.NetworkTarget.Side
@@ -71,7 +72,7 @@ abstract class BlockMachine extends BlockDefault with PacketHandler with IActiva
 				active = packet.readBoolean()
 
 				if (prevActive != this.active)
-					world.markStaticRender(position())
+					world.markStaticRender(transform.position)
 			}
 		}
 	}
@@ -89,7 +90,7 @@ abstract class BlockMachine extends BlockDefault with PacketHandler with IActiva
 	def setActive(flag: Boolean) {
 		active = flag
 		Game.instance.networkManager.sync(PacketBlock.description, this)
-		world().markStaticRender(position())
+		world().markStaticRender(transform.position)
 	}
 
 	def onRightClick(evt: RightClickEvent) {
@@ -99,7 +100,7 @@ abstract class BlockMachine extends BlockDefault with PacketHandler with IActiva
 				if (Side.get().isServer) {
 					//TODO: Fix this
 					// InventoryUtility.dropBlockAsItem(world, position)
-					world.setBlock(position, null)
+					world.setBlock(transform.position, null)
 					evt.result = true
 					return
 				}
@@ -108,7 +109,7 @@ abstract class BlockMachine extends BlockDefault with PacketHandler with IActiva
 			}
 		}
 
-		val opOriented = get(classOf[Oriented])
+		val opOriented = get(classOf[Orientation])
 
 		if (opOriented.isPresent) {
 			evt.result = opOriented.get().rotate(evt.side.ordinal(), evt.position)

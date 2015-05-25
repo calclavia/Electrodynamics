@@ -12,7 +12,8 @@ import com.calclavia.edx.mffs.security.{MFFSPermissions, PermissionHandler}
 import com.calclavia.edx.mffs.util.MFFSUtility
 import com.calclavia.edx.mffs.{ModularForceFieldSystem, Settings}
 import com.resonant.core.prefab.block.InventorySimpleProvider
-import nova.core.block.component.{BlockCollider, Oriented, StaticBlockRenderer}
+import nova.core.block.component.{BlockCollider, StaticBlockRenderer}
+import nova.core.component.transform.Orientation
 import nova.core.entity.Entity
 import nova.core.entity.component.RigidBody
 import nova.core.game.Game
@@ -62,7 +63,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 		override def renderStatic(model: Model) {
 			model.matrix = new MatrixStack()
 				.loadMatrix(model.matrix)
-				.rotate(get(classOf[Oriented]).get().direction.rotation)
+				.rotate(get(classOf[Orientation]).get().orientation.rotation)
 				.getMatrix
 
 			model.children.add(Models.mobilizer.getModel)
@@ -70,7 +71,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 		}
 	})
 
-	get(classOf[Oriented]).get.setMask(63)
+	get(classOf[Orientation]).get.setMask(63)
 	get(classOf[BlockCollider]).get.setCube(false)
 
 	def markFailMove() = failedMove = true
@@ -130,7 +131,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 				Game.instance.networkManager.sync(PacketBlock.field, this)
 
 				if (!isTeleport && doAnchor) {
-					anchor += get(classOf[Oriented]).get().direction.toVector
+					anchor += get(classOf[Orientation]).get().orientation.toVector
 				}
 			}))
 
@@ -374,7 +375,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 			}
 		}
 
-		return (world(), getAbsoluteAnchor + get(classOf[Oriented]).get().direction.toVector)
+		return (world(), getAbsoluteAnchor + get(classOf[Orientation]).get().orientation.toVector)
 	}
 
 	private def isTeleport: Boolean = {
@@ -397,7 +398,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 		}
 	}
 
-	def getAbsoluteAnchor: Vector3i = position + anchor
+	def getAbsoluteAnchor: Vector3i = transform.position + anchor
 
 	def isVisibleToPlayer(position: Vector3i): Boolean = {
 		return Direction.DIRECTIONS.count(dir => world.getBlock(position + dir.toVector).get.get(classOf[BlockCollider]).get.isOpaqueCube.get()) < 6
@@ -454,7 +455,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 								//Render teleport start
 								val hologramA = world.addClientEntity(Content.fxHologramProgress).asInstanceOf[FXHologramProgress]
 								hologramA.setColor(color)
-								hologramA.setPosition(pos.toDouble + 0.5)
+								hologramA.transform.setPosition(pos.toDouble + 0.5)
 								//TODO: Not clean
 								/*
 								if (targetPosition.world != null && targetPosition.world.getChunkProvider.chunkExists(targetPosition.xi, targetPosition.zi)) {
@@ -472,7 +473,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 							 */
 							val vecSize = packet.readInt()
 							val hologramRenderPoints = packet.readSet[Vector3i]()
-							hologramRenderPoints.foreach(p => world.addClientEntity(new FXHologramProgress(FieldColor.red, 30)).setPosition(p.toDouble + 0.5))
+							hologramRenderPoints.foreach(p => world.addClientEntity(new FXHologramProgress(FieldColor.red, 30)).transform.setPosition(p.toDouble + 0.5))
 						}
 					}
 				}
@@ -517,13 +518,13 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 
 		if (bounds != null) {
 			val entities = world.getEntities(bounds)
-			entities.foreach(entity => moveEntity(entity, targetLocation._1, targetLocation._2.toDouble + 0.5 + entity.position() - (getAbsoluteAnchor.toDouble + 0.5)))
+			entities.foreach(entity => moveEntity(entity, targetLocation._1, targetLocation._2.toDouble + 0.5 + entity.transform.position() - (getAbsoluteAnchor.toDouble + 0.5)))
 		}
 	}
 
 	def getSearchBounds: Cuboid = {
-		val positiveScale = position + getTranslation + getPositiveScale + 1
-		val negativeScale = position + getTranslation - getNegativeScale
+		val positiveScale = transform.position + getTranslation + getPositiveScale + 1
+		val negativeScale = transform.position + getTranslation - getNegativeScale
 		val minScale = positiveScale.min(negativeScale)
 		val maxScale = positiveScale.max(negativeScale)
 		return new Cuboid(minScale, maxScale)
@@ -533,8 +534,8 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 
 	protected def moveEntity(entity: Entity, targetWorld: World, targetPos: Vector3d) {
 		if (entity != null && targetPos != null) {
-			if (!entity.world().sameType(targetWorld)) {
-				entity.setWorld(targetWorld)
+			if (!entity.transform.world().sameType(targetWorld)) {
+				entity.transform.setWorld(targetWorld)
 				//entity.travelToDimension(targetPos.world.provider.dimensionId)
 			}
 

@@ -42,7 +42,7 @@ abstract class BlockFortron extends BlockFrequency with SidedTankProvider with F
 				GraphFrequency.instance.get(getFrequency)
 					.collect { case f: FortronFrequency with Block => f }
 					.filter(_.world() == world())
-					.filter(_.position().distance(position()) < 100)
+					.filter(_.transform.position.distance(transform.position) < 100)
 					.map(_.asInstanceOf[FortronFrequency]),
 				TransferMode.drain,
 				Integer.MAX_VALUE

@@ -7,8 +7,9 @@ import com.calclavia.edx.mffs.base.BlockFrequency
 import com.calclavia.edx.mffs.content.{Models, Textures}
 import com.resonant.core.access.Permission
 import com.resonant.core.prefab.block.Updater
-import nova.core.block.component.{BlockCollider, Oriented, StaticBlockRenderer}
+import nova.core.block.component.{BlockCollider, StaticBlockRenderer}
 import nova.core.component.renderer.DynamicRenderer
+import nova.core.component.transform.Orientation
 import nova.core.entity.Entity
 import nova.core.game.Game
 import nova.core.inventory.InventorySimple
@@ -35,11 +36,11 @@ class BlockBiometric extends BlockFrequency with Updater with PermissionHandler 
 	 */
 	var lastFlicker = 0L
 
-	add(new Oriented(this))
+	add(new Orientation(this))
 	add(new BlockCollider(this).setCube(false))
 	add(new StaticBlockRenderer(this) {
 		override def renderStatic(model: Model) {
-			model.rotate(get(classOf[Oriented]).get().direction.rotation)
+			model.rotate(get(classOf[Orientation]).get().orientation.rotation)
 			val modelBiometric: Model = Models.biometric.getModel
 			modelBiometric.children.removeAll(modelBiometric.children.filter(_.name.equals("holoScreen")))
 			model.children.add(modelBiometric)
@@ -48,7 +49,7 @@ class BlockBiometric extends BlockFrequency with Updater with PermissionHandler 
 	})
 	add(new DynamicRenderer(this) {
 		override def renderDynamic(model: Model) {
-			model.rotate(get(classOf[Oriented]).get().direction.rotation)
+			model.rotate(get(classOf[Orientation]).get().orientation.rotation)
 			/**
 			 * Simulate flicker and, hovering
 			 */

@@ -61,7 +61,7 @@ class BlockForceField extends Block with PacketHandler with ForceField with Stor
 				if (projector.getModules().forall(stack => stack.asInstanceOf[Module].onFieldCollide(BlockForceField.this, entity))) {
 					val biometricIdentifier = projector.getBiometricIdentifier
 
-					if ((position().toDouble + 0.5).distance(entity.position()) < 0.5) {
+					if ((transform.position.toDouble + 0.5).distance(entity.transform.position) < 0.5) {
 						if (Game.instance.networkManager.isServer && entity.isInstanceOf[Damageable]) {
 							val entityLiving = entity.asInstanceOf[Damageable]
 
@@ -114,7 +114,7 @@ class BlockForceField extends Block with PacketHandler with ForceField with Stor
 			    }
 		    }
 
-		    val block = world.getBlock(position + side.toVector)
+		    val block = world.getBlock(transform.position + side.toVector)
 		    if (block.isPresent) sameType(block.get()) else true
 	    }
 	    )
@@ -138,7 +138,7 @@ class BlockForceField extends Block with PacketHandler with ForceField with Stor
 		}
 
 		if (Game.instance.networkManager.isServer) {
-			world.removeBlock(position)
+			world.removeBlock(transform.position)
 		}
 	}
 
@@ -152,7 +152,7 @@ class BlockForceField extends Block with PacketHandler with ForceField with Stor
 		}
 
 		if (Game.instance.networkManager.isServer) {
-			world.removeBlock(position)
+			world.removeBlock(transform.position)
 		}
 
 		return null
@@ -164,7 +164,7 @@ class BlockForceField extends Block with PacketHandler with ForceField with Stor
 			val projBlock = world.getBlock(projector)
 			if (projBlock.isPresent) {
 				val proj = projBlock.get().asInstanceOf[BlockProjector]
-				if (Game.instance.networkManager.isClient || (proj.getCalculatedField != null && proj.getCalculatedField.contains(position))) {
+				if (Game.instance.networkManager.isClient || (proj.getCalculatedField != null && proj.getCalculatedField.contains(transform.position))) {
 					return proj
 				}
 			}
@@ -183,7 +183,7 @@ class BlockForceField extends Block with PacketHandler with ForceField with Stor
 
 	def refreshCamoBlock() {
 		if (getProjectorSafe != null) {
-			camoBlock = MFFSUtility.getCamoBlock(getProjector, position).getDummy
+			camoBlock = MFFSUtility.getCamoBlock(getProjector, transform.position).getDummy
 		}
 	}
 }

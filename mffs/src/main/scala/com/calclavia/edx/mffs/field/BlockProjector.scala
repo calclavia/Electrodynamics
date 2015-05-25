@@ -11,9 +11,11 @@ import com.calclavia.edx.mffs.field.shape.ItemShapeCustom
 import com.calclavia.edx.mffs.particle.{FXFortronBeam, FXHologramProgress, FieldColor}
 import com.calclavia.edx.mffs.security.PermissionHandler
 import com.calclavia.edx.mffs.util.CacheHandler
+import com.resonant.lib.wrapper.WrapFunctions._
 import nova.core.block.Block
-import nova.core.block.component.{BlockCollider, LightEmitter, Oriented}
+import nova.core.block.component.{BlockCollider, LightEmitter}
 import nova.core.component.renderer.{DynamicRenderer, StaticRenderer}
+import nova.core.component.transform.Orientation
 import nova.core.entity.Entity
 import nova.core.game.Game
 import nova.core.inventory.InventorySimple
@@ -28,7 +30,6 @@ import nova.core.util.transform.shape.Cuboid
 import nova.core.util.transform.vector.{Vector3d, Vector3i}
 
 import scala.collection.convert.wrapAll._
-
 class BlockProjector extends BlockFieldMatrix with Projector with PermissionHandler {
 
 	@Stored
@@ -53,15 +54,14 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 
 	add(new BlockCollider(this) {
 		override def getBoundingBox: Cuboid = new Cuboid(0, 0, 0, 1, 0.8, 1)
-
-		override def isCube: Boolean = false
 	})
+		.setCube(false)
 
-	add(new Oriented(this))
+	add(new Orientation(this))
 
 	add(new StaticRenderer(this) {
 		override def renderStatic(model: Model) {
-			model.rotate(get(classOf[Oriented]).get().direction.rotation)
+			model.rotate(get(classOf[Orientation]).get().orientation.rotation)
 			model.children.add(Models.projector.getModel)
 			model.bindAll(if (isActive) Textures.projectorOn else Textures.projectorOff)
 		}
@@ -77,8 +77,8 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 				//TODO: Lighting, RenderHelper.disableStandardItemLighting
 
 				val player = Game.instance.clientManager.getPlayer.asInstanceOf[Entity with Player]
-				val xDifference: Double = player.position.x - (x + 0.5)
-				val zDifference: Double = player.position.z - (y + 0.5)
+				val xDifference: Double = player.transform.position.x - (x + 0.5)
+				val zDifference: Double = player.transform.position.z - (y + 0.5)
 				val rot = Math.atan2(zDifference, xDifference)
 				lightBeam.matrix = new MatrixStack().rotate(Vector3d.yAxis, -rot + Math.toRadians(27)).getMatrix
 
@@ -141,9 +141,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 		}
 	})
 
-	add(new LightEmitter() {
-		override def getEmittedLightLevel: Float = if (getShapeItem() != null) 1 else 0
-	})
+	add(new LightEmitter().setEmittedLevel(supplier(() => if (getShapeItem() != null) 1f else 0f)))
 
 	/*
 	override def isItemValidForSlot(slotID: Int, Item: Item): Boolean = {
@@ -192,9 +190,9 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 			nbt.setTag("blockList", nbtList)
 			ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(this, PacketBlock.field.id: Integer, nbt))*/
 			case PacketBlock.effect =>
-				packet <<< position
+				packet <<< transform.position
 			case PacketBlock.effect2 =>
-				packet <<< position
+				packet <<< transform.position
 			case _ =>
 		}
 	}
@@ -207,15 +205,15 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 				//Spawns a holographic beam
 				val packetType = packet.readInt
 				val target = new Vector3d(packet.readInt, packet.readInt, packet.readInt) + 0.5
-				val pos = position.toDouble + 0.5
+				val pos = transform.position.toDouble + 0.5
 
 				if (packetType == 1) {
-					world.addClientEntity(Content.fxFortronBeam).setPosition(pos).asInstanceOf[FXFortronBeam].setTarget(target)
-					world.addClientEntity(Content.fxHologramProgress).setPosition(pos)
+					world.addClientEntity(Content.fxFortronBeam).transform.setPosition(pos).asInstanceOf[FXFortronBeam].setTarget(target)
+					world.addClientEntity(Content.fxHologramProgress).transform.setPosition(pos)
 				}
 				else if (packetType == 2) {
-					world.addClientEntity(Content.fxFortronBeam).setPosition(pos).asInstanceOf[FXFortronBeam].setTarget(target).setColor(FieldColor.red)
-					world.addClientEntity(Content.fxHologramProgress).setPosition(pos).asInstanceOf[FXHologramProgress].setColor(FieldColor.red)
+					world.addClientEntity(Content.fxFortronBeam).transform.setPosition(pos).asInstanceOf[FXFortronBeam].setTarget(target).setColor(FieldColor.red)
+					world.addClientEntity(Content.fxHologramProgress).transform.setPosition(pos).asInstanceOf[FXHologramProgress].setColor(FieldColor.red)
 				}
 			}
 			else if (packet.getID == PacketBlock.field) {
@@ -285,7 +283,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 					//Creates a collection of positions that will be evaluated
 					val evaluateField = potentialField
 						.view.par
-						.filter(!_.equals(position))
+						.filter(!_.equals(transform.position))
 						.filter(v => !world.getBlock(v).isPresent || canReplaceBlock(v, world.getBlock(v).get()))
 						.filter(v => world.getBlock(v).isPresent && world.getBlock(v).get().sameType(Content.forceField))
 						.take(constructionSpeed)
@@ -349,11 +347,6 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 		}
 	}
 
-	override def unload() {
-		destroyField()
-		super.unload()
-	}
-
 	def destroyField() {
 		if (Game.instance.networkManager.isServer && calculatedField != null && !isCalculating) {
 			getModules(getModuleSlots: _*).forall(!_.onDestroyField(this, calculatedField))
@@ -368,6 +361,11 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 			isCompleteConstructing = false
 			fieldRequireTicks = false
 		}
+	}
+
+	override def unload() {
+		destroyField()
+		super.unload()
 	}
 
 	override def getForceFields: JSet[Vector3i] = forceFields

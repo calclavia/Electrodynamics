@@ -41,10 +41,10 @@ abstract class ItemModule extends Item with TooltipItem with Module with Categor
 
 	def getEntitiesInField(projector: Projector): Set[Entity] = {
 		val blockProjector = projector.asInstanceOf[BlockProjector]
-		val bound = new Cuboid(-projector.getNegativeScale, projector.getPositiveScale + Vector3i.one) + blockProjector.position() + projector.getTranslation
+		val bound = new Cuboid(-projector.getNegativeScale, projector.getPositiveScale + Vector3i.one) + blockProjector.transform.position + projector.getTranslation
 
 		return blockProjector.world.getEntities(bound)
-			.filter(entity => projector.isInField(entity.position()))
+			.filter(entity => projector.isInField(entity.transform.position))
 			.toSet
 	}
 }
