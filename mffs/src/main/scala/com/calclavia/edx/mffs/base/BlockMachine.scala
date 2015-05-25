@@ -8,8 +8,7 @@ import com.calclavia.graph.api.energy.NodeRedstone
 import com.resonant.core.prefab.block.Rotatable
 import com.resonant.lib.wrapper.WrapFunctions._
 import com.resonant.wrapper.core.Placeholder
-import nova.core.block.Block
-import nova.core.block.component.Stateful
+import nova.core.block.{Block, Stateful}
 import nova.core.component.renderer.ItemRenderer
 import nova.core.entity.Entity
 import nova.core.game.Game
