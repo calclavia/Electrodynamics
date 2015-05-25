@@ -42,7 +42,7 @@ class FXHologram(color: Color, maxAge: Double) extends FXMFFS {
 	 */
 	def setTarget(targetPosition: Vector3d): FXHologram = {
 		this.targetPosition = targetPosition
-		get(classOf[RigidBody]).get().setVelocity((targetPosition - position) / maxAge)
+		get(classOf[RigidBody]).setVelocity((targetPosition - position) / maxAge)
 		return this
 	}
 

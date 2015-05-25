@@ -40,7 +40,7 @@ class BlockBiometric extends BlockFrequency with Updater with PermissionHandler 
 	add(new BlockCollider(this).setCube(false))
 	add(new StaticBlockRenderer(this) {
 		override def renderStatic(model: Model) {
-			model.rotate(get(classOf[Orientation]).get().orientation.rotation)
+			model.rotate(get(classOf[Orientation]).orientation.rotation)
 			val modelBiometric: Model = Models.biometric.getModel
 			modelBiometric.children.removeAll(modelBiometric.children.filter(_.name.equals("holoScreen")))
 			model.children.add(modelBiometric)
@@ -49,7 +49,7 @@ class BlockBiometric extends BlockFrequency with Updater with PermissionHandler 
 	})
 	add(new DynamicRenderer(this) {
 		override def renderDynamic(model: Model) {
-			model.rotate(get(classOf[Orientation]).get().orientation.rotation)
+			model.rotate(get(classOf[Orientation]).orientation.rotation)
 			/**
 			 * Simulate flicker and, hovering
 			 */

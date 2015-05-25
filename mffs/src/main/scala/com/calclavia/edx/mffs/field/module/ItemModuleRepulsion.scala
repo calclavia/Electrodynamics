@@ -24,13 +24,13 @@ class ItemModuleRepulsion extends ItemModule {
 
 		getEntitiesInField(projector).par
 			.collect {
-			case entity if entity.get(classOf[Player]).isPresent && projector.hasPermission(entity.get(classOf[Player]).get().getPlayerID, MFFSPermissions.forceFieldWarp) => entity
+			case entity if entity.getOp(classOf[Player]).isPresent && projector.hasPermission(entity.get(classOf[Player]).getPlayerID, MFFSPermissions.forceFieldWarp) => entity
 			case entity: Entity => entity
 		}
 			.foreach(
 		    entity => {
 			    val repelDirection = entity.transform.position - (entity.transform.position.toInt.toDouble + 0.5).normalize
-			    val rigidBody = entity.get(classOf[RigidBody]).get
+			    val rigidBody = entity.get(classOf[RigidBody])
 			    val velocity = rigidBody.velocity
 			    val force = repelDirection * repellForce.max(velocity.abs)
 			    rigidBody.addForce(force)

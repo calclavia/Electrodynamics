@@ -43,9 +43,9 @@ class BlockForceField extends Block with PacketHandler with ForceField with Stor
 		override def getCollidingBoxes(intersect: Cuboid, entity: Optional[Entity]): util.Set[Cuboid] = {
 			val projector = getProjector()
 
-			if (projector != null && entity.isPresent && entity.get.get(classOf[Player]).isPresent) {
+			if (projector != null && entity.isPresent && entity.get.getOp(classOf[Player]).isPresent) {
 				val biometricIdentifier = projector.getBiometricIdentifier
-				val entityPlayer = entity.get.get(classOf[Player]).get()
+				val entityPlayer = entity.get.get(classOf[Player])
 
 				if (biometricIdentifier != null) {
 					if (biometricIdentifier.hasPermission(entityPlayer.getPlayerID, MFFSPermissions.forceFieldWarp)) {
@@ -68,8 +68,8 @@ class BlockForceField extends Block with PacketHandler with ForceField with Stor
 						if (Side.get().isServer && entity.has(classOf[Damageable])) {
 							val entityLiving = entity.get(classOf[Damageable])
 
-							if (entity.get(classOf[Player]).isPresent) {
-								val player = entity.get(classOf[Player]).get
+							if (entity.getOp(classOf[Player]).isPresent) {
+								val player = entity.get(classOf[Player])
 
 								if (biometricIdentifier != null) {
 									if (biometricIdentifier.hasPermission(player.getID, MFFSPermissions.forceFieldWarp)) {
@@ -94,7 +94,7 @@ class BlockForceField extends Block with PacketHandler with ForceField with Stor
 
 	add(new StaticBlockRenderer(this) {
 		override def renderStatic(model: Model) {
-			val opRenderer = camoBlock.get(classOf[StaticRenderer])
+			val opRenderer = camoBlock.getOp(classOf[StaticRenderer])
 
 			if (opRenderer.isPresent)
 				opRenderer.get.renderStatic(model)
@@ -106,7 +106,7 @@ class BlockForceField extends Block with PacketHandler with ForceField with Stor
 	    func((side: Direction) => {
 		    if (camoBlock != null) {
 			    try {
-				    val opRenderer = camoBlock.get(classOf[StaticBlockRenderer])
+				    val opRenderer = camoBlock.getOp(classOf[StaticBlockRenderer])
 				    if (opRenderer.isPresent)
 					    opRenderer.get.renderSide(side)
 			    }

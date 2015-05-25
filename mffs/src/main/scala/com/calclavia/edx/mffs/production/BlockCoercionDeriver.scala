@@ -89,8 +89,8 @@ class BlockCoercionDeriver extends BlockModuleHandler {
 	add(new ItemRenderer(this) {
 		override def renderItem(model: Model) {
 			model.translate(0, 0.1, 0)
-			get(classOf[StaticRenderer]).get.renderStatic(model)
-			get(classOf[DynamicRenderer]).get.renderDynamic(model)
+			get(classOf[StaticRenderer]).renderStatic(model)
+			get(classOf[DynamicRenderer]).renderDynamic(model)
 		}
 	})
 

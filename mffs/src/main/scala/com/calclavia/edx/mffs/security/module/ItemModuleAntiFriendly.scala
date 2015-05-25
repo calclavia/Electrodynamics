@@ -14,8 +14,8 @@ class ItemModuleAntiFriendly extends ItemModuleDefense {
 		val entities = getEntitiesInField(projector)
 
 		entities.view
-			.filter(entity => entity.get(classOf[Damageable]).isPresent && /*!(entity.isInstanceOf[IMob] && !entity.isInstanceOf[INpc]) && */ !entity.get(classOf[Player]).isPresent)
-			.map(_.get(classOf[Damageable]).get())
+			.filter(entity => entity.has(classOf[Damageable]) && /*!(entity.isInstanceOf[IMob] && !entity.isInstanceOf[INpc]) && */ !entity.has(classOf[Player]))
+			.map(_.get(classOf[Damageable]))
 			.foreach(entity => {
 			entity.damage(Double.PositiveInfinity, DamageType.generic)
 		})

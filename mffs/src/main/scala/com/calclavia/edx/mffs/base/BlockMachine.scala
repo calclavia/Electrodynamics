@@ -50,7 +50,7 @@ abstract class BlockMachine extends BlockDefault with PacketHandler with IActiva
 	add(new StaticBlockRenderer(this))
 		.setTexture(func((side: Direction) => Optional.of(Textures.machine)))
 
-	get(classOf[BlockCollider]).get
+	get(classOf[BlockCollider])
 		.setCube(false)
 		.setOpaqueCube(false)
 
@@ -109,7 +109,7 @@ abstract class BlockMachine extends BlockDefault with PacketHandler with IActiva
 			}
 		}
 
-		val opOriented = get(classOf[Orientation])
+		val opOriented = getOp(classOf[Orientation])
 
 		if (opOriented.isPresent) {
 			evt.result = opOriented.get().rotate(evt.side.ordinal(), evt.position)

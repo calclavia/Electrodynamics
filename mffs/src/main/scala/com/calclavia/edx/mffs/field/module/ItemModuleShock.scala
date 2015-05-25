@@ -14,13 +14,13 @@ class ItemModuleShock extends ItemModule {
 	override def getID: String = "moduleShock"
 
 	override def onFieldCollide(block: Block, entity: Entity): Boolean = {
-		if (entity.get(classOf[Damageable]).isPresent && entity.get(classOf[Player]).isPresent) {
-			val player = entity.get(classOf[Player]).get()
+		if (entity.has(classOf[Damageable]) && entity.has(classOf[Player])) {
+			val player = entity.get(classOf[Player])
 			if (block.asInstanceOf[BlockForceField].getProjector.hasPermission(player.getUsername, MFFSPermissions.forceFieldWarp)) {
 				return true
 			}
 
-			entity.get(classOf[Damageable]).get().damage(count(), DamageType.generic)
+			entity.get(classOf[Damageable]).damage(count(), DamageType.generic)
 		}
 
 		return true

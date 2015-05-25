@@ -24,7 +24,7 @@ class ItemModuleAntiPersonnel extends ItemModuleDefense {
 			.filter(p => !projector.hasPermission(p.getID, MFFSPermissions.defense))
 			.foreach(
 		    entity => {
-			    val player = entity.get(classOf[Player]).get()
+			    val player = entity.get(classOf[Player])
 			    (0 until player.getInventory.size())
 				    .filter(player.getInventory.get(_) != null)
 				    .foreach(
@@ -37,7 +37,7 @@ class ItemModuleAntiPersonnel extends ItemModuleDefense {
 			        }
 				    )
 
-			    entity.get(classOf[Damageable]).get().damage(1000)
+			    entity.get(classOf[Damageable]).damage(1000)
 			    Game.instance.networkManager.sendChat(player, Game.instance.languageManager.translate("message.moduleAntiPersonnel.death"))
 		    }
 			)

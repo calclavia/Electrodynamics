@@ -1,7 +1,5 @@
 package com.calclavia.edx.mffs.production
 
-import java.util.{HashSet => JHashSet, Set => JSet}
-
 import com.calclavia.edx.mffs.GraphFrequency
 import com.calclavia.edx.mffs.api.card.CoordLink
 import com.calclavia.edx.mffs.api.fortron.FortronFrequency
@@ -69,7 +67,7 @@ class BlockFortronCapacitor extends BlockModuleHandler {
 			 * Handle fortron item inputs
 			 */
 			getInputStacks
-				.map(_.get(classOf[FluidHandler]))
+				.map(_.getOp(classOf[FluidHandler]))
 				.collect { case op if op.isPresent => op.get }
 				.flatMap(_.tanks)
 				.foreach(
@@ -87,7 +85,7 @@ class BlockFortronCapacitor extends BlockModuleHandler {
 			if (fortronTank.getFluidAmount > 0) {
 
 				getOutputStacks
-					.map(_.get(classOf[FluidHandler]))
+					.map(_.getOp(classOf[FluidHandler]))
 					.collect { case op if op.isPresent => op.get }
 					.flatMap(_.tanks)
 					.foreach(
@@ -119,6 +117,10 @@ class BlockFortronCapacitor extends BlockModuleHandler {
 	}
 
 	def getTransmissionRate: Int = 500 + 100 * getModuleCount(Content.moduleSpeed)
+
+	override def getAmplifier: Float = 0f
+
+	def getDeviceCount = getFrequencyDevices.size + getInputDevices.size + getOutputDevices.size
 
 	def getFrequencyDevices: Set[FortronFrequency] =
 		GraphFrequency.instance.get(getFrequency)
@@ -154,10 +156,6 @@ class BlockFortronCapacitor extends BlockModuleHandler {
 			.map(inventory.get)
 			.collect { case op if op.isPresent => op.get }
 			.toSet
-
-	override def getAmplifier: Float = 0f
-
-	def getDeviceCount = getFrequencyDevices.size + getInputDevices.size + getOutputDevices.size
 
 	def getTransferMode: TransferMode = transferMode
 

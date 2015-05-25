@@ -21,7 +21,7 @@ class ItemModuleConfiscate extends ItemModuleDefense {
 
 		entities.view
 			.filter(_.has(classOf[Player]))
-			.map(_.get(classOf[Player]).get())
+			.map(_.get(classOf[Player]))
 			.filter(player => !proj.hasPermission(player.getPlayerID, MFFSPermissions.bypassConfiscation))
 			.foreach(
 		    player => {

@@ -61,7 +61,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 
 	add(new StaticRenderer(this) {
 		override def renderStatic(model: Model) {
-			model.rotate(get(classOf[Orientation]).get().orientation.rotation)
+			model.rotate(get(classOf[Orientation]).orientation.rotation)
 			model.children.add(Models.projector.getModel)
 			model.bindAll(if (isActive) Textures.projectorOn else Textures.projectorOff)
 		}
@@ -158,27 +158,6 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 		calculateField(postCalculation)
 	}
 
-	def postCalculation() = if (clientSideSimulationRequired) Game.instance.networkManager.sync(PacketBlock.field, this)
-
-	private def clientSideSimulationRequired: Boolean = {
-		return getModuleCount(Content.moduleRepulsion) > 0
-	}
-
-	/**
-	 * Initiate a field calculation
-	 */
-	protected override def calculateField(callBack: () => Unit = null) {
-		if (Game.instance.networkManager.isServer && !isCalculating) {
-			if (getShapeItem != null) {
-				forceFields = Set.empty
-			}
-
-			super.calculateField(callBack)
-			isCompleteConstructing = false
-			fieldRequireTicks = getModules().exists(_.requireTicks)
-		}
-	}
-
 	override def write(packet: Packet) {
 		super.write(packet)
 		packet.getID match {
@@ -256,6 +235,27 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 		}
 		else if (Game.instance.networkManager.isServer) {
 			destroyField()
+		}
+	}
+
+	def postCalculation() = if (clientSideSimulationRequired) Game.instance.networkManager.sync(PacketBlock.field, this)
+
+	private def clientSideSimulationRequired: Boolean = {
+		return getModuleCount(Content.moduleRepulsion) > 0
+	}
+
+	/**
+	 * Initiate a field calculation
+	 */
+	protected override def calculateField(callBack: () => Unit = null) {
+		if (Game.instance.networkManager.isServer && !isCalculating) {
+			if (getShapeItem != null) {
+				forceFields = Set.empty
+			}
+
+			super.calculateField(callBack)
+			isCompleteConstructing = false
+			fieldRequireTicks = getModules().exists(_.requireTicks)
 		}
 	}
 
@@ -339,14 +339,6 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 
 	def getProjectionSpeed: Int = 28 + 28 * getModuleCount(Content.moduleSpeed, getModuleSlots: _*)
 
-	override def markDirty() {
-		super.markDirty()
-
-		if (world != null) {
-			destroyField()
-		}
-	}
-
 	def destroyField() {
 		if (Game.instance.networkManager.isServer && calculatedField != null && !isCalculating) {
 			getModules(getModuleSlots: _*).forall(!_.onDestroyField(this, calculatedField))
@@ -360,6 +352,14 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 			calculatedField = null
 			isCompleteConstructing = false
 			fieldRequireTicks = false
+		}
+	}
+
+	override def markDirty() {
+		super.markDirty()
+
+		if (world != null) {
+			destroyField()
 		}
 	}
 

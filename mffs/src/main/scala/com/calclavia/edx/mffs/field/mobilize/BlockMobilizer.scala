@@ -19,6 +19,7 @@ import nova.core.entity.component.RigidBody
 import nova.core.game.Game
 import nova.core.inventory.InventorySimple
 import nova.core.item.Item
+import nova.core.network.NetworkTarget.Side
 import nova.core.network.{Packet, Sync}
 import nova.core.render.model.Model
 import nova.core.retention.{Data, Storable, Stored}
@@ -63,7 +64,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 		override def renderStatic(model: Model) {
 			model.matrix = new MatrixStack()
 				.loadMatrix(model.matrix)
-				.rotate(get(classOf[Orientation]).get().orientation.rotation)
+				.rotate(get(classOf[Orientation]).orientation.rotation)
 				.getMatrix
 
 			model.children.add(Models.mobilizer.getModel)
@@ -71,8 +72,8 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 		}
 	})
 
-	get(classOf[Orientation]).get.setMask(63)
-	get(classOf[BlockCollider]).get.setCube(false)
+	get(classOf[Orientation]).setMask(63)
+	get(classOf[BlockCollider]).setCube(false)
 
 	def markFailMove() = failedMove = true
 
@@ -131,7 +132,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 				Game.instance.networkManager.sync(PacketBlock.field, this)
 
 				if (!isTeleport && doAnchor) {
-					anchor += get(classOf[Orientation]).get().orientation.toVector
+					anchor += get(classOf[Orientation]).orientation.toVector
 				}
 			}))
 
@@ -375,7 +376,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 			}
 		}
 
-		return (world(), getAbsoluteAnchor + get(classOf[Orientation]).get().orientation.toVector)
+		return (world(), getAbsoluteAnchor + get(classOf[Orientation]).orientation.toVector)
 	}
 
 	private def isTeleport: Boolean = {
@@ -400,14 +401,12 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 
 	def getAbsoluteAnchor: Vector3i = transform.position + anchor
 
-	def isVisibleToPlayer(position: Vector3i): Boolean = {
-		return Direction.DIRECTIONS.count(dir => world.getBlock(position + dir.toVector).get.get(classOf[BlockCollider]).get.isOpaqueCube.get()) < 6
-	}
+	def isVisibleToPlayer(position: Vector3i): Boolean = Direction.DIRECTIONS.count(dir => world.getBlock(position + dir.toVector).get.get(classOf[BlockCollider]).isOpaqueCube.get()) < 6
 
 	override def read(packet: Packet) {
 		super.read(packet)
 
-		if (Game.instance.networkManager.isClient) {
+		if (Side.get().isClient) {
 			packet.getID match {
 				case PacketBlock.effect => {
 					packet.readInt() match {
@@ -426,7 +425,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 							/**
 							 * Movement Rendering
 							 */
-							val direction = get(classOf[Orientation]).get().orientation
+							val direction = get(classOf[Orientation]).orientation
 
 							hologramRenderPoints.foreach(
 								pos =>
@@ -539,7 +538,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 				//entity.travelToDimension(targetPos.world.provider.dimensionId)
 			}
 
-			entity.get(classOf[RigidBody]).get().setVelocity(Vector3d.zero)
+			entity.get(classOf[RigidBody]).setVelocity(Vector3d.zero)
 		}
 	}
 
