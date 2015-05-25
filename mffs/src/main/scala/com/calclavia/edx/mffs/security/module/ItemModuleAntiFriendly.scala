@@ -3,9 +3,8 @@ package com.calclavia.edx.mffs.security.module
 import java.util
 
 import com.calclavia.edx.mffs.api.machine.Projector
-import nova.core.entity.component.Damageable
 import nova.core.entity.component.Damageable.DamageType
-import nova.core.player.Player
+import nova.core.entity.component.{Damageable, Player}
 import nova.core.util.transform.vector.Vector3i
 
 class ItemModuleAntiFriendly extends ItemModuleDefense {

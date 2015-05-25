@@ -6,8 +6,8 @@ import java.util.Optional
 import com.calclavia.edx.mffs.api.Frequency
 import com.google.common.hash.Hashing
 import nova.core.entity.Entity
+import nova.core.entity.component.Player
 import nova.core.game.Game
-import nova.core.player.Player
 import nova.core.retention.Stored
 import nova.core.util.transform.vector.Vector3i
 

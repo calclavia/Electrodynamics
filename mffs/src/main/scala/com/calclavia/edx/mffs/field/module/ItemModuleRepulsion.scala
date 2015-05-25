@@ -6,8 +6,7 @@ import com.calclavia.edx.mffs.api.machine.Projector
 import com.calclavia.edx.mffs.base.ItemModule
 import com.calclavia.edx.mffs.security.MFFSPermissions
 import nova.core.entity.Entity
-import nova.core.entity.component.RigidBody
-import nova.core.player.Player
+import nova.core.entity.component.{Player, RigidBody}
 import nova.core.util.transform.vector.{Vector3d, Vector3i}
 
 /**

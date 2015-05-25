@@ -5,8 +5,8 @@ import java.util.Optional
 
 import com.calclavia.edx.mffs.api.card.CoordLink
 import nova.core.entity.Entity
+import nova.core.entity.component.Player
 import nova.core.game.Game
-import nova.core.player.Player
 import nova.core.retention.{Storable, Stored}
 import nova.core.util.Direction
 import nova.core.util.collection.Tuple2

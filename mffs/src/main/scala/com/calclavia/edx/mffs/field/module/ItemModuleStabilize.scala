@@ -12,7 +12,7 @@ import com.calclavia.edx.mffs.field.shape.ItemShapeCustom
 import nova.core.block.{Block, BlockFactory}
 import nova.core.game.Game
 import nova.core.inventory.Inventory
-import nova.core.inventory.components.SidedInventoryProvider
+import nova.core.inventory.component.SidedInventoryProvider
 import nova.core.item.ItemBlock
 import nova.core.util.Direction
 import nova.core.util.transform.matrix.Quaternion

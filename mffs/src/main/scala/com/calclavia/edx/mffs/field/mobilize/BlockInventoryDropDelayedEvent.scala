@@ -2,7 +2,7 @@ package com.calclavia.edx.mffs.field.mobilize
 
 import nova.core.block.Block
 import nova.core.game.Game
-import nova.core.inventory.components.InventoryProvider
+import nova.core.inventory.component.InventoryProvider
 import nova.core.util.transform.vector.Vector3i
 import nova.core.world.World
 

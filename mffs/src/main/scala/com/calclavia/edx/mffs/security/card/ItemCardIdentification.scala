@@ -5,11 +5,11 @@ import java.util.Optional
 
 import com.resonant.core.access.{AbstractAccess, AccessUser, Permissions}
 import nova.core.entity.Entity
+import nova.core.entity.component.Player
 import nova.core.game.Game
 import nova.core.gui.KeyManager.Key
 import nova.core.network.NetworkTarget.Side
 import nova.core.network.{Packet, PacketHandler}
-import nova.core.player.Player
 import nova.core.retention.Stored
 import nova.core.util.transform.vector.Vector3i
 

@@ -9,9 +9,9 @@ import com.resonant.core.prefab.itemblock.TooltipItem
 import com.resonant.core.prefab.modcontent.AutoItemTexture
 import com.resonant.wrapper.lib.utility.science.UnitDisplay
 import nova.core.entity.Entity
+import nova.core.entity.component.Player
 import nova.core.game.Game
 import nova.core.item.Item
-import nova.core.player.Player
 import nova.core.util.transform.shape.Cuboid
 import nova.core.util.transform.vector.Vector3i
 

@@ -4,8 +4,8 @@ import java.util
 import java.util.Optional
 
 import com.calclavia.edx.mffs.base.ItemModule
+import nova.core.entity.component.Player
 import nova.core.game.Game
-import nova.core.player.Player
 
 class ItemModuleDefense extends ItemModule {
 	override def getTooltips(player: Optional[Player], tooltips: util.List[String]) {

@@ -14,12 +14,12 @@ import com.calclavia.edx.mffs.util.MFFSUtility
 import com.resonant.wrapper.lib.utility.science.UnitDisplay
 import nova.core.block.Block.RightClickEvent
 import nova.core.entity.Entity
+import nova.core.entity.component.Player
 import nova.core.fluid.Fluid
 import nova.core.game.Game
 import nova.core.gui.KeyManager.Key
 import nova.core.item.Item
 import nova.core.network.NetworkTarget.Side
-import nova.core.player.Player
 import nova.core.retention.{Storable, Stored}
 import nova.core.util.Direction
 import nova.core.util.collection.Tuple2

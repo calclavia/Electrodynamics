@@ -5,9 +5,8 @@ import com.calclavia.edx.mffs.field.BlockForceField
 import com.calclavia.edx.mffs.security.MFFSPermissions
 import nova.core.block.Block
 import nova.core.entity.Entity
-import nova.core.entity.component.Damageable
 import nova.core.entity.component.Damageable.DamageType
-import nova.core.player.Player
+import nova.core.entity.component.{Damageable, Player}
 
 class ItemModuleShock extends ItemModule {
 

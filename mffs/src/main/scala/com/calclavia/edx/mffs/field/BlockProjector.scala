@@ -17,11 +17,11 @@ import nova.core.block.component.{BlockCollider, LightEmitter}
 import nova.core.component.renderer.{DynamicRenderer, StaticRenderer}
 import nova.core.component.transform.Orientation
 import nova.core.entity.Entity
+import nova.core.entity.component.Player
 import nova.core.game.Game
 import nova.core.inventory.InventorySimple
 import nova.core.item.Item
 import nova.core.network.{Packet, Sync}
-import nova.core.player.Player
 import nova.core.render.Color
 import nova.core.render.model.{Model, Vertex}
 import nova.core.retention.Stored

@@ -11,7 +11,7 @@ import com.calclavia.edx.mffs.field.BlockProjector
 import com.calclavia.edx.mffs.field.mobilize.{BlockDropDelayedEvent, BlockInventoryDropDelayedEvent}
 import com.calclavia.edx.mffs.util.MFFSUtility
 import nova.core.game.Game
-import nova.core.inventory.components.InventoryProvider
+import nova.core.inventory.component.InventoryProvider
 import nova.core.util.transform.vector.Vector3i
 
 class ItemModuleDisintegration extends ItemModule {

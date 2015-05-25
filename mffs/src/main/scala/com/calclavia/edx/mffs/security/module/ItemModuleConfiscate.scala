@@ -5,9 +5,9 @@ import java.util
 import com.calclavia.edx.mffs.api.machine.Projector
 import com.calclavia.edx.mffs.field.BlockProjector
 import com.calclavia.edx.mffs.security.MFFSPermissions
+import nova.core.entity.component.Player
 import nova.core.game.Game
-import nova.core.inventory.components.InventoryProvider
-import nova.core.player.Player
+import nova.core.inventory.component.InventoryProvider
 import nova.core.util.Direction
 import nova.core.util.transform.vector.Vector3i
 

@@ -10,9 +10,9 @@ import com.calclavia.edx.mffs.content.Content
 import com.calclavia.edx.mffs.util.CacheHandler
 import com.resonant.core.structure.{Structure, StructureCustom}
 import nova.core.entity.Entity
+import nova.core.entity.component.Player
 import nova.core.game.Game
 import nova.core.gui.KeyManager.Key
-import nova.core.player.Player
 import nova.core.render.model.Model
 import nova.core.retention.Stored
 import nova.core.util.Direction

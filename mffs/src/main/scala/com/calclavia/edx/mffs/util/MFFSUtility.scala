@@ -7,12 +7,12 @@ import com.calclavia.edx.mffs.field.BlockProjector
 import com.calclavia.edx.mffs.field.shape.ItemShapeCustom
 import com.resonant.core.access.Permission
 import nova.core.block.{Block, BlockFactory}
+import nova.core.entity.component.Player
 import nova.core.game.Game
 import nova.core.inventory.Inventory
-import nova.core.inventory.components.InventoryProvider
+import nova.core.inventory.component.InventoryProvider
 import nova.core.item.{Item, ItemBlock}
 import nova.core.network.NetworkTarget.Side
-import nova.core.player.Player
 import nova.core.util.Direction
 import nova.core.util.transform.matrix.Quaternion
 import nova.core.util.transform.vector.{Vector3d, Vector3i}

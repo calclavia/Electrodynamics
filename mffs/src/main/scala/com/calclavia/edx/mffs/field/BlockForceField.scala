@@ -13,11 +13,10 @@ import nova.core.block.Block
 import nova.core.block.component.{BlockCollider, LightEmitter, StaticBlockRenderer}
 import nova.core.component.renderer.StaticRenderer
 import nova.core.entity.Entity
-import nova.core.entity.component.Damageable
+import nova.core.entity.component.{Damageable, Player}
 import nova.core.game.Game
 import nova.core.item.Item
 import nova.core.network.{PacketHandler, Sync}
-import nova.core.player.Player
 import nova.core.render.model.Model
 import nova.core.retention.{Storable, Stored}
 import nova.core.util.Direction
