@@ -1,9 +1,9 @@
 package com.calclavia.edx.electrical.circuit.wire.base
 
 import codechicken.lib.data.{MCDataInput, MCDataOutput}
-import com.calclavia.edx.electrical.ElectricalContent
+import com.calclavia.edx.electrical.Electric
 import edx.core.prefab.part.connector._
-import ElectricalContent
+import Electric
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 
@@ -20,7 +20,7 @@ import net.minecraft.nbt.NBTTagCompound
  */
 trait TWire extends PartAbstract with TPartNodeProvider with TMaterial[WireMaterial] with TInsulatable with TColorable
 {
-  override protected val insulationItem: Item = ElectricalContent.itemInsulation
+  override protected val insulationItem: Item = Electric.itemInsulation
 
   material = WireMaterial.COPPER
 
@@ -65,7 +65,7 @@ trait TWire extends PartAbstract with TPartNodeProvider with TMaterial[WireMater
     super[TColorable].save(nbt)
   }
 
-  override protected def getItem = new ItemStack(ElectricalContent.itemWire, getMaterialID)
+  override protected def getItem = new ItemStack(Electric.itemWire, getMaterialID)
 
   override def getMaterialID = material.ordinal()
 }

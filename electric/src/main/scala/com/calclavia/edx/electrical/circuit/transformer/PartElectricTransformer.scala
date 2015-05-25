@@ -2,15 +2,15 @@ package com.calclavia.edx.electrical.circuit.transformer
 
 import codechicken.lib.data.{MCDataInput, MCDataOutput}
 import codechicken.lib.vec.Vector3
-import com.calclavia.edx.electrical.ElectricalContent
+import com.calclavia.edx.electrical.Electric
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import edx.core.prefab.part.PartFace
-import ElectricalContent
+import Electric
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.{ChatComponentText, MovingObjectPosition}
-import net.minecraftforge.common.util.ForgeDirection
+import nova.core.util.Direction
 import resonantengine.api.graph.INodeProvider
 import resonantengine.api.graph.node.INode
 import resonantengine.lib.utility.WrenchUtility
@@ -104,7 +104,7 @@ class PartElectricTransformer extends PartFace with INodeProvider
     return true
   }
 
-  override def getNode[N <: INode](nodeType: Class[_ <: N], from: ForgeDirection): N =
+  override def getNode[N <: INode](nodeType: Class[_ <: N], from: Direction): N =
   {
     if (from == getAbsoluteFacing)
     {
@@ -120,6 +120,6 @@ class PartElectricTransformer extends PartFace with INodeProvider
 
   protected def getItem: ItemStack =
   {
-    return new ItemStack(ElectricalContent.itemTransformer)
+    return new ItemStack(Electric.itemTransformer)
   }
 }

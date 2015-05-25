@@ -3,7 +3,7 @@ package com.calclavia.edx.core.prefab.node
 import io.netty.buffer.ByteBuf
 import net.minecraft.block.material.Material
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraftforge.common.util.ForgeDirection
+import nova.core.util.Direction
 import net.minecraftforge.fluids._
 import resonantengine.core.network.discriminator.PacketType
 import resonantengine.lib.modcontent.block.ResonantTile
@@ -103,16 +103,16 @@ abstract class TileFluidProvider(material: Material) extends ResonantTile(materi
     nbt.setInteger("colorID", colorID)
   }
 
-  override def drain(from: ForgeDirection, resource: FluidStack, doDrain: Boolean): FluidStack = fluidNode.drain(from, resource, doDrain)
+  override def drain(from: Direction, resource: FluidStack, doDrain: Boolean): FluidStack = fluidNode.drain(from, resource, doDrain)
 
-  override def drain(from: ForgeDirection, maxDrain: Int, doDrain: Boolean): FluidStack = fluidNode.drain(from, maxDrain, doDrain)
+  override def drain(from: Direction, maxDrain: Int, doDrain: Boolean): FluidStack = fluidNode.drain(from, maxDrain, doDrain)
 
-  override def canFill(from: ForgeDirection, fluid: Fluid): Boolean = fluidNode.canFill(from, fluid)
+  override def canFill(from: Direction, fluid: Fluid): Boolean = fluidNode.canFill(from, fluid)
 
-  override def canDrain(from: ForgeDirection, fluid: Fluid): Boolean = fluidNode.canDrain(from, fluid)
+  override def canDrain(from: Direction, fluid: Fluid): Boolean = fluidNode.canDrain(from, fluid)
 
-  override def fill(from: ForgeDirection, resource: FluidStack, doFill: Boolean): Int = fluidNode.fill(from, resource, doFill)
+  override def fill(from: Direction, resource: FluidStack, doFill: Boolean): Int = fluidNode.fill(from, resource, doFill)
 
-  override def getTankInfo(from: ForgeDirection): Array[FluidTankInfo] = fluidNode.getTankInfo(from)
+  override def getTankInfo(from: Direction): Array[FluidTankInfo] = fluidNode.getTankInfo(from)
 
 }

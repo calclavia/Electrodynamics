@@ -22,7 +22,7 @@ final object Reference {
 	/**
 	 * Directories Definition
 	 */
-	final val resourceDirectory = "/assets/mffs/"
+	final val resourceDirectory = "/mffs/src/main/assets/mffs/"
 	final val textureDirectory = "textures/"
 	final val blockDirectory = textureDirectory + "blocks/"
 	final val itemDirectory = textureDirectory + "items/"

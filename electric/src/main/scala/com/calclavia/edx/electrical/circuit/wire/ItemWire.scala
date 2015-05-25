@@ -15,7 +15,7 @@ import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.world.World
-import net.minecraftforge.common.util.ForgeDirection
+import nova.core.util.Direction
 import org.lwjgl.input.Keyboard
 import resonantengine.lib.render.EnumColor
 import resonantengine.lib.utility.LanguageUtility
@@ -33,7 +33,7 @@ class ItemWire extends TItemMultiPart
   {
     val onPos: BlockCoord = pos.copy.offset(side ^ 1)
 
-    if (!MultipartUtil.canPlaceWireOnSide(world, onPos.x, onPos.y, onPos.z, ForgeDirection.getOrientation(side), false))
+    if (!MultipartUtil.canPlaceWireOnSide(world, onPos.x, onPos.y, onPos.z, Direction.getOrientation(side), false))
     {
       return null
     }

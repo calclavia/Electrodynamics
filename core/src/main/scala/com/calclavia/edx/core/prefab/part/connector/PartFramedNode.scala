@@ -11,7 +11,7 @@ import com.calclavia.edx.core.prefab.part.CuboidShapes
 import CuboidShapes
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.MovingObjectPosition
-import net.minecraftforge.common.util.ForgeDirection
+import nova.core.util.Direction
 import resonantengine.lib.grid.core.NodeConnector
 import resonantengine.lib.wrapper.BitmaskWrapper._
 
@@ -25,7 +25,7 @@ abstract class PartFramedNode extends PartAbstract with TPartNodeProvider with T
   var clientRenderMask = 0x00
 
   /** Client Side */
-  protected var testingSide: ForgeDirection = null
+  protected var testingSide: Direction = null
 
   //Check if lazy val will be null?
   nodes.add(node)
@@ -42,13 +42,13 @@ abstract class PartFramedNode extends PartAbstract with TPartNodeProvider with T
     val sideCuboids = if (this.isInstanceOf[TInsulatable] && this.asInstanceOf[TInsulatable].insulated) CuboidShapes.thickSegment else CuboidShapes.segment
     val list = mutable.Set.empty[IndexedCuboid6]
     list += CuboidShapes.center
-    list ++= ForgeDirection.VALID_DIRECTIONS.filter(s => clientRenderMask.mask(s) || s == testingSide).map(s => sideCuboids(s.ordinal()))
+    list ++= Direction.VALID_DIRECTIONS.filter(s => clientRenderMask.mask(s) || s == testingSide).map(s => sideCuboids(s.ordinal()))
     return list
   }
 
   override def getSlotMask = PartMap.CENTER.mask
 
-  def isBlockedOnSide(side: ForgeDirection): Boolean =
+  def isBlockedOnSide(side: Direction): Boolean =
   {
     val blocker: TMultiPart = tile.partMap(side.ordinal)
     testingSide = side
@@ -57,7 +57,7 @@ abstract class PartFramedNode extends PartAbstract with TPartNodeProvider with T
     return !expandable
   }
 
-  def isCurrentlyConnected(side: ForgeDirection): Boolean = clientRenderMask.mask(side)
+  def isCurrentlyConnected(side: Direction): Boolean = clientRenderMask.mask(side)
 
   override def write(packet: MCDataOutput, id: Int)
   {
@@ -80,7 +80,7 @@ abstract class PartFramedNode extends PartAbstract with TPartNodeProvider with T
   }
 
   @deprecated
-  def connectionMapContainsSide(connections: Int, side: ForgeDirection): Boolean =
+  def connectionMapContainsSide(connections: Int, side: Direction): Boolean =
   {
     val tester = 1 << side.ordinal
     return (connections & tester) > 0

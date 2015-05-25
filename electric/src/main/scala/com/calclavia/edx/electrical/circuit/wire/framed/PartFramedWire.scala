@@ -9,7 +9,7 @@ import edx.core.prefab.node.TMultipartNode
 import edx.core.prefab.part.connector.PartFramedNode
 import net.minecraft.client.renderer.RenderBlocks
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraftforge.common.util.ForgeDirection
+import nova.core.util.Direction
 import resonantengine.lib.grid.energy.electric.NodeElectricComponent
 import resonantengine.lib.wrapper.BitmaskWrapper._
 
@@ -33,7 +33,7 @@ class PartFramedWire extends PartFramedNode with TWire
         sendPacket(0)
     }
 
-    override def connect[B <: NodeElectricComponent](obj: B, dir: ForgeDirection) =
+    override def connect[B <: NodeElectricComponent](obj: B, dir: Direction) =
     {
       super.connect(obj, dir)
       connectionMask = connectionMask.openMask(dir)

@@ -8,7 +8,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.{ChatComponentText, ResourceLocation}
 import net.minecraftforge.client.model.AdvancedModelLoader
-import net.minecraftforge.common.util.ForgeDirection
+import nova.core.util.Direction
 import org.lwjgl.opengl.GL11
 import resonantengine.lib.content.prefab.TIO
 import resonantengine.lib.grid.energy.electric.NodeElectricComponent
@@ -45,7 +45,7 @@ class TileMotor extends ResonantTile(Material.iron) with TIO with TBlockNodeProv
   private val electricNode = new NodeElectricComponent(this)
   private val mechNode = new NodeMechanical(this)
   {
-    override def canConnect(from: ForgeDirection): Boolean =
+    override def canConnect(from: Direction): Boolean =
     {
       connectionMask = 1 << getDirection.getOpposite.ordinal
       return super.canConnect(from)
@@ -96,7 +96,7 @@ class TileMotor extends ResonantTile(Material.iron) with TIO with TBlockNodeProv
     electricNode.generateVoltage(inducedEmf)
   }
 
-  override def setIO(dir: ForgeDirection, ioType: Int)
+  override def setIO(dir: Direction, ioType: Int)
   {
     if (dir != getDirection || dir != getDirection.getOpposite)
     {

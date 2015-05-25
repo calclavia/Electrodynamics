@@ -1,6 +1,6 @@
 package com.calclavia.edx.electrical.circuit.component.laser.fx
 
-import com.calclavia.edx.electrical.ElectricalContent
+import com.calclavia.edx.electrical.Electric
 import cpw.mods.fml.client.FMLClientHandler
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import edx.core.Reference
@@ -8,7 +8,7 @@ import net.minecraft.client.particle.EntityFX
 import net.minecraft.client.renderer.Tessellator
 import net.minecraft.util.ResourceLocation
 import net.minecraft.world.World
-import net.minecraftforge.common.util.ForgeDirection
+import nova.core.util.Direction
 import org.lwjgl.opengl.GL11._
 import resonantengine.lib.transform.vector.Vector3
 
@@ -72,15 +72,15 @@ class EntityScorchFX(par1World: World, position: Vector3, side: Int) extends Ent
     /**
      * Rotate the scorch effect
      */
-    ForgeDirection.getOrientation(side) match
+    Direction.getOrientation(side) match
     {
-      case ForgeDirection.UNKNOWN =>
-      case ForgeDirection.UP => glRotatef(90, 1, 0, 0)
-      case ForgeDirection.DOWN => glRotatef(-90, 1, 0, 0)
-      case ForgeDirection.NORTH => glRotatef(0, 0, 1, 0)
-      case ForgeDirection.SOUTH => glRotatef(180, 0, 1, 0)
-      case ForgeDirection.WEST => glRotatef(90, 0, 1, 0)
-      case ForgeDirection.EAST => glRotatef(-90, 0, 1, 0)
+      case Direction.UNKNOWN =>
+      case Direction.UP => glRotatef(90, 1, 0, 0)
+      case Direction.DOWN => glRotatef(-90, 1, 0, 0)
+      case Direction.NORTH => glRotatef(0, 0, 1, 0)
+      case Direction.SOUTH => glRotatef(180, 0, 1, 0)
+      case Direction.WEST => glRotatef(90, 0, 1, 0)
+      case Direction.EAST => glRotatef(-90, 0, 1, 0)
     }
 
     /**
@@ -102,7 +102,7 @@ class EntityScorchFX(par1World: World, position: Vector3, side: Int) extends Ent
 
     glPopMatrix()
 
-    FMLClientHandler.instance().getClient().renderEngine.bindTexture(ElectricalContent.particleTextures)
+    FMLClientHandler.instance().getClient().renderEngine.bindTexture(Electric.particleTextures)
     tessellator.startDrawingQuads()
   }
 

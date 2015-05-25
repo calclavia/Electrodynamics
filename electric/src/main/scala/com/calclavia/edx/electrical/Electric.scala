@@ -13,6 +13,7 @@ import com.calclavia.edx.electrical.circuit.wire.flat.{RenderFlatWire, PartFlatW
 import com.calclavia.edx.electrical.circuit.wire.framed.{PartFramedWire, RenderFramedWire}
 import com.calclavia.edx.electrical.multimeter.{ItemMultimeter, PartMultimeter}
 import com.calclavia.edx.quantum.gate.{ItemQuantumGlyph, PartQuantumGlyph}
+import com.resonant.core.prefab.modcontent.ContentLoader
 import cpw.mods.fml.common.Loader
 import cpw.mods.fml.common.eventhandler.SubscribeEvent
 import cpw.mods.fml.common.registry.GameRegistry
@@ -39,7 +40,7 @@ import resonantengine.lib.modcontent.ExplicitContentName
 import resonantengine.lib.utility.recipe.UniversalRecipe
 import resonantengine.prefab.modcontent.ContentHolder
 
-object ElectricalContent extends ContentHolder
+object Electric extends ContentLoader
 {
   val particleTextures = new ResourceLocation("textures/particle/particles.png")
 
@@ -48,7 +49,7 @@ object ElectricalContent extends ContentHolder
   var itemTransformer = new ItemElectricTransformer
   @ExplicitContentName("insulation")
   var itemInsulation = new Item
-  var itemQuantumGlyph = new ItemQuantumGlyph
+ //var itemQuantumGlyph = new ItemQuantumGlyph
 
   var itemFocusingMatrix: ItemFocusingMatrix = new ItemFocusingMatrix
 
@@ -68,12 +69,11 @@ object ElectricalContent extends ContentHolder
   var tierTwoBattery: ItemStack = null
   var tierThreeBattery: ItemStack = null
 
-  manager.setTab(EDXCreativeTab).setPrefix(Reference.prefix)
-
   override def preInit()
   {
     super.preInit()
 
+    /*
     tierOneBattery = ItemBlockBattery.setTier(new ItemStack(ElectricalContent.blockBattery, 1, 0), 0)
     tierTwoBattery = ItemBlockBattery.setTier(new ItemStack(ElectricalContent.blockBattery, 1, 0), 1)
     tierThreeBattery = ItemBlockBattery.setTier(new ItemStack(ElectricalContent.blockBattery, 1, 0), 2)
@@ -86,20 +86,24 @@ object ElectricalContent extends ContentHolder
     ResonantPartFactory.register(classOf[PartQuantumGlyph])
 
     MinecraftForge.EVENT_BUS.register(this)
+    */
   }
 
   override def init()
   {
     super.init()
 
-    OreDictionary.registerOre("wire", ElectricalContent.itemWire)
-    OreDictionary.registerOre("motor", ElectricalContent.blockMotor)
-    OreDictionary.registerOre("battery", ItemBlockBattery.setTier(new ItemStack(ElectricalContent.blockBattery, 1, 0), 0.asInstanceOf[Byte]))
-    OreDictionary.registerOre("batteryBox", ItemBlockBattery.setTier(new ItemStack(ElectricalContent.blockBattery, 1, 0), 0.asInstanceOf[Byte]))
+	  /*
+    OreDictionary.registerOre("wire", Electric.itemWire)
+    OreDictionary.registerOre("motor", Electric.blockMotor)
+    OreDictionary.registerOre("battery", ItemBlockBattery.setTier(new ItemStack(Electric.blockBattery, 1, 0), 0.asInstanceOf[Byte]))
+    OreDictionary.registerOre("batteryBox", ItemBlockBattery.setTier(new ItemStack(Electric.blockBattery, 1, 0), 0.asInstanceOf[Byte]))
+    */
   }
 
   override def postInit()
   {
+	  /*
     recipes += shaped(new ItemStack(blockSiren, 2), "NPN", 'N', Blocks.noteblock, 'P', UniversalRecipe.SECONDARY_PLATE.get)
     recipes += shaped(blockTesla, "WEW", " C ", "DID", 'W', "wire", 'E', Items.ender_eye, 'C', UniversalRecipe.BATTERY.get, 'D', Items.diamond, 'I', UniversalRecipe.PRIMARY_PLATE.get)
     recipes += shaped(itemMultimeter, "WWW", "ICI", 'W', "wire", 'C', UniversalRecipe.BATTERY.get, 'I', UniversalRecipe.PRIMARY_METAL.get)
@@ -141,11 +145,11 @@ object ElectricalContent extends ContentHolder
     if (Loader.isModLoaded("Mekanism"))
     {
       GameRegistry.addRecipe(new ShapelessOreRecipe(getWire(WireMaterial.COPPER, 1), "universalCable"))
-    }
+    }*/
   }
 
-  def getWire(t: WireMaterial, count: Int): ItemStack = new ItemStack(itemWire, count, t.ordinal())
-
+  //def getWire(t: WireMaterial, count: Int): ItemStack = new ItemStack(itemWire, count, t.ordinal())
+/*
   /**
    * Handle wire texture
    */
@@ -159,5 +163,5 @@ object ElectricalContent extends ContentHolder
       RenderFramedWire.wireIcon = event.map.registerIcon(Reference.prefix + "models/wire")
       RenderFramedWire.insulationIcon = event.map.registerIcon(Reference.prefix + "models/insulation")
     }
-  }
+  }*/
 }

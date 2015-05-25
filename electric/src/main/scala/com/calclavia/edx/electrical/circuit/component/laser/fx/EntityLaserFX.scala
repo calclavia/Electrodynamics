@@ -1,6 +1,6 @@
 package com.calclavia.edx.electrical.circuit.component.laser.fx
 
-import com.calclavia.edx.electrical.ElectricalContent
+import com.calclavia.edx.electrical.Electric
 import com.calclavia.edx.electrical.circuit.component.laser.Laser
 import cpw.mods.fml.client.FMLClientHandler
 import cpw.mods.fml.relauncher.{Side, SideOnly}
@@ -190,7 +190,7 @@ class EntityLaserFX(par1World: World, start: Vector3, end: Vector3, color: Vecto
 
     glPopMatrix()
 
-    FMLClientHandler.instance().getClient().renderEngine.bindTexture(ElectricalContent.particleTextures)
+    FMLClientHandler.instance().getClient().renderEngine.bindTexture(Electric.particleTextures)
     tessellator.startDrawingQuads()
   }
 

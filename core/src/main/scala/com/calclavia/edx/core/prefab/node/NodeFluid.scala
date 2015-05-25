@@ -1,7 +1,7 @@
 package com.calclavia.edx.core.prefab.node
 
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraftforge.common.util.ForgeDirection
+import nova.core.util.Direction
 import net.minecraftforge.fluids._
 import resonantengine.api.graph.INodeProvider
 import resonantengine.api.graph.node.INode
@@ -22,7 +22,7 @@ class NodeFluid(parent: INodeProvider, volume: Int = FluidContainerRegistry.BUCK
   /** Internal tank */
   private var tank = new FluidTank(volume)
 
-  override def fill(from: ForgeDirection, resource: FluidStack, doFill: Boolean): Int =
+  override def fill(from: Direction, resource: FluidStack, doFill: Boolean): Int =
   {
     tank synchronized
     {
@@ -36,7 +36,7 @@ class NodeFluid(parent: INodeProvider, volume: Int = FluidContainerRegistry.BUCK
     }
   }
 
-  override def drain(from: ForgeDirection, resource: FluidStack, doDrain: Boolean): FluidStack =
+  override def drain(from: Direction, resource: FluidStack, doDrain: Boolean): FluidStack =
   {
     tank synchronized
     {
@@ -50,7 +50,7 @@ class NodeFluid(parent: INodeProvider, volume: Int = FluidContainerRegistry.BUCK
     }
   }
 
-  override def drain(from: ForgeDirection, maxDrain: Int, doDrain: Boolean): FluidStack =
+  override def drain(from: Direction, maxDrain: Int, doDrain: Boolean): FluidStack =
   {
     tank synchronized
     {
@@ -65,9 +65,9 @@ class NodeFluid(parent: INodeProvider, volume: Int = FluidContainerRegistry.BUCK
     }
   }
 
-  override def canFill(from: ForgeDirection, fluid: Fluid): Boolean = canConnect(from)
+  override def canFill(from: Direction, fluid: Fluid): Boolean = canConnect(from)
 
-  override def canDrain(from: ForgeDirection, fluid: Fluid): Boolean = canConnect(from)
+  override def canDrain(from: Direction, fluid: Fluid): Boolean = canConnect(from)
 
   override def load(nbt: NBTTagCompound)
   {
@@ -92,7 +92,7 @@ class NodeFluid(parent: INodeProvider, volume: Int = FluidContainerRegistry.BUCK
    */
   override protected def getCompareClass: Class[_ <: NodeFluid with INode] = classOf[NodeFluid]
 
-  protected def showConnectionsFor(obj: AnyRef, dir: ForgeDirection): Boolean =
+  protected def showConnectionsFor(obj: AnyRef, dir: Direction): Boolean =
   {
     if (obj != null)
     {

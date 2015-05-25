@@ -1,6 +1,6 @@
 package com.calclavia.edx.electrical.circuit.transformer
 
-import net.minecraftforge.common.util.ForgeDirection
+import nova.core.util.Direction
 import resonantengine.api.graph.INodeProvider
 import resonantengine.lib.grid.energy.electric.NodeElectricComponent
 
@@ -9,12 +9,12 @@ import resonantengine.lib.grid.energy.electric.NodeElectricComponent
  */
 class ElectricTransformerNode(parent: INodeProvider) extends NodeElectricComponent(parent: INodeProvider)
 {
-  var connectionDirection: ForgeDirection = ForgeDirection.NORTH
+  var connectionDirection: Direction = Direction.NORTH
   var input = true
   var otherNode: ElectricTransformerNode = null
   var step: Int = 2
 
-  def this(parent: INodeProvider, side: ForgeDirection, in: Boolean) =
+  def this(parent: INodeProvider, side: Direction, in: Boolean) =
   {
     this(parent)
     connectionDirection = side
@@ -30,13 +30,13 @@ class ElectricTransformerNode(parent: INodeProvider) extends NodeElectricCompone
     return 120
   }
 
-  override def canConnect[B <: NodeElectricComponent](obj: B, from: ForgeDirection): Boolean =
+  override def canConnect[B <: NodeElectricComponent](obj: B, from: Direction): Boolean =
   {
     return obj.isInstanceOf[INodeProvider] && from == connectionDirection
   }
 
   /*
-  override def addEnergy(dir: ForgeDirection, wattage: Double, doAdd: Boolean): Double =
+  override def addEnergy(dir: Direction, wattage: Double, doAdd: Boolean): Double =
   {
     if (input)
     {
@@ -55,7 +55,7 @@ class ElectricTransformerNode(parent: INodeProvider) extends NodeElectricCompone
     return 0
   }
 
-  override def removeEnergy(dir: ForgeDirection, wattage: Double, doRemove: Boolean): Double =
+  override def removeEnergy(dir: Direction, wattage: Double, doRemove: Boolean): Double =
   {
     return 0
   }*/

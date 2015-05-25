@@ -6,7 +6,7 @@ import net.minecraft.block.material.Material
 import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.init.Blocks
 import net.minecraft.util.IIcon
-import net.minecraftforge.common.util.ForgeDirection
+import nova.core.util.Direction
 import resonantengine.lib.content.prefab.TIO
 import resonantengine.lib.grid.energy.electric.NodeElectricComponent
 import resonantengine.lib.modcontent.block.{ResonantBlock, ResonantTile}
@@ -28,8 +28,8 @@ class TileThermopile extends ResonantTile(Material.rock) with TBlockNodeProvider
   nodes.add(electricNode)
 
   electricNode.dynamicTerminals = true
-  electricNode.setPositives(Set(ForgeDirection.NORTH, ForgeDirection.EAST))
-  electricNode.setNegatives(Set(ForgeDirection.SOUTH, ForgeDirection.WEST))
+  electricNode.setPositives(Set(Direction.NORTH, Direction.EAST))
+  electricNode.setNegatives(Set(Direction.SOUTH, Direction.WEST))
 
   override def update()
   {
@@ -40,7 +40,7 @@ class TileThermopile extends ResonantTile(Material.rock) with TBlockNodeProvider
       var heatSources = 0
       var coolingSources = 0
 
-      for (dir <- ForgeDirection.VALID_DIRECTIONS)
+      for (dir <- Direction.VALID_DIRECTIONS)
       {
         val checkPos = position + dir
         val block = checkPos.getBlock
@@ -75,7 +75,7 @@ class TileThermopile extends ResonantTile(Material.rock) with TBlockNodeProvider
 
         if (ticksUsed >= maxTicks)
         {
-          for (dir <- ForgeDirection.VALID_DIRECTIONS)
+          for (dir <- Direction.VALID_DIRECTIONS)
           {
             val checkPos = position.add(dir)
             val block = checkPos.getBlock(worldObj)

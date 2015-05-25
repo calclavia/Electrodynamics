@@ -12,7 +12,7 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity
 import net.minecraft.network.{NetworkManager, Packet}
 import net.minecraft.util.{MovingObjectPosition, ResourceLocation}
 import net.minecraftforge.client.model.AdvancedModelLoader
-import net.minecraftforge.common.util.ForgeDirection
+import nova.core.util.Direction
 import org.lwjgl.opengl.GL11._
 import resonantengine.lib.transform.rotation.Quaternion
 import resonantengine.lib.transform.vector.Vector3
@@ -48,7 +48,7 @@ class TileMirror extends TileFocus(Material.glass) with ILaserHandler with IFocu
     {
       for (a <- 0 to 5)
       {
-        val dir = ForgeDirection.getOrientation(a)
+        val dir = Direction.getOrientation(a)
         val axis = new Vector3(dir)
         val rotateAngle = world.getIndirectPowerLevelTo(x + axis.x.toInt, y + axis.y.toInt, z + axis.z.toInt, a) * 15
 

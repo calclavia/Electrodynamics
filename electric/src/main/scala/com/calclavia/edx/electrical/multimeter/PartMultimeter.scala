@@ -6,20 +6,20 @@ import codechicken.lib.data.{MCDataInput, MCDataOutput}
 import codechicken.lib.vec
 import codechicken.lib.vec.Cuboid6
 import codechicken.multipart.{IRedstonePart, TMultiPart, TileMultipart}
-import com.calclavia.edx.electrical.ElectricalContent
+import com.calclavia.edx.electrical.Electric
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import edx.core.Electrodynamics
 import edx.core.interfaces.TNodeMechanical
 import edx.core.prefab.part.ChickenBonesWrapper._
 import edx.core.prefab.part.PartFace
-import ElectricalContent
+import Electric
 import io.netty.buffer.ByteBuf
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.{ChatComponentText, MovingObjectPosition}
-import net.minecraftforge.common.util.ForgeDirection
+import nova.core.util.Direction
 import net.minecraftforge.fluids.{FluidTankInfo, IFluidHandler}
 import resonantengine.api.graph.INodeProvider
 import resonantengine.api.network.IPacketReceiver
@@ -128,12 +128,12 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
 
   def updateDetections()
   {
-    val receivingSide: ForgeDirection = getDirection.getOpposite
+    val receivingSide: Direction = getDirection.getOpposite
     val tileEntity: TileEntity = getDetectedTile
 
     if (tileEntity.isInstanceOf[INodeProvider])
     {
-      val instance = ForgeDirection.values
+      val instance = Direction.values
         .map(dir => tileEntity.asInstanceOf[INodeProvider].getNode(classOf[TNodeMechanical], dir).asInstanceOf[TNodeMechanical])
         .headOption.orNull
 
@@ -158,7 +158,7 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
 
   def getDetectedTile: TileEntity =
   {
-    val direction: ForgeDirection = getDirection
+    val direction: Direction = getDirection
     return world.getTileEntity(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ)
   }
 
@@ -211,7 +211,7 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
     {
       case 0 =>
       {
-        placementSide = ForgeDirection.getOrientation(packet.readByte)
+        placementSide = Direction.getOrientation(packet.readByte)
         facing = packet.readByte
         detectMode = DetectModes(packet.readByte).asInstanceOf[DetectModes.DetectMode]
         detectType = packet.readByte
@@ -235,7 +235,7 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
   def getRemovedItems(entity: EntityPlayer): List[ItemStack] =
   {
     val list: List[ItemStack] = new ArrayList[ItemStack]
-    list.add(new ItemStack(ElectricalContent.itemMultimeter))
+    list.add(new ItemStack(Electric.itemMultimeter))
     return list
   }
 
@@ -272,7 +272,7 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
   override def load(nbt: NBTTagCompound)
   {
     super.load(nbt)
-    placementSide = ForgeDirection.getOrientation(nbt.getByte("side"))
+    placementSide = Direction.getOrientation(nbt.getByte("side"))
     detectMode = DetectModes(nbt.getByte("detectMode")).asInstanceOf[DetectModes.DetectMode]
     detectType = nbt.getByte("detectionType")
     graphType = nbt.getByte("graphType")
@@ -327,7 +327,7 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
     return if (redstoneOn) 14 else 0
   }
 
-  def canConnect(direction: ForgeDirection, obj: AnyRef): Boolean =
+  def canConnect(direction: Direction, obj: AnyRef): Boolean =
   {
     return obj.isInstanceOf[PartMultimeter]
   }
@@ -335,7 +335,7 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
   def getConnections: Array[AnyRef] =
   {
     val connections: Array[AnyRef] = new Array[AnyRef](6)
-    for (dir <- ForgeDirection.VALID_DIRECTIONS)
+    for (dir <- Direction.VALID_DIRECTIONS)
     {
       if (dir != getDirection && dir != getDirection.getOpposite)
       {
@@ -349,9 +349,9 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
     return connections
   }
 
-  def getDirection: ForgeDirection =
+  def getDirection: Direction =
   {
-    return ForgeDirection.getOrientation(this.placementSide.ordinal)
+    return Direction.getOrientation(this.placementSide.ordinal)
   }
 
   def hasMultimeter(x: Int, y: Int, z: Int): Boolean =
@@ -392,7 +392,7 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
 
   protected def getItem: ItemStack =
   {
-    return new ItemStack(ElectricalContent.itemMultimeter)
+    return new ItemStack(Electric.itemMultimeter)
   }
 
   object DetectModes extends Enumeration

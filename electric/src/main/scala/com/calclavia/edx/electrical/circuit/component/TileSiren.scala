@@ -3,7 +3,7 @@ package com.calclavia.edx.electrical.circuit.component
 import edx.core.Reference
 import net.minecraft.block.material.Material
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraftforge.common.util.ForgeDirection
+import nova.core.util.Direction
 import resonantengine.lib.grid.energy.electric.NodeElectricComponent
 import resonantengine.lib.modcontent.block.ResonantTile
 import resonantengine.lib.transform.vector.Vector3
@@ -19,8 +19,8 @@ class TileSiren extends ResonantTile(Material.wood) with TBlockNodeProvider
   val electricNode = new NodeElectricComponent(this)
   nodes.add(electricNode)
   electricNode.dynamicTerminals = true
-  electricNode.setPositives(Set(ForgeDirection.NORTH, ForgeDirection.UP, ForgeDirection.EAST))
-  electricNode.setNegatives(Set(ForgeDirection.SOUTH, ForgeDirection.DOWN, ForgeDirection.WEST))
+  electricNode.setPositives(Set(Direction.NORTH, Direction.UP, Direction.EAST))
+  electricNode.setNegatives(Set(Direction.SOUTH, Direction.DOWN, Direction.WEST))
 
   override def update()
   {
@@ -36,7 +36,7 @@ class TileSiren extends ResonantTile(Material.wood) with TBlockNodeProvider
           var volume: Float = 0.5f
           for (i <- 0 to 6)
           {
-            val check: Vector3 = position.add(ForgeDirection.getOrientation(i))
+            val check: Vector3 = position.add(Direction.getOrientation(i))
             if (check.getBlock(world) == getBlockType)
             {
               volume *= 1.5f

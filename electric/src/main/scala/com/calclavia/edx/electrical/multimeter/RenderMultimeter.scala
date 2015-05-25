@@ -7,7 +7,7 @@ import net.minecraft.init.Blocks
 import net.minecraft.item.ItemStack
 import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.IItemRenderer
-import net.minecraftforge.common.util.ForgeDirection
+import nova.core.util.Direction
 import org.lwjgl.opengl.GL11
 import resonantengine.api.item.ISimpleItemRenderer
 import resonantengine.lib.render.RenderUtility
@@ -29,7 +29,7 @@ object RenderMultimeter extends ISimpleItemRenderer
 
   def render(part: PartMultimeter, x: Double, y: Double, z: Double)
   {
-    val dir: ForgeDirection = part.getDirection
+    val dir: Direction = part.getDirection
     GL11.glPushMatrix()
     GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5)
     RenderUtility.rotateFaceBlockToSideOutwards(part.getDirection.getOpposite)
@@ -39,7 +39,7 @@ object RenderMultimeter extends ISimpleItemRenderer
     for (i <- 0 until 6)
     {
 
-      val check: ForgeDirection = ForgeDirection.getOrientation(i)
+      val check: Direction = Direction.getOrientation(i)
       if (!part.hasMultimeter(part.x + check.offsetX, part.y + check.offsetY, part.z + check.offsetZ))
       {
         if (dir.offsetX != 0)
@@ -141,14 +141,14 @@ object RenderMultimeter extends ISimpleItemRenderer
     GL11.glRotatef(90, 1, 0, 0)
     RenderUtility.bind(TextureMap.locationBlocksTexture)
     RenderUtility.renderCube(-0.5, -0.05, -0.5, 0.5, 0.05, 0.5, Blocks.iron_block, RenderUtility.loadedIconMap.get(Reference.prefix + "multimeter_screen"))
-    val dir: ForgeDirection = ForgeDirection.NORTH
+    val dir: Direction = Direction.NORTH
     val metadata: Int = 8
     RenderUtility.renderCube(-0.501, -0.0501, -0.501, 0.501, 0.0501, -0.44, Blocks.iron_block, null, metadata)
     RenderUtility.renderCube(-0.501, -0.0501, 0.44, 0.501, 0.0501, 0.501, Blocks.iron_block, null, metadata)
 
     for (i <- 0 until 6)
     {
-      val check: ForgeDirection = ForgeDirection.getOrientation(i)
+      val check: Direction = Direction.getOrientation(i)
       if (dir.offsetX != 0 && check.offsetZ != 0)
       {
         if (dir.offsetX != check.offsetZ)

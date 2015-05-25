@@ -16,7 +16,7 @@ import net.minecraft.server.MinecraftServer
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.ChatComponentText
 import net.minecraft.world.World
-import net.minecraftforge.common.util.ForgeDirection
+import nova.core.util.Direction
 import resonantengine.core.network.discriminator.{PacketTile, PacketType}
 import resonantengine.lib.content.prefab.TIO
 import resonantengine.lib.grid.energy.EnergyStorage
@@ -482,7 +482,7 @@ class TileTesla extends ResonantTile(Material.iron) with TBlockNodeProvider with
     return worldObj
   }
 
-  override def setIO(dir: ForgeDirection, `type`: Int)
+  override def setIO(dir: Direction, `type`: Int)
   {
     if (getMultiBlock.isPrimary)
     {
@@ -494,7 +494,7 @@ class TileTesla extends ResonantTile(Material.iron) with TBlockNodeProvider with
     }
   }
 
-  override def getIO(dir: ForgeDirection): Int =
+  override def getIO(dir: Direction): Int =
   {
     if (getMultiBlock.isPrimary)
     {

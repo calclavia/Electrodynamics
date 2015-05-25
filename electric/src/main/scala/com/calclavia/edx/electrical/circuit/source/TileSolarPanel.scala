@@ -5,7 +5,7 @@ import edx.core.Reference
 import net.minecraft.block.material.Material
 import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.util.IIcon
-import net.minecraftforge.common.util.ForgeDirection
+import nova.core.util.Direction
 import resonantengine.lib.content.prefab.TIO
 import resonantengine.lib.grid.energy.electric.NodeElectricComponent
 import resonantengine.lib.modcontent.block.{ResonantBlock, ResonantTile}
@@ -29,8 +29,8 @@ class TileSolarPanel extends ResonantTile(Material.iron) with TBlockNodeProvider
 
   edgeTexture = Reference.prefix + "tankEdge"
   electricNode.dynamicTerminals = true
-  electricNode.setPositives(Set(ForgeDirection.NORTH, ForgeDirection.EAST))
-  electricNode.setNegatives(Set(ForgeDirection.SOUTH, ForgeDirection.WEST))
+  electricNode.setPositives(Set(Direction.NORTH, Direction.EAST))
+  electricNode.setNegatives(Set(Direction.SOUTH, Direction.WEST))
   nodes.add(electricNode)
 
   @SideOnly(Side.CLIENT)

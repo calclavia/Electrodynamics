@@ -3,7 +3,7 @@ package com.calclavia.edx.core.prefab.pass;
 import codechicken.multipart.PartMap;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
-import net.minecraftforge.common.util.ForgeDirection;
+import nova.core.util.Direction;
 import resonantengine.api.graph.INodeProvider;
 import resonantengine.api.graph.node.INode;
 
@@ -16,7 +16,7 @@ import resonantengine.api.graph.node.INode;
 public class TraitNodeProvider extends TileMultipart implements INodeProvider
 {
 	@Override
-	public <N extends INode> N getNode(Class<? extends N> nodeType, ForgeDirection from)
+	public <N extends INode> N getNode(Class<? extends N> nodeType, Direction from)
 	{
 		TMultiPart nodePart = partMap(from.ordinal());
 

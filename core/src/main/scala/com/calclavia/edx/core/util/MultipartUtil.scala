@@ -5,7 +5,7 @@ import net.minecraft.block.Block
 import net.minecraft.init.Blocks
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.{IBlockAccess, World}
-import net.minecraftforge.common.util.ForgeDirection
+import nova.core.util.Direction
 import resonantengine.lib.transform.vector.{Vector3, VectorWorld}
 
 /**
@@ -46,7 +46,7 @@ object MultipartUtil
     return null
   }
 
-  def canPlaceWireOnSide(w: World, x: Int, y: Int, z: Int, side: ForgeDirection, _default: Boolean): Boolean =
+  def canPlaceWireOnSide(w: World, x: Int, y: Int, z: Int, side: Direction, _default: Boolean): Boolean =
   {
     if (!w.blockExists(x, y, z)) return _default
     val b: Block = w.getBlock(x, y, z)

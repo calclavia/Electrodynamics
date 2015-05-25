@@ -1,16 +1,15 @@
 package com.calclavia.edx.electrical.circuit.component.laser
 
+import com.calclavia.edx.core.Reference
+import com.calclavia.graph.api.energy.NodeElectricComponent
+import com.resonant.core.prefab.block.{Updater, Rotatable}
 import cpw.mods.fml.client.FMLClientHandler
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import edx.core.Reference
-import net.minecraft.block.BlockPistonBase
-import net.minecraft.block.material.Material
-import net.minecraft.entity.EntityLivingBase
-import net.minecraft.item.ItemStack
-import net.minecraft.util.{MovingObjectPosition, ResourceLocation}
-import net.minecraft.world.IBlockAccess
-import net.minecraftforge.client.model.AdvancedModelLoader
-import net.minecraftforge.common.util.ForgeDirection
+
+import nova.core.block.Block
+import nova.core.game.Game
+import nova.core.util.Direction
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL11._
 import resonantengine.lib.grid.energy.electric.NodeElectricComponent
@@ -37,20 +36,20 @@ object TileLaserEmitter
   val texture = new ResourceLocation(Reference.domain, Reference.modelPath + "laserEmitter.png")
 }
 
-class TileLaserEmitter extends ResonantTile(Material.iron) with ILaserHandler with TBlockNodeProvider with TRotatable
+class TileLaserEmitter extends Block with ILaserHandler with Rotatable with Updater
 {
-  val electricNode = new NodeElectricComponent(this)
+  val electricNode = Game.instance.componentManager.make(classOf[NodeElectricComponent], this)
 
   domain = ""
   textureName = "stone"
-  normalRender = false
-  isOpaqueCube = false
   electricNode.dynamicTerminals = true
-  electricNode.setPositives(Set(ForgeDirection.NORTH, ForgeDirection.EAST, ForgeDirection.UP))
-  electricNode.setNegatives(Set(ForgeDirection.SOUTH, ForgeDirection.WEST, ForgeDirection.DOWN))
+  electricNode.setPositives(Set(Direction.NORTH, Direction.EAST, Direction.UP))
+  electricNode.setNegatives(Set(Direction.SOUTH, Direction.WEST, Direction.DOWN))
   nodes.add(electricNode)
 
-  /**
+	override def isCube: Boolean = false
+
+	/**
    * Called when the block is placed by a living entity
    * @param entityLiving - entity who placed the block
    * @param itemStack - ItemStack the entity used to place the block
@@ -61,11 +60,13 @@ class TileLaserEmitter extends ResonantTile(Material.iron) with ILaserHandler wi
     world.setBlockMetadataWithNotify(x, y, z, l, 2)
   }
 
-  override def getLightValue(access: IBlockAccess): Int = ((electricNode.power / Laser.maxEnergy) * 15).toInt
+	override def getLightValue(world: IBlockAccess, x: Int, y: Int, z: Int): Int = super.getLightValue(world, x, y, z)
+
+	override def getLightValue(access: IBlockAccess): Int = ((electricNode.power / Laser.maxEnergy) * 15).toInt
 
   override def onLaserHit(renderStart: Vector3, incidentDirection: Vector3, hit: MovingObjectPosition, color: Vector3, energy: Double) = false
 
-  override def update()
+	override def update(deltaTime: Double)
   {
     super.update()
 
@@ -84,13 +85,13 @@ class TileLaserEmitter extends ResonantTile(Material.iron) with ILaserHandler wi
 
     getDirection match
     {
-      case ForgeDirection.UNKNOWN =>
-      case ForgeDirection.UP => glRotatef(-90, 1, 0, 0)
-      case ForgeDirection.DOWN => glRotatef(90, 1, 0, 0)
-      case ForgeDirection.NORTH => glRotatef(90, 0, 1, 0)
-      case ForgeDirection.SOUTH => glRotatef(-90, 0, 1, 0)
-      case ForgeDirection.WEST => glRotatef(-180, 0, 1, 0)
-      case ForgeDirection.EAST => glRotatef(0, 0, 1, 0)
+      case Direction.UNKNOWN =>
+      case Direction.UP => glRotatef(-90, 1, 0, 0)
+      case Direction.DOWN => glRotatef(90, 1, 0, 0)
+      case Direction.NORTH => glRotatef(90, 0, 1, 0)
+      case Direction.SOUTH => glRotatef(-90, 0, 1, 0)
+      case Direction.WEST => glRotatef(-180, 0, 1, 0)
+      case Direction.EAST => glRotatef(0, 0, 1, 0)
     }
 
     if (getDirection.offsetY == 0)

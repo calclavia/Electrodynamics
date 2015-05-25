@@ -9,7 +9,7 @@ import net.minecraft.entity.EntityLivingBase
 import net.minecraft.item.ItemStack
 import net.minecraft.util.{MovingObjectPosition, ResourceLocation}
 import net.minecraftforge.client.model.AdvancedModelLoader
-import net.minecraftforge.common.util.ForgeDirection
+import nova.core.util.Direction
 import org.lwjgl.opengl.GL11._
 import resonantengine.lib.grid.energy.electric.NodeElectricComponent
 import resonantengine.lib.modcontent.block.ResonantTile
@@ -42,8 +42,8 @@ class TileLaserReceiver extends ResonantTile(Material.rock) with ILaserHandler w
   nodes.add(electricNode)
 
   electricNode.dynamicTerminals = true
-  electricNode.setPositives(Set(ForgeDirection.NORTH, ForgeDirection.EAST))
-  electricNode.setNegatives(Set(ForgeDirection.SOUTH, ForgeDirection.WEST))
+  electricNode.setPositives(Set(Direction.NORTH, Direction.EAST))
+  electricNode.setNegatives(Set(Direction.SOUTH, Direction.WEST))
 
   override def canUpdate: Boolean = false
 
@@ -73,13 +73,13 @@ class TileLaserReceiver extends ResonantTile(Material.rock) with ILaserHandler w
 
     getDirection match
     {
-      case ForgeDirection.UNKNOWN =>
-      case ForgeDirection.UP => glRotatef(-90, 1, 0, 0)
-      case ForgeDirection.DOWN => glRotatef(90, 1, 0, 0)
-      case ForgeDirection.NORTH => glRotatef(90, 0, 1, 0)
-      case ForgeDirection.SOUTH => glRotatef(-90, 0, 1, 0)
-      case ForgeDirection.WEST => glRotatef(-180, 0, 1, 0)
-      case ForgeDirection.EAST => glRotatef(0, 0, 1, 0)
+      case Direction.UNKNOWN =>
+      case Direction.UP => glRotatef(-90, 1, 0, 0)
+      case Direction.DOWN => glRotatef(90, 1, 0, 0)
+      case Direction.NORTH => glRotatef(90, 0, 1, 0)
+      case Direction.SOUTH => glRotatef(-90, 0, 1, 0)
+      case Direction.WEST => glRotatef(-180, 0, 1, 0)
+      case Direction.EAST => glRotatef(0, 0, 1, 0)
     }
 
     if (getDirection.offsetY == 0)

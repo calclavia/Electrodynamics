@@ -9,7 +9,7 @@ import edx.core.Reference
 import edx.core.render.InvertX
 import edx.core.util.ColorUtil
 import net.minecraft.util.{IIcon, ResourceLocation}
-import net.minecraftforge.common.util.ForgeDirection
+import nova.core.util.Direction
 import resonantengine.lib.wrapper.BitmaskWrapper._
 
 import scala.collection.convert.wrapAll._
@@ -41,12 +41,12 @@ object RenderFramedWire
     CCRenderState.reset()
     CCRenderState.useColour = true
     CCRenderState.setBrightness(wire.world, wire.x, wire.y, wire.z)
-    renderSide(ForgeDirection.UNKNOWN, wire)
+    renderSide(Direction.UNKNOWN, wire)
 
-    ForgeDirection.VALID_DIRECTIONS.filter(s => wire.clientRenderMask.mask(s)).foreach(renderSide(_, wire))
+    Direction.VALID_DIRECTIONS.filter(s => wire.clientRenderMask.mask(s)).foreach(renderSide(_, wire))
   }
 
-  def renderSide(side: ForgeDirection, wire: PartFramedWire)
+  def renderSide(side: Direction, wire: PartFramedWire)
   {
     var name: String = side.name.toLowerCase
     name = if (name == "unknown") "center" else name

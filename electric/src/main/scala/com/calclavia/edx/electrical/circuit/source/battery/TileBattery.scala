@@ -13,7 +13,7 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.IItemRenderer.ItemRenderType
 import net.minecraftforge.client.model.AdvancedModelLoader
-import net.minecraftforge.common.util.ForgeDirection
+import nova.core.util.Direction
 import org.lwjgl.opengl.GL11._
 import resonantengine.api.item.ISimpleItemRenderer
 import resonantengine.core.network.discriminator.PacketType
@@ -125,7 +125,7 @@ class TileBattery extends ResonantTile(Material.iron) with TIO with TBlockNodePr
     ioMap = buf.readInt()
   }
 
-  override def setIO(dir: ForgeDirection, packet: Int)
+  override def setIO(dir: Direction, packet: Int)
   {
     super.setIO(dir, packet)
     updateConnectionMask()
@@ -199,20 +199,20 @@ class TileBattery extends ResonantTile(Material.iron) with TIO with TBlockNodePr
     var disabledParts = Set.empty[String]
     var enabledParts = Set.empty[String]
 
-    for (check <- ForgeDirection.VALID_DIRECTIONS)
+    for (check <- Direction.VALID_DIRECTIONS)
     {
       if ((position + check).getTileEntity.isInstanceOf[TileBattery])
       {
         disabledParts ++= partToDisable(check.ordinal)
-        if (check == ForgeDirection.UP)
+        if (check == Direction.UP)
         {
           enabledParts ++= partToDisable(check.ordinal)
           enabledParts += "coil1"
         }
-        else if (check == ForgeDirection.DOWN)
+        else if (check == Direction.DOWN)
         {
           var connectionParts = Set.empty[String]
-          val downDirs = ForgeDirection.VALID_DIRECTIONS.filter(_.offsetY == 0)
+          val downDirs = Direction.VALID_DIRECTIONS.filter(_.offsetY == 0)
           downDirs.foreach(s => connectionParts ++= connectionPartToEnable(s.ordinal))
           downDirs.filter(s => (position + s).getTileEntity.isInstanceOf[TileBattery]).foreach(s => connectionParts --= connectionPartToEnable(s.ordinal))
           enabledParts ++= connectionParts

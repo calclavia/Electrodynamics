@@ -4,7 +4,7 @@ import net.minecraft.block.material.Material
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
-import net.minecraftforge.common.util.ForgeDirection
+import nova.core.util.Direction
 import resonantengine.lib.modcontent.block.ResonantTile
 import resonantengine.lib.transform.vector.Vector3
 
@@ -24,7 +24,7 @@ abstract class TileFocus(material: Material) extends ResonantTile(material) with
     {
       if (player.isSneaking)
       {
-        focus(new Vector3(ForgeDirection.getOrientation(side)) + new Vector3(x, y, z) + 0.5)
+        focus(new Vector3(Direction.getOrientation(side)) + new Vector3(x, y, z) + 0.5)
       }
       else
       {

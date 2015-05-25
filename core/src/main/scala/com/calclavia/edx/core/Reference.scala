@@ -9,7 +9,7 @@ import java.util.logging.Logger
  */
 object Reference
 {
-  final val id = "EDX"
+  final val id = "edx"
 
   /** The official name of the mod */
   final val name = "Electrodynamics"

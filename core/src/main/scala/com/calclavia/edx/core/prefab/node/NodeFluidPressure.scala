@@ -1,6 +1,6 @@
 package com.calclavia.edx.core.prefab.node
 
-import net.minecraftforge.common.util.ForgeDirection
+import nova.core.util.Direction
 import net.minecraftforge.fluids.{FluidContainerRegistry, IFluidHandler}
 import resonantengine.api.graph.{INodeProvider, IUpdate}
 import resonantengine.lib.grid.core.UpdateTicker
@@ -52,7 +52,7 @@ class NodeFluidPressure(parent: INodeProvider, volume: Int = FluidContainerRegis
     {
       directionMap.foreach
       {
-        case (handler: IFluidHandler, dir: ForgeDirection) =>
+        case (handler: IFluidHandler, dir: Direction) =>
         {
           if (handler.isInstanceOf[NodeFluidPressure])
           {
@@ -121,7 +121,7 @@ class NodeFluidPressure(parent: INodeProvider, volume: Int = FluidContainerRegis
     }
   }
 
-  protected def doDistribute(deltaTime: Double, dir: ForgeDirection, nodeA: NodeFluidPressure, nodeB: NodeFluidPressure, flowRate: Int)
+  protected def doDistribute(deltaTime: Double, dir: Direction, nodeA: NodeFluidPressure, nodeB: NodeFluidPressure, flowRate: Int)
   {
     val tankA = nodeA.getTank
     val tankB = nodeB.getTank
@@ -152,7 +152,7 @@ class NodeFluidPressure(parent: INodeProvider, volume: Int = FluidContainerRegis
 
     directionMap.foreach
     {
-      case (handler: IFluidHandler, dir: ForgeDirection) =>
+      case (handler: IFluidHandler, dir: Direction) =>
       {
         if (handler.isInstanceOf[NodeFluidPressure])
         {
@@ -180,7 +180,7 @@ class NodeFluidPressure(parent: INodeProvider, volume: Int = FluidContainerRegis
     }
   }
 
-  def pressure(direction: ForgeDirection): Int = _pressure
+  def pressure(direction: Direction): Int = _pressure
 
   def pressure: Int = _pressure
 

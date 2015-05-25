@@ -11,7 +11,7 @@ import com.calclavia.edx.core.prefab.part.connector.PartAbstract
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.MovingObjectPosition
-import net.minecraftforge.common.util.ForgeDirection
+import nova.core.util.Direction
 
 import scala.collection.convert.wrapAll._
 
@@ -24,7 +24,7 @@ abstract class PartFace extends PartAbstract with TCuboidPart with JNormalOcclus
   /**
    * Side of the block this is placed on.
    */
-  var placementSide: ForgeDirection = null
+  var placementSide: Direction = null
   /**
    * The relative direction this block faces.
    */
@@ -32,13 +32,13 @@ abstract class PartFace extends PartAbstract with TCuboidPart with JNormalOcclus
 
   def preparePlacement(side: Int, facing: Int)
   {
-    this.placementSide = ForgeDirection.getOrientation(side)
+    this.placementSide = Direction.getOrientation(side)
     this.facing = (facing - 2).asInstanceOf[Byte]
   }
 
   override def read(packet: MCDataInput, id: Int)
   {
-    placementSide = ForgeDirection.getOrientation(packet.readByte)
+    placementSide = Direction.getOrientation(packet.readByte)
     facing = packet.readByte
   }
 
@@ -72,7 +72,7 @@ abstract class PartFace extends PartAbstract with TCuboidPart with JNormalOcclus
   override def load(nbt: NBTTagCompound)
   {
     super.load(nbt)
-    placementSide = ForgeDirection.getOrientation(nbt.getByte("side"))
+    placementSide = Direction.getOrientation(nbt.getByte("side"))
     facing = nbt.getByte("facing")
   }
 
@@ -86,9 +86,9 @@ abstract class PartFace extends PartAbstract with TCuboidPart with JNormalOcclus
   /**
    * Gets the relative direction of this block relative to the face it is on.
    */
-  def getFacing: ForgeDirection = ForgeDirection.getOrientation(this.facing + 2)
+  def getFacing: Direction = Direction.getOrientation(this.facing + 2)
 
-  def getAbsoluteFacing: ForgeDirection =
+  def getAbsoluteFacing: Direction =
   {
     var s: Int = 0
     facing match
@@ -104,6 +104,6 @@ abstract class PartFace extends PartAbstract with TCuboidPart with JNormalOcclus
     }
 
     val absDir = Rotation.rotateSide(placementSide.ordinal, s)
-    return ForgeDirection.getOrientation(absDir)
+    return Direction.getOrientation(absDir)
   }
 }
