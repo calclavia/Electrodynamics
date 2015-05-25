@@ -7,7 +7,6 @@ import com.calclavia.edx.mffs.api.modules.Module
 import com.calclavia.edx.mffs.base.{BlockModuleHandler, PacketBlock}
 import com.calclavia.edx.mffs.content.{Content, Models, Textures}
 import com.calclavia.edx.mffs.item.card.ItemCardFrequency
-import com.calclavia.graph.core.electric.TTEBridge
 import com.resonant.core.energy.EnergyStorage
 import nova.core.block.components.{DynamicRenderer, StaticRenderer}
 import nova.core.fluid.Tank
@@ -47,9 +46,9 @@ object BlockCoercionDeriver {
 	val power = 5000000
 }
 
-class BlockCoercionDeriver extends BlockModuleHandler with TTEBridge with StaticRenderer with DynamicRenderer {
+class BlockCoercionDeriver extends BlockModuleHandler with StaticRenderer with DynamicRenderer {
 	override val inventory = new InventorySimple(6)
-	override val energy = new EnergyStorage(BlockCoercionDeriver.power)
+
 	@Stored
 	var processTime: Int = 0
 
@@ -66,7 +65,7 @@ class BlockCoercionDeriver extends BlockModuleHandler with TTEBridge with Static
 
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)
-
+/*
 		if (Side.get().isServer) {
 			if (isActive) {
 				if (isInversed && Settings.enableElectricity) {
@@ -119,7 +118,7 @@ class BlockCoercionDeriver extends BlockModuleHandler with TTEBridge with Static
 					animationTween -= 0.01f
 				}
 			}
-		}
+		}*/
 	}
 
 	/**
