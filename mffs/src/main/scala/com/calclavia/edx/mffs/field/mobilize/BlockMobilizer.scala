@@ -426,7 +426,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 							/**
 							 * Movement Rendering
 							 */
-							val direction = getDirection
+							val direction = get(classOf[Orientation]).get().orientation
 
 							hologramRenderPoints.foreach(
 								pos =>

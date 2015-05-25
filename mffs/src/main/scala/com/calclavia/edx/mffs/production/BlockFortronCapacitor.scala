@@ -20,7 +20,6 @@ import nova.core.network.Sync
 import nova.core.render.model.Model
 import nova.core.retention.Stored
 import nova.core.util.transform.matrix.MatrixStack
-
 class BlockFortronCapacitor extends BlockModuleHandler {
 
 	override val inventory: InventorySimple = new InventorySimple(3 + 4 * 2 + 1)

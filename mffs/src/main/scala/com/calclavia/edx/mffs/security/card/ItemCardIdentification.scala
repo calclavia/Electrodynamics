@@ -43,7 +43,7 @@ class ItemCardIdentification extends ItemCardAccess with PacketHandler {
 	override def onRightClick(entity: Entity) {
 		super.onRightClick(entity)
 		if (Side.get.isServer) {
-			if (entity.isInstanceOf[Player]) {
+			if (entity.has(classOf[Player])) {
 				val player = entity.asInstanceOf[Player]
 				if (Game.instance.keyManager.isKeyDown(Key.KEY_LSHIFT)) {
 

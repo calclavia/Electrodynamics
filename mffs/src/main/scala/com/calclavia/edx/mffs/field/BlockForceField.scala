@@ -17,6 +17,7 @@ import nova.core.entity.Entity
 import nova.core.entity.component.Player
 import nova.core.game.Game
 import nova.core.item.Item
+import nova.core.network.NetworkTarget.Side
 import nova.core.network.{PacketHandler, Sync}
 import nova.core.render.model.Model
 import nova.core.retention.{Storable, Stored}
@@ -25,6 +26,7 @@ import nova.core.util.transform.shape.Cuboid
 import nova.core.util.transform.vector.Vector3i
 
 import scala.collection.convert.wrapAll._
+
 class BlockForceField extends Block with PacketHandler with ForceField with Storable {
 
 	@Stored
@@ -63,8 +65,8 @@ class BlockForceField extends Block with PacketHandler with ForceField with Stor
 					val biometricIdentifier = projector.getBiometricIdentifier
 
 					if ((transform.position.toDouble + 0.5).distance(entity.transform.position) < 0.5) {
-						if (Game.instance.networkManager.isServer && entity.isInstanceOf[Damageable]) {
-							val entityLiving = entity.asInstanceOf[Damageable]
+						if (Side.get().isServer && entity.has(classOf[Damageable])) {
+							val entityLiving = entity.get(classOf[Damageable])
 
 							if (entity.get(classOf[Player]).isPresent) {
 								val player = entity.get(classOf[Player]).get

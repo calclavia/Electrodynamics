@@ -53,19 +53,6 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix  wit
 
 	override def getShape: StructureProvider = getShapeItem
 
-	/**
-	 * @return Gets the item that provides a shape
-	 */
-	def getShapeItem: Item with StructureProvider = {
-		val optional = inventory.get(modeSlotID)
-		if (optional.isPresent) {
-			if (optional.get().isInstanceOf[Item with StructureProvider]) {
-				return optional.asInstanceOf[Item with StructureProvider]
-			}
-		}
-		return null
-	}
-
 	override def getSidedModuleCount(module: ItemFactory, directions: Direction*): Int = {
 		var actualDirs = directions
 
@@ -86,6 +73,19 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix  wit
 			getModules().foreach(_.onCalculateInterior(this, structure))
 			return structure.getExteriorStructure
 		})
+
+	/**
+	 * @return Gets the item that provides a shape
+	 */
+	def getShapeItem: Item with StructureProvider = {
+		val optional = inventory.get(modeSlotID)
+		if (optional.isPresent) {
+			if (optional.get().isInstanceOf[Item with StructureProvider]) {
+				return optional.asInstanceOf[Item with StructureProvider]
+			}
+		}
+		return null
+	}
 
 	def getStructure: Structure = {
 		val structure = getShapeItem.getStructure
@@ -110,7 +110,7 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix  wit
 				yScalePos = getModuleCount(Content.moduleScale, getDirectionSlots(Direction.UP): _*)
 			}
 			else {
-				val direction = getDirection
+				val direction = get(classOf[Orientation]).get().orientation
 
 				zScalePos = getModuleCount(Content.moduleScale, getDirectionSlots(RotationUtility.getRelativeSide(direction, Direction.SOUTH)): _*)
 				xScalePos = getModuleCount(Content.moduleScale, getDirectionSlots(RotationUtility.getRelativeSide(direction, Direction.EAST)): _*)
@@ -128,13 +128,38 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix  wit
 
 	def getModuleSlots: Array[Int] = _getModuleSlots
 
+	override def getDirectionSlots(direction: Direction): Array[Int] =
+		direction match {
+			case Direction.UP =>
+				Array(10, 11)
+			case Direction.DOWN =>
+				Array(12, 13)
+			case Direction.SOUTH =>
+				Array(2, 3)
+			case Direction.NORTH =>
+				Array(4, 5)
+			case Direction.WEST =>
+				Array(6, 7)
+			case Direction.EAST =>
+				Array(8, 9)
+			case _ =>
+				Array[Int]()
+		}
+
+	/**
+	 * Gets the number of modules in this block that are in specific slots
+	 * @param slots The slot IDs. Providing null will search all slots
+	 * @return The number of all item modules in the slots.
+	 */
+	override def getModuleCount(compareModule: ItemFactory, slots: Int*): Int = super[BlockModuleHandler].getModuleCount(compareModule, slots: _*)
+
 	def getNegativeScale: Vector3i =
 		getOrSetCache("getNegativeScale", () => {
 			var zScaleNeg = 0
 			var xScaleNeg = 0
 			var yScaleNeg = 0
 
-			val direction = getDirection
+			val direction = get(classOf[Orientation]).get().orientation
 
 			if (absoluteDirection) {
 				zScaleNeg = getModuleCount(Content.moduleScale, getDirectionSlots(Direction.NORTH): _*)
@@ -158,7 +183,7 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix  wit
 	def getTranslation: Vector3i =
 		getOrSetCache("getTranslation", () => {
 
-			val direction = getDirection
+			val direction = get(classOf[Orientation]).get().orientation
 
 			var zTranslationNeg = 0
 			var zTranslationPos = 0
@@ -187,31 +212,6 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix  wit
 			return new Vector3i(xTranslationPos - xTranslationNeg, yTranslationPos - yTranslationNeg, zTranslationPos - zTranslationNeg)
 		})
 
-	override def getDirectionSlots(direction: Direction): Array[Int] =
-		direction match {
-			case Direction.UP =>
-				Array(10, 11)
-			case Direction.DOWN =>
-				Array(12, 13)
-			case Direction.SOUTH =>
-				Array(2, 3)
-			case Direction.NORTH =>
-				Array(4, 5)
-			case Direction.WEST =>
-				Array(6, 7)
-			case Direction.EAST =>
-				Array(8, 9)
-			case _ =>
-				Array[Int]()
-		}
-
-	/**
-	 * Gets the number of modules in this block that are in specific slots
-	 * @param slots The slot IDs. Providing null will search all slots
-	 * @return The number of all item modules in the slots.
-	 */
-	override def getModuleCount(compareModule: ItemFactory, slots: Int*): Int = super[BlockModuleHandler].getModuleCount(compareModule, slots: _*)
-
 	def getRotation = Quaternion.fromEuler(Math.toRadians(getRotationYaw), Math.toRadians(getRotationPitch), 0)
 
 	/**
@@ -221,7 +221,7 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix  wit
 		getOrSetCache("getRotationYaw", () => {
 
 			var horizontalRotation = 0
-			val direction = getDirection
+			val direction = get(classOf[Orientation]).get().orientation
 
 			if (this.absoluteDirection) {
 				horizontalRotation = getModuleCount(Content.moduleRotate, getDirectionSlots(Direction.EAST): _*) - getModuleCount(Content.moduleRotate, getDirectionSlots(Direction.WEST): _*) + getModuleCount(Content.moduleRotate, this.getDirectionSlots(Direction.SOUTH): _*) - this.getModuleCount(Content.moduleRotate, getDirectionSlots(Direction.NORTH): _*)
