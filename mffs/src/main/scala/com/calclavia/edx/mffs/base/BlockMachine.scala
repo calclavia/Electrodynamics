@@ -7,7 +7,7 @@ import com.calclavia.edx.mffs.content.Textures
 import com.calclavia.graph.api.energy.NodeRedstone
 import com.resonant.lib.wrapper.WrapFunctions._
 import com.resonant.wrapper.core.Placeholder
-import nova.core.block.component.Oriented
+import nova.core.block.component.{BlockCollider, Oriented}
 import nova.core.block.{Block, Stateful}
 import nova.core.component.renderer.ItemRenderer
 import nova.core.entity.Entity
@@ -19,6 +19,7 @@ import nova.core.render.texture.Texture
 import nova.core.retention.{Storable, Stored}
 import nova.core.util.Direction
 import nova.core.util.transform.vector.Vector3d
+
 /**
  * A base block class for all MFFS blocks to inherit.
  * @author Calclavia
@@ -46,6 +47,7 @@ abstract class BlockMachine extends Block with PacketHandler with IActivatable w
 	})
 
 	add(redstoneNode)
+	add(new BlockCollider(this).setCube(false))
 	add(new ItemRenderer(this))
 
 	//	stepSound = Block.soundTypeMetal
@@ -89,6 +91,7 @@ abstract class BlockMachine extends Block with PacketHandler with IActivatable w
 		Game.instance.networkManager.sync(PacketBlock.description, this)
 		world().markStaticRender(position())
 	}
+
 	override def onRightClick(entity: Entity, side: Int, hit: Vector3d): Boolean = {
 		active = !active
 		if (Placeholder.isHoldingConfigurator(entity)) {

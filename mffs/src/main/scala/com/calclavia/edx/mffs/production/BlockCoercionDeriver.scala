@@ -7,7 +7,8 @@ import com.calclavia.edx.mffs.api.modules.Module
 import com.calclavia.edx.mffs.base.{BlockModuleHandler, PacketBlock}
 import com.calclavia.edx.mffs.content.{Content, Models, Textures}
 import com.calclavia.edx.mffs.item.card.ItemCardFrequency
-import nova.core.component.renderer.{DynamicRenderer, StaticRenderer}
+import nova.core.block.component.BlockCollider
+import nova.core.component.renderer.{DynamicRenderer, ItemRenderer, StaticRenderer}
 import nova.core.fluid.component.Tank
 import nova.core.inventory.InventorySimple
 import nova.core.item.Item
@@ -45,7 +46,7 @@ object BlockCoercionDeriver {
 	val power = 5000000
 }
 
-class BlockCoercionDeriver extends BlockModuleHandler with StaticRenderer with DynamicRenderer {
+class BlockCoercionDeriver extends BlockModuleHandler {
 	override val inventory = new InventorySimple(6)
 
 	@Stored
@@ -58,66 +59,101 @@ class BlockCoercionDeriver extends BlockModuleHandler with StaticRenderer with D
 	//Client
 	var animationTween = 0f
 
+	add(new BlockCollider(this).setCube(false))
+
+	add(new StaticRenderer(this) {
+		override def renderStatic(model: Model) {
+			val originalModel = Models.deriver.getModel
+			val capacitorModel = new Model
+			capacitorModel.children.addAll(originalModel.filterNot(_.name.equals("crystal")))
+			model.children.add(capacitorModel)
+			model.bindAll(if (isActive) Textures.coercionDeriverOn else Textures.coercionDeriverOff)
+		}
+	})
+
+	add(new DynamicRenderer(this) {
+		override def renderDynamic(model: Model) {
+			model.translate(0, (0.3 + Math.sin(Math.toRadians(animation)) * 0.08) * animationTween - 0.1, 0)
+			model.rotate(Vector3d.yAxis, animation)
+
+			val originalModel = Models.deriver.getModel
+			val crystalModel = new Model
+			crystalModel.children.addAll(originalModel.filter(_.name.equals("crystal")))
+			//Enable Blending
+			model.children.add(crystalModel)
+			//Disable Blending
+			model.bindAll(if (isActive) Textures.coercionDeriverOn else Textures.coercionDeriverOff)
+		}
+	})
+
+	add(new ItemRenderer(this) {
+		override def renderItem(model: Model) {
+			model.translate(0, 0.1, 0)
+			get(classOf[StaticRenderer]).get.renderStatic(model)
+			get(classOf[DynamicRenderer]).get.renderDynamic(model)
+		}
+	})
+
 	override def getID: String = "coercionDeriver"
 
 	override def getTank(dir: Direction): util.Set[Tank] = Set.empty[Tank]
 
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)
-/*
-		if (Side.get().isServer) {
-			if (isActive) {
-				if (isInversed && Settings.enableElectricity) {
-					val withdrawnElectricity = removeFortron(productionRate / 20, true) / BlockCoercionDeriver.ueToFortronRatio
-					energy += withdrawnElectricity * BlockCoercionDeriver.energyConversionPercentage
-					//recharge(getStackInSlot(TileCoercionDeriver.slotBattery))
-				}
-				else {
-					if (getFortron < getFortronCapacity) {
-						// discharge(getStackInSlot(TileCoercionDeriver.slotBattery))
-						energy.max = getPower
+		/*
+				if (Side.get().isServer) {
+					if (isActive) {
+						if (isInversed && Settings.enableElectricity) {
+							val withdrawnElectricity = removeFortron(productionRate / 20, true) / BlockCoercionDeriver.ueToFortronRatio
+							energy += withdrawnElectricity * BlockCoercionDeriver.energyConversionPercentage
+							//recharge(getStackInSlot(TileCoercionDeriver.slotBattery))
+						}
+						else {
+							if (getFortron < getFortronCapacity) {
+								// discharge(getStackInSlot(TileCoercionDeriver.slotBattery))
+								energy.max = getPower
 
-						if (energy >= getPower || (!Settings.enableElectricity && isItemValidForSlot(BlockCoercionDeriver.slotFuel, inventory.get(BlockCoercionDeriver.slotFuel).orElse(null)))) {
-							addFortron(productionRate, true)
-							energy -= getPower
+								if (energy >= getPower || (!Settings.enableElectricity && isItemValidForSlot(BlockCoercionDeriver.slotFuel, inventory.get(BlockCoercionDeriver.slotFuel).orElse(null)))) {
+									addFortron(productionRate, true)
+									energy -= getPower
 
-							if (processTime == 0 && isItemValidForSlot(BlockCoercionDeriver.slotFuel, inventory.get(BlockCoercionDeriver.slotFuel).orElse(null))) {
-								inventory.remove(BlockCoercionDeriver.slotFuel, 1)
-								processTime = BlockCoercionDeriver.fuelProcessTime * Math.max(this.getModuleCount(Content.moduleScale) / 20, 1)
-							}
+									if (processTime == 0 && isItemValidForSlot(BlockCoercionDeriver.slotFuel, inventory.get(BlockCoercionDeriver.slotFuel).orElse(null))) {
+										inventory.remove(BlockCoercionDeriver.slotFuel, 1)
+										processTime = BlockCoercionDeriver.fuelProcessTime * Math.max(this.getModuleCount(Content.moduleScale) / 20, 1)
+									}
 
-							if (processTime > 0) {
-								processTime -= 1
+									if (processTime > 0) {
+										processTime -= 1
 
-								if (processTime < 1) {
-									processTime = 0
+										if (processTime < 1) {
+											processTime = 0
+										}
+									}
+									else {
+										processTime = 0
+									}
 								}
-							}
-							else {
-								processTime = 0
 							}
 						}
 					}
 				}
-			}
-		}
-		else {
-			/**
-			 * Handle animation
-			 */
-			if (isActive) {
-				animation += 1
+				else {
+					/**
+					 * Handle animation
+					 */
+					if (isActive) {
+						animation += 1
 
-				if (animationTween < 1) {
-					animationTween += 0.01f
-				}
-			}
-			else {
-				if (animationTween > 0) {
-					animationTween -= 0.01f
-				}
-			}
-		}*/
+						if (animationTween < 1) {
+							animationTween += 0.01f
+						}
+					}
+					else {
+						if (animationTween > 0) {
+							animationTween -= 0.01f
+						}
+					}
+				}*/
 	}
 
 	/**
@@ -187,32 +223,4 @@ class BlockCoercionDeriver extends BlockModuleHandler with StaticRenderer with D
 		}
 	}
 
-	override def isCube: Boolean = false
-
-	override def renderItem(model: Model) {
-		model.translate(0, 0.1, 0)
-		renderStatic(model)
-		renderDynamic(model)
-	}
-
-	override def renderStatic(model: Model) {
-		val originalModel = Models.deriver.getModel
-		val capacitorModel = new Model
-		capacitorModel.children.addAll(originalModel.filterNot(_.name.equals("crystal")))
-		model.children.add(capacitorModel)
-		model.bindAll(if (isActive) Textures.coercionDeriverOn else Textures.coercionDeriverOff)
-	}
-
-	override def renderDynamic(model: Model) {
-		model.translate(0, (0.3 + Math.sin(Math.toRadians(animation)) * 0.08) * animationTween - 0.1, 0)
-		model.rotate(Vector3d.yAxis, animation)
-
-		val originalModel = Models.deriver.getModel
-		val crystalModel = new Model
-		crystalModel.children.addAll(originalModel.filter(_.name.equals("crystal")))
-		//Enable Blending
-		model.children.add(crystalModel)
-		//Disable Blending
-		model.bindAll(if (isActive) Textures.coercionDeriverOn else Textures.coercionDeriverOff)
-	}
 }

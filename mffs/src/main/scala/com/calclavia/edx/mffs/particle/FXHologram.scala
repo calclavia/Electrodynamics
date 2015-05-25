@@ -9,9 +9,28 @@ import nova.core.util.transform.vector.Vector3d
 
 import scala.collection.convert.wrapAll._
 
-class FXHologram(color: Color, maxAge: Double) extends FXMFFS with DynamicRenderer {
+class FXHologram(color: Color, maxAge: Double) extends FXMFFS {
 	var age = 0d
 	private var targetPosition: Vector3d = null
+
+	add(new DynamicRenderer(this) {
+		override def renderDynamic(model: Model) {
+			model.scale(1.01, 1.01, 1.01)
+
+			var op = 0.5
+
+			if (maxAge - age <= 4) {
+				op = 0.5f - (5 - (maxAge - age)) * 0.1F
+			}
+
+			//		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F)
+			//		RenderUtility.enableBlending
+			BlockModelUtil.drawCube(model)
+			model.bindAll(Textures.hologram)
+			model.faces.foreach(_.vertices.foreach(_.setColor(color.alpha((op * 255).toInt))))
+			//		RenderUtility.disableBlending
+		}
+	})
 
 	override def getID: String = "hologram"
 
@@ -37,20 +56,4 @@ class FXHologram(color: Color, maxAge: Double) extends FXMFFS with DynamicRender
 		}
 	}
 
-	override def renderDynamic(model: Model) {
-		model.scale(1.01, 1.01, 1.01)
-
-		var op = 0.5
-
-		if (maxAge - age <= 4) {
-			op = 0.5f - (5 - (maxAge - age)) * 0.1F
-		}
-
-		//		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F)
-		//		RenderUtility.enableBlending
-		BlockModelUtil.drawCube(model)
-		model.bindAll(Textures.hologram)
-		model.faces.foreach(_.vertices.foreach(_.setColor(color.alpha((op * 255).toInt))))
-		//		RenderUtility.disableBlending
-	}
 }

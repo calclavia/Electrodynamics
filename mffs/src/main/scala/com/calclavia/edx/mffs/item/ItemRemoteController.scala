@@ -12,6 +12,7 @@ import com.calclavia.edx.mffs.particle.{FXFortronBeam, FieldColor}
 import com.calclavia.edx.mffs.security.MFFSPermissions
 import com.calclavia.edx.mffs.util.MFFSUtility
 import com.resonant.wrapper.lib.utility.science.UnitDisplay
+import nova.core.block.Block.RightClickEvent
 import nova.core.entity.Entity
 import nova.core.fluid.Fluid
 import nova.core.game.Game
@@ -106,7 +107,7 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 							}
 							if (receivedEnergy >= requiredEnergy) {
 								try {
-									block.onRightClick(entity, 0, Vector3d.zero)
+									block.rightClickEvent.publish(new RightClickEvent(entity, Direction.UNKNOWN, Vector3d.zero))
 								}
 								catch {
 									case e: Exception => {

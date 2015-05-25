@@ -23,7 +23,7 @@ import nova.core.retention.Stored
 import nova.core.util.transform.matrix.MatrixStack
 import nova.core.util.transform.vector.Vector3d
 
-class BlockFortronCapacitor extends BlockModuleHandler with StaticRenderer {
+class BlockFortronCapacitor extends BlockModuleHandler {
 
 	override val inventory: InventorySimple = new InventorySimple(3 + 4 * 2 + 1)
 	private var tickAccumulator = 0d
@@ -45,6 +45,20 @@ class BlockFortronCapacitor extends BlockModuleHandler with StaticRenderer {
 	capacityBase = 700
 	capacityBoost = 10
 	startModuleIndex = 1
+
+	add(new StaticRenderer(this) {
+		override def renderStatic(model: Model) {
+			model.matrix = new MatrixStack()
+				.loadMatrix(model.matrix)
+				.translate(0, 0.15, 0)
+				.scale(1.3, 1.3, 1.3)
+				.getMatrix
+
+			model.children.add(Models.fortronCapacitor.getModel)
+			model.bindAll(if (isActive) Textures.fortronCapacitorOn else Textures.fortronCapacitorOff)
+		}
+	}
+	)
 
 	override def onRightClick(entity: Entity, side: Int, hit: Vector3d): Boolean = {
 		/*if (!super.onRightClick(entity, side, hit)) {
@@ -156,22 +170,9 @@ class BlockFortronCapacitor extends BlockModuleHandler with StaticRenderer {
 
 	def getDeviceCount = getFrequencyDevices.size + getInputDevices.size + getOutputDevices.size
 
-	override def isCube: Boolean = false
-
 	def getTransferMode: TransferMode = transferMode
 
 	def toggleTransferMode() {
 		transferMode = transferMode.toggle()
-	}
-
-	override def renderStatic(model: Model) {
-		model.matrix = new MatrixStack()
-			.loadMatrix(model.matrix)
-			.translate(0, 0.15, 0)
-			.scale(1.3, 1.3, 1.3)
-			.getMatrix
-
-		model.children.add(Models.fortronCapacitor.getModel)
-		model.bindAll(if (isActive) Textures.fortronCapacitorOn else Textures.fortronCapacitorOff)
 	}
 }

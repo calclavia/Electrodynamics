@@ -15,7 +15,7 @@ import scala.collection.convert.wrapAll._
  * MFFS Beam Renderer.
  * @author Calclavia, Azanor
  */
-abstract class FXBeam(texture: Texture, @BeanProperty var color: Color, maxAge: Double) extends Entity with DynamicRenderer with Updater {
+abstract class FXBeam(texture: Texture, @BeanProperty var color: Color, maxAge: Double) extends Entity with Updater {
 
 	private val endModifier: Float = 1.0F
 	private val reverse: Boolean = false
@@ -34,6 +34,81 @@ abstract class FXBeam(texture: Texture, @BeanProperty var color: Color, maxAge: 
 	private var age: Double = 0
 
 	private var prevPos: Vector3d = null
+
+	add(new DynamicRenderer(this) {
+		override def renderDynamic(model: Model) {
+
+			//		GL11.glPushMatrix
+			var f = 1
+			val var9: Float = 1.0F
+			val slide: Float = ticks
+			val rot: Float = ticks % (360 / rotationSpeed) * rotationSpeed + rotationSpeed * f
+			var size = 1.0
+			if (pulse) {
+				size = Math.min(age, 1.0F)
+				size = prevSize + (size - prevSize) * f
+			}
+
+			var op = 0.5
+			if (pulse && (maxAge - age <= 4)) {
+				op = 0.5F - (4 - (maxAge - age)) * 0.1F
+			}
+			//		GL11.glTexParameterf(3553, 10242, 10497.0F)
+			//		GL11.glTexParameterf(3553, 10243, 10497.0F)
+			//		GL11.glDisable(2884)
+			var var11: Float = slide + f
+			if (reverse) {
+				var11 *= -1.0F
+			}
+			val var12 = -var11 * 0.2F - Math.floor(-var11 * 0.1F)
+			//		GL11.glEnable(3042)
+			//		GL11.glBlendFunc(770, 1)
+			//		GL11.glDepthMask(false)
+			//		GL11.glTranslated(xx, yy, zz)
+			val ry = prevYaw + (rotYaw - prevYaw) * f
+			val rp = prevPitch + (rotPitch - prevPitch) * f
+
+			model.rotate(Vector3d.xAxis, Math.PI)
+			model.rotate(-Vector3d.zAxis, Math.PI * 2 + ry)
+			model.rotate(Vector3d.xAxis, rp)
+
+			val var44: Double = -0.15D * size
+			val var17: Double = 0.15D * size
+			val var44b: Double = -0.15D * size * endModifier
+			val var17b: Double = 0.15D * size * endModifier
+
+			model.rotate(Vector3d.yAxis, rot)
+
+			for (t <- 0 until 3) {
+
+				val var29: Double = length * size * var9
+				val var31: Double = 0.0D
+				val var33: Double = 1.0D
+				val var35: Double = -1.0F + var12 + t / 3.0F
+				val var37: Double = length * size * var9 + var35
+
+				val beamModel = new Model()
+				beamModel.rotate(Vector3d.yAxis, Math.PI / 3)
+				val face = beamModel.createFace()
+				face.drawVertex(new Vertex(var44b, var29, 0.0D, var33, var37))
+				face.drawVertex(new Vertex(var44, 0.0D, 0.0D, var33, var35))
+				face.drawVertex(new Vertex(var17, 0.0D, 0.0D, var31, var35))
+				face.drawVertex(new Vertex(var17b, var29, 0.0D, var31, var37))
+				face.vertices.foreach(_.setColor(color.alpha((op * 255).toInt)))
+				beamModel.drawFace(face)
+				model.children.add(beamModel)
+			}
+
+			//		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F)
+			//		GL11.glDepthMask(true)
+			//		GL11.glDisable(3042)
+			//		GL11.glEnable(2884)
+			//		GL11.glPopMatrix
+
+			prevSize = size
+			model.bindAll(texture)
+		}
+	})
 
 	def setTarget(target: Vector3d): this.type = {
 		this.target = target
@@ -71,76 +146,4 @@ abstract class FXBeam(texture: Texture, @BeanProperty var color: Color, maxAge: 
 		}
 	}
 
-	override def renderDynamic(model: Model) {
-
-		//		GL11.glPushMatrix
-		var f = 1
-		val var9: Float = 1.0F
-		val slide: Float = ticks
-		val rot: Float = ticks % (360 / this.rotationSpeed) * this.rotationSpeed + this.rotationSpeed * f
-		var size = 1.0
-		if (this.pulse) {
-			size = Math.min(age, 1.0F)
-			size = this.prevSize + (size - this.prevSize) * f
-		}
-
-		var op = 0.5
-		if (pulse && (this.maxAge - this.age <= 4)) {
-			op = 0.5F - (4 - (this.maxAge - this.age)) * 0.1F
-		}
-		//		GL11.glTexParameterf(3553, 10242, 10497.0F)
-		//		GL11.glTexParameterf(3553, 10243, 10497.0F)
-		//		GL11.glDisable(2884)
-		var var11: Float = slide + f
-		if (this.reverse) {
-			var11 *= -1.0F
-		}
-		val var12 = -var11 * 0.2F - Math.floor(-var11 * 0.1F)
-		//		GL11.glEnable(3042)
-		//		GL11.glBlendFunc(770, 1)
-		//		GL11.glDepthMask(false)
-		//		GL11.glTranslated(xx, yy, zz)
-		val ry = this.prevYaw + (this.rotYaw - this.prevYaw) * f
-		val rp = this.prevPitch + (this.rotPitch - this.prevPitch) * f
-
-		model.rotate(Vector3d.xAxis, Math.PI)
-		model.rotate(-Vector3d.zAxis, Math.PI * 2 + ry)
-		model.rotate(Vector3d.xAxis, rp)
-
-		val var44: Double = -0.15D * size
-		val var17: Double = 0.15D * size
-		val var44b: Double = -0.15D * size * this.endModifier
-		val var17b: Double = 0.15D * size * this.endModifier
-
-		model.rotate(Vector3d.yAxis, rot)
-
-		for (t <- 0 until 3) {
-
-			val var29: Double = this.length * size * var9
-			val var31: Double = 0.0D
-			val var33: Double = 1.0D
-			val var35: Double = -1.0F + var12 + t / 3.0F
-			val var37: Double = this.length * size * var9 + var35
-
-			val beamModel = new Model()
-			beamModel.rotate(Vector3d.yAxis, Math.PI / 3)
-			val face = beamModel.createFace()
-			face.drawVertex(new Vertex(var44b, var29, 0.0D, var33, var37))
-			face.drawVertex(new Vertex(var44, 0.0D, 0.0D, var33, var35))
-			face.drawVertex(new Vertex(var17, 0.0D, 0.0D, var31, var35))
-			face.drawVertex(new Vertex(var17b, var29, 0.0D, var31, var37))
-			face.vertices.foreach(_.setColor(color.alpha((op * 255).toInt)))
-			beamModel.drawFace(face)
-			model.children.add(beamModel)
-		}
-
-		//		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F)
-		//		GL11.glDepthMask(true)
-		//		GL11.glDisable(3042)
-		//		GL11.glEnable(2884)
-		//		GL11.glPopMatrix
-
-		this.prevSize = size
-		model.bindAll(texture)
-	}
 }

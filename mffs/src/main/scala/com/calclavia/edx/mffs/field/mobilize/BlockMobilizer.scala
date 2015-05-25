@@ -12,8 +12,7 @@ import com.calclavia.edx.mffs.security.{MFFSPermissions, PermissionHandler}
 import com.calclavia.edx.mffs.util.MFFSUtility
 import com.calclavia.edx.mffs.{ModularForceFieldSystem, Settings}
 import com.resonant.core.prefab.block.InventorySimpleProvider
-import nova.core.block.component.{BlockCollider, Oriented}
-import nova.core.component.renderer.StaticRenderer
+import nova.core.block.component.{BlockCollider, Oriented, StaticBlockRenderer}
 import nova.core.entity.Entity
 import nova.core.entity.component.RigidBody
 import nova.core.game.Game
@@ -30,7 +29,7 @@ import nova.core.world.World
 
 import scala.collection.convert.wrapAll._
 
-class BlockMobilizer extends BlockFieldMatrix with IEffectController with InventorySimpleProvider with PermissionHandler with StaticRenderer {
+class BlockMobilizer extends BlockFieldMatrix with IEffectController with InventorySimpleProvider with PermissionHandler {
 	@Stored
 	@Sync(ids = Array(PacketBlock.description, PacketBlock.inventory))
 	override val inventory = new InventorySimple(1 + 25)
@@ -58,6 +57,18 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 	 */
 	private var moveTime = 0
 	private var canRenderMove = true
+
+	add(new StaticBlockRenderer(this) {
+		override def renderStatic(model: Model) {
+			model.matrix = new MatrixStack()
+				.loadMatrix(model.matrix)
+				.rotate(get(classOf[Oriented]).get().direction.rotation)
+				.getMatrix
+
+			model.children.add(Models.mobilizer.getModel)
+			model.bindAll(if (isActive) Textures.mobilizerOn else Textures.mobilizerOff)
+		}
+	})
 
 	get(classOf[Oriented]).get.setMask(63)
 	get(classOf[BlockCollider]).get.setCube(false)
@@ -389,7 +400,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 	def getAbsoluteAnchor: Vector3i = position + anchor
 
 	def isVisibleToPlayer(position: Vector3i): Boolean = {
-		return Direction.DIRECTIONS.count(dir => world.getBlock(position + dir.toVector).get.get(classOf[BlockCollider]).get.isOpaqueCube) < 6
+		return Direction.DIRECTIONS.count(dir => world.getBlock(position + dir.toVector).get.get(classOf[BlockCollider]).get.isOpaqueCube.get()) < 6
 	}
 
 	override def read(packet: Packet) {
@@ -609,16 +620,6 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 		return super.callMethod(computer, context, method, arguments)
 	  }
 	*/
-
-	override def renderStatic(model: Model) {
-		model.matrix = new MatrixStack()
-			.loadMatrix(model.matrix)
-			.rotate(get(classOf[Oriented]).get().direction.rotation)
-			.getMatrix
-
-		model.children.add(Models.mobilizer.getModel)
-		model.bindAll(if (isActive) Textures.mobilizerOn else Textures.mobilizerOff)
-	}
 
 	/**
 	 * Called to start the block moving operation to move a set of blocks to a target.
