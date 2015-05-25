@@ -9,7 +9,8 @@ import com.resonant.core.prefab.block.Rotatable
 import com.resonant.lib.wrapper.WrapFunctions._
 import com.resonant.wrapper.core.Placeholder
 import nova.core.block.Block
-import nova.core.block.components.{ItemRenderer, Stateful}
+import nova.core.block.component.Stateful
+import nova.core.component.renderer.ItemRenderer
 import nova.core.entity.Entity
 import nova.core.game.Game
 import nova.core.gui.KeyManager.Key

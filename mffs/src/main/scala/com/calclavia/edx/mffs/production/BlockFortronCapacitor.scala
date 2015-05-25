@@ -12,9 +12,9 @@ import com.calclavia.edx.mffs.item.card.ItemCardFrequency
 import com.calclavia.edx.mffs.util.{FortronUtility, TransferMode}
 import com.resonant.lib.wrapper.WrapFunctions._
 import nova.core.block.Block
-import nova.core.block.components.StaticRenderer
+import nova.core.component.renderer.StaticRenderer
 import nova.core.entity.Entity
-import nova.core.fluid.Tank
+import nova.core.fluid.component.Tank
 import nova.core.inventory.InventorySimple
 import nova.core.item.Item
 import nova.core.network.Sync
@@ -117,6 +117,10 @@ class BlockFortronCapacitor extends BlockModuleHandler with StaticRenderer {
 
 	def getTransmissionRate: Int = 500 + 100 * getModuleCount(Content.moduleSpeed)
 
+	override def getAmplifier: Float = 0f
+
+	def getDeviceCount = getFrequencyDevices.size + getInputDevices.size + getOutputDevices.size
+
 	def getFrequencyDevices: Set[FortronFrequency] =
 		GraphFrequency.instance.get(getFrequency)
 			.view
@@ -151,10 +155,6 @@ class BlockFortronCapacitor extends BlockModuleHandler with StaticRenderer {
 			.map(inventory.get)
 			.collect { case op if op.isPresent => op.get }
 			.toSet
-
-	override def getAmplifier: Float = 0f
-
-	def getDeviceCount = getFrequencyDevices.size + getInputDevices.size + getOutputDevices.size
 
 	override def isCube: Boolean = false
 

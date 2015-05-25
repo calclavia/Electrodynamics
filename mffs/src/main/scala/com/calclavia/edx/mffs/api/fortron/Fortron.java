@@ -2,7 +2,7 @@ package com.calclavia.edx.mffs.api.fortron;
 
 import nova.core.fluid.Fluid;
 import nova.core.fluid.SidedTankProvider;
-import nova.core.fluid.Tank;
+import nova.core.fluid.component.Tank;
 import nova.core.game.Game;
 
 import java.util.Optional;

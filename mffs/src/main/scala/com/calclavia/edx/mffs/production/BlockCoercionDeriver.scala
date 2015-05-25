@@ -7,9 +7,8 @@ import com.calclavia.edx.mffs.api.modules.Module
 import com.calclavia.edx.mffs.base.{BlockModuleHandler, PacketBlock}
 import com.calclavia.edx.mffs.content.{Content, Models, Textures}
 import com.calclavia.edx.mffs.item.card.ItemCardFrequency
-import com.resonant.core.energy.EnergyStorage
-import nova.core.block.components.{DynamicRenderer, StaticRenderer}
-import nova.core.fluid.Tank
+import nova.core.component.renderer.{DynamicRenderer, StaticRenderer}
+import nova.core.fluid.component.Tank
 import nova.core.inventory.InventorySimple
 import nova.core.item.Item
 import nova.core.network.NetworkTarget.Side

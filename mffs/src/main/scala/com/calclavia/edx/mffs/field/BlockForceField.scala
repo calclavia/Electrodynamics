@@ -9,7 +9,8 @@ import com.calclavia.edx.mffs.content.{Content, Textures}
 import com.calclavia.edx.mffs.security.MFFSPermissions
 import com.calclavia.edx.mffs.util.MFFSUtility
 import nova.core.block.Block
-import nova.core.block.components.{LightEmitter, StaticRenderer}
+import nova.core.block.component.LightEmitter
+import nova.core.component.renderer.StaticRenderer
 import nova.core.entity.Entity
 import nova.core.entity.component.Damageable
 import nova.core.game.Game
@@ -90,6 +91,51 @@ class BlockForceField extends Block with PacketHandler with ForceField with Ligh
 		super.getCollidingBoxes(intersect, entity)
 	}
 
+	/**
+	 * @return Gets the projector block controlling this force field. Removes the force field if no
+	 *         projector can be found.
+	 */
+	def getProjector: BlockProjector = {
+		if (this.getProjectorSafe != null) {
+			return getProjectorSafe
+		}
+
+		if (Game.instance.networkManager.isServer) {
+			world.removeBlock(position)
+		}
+
+		return null
+	}
+
+	def getProjectorSafe: BlockProjector = {
+		if (projector != null) {
+
+			val projBlock = world.getBlock(projector)
+			if (projBlock.isPresent) {
+				val proj = projBlock.get().asInstanceOf[BlockProjector]
+				if (Game.instance.networkManager.isClient || (proj.getCalculatedField != null && proj.getCalculatedField.contains(position))) {
+					return proj
+				}
+			}
+		}
+
+		return null
+	}
+
+	def setProjector(position: Vector3i) {
+		projector = position
+
+		if (Game.instance.networkManager.isServer) {
+			refreshCamoBlock()
+		}
+	}
+
+	def refreshCamoBlock() {
+		if (getProjectorSafe != null) {
+			camoBlock = MFFSUtility.getCamoBlock(getProjector, position).getDummy
+		}
+	}
+
 	override def onEntityCollide(entity: Entity) {
 		val projector = getProjector()
 
@@ -144,51 +190,6 @@ class BlockForceField extends Block with PacketHandler with ForceField with Ligh
 
 		if (Game.instance.networkManager.isServer) {
 			world.removeBlock(position)
-		}
-	}
-
-	/**
-	 * @return Gets the projector block controlling this force field. Removes the force field if no
-	 *         projector can be found.
-	 */
-	def getProjector: BlockProjector = {
-		if (this.getProjectorSafe != null) {
-			return getProjectorSafe
-		}
-
-		if (Game.instance.networkManager.isServer) {
-			world.removeBlock(position)
-		}
-
-		return null
-	}
-
-	def getProjectorSafe: BlockProjector = {
-		if (projector != null) {
-
-			val projBlock = world.getBlock(projector)
-			if (projBlock.isPresent) {
-				val proj = projBlock.get().asInstanceOf[BlockProjector]
-				if (Game.instance.networkManager.isClient || (proj.getCalculatedField != null && proj.getCalculatedField.contains(position))) {
-					return proj
-				}
-			}
-		}
-
-		return null
-	}
-
-	def setProjector(position: Vector3i) {
-		projector = position
-
-		if (Game.instance.networkManager.isServer) {
-			refreshCamoBlock()
-		}
-	}
-
-	def refreshCamoBlock() {
-		if (getProjectorSafe != null) {
-			camoBlock = MFFSUtility.getCamoBlock(getProjector, position).getDummy
 		}
 	}
 }

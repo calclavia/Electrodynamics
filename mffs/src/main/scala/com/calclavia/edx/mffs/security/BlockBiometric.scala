@@ -7,7 +7,7 @@ import com.calclavia.edx.mffs.base.BlockFrequency
 import com.calclavia.edx.mffs.content.{Models, Textures}
 import com.resonant.core.access.Permission
 import com.resonant.core.prefab.block.{Rotatable, Updater}
-import nova.core.block.components.{DynamicRenderer, StaticRenderer}
+import nova.core.component.renderer.{DynamicRenderer, StaticRenderer}
 import nova.core.entity.Entity
 import nova.core.game.Game
 import nova.core.inventory.InventorySimple

@@ -1,6 +1,7 @@
 package com.calclavia.edx.mffs.item.card
 
-import nova.core.fluid.{Fluid, TankSimple}
+import nova.core.fluid.Fluid
+import nova.core.fluid.component.TankSimple
 
 /**
  * A card used by admins or players to cheat infinite energy.

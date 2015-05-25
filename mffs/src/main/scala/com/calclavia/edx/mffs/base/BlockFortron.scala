@@ -7,7 +7,8 @@ import com.calclavia.edx.mffs.api.fortron.FortronFrequency
 import com.calclavia.edx.mffs.util.{FortronUtility, TransferMode}
 import com.resonant.core.prefab.block.Updater
 import nova.core.block.Block
-import nova.core.fluid.{Fluid, SidedTankProvider, Tank, TankSimple}
+import nova.core.fluid.component.{Tank, TankSimple}
+import nova.core.fluid.{Fluid, SidedTankProvider}
 import nova.core.game.Game
 import nova.core.network.Sync
 import nova.core.retention.Stored

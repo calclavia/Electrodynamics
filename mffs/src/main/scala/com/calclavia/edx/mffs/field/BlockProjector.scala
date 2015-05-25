@@ -12,7 +12,8 @@ import com.calclavia.edx.mffs.particle.{FXFortronBeam, FXHologramProgress, Field
 import com.calclavia.edx.mffs.security.PermissionHandler
 import com.calclavia.edx.mffs.util.CacheHandler
 import nova.core.block.Block
-import nova.core.block.components.{DynamicRenderer, LightEmitter, StaticRenderer}
+import nova.core.block.component.LightEmitter
+import nova.core.component.renderer.{DynamicRenderer, StaticRenderer}
 import nova.core.entity.Entity
 import nova.core.game.Game
 import nova.core.inventory.InventorySimple
@@ -258,6 +259,11 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter w
 		}
 	}
 
+	override def unload() {
+		destroyField()
+		super.unload()
+	}
+
 	def destroyField() {
 		if (Game.instance.networkManager.isServer && calculatedField != null && !isCalculating) {
 			getModules(getModuleSlots: _*).forall(!_.onDestroyField(this, calculatedField))
@@ -272,11 +278,6 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter w
 			isCompleteConstructing = false
 			fieldRequireTicks = false
 		}
-	}
-
-	override def unload() {
-		destroyField()
-		super.unload()
 	}
 
 	override def getForceFields: JSet[Vector3i] = forceFields
