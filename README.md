@@ -5,13 +5,13 @@ Electrodynamics is a voxel game mod that features realistic, world-based technol
 Copyright (c) Calclavia
 
 ### Founder
-* <a href="http://www.patreon.com/calclavia"> Calclavia </a>
+* Calclavia
 
 ### Contributors
-* <a href="http://www.patreon.com/calclavia"> Calclavia </a>
-* <a href="http://www.patreon.com/darkcow"> Darkguardsman </a>
-* <a href="http://www.patreon.com/tgame14"> Tgame14 </a>
-* <a href="http://www.patreon.com/maxwolf"> Maxwolf Goodliffe </a>
+* CyanideX
+* Darkguardsman
+* Tgame14
+* Maxwolf Goodliffe
 
 ### Contribution
 By committing to the project, you fully agree to the Contribution Agreement:
