@@ -10,7 +10,6 @@ import com.calclavia.edx.mffs.content.Content
 import com.calclavia.edx.mffs.util.CacheHandler
 import com.resonant.core.structure.{Structure, StructureCustom}
 import nova.core.entity.Entity
-import nova.core.entity.component.Player
 import nova.core.game.Game
 import nova.core.gui.KeyManager.Key
 import nova.core.render.model.Model
@@ -45,7 +44,7 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 			return custom
 		})
 
-	override def getTooltips(player: Optional[Player], tooltips: util.List[String]) {
+	override def getTooltips(player: Optional[Entity], tooltips: util.List[String]) {
 		super.getTooltips(player, tooltips)
 
 		tooltips.add(Game.instance.languageManager.translate("info.modeCustom.mode") + " " + (if (isAdditive) Game.instance.languageManager.translate("info.modeCustom.additive") else Game.instance.languageManager.translate("info.modeCustom.substraction")))

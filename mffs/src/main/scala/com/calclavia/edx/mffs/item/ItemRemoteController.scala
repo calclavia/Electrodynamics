@@ -36,7 +36,7 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 	@Stored
 	private var linkPos: Vector3i = _
 
-	override def getTooltips(player: Optional[Player], tooltips: util.List[String]) {
+	override def getTooltips(player: Optional[Entity], tooltips: util.List[String]) {
 		super.getTooltips(player, tooltips)
 
 		if (linkWorld != null) {

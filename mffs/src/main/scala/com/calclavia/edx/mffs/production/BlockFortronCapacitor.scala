@@ -13,7 +13,7 @@ import com.calclavia.edx.mffs.util.{FortronUtility, TransferMode}
 import com.resonant.lib.wrapper.WrapFunctions._
 import nova.core.block.Block
 import nova.core.component.renderer.StaticRenderer
-import nova.core.fluid.component.{FluidHandler, Tank}
+import nova.core.fluid.component.FluidHandler
 import nova.core.inventory.InventorySimple
 import nova.core.item.Item
 import nova.core.network.Sync
@@ -87,8 +87,9 @@ class BlockFortronCapacitor extends BlockModuleHandler {
 			if (fortronTank.getFluidAmount > 0) {
 
 				getOutputStacks
-					.map(_.get(classOf[Tank]))
+					.map(_.get(classOf[FluidHandler]))
 					.collect { case op if op.isPresent => op.get }
+					.flatMap(_.tanks)
 					.foreach(
 				    tank => {
 					    val fluid = fortronTank.removeFluid(Math.min(fortronTank.getFluidAmount, getTransmissionRate), true)

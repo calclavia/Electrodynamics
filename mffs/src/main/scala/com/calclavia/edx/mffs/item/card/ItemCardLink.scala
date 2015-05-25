@@ -5,7 +5,6 @@ import java.util.Optional
 
 import com.calclavia.edx.mffs.api.card.CoordLink
 import nova.core.entity.Entity
-import nova.core.entity.component.Player
 import nova.core.game.Game
 import nova.core.retention.{Storable, Stored}
 import nova.core.util.Direction
@@ -32,7 +31,7 @@ class ItemCardLink extends ItemCard with CoordLink with Storable {
 
 	override def getLink: Tuple2[World, Vector3i] = new Tuple2(linkWorld, linkPos)
 
-	override def getTooltips(player: Optional[Player], tooltips: util.List[String]) {
+	override def getTooltips(player: Optional[Entity], tooltips: util.List[String]) {
 		super.getTooltips(player, tooltips)
 
 		if (linkWorld != null && linkPos != null) {

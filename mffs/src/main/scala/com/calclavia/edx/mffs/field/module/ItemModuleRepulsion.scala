@@ -29,7 +29,7 @@ class ItemModuleRepulsion extends ItemModule {
 		}
 			.foreach(
 		    entity => {
-			    val repelDirection = entity.transform.position) -(entity.transform.position.toInt.toDouble + 0.5).normalize
+			    val repelDirection = entity.transform.position - (entity.transform.position.toInt.toDouble + 0.5).normalize
 			    val rigidBody = entity.get(classOf[RigidBody]).get
 			    val velocity = rigidBody.velocity
 			    val force = repelDirection * repellForce.max(velocity.abs)

@@ -6,7 +6,6 @@ import java.util.Optional
 import com.calclavia.edx.mffs.api.Frequency
 import com.google.common.hash.Hashing
 import nova.core.entity.Entity
-import nova.core.entity.component.Player
 import nova.core.game.Game
 import nova.core.retention.Stored
 import nova.core.util.transform.vector.Vector3i
@@ -19,7 +18,7 @@ class ItemCardFrequency extends ItemCard with Frequency {
 	@BeanProperty
 	var frequency: Int = 0
 
-	override def getTooltips(player: Optional[Player], tooltips: util.List[String]) {
+	override def getTooltips(player: Optional[Entity], tooltips: util.List[String]) {
 		super.getTooltips(player, tooltips)
 		tooltips.add(Game.instance.languageManager.translate("info.cardFrequency.freq") + " " + getEncodedFrequency)
 	}
