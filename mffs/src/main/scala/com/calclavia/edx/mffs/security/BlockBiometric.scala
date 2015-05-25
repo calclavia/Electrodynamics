@@ -7,6 +7,7 @@ import com.calclavia.edx.mffs.base.BlockFrequency
 import com.calclavia.edx.mffs.content.{Models, Textures}
 import com.resonant.core.access.Permission
 import com.resonant.core.prefab.block.Updater
+import nova.core.block.component.Oriented
 import nova.core.component.renderer.{DynamicRenderer, StaticRenderer}
 import nova.core.entity.Entity
 import nova.core.game.Game
@@ -20,7 +21,7 @@ object BlockBiometric {
 	val SLOT_COPY = 12
 }
 
-class BlockBiometric extends BlockFrequency with Rotatable with Updater with PermissionHandler with StaticRenderer with DynamicRenderer {
+class BlockBiometric extends BlockFrequency with Updater with PermissionHandler with StaticRenderer with DynamicRenderer {
 
 	/**
 	 * 2 slots: Card copying
@@ -33,6 +34,8 @@ class BlockBiometric extends BlockFrequency with Rotatable with Updater with Per
 	 * Rendering
 	 */
 	var lastFlicker = 0L
+
+	add(new Oriented(this))
 
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)
