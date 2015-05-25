@@ -12,6 +12,7 @@ import com.calclavia.edx.mffs.security.{MFFSPermissions, PermissionHandler}
 import com.calclavia.edx.mffs.util.MFFSUtility
 import com.calclavia.edx.mffs.{ModularForceFieldSystem, Settings}
 import com.resonant.core.prefab.block.InventorySimpleProvider
+import nova.core.block.component.{BlockCollider, Oriented}
 import nova.core.component.renderer.StaticRenderer
 import nova.core.entity.Entity
 import nova.core.entity.component.RigidBody
@@ -58,7 +59,8 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 	private var moveTime = 0
 	private var canRenderMove = true
 
-	rotationMask = 63
+	getComponent(classOf[Oriented]).get.setMask(63)
+	getComponent(classOf[BlockCollider]).get.setCube(false)
 
 	def markFailMove() = failedMove = true
 
@@ -117,7 +119,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 				Game.instance.networkManager.sync(PacketBlock.field, this)
 
 				if (!isTeleport && doAnchor) {
-					anchor += direction.toVector
+					anchor += getComponent(classOf[Oriented]).get().direction.toVector
 				}
 			}))
 
@@ -346,8 +348,48 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 		return Game.instance.blockManager.getAirBlock.sameType(targetBlock)
 	}
 
+	/**
+	 * Gets the position in which the manipulator will try to translate the field into.
+	 *
+	 * @return A vector of the target position.
+	 */
+	def getTargetPosition: (World, Vector3i) = {
+		if (isTeleport) {
+			val cardStack = getLinkCard
+
+			if (cardStack != null) {
+				val link = cardStack.asInstanceOf[CoordLink].getLink
+				return (link._1, link._2)
+			}
+		}
+
+		return (world(), getAbsoluteAnchor + getComponent(classOf[Oriented]).get().direction.toVector)
+	}
+
+	private def isTeleport: Boolean = {
+		if (Settings.allowForceManipulatorTeleport) {
+			val cardStack = getLinkCard
+
+			if (cardStack != null) {
+				return cardStack.asInstanceOf[CoordLink].getLink != null
+			}
+		}
+		return false
+	}
+
+	def getLinkCard: Item = {
+		inventory
+			.filter(_ != null)
+			.find(_.isInstanceOf[CoordLink]) match {
+			case Some(item) => return item
+			case _ => return null
+		}
+	}
+
+	def getAbsoluteAnchor: Vector3i = position + anchor
+
 	def isVisibleToPlayer(position: Vector3i): Boolean = {
-		return Direction.DIRECTIONS.count(dir => world.getBlock(position + dir.toVector).get.isOpaqueCube) < 6
+		return Direction.DIRECTIONS.count(dir => world.getBlock(position + dir.toVector).get.getComponent(classOf[BlockCollider]).get.isOpaqueCube) < 6
 	}
 
 	override def read(packet: Packet) {
@@ -468,46 +510,6 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 		}
 	}
 
-	/**
-	 * Gets the position in which the manipulator will try to translate the field into.
-	 *
-	 * @return A vector of the target position.
-	 */
-	def getTargetPosition: (World, Vector3i) = {
-		if (isTeleport) {
-			val cardStack = getLinkCard
-
-			if (cardStack != null) {
-				val link = cardStack.asInstanceOf[CoordLink].getLink
-				return (link._1, link._2)
-			}
-		}
-
-		return (world(), getAbsoluteAnchor + direction.toVector)
-	}
-
-	private def isTeleport: Boolean = {
-		if (Settings.allowForceManipulatorTeleport) {
-			val cardStack = getLinkCard
-
-			if (cardStack != null) {
-				return cardStack.asInstanceOf[CoordLink].getLink != null
-			}
-		}
-		return false
-	}
-
-	def getLinkCard: Item = {
-		inventory
-			.filter(_ != null)
-			.find(_.isInstanceOf[CoordLink]) match {
-			case Some(item) => return item
-			case _ => return null
-		}
-	}
-
-	def getAbsoluteAnchor: Vector3i = position + anchor
-
 	def getSearchBounds: Cuboid = {
 		val positiveScale = position + getTranslation + getPositiveScale + 1
 		val negativeScale = position + getTranslation - getNegativeScale
@@ -608,12 +610,10 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 	  }
 	*/
 
-	override def isCube: Boolean = false
-
 	override def renderStatic(model: Model) {
 		model.matrix = new MatrixStack()
 			.loadMatrix(model.matrix)
-			.rotate(direction.rotation)
+			.rotate(getComponent(classOf[Oriented]).get().direction.rotation)
 			.getMatrix
 
 		model.children.add(Models.mobilizer.getModel)

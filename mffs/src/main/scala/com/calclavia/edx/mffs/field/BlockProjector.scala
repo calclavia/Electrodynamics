@@ -12,7 +12,7 @@ import com.calclavia.edx.mffs.particle.{FXFortronBeam, FXHologramProgress, Field
 import com.calclavia.edx.mffs.security.PermissionHandler
 import com.calclavia.edx.mffs.util.CacheHandler
 import nova.core.block.Block
-import nova.core.block.component.LightEmitter
+import nova.core.block.component.{BlockCollider, LightEmitter, Oriented}
 import nova.core.component.renderer.{DynamicRenderer, StaticRenderer}
 import nova.core.entity.Entity
 import nova.core.game.Game
@@ -29,7 +29,7 @@ import nova.core.util.transform.vector.{Vector3d, Vector3i}
 
 import scala.collection.convert.wrapAll._
 
-class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter with PermissionHandler with StaticRenderer with DynamicRenderer {
+class BlockProjector extends BlockFieldMatrix with Projector with PermissionHandler {
 
 	@Stored
 	@Sync(ids = Array(PacketBlock.description, PacketBlock.inventory))
@@ -51,7 +51,99 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter w
 
 	override def getID: String = "projector"
 
-	override def getBoundingBox: Cuboid = new Cuboid(0, 0, 0, 1, 0.8, 1)
+	add(new BlockCollider(this) {
+		override def getBoundingBox: Cuboid = new Cuboid(0, 0, 0, 1, 0.8, 1)
+
+		override def isCube: Boolean = false
+	})
+
+	add(new Oriented(this))
+
+	add(new StaticRenderer(this) {
+		override def renderStatic(model: Model) {
+			model.rotate(getComponent(classOf[Oriented]).get().direction.rotation)
+			model.children.add(Models.projector.getModel)
+			model.bindAll(if (isActive) Textures.projectorOn else Textures.projectorOff)
+		}
+	})
+
+	add(new DynamicRenderer(this) {
+		override def renderDynamic(model: Model) {
+			/**
+			 * Render the light beam
+			 */
+			if (getShapeItem != null) {
+				val lightBeam = new Model()
+				//TODO: Lighting, RenderHelper.disableStandardItemLighting
+
+				val player = Game.instance.clientManager.getPlayer.asInstanceOf[Entity with Player]
+				val xDifference: Double = player.position.x - (x + 0.5)
+				val zDifference: Double = player.position.z - (y + 0.5)
+				val rot = Math.atan2(zDifference, xDifference)
+				lightBeam.matrix = new MatrixStack().rotate(Vector3d.yAxis, -rot + Math.toRadians(27)).getMatrix
+
+				/*
+				glDisable(GL_TEXTURE_2D)
+				glShadeModel(GL_SMOOTH)
+				glEnable(GL_BLEND)
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE)
+				glDisable(GL_ALPHA_TEST)
+				glEnable(GL_CULL_FACE)
+				glDepthMask(false)
+				glPushMatrix*/
+
+				val height: Float = 2
+				val width: Float = 2
+
+				val face = lightBeam.createFace()
+				//tessellator.setColorRGBA_I(0, 0)
+				face.drawVertex(new Vertex(0, 0, 0, 0, 0))
+				face.drawVertex(new Vertex(-0.866D * width, height, -0.5F * width, 0, 0))
+				face.drawVertex(new Vertex(0.866D * width, height, -0.5F * width, 0, 0))
+				face.drawVertex(new Vertex(0.0D, height, 1.0F * width, 0, 0))
+				face.drawVertex(new Vertex(-0.866D * width, height, -0.5F * width, 0, 0))
+				face.vertices.foreach(_.setColor(Color.rgb(72, 198, 255)))
+				lightBeam.drawFace(face)
+
+				/*
+				glPopMatrix
+				glDepthMask(true)
+				glDisable(GL_CULL_FACE)
+				glDisable(GL_BLEND)
+				glShadeModel(GL_FLAT)
+				glColor4f(1.0F, 1.0F, 1.0F, 1.0F)
+				glEnable(GL_TEXTURE_2D)
+				glEnable(GL_ALPHA_TEST)
+				RenderHelper.enableStandardItemLighting
+				glPopMatrix*/
+
+				model.children.add(lightBeam)
+
+				/**
+				 * Render hologram
+				 */
+				if (Settings.highGraphics) {
+
+					val hologram = new Model()
+					hologram.matrix = new MatrixStack()
+						.translate(0, 0.85 + Math.sin(Math.toRadians(ticks * 3)).toFloat / 7, 0)
+						.rotate(Vector3d.yAxis, Math.toRadians(ticks * 4))
+						.rotate(new Vector3d(0, 1, 1), Math.toRadians(36f + ticks * 4))
+						.getMatrix
+
+					getShapeItem.render(BlockProjector.this, model)
+
+					val color = if (isActive) FieldColor.blue else FieldColor.red
+					hologram.faces.foreach(_.vertices.foreach(_.setColor(color.alpha((Math.sin(ticks.toDouble / 10) * 255).toInt))))
+					hologram.bind(Textures.hologram)
+				}
+			}
+		}
+	})
+
+	add(new LightEmitter() {
+		override def getEmittedLightLevel: Float = if (getShapeItem() != null) 1 else 0
+	})
 
 	/*
 	override def isItemValidForSlot(slotID: Int, Item: Item): Boolean = {
@@ -67,29 +159,6 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter w
 		super.start()
 		calculateField(postCalculation)
 	}
-
-	def postCalculation() = if (clientSideSimulationRequired) Game.instance.networkManager.sync(PacketBlock.field, this)
-
-	private def clientSideSimulationRequired: Boolean = {
-		return getModuleCount(Content.moduleRepulsion) > 0
-	}
-
-	/**
-	 * Initiate a field calculation
-	 */
-	protected override def calculateField(callBack: () => Unit = null) {
-		if (Game.instance.networkManager.isServer && !isCalculating) {
-			if (getShapeItem != null) {
-				forceFields = Set.empty
-			}
-
-			super.calculateField(callBack)
-			isCompleteConstructing = false
-			fieldRequireTicks = getModules().exists(_.requireTicks)
-		}
-	}
-
-	override def getEmittedLightLevel: Float = if (getShapeItem() != null) 1 else 0
 
 	override def write(packet: Packet) {
 		super.write(packet)
@@ -168,6 +237,27 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter w
 		}
 		else if (Game.instance.networkManager.isServer) {
 			destroyField()
+		}
+	}
+
+	def postCalculation() = if (clientSideSimulationRequired) Game.instance.networkManager.sync(PacketBlock.field, this)
+
+	private def clientSideSimulationRequired: Boolean = {
+		return getModuleCount(Content.moduleRepulsion) > 0
+	}
+
+	/**
+	 * Initiate a field calculation
+	 */
+	protected override def calculateField(callBack: () => Unit = null) {
+		if (Game.instance.networkManager.isServer && !isCalculating) {
+			if (getShapeItem != null) {
+				forceFields = Set.empty
+			}
+
+			super.calculateField(callBack)
+			isCompleteConstructing = false
+			fieldRequireTicks = getModules().exists(_.requireTicks)
 		}
 	}
 
@@ -251,19 +341,6 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter w
 
 	def getProjectionSpeed: Int = 28 + 28 * getModuleCount(Content.moduleSpeed, getModuleSlots: _*)
 
-	override def markDirty() {
-		super.markDirty()
-
-		if (world != null) {
-			destroyField()
-		}
-	}
-
-	override def unload() {
-		destroyField()
-		super.unload()
-	}
-
 	def destroyField() {
 		if (Game.instance.networkManager.isServer && calculatedField != null && !isCalculating) {
 			getModules(getModuleSlots: _*).forall(!_.onDestroyField(this, calculatedField))
@@ -278,6 +355,19 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter w
 			isCompleteConstructing = false
 			fieldRequireTicks = false
 		}
+	}
+
+	override def markDirty() {
+		super.markDirty()
+
+		if (world != null) {
+			destroyField()
+		}
+	}
+
+	override def unload() {
+		destroyField()
+		super.unload()
 	}
 
 	override def getForceFields: JSet[Vector3i] = forceFields
@@ -306,89 +396,6 @@ class BlockProjector extends BlockFieldMatrix with Projector with LightEmitter w
 	def getFilterItems: Set[Item] = (26 until 32).map(inventory.get).collect { case op: Optional[Item] if op.isPresent => op.get }.toSet
 
 	def isInvertedFilter: Boolean = isInverted
-
-	override def isCube: Boolean = false
-
-	override def renderStatic(model: Model) {
-		model.rotate(direction.rotation)
-		model.children.add(Models.projector.getModel)
-		model.bindAll(if (isActive) Textures.projectorOn else Textures.projectorOff)
-	}
-
-	/**
-	 * Rendering
-	 */
-	override def renderDynamic(model: Model) {
-		/**
-		 * Render the light beam 
-		 */
-		if (getShapeItem != null) {
-			val lightBeam = new Model()
-			//TODO: Lighting, RenderHelper.disableStandardItemLighting
-
-			val player = Game.instance.clientManager.getPlayer.asInstanceOf[Entity with Player]
-			val xDifference: Double = player.position.x - (x + 0.5)
-			val zDifference: Double = player.position.z - (y + 0.5)
-			val rot = Math.atan2(zDifference, xDifference)
-			lightBeam.matrix = new MatrixStack().rotate(Vector3d.yAxis, -rot + Math.toRadians(27)).getMatrix
-
-			/*
-			glDisable(GL_TEXTURE_2D)
-			glShadeModel(GL_SMOOTH)
-			glEnable(GL_BLEND)
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE)
-			glDisable(GL_ALPHA_TEST)
-			glEnable(GL_CULL_FACE)
-			glDepthMask(false)
-			glPushMatrix*/
-
-			val height: Float = 2
-			val width: Float = 2
-
-			val face = lightBeam.createFace()
-			//tessellator.setColorRGBA_I(0, 0)
-			face.drawVertex(new Vertex(0, 0, 0, 0, 0))
-			face.drawVertex(new Vertex(-0.866D * width, height, -0.5F * width, 0, 0))
-			face.drawVertex(new Vertex(0.866D * width, height, -0.5F * width, 0, 0))
-			face.drawVertex(new Vertex(0.0D, height, 1.0F * width, 0, 0))
-			face.drawVertex(new Vertex(-0.866D * width, height, -0.5F * width, 0, 0))
-			face.vertices.foreach(_.setColor(Color.rgb(72, 198, 255)))
-			lightBeam.drawFace(face)
-
-			/*
-			glPopMatrix
-			glDepthMask(true)
-			glDisable(GL_CULL_FACE)
-			glDisable(GL_BLEND)
-			glShadeModel(GL_FLAT)
-			glColor4f(1.0F, 1.0F, 1.0F, 1.0F)
-			glEnable(GL_TEXTURE_2D)
-			glEnable(GL_ALPHA_TEST)
-			RenderHelper.enableStandardItemLighting
-			glPopMatrix*/
-
-			model.children.add(lightBeam)
-
-			/**
-			 * Render hologram
-			 */
-			if (Settings.highGraphics) {
-
-				val hologram = new Model()
-				hologram.matrix = new MatrixStack()
-					.translate(0, 0.85 + Math.sin(Math.toRadians(ticks * 3)).toFloat / 7, 0)
-					.rotate(Vector3d.yAxis, Math.toRadians(ticks * 4))
-					.rotate(new Vector3d(0, 1, 1), Math.toRadians(36f + ticks * 4))
-					.getMatrix
-
-				getShapeItem.render(this, model)
-
-				val color = if (isActive) FieldColor.blue else FieldColor.red
-				hologram.faces.foreach(_.vertices.foreach(_.setColor(color.alpha((Math.sin(ticks.toDouble / 10) * 255).toInt))))
-				hologram.bind(Textures.hologram)
-			}
-		}
-	}
 
 	/**
 	 * Returns Fortron cost in ticks.
