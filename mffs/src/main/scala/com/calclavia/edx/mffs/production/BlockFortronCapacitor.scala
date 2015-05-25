@@ -18,6 +18,7 @@ import nova.core.network.Sync
 import nova.core.render.model.Model
 import nova.core.retention.Stored
 import nova.core.util.transform.matrix.MatrixStack
+import scala.collection.convert.wrapAll._
 class BlockFortronCapacitor extends BlockModuleHandler {
 
 	override val inventory: InventorySimple = new InventorySimple(3 + 4 * 2 + 1)
@@ -118,10 +119,6 @@ class BlockFortronCapacitor extends BlockModuleHandler {
 
 	def getTransmissionRate: Int = 500 + 100 * getModuleCount(Content.moduleSpeed)
 
-	override def getAmplifier: Float = 0f
-
-	def getDeviceCount = getFrequencyDevices.size + getInputDevices.size + getOutputDevices.size
-
 	def getFrequencyDevices: Set[FortronFrequency] =
 		GraphFrequency.instance.get(getFrequency)
 			.view
@@ -134,14 +131,6 @@ class BlockFortronCapacitor extends BlockModuleHandler {
 
 	def getInputDevices: Set[FortronFrequency] = getDevicesFromStacks(getInputStacks)
 
-	def getInputStacks: Set[Item] =
-		(4 to 7)
-			.map(inventory.get)
-			.collect { case op if op.isPresent => op.get }
-			.toSet
-
-	def getOutputDevices: Set[FortronFrequency] = getDevicesFromStacks(getOutputStacks)
-
 	def getDevicesFromStacks(stacks: Set[Item]): Set[FortronFrequency] =
 		stacks
 			.view
@@ -151,11 +140,23 @@ class BlockFortronCapacitor extends BlockModuleHandler {
 			.collect { case freqBlock: FortronFrequency => freqBlock }
 			.toSet
 
+	def getInputStacks: Set[Item] =
+		(4 to 7)
+			.map(inventory.get)
+			.collect { case op if op.isPresent => op.get }
+			.toSet
+
+	def getOutputDevices: Set[FortronFrequency] = getDevicesFromStacks(getOutputStacks)
+
 	def getOutputStacks: Set[Item] =
 		(8 to 11)
 			.map(inventory.get)
 			.collect { case op if op.isPresent => op.get }
 			.toSet
+
+	override def getAmplifier: Float = 0f
+
+	def getDeviceCount = getFrequencyDevices.size + getInputDevices.size + getOutputDevices.size
 
 	def getTransferMode: TransferMode = transferMode
 
