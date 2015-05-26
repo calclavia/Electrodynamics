@@ -14,7 +14,7 @@ import com.calclavia.edx.mffs.util.CacheHandler
 import com.resonant.lib.wrapper.WrapFunctions._
 import nova.core.block.Block
 import nova.core.block.component.{BlockCollider, LightEmitter}
-import nova.core.component.renderer.{DynamicRenderer, StaticRenderer}
+import nova.core.component.renderer.{ItemRenderer, DynamicRenderer, StaticRenderer}
 import nova.core.component.transform.Orientation
 import nova.core.entity.Entity
 import nova.core.entity.component.Player
@@ -139,6 +139,8 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 			}
 		}
 	})
+
+	add(new ItemRenderer(this))
 
 	add(new LightEmitter().setEmittedLevel(supplier(() => if (getShapeItem() != null) 1f else 0f)))
 
@@ -346,11 +348,6 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 		}
 	}
 
-	override def unload() {
-		destroyField()
-		super.unload()
-	}
-
 	def destroyField() {
 		if (Game.instance.networkManager.isServer && calculatedField != null && !isCalculating) {
 			getModules(getModuleSlots: _*).forall(!_.onDestroyField(this, calculatedField))
@@ -365,6 +362,11 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 			isCompleteConstructing = false
 			fieldRequireTicks = false
 		}
+	}
+
+	override def unload() {
+		destroyField()
+		super.unload()
 	}
 
 	override def getForceFields: JSet[Vector3i] = forceFields
