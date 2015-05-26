@@ -7,7 +7,7 @@ import com.calclavia.edx.mffs.api.modules.Module
 import com.calclavia.edx.mffs.base.{BlockModuleHandler, PacketBlock}
 import com.calclavia.edx.mffs.content.{Content, Models, Textures}
 import com.calclavia.edx.mffs.item.card.ItemCardFrequency
-import nova.core.block.component.BlockCollider
+import com.resonant.lib.wrapper.WrapFunctions._
 import nova.core.component.renderer.{DynamicRenderer, ItemRenderer, StaticRenderer}
 import nova.core.fluid.component.Tank
 import nova.core.inventory.InventorySimple
@@ -59,36 +59,38 @@ class BlockCoercionDeriver extends BlockModuleHandler {
 	//Client
 	var animationTween = 0f
 
-	add(new StaticRenderer(this) {
-		override def renderStatic(model: Model) {
-			val originalModel = Models.deriver.getModel
-			val capacitorModel = new Model
-			capacitorModel.children.addAll(originalModel.filterNot(_.name.equals("crystal")))
-			model.children.add(capacitorModel)
-			model.bindAll(if (isActive) Textures.coercionDeriverOn else Textures.coercionDeriverOff)
-		}
-	})
+	add(new StaticRenderer(this))
+		.onRender(
+	    (model: Model) => {
+		    val originalModel = Models.deriver.getModel
+		    val capacitorModel = new Model
+		    capacitorModel.children.addAll(originalModel.filterNot(_.name.equals("crystal")))
+		    model.children.add(capacitorModel)
+		    model.bindAll(if (isActive) Textures.coercionDeriverOn else Textures.coercionDeriverOff)
+	    }
+		)
 
-	add(new DynamicRenderer(this) {
-		override def renderDynamic(model: Model) {
-			model.translate(0, (0.3 + Math.sin(Math.toRadians(animation)) * 0.08) * animationTween - 0.1, 0)
-			model.rotate(Vector3d.yAxis, animation)
+	add(new DynamicRenderer(this))
+		.onRender(
+	    (model: Model) => {
+		    model.translate(0, (0.3 + Math.sin(Math.toRadians(animation)) * 0.08) * animationTween - 0.1, 0)
+		    model.rotate(Vector3d.yAxis, animation)
 
-			val originalModel = Models.deriver.getModel
-			val crystalModel = new Model
-			crystalModel.children.addAll(originalModel.filter(_.name.equals("crystal")))
-			//Enable Blending
-			model.children.add(crystalModel)
-			//Disable Blending
-			model.bindAll(if (isActive) Textures.coercionDeriverOn else Textures.coercionDeriverOff)
-		}
-	})
+		    val originalModel = Models.deriver.getModel
+		    val crystalModel = new Model
+		    crystalModel.children.addAll(originalModel.filter(_.name.equals("crystal")))
+		    //Enable Blending
+		    model.children.add(crystalModel)
+		    //Disable Blending
+		    model.bindAll(if (isActive) Textures.coercionDeriverOn else Textures.coercionDeriverOff)
+	    }
+		)
 
 	add(new ItemRenderer(this) {
 		override def renderItem(model: Model) {
 			model.translate(0, 0.1, 0)
-			get(classOf[StaticRenderer]).renderStatic(model)
-			get(classOf[DynamicRenderer]).renderDynamic(model)
+			get(classOf[StaticRenderer]).onRender.accept(model)
+			get(classOf[DynamicRenderer]).onRender.accept(model)
 		}
 	})
 

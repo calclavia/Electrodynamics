@@ -8,13 +8,14 @@ import nova.core.render.model.{BlockModelUtil, Model}
 import nova.core.util.transform.vector.Vector3d
 
 import scala.collection.convert.wrapAll._
-
+import com.resonant.lib.wrapper.WrapFunctions._
 class FXHologram(color: Color, maxAge: Double) extends FXMFFS {
 	var age = 0d
 	private var targetPosition: Vector3d = null
 
-	add(new DynamicRenderer(this) {
-		override def renderDynamic(model: Model) {
+	add(new DynamicRenderer(this))
+		.onRender(
+	    (model: Model) => {
 			model.scale(1.01, 1.01, 1.01)
 
 			var op = 0.5
@@ -30,7 +31,7 @@ class FXHologram(color: Color, maxAge: Double) extends FXMFFS {
 			model.faces.foreach(_.vertices.foreach(_.setColor(color.alpha((op * 255).toInt))))
 			//		RenderUtility.disableBlending
 		}
-	})
+		)
 
 	override def getID: String = "hologram"
 

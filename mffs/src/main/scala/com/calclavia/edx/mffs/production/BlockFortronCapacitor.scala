@@ -10,6 +10,7 @@ import com.calclavia.edx.mffs.item.card.ItemCardFrequency
 import com.calclavia.edx.mffs.util.{FortronUtility, TransferMode}
 import com.resonant.lib.wrapper.WrapFunctions._
 import nova.core.block.Block
+import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.renderer.StaticRenderer
 import nova.core.fluid.component.FluidHandler
 import nova.core.inventory.InventorySimple
@@ -42,8 +43,9 @@ class BlockFortronCapacitor extends BlockModuleHandler {
 	capacityBoost = 10
 	startModuleIndex = 1
 
-	add(new StaticRenderer(this) {
-		override def renderStatic(model: Model) {
+	add(new StaticBlockRenderer(this))
+		.onRender(
+	    (model: Model) => {
 			model.matrix = new MatrixStack()
 				.loadMatrix(model.matrix)
 				.translate(0, 0.15, 0)
@@ -53,7 +55,6 @@ class BlockFortronCapacitor extends BlockModuleHandler {
 			model.children.add(Models.fortronCapacitor.getModel)
 			model.bindAll(if (isActive) Textures.fortronCapacitorOn else Textures.fortronCapacitorOff)
 		}
-	}
 	)
 
 	override def getID: String = "fortronCapacitor"
@@ -119,6 +120,10 @@ class BlockFortronCapacitor extends BlockModuleHandler {
 
 	def getTransmissionRate: Int = 500 + 100 * getModuleCount(Content.moduleSpeed)
 
+	override def getAmplifier: Float = 0f
+
+	def getDeviceCount = getFrequencyDevices.size + getInputDevices.size + getOutputDevices.size
+
 	def getFrequencyDevices: Set[FortronFrequency] =
 		GraphFrequency.instance.get(getFrequency)
 			.view
@@ -131,6 +136,14 @@ class BlockFortronCapacitor extends BlockModuleHandler {
 
 	def getInputDevices: Set[FortronFrequency] = getDevicesFromStacks(getInputStacks)
 
+	def getInputStacks: Set[Item] =
+		(4 to 7)
+			.map(inventory.get)
+			.collect { case op if op.isPresent => op.get }
+			.toSet
+
+	def getOutputDevices: Set[FortronFrequency] = getDevicesFromStacks(getOutputStacks)
+
 	def getDevicesFromStacks(stacks: Set[Item]): Set[FortronFrequency] =
 		stacks
 			.view
@@ -140,23 +153,11 @@ class BlockFortronCapacitor extends BlockModuleHandler {
 			.collect { case freqBlock: FortronFrequency => freqBlock }
 			.toSet
 
-	def getInputStacks: Set[Item] =
-		(4 to 7)
-			.map(inventory.get)
-			.collect { case op if op.isPresent => op.get }
-			.toSet
-
-	def getOutputDevices: Set[FortronFrequency] = getDevicesFromStacks(getOutputStacks)
-
 	def getOutputStacks: Set[Item] =
 		(8 to 11)
 			.map(inventory.get)
 			.collect { case op if op.isPresent => op.get }
 			.toSet
-
-	override def getAmplifier: Float = 0f
-
-	def getDeviceCount = getFrequencyDevices.size + getInputDevices.size + getOutputDevices.size
 
 	def getTransferMode: TransferMode = transferMode
 

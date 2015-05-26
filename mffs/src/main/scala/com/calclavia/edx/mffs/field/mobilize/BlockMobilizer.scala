@@ -12,6 +12,7 @@ import com.calclavia.edx.mffs.security.{MFFSPermissions, PermissionHandler}
 import com.calclavia.edx.mffs.util.MFFSUtility
 import com.calclavia.edx.mffs.{ModularForceFieldSystem, Settings}
 import com.resonant.core.prefab.block.InventorySimpleProvider
+import com.resonant.lib.wrapper.WrapFunctions._
 import nova.core.block.component.{BlockCollider, StaticBlockRenderer}
 import nova.core.component.transform.Orientation
 import nova.core.entity.Entity
@@ -60,17 +61,18 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 	private var moveTime = 0
 	private var canRenderMove = true
 
-	add(new StaticBlockRenderer(this) {
-		override def renderStatic(model: Model) {
-			model.matrix = new MatrixStack()
-				.loadMatrix(model.matrix)
-				.rotate(get(classOf[Orientation]).orientation.rotation)
-				.getMatrix
+	add(new StaticBlockRenderer(this))
+		.onRender(
+	    (model: Model) => {
+		    model.matrix = new MatrixStack()
+			    .loadMatrix(model.matrix)
+			    .rotate(get(classOf[Orientation]).orientation.rotation)
+			    .getMatrix
 
-			model.children.add(Models.mobilizer.getModel)
-			model.bindAll(if (isActive) Textures.mobilizerOn else Textures.mobilizerOff)
-		}
-	})
+		    model.children.add(Models.mobilizer.getModel)
+		    model.bindAll(if (isActive) Textures.mobilizerOn else Textures.mobilizerOff)
+	    }
+		)
 
 	get(classOf[Orientation]).setMask(63)
 	get(classOf[BlockCollider]).isCube(false)

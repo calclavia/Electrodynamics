@@ -10,7 +10,7 @@ import nova.core.util.transform.vector.Vector3d
 
 import scala.beans.BeanProperty
 import scala.collection.convert.wrapAll._
-
+import com.resonant.lib.wrapper.WrapFunctions._
 /**
  * MFFS Beam Renderer.
  * @author Calclavia, Azanor
@@ -35,8 +35,9 @@ abstract class FXBeam(texture: Texture, @BeanProperty var color: Color, maxAge: 
 
 	private var prevPos: Vector3d = null
 
-	add(new DynamicRenderer(this) {
-		override def renderDynamic(model: Model) {
+	add(new DynamicRenderer(this))
+		.onRender(
+	    (model: Model) => {
 
 			//		GL11.glPushMatrix
 			var f = 1
@@ -108,7 +109,7 @@ abstract class FXBeam(texture: Texture, @BeanProperty var color: Color, maxAge: 
 			prevSize = size
 			model.bindAll(texture)
 		}
-	})
+		)
 
 	def setTarget(target: Vector3d): this.type = {
 		this.target = target

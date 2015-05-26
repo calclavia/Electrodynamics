@@ -7,7 +7,8 @@ import com.calclavia.edx.mffs.base.BlockFrequency
 import com.calclavia.edx.mffs.content.{Models, Textures}
 import com.resonant.core.access.Permission
 import com.resonant.core.prefab.block.Updater
-import nova.core.block.component.{BlockCollider, StaticBlockRenderer}
+import com.resonant.lib.wrapper.WrapFunctions._
+import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.renderer.DynamicRenderer
 import nova.core.component.transform.Orientation
 import nova.core.entity.Entity
@@ -37,39 +38,42 @@ class BlockBiometric extends BlockFrequency with Updater with PermissionHandler 
 	var lastFlicker = 0L
 
 	add(new Orientation(this))
-	add(new StaticBlockRenderer(this) {
-		override def renderStatic(model: Model) {
-			model.rotate(get(classOf[Orientation]).orientation.rotation)
-			val modelBiometric: Model = Models.biometric.getModel
-			modelBiometric.children.removeAll(modelBiometric.children.filter(_.name.equals("holoScreen")))
-			model.children.add(modelBiometric)
-			model.bindAll(if (isActive) Textures.biometricOn else Textures.biometricOff)
-		}
-	})
-	add(new DynamicRenderer(this) {
-		override def renderDynamic(model: Model) {
-			model.rotate(get(classOf[Orientation]).orientation.rotation)
-			/**
-			 * Simulate flicker and, hovering
-			 */
-			val t = System.currentTimeMillis()
-			val dist = position.distance(Game.instance.clientManager.getPlayer.asInstanceOf[Entity].position)
+	add(new StaticBlockRenderer(this))
+		.onRender(
+	    (model: Model) => {
+		    model.rotate(get(classOf[Orientation]).orientation.rotation)
+		    val modelBiometric: Model = Models.biometric.getModel
+		    modelBiometric.children.removeAll(modelBiometric.children.filter(_.name.equals("holoScreen")))
+		    model.children.add(modelBiometric)
+		    model.bindAll(if (isActive) Textures.biometricOn else Textures.biometricOff)
+	    }
+		)
 
-			if (dist < 3) {
-				if (Math.random() > 0.05 || (lastFlicker - t) > 200) {
-					model.translate(0, Math.sin(Math.toRadians(animation)) * 0.05, 0)
-					//RenderUtility.enableBlending()
-					val screenModel = Models.biometric.getModel
-					screenModel.children.removeAll(screenModel.filterNot(_.name.equals("holoScreen")))
-					model.children.add(screenModel)
-					//RenderUtility.disableBlending()
-					lastFlicker = t
-				}
-			}
+	add(new DynamicRenderer(this))
+		.onRender(
+	    (model: Model) => {
+		    model.rotate(get(classOf[Orientation]).orientation.rotation)
+		    /**
+		     * Simulate flicker and, hovering
+		     */
+		    val t = System.currentTimeMillis()
+		    val dist = position.distance(Game.instance.clientManager.getPlayer.asInstanceOf[Entity].position)
 
-			model.bindAll(if (isActive) Textures.biometricOn else Textures.biometricOff)
-		}
-	})
+		    if (dist < 3) {
+			    if (Math.random() > 0.05 || (lastFlicker - t) > 200) {
+				    model.translate(0, Math.sin(Math.toRadians(animation)) * 0.05, 0)
+				    //RenderUtility.enableBlending()
+				    val screenModel = Models.biometric.getModel
+				    screenModel.children.removeAll(screenModel.filterNot(_.name.equals("holoScreen")))
+				    model.children.add(screenModel)
+				    //RenderUtility.disableBlending()
+				    lastFlicker = t
+			    }
+		    }
+
+		    model.bindAll(if (isActive) Textures.biometricOn else Textures.biometricOff)
+	    }
+		)
 
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)

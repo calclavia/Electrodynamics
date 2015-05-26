@@ -9,8 +9,8 @@ import com.calclavia.edx.mffs.content.{Content, Textures}
 import com.calclavia.edx.mffs.security.MFFSPermissions
 import com.calclavia.edx.mffs.util.MFFSUtility
 import com.resonant.lib.wrapper.WrapFunctions._
-import nova.core.block.{BlockDefault, Block}
 import nova.core.block.component.{BlockCollider, LightEmitter, StaticBlockRenderer}
+import nova.core.block.{Block, BlockDefault}
 import nova.core.component.misc.Damageable
 import nova.core.component.renderer.StaticRenderer
 import nova.core.entity.Entity
@@ -94,16 +94,7 @@ class BlockForceField extends BlockDefault with PacketHandler with ForceField wi
 		0f
 	})))
 
-	add(new StaticBlockRenderer(this) {
-		override def renderStatic(model: Model) {
-			val opRenderer = camoBlock.getOp(classOf[StaticRenderer])
-
-			if (opRenderer.isPresent)
-				opRenderer.get.renderStatic(model)
-			else
-				super.renderStatic(model)
-		}
-	}
+	add(new StaticBlockRenderer(this))
 		.setRenderSide(
 	    func((side: Direction) => {
 		    if (camoBlock != null) {
@@ -124,7 +115,16 @@ class BlockForceField extends BlockDefault with PacketHandler with ForceField wi
 	    )
 		)
 		.setTexture(func((dir: Direction) => Optional.of(Textures.forceField)))
-	)
+		.onRender(
+	    (model: Model) => {
+		    val opRenderer = camoBlock.getOp(classOf[StaticRenderer])
+
+		    if (opRenderer.isPresent)
+			    opRenderer.get.onRender.accept(model)
+		    else
+			    get(classOf[StaticBlockRenderer]).onRender.accept(model)
+	    }
+		)
 
 	override def getHardness: Double = Double.PositiveInfinity
 
