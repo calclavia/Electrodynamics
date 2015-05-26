@@ -5,7 +5,7 @@ import io.netty.buffer.ByteBuf
 import io.netty.channel.ChannelHandlerContext
 import net.minecraft.entity.player.EntityPlayer
 import resonantengine.core.network.discriminator.PacketType
-import resonantengine.lib.transform.vector.Vector3
+import resonantengine.lib.transform.vector.Vector3d
 import resonantengine.prefab.network.TPacketReceiver
 
 /**
@@ -77,7 +77,7 @@ class PacketMultiPart extends PacketType
     }
     else
     {
-      throw new UnsupportedOperationException("Packet was sent to a multipart not implementing IPacketReceiver, this is a coding error [" + tile + "] in " + new Vector3(x, y, z))
+      throw new UnsupportedOperationException("Packet was sent to a multipart not implementing IPacketReceiver, this is a coding error [" + tile + "] in " + new Vector3d(x, y, z))
     }
   }
 }

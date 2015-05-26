@@ -1,13 +1,7 @@
 package com.calclavia.edx.core
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent
-import net.minecraft.block.Block
-import net.minecraft.item.ItemStack
-import net.minecraftforge.common.config.Configuration
-import resonantengine.api.edx.recipe.QuantumAssemblerRecipes
-import resonantengine.lib.mod.config.Config
-import resonantengine.lib.mod.config.ConfigEvent.PostConfigEvent
-import resonantengine.lib.potion.PotionRadiation
+import com.resonant.wrapper.core.api.edx.recipe.QuantumAssemblerRecipes
+import nova.core.util.Config
 
 import scala.collection.convert.wrapAll._
 
@@ -16,10 +10,8 @@ object Settings
 {
   @Config(category = "Power", key = "AcceleratorCostPerTick")
   final val ACCELERATOR_ENERGY_COST_PER_TICK: Int = 4800000
-  var config: Configuration = _
-  @Config(key = "Tesla Sound FXs")
+	@Config(key = "Tesla Sound FXs")
   var SOUND_FXS = true
-
   //Turbine Settings
   @Config(key = "Shiny silver Wires")
   var SHINY_SILVER = true
@@ -61,10 +53,11 @@ object Settings
   @Config
   var ACCELERATOR_ANITMATTER_DENSITY_MULTIPLIER: Int = 1
 
+	/*
   @SubscribeEvent
-  def configEvent(evt: PostConfigEvent)
+  def configEvent(evt: ConfigEvent)
   {
     QuantumAssemblerRecipes.RECIPES.addAll(quantumAssemblerRecipes.map(x => new ItemStack(Block.blockRegistry.getObject(x).asInstanceOf[Block])).toList)
     PotionRadiation.INSTANCE.getId
-  }
+  }*/
 }

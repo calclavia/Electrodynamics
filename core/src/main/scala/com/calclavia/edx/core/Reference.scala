@@ -11,6 +11,10 @@ object Reference
 {
   final val id = "edx"
 
+	final val mechanicID = id + ":mechanic"
+	final val electricID = id + ":electric"
+	final val quantumID = id + ":quantum"
+
   /** The official name of the mod */
   final val name = "Electrodynamics"
   final val logger = Logger.getLogger(Reference.name)
@@ -20,7 +24,10 @@ object Reference
   final val revisionVersion = "@REVIS@"
   final val build = "@BUILD@"
   final val version = majorVersion + "." + minorVersion + "." + revisionVersion
-  /**
+
+	final val novaVersion = "0.0.1"
+
+	/**
    * Directory Information
    */
   final val domain: String = "edx"
@@ -33,4 +40,11 @@ object Reference
   final val modelPath: String = "models/"
   final val modelDirectory: String = assetDirectory + modelPath
   final val FX_DIRECTORY = textureDirectory + "fx/"
+
+	/**
+	 *
+	MultipartGenerator.registerTrait("resonantengine.api.graph.INodeProvider", "edx.core.prefab.pass.TraitNodeProvider")
+		MultipartGenerator.registerTrait("resonantengine.api.tile.IDebugInfo", "edx.core.prefab.pass.TraitDebugInfo")
+		MultipartGenerator.registerPassThroughInterface("net.minecraftforge.fluids.IFluidHandler")
+	 */
 }

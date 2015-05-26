@@ -1,18 +1,11 @@
-package com.calclavia.edx.core.handler
-
-import com.calclavia.edx.core.Reference
-import cpw.mods.fml.common.eventhandler.SubscribeEvent
-import cpw.mods.fml.relauncher.{Side, SideOnly}
-import Reference
-import edx.quantum.QuantumContent
-import net.minecraftforge.client.event.TextureStitchEvent
-import resonantengine.lib.render.RenderUtility
+package com.calclavia.edx.core
 
 /** Event handler for texture events
   * @author Calclavia
   */
-object TextureHookHandler
+object TextureHolder
 {
+	/*
   @SubscribeEvent
   @SideOnly(Side.CLIENT)
   def preTextureHook(event: TextureStitchEvent.Pre)
@@ -49,6 +42,6 @@ object TextureHookHandler
     QuantumContent.getFluidTritium.setIcons(RenderUtility.loadedIconMap.get(Reference.prefix + "tritium"))
     QuantumContent.getFluidToxicWaste.setIcons(QuantumContent.blockToxicWaste.getIcon(0, 0))
     QuantumContent.FLUID_PLASMA.setIcons(QuantumContent.blockPlasma.getIcon(0, 0))
-  }
+  }*/
 
 }

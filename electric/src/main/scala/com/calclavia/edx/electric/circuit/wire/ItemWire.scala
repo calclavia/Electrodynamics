@@ -6,7 +6,7 @@ import java.util.List
 import codechicken.lib.vec.{BlockCoord, Vector3}
 import codechicken.multipart._
 import com.calclavia.edx.electrical.circuit.wire.base.WireMaterial
-import com.calclavia.edx.electrical.circuit.wire.flat.PartFlatWire
+import com.calclavia.edx.electrical.circuit.wire.flat.BlockFlatWire$
 import com.calclavia.edx.electrical.circuit.wire.framed.PartFramedWire
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import edx.core.util.MultipartUtil
@@ -15,6 +15,8 @@ import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.world.World
+import nova.core.block.BlockFactory
+import nova.core.item.ItemBlock
 import nova.core.util.Direction
 import org.lwjgl.input.Keyboard
 import resonantengine.lib.render.EnumColor
@@ -22,13 +24,8 @@ import resonantengine.lib.utility.LanguageUtility
 import resonantengine.lib.utility.science.UnitDisplay
 import resonantengine.lib.wrapper.CollectionWrapper._
 
-class ItemWire extends TItemMultiPart
+class ItemWire(blockFactory: BlockFactory) extends ItemBlock(blockFactory)
 {
-  setUnlocalizedName(Reference.prefix + "wire")
-  setTextureName(Reference.prefix + "wire")
-  setHasSubtypes(true)
-  setMaxDamage(0)
-
   def newPart(itemStack: ItemStack, player: EntityPlayer, world: World, pos: BlockCoord, side: Int, hit: Vector3): TMultiPart =
   {
     val onPos: BlockCoord = pos.copy.offset(side ^ 1)
@@ -38,7 +35,7 @@ class ItemWire extends TItemMultiPart
       return null
     }
 
-    val wire = if (player.isSneaking) ResonantPartFactory.create(classOf[PartFramedWire]) else ResonantPartFactory.create(classOf[PartFlatWire])
+	  val wire = if (player.isSneaking) ResonantPartFactory.create(classOf[PartFramedWire]) else ResonantPartFactory.create(classOf[BlockFlatWire])
 
     if (wire != null)
     {

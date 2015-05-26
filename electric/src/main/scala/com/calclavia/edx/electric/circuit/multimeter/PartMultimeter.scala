@@ -190,21 +190,6 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
     }
   }
 
-  def getGrid: GridMultimeter =
-  {
-    if (grid == null)
-    {
-      grid = new GridMultimeter
-      grid.add(this)
-    }
-    return grid
-  }
-
-  def setGrid(network: GridMultimeter)
-  {
-    grid = network
-  }
-
   override def read(packet: MCDataInput, packetID: Int)
   {
     packetID match
@@ -251,6 +236,18 @@ class PartMultimeter extends PartFace with IRedstonePart with IPacketReceiver wi
   {
     graphType = ((graphType + 1) % getGrid.graphs.size).asInstanceOf[Byte]
     updateServer
+  }
+
+	def getGrid: GridMultimeter = {
+		if (grid == null) {
+			grid = new GridMultimeter
+			grid.add(this)
+		}
+		return grid
+	}
+
+	def setGrid(network: GridMultimeter) {
+		grid = network
   }
 
   def updateServer

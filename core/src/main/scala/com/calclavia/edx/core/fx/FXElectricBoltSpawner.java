@@ -1,46 +1,43 @@
 package com.calclavia.edx.core.fx;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.EntityFX;
-import net.minecraft.world.World;
-import resonantengine.lib.transform.vector.Vector3;
+import nova.core.component.Updater;
+import nova.core.entity.Entity;
+import nova.core.util.transform.vector.Vector3d;
 
 import java.util.Random;
 
 /**
  * A spawner used to spawn in multiple electrical bolts for a specific duration.
  */
-public class FXElectricBoltSpawner extends EntityFX
-{
-	private Vector3 start;
-	private Vector3 end;
+public class FXElectricBoltSpawner extends Entity implements Updater {
+	private final float maxAge;
+	private Vector3d start;
+	private Vector3d end;
+	private Random rand;
+	private float age;
 
-	public FXElectricBoltSpawner(World world, Vector3 startVec, Vector3 targetVec, long seed, int duration)
-	{
-		super(world, startVec.x(), startVec.y(), startVec.z(), 0.0D, 0.0D, 0.0D);
-
-		if (seed == 0)
-		{
-			this.rand = new Random();
-		}
-		else
-		{
-			this.rand = new Random(seed);
+	public FXElectricBoltSpawner(Vector3d targetVec, long seed, int duration) {
+		if (seed == 0) {
+			rand = new Random();
+		} else {
+			rand = new Random(seed);
 		}
 
-		this.start = startVec;
-		this.end = targetVec;
-		this.particleMaxAge = duration;
+		end = targetVec;
+		maxAge = duration;
 	}
 
 	@Override
-	public void onUpdate()
-	{
-		Minecraft.getMinecraft().effectRenderer.addEffect(new FXElectricBolt(this.worldObj, this.start, this.end));
-		if (this.particleAge++ >= this.particleMaxAge)
-		{
-			this.setDead();
+	public void update(double deltaTime) {
+		age += deltaTime;
+
+		if (age > deltaTime) {
+			world().removeEntity(this);
 		}
 	}
 
+	@Override
+	public String getID() {
+		return "electricBoltSpawner";
+	}
 }

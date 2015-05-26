@@ -1,7 +1,7 @@
 package com.calclavia.edx.core.prefab.part
 
 import codechicken.lib.raytracer.IndexedCuboid6
-import codechicken.lib.vec.{Cuboid6, Rotation, Vector3}
+import codechicken.lib.vec.{Cuboid6, Rotation, Vector3d}
 
 /**
  * Reference sheet for commonly created cuboid shape sets.
@@ -32,7 +32,7 @@ object CuboidShapes
 
     for (s <- 1 until 6)
     {
-      val t = Rotation.sideRotations(s).at(Vector3.center)
+      val t = Rotation.sideRotations(s).at(Vector3d.center)
       segments(s)(0) = segments(0)(0).copy().apply(t)
       segments(s)(1) = segments(0)(1).copy().apply(t)
     }

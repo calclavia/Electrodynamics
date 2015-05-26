@@ -199,6 +199,87 @@ class TileTesla extends ResonantTile(Material.iron) with TBlockNodeProvider with
     this.topCache = null
   }
 
+	def getRange: Int = {
+		return Math.min(4 * (this.getHeight - 1), 50)
+	}
+
+	/**
+	 * Called only on bottom.
+	 *
+	 * @return The highest Tesla coil in this tower.
+	 */
+	def getTopTelsa: TileTesla = {
+		if (this.topCache != null) {
+			return this.topCache
+		}
+		this.connectedTeslas.clear
+		val checkPosition: Vector3 = position
+		var returnTile: TileTesla = this
+		var exit = false
+		while (exit) {
+			val t: TileEntity = checkPosition.getTileEntity(this.worldObj)
+			if (t.isInstanceOf[TileTesla]) {
+				this.connectedTeslas.add(t.asInstanceOf[TileTesla])
+				returnTile = t.asInstanceOf[TileTesla]
+				checkPosition.add(0, 1, 0)
+			}
+			else {
+				exit = true
+			}
+		}
+		this.topCache = returnTile
+		return returnTile
+	}
+
+	/**
+	 * Called only on bottom.
+	 *
+	 * @return The highest Tesla coil in this tower.
+	 */
+	def getHeight: Int = {
+		this.connectedTeslas.clear
+		var y: Int = 0
+		var exit = false
+		while (!exit) {
+			val t: TileEntity = (position + new Vector3(0, y, 0)).getTileEntity(this.worldObj)
+			if (t.isInstanceOf[TileTesla]) {
+				this.connectedTeslas.add(t.asInstanceOf[TileTesla])
+				y += 1
+			}
+			else {
+				exit = true
+			}
+		}
+		return y
+	}
+
+	private def transfer(tesla: ITesla, transferEnergy: Double) {
+		if (transferEnergy > 0) {
+			tesla.teslaTransfer(transferEnergy, true)
+			this.teslaTransfer(-transferEnergy, true)
+		}
+	}
+
+	def teslaTransfer(e: Double, doTransfer: Boolean): Double = {
+		var transferEnergy = e
+		if (getMultiBlock.isPrimary) {
+			if (doTransfer) {
+				this.energy += transferEnergy
+				if (this.energy.isLastEmpty) {
+					this.sendPacket(2)
+				}
+			}
+			return transferEnergy
+		}
+		else {
+			if (energy.value > 0) {
+				transferEnergy += energy.value
+				energy.value = 0
+			}
+			return getMultiBlock.get.teslaTransfer(transferEnergy, doTransfer)
+		}
+	}
+
   def canTeslaTransfer(tileEntity: TileEntity): Boolean =
   {
     if (tileEntity.isInstanceOf[TileTesla])
@@ -211,6 +292,19 @@ class TileTesla extends ResonantTile(Material.iron) with TBlockNodeProvider with
     }
     return canReceive && tileEntity != getMultiBlock.get && !this.outputBlacklist.contains(tileEntity)
   }
+
+	/** Gets color of the link */
+	def getDye: Int = dyeID
+
+	def setDye(id: Int) {
+		this.dyeID = id
+		this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord)
+	}
+
+	def getMultiBlock: MultiBlockHandler[TileTesla] = {
+		if (multiBlock == null) multiBlock = new MultiBlockHandler[TileTesla](this)
+		return multiBlock
+	}
 
   override def getDescPacket: PacketTile =
   {
@@ -265,99 +359,6 @@ class TileTesla extends ResonantTile(Material.iron) with TBlockNodeProvider with
     }
   }
 
-  def teslaTransfer(e: Double, doTransfer: Boolean): Double =
-  {
-    var transferEnergy = e
-    if (getMultiBlock.isPrimary)
-    {
-      if (doTransfer)
-      {
-        this.energy += transferEnergy
-        if (this.energy.isLastEmpty)
-        {
-          this.sendPacket(2)
-        }
-      }
-      return transferEnergy
-    }
-    else
-    {
-      if (energy.value > 0)
-      {
-        transferEnergy += energy.value
-        energy.value = 0
-      }
-      return getMultiBlock.get.teslaTransfer(transferEnergy, doTransfer)
-    }
-  }
-
-  def getRange: Int =
-  {
-    return Math.min(4 * (this.getHeight - 1), 50)
-  }
-
-  /**
-   * Called only on bottom.
-   *
-   * @return The highest Tesla coil in this tower.
-   */
-  def getTopTelsa: TileTesla =
-  {
-    if (this.topCache != null)
-    {
-      return this.topCache
-    }
-    this.connectedTeslas.clear
-    val checkPosition: Vector3 = position
-    var returnTile: TileTesla = this
-    var exit = false
-    while (exit)
-    {
-      val t: TileEntity = checkPosition.getTileEntity(this.worldObj)
-      if (t.isInstanceOf[TileTesla])
-      {
-        this.connectedTeslas.add(t.asInstanceOf[TileTesla])
-        returnTile = t.asInstanceOf[TileTesla]
-        checkPosition.add(0, 1, 0)
-      }
-      else
-      {
-        exit = true
-      }
-    }
-    this.topCache = returnTile
-    return returnTile
-  }
-
-  /** Gets color of the link */
-  def getDye: Int = dyeID
-
-  /**
-   * Called only on bottom.
-   *
-   * @return The highest Tesla coil in this tower.
-   */
-  def getHeight: Int =
-  {
-    this.connectedTeslas.clear
-    var y: Int = 0
-    var exit = false
-    while (!exit)
-    {
-      val t: TileEntity = (position + new Vector3(0, y, 0)).getTileEntity(this.worldObj)
-      if (t.isInstanceOf[TileTesla])
-      {
-        this.connectedTeslas.add(t.asInstanceOf[TileTesla])
-        y += 1
-      }
-      else
-      {
-        exit = true
-      }
-    }
-    return y
-  }
-
   override def invalidate
   {
     TeslaGrid.instance.unregister(this)
@@ -381,12 +382,6 @@ class TileTesla extends ResonantTile(Material.iron) with TBlockNodeProvider with
     getMultiBlock.load(nbt)
   }
 
-  def getMultiBlock: MultiBlockHandler[TileTesla] =
-  {
-    if (multiBlock == null) multiBlock = new MultiBlockHandler[TileTesla](this)
-    return multiBlock
-  }
-
   /**
    * Writes a tile entity to NBT.
    */
@@ -404,47 +399,6 @@ class TileTesla extends ResonantTile(Material.iron) with TBlockNodeProvider with
       nbt.setInteger("linkDim", this.linkDim)
     }
     getMultiBlock.save(nbt)
-  }
-
-  def setLink(vector3: Vector3, dimID: Int, setOpponent: Boolean)
-  {
-    if (!worldObj.isRemote)
-    {
-      val otherWorld: World = MinecraftServer.getServer.worldServerForDimension(linkDim)
-      if (setOpponent && linked != null && otherWorld != null)
-      {
-        val tileEntity: TileEntity = linked.getTileEntity(otherWorld)
-        if (tileEntity.isInstanceOf[TileTesla])
-        {
-          (tileEntity.asInstanceOf[TileTesla]).setLink(null, this.linkDim, false)
-        }
-      }
-      linked = vector3
-      linkDim = dimID
-      worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord)
-      val newOtherWorld: World = MinecraftServer.getServer.worldServerForDimension(this.linkDim)
-      if (setOpponent && newOtherWorld != null && this.linked != null)
-      {
-        val tileEntity: TileEntity = this.linked.getTileEntity(newOtherWorld)
-        if (tileEntity.isInstanceOf[TileTesla])
-        {
-          (tileEntity.asInstanceOf[TileTesla]).setLink(position, this.worldObj.provider.dimensionId, false)
-        }
-      }
-    }
-  }
-
-  def tryLink(vector: VectorWorld): Boolean =
-  {
-    if (vector != null)
-    {
-      if (vector.getTileEntity.isInstanceOf[TileTesla])
-      {
-        setLink(vector, vector.world.provider.dimensionId, true)
-      }
-      return true
-    }
-    return false
   }
 
   def onMultiBlockChanged
@@ -543,12 +497,6 @@ class TileTesla extends ResonantTile(Material.iron) with TBlockNodeProvider with
     return false
   }
 
-  def setDye(id: Int)
-  {
-    this.dyeID = id
-    this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord)
-  }
-
   def toggleReceive: Boolean =
   {
     this.canReceive = !this.canReceive
@@ -582,6 +530,38 @@ class TileTesla extends ResonantTile(Material.iron) with TBlockNodeProvider with
     }
     return super.configure(player, side, hit)
   }
+
+	def tryLink(vector: VectorWorld): Boolean = {
+		if (vector != null) {
+			if (vector.getTileEntity.isInstanceOf[TileTesla]) {
+				setLink(vector, vector.world.provider.dimensionId, true)
+			}
+			return true
+		}
+		return false
+	}
+
+	def setLink(vector3: Vector3, dimID: Int, setOpponent: Boolean) {
+		if (!worldObj.isRemote) {
+			val otherWorld: World = MinecraftServer.getServer.worldServerForDimension(linkDim)
+			if (setOpponent && linked != null && otherWorld != null) {
+				val tileEntity: TileEntity = linked.getTileEntity(otherWorld)
+				if (tileEntity.isInstanceOf[TileTesla]) {
+					(tileEntity.asInstanceOf[TileTesla]).setLink(null, this.linkDim, false)
+				}
+			}
+			linked = vector3
+			linkDim = dimID
+			worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord)
+			val newOtherWorld: World = MinecraftServer.getServer.worldServerForDimension(this.linkDim)
+			if (setOpponent && newOtherWorld != null && this.linked != null) {
+				val tileEntity: TileEntity = this.linked.getTileEntity(newOtherWorld)
+				if (tileEntity.isInstanceOf[TileTesla]) {
+					(tileEntity.asInstanceOf[TileTesla]).setLink(position, this.worldObj.provider.dimensionId, false)
+				}
+			}
+		}
+	}
 
   override def onNeighborChanged(id: Block)
   {
@@ -628,15 +608,6 @@ class TileTesla extends ResonantTile(Material.iron) with TBlockNodeProvider with
       checkPosition.add(0, -1, 0)
     }
     return lowest
-  }
-
-  private def transfer(tesla: ITesla, transferEnergy: Double)
-  {
-    if (transferEnergy > 0)
-    {
-      tesla.teslaTransfer(transferEnergy, true)
-      this.teslaTransfer(-transferEnergy, true)
-    }
   }
 
 }

@@ -55,6 +55,15 @@ class ItemBlockBattery(block: Block) extends ItemBlock(block) with TEnergyItem
     this.setEnergy(itemStack, 0)
   }
 
+	override def recharge(itemStack: ItemStack, energy: Double, doReceive: Boolean): Double = {
+		val rejectedElectricity: Double = Math.max((this.getEnergy(itemStack) + energy) - this.getEnergyCapacity(itemStack), 0)
+		val energyToReceive: Double = Math.min(energy - rejectedElectricity, getTransferRate(itemStack))
+		if (doReceive) {
+			this.setEnergy(itemStack, this.getEnergy(itemStack) + energyToReceive)
+		}
+		return energyToReceive
+	}
+
   override def setEnergy(itemStack: ItemStack, joules: Double): ItemStack =
   {
     if (itemStack.getTagCompound == null)
@@ -69,17 +78,6 @@ class ItemBlockBattery(block: Block) extends ItemBlock(block) with TEnergyItem
   def getEnergyCapacity(theItem: ItemStack): Double =
   {
     return TileBattery.getEnergyForTier(ItemBlockBattery.getTier(theItem))
-  }
-
-  override def recharge(itemStack: ItemStack, energy: Double, doReceive: Boolean): Double =
-  {
-    val rejectedElectricity: Double = Math.max((this.getEnergy(itemStack) + energy) - this.getEnergyCapacity(itemStack), 0)
-    val energyToReceive: Double = Math.min(energy - rejectedElectricity, getTransferRate(itemStack))
-    if (doReceive)
-    {
-      this.setEnergy(itemStack, this.getEnergy(itemStack) + energyToReceive)
-    }
-    return energyToReceive
   }
 
   override def discharge(itemStack: ItemStack, energy: Double, doTransfer: Boolean): Double =

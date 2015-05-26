@@ -8,7 +8,7 @@ import net.minecraft.init.Blocks
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.world.World
 import resonantengine.lib.factory.resources.item.TItemResource
-import resonantengine.lib.transform.vector.Vector3
+import resonantengine.lib.transform.vector.Vector3d
 
 /**
  * @author Calclavia
@@ -35,7 +35,7 @@ class ItemRefinedDust extends Item with TItemResource
     }
 
     var actualSide = side
-    val placeVec = new Vector3(x, y, z)
+    val placeVec = new Vector3d(x, y, z)
 
     if (block == Blocks.snow_layer && (world.getBlockMetadata(x, y, z) & 7) < 1)
     {
