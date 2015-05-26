@@ -61,7 +61,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 	private var moveTime = 0
 	private var canRenderMove = true
 
-	add(new StaticBlockRenderer(this))
+	get(classOf[StaticBlockRenderer])
 		.onRender(
 	    (model: Model) => {
 		    model.matrix = new MatrixStack()

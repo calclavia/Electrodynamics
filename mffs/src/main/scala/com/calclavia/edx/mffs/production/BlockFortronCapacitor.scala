@@ -43,7 +43,7 @@ class BlockFortronCapacitor extends BlockModuleHandler {
 	capacityBoost = 10
 	startModuleIndex = 1
 
-	add(new StaticBlockRenderer(this))
+	get(classOf[StaticBlockRenderer])
 		.onRender(
 	    (model: Model) => {
 			model.matrix = new MatrixStack()

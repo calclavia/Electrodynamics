@@ -86,13 +86,13 @@ class BlockCoercionDeriver extends BlockModuleHandler {
 	    }
 		)
 
-	add(new ItemRenderer(this) {
-		override def renderItem(model: Model) {
+	get(classOf[ItemRenderer]).onRender(
+		(model: Model) => {
 			model.translate(0, 0.1, 0)
 			get(classOf[StaticRenderer]).onRender.accept(model)
 			get(classOf[DynamicRenderer]).onRender.accept(model)
 		}
-	})
+	)
 
 	override def getID: String = "coercionDeriver"
 

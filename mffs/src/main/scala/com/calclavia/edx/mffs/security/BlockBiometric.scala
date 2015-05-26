@@ -38,7 +38,7 @@ class BlockBiometric extends BlockFrequency with Updater with PermissionHandler 
 	var lastFlicker = 0L
 
 	add(new Orientation(this))
-	add(new StaticBlockRenderer(this))
+	get(classOf[StaticBlockRenderer])
 		.onRender(
 	    (model: Model) => {
 		    model.rotate(get(classOf[Orientation]).orientation.rotation)

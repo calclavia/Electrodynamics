@@ -141,8 +141,6 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 	    }
 		)
 
-	add(new ItemRenderer(this))
-
 	add(new LightEmitter().setEmittedLevel(supplier(() => if (getShapeItem() != null) 1f else 0f)))
 
 	/*
@@ -341,6 +339,14 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 
 	def getProjectionSpeed: Int = 28 + 28 * getModuleCount(Content.moduleSpeed, getModuleSlots: _*)
 
+	override def markDirty() {
+		super.markDirty()
+
+		if (world != null) {
+			destroyField()
+		}
+	}
+
 	def destroyField() {
 		if (Game.instance.networkManager.isServer && calculatedField != null && !isCalculating) {
 			getModules(getModuleSlots: _*).forall(!_.onDestroyField(this, calculatedField))
@@ -354,14 +360,6 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 			calculatedField = null
 			isCompleteConstructing = false
 			fieldRequireTicks = false
-		}
-	}
-
-	override def markDirty() {
-		super.markDirty()
-
-		if (world != null) {
-			destroyField()
 		}
 	}
 
