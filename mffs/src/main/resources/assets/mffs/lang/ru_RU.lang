@@ -1,0 +1,212 @@
+# Modular Force Field System Language Properties
+# @author Adaptivity
+
+itemGroup.MFFS=Modular Force Field System
+
+fluid.fortron=Фортрон
+
+# Chat Messages
+death.attack.areaDefense=#1 пренебрёг предупреждениями и распался.
+death.attack.fieldShock=#1 распался благодаря силовому полю.
+
+message.cardFrequency.generated=Создана случайная частота:
+message.cardFrequency.set=Частота установлена на: #p
+message.remoteController.linked=Соединён с позицией: #p с блоком: #q
+message.remoteController.fail=Невозможно использовать #p из фортронного поля.
+message.moduleAntiPersonnel.death=Вы распалась. Прощайте.
+message.moduleConfiscate.confiscate=%s из Ваших предмет(ов) конфискованы.
+message.moduleWarn.warn=Немедленно покиньте эту зону. У вас нет права на вход.
+message.interdictionMatrix.warn=Внимание! Вы рядом с диапазоном сканирования!
+message.modeCustom.modeChange=Режим выбора изменён на #p
+message.modeCustom.saved=Структура поля сохранена.
+
+# Blocks
+tile.mffs:fortronite.name=Фортронит
+tile.mffs:biometricIdentifier.name=Биометрический идентификатор
+tile.mffs:interdictionMatrix.name=Запрещающая матрица
+tile.mffs:fortronCapacitor.name=Фортронный конденсатор
+tile.mffs:electromagneticProjector.name=Электромагнитный проектор
+tile.mffs:coercionDeriver.name=Принуждающий производитель
+tile.mffs:forceMobilizer.name=Силовой мобилизатор
+tile.mffs:forceField.name=Силовое поле
+
+
+# Cards
+item.mffs:cardBlank.name=Пустая карта
+item.mffs:cardInfinite.name=Бесконечная энергетическая карта
+item.mffs:cardInfinite.tooltip=Бесконечная энергетическая карта - это только творческий предмет, который может быть помещён внутрь конденсатора для бесконечной энергии.
+item.mffs:cardFrequency.name=Частотная карта
+item.mffs:cardFrequency.tooltip=Частотная карта используется для облегчения передачи частот. Shift-ПКМ с картой создаст случайную частоту.
+item.mffs:cardLink.name=Соединяющая карта
+item.mffs:cardLink.tooltip=ПКМ соединяющей картой по блоку создаст ссылку на эту конкретную позицию.
+item.mffs:cardIdentification.name=Идентификационная карта
+item.mffs:cardIdentification.tooltip=ПКМ на идентификационной карте, чтобы биометрически заблокировать её на Ваше имя.
+
+#Items
+item.mffs:remoteController.name=Пульт дистанционного управления
+item.mffs:fortron.name=Фортрон
+item.mffs:focusMatrix.name=Фокусирующая матрица
+
+#Projection Modes
+item.mffs:modeCube.name=Режим куба
+item.mffs:modeTube.name=Режим трубы
+item.mffs:modeSphere.name=Режим сферы
+item.mffs:modePyramid.name=Режим пирамиды
+item.mffs:modeCylinder.name=Режим цилиндра
+item.mffs:modeCustom.name=Пользовательский режим
+item.mffs:modeCustom.tooltip=Создайте свой собственный режим, щёлкнув ПКМ по двум точкам для определения области. Shift-ПКМ, чтобы сохранить область.
+
+# Modules
+## General Modules
+item.mffs:moduleScale.name=Модуль масштаба
+item.mffs:moduleScale.tooltip=Модуль масштаба увеличивает масштаб определённого компонента.
+item.mffs:moduleTranslate.name=Модуль перемещения
+item.mffs:moduleTranslate.tooltip=Модуль перемещения перемещает поле, вытесняя его из источника.
+item.mffs:moduleRotate.name=Модуль вращения
+item.mffs:moduleRotate.tooltip=Модуль вращения вращает поле под определённым углом.
+
+item.mffs:moduleCapacity.name=Модуль ёмкости
+item.mffs:moduleCapacity.tooltip=Увеличивает ёмкость устройства.
+item.mffs:moduleSpeed.name=Модуль скорости
+item.mffs:moduleSpeed.tooltip=Увеличивает скорость устройства.
+
+## Force Field Projector Modules
+item.mffs:moduleShock.name=Модуль шока
+item.mffs:moduleSponge.name=Модуль губки
+item.mffs:moduleDome.name=Модуль купола
+item.mffs:moduleFusion.name=Модуль слияния поля
+item.mffs:moduleCamouflage.name=Модуль маскировки
+item.mffs:moduleCamouflage.tooltip=Маскирует силовое поле. Используя этот модуль с модулем распада, фильтр распада инвертируется.
+item.mffs:moduleDisintegration.name=Модуль распада
+item.mffs:moduleDisintegration.tooltip=Разрушает блоки, занятые силовым полем и разбрасывает его.
+item.mffs:moduleGlow.name=Модуль свечения
+item.mffs:moduleStabilize.name=Модуль стабилизации
+item.mffs:moduleStabilize.tooltip=Стабилизирует проектируемое силовое поле и кристаллизирует поле в твёрдые блоки. Поставьте сундук к проектору с блоками для стабилизации поля.
+item.mffs:moduleCollection.name=Модуль собирания
+item.mffs:moduleCollection.tooltip=Модуль собирания позволяет Вам собирать блоки, брошенные модулем распада.
+item.mffs:moduleInvert.name=Модуль переворачивания
+item.mffs:moduleInvert.tooltip=Переворачивает поле, чтобы использовать обратное пространство вместо абсолютного пространства.
+item.mffs:moduleSilence.name=Модуль бесшумности
+item.mffs:moduleSilence.tooltip=Заглушает силовое поле и запрещает ему издавать звуки. Также запрещает запрещающей матрице отправлять предупреждающие сообщения.
+item.mffs:moduleRepulsion.name=Модуль отталкивания
+item.mffs:moduleRepulsion.tooltip=Создаёт поле, которое отталкивает сущностей без блоков.
+item.mffs:moduleArray.name=Модуль массива
+item.mffs:moduleArray.tooltip=Повторяет поле по шаблону в указанном направлении.
+item.mffs:moduleApproximation.name=Модуль приближения
+item.mffs:moduleApproximation.tooltip=Заставляет поле приближаться и игнорировать метаданные при стабилизации или распаде.
+
+## Interdiction Matrix Modules
+item.mffs:moduleAntiPersonnel.name=Модуль против игроков
+item.mffs:moduleAntiPersonnel.tooltip=Заставляет запрещающую матрицу убивать всех игроков.
+item.mffs:moduleAntiFriendly.name=Модуль против дружелюбных мобов
+item.mffs:moduleAntiFriendly.tooltip=Заставляет запрещающую матрицу убивать всех дружелюбных мобов.
+item.mffs:moduleAntiHostile.name=Модуль против враждебных мобов
+item.mffs:moduleAntiHostile.tooltip=Заставляет запрещающую матрицу убивать всех враждебных мобов.
+item.mffs:moduleBroadcast.name=Модуль трансляции
+item.mffs:moduleBroadcast.tooltip=Транслирует сообщение каждому, находящемуся в поле.
+item.mffs:moduleConfiscate.name=Модуль конфискации
+item.mffs:moduleConfiscate.tooltip=Конфискует предметы нарушителя.
+item.mffs:moduleBlockAccess.name=Модуль блокировки доступа
+item.mffs:moduleBlockAccess.tooltip=Запрещает нарушителю использовать блоки.
+item.mffs:moduleBlockAlter.name=Модуль блокировки изменений
+item.mffs:moduleBlockAlter.tooltip=Запрещает нарушителю размещать или ломать блоки.
+item.mffs:moduleAntiSpawn.name=Модуль против появления
+item.mffs:moduleAntiSpawn.tooltip=Запрещает появление сущностей в конкретном регионе.
+
+# Multitool
+item.mffs:itemMultiTool.name=Мультиинструмент
+
+# GUI
+gui.frequency.name=Частота
+gui.frequency.tooltip=Механизмы с одинаковой частотой будут делиться фортронной энергией.
+gui.frequency.random=Случайная частота
+gui.progress.name=Прогресс
+gui.fortron.name=Фортрон
+gui.fortron.tooltip=Фортрон - это вид силовой энергии, используемый в механизмах MFFS.
+gui.upgrade.name=Улучшение
+gui.matrix.name=Матрица
+gui.matrix.tooltip=Матрица проекции используется для определения того, как проекция должна быть создана.
+gui.master.name=Мастер
+gui.master.tooltip=Мастер карта будет обозначать игрока в карте, владельца биометрического идентификатора.
+gui.deriver.derive=Производить
+gui.deriver.integrate=Интеграция
+gui.deriver.running=Работа
+gui.deriver.idle=Простой
+gui.mobilizer.anchor=Якорь
+gui.mobilizer.time=Move Time
+
+gui.energy=Энергия
+gui.direction=Направление
+gui.makecopy=Сделать копию
+gui.input.name=Ввод
+gui.output.name=Вывод
+
+# Capacitor
+gui.linkedDevice.name=Соединённых устройств
+gui.linkedDevice.tooltip=Количество устройств, соединённых с этим механизмом.
+gui.range.name=Диапазон
+gui.range.tooltip=Диапазон может быть улучшен с модулем диапазона.
+gui.transmissionRate.name=Скорость передачи
+gui.transmissionRate.tooltip=Скорость, с которой этот конденсатор может передавать фортронную энергию.
+
+## Transfer Modes
+gui.transferMode.equalize.name=Уравнение
+gui.transferMode.equalize.tooltip=Разносит фортронную энергию между механизмами на основе процентной ёмкости механизма.
+gui.transferMode.distribute.name=Распространение
+gui.transferMode.distribute.tooltip=Равномерно разносит фортронную энергию на основе количества энергии.
+gui.transferMode.drain.name=Осушение
+gui.transferMode.drain.tooltip=Забирает энергию конденсатора и уравнивает её между соединёнными механизмами.
+gui.transferMode.fill.name=Заполнение
+gui.transferMode.fill.tooltip=Заполняет конденсатор энергией. Выравнивает переполнение энергией.
+
+# Permissions
+gui.rights.name=Права
+gui.rights.tooltip=Назначает права на карту. Вставьте карту слева от Вас.
+gui.warp.name=Искажение
+gui.warp.tooltip=Разрешает игроку проходить и обходить силовые поля.
+gui.blockPlaceAccess.name=Изменение блоков
+gui.blockPlaceAccess.tooltip=Разрешает игроку размещать и уничтожать блоки.
+gui.blockAccess.name=Доступ к блокам
+gui.blockAccess.tooltip=Разрешает игроку взаимодействовать с блоками и открывать их интерфейсы.
+gui.configure.name=Настройка
+gui.configure.tooltip=Разрешает игроку настраивать биометрический идентификатор.
+gui.bypassDefense.name=Обход защиты
+gui.bypassDefense.tooltip=Разрешает игроку обходить ограничения запрещающей матрицы.
+gui.bypassConfiscation.name=Обход конфискации
+gui.bypassConfiscation.tooltip=Разрешает игроку обходить конфискацию запрещающей матрицы.
+gui.remoteControl.name=Удалённое управление
+gui.remoteControl.tooltip=Разрешает игроку использовать пульт дистанционного управления в пределах защищённой области.
+
+# Force Field Projector
+gui.projector.mode=Режим
+gui.projector.up=Верх
+gui.projector.down=Низ
+gui.projector.north=Север
+gui.projector.south=Юг
+gui.projector.east=Восток
+gui.projector.west=Запад
+gui.projector.front=Перед
+gui.projector.back=Зад
+gui.projector.left=Лево
+gui.projector.right=Право
+
+# Custom Mode
+info.modeCustom.mode=Режим:
+info.modeCustom.substraction=Вычитание
+info.modeCustom.additive=Прибавление
+info.modeCustom.point1=Точка 1:
+info.modeCustom.point2=Точка 2:
+info.modeCustom.modeID=ID режима:
+info.modeCustom.fieldSize=Размер поля:
+info.modeCustom.notSaved=Поле не сохранено.
+info.modeCustom.shift=Удерживайте shift для более...
+
+# More tooltips
+info.module.defense=Модуль защиты
+info.item.linkedWith=Соединено с: %s
+info.item.dimension=Измерение:
+info.item.notLinked=Не соединено.
+info.item.fortron=Фортрон:
+info.cardFrequency.freq=Частота:
+info.cardIdentification.username=Имя пользователя:
+info.cardIdentification.empty=не опознано

@@ -1,0 +1,211 @@
+# Modular Force Field System Language Properties for zh_CN
+# @author Fr0stbyteR and sb023612
+
+itemGroup.MFFS=模块化力场系统
+
+fluid.fortron=Fortron
+
+# Chat Messages
+death.attack.areaDefense=#1罔顾警告结果被分解掉了。
+death.attack.fieldShock=#1被力场分解掉了。
+
+message.cardFrequency.generated=已产生随机频率:
+message.cardFrequency.set=频率设置成: #p
+message.remoteController.linked=已连接至坐标: #p 所连接方块: #q
+message.remoteController.fail=无法管理所聚合力场内的#p.
+message.moduleAntiPersonnel.death=你已被肢解,永别了.
+message.moduleConfiscate.confiscate=你的%s已经被没收充公.
+message.moduleWarn.warn=立即离开这个区域. 你无权进入.
+message.interdictionMatrix.warn=警告! 你正在接近扫描范围!
+message.modeCustom.modeChange=已将选定力场模式改变为#p
+message.modeCustom.saved=力场结构已保存.
+
+# Blocks
+tile.mffs:fortronite.name=力场矿
+tile.mffs:biometricIdentifier.name=生物辨识机
+tile.mffs:interdictionMatrix.name=封锁矩阵
+tile.mffs:fortronCapacitor.name=形态转换电容
+tile.mffs:electromagneticProjector.name=力场投影机
+tile.mffs:coercionDeriver.name=强制驱动器
+tile.mffs:forceMobilizer.name=力场移动器
+tile.mffs:forceField.name=力场
+
+
+# Cards
+item.mffs:cardBlank.name=空白卡片
+item.mffs:cardInfinite.name=无限能量卡片
+item.mffs:cardInfinite.tooltip=创造模式专属物品，可以放入电容器里提供无限能量。
+item.mffs:cardFrequency.name=频率卡片
+item.mffs:cardFrequency.tooltip=频率卡片为设定频率提供便捷，右击可生成一个随机频率。
+item.mffs:cardLink.name=链接卡片
+item.mffs:cardLink.tooltip=右击方块将卡片绑定到特殊位置。
+item.mffs:cardIdentification.name=身份卡片
+item.mffs:cardIdentification.tooltip=右击将自己的信息绑定到生物辨识系统中。
+
+#Items
+item.mffs:remoteController.name=遥控器
+item.mffs:fortron.name=形态转换石
+item.mffs:focusMatrix.name=聚焦矩阵
+
+#Projection Modes
+item.mffs:modeCube.name=立方模式
+item.mffs:modeTube.name=管道模式
+item.mffs:modeSphere.name=球体模式
+item.mffs:modePyramid.name=金字塔模式
+item.mffs:modeCylinder.name=圆柱模式
+item.mffs:modeCustom.name=自定义模式
+item.mffs:modeCustom.tooltip=右击两个坐标来定义一块区域，然后按住潜行右击将其保存来设置自定义模式。
+
+# Modules
+## General Modules
+item.mffs:moduleScale.name=规格模块
+item.mffs:moduleScale.tooltip=该模块可增大力场规格。
+item.mffs:moduleTranslate.name=平移模块
+item.mffs:moduleTranslate.tooltip=该模块用来移动力场。
+item.mffs:moduleRotate.name=旋转模块
+item.mffs:moduleRotate.tooltip=该模块用来以指定角度旋转力场。
+
+item.mffs:moduleCapacity.name=电容模块
+item.mffs:moduleCapacity.tooltip=增加设备的能量容量。
+item.mffs:moduleSpeed.name=速度模块
+item.mffs:moduleSpeed.tooltip=提高设备速度。
+
+## Force Field Projector Modules
+item.mffs:moduleShock.name=震荡模块
+item.mffs:moduleSponge.name=海绵模块
+item.mffs:moduleDome.name=圆顶模块
+item.mffs:moduleFusion.name=力场融合模块
+item.mffs:moduleCamouflage.name=伪装模块
+item.mffs:moduleCamouflage.tooltip=使力场能够伪装成其他方块,配合分解模块使用可以反转分解模块的过滤设置.
+item.mffs:moduleDisintegration.name=分解模块
+item.mffs:moduleDisintegration.tooltip=破坏被力场占据了位置的方块使得它们变成可拾取状态.
+item.mffs:moduleGlow.name=发光模块
+item.mffs:moduleStabilize.name=力场稳定模块
+item.mffs:moduleStabilize.tooltip=使得力场投影机稳定且将力场结晶化为固定方块。在投影机边上放置箱子来提供稳定力场用的固化方块。
+item.mffs:moduleCollection.name=收集模块
+item.mffs:moduleCollection.tooltip=收集模块让你能够收集通过分解模块得到的掉落方块。
+item.mffs:moduleInvert.name=反转模块
+item.mffs:moduleInvert.tooltip=反转力场,使其投影于反转前不生成的位置而非当前位置。
+item.mffs:moduleSilence.name=静音模块
+item.mffs:moduleSilence.tooltip=让力场范围内静音。
+item.mffs:moduleRepulsion.name=排斥模块
+item.mffs:moduleRepulsion.tooltip=创建一个没有方块的实体排斥区域.
+item.mffs:moduleArray.name=阵列模块
+item.mffs:moduleArray.tooltip=按某方向的力场的样式重复生成力场阵列.
+item.mffs:moduleApproximation.name=模糊模块
+item.mffs:moduleApproximation.tooltip=使得力场在分解或者稳定时能够忽略方块的不同Meta,将其视为同一种方块模糊处理.
+
+## Interdiction Matrix Modules
+item.mffs:moduleAntiPersonnel.name=玩家封锁模块
+item.mffs:moduleAntiPersonnel.tooltip=制造出封锁力场来杀死玩家。
+item.mffs:moduleAntiFriendly.name=动物封锁模块
+item.mffs:moduleAntiFriendly.tooltip=制造出封锁力场来杀死动物等友善生物。
+item.mffs:moduleAntiHostile.name=怪物封锁模块
+item.mffs:moduleAntiHostile.tooltip=制造出封锁力场来杀死敌对生物。
+item.mffs:moduleBroadcast.name=广播模块
+item.mffs:moduleBroadcast.tooltip=广播一条信息给力场内的所有玩家.
+item.mffs:moduleConfiscate.name=收缴模块
+item.mffs:moduleConfiscate.tooltip=收缴入侵者的物品。
+item.mffs:moduleBlockAccess.name=禁止操作模块
+item.mffs:moduleBlockAccess.tooltip=禁止入侵者右击方块。
+item.mffs:moduleBlockAlter.name=禁止建筑模块
+item.mffs:moduleBlockAlter.tooltip=禁止入侵者放置/破坏方块
+item.mffs:moduleAntiSpawn.name=禁止生成模块
+item.mffs:moduleAntiSpawn.tooltip=在指定范围内禁止实体生成。
+
+# Multitool
+item.mffs:itemMultiTool.name=多功能工具
+
+# GUI
+gui.frequency.name=频率
+gui.frequency.tooltip=相同频率的机器共享形态转换能源。
+gui.frequency.random=随机频率
+gui.progress.name=进程
+gui.fortron.name=力场能
+gui.fortron.tooltip=力场能是mffs设备专用的一种能源形式。
+gui.upgrade.name=升级
+gui.matrix.name=矩阵
+gui.matrix.tooltip=投影矩阵用于定义如何投影力场。
+gui.master.name=拥有者
+gui.master.tooltip=拥有者卡片将会记录名字的玩家设置为生物辨识机的主人
+gui.deriver.derive=导出
+gui.deriver.integrate=整合
+gui.deriver.running=正在运行
+gui.deriver.idle=闲置
+gui.mobilizer.anchor=锚
+gui.mobilizer.time=传送时间
+
+gui.energy=能量
+gui.direction=方向
+gui.makecopy=复制
+gui.input.name=输入
+gui.output.name=输出
+# Capacitor
+gui.linkedDevice.name=链接设备
+gui.linkedDevice.tooltip=链接到该机器的设备数目。
+gui.range.name=范围
+gui.range.tooltip=可被范围模块升级的范围。
+gui.transmissionRate.name=转换率
+gui.transmissionRate.tooltip=电容器转换成力场能的速率。
+
+## Transfer Modes
+gui.transferMode.equalize.name=平衡
+gui.transferMode.equalize.tooltip=以机器的电容百分数为标准分配形态转换能。
+gui.transferMode.distribute.name=均一
+gui.transferMode.distribute.tooltip=向所有设备传输相等能量。
+gui.transferMode.drain.name=输出
+gui.transferMode.drain.tooltip=快速输出能量并平衡分配给设备。
+gui.transferMode.fill.name=充能
+gui.transferMode.fill.tooltip=补充电容器能量,并输出多余能量。
+
+# Permissions
+gui.rights.name=基本权限
+gui.rights.tooltip=使得玩家能离开力场。
+gui.warp.name=进出权限
+gui.warp.tooltip=使得玩家能穿过力场。
+gui.blockPlaceAccess.name=方块设置权限
+gui.blockPlaceAccess.tooltip=使得玩家能放置/破坏方块
+gui.blockAccess.name=设备访问权限
+gui.blockAccess.tooltip=使得玩家能访问设备。
+gui.configure.name=身份辨识
+gui.configure.tooltip=使得玩家能通过生物辨识机辨识。
+gui.bypassDefense.name=豁免封锁
+gui.bypassDefense.tooltip=使得玩家能通过力场限制。
+gui.bypassConfiscation.name=豁免收缴
+gui.bypassConfiscation.tooltip=使得玩家能保留物品地通过力场。
+gui.remoteControl.name=远程控制
+gui.remoteControl.tooltip=允许玩家远程操控设备。
+
+# Force Field Projector
+gui.projector.mode=模式
+gui.projector.up=上
+gui.projector.down=下
+gui.projector.north=北
+gui.projector.south=南
+gui.projector.east=东
+gui.projector.west=西
+gui.projector.front=前
+gui.projector.back=后
+gui.projector.left=左
+gui.projector.right=右
+
+# Custom Mode
+info.modeCustom.mode=模式:
+info.modeCustom.substraction=减法
+info.modeCustom.additive=加法
+info.modeCustom.point1=点1:
+info.modeCustom.point2=点2:
+info.modeCustom.modeID=模式ID:
+info.modeCustom.fieldSize=力场面积:
+info.modeCustom.notSaved=力场未保存.
+info.modeCustom.shift=按住shift查看更多...
+
+# More tooltips
+info.module.defense=防御模块
+info.item.linkedWith=连接至: %s
+info.item.dimension=维度:
+info.item.notLinked=未连接.
+info.item.fortron=聚合:
+info.cardFrequency.freq=频率:
+info.cardIdentification.username=用户名:
+info.cardIdentification.empty=未识别
