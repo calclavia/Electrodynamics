@@ -73,7 +73,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 	})
 
 	get(classOf[Orientation]).setMask(63)
-	get(classOf[BlockCollider]).setCube(false)
+	get(classOf[BlockCollider]).isCube(false)
 
 	def markFailMove() = failedMove = true
 
@@ -361,46 +361,6 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 		return Game.instance.blockManager.getAirBlock.sameType(targetBlock)
 	}
 
-	/**
-	 * Gets the position in which the manipulator will try to translate the field into.
-	 *
-	 * @return A vector of the target position.
-	 */
-	def getTargetPosition: (World, Vector3i) = {
-		if (isTeleport) {
-			val cardStack = getLinkCard
-
-			if (cardStack != null) {
-				val link = cardStack.asInstanceOf[CoordLink].getLink
-				return (link._1, link._2)
-			}
-		}
-
-		return (world(), getAbsoluteAnchor + get(classOf[Orientation]).orientation.toVector)
-	}
-
-	private def isTeleport: Boolean = {
-		if (Settings.allowForceManipulatorTeleport) {
-			val cardStack = getLinkCard
-
-			if (cardStack != null) {
-				return cardStack.asInstanceOf[CoordLink].getLink != null
-			}
-		}
-		return false
-	}
-
-	def getLinkCard: Item = {
-		inventory
-			.filter(_ != null)
-			.find(_.isInstanceOf[CoordLink]) match {
-			case Some(item) => return item
-			case _ => return null
-		}
-	}
-
-	def getAbsoluteAnchor: Vector3i = transform.position + anchor
-
 	def isVisibleToPlayer(position: Vector3i): Boolean = Direction.DIRECTIONS.count(dir => world.getBlock(position + dir.toVector).get.get(classOf[BlockCollider]).isOpaqueCube.get()) < 6
 
 	override def read(packet: Packet) {
@@ -520,6 +480,46 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 			entities.foreach(entity => moveEntity(entity, targetLocation._1, targetLocation._2.toDouble + 0.5 + entity.transform.position() - (getAbsoluteAnchor.toDouble + 0.5)))
 		}
 	}
+
+	/**
+	 * Gets the position in which the manipulator will try to translate the field into.
+	 *
+	 * @return A vector of the target position.
+	 */
+	def getTargetPosition: (World, Vector3i) = {
+		if (isTeleport) {
+			val cardStack = getLinkCard
+
+			if (cardStack != null) {
+				val link = cardStack.asInstanceOf[CoordLink].getLink
+				return (link._1, link._2)
+			}
+		}
+
+		return (world(), getAbsoluteAnchor + get(classOf[Orientation]).orientation.toVector)
+	}
+
+	private def isTeleport: Boolean = {
+		if (Settings.allowForceManipulatorTeleport) {
+			val cardStack = getLinkCard
+
+			if (cardStack != null) {
+				return cardStack.asInstanceOf[CoordLink].getLink != null
+			}
+		}
+		return false
+	}
+
+	def getLinkCard: Item = {
+		inventory
+			.filter(_ != null)
+			.find(_.isInstanceOf[CoordLink]) match {
+			case Some(item) => return item
+			case _ => return null
+		}
+	}
+
+	def getAbsoluteAnchor: Vector3i = transform.position + anchor
 
 	def getSearchBounds: Cuboid = {
 		val positiveScale = transform.position + getTranslation + getPositiveScale + 1

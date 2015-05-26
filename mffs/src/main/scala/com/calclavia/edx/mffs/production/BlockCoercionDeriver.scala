@@ -59,8 +59,6 @@ class BlockCoercionDeriver extends BlockModuleHandler {
 	//Client
 	var animationTween = 0f
 
-	add(new BlockCollider(this).setCube(false))
-
 	add(new StaticRenderer(this) {
 		override def renderStatic(model: Model) {
 			val originalModel = Models.deriver.getModel

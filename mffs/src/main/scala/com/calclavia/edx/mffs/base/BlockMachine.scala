@@ -51,8 +51,8 @@ abstract class BlockMachine extends BlockDefault with PacketHandler with IActiva
 		.setTexture(func((side: Direction) => Optional.of(Textures.machine)))
 
 	get(classOf[BlockCollider])
-		.setCube(false)
-		.setOpaqueCube(false)
+		.isCube(false)
+		.isOpaqueCube(false)
 
 	rightClickEvent.add((evt: RightClickEvent) => onRightClick(evt))
 

@@ -9,7 +9,7 @@ import com.calclavia.edx.mffs.content.{Content, Textures}
 import com.calclavia.edx.mffs.security.MFFSPermissions
 import com.calclavia.edx.mffs.util.MFFSUtility
 import com.resonant.lib.wrapper.WrapFunctions._
-import nova.core.block.Block
+import nova.core.block.{BlockDefault, Block}
 import nova.core.block.component.{BlockCollider, LightEmitter, StaticBlockRenderer}
 import nova.core.component.misc.Damageable
 import nova.core.component.renderer.StaticRenderer
@@ -27,7 +27,7 @@ import nova.core.util.transform.vector.Vector3i
 
 import scala.collection.convert.wrapAll._
 
-class BlockForceField extends Block with PacketHandler with ForceField with Storable {
+class BlockForceField extends BlockDefault with PacketHandler with ForceField with Storable {
 
 	@Stored
 	@Sync
@@ -39,50 +39,52 @@ class BlockForceField extends Block with PacketHandler with ForceField with Stor
 	/**
 	 * Constructor
 	 */
-	add(new BlockCollider(this) {
-		override def getCollidingBoxes(intersect: Cuboid, entity: Optional[Entity]): util.Set[Cuboid] = {
-			val projector = getProjector()
+	get(classOf[BlockCollider])
+		.collidingBoxes(
+	    biFunc((intersect: Cuboid, entity: Optional[Entity]) => {
+		    val projector = getProjector()
 
-			if (projector != null && entity.isPresent && entity.get.getOp(classOf[Player]).isPresent) {
-				val biometricIdentifier = projector.getBiometricIdentifier
-				val entityPlayer = entity.get.get(classOf[Player])
+		    if (projector != null && entity.isPresent && entity.get.getOp(classOf[Player]).isPresent) {
+			    val biometricIdentifier = projector.getBiometricIdentifier
+			    val entityPlayer = entity.get.get(classOf[Player])
 
-				if (biometricIdentifier != null) {
-					if (biometricIdentifier.hasPermission(entityPlayer.getPlayerID, MFFSPermissions.forceFieldWarp)) {
-						return null
-					}
-				}
-			}
-			super.getCollidingBoxes(intersect, entity)
-		}
-	}
-		.setCube(false)
-		.setEntityCollide(consumer(
-		(entity: Entity) => {
-			val projector = getProjector()
-			if (projector != null) {
-				if (projector.getModules().forall(stack => stack.asInstanceOf[Module].onFieldCollide(BlockForceField.this, entity))) {
-					val biometricIdentifier = projector.getBiometricIdentifier
+			    if (biometricIdentifier != null) {
+				    if (biometricIdentifier.hasPermission(entityPlayer.getPlayerID, MFFSPermissions.forceFieldWarp)) {
+					    null
+				    }
+			    }
+		    }
+		    //Compose function
+		    get(classOf[BlockCollider]).collidingBoxes(intersect, entity)
+	    })
+		)
+		.isCube(false)
+		.onEntityCollide(
+	    consumer((entity: Entity) => {
+		    val projector = getProjector()
+		    if (projector != null) {
+			    if (projector.getModules().forall(stack => stack.asInstanceOf[Module].onFieldCollide(BlockForceField.this, entity))) {
+				    val biometricIdentifier = projector.getBiometricIdentifier
 
-					if ((transform.position.toDouble + 0.5).distance(entity.transform.position) < 0.5) {
-						if (Side.get().isServer && entity.has(classOf[Damageable])) {
-							val entityLiving = entity.get(classOf[Damageable])
+				    if ((transform.position.toDouble + 0.5).distance(entity.transform.position) < 0.5) {
+					    if (Side.get().isServer && entity.has(classOf[Damageable])) {
+						    val entityLiving = entity.get(classOf[Damageable])
 
-							if (entity.getOp(classOf[Player]).isPresent) {
-								val player = entity.get(classOf[Player])
+						    if (entity.getOp(classOf[Player]).isPresent) {
+							    val player = entity.get(classOf[Player])
 
-								if (biometricIdentifier != null) {
-									if (biometricIdentifier.hasPermission(player.getID, MFFSPermissions.forceFieldWarp)) {
-										//Hurt player?
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}))
-	)
+							    if (biometricIdentifier != null) {
+								    if (biometricIdentifier.hasPermission(player.getID, MFFSPermissions.forceFieldWarp)) {
+									    //Hurt player?
+								    }
+							    }
+						    }
+					    }
+				    }
+			    }
+		    }
+	    })
+		)
 
 	add(new LightEmitter().setEmittedLevel(supplier(() => {
 		val projector = getProjectorSafe
