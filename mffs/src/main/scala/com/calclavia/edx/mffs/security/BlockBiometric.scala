@@ -8,10 +8,10 @@ import com.calclavia.edx.mffs.content.{Models, Textures}
 import com.resonant.core.access.Permission
 import com.resonant.core.prefab.block.Updater
 import com.resonant.lib.wrapper.WrapFunctions._
+import nova.core.block.Block.{BlockPlaceEvent, RightClickEvent}
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.renderer.DynamicRenderer
 import nova.core.component.transform.Orientation
-import nova.core.entity.Entity
 import nova.core.game.Game
 import nova.core.inventory.InventorySimple
 import nova.core.item.Item
@@ -37,7 +37,8 @@ class BlockBiometric extends BlockFrequency with Updater with PermissionHandler 
 	 */
 	var lastFlicker = 0L
 
-	add(new Orientation(this))
+	add(new Orientation(this)).hookBlockEvents()
+
 	get(classOf[StaticBlockRenderer])
 		.onRender(
 	    (model: Model) => {
@@ -74,6 +75,9 @@ class BlockBiometric extends BlockFrequency with Updater with PermissionHandler 
 		    model.bindAll(if (isActive) Textures.biometricOn else Textures.biometricOff)
 	    }
 		)
+
+	placeEvent.add((evt: BlockPlaceEvent) => world.markStaticRender(position))
+	rightClickEvent.add((evt: RightClickEvent) => world.markStaticRender(position))
 
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)
