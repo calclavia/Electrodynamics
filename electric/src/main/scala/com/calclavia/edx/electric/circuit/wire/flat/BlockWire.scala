@@ -8,7 +8,8 @@ import com.calclavia.edx.electrical.circuit.wire.base.WireMaterial
 import com.calclavia.graph.api.energy.NodeElectric
 import com.calclavia.graph.core.electric.NodeElectricJunction
 import com.calclavia.microblock.api.MicroblockContainer
-import com.calclavia.microblock.api.micro.{MicroblockContainer, Microblock}
+import com.calclavia.microblock.api.micro.MicroblockContainer
+import com.calclavia.microblock.core.micro.Microblock
 import com.resonant.lib.util.RotationUtility
 import com.resonant.lib.wrapper.WrapFunctions._
 import nova.core.block.Block
@@ -101,9 +102,8 @@ class BlockWire extends Block with Storable with PacketHandler {
 	})
 
 	placeEvent.add((evt: BlockPlaceEvent) => {
-		evt.side.ifPresent((side: Direction) => this.side = side.opposite.ordinal.toByte)
-		//TODO: Get material from item
-		//evt.item.ifPresent((item:Item) => get(classOf[Material[WireMaterial]]).material = WireMaterial.values()(item))
+		this.side = evt.side.opposite.ordinal.toByte
+		//get(classOf[Material[WireMaterial]]).material = WireMaterial.values()(evt.item)
 	})
 
 	/*
