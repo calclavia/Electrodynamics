@@ -7,13 +7,12 @@ import com.calclavia.edx.core.CategoryEDX
 import com.calclavia.edx.core.component.Material
 import com.calclavia.graph.api.energy.NodeElectric
 import com.calclavia.graph.core.electric.NodeElectricJunction
-import com.calclavia.microblock.core.micro.{MicroblockContainer, Microblock}
+import com.calclavia.microblock.core.micro.{Microblock, MicroblockContainer}
 import com.resonant.lib.util.RotationUtility
 import com.resonant.lib.wrapper.WrapFunctions._
 import nova.core.block.Block
-import nova.core.block.Block.BlockPlaceEvent
+import nova.core.block.Block.{BlockPlaceEvent, RightClickEvent}
 import nova.core.block.component.{BlockCollider, StaticBlockRenderer}
-import nova.core.component.Category
 import nova.core.entity.Entity
 import nova.core.game.Game
 import nova.core.network.{PacketHandler, Sync}
@@ -106,6 +105,7 @@ class BlockWire extends Block with Storable with PacketHandler {
 	})
 
 	add(new CategoryEDX)
+
 	/*
 	override def getSubParts: JIterable[IndexedCuboid6] = Seq(new IndexedCuboid6(0, BlockWire.selectionBounds(getThickness)(side)))
 	def getOcclusionBoxes: JIterable[Cuboid6] =
