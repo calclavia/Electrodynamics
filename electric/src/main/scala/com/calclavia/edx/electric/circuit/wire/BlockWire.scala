@@ -99,8 +99,8 @@ class BlockWire extends Block with Storable with PacketHandler {
 		(evt: BlockPlaceEvent) => {
 			this.side = evt.side.opposite.ordinal.toByte
 			//get(classOf[Material[WireMaterial]]).material = WireMaterial.values()(evt.item)
-			get(classOf[BlockCollider]).collisionBoxes = List[Cuboid](BlockWire.occlusionBounds(1)(side) + 0.5)
 			BlockWire.init()
+			get(classOf[BlockCollider]).collisionBoxes = List[Cuboid](BlockWire.occlusionBounds(1)(side) + 0.5)
 			MicroblockContainer.sidePosition(Direction.fromOrdinal(this.side))
 		}))
 
@@ -114,14 +114,16 @@ class BlockWire extends Block with Storable with PacketHandler {
 	add(new StaticBlockRenderer(this))
 		.onRender(
 	    (model: Model) => {
-		    get(classOf[BlockCollider]).collisionBoxes.foreach(cuboid => BlockModelUtil.drawCube(model, cuboid - 0.5, StaticCubeTextureCoordinates.instance))
+		    get(classOf[BlockCollider]).collisionBoxes.foreach(cuboid => {
+			    BlockModelUtil.drawCube(model, cuboid - 0.5, StaticCubeTextureCoordinates.instance)
+		    })
 		    model.bindAll(ElectricContent.wireTexture)
 	    }
 		)
 
 	add(new CategoryEDX)
 
-	rightClickEvent.add((evt: RightClickEvent) => System.out.println(this))
+	rightClickEvent.add((evt: RightClickEvent) => System.out.println(get(classOf[Microblock])))
 
 	/*
 	override def getSubParts: JIterable[IndexedCuboid6] = Seq(new IndexedCuboid6(0, BlockWire.selectionBounds(getThickness)(side)))
