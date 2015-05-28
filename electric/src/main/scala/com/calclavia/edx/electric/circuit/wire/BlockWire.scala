@@ -15,6 +15,7 @@ import nova.core.block.Block
 import nova.core.block.Block.{BlockPlaceEvent, RightClickEvent}
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.misc.Collider
+import nova.core.entity.Entity
 import nova.core.game.Game
 import nova.core.network.{PacketHandler, Sync}
 import nova.core.render.model.{BlockModelUtil, Model, StaticCubeTextureCoordinates}
@@ -100,11 +101,11 @@ class BlockWire extends Block with Storable with PacketHandler {
 			this.side = evt.side.opposite.ordinal.toByte
 			//get(classOf[Material[WireMaterial]]).material = WireMaterial.values()(evt.item)
 			BlockWire.init()
-			get(classOf[Collider]).setBoundingBox(BlockWire.occlusionBounds(1)(side) + 0.5)
 			MicroblockContainer.sidePosition(Direction.fromOrdinal(this.side))
 		}))
 
 	add(new Collider())
+		.setOcclusionBoxes(func((entity: Optional[Entity]) => Set[Cuboid](BlockWire.occlusionBounds(1)(side) + 0.5)))
 		.isCube(false)
 		.isOpaqueCube(false)
 
@@ -113,6 +114,7 @@ class BlockWire extends Block with Storable with PacketHandler {
 	add(new StaticBlockRenderer(this))
 		.onRender(
 	    (model: Model) => {
+		    System.out.println(this + " => " + get(classOf[Collider]).boundingBox)
 		    get(classOf[Collider]).occlusionBoxes.apply(Optional.empty()).foreach(cuboid => {
 			    BlockModelUtil.drawCube(model, cuboid - 0.5, StaticCubeTextureCoordinates.instance)
 		    })
