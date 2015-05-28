@@ -105,7 +105,7 @@ class BlockWire extends Block with Storable with PacketHandler {
 		}))
 
 	add(new Collider())
-		.setOcclusionBoxes(func((entity: Optional[Entity]) => Set[Cuboid](BlockWire.occlusionBounds(1)(side) + 0.5)))
+		.setBoundingBox(() => BlockWire.occlusionBounds(1)(side) + 0.5)
 		.isCube(false)
 		.isOpaqueCube(false)
 
