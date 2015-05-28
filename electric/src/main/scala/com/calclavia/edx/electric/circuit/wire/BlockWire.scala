@@ -5,13 +5,14 @@ import java.util.{Optional, Set => JSet}
 
 import com.calclavia.edx.core.CategoryEDX
 import com.calclavia.edx.core.component.Material
+import com.calclavia.edx.electric.ElectricContent
 import com.calclavia.graph.api.energy.NodeElectric
 import com.calclavia.graph.core.electric.NodeElectricJunction
 import com.calclavia.microblock.core.micro.{Microblock, MicroblockContainer}
 import com.resonant.lib.util.RotationUtility
 import com.resonant.lib.wrapper.WrapFunctions._
 import nova.core.block.Block
-import nova.core.block.Block.{BlockPlaceEvent, RightClickEvent}
+import nova.core.block.Block.BlockPlaceEvent
 import nova.core.block.component.{BlockCollider, StaticBlockRenderer}
 import nova.core.entity.Entity
 import nova.core.game.Game
@@ -88,21 +89,25 @@ class BlockWire extends Block with Storable with PacketHandler {
 		(evt: BlockPlaceEvent) => {
 			this.side = evt.side.opposite.ordinal.toByte
 			//get(classOf[Material[WireMaterial]]).material = WireMaterial.values()(evt.item)
+			get(classOf[BlockCollider]).collisionBoxes = List[Cuboid](BlockWire.occlusionBounds(1)(side))
 			MicroblockContainer.sidePosition(Direction.fromOrdinal(this.side))
 		}))
 		.setSlotMask(supplier(() => 1 << side))
 
 	add(new BlockCollider(this))
 		.collidingBoxes(biFunc((cuboid: Cuboid, entity: Optional[Entity]) => Set[Cuboid](BlockWire.occlusionBounds(1)(side))))
+		.isCube(false)
+		.isOpaqueCube(false)
 
 	add(new Material[WireMaterial])
 
 	add(new StaticBlockRenderer(this))
-		.onRender((model: Model) => {
-		//TODO Bind material texture.
-		get(classOf[BlockCollider]).collisionBoxes.foreach(cuboid => BlockModelUtil.drawCube(model, cuboid, StaticCubeTextureCoordinates.instance))
-		//model.bindAll()
-	})
+		.onRender(
+	    (model: Model) => {
+		    get(classOf[BlockCollider]).collisionBoxes.foreach(cuboid => BlockModelUtil.drawCube(model, cuboid, StaticCubeTextureCoordinates.instance))
+		    model.bindAll(ElectricContent.wireTexture)
+	    }
+		)
 
 	add(new CategoryEDX)
 

@@ -1,10 +1,7 @@
 package com.calclavia.edx.electric
 
 import com.calclavia.edx.core.Reference
-import com.calclavia.edx.electric.circuit.wire.BlockWire
-import com.resonant.core.prefab.modcontent.ContentLoader
-import nova.core.block.BlockFactory
-import nova.core.loader.NovaMod
+import nova.core.loader.{Loadable, NovaMod}
 
 @NovaMod(
 	id = Reference.electricID,
@@ -13,7 +10,7 @@ import nova.core.loader.NovaMod
 	novaVersion = Reference.novaVersion,
 	dependencies = Array("microblock", "resonantengine")
 )
-object Electric extends ContentLoader {
+object Electric extends Loadable {
 	/*
 	var itemWire = new ItemWire
 	var itemMultimeter = new ItemMultimeter
@@ -40,10 +37,8 @@ object Electric extends ContentLoader {
 	var tierTwoBattery: ItemStack = null
 	var tierThreeBattery: ItemStack = null*/
 
-	val wire: BlockFactory = classOf[BlockWire]
-
 	override def preInit() {
-		super.preInit()
+		ElectricContent.preInit()
 
 		/*
 		tierOneBattery = ItemBlockBattery.setTier(new ItemStack(ElectricalContent.blockBattery, 1, 0), 0)
@@ -133,5 +128,4 @@ object Electric extends ContentLoader {
 				RenderFramedWire.insulationIcon = event.map.registerIcon(Reference.prefix + "models/insulation")
 			}
 		}*/
-	override def id: String = Reference.electricID
 }

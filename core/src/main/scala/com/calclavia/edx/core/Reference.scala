@@ -11,6 +11,7 @@ object Reference
 {
   final val id = "edx"
 
+	final val coreID = id
 	final val mechanicID = id + ":mechanic"
 	final val electricID = id + ":electric"
 	final val quantumID = id + ":quantum"
@@ -44,7 +45,7 @@ object Reference
 	/**
 	 *
 	MultipartGenerator.registerTrait("resonantengine.api.graph.INodeProvider", "edx.core.prefab.pass.TraitNodeProvider")
-		MultipartGenerator.registerTrait("resonantengine.api.tile.IDebugInfo", "edx.core.prefab.pass.TraitDebugInfo")
-		MultipartGenerator.registerPassThroughInterface("net.minecraftforge.fluids.IFluidHandler")
+			MultipartGenerator.registerTrait("resonantengine.api.tile.IDebugInfo", "edx.core.prefab.pass.TraitDebugInfo")
+			MultipartGenerator.registerPassThroughInterface("net.minecraftforge.fluids.IFluidHandler")
 	 */
 }
