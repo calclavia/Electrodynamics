@@ -2,7 +2,8 @@ package com.calclavia.edx.mffs.field
 
 import java.util.{Optional, Set => JSet}
 
-import com.calclavia.edx.mffs.Settings
+import com.calclavia.edx.mffs.api.fortron.FortronFrequency
+import com.calclavia.edx.mffs.{GraphFrequency, Settings}
 import com.calclavia.edx.mffs.api.machine.Projector
 import com.calclavia.edx.mffs.api.modules.Module.ProjectState
 import com.calclavia.edx.mffs.base.{BlockFieldMatrix, PacketBlock}
@@ -10,14 +11,16 @@ import com.calclavia.edx.mffs.content.{Content, Models, Textures}
 import com.calclavia.edx.mffs.field.shape.ItemShapeCustom
 import com.calclavia.edx.mffs.particle.{FXFortronBeam, FXHologramProgress, FieldColor}
 import com.calclavia.edx.mffs.security.PermissionHandler
-import com.calclavia.edx.mffs.util.CacheHandler
+import com.calclavia.edx.mffs.util.{TransferMode, FortronUtility, CacheHandler}
 import com.resonant.lib.wrapper.WrapFunctions._
 import nova.core.block.Block
+import nova.core.block.Stateful.UnloadEvent
 import nova.core.block.component.{BlockCollider, LightEmitter}
 import nova.core.component.renderer.{DynamicRenderer, ItemRenderer, StaticRenderer}
 import nova.core.component.transform.Orientation
 import nova.core.entity.Entity
 import nova.core.entity.component.Player
+import nova.core.event.EventBus
 import nova.core.game.Game
 import nova.core.inventory.InventorySimple
 import nova.core.item.Item
@@ -52,6 +55,8 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 	private var isInverted = false
 
 	override def getID: String = "projector"
+
+	unloadEvent.add((evt: UnloadEvent) => destroyField(), EventBus.PRIORITY_DEFAULT + 1)
 
 	get(classOf[BlockCollider])
 		.isCube(false)
@@ -158,27 +163,6 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 		calculateField(postCalculation)
 	}
 
-	def postCalculation() = if (clientSideSimulationRequired) Game.instance.networkManager.sync(PacketBlock.field, this)
-
-	private def clientSideSimulationRequired: Boolean = {
-		return getModuleCount(Content.moduleRepulsion) > 0
-	}
-
-	/**
-	 * Initiate a field calculation
-	 */
-	protected override def calculateField(callBack: () => Unit = null) {
-		if (Game.instance.networkManager.isServer && !isCalculating) {
-			if (getShapeItem != null) {
-				forceFields = Set.empty
-			}
-
-			super.calculateField(callBack)
-			isCompleteConstructing = false
-			fieldRequireTicks = getModules().exists(_.requireTicks)
-		}
-	}
-
 	override def write(packet: Packet) {
 		super.write(packet)
 		packet.getID match {
@@ -256,6 +240,27 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 		}
 		else if (Game.instance.networkManager.isServer) {
 			destroyField()
+		}
+	}
+
+	def postCalculation() = if (clientSideSimulationRequired) Game.instance.networkManager.sync(PacketBlock.field, this)
+
+	private def clientSideSimulationRequired: Boolean = {
+		return getModuleCount(Content.moduleRepulsion) > 0
+	}
+
+	/**
+	 * Initiate a field calculation
+	 */
+	protected override def calculateField(callBack: () => Unit = null) {
+		if (Game.instance.networkManager.isServer && !isCalculating) {
+			if (getShapeItem != null) {
+				forceFields = Set.empty
+			}
+
+			super.calculateField(callBack)
+			isCompleteConstructing = false
+			fieldRequireTicks = getModules().exists(_.requireTicks)
 		}
 	}
 
@@ -361,11 +366,6 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 			isCompleteConstructing = false
 			fieldRequireTicks = false
 		}
-	}
-
-	override def unload() {
-		destroyField()
-		super.unload()
 	}
 
 	override def getForceFields: JSet[Vector3i] = forceFields

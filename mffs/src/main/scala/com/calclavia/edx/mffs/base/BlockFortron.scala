@@ -6,7 +6,10 @@ import com.calclavia.edx.mffs.GraphFrequency
 import com.calclavia.edx.mffs.api.fortron.FortronFrequency
 import com.calclavia.edx.mffs.util.{FortronUtility, TransferMode}
 import com.resonant.core.prefab.block.Updater
+import com.resonant.lib.wrapper.WrapFunctions._
 import nova.core.block.Block
+import nova.core.block.Stateful.UnloadEvent
+import nova.core.event.EventBus
 import nova.core.fluid.component.{Tank, TankSimple}
 import nova.core.fluid.{Fluid, SidedTankProvider}
 import nova.core.game.Game
@@ -26,15 +29,7 @@ abstract class BlockFortron extends BlockFrequency with SidedTankProvider with F
 	@Stored
 	protected var fortronTank = new TankSimple(Fluid.bucketVolume)
 
-	override def update(deltaTime: Double) {
-		super.update(deltaTime)
-
-		if (Game.instance.networkManager.isServer && ticks % 60 == 0) {
-			Game.instance.networkManager.sync(PacketBlock.fortron, this)
-		}
-	}
-
-	override def unload() {
+	unloadEvent.add((evt: UnloadEvent) => {
 		//Use this to "spread" Fortron out when this block is destroyed.
 		if (markSendFortron) {
 			FortronUtility.transferFortron(
@@ -48,8 +43,14 @@ abstract class BlockFortron extends BlockFrequency with SidedTankProvider with F
 				Integer.MAX_VALUE
 			)
 		}
+	}, EventBus.PRIORITY_DEFAULT + 1)
 
-		super.unload()
+	override def update(deltaTime: Double) {
+		super.update(deltaTime)
+
+		if (Game.instance.networkManager.isServer && ticks % 60 == 0) {
+			Game.instance.networkManager.sync(PacketBlock.fortron, this)
+		}
 	}
 
 	override def getFortronTank: Tank = fortronTank

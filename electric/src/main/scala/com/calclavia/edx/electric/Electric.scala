@@ -1,11 +1,20 @@
 package com.calclavia.edx.electric
 
 import com.calclavia.edx.core.Reference
+import com.calclavia.edx.electric.circuit.wire.BlockWire
 import com.resonant.core.prefab.modcontent.ContentLoader
+import nova.core.block.BlockFactory
 import nova.core.loader.NovaMod
 
-@NovaMod(id = Reference.electricID, name = "Electrodynamics: Electric", Reference.version, novaVersion = Reference.novaVersion)
+@NovaMod(
+	id = Reference.electricID,
+	name = "Electrodynamics: Electric",
+	version = Reference.version,
+	novaVersion = Reference.novaVersion,
+	dependencies = Array("microblock")
+)
 object Electric extends ContentLoader {
+	/*
 	var itemWire = new ItemWire
 	var itemMultimeter = new ItemMultimeter
 	var itemTransformer = new ItemElectricTransformer
@@ -29,7 +38,9 @@ object Electric extends ContentLoader {
 
 	var tierOneBattery: ItemStack = null
 	var tierTwoBattery: ItemStack = null
-	var tierThreeBattery: ItemStack = null
+	var tierThreeBattery: ItemStack = null*/
+
+	val wire: BlockFactory = classOf[BlockWire]
 
 	override def preInit() {
 		super.preInit()
@@ -123,4 +134,5 @@ object Electric extends ContentLoader {
 				RenderFramedWire.insulationIcon = event.map.registerIcon(Reference.prefix + "models/insulation")
 			}
 		}*/
+	override def id: String = Reference.electricID
 }

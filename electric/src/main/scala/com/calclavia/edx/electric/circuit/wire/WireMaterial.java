@@ -1,4 +1,4 @@
-package com.calclavia.edx.electrical.circuit.wire.base;
+package com.calclavia.edx.electric.circuit.wire;
 
 /**
  * An enumerator for different wire materials. The metadata of the wire determines the type of the

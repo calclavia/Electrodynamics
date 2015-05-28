@@ -1,15 +1,12 @@
-package com.calclavia.edx.electric.circuit.wire.flat
+package com.calclavia.edx.electric.circuit.wire
 
 import java.lang.{Iterable => JIterable}
 import java.util.{Optional, Set => JSet}
 
 import com.calclavia.edx.core.component.Material
-import com.calclavia.edx.electrical.circuit.wire.base.WireMaterial
 import com.calclavia.graph.api.energy.NodeElectric
 import com.calclavia.graph.core.electric.NodeElectricJunction
-import com.calclavia.microblock.api.MicroblockContainer
-import com.calclavia.microblock.api.micro.MicroblockContainer
-import com.calclavia.microblock.core.micro.Microblock
+import com.calclavia.microblock.core.micro.{MicroblockContainer, Microblock}
 import com.resonant.lib.util.RotationUtility
 import com.resonant.lib.wrapper.WrapFunctions._
 import nova.core.block.Block
@@ -86,7 +83,12 @@ class BlockWire extends Block with Storable with PacketHandler {
 	add(electricNode)
 		.setConnectionHandler(computeConnection)
 
-	add(new Microblock(this))
+	add(new Microblock(this,
+		(evt: BlockPlaceEvent) => {
+			this.side = evt.side.opposite.ordinal.toByte
+			//get(classOf[Material[WireMaterial]]).material = WireMaterial.values()(evt.item)
+			MicroblockContainer.sidePosition(Direction.fromOrdinal(this.side))
+		}))
 		.setSlotMask(supplier(() => 1 << side))
 
 	add(new BlockCollider(this))
@@ -99,11 +101,6 @@ class BlockWire extends Block with Storable with PacketHandler {
 		//TODO Bind material texture.
 		get(classOf[BlockCollider]).collisionBoxes.foreach(cuboid => BlockModelUtil.drawCube(model, cuboid, StaticCubeTextureCoordinates.instance))
 		//model.bindAll()
-	})
-
-	placeEvent.add((evt: BlockPlaceEvent) => {
-		this.side = evt.side.opposite.ordinal.toByte
-		//get(classOf[Material[WireMaterial]]).material = WireMaterial.values()(evt.item)
 	})
 
 	/*
@@ -139,14 +136,12 @@ class BlockWire extends Block with Storable with PacketHandler {
 			Game.instance.networkManager.sync(1, this)
 		}
 
-		return connections
-
 		/**
 		 * Check inner connection (01)
 		 * @return True if a connection is found
 		 */
 		def computeInnerConnection(relativeSide: Int, absSide: Int): Boolean = {
-			val opMicroblock = get(classOf[MicroblockContainer]).getMicroblock(absSide)
+			val opMicroblock = get(classOf[MicroblockContainer]).get(absSide)
 			if (opMicroblock.isPresent) {
 				val otherMicroblock = opMicroblock.get()
 				val opElectric = otherMicroblock.block.getOp(classOf[NodeElectric])
@@ -175,7 +170,7 @@ class BlockWire extends Block with Storable with PacketHandler {
 				val opMicroblockHolder = checkBlock.get.getOp(classOf[MicroblockContainer])
 				if (opMicroblockHolder.isPresent) {
 					//Try to find the microblock that is has the component NodeElectric
-					val opMicroblock = opMicroblockHolder.get().getMicroblock(this.side)
+					val opMicroblock = opMicroblockHolder.get().get(this.side)
 					if (opMicroblock.isPresent) {
 						val opElectric = opMicroblock.get.block.getOp(classOf[NodeElectric])
 
@@ -216,7 +211,7 @@ class BlockWire extends Block with Storable with PacketHandler {
 				if (opMicroblockHolder.isPresent) {
 					//Try to find the microblock that is has the component NodeElectric
 					//We look for opposite of the side we are checking, as the block has to be flat placed onto the same block this wire is flat-placed on.
-					val opMicroblock = opMicroblockHolder.get().getMicroblock(absSide ^ -1)
+					val opMicroblock = opMicroblockHolder.get().get(absSide ^ -1)
 					if (opMicroblock.isPresent) {
 						val opElectric = opMicroblock.get.block.getOp(classOf[NodeElectric])
 
@@ -235,8 +230,11 @@ class BlockWire extends Block with Storable with PacketHandler {
 		 * Check if there's a cover on a specific side
 		 */
 		def maskOpen(absSide: Int): Boolean = {
-			return get(classOf[MicroblockContainer]).getMicroblock(absSide).isPresent
+			//Check bounding space (cuboid)
+			return get(classOf[MicroblockContainer]).get(absSide).isPresent
 		}
+
+		return connections
 	}
 
 	override def getID: String = "electricWire"

@@ -6,6 +6,8 @@ import com.calclavia.edx.mffs.GraphFrequency
 import com.calclavia.edx.mffs.api.Frequency
 import com.calclavia.edx.mffs.item.card.ItemCardFrequency
 import com.resonant.core.prefab.block.InventorySimpleProvider
+import com.resonant.lib.wrapper.WrapFunctions._
+import nova.core.block.Stateful.{LoadEvent, UnloadEvent}
 import nova.core.item.Item
 
 /**
@@ -15,13 +17,8 @@ import nova.core.item.Item
 abstract class BlockFrequency extends BlockMachine with Frequency with InventorySimpleProvider {
 	val frequencySlot = 0
 
-	override def load() {
-		GraphFrequency.instance.add(this)
-	}
-
-	override def unload() {
-		GraphFrequency.instance.remove(this)
-	}
+	loadEvent.add((evt: LoadEvent) => GraphFrequency.instance.add(this))
+	unloadEvent.add((evt: UnloadEvent) => GraphFrequency.instance.remove(this))
 
 	override def getFrequency: Int = {
 		val frequencyCard = getFrequencyCard
