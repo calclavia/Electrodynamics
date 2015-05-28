@@ -12,7 +12,7 @@ import com.calclavia.microblock.core.micro.{Microblock, MicroblockContainer}
 import com.resonant.lib.util.RotationUtility
 import com.resonant.lib.wrapper.WrapFunctions._
 import nova.core.block.Block
-import nova.core.block.Block.BlockPlaceEvent
+import nova.core.block.Block.{BlockPlaceEvent, RightClickEvent}
 import nova.core.block.component.{BlockCollider, StaticBlockRenderer}
 import nova.core.entity.Entity
 import nova.core.game.Game
@@ -20,7 +20,9 @@ import nova.core.network.{PacketHandler, Sync}
 import nova.core.render.model.{BlockModelUtil, Model, StaticCubeTextureCoordinates}
 import nova.core.retention.{Storable, Stored}
 import nova.core.util.Direction
+import nova.core.util.transform.matrix.Quaternion
 import nova.core.util.transform.shape.Cuboid
+import nova.core.util.transform.vector.Vector3d
 
 import scala.collection.convert.wrapAll._
 
@@ -41,12 +43,20 @@ object BlockWire {
 
 	def init() {
 		for (t <- 0 until 3) {
-			val selection = new Cuboid(0, 0, 0, 1, (t + 2) / 16D, 1).expand(-0.005)
-			val occlusion = new Cuboid(2 / 8D, 0, 2 / 8D, 6 / 8D, (t + 2) / 16D, 6 / 8D)
+			val selection = new Cuboid(0, 0, 0, 1, (t + 2) / 16D, 1).expand(-0.005) - 0.5
+			val occlusion = new Cuboid(2 / 8D, 0, 2 / 8D, 6 / 8D, (t + 2) / 16D, 6 / 8D) - 0.5
 
 			for (s <- 0 until 6) {
-				selectionBounds(t)(s) = selection.transform(Direction.fromOrdinal(s).rotation)
-				occlusionBounds(t)(s) = occlusion.transform(Direction.fromOrdinal(s).rotation)
+				val bound = s match {
+					case 0 => occlusion.transform(Quaternion.identity)
+					case 1 => occlusion.transform(Quaternion.fromAxis(Vector3d.zAxis, Math.PI))
+					case 2 => occlusion.transform(Quaternion.fromAxis(Vector3d.xAxis, Math.PI / 2))
+					case 3 => occlusion.transform(Quaternion.fromAxis(Vector3d.xAxis, -Math.PI / 2))
+					case 4 => occlusion.transform(Quaternion.fromAxis(Vector3d.zAxis, -Math.PI / 2))
+					case 5 => occlusion.transform(Quaternion.fromAxis(Vector3d.zAxis, Math.PI / 2))
+				}
+				selectionBounds(t)(s) = new Cuboid(bound.min.min(bound.max), bound.max.max(bound.min))
+				occlusionBounds(t)(s) = new Cuboid(bound.min.min(bound.max), bound.max.max(bound.min))
 			}
 		}
 	}
@@ -89,13 +99,13 @@ class BlockWire extends Block with Storable with PacketHandler {
 		(evt: BlockPlaceEvent) => {
 			this.side = evt.side.opposite.ordinal.toByte
 			//get(classOf[Material[WireMaterial]]).material = WireMaterial.values()(evt.item)
-			get(classOf[BlockCollider]).collisionBoxes = List[Cuboid](BlockWire.occlusionBounds(1)(side))
+			get(classOf[BlockCollider]).collisionBoxes = List[Cuboid](BlockWire.occlusionBounds(1)(side) + 0.5)
+			BlockWire.init()
 			MicroblockContainer.sidePosition(Direction.fromOrdinal(this.side))
 		}))
-		.setSlotMask(supplier(() => 1 << side))
 
 	add(new BlockCollider(this))
-		.collidingBoxes(biFunc((cuboid: Cuboid, entity: Optional[Entity]) => Set[Cuboid](BlockWire.occlusionBounds(1)(side))))
+		.collidingBoxes(biFunc((cuboid: Cuboid, entity: Optional[Entity]) => Set[Cuboid](BlockWire.occlusionBounds(1)(side)).map(_ + 0.5)))
 		.isCube(false)
 		.isOpaqueCube(false)
 
@@ -104,12 +114,14 @@ class BlockWire extends Block with Storable with PacketHandler {
 	add(new StaticBlockRenderer(this))
 		.onRender(
 	    (model: Model) => {
-		    get(classOf[BlockCollider]).collisionBoxes.foreach(cuboid => BlockModelUtil.drawCube(model, cuboid, StaticCubeTextureCoordinates.instance))
+		    get(classOf[BlockCollider]).collisionBoxes.foreach(cuboid => BlockModelUtil.drawCube(model, cuboid - 0.5, StaticCubeTextureCoordinates.instance))
 		    model.bindAll(ElectricContent.wireTexture)
 	    }
 		)
 
 	add(new CategoryEDX)
+
+	rightClickEvent.add((evt: RightClickEvent) => System.out.println(this))
 
 	/*
 	override def getSubParts: JIterable[IndexedCuboid6] = Seq(new IndexedCuboid6(0, BlockWire.selectionBounds(getThickness)(side)))
