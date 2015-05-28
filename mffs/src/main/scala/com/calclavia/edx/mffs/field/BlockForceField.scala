@@ -9,9 +9,10 @@ import com.calclavia.edx.mffs.content.{Content, Textures}
 import com.calclavia.edx.mffs.security.MFFSPermissions
 import com.calclavia.edx.mffs.util.MFFSUtility
 import com.resonant.lib.wrapper.WrapFunctions._
-import nova.core.block.component.{BlockCollider, LightEmitter, StaticBlockRenderer}
+import nova.core.block.component.{LightEmitter, StaticBlockRenderer}
 import nova.core.block.{Block, BlockDefault}
-import nova.core.component.misc.Damageable
+import nova.core.component.misc.Collider.CollideEvent
+import nova.core.component.misc.{Collider, Damageable}
 import nova.core.component.renderer.StaticRenderer
 import nova.core.entity.Entity
 import nova.core.entity.component.Player
@@ -39,9 +40,9 @@ class BlockForceField extends BlockDefault with PacketHandler with ForceField wi
 	/**
 	 * Constructor
 	 */
-	get(classOf[BlockCollider])
-		.collidingBoxes(
-	    biFunc((intersect: Cuboid, entity: Optional[Entity]) => {
+	get(classOf[Collider])
+		.setOcclusionBoxes(
+	    (entity: Optional[Entity]) => {
 		    val projector = getProjector()
 
 		    if (projector != null && entity.isPresent && entity.get.getOp(classOf[Player]).isPresent) {
@@ -55,13 +56,14 @@ class BlockForceField extends BlockDefault with PacketHandler with ForceField wi
 			    }
 		    }
 		    //Compose function
-		    get(classOf[BlockCollider]).collidingBoxes(intersect, entity)
-	    })
+		    get(classOf[Collider]).occlusionBoxes.apply(entity)
+	    }
 		)
 		.isCube(false)
-		.onEntityCollide(
-	    consumer((entity: Entity) => {
+		.onCollide(
+	    (evt: CollideEvent) => {
 		    val projector = getProjector()
+		    val entity = evt.entity
 		    if (projector != null) {
 			    if (projector.getModules().forall(stack => stack.asInstanceOf[Module].onFieldCollide(BlockForceField.this, entity))) {
 				    val biometricIdentifier = projector.getBiometricIdentifier
@@ -83,7 +85,7 @@ class BlockForceField extends BlockDefault with PacketHandler with ForceField wi
 				    }
 			    }
 		    }
-	    })
+	    }
 		)
 
 	add(new LightEmitter().setEmittedLevel(supplier(() => {

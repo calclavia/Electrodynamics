@@ -8,8 +8,9 @@ import com.calclavia.graph.api.energy.NodeRedstone
 import com.resonant.lib.wrapper.WrapFunctions._
 import com.resonant.wrapper.core.Placeholder
 import nova.core.block.Block.RightClickEvent
-import nova.core.block.component.{BlockCollider, StaticBlockRenderer}
+import nova.core.block.component.StaticBlockRenderer
 import nova.core.block.{BlockDefault, Stateful}
+import nova.core.component.misc.Collider
 import nova.core.component.renderer.ItemRenderer
 import nova.core.component.transform.Orientation
 import nova.core.game.Game
@@ -50,7 +51,7 @@ abstract class BlockMachine extends BlockDefault with PacketHandler with IActiva
 	add(new StaticBlockRenderer(this))
 		.setTexture(func((side: Direction) => Optional.of(Textures.machine)))
 
-	get(classOf[BlockCollider])
+	get(classOf[Collider])
 		.isCube(false)
 		.isOpaqueCube(false)
 
