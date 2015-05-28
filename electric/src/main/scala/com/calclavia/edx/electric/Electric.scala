@@ -11,7 +11,7 @@ import nova.core.loader.NovaMod
 	name = "Electrodynamics: Electric",
 	version = Reference.version,
 	novaVersion = Reference.novaVersion,
-	dependencies = Array("microblock")
+	dependencies = Array("microblock", "resonantengine")
 )
 object Electric extends ContentLoader {
 	/*
