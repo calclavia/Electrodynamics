@@ -17,7 +17,7 @@ import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.misc.Collider
 import nova.core.entity.Entity
 import nova.core.game.Game
-import nova.core.network.{PacketHandler, Sync}
+import nova.core.network.{Packet, PacketHandler, Sync}
 import nova.core.render.model.{BlockModelUtil, Model, StaticCubeTextureCoordinates}
 import nova.core.retention.{Storable, Stored}
 import nova.core.util.Direction
@@ -50,7 +50,7 @@ object BlockWire {
 			for (s <- 0 until 6) {
 				val bound = s match {
 					case 0 => occlusion.transform(Quaternion.identity)
-					case 1 => occlusion.transform(Quaternion.fromAxis(Vector3d.zAxis, Math.PI))
+					case 1 => occlusion.transform(Quaternion.fromAxis(Vector3d.xAxis, Math.PI))
 					case 2 => occlusion.transform(Quaternion.fromAxis(Vector3d.xAxis, Math.PI / 2))
 					case 3 => occlusion.transform(Quaternion.fromAxis(Vector3d.xAxis, -Math.PI / 2))
 					case 4 => occlusion.transform(Quaternion.fromAxis(Vector3d.zAxis, -Math.PI / 2))
@@ -123,13 +123,24 @@ class BlockWire extends Block with Storable with PacketHandler {
 
 	add(new CategoryEDX)
 
-	rightClickEvent.add((evt: RightClickEvent) => System.out.println(get(classOf[Microblock])))
+	rightClickEvent.add((evt: RightClickEvent) => System.out.println(side))
+
+
 
 	/*
 	override def getSubParts: JIterable[IndexedCuboid6] = Seq(new IndexedCuboid6(0, BlockWire.selectionBounds(getThickness)(side)))
 	def getOcclusionBoxes: JIterable[Cuboid6] =
 	override def solid(arg0: Int) = false
 	*/
+
+	override def read(packet: Packet) {
+		super[PacketHandler].read(packet)
+		println("Read packet. " + side)
+	}
+
+	override def write(packet: Packet) {
+		super[PacketHandler].write(packet)
+	}
 
 	/**
 	 * Return the connections the block currently is connected to
