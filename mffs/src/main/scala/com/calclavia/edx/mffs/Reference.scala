@@ -8,7 +8,6 @@ final object Reference {
 	/**
 	 * General Variable Definition
 	 */
-	final val channel = "MFFS"
 	final val id = "mffs"
 	final val name = "Modular Force Field System"
 	final val domain = id

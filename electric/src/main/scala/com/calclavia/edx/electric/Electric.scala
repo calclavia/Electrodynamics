@@ -62,7 +62,6 @@ object Electric extends ContentLoader {
 	}
 
 	override def init() {
-		super.init()
 
 		/*
 		OreDictionary.registerOre("wire", Electric.itemWire)
