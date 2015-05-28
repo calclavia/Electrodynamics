@@ -3,6 +3,7 @@ package com.calclavia.edx.electric.circuit.wire
 import java.lang.{Iterable => JIterable}
 import java.util.{Optional, Set => JSet}
 
+import com.calclavia.edx.core.CategoryEDX
 import com.calclavia.edx.core.component.Material
 import com.calclavia.graph.api.energy.NodeElectric
 import com.calclavia.graph.core.electric.NodeElectricJunction
@@ -51,7 +52,7 @@ object BlockWire {
 }
 
 // with TWire with TFacePart with TNormalOcclusion
-class BlockWire extends Block with Storable with PacketHandler {
+class BlockWire extends Block with Storable with PacketHandler with CategoryEDX {
 
 	private val electricNode = new NodeElectricJunction(this)
 
