@@ -1,10 +1,8 @@
 package com.calclavia.edx.mffs.base
 
-import nova.core.util.Category
+import nova.core.component.Category
 
 /**
  * @author Calclavia
  */
-trait CategoryMFFS extends Category {
-	override def getCategory: String = "mffs"
-}
+class CategoryMFFS extends Category("mffs")

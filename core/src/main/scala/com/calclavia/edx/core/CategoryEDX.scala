@@ -4,11 +4,9 @@
 
 package com.calclavia.edx.core
 
-import nova.core.util.Category
+import nova.core.component.Category
 
 /**
  * @author Calclavia
  */
-trait CategoryEDX extends Category {
-	override def getCategory: String = "edx"
-}
+class CategoryEDX extends Category("edx")

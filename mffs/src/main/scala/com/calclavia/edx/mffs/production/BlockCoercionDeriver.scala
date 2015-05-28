@@ -8,6 +8,7 @@ import com.calclavia.edx.mffs.base.{BlockModuleHandler, PacketBlock}
 import com.calclavia.edx.mffs.content.{Content, Models, Textures}
 import com.calclavia.edx.mffs.item.card.ItemCardFrequency
 import com.resonant.lib.wrapper.WrapFunctions._
+import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.renderer.{DynamicRenderer, ItemRenderer, StaticRenderer}
 import nova.core.fluid.component.Tank
 import nova.core.inventory.InventorySimple
@@ -59,7 +60,7 @@ class BlockCoercionDeriver extends BlockModuleHandler {
 	//Client
 	var animationTween = 0f
 
-	add(new StaticRenderer(this))
+	get(classOf[StaticBlockRenderer])
 		.onRender(
 	    (model: Model) => {
 		    val originalModel = Models.deriver.getModel

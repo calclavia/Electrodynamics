@@ -13,6 +13,7 @@ import com.resonant.lib.wrapper.WrapFunctions._
 import nova.core.block.Block
 import nova.core.block.Block.BlockPlaceEvent
 import nova.core.block.component.{BlockCollider, StaticBlockRenderer}
+import nova.core.component.Category
 import nova.core.entity.Entity
 import nova.core.game.Game
 import nova.core.network.{PacketHandler, Sync}
@@ -52,7 +53,7 @@ object BlockWire {
 }
 
 // with TWire with TFacePart with TNormalOcclusion
-class BlockWire extends Block with Storable with PacketHandler with CategoryEDX {
+class BlockWire extends Block with Storable with PacketHandler {
 
 	private val electricNode = new NodeElectricJunction(this)
 
@@ -104,6 +105,7 @@ class BlockWire extends Block with Storable with PacketHandler with CategoryEDX 
 		//model.bindAll()
 	})
 
+	add(new CategoryEDX)
 	/*
 	override def getSubParts: JIterable[IndexedCuboid6] = Seq(new IndexedCuboid6(0, BlockWire.selectionBounds(getThickness)(side)))
 	def getOcclusionBoxes: JIterable[Cuboid6] =

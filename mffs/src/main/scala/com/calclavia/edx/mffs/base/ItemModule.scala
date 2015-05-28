@@ -16,9 +16,11 @@ import nova.core.util.transform.vector.Vector3i
 
 import scala.collection.convert.wrapAll._
 
-abstract class ItemModule extends Item with TooltipItem with Module with CategoryMFFS with AutoItemTexture {
+abstract class ItemModule extends Item with TooltipItem with Module with AutoItemTexture {
 	private var fortronCost = 0.5f
 	private var maxCount = 64
+
+	add(new CategoryMFFS)
 
 	override def getTooltips(player: Optional[Entity], tooltips: JList[String]) {
 		tooltips.add(Game.instance.languageManager.translate("info.item.fortron") + " " + new UnitDisplay(UnitDisplay.Unit.LITER, getFortronCost(1) * 20) + "/s")

@@ -24,7 +24,7 @@ import nova.core.util.Direction
  * @author Calclavia
  */
 //TODO: Redstone state is not properly saved
-abstract class BlockMachine extends BlockDefault with PacketHandler with IActivatable with Stateful with Storable with CategoryMFFS {
+abstract class BlockMachine extends BlockDefault with PacketHandler with IActivatable with Stateful with Storable {
 	/**
 	 * Used for client side animations.
 	 */
@@ -44,7 +44,7 @@ abstract class BlockMachine extends BlockDefault with PacketHandler with IActiva
 		else
 			setActive(false)
 	})
-
+	add(new CategoryMFFS)
 	add(redstoneNode)
 	add(new ItemRenderer(this))
 	add(new StaticBlockRenderer(this))

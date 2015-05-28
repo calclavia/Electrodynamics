@@ -15,7 +15,7 @@ import com.calclavia.edx.mffs.util.{TransferMode, FortronUtility, CacheHandler}
 import com.resonant.lib.wrapper.WrapFunctions._
 import nova.core.block.Block
 import nova.core.block.Stateful.UnloadEvent
-import nova.core.block.component.{BlockCollider, LightEmitter}
+import nova.core.block.component.{StaticBlockRenderer, BlockCollider, LightEmitter}
 import nova.core.component.renderer.{DynamicRenderer, ItemRenderer, StaticRenderer}
 import nova.core.component.transform.Orientation
 import nova.core.entity.Entity
@@ -62,7 +62,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 		.isCube(false)
 		.collisionBoxes = List(new Cuboid(0, 0, 0, 1, 0.8, 1))
 
-	add(new StaticRenderer(this))
+	get(classOf[StaticBlockRenderer])
 		.onRender(
 	    (model: Model) => {
 		    model.rotate(get(classOf[Orientation]).orientation.rotation)
@@ -344,14 +344,6 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 
 	def getProjectionSpeed: Int = 28 + 28 * getModuleCount(Content.moduleSpeed, getModuleSlots: _*)
 
-	override def markDirty() {
-		super.markDirty()
-
-		if (world != null) {
-			destroyField()
-		}
-	}
-
 	def destroyField() {
 		if (Game.instance.networkManager.isServer && calculatedField != null && !isCalculating) {
 			getModules(getModuleSlots: _*).forall(!_.onDestroyField(this, calculatedField))
@@ -365,6 +357,14 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 			calculatedField = null
 			isCompleteConstructing = false
 			fieldRequireTicks = false
+		}
+	}
+
+	override def markDirty() {
+		super.markDirty()
+
+		if (world != null) {
+			destroyField()
 		}
 	}
 
