@@ -114,7 +114,7 @@ class BlockWire extends Block with Storable with PacketHandler {
 	add(new Material[WireMaterial])
 
 	add(new StaticBlockRenderer(this))
-		.onRender(
+		.setOnRender(
 	    (model: Model) => {
 		    get(classOf[Collider]).occlusionBoxes.apply(Optional.empty()).foreach(cuboid => {
 			    BlockModelUtil.drawCube(model, cuboid - 0.5, StaticCubeTextureCoordinates.instance)

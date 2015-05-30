@@ -14,7 +14,7 @@ class FXHologramProgress(@BeanProperty var color: Color, maxAge: Double) extends
 	var age = 0d
 
 	add(new DynamicRenderer(this))
-		.onRender(
+		.setOnRender(
 	    (model: Model) => {
 		    //		GL11.glPushMatrix
 		    val completion = age / maxAge

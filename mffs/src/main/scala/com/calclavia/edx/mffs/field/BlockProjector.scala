@@ -63,7 +63,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 		.setBoundingBox(new Cuboid(0, 0, 0, 1, 0.8, 1))
 
 	get(classOf[StaticBlockRenderer])
-		.onRender(
+		.setOnRender(
 	    (model: Model) => {
 		    model.rotate(get(classOf[Orientation]).orientation.rotation)
 		    model.children.add(Models.projector.getModel)
@@ -72,7 +72,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 		)
 
 	add(new DynamicRenderer(this))
-		.onRender(
+		.setOnRender(
 	    (model: Model) => {
 		    /**
 		     * Render the light beam

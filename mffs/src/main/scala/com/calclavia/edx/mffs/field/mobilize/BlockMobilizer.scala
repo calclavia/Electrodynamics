@@ -63,7 +63,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 	private var canRenderMove = true
 
 	get(classOf[StaticBlockRenderer])
-		.onRender(
+		.setOnRender(
 	    (model: Model) => {
 		    model.matrix = new MatrixStack()
 			    .loadMatrix(model.matrix)
@@ -505,34 +505,6 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 		}
 	}
 
-	override def write(packet: Packet) {
-		super.write(packet)
-
-		if (packet.getID == PacketBlock.description) {
-			packet <<< anchor
-			packet <<< previewMode
-			packet <<< doAnchor
-			packet <<< (if (moveTime > 0) moveTime else getMoveTime)
-		}
-	}
-
-	/**
-	 * Gets the movement time required in TICKS.
-	 *
-	 * @return The time it takes to teleport (using a link card) to another coordinate OR
-	 *         ANIMATION_TIME for default move.
-	 */
-	def getMoveTime: Int = {
-		if (isTeleport) {
-			var time = (20 * getTargetPosition._2.distance(this.getAbsoluteAnchor)).toInt
-			if (this.getTargetPosition._1 != world) {
-				time += 20 * 60
-			}
-			return time
-		}
-		return animationTime
-	}
-
 	/**
 	 * Gets the position in which the manipulator will try to translate the field into.
 	 *
@@ -572,6 +544,34 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 	}
 
 	def getAbsoluteAnchor: Vector3i = transform.position + anchor
+
+	override def write(packet: Packet) {
+		super.write(packet)
+
+		if (packet.getID == PacketBlock.description) {
+			packet <<< anchor
+			packet <<< previewMode
+			packet <<< doAnchor
+			packet <<< (if (moveTime > 0) moveTime else getMoveTime)
+		}
+	}
+
+	/**
+	 * Gets the movement time required in TICKS.
+	 *
+	 * @return The time it takes to teleport (using a link card) to another coordinate OR
+	 *         ANIMATION_TIME for default move.
+	 */
+	def getMoveTime: Int = {
+		if (isTeleport) {
+			var time = (20 * getTargetPosition._2.distance(this.getAbsoluteAnchor)).toInt
+			if (this.getTargetPosition._1 != world) {
+				time += 20 * 60
+			}
+			return time
+		}
+		return animationTime
+	}
 
 	override def doGetFortronCost: Int = Math.round(super.doGetFortronCost + (if (this.anchor != null) this.anchor.magnitude * 1000 else 0)).toInt
 

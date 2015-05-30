@@ -117,7 +117,7 @@ class BlockForceField extends BlockDefault with PacketHandler with ForceField wi
 	    )
 		)
 		.setTexture(func((dir: Direction) => Optional.of(Textures.forceField)))
-		.onRender(
+		.setOnRender(
 	    (model: Model) => {
 		    val opRenderer = camoBlock.getOp(classOf[StaticRenderer])
 

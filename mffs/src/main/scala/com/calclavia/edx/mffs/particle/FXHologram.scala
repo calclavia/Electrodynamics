@@ -14,7 +14,7 @@ class FXHologram(color: Color, maxAge: Double) extends FXMFFS {
 	private var targetPosition: Vector3d = null
 
 	add(new DynamicRenderer(this))
-		.onRender(
+		.setOnRender(
 	    (model: Model) => {
 			model.scale(1.01, 1.01, 1.01)
 

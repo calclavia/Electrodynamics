@@ -61,7 +61,7 @@ class BlockCoercionDeriver extends BlockModuleHandler {
 	var animationTween = 0f
 
 	get(classOf[StaticBlockRenderer])
-		.onRender(
+		.setOnRender(
 	    (model: Model) => {
 		    val originalModel = Models.deriver.getModel
 		    val capacitorModel = new Model
@@ -72,7 +72,7 @@ class BlockCoercionDeriver extends BlockModuleHandler {
 		)
 
 	add(new DynamicRenderer(this))
-		.onRender(
+		.setOnRender(
 	    (model: Model) => {
 		    model.translate(0, (0.3 + Math.sin(Math.toRadians(animation)) * 0.08) * animationTween - 0.1, 0)
 		    model.rotate(Vector3d.yAxis, animation)
@@ -87,7 +87,7 @@ class BlockCoercionDeriver extends BlockModuleHandler {
 	    }
 		)
 
-	get(classOf[ItemRenderer]).onRender(
+	get(classOf[ItemRenderer]).setOnRender(
 		(model: Model) => {
 			model.translate(0, 0.1, 0)
 			get(classOf[StaticRenderer]).onRender.accept(model)
