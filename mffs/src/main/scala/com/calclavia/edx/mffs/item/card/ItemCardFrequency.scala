@@ -1,12 +1,10 @@
 package com.calclavia.edx.mffs.item.card
 
-import java.util
-import java.util.Optional
-
 import com.calclavia.edx.mffs.api.Frequency
 import com.google.common.hash.Hashing
-import nova.core.entity.Entity
+import com.resonant.lib.wrapper.WrapFunctions._
 import nova.core.game.Game
+import nova.core.item.Item.{RightClickEvent, TooltipEvent}
 import nova.core.retention.Stored
 import nova.core.util.transform.vector.Vector3i
 
@@ -18,18 +16,15 @@ class ItemCardFrequency extends ItemCard with Frequency {
 	@BeanProperty
 	var frequency: Int = 0
 
-	override def getTooltips(player: Optional[Entity], tooltips: util.List[String]) {
-		super.getTooltips(player, tooltips)
-		tooltips.add(Game.instance.languageManager.translate("info.cardFrequency.freq") + " " + getEncodedFrequency)
-	}
+	tooltipEvent.add(eventListener((evt: TooltipEvent) => evt.tooltips.add(Game.instance.languageManager.translate("info.cardFrequency.freq") + " " + getEncodedFrequency)))
 
 	def getEncodedFrequency = Hashing.md5().hashInt(frequency).toString.take(12)
 
-	override def onRightClick(entity: Entity) {
+	rightClickEvent.add((evt: RightClickEvent) => {
 		if (Game.instance.networkManager.isServer) {
-			Game.instance.guiFactory.showGui("cardFrequency", entity, Vector3i.zero)
+			Game.instance.guiFactory.showGui("cardFrequency", evt.entity, Vector3i.zero)
 		}
-	}
+	})
 
 	override def getID: String = "cardFrequency"
 }

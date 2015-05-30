@@ -1,16 +1,18 @@
 package com.calclavia.edx.mffs.base
 
-import java.util.{List => JList, Optional, Set => JSet}
+import java.util.{List => JList, Set => JSet}
 
 import com.calclavia.edx.mffs.api.machine.Projector
 import com.calclavia.edx.mffs.api.modules.Module
 import com.calclavia.edx.mffs.field.BlockProjector
 import com.resonant.core.prefab.itemblock.TooltipItem
 import com.resonant.core.prefab.modcontent.AutoItemTexture
+import com.resonant.lib.wrapper.WrapFunctions._
 import com.resonant.wrapper.lib.utility.science.UnitDisplay
 import nova.core.entity.Entity
 import nova.core.game.Game
 import nova.core.item.Item
+import nova.core.item.Item.TooltipEvent
 import nova.core.util.transform.shape.Cuboid
 import nova.core.util.transform.vector.Vector3i
 
@@ -22,9 +24,8 @@ abstract class ItemModule extends Item with TooltipItem with Module with AutoIte
 
 	add(new CategoryMFFS)
 
-	override def getTooltips(player: Optional[Entity], tooltips: JList[String]) {
-		tooltips.add(Game.instance.languageManager.translate("info.item.fortron") + " " + new UnitDisplay(UnitDisplay.Unit.LITER, getFortronCost(1) * 20) + "/s")
-	}
+	tooltipEvent.add(eventListener((evt: TooltipEvent) => evt.tooltips.add(Game.instance.languageManager.translate("info.item.fortron") + " " + new
+			UnitDisplay(UnitDisplay.Unit.LITER, getFortronCost(1) * 20) + "/s")))
 
 	override def getFortronCost(amplifier: Float) = fortronCost
 

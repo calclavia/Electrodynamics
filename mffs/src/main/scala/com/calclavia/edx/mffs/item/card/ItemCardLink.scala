@@ -1,15 +1,12 @@
 package com.calclavia.edx.mffs.item.card
 
-import java.util
-import java.util.Optional
-
 import com.calclavia.edx.mffs.api.card.CoordLink
-import nova.core.entity.Entity
+import com.resonant.lib.wrapper.WrapFunctions._
 import nova.core.game.Game
+import nova.core.item.Item.{TooltipEvent, UseEvent}
 import nova.core.retention.{Storable, Stored}
-import nova.core.util.Direction
 import nova.core.util.collection.Tuple2
-import nova.core.util.transform.vector.{Vector3d, Vector3i}
+import nova.core.util.transform.vector.Vector3i
 import nova.core.world.World
 
 /**
@@ -31,39 +28,35 @@ class ItemCardLink extends ItemCard with CoordLink with Storable {
 
 	override def getLink: Tuple2[World, Vector3i] = new Tuple2(linkWorld, linkPos)
 
-	override def getTooltips(player: Optional[Entity], tooltips: util.List[String]) {
-		super.getTooltips(player, tooltips)
-
+	tooltipEvent.add(eventListener((evt: TooltipEvent) => {
 		if (linkWorld != null && linkPos != null) {
 			val block = linkWorld.getBlock(linkPos)
 
 			if (block.isPresent) {
-				tooltips.add(Game.instance.languageManager.translate("info.item.linkedWith") + " " + block.get().getID)
+				evt.tooltips.add(Game.instance.languageManager.translate("info.item.linkedWith") + " " + block.get().getID)
 			}
 
-			tooltips.add(linkPos.x + ", " + linkPos.y + ", " + linkPos.z)
-			tooltips.add(Game.instance.languageManager.translate("info.item.dimension") + " " + linkWorld.getID)
+			evt.tooltips.add(linkPos.x + ", " + linkPos.y + ", " + linkPos.z)
+			evt.tooltips.add(Game.instance.languageManager.translate("info.item.dimension") + " " + linkWorld.getID)
 		}
 		else {
-			tooltips.add(Game.instance.languageManager.translate("info.item.notLinked"))
+			evt.tooltips.add(Game.instance.languageManager.translate("info.item.notLinked"))
 		}
-	}
+	}))
 
-	override def onUse(entity: Entity, world: World, position: Vector3i, side: Direction, hit: Vector3d): Boolean = {
-		super.onUse(entity, world, position, side, hit)
-
+	useEvent.add((evt: UseEvent) => {
 		if (Game.instance.networkManager.isServer) {
 
-			val block = world.getBlock(position)
+			val block = evt.entity.world.getBlock(evt.position)
 			if (block.isPresent) {
-				linkWorld = world
-				linkPos = position
+				linkWorld = evt.entity.world
+				linkPos = evt.position
 				//TODO: Fix chat msg
 				//player.addChatMessage(new ChatComponentTranslation("info.item.linkedWith", x + ", " + y + ", " + z + " - " + vector.getBlock(world).getLocalizedName))
 			}
 		}
-		return true
-	}
+		evt.action = true
+	})
 
 	override def getID: String = "cardLink"
 }

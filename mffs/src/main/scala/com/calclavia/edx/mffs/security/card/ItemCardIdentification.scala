@@ -1,13 +1,11 @@
 package com.calclavia.edx.mffs.security.card
 
-import java.util
-import java.util.Optional
-
 import com.resonant.core.access.{AbstractAccess, AccessUser, Permissions}
-import nova.core.entity.Entity
+import com.resonant.lib.wrapper.WrapFunctions._
 import nova.core.entity.component.Player
 import nova.core.game.Game
 import nova.core.gui.KeyManager.Key
+import nova.core.item.Item.{RightClickEvent, TooltipEvent}
 import nova.core.network.NetworkTarget.Side
 import nova.core.network.{Packet, PacketHandler}
 import nova.core.retention.Stored
@@ -29,22 +27,19 @@ class ItemCardIdentification extends ItemCardAccess with PacketHandler {
 	@Stored
 	override var access: AbstractAccess = null
 
-	override def getTooltips(player: Optional[Entity], tooltips: util.List[String]) {
-		super.getTooltips(player, tooltips)
-
+	tooltipEvent.add(eventListener((evt: TooltipEvent) => {
 		if (access != null) {
-			tooltips.add(Game.instance.languageManager.translate("info.cardIdentification.username") + " " + access.asInstanceOf[AccessUser].username)
+			evt.tooltips.add(Game.instance.languageManager.translate("info.cardIdentification.username") + " " + access.asInstanceOf[AccessUser].username)
 		}
 		else {
-			tooltips.add(Game.instance.languageManager.translate("info.cardIdentification.empty"))
+			evt.tooltips.add(Game.instance.languageManager.translate("info.cardIdentification.empty"))
 		}
-	}
+	}))
 
-	override def onRightClick(entity: Entity) {
-		super.onRightClick(entity)
+	rightClickEvent.add((evt: RightClickEvent) => {
 		if (Side.get.isServer) {
-			if (entity.has(classOf[Player])) {
-				val player = entity.asInstanceOf[Player]
+			if (evt.entity.has(classOf[Player])) {
+				val player = evt.entity.get(classOf[Player])
 				if (Game.instance.keyManager.isKeyDown(Key.KEY_LSHIFT)) {
 
 					if (access != null) {
@@ -58,11 +53,11 @@ class ItemCardIdentification extends ItemCardAccess with PacketHandler {
 					/**
 					 * Open item GUI
 					 */
-					Game.instance.guiFactory.showGui("idCard", entity, new Vector3i(0, 0, 0))
+					Game.instance.guiFactory.showGui("idCard", evt.entity, new Vector3i(0, 0, 0))
 				}
 			}
 		}
-	}
+	})
 
 	override def read(packet: Packet) {
 		super.read(packet)

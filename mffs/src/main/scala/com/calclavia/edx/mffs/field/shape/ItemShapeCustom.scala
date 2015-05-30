@@ -1,22 +1,20 @@
 package com.calclavia.edx.mffs.field.shape
 
 import java.io.File
-import java.util
-import java.util.{Optional, Set => JSet}
+import java.util.{Set => JSet}
 
 import com.calclavia.edx.mffs.Settings
 import com.calclavia.edx.mffs.api.machine.Projector
 import com.calclavia.edx.mffs.content.Content
 import com.calclavia.edx.mffs.util.CacheHandler
 import com.resonant.core.structure.{Structure, StructureCustom}
-import nova.core.entity.Entity
+import com.resonant.lib.wrapper.WrapFunctions._
 import nova.core.game.Game
 import nova.core.gui.KeyManager.Key
+import nova.core.item.Item.{RightClickEvent, TooltipEvent, UseEvent}
 import nova.core.render.model.Model
 import nova.core.retention.Stored
-import nova.core.util.Direction
-import nova.core.util.transform.vector.{Vector3d, Vector3i}
-import nova.core.world.World
+import nova.core.util.transform.vector.Vector3i
 
 import scala.util.Random
 
@@ -35,43 +33,42 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 	@Stored
 	var fieldSize = 0
 
-	override def getID: String = "shapeCustom"
-
-	override def getStructure: Structure =
-		getOrSetCache("shapeCustom", () => {
-			val custom = new StructureCustom("shapeCustom")
-			Game.instance.saveManager.load(saveFilePrefix + saveID, custom)
-			return custom
-		})
-
-	override def getTooltips(player: Optional[Entity], tooltips: util.List[String]) {
-		super.getTooltips(player, tooltips)
-
-		tooltips.add(Game.instance.languageManager.translate("info.modeCustom.mode") + " " + (if (isAdditive) Game.instance.languageManager.translate("info.modeCustom.additive") else Game.instance.languageManager.translate("info.modeCustom.substraction")))
-		tooltips.add(Game.instance.languageManager.translate("info.modeCustom.point1") + " " + pointA.xi + ", " + pointA.yi + ", " + pointA.zi)
-		tooltips.add(Game.instance.languageManager.translate("info.modeCustom.point2") + " " + pointB.xi + ", " + pointB.yi + ", " + pointB.zi)
+	tooltipEvent.add(eventListener((evt: TooltipEvent) => {
+		evt.tooltips.add(Game.instance.languageManager.translate("info.modeCustom.mode") + " " + (if (isAdditive) Game.instance.languageManager.translate("info.modeCustom.additive") else Game.instance.languageManager.translate("info.modeCustom.substraction")))
+		evt.tooltips.add(Game.instance.languageManager.translate("info.modeCustom.point1") + " " + pointA.xi + ", " + pointA.yi + ", " + pointA.zi)
+		evt.tooltips.add(Game.instance.languageManager.translate("info.modeCustom.point2") + " " + pointB.xi + ", " + pointB.yi + ", " + pointB.zi)
 
 		if (saveID > 0) {
-			tooltips.add(Game.instance.languageManager.translate("info.modeCustom.modeID") + " " + saveID)
+			evt.tooltips.add(Game.instance.languageManager.translate("info.modeCustom.modeID") + " " + saveID)
 			if (fieldSize > 0) {
-				tooltips.add(Game.instance.languageManager.translate("info.modeCustom.fieldSize") + " " + fieldSize)
+				evt.tooltips.add(Game.instance.languageManager.translate("info.modeCustom.fieldSize") + " " + fieldSize)
 			}
 			else {
-				tooltips.add(Game.instance.languageManager.translate("info.modeCustom.notSaved"))
+				evt.tooltips.add(Game.instance.languageManager.translate("info.modeCustom.notSaved"))
 			}
 		}
 
-		if (Game.instance.keyManager.isKeyDown(Key.KEY_LSHIFT)) {
-			super.getTooltips(player, tooltips)
+		if (!Game.instance.keyManager.isKeyDown(Key.KEY_LSHIFT)) {
+			evt.tooltips.add(Game.instance.languageManager.translate("info.modeCustom.shift"))
 		}
-		else {
-			tooltips.add(Game.instance.languageManager.translate("info.modeCustom.shift"))
+	}))
+
+	useEvent.add((evt: UseEvent) => {
+		if (Game.instance.networkManager.isServer) {
+
+			if (pointA == null) {
+				pointA = evt.position
+				//player.addChatMessage(new ChatComponentText("Set point 1: " + x + ", " + y + ", " + z + "."))
+			}
+			else {
+				pointB = evt.position
+				//player.addChatMessage(new ChatComponentText("Set point 2: " + x + ", " + y + ", " + z + "."))
+			}
 		}
-	}
+		evt.action = true
+	})
 
-	override def onRightClick(entity: Entity) {
-		super.onRightClick(entity)
-
+	rightClickEvent.add((evt: RightClickEvent) => {
 		if (Game.instance.networkManager.isServer) {
 			if (Game.instance.keyManager.isKeyDown(Key.KEY_LSHIFT)) {
 				//Holding shift saves the item
@@ -98,7 +95,7 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 						for (x <- minPoint.x to maxPoint.x; y <- minPoint.y to maxPoint.y; z <- minPoint.z to maxPoint.z) {
 							val position = new Vector3i(x, y, z)
 							val targetCheck = midPoint + position
-							val block = entity.world().getBlock(targetCheck)
+							val block = evt.entity.world().getBlock(targetCheck)
 
 							if (block.isPresent) {
 								/**
@@ -126,7 +123,16 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 				//entityPlayer.addChatMessage(new ChatComponentText(Game.instance.get.languageManager.translate("message.modeCustom.modeChange").replaceAll("#p", (if (nbt.getBoolean(NBT_MODE)) Game.instance.get.languageManager.translate("info.modeCustom.substraction") else Game.instance.get.languageManager.translate("info.modeCustom.additive")))))
 			}
 		}
-	}
+	})
+
+	override def getID: String = "shapeCustom"
+
+	override def getStructure: Structure =
+		getOrSetCache("shapeCustom", () => {
+			val custom = new StructureCustom("shapeCustom")
+			Game.instance.saveManager.load(saveFilePrefix + saveID, custom)
+			return custom
+		})
 
 	def getNextAvaliableID: Int = getSaveDirectory.listFiles.length
 
@@ -141,22 +147,6 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 			file.mkdir
 		}*/
 		return saveDirectory
-	}
-
-	override def onUse(entity: Entity, world: World, position: Vector3i, side: Direction, hit: Vector3d): Boolean = {
-		if (Game.instance.networkManager.isServer) {
-
-			if (pointA == null) {
-				pointA = position
-				//player.addChatMessage(new ChatComponentText("Set point 1: " + x + ", " + y + ", " + z + "."))
-			}
-			else {
-				pointB = position
-				//player.addChatMessage(new ChatComponentText("Set point 2: " + x + ", " + y + ", " + z + "."))
-			}
-		}
-
-		return true
 	}
 
 	override def render(projector: Projector, model: Model) {

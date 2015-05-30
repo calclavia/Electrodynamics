@@ -11,14 +11,16 @@ import com.calclavia.edx.mffs.item.card.ItemCardFrequency
 import com.calclavia.edx.mffs.particle.{FXFortronBeam, FieldColor}
 import com.calclavia.edx.mffs.security.MFFSPermissions
 import com.calclavia.edx.mffs.util.MFFSUtility
+import com.resonant.lib.wrapper.WrapFunctions._
 import com.resonant.wrapper.lib.utility.science.UnitDisplay
-import nova.core.block.Block.RightClickEvent
+import nova.core.block.Block
 import nova.core.entity.Entity
 import nova.core.entity.component.Player
 import nova.core.fluid.Fluid
 import nova.core.game.Game
 import nova.core.gui.KeyManager.Key
 import nova.core.item.Item
+import nova.core.item.Item.{RightClickEvent, TooltipEvent, UseEvent}
 import nova.core.network.NetworkTarget.Side
 import nova.core.retention.{Storable, Stored}
 import nova.core.util.Direction
@@ -36,47 +38,37 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 	@Stored
 	private var linkPos: Vector3i = _
 
-	override def getTooltips(player: Optional[Entity], tooltips: util.List[String]) {
-		super.getTooltips(player, tooltips)
-
+	tooltipEvent.add(eventListener((evt: TooltipEvent) => {
 		if (linkWorld != null) {
 			val block = linkWorld.getBlock(linkPos)
 			if (block.isPresent) {
 				//TODO: Get the real block name?
-				tooltips.add(Game.instance.languageManager.translate("info.item.linkedWith") + " " + block.get().getID)
+				evt.tooltips.add(Game.instance.languageManager.translate("info.item.linkedWith") + " " + block.get().getID)
 			}
-			tooltips.add(linkPos.xi + ", " + linkPos.yi + ", " + linkPos.zi)
-			tooltips.add(Game.instance.languageManager.translate("info.item.dimension") + " '" + linkWorld.getID + "'")
+			evt.tooltips.add(linkPos.xi + ", " + linkPos.yi + ", " + linkPos.zi)
+			evt.tooltips.add(Game.instance.languageManager.translate("info.item.dimension") + " '" + linkWorld.getID + "'")
 		}
 		else {
-			tooltips.add(Game.instance.languageManager.translate("info.item.notLinked"))
+			evt.tooltips.add(Game.instance.languageManager.translate("info.item.notLinked"))
 		}
-	}
+	}))
 
-	def hasLink: Boolean = linkWorld != null
 
-	override def onUse(entity: Entity, world: World, position: Vector3i, side: Direction, hit: Vector3d): Boolean = {
-		super.onUse(entity, world, position, side, hit)
-
+	useEvent.add((evt: UseEvent) => {
 		if (Side.get().isServer && Game.instance.keyManager.isKeyDown(Key.KEY_LSHIFT)) {
-			linkWorld = world
-			linkPos = position
+			linkWorld = evt.entity.world
+			linkPos = evt.position
 			val block = linkWorld.getBlock(linkPos).get()
 
 			if (block != null) {
-				Game.instance.networkManager.sendChat(entity.asInstanceOf[Player], Game.instance.languageManager.translate("message.remoteController.linked").replaceAll("#p", position.x + ", " + position.y + ", " + position.z).replaceAll("#q", block.getID))
+				Game.instance.networkManager.sendChat(evt.entity.asInstanceOf[Player], Game.instance.languageManager.translate("message.remoteController.linked").replaceAll("#p", evt.position.x + ", " + evt.position.y + ", " + evt.position.z).replaceAll("#q", block.getID))
 			}
 		}
+		evt.action = true
+	})
 
-		return true
-	}
 
-	def clearLink(Item: Item) {
-		linkWorld = null
-		linkPos = null
-	}
-
-	override def onRightClick(entity: Entity) {
+	rightClickEvent.add((evt: RightClickEvent) => {
 		if (!Game.instance.keyManager.isKeyDown(Key.KEY_LSHIFT)) {
 			if (linkPos != null) {
 				val op = linkWorld.getBlock(linkPos)
@@ -84,49 +76,58 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 				if (op.isPresent) {
 					val block = op.get()
 
-					val player = entity.asInstanceOf[Player]
+					val player = evt.entity.get(classOf[Player])
+
+					var finished = false
 					if (MFFSUtility.hasPermission(linkWorld, linkPos.toDouble, MFFSPermissions.blockAccess, player) || MFFSUtility.hasPermission(linkWorld, linkPos.toDouble, MFFSPermissions.remoteControl, player)) {
-						val requiredEnergy = entity.position().distance(linkPos) * (Fluid.bucketVolume / 100)
+						val requiredEnergy = evt.entity.position().distance(linkPos) * (Fluid.bucketVolume / 100)
 						var receivedEnergy = 0
 						val fortronBlocks = GraphFrequency
 							.instance
 							.get(frequency)
 							.collect { case block: BlockFortron => block }
-							.filter(_.position().distance(entity.position()) < 50)
+							.filter(_.position().distance(evt.entity.position()) < 50)
 
 						for (fortronBlock <- fortronBlocks) {
 							val consumedEnergy = fortronBlock.removeFortron(Math.ceil(requiredEnergy / fortronBlocks.size).toInt, true)
 
 							if (consumedEnergy > 0) {
 								if (Side.get().isServer) {
-									val newFX = entity.world.addClientEntity(new FXFortronBeam(FieldColor.blue, 20))
-									newFX.setPosition(entity.position /*.add(new Vector3d(0, entity.getEyeHeight - 0.2, 0))*/)
+									val newFX = evt.entity.world.addClientEntity(new FXFortronBeam(FieldColor.blue, 20))
+									newFX.setPosition(evt.entity.position /*.add(new Vector3d(0, entity.getEyeHeight - 0.2, 0))*/)
 									newFX.setTarget(fortronBlock.position.toDouble.add(0.5))
 								}
 								receivedEnergy += consumedEnergy
 							}
+
 							if (receivedEnergy >= requiredEnergy) {
 								try {
-									block.rightClickEvent.publish(new RightClickEvent(entity, Direction.UNKNOWN, Vector3d.zero))
+									block.rightClickEvent.publish(new Block.RightClickEvent(evt.entity, Direction.UNKNOWN, Vector3d.zero))
 								}
 								catch {
 									case e: Exception => {
 										e.printStackTrace()
 									}
 								}
-								return
+								finished = true
 							}
 						}
-						if (Side.get().isServer) {
-							Game.instance.networkManager.sendChat(entity.asInstanceOf[Player], Game.instance.languageManager.translate("message.remoteController.fail").replaceAll("#p", new
+						if (!finished && Side.get().isServer) {
+							Game.instance.networkManager.sendChat(evt.entity.get(classOf[Player]), Game.instance.languageManager.translate("message.remoteController.fail").replaceAll("#p", new
 									UnitDisplay(UnitDisplay.Unit.JOULES, requiredEnergy).toString))
 						}
 					}
 				}
 			}
 		}
-	}
+	})
 
+	def hasLink: Boolean = linkWorld != null
+
+	def clearLink(Item: Item) {
+		linkWorld = null
+		linkPos = null
+	}
 	def getLink: Tuple2[World, Vector3i] = {
 		return new Tuple2(linkWorld, linkPos)
 	}
