@@ -1,7 +1,7 @@
 package com.calclavia.edx.electric.circuit.wire;
 
 /**
- * An enumerator for different wire materials. The metadata of the wire determines the type of the
+ * An enumerator for different wire materials. The metadata of the wire determines the componentType of the
  * wire.
  *
  * @author Calclavia

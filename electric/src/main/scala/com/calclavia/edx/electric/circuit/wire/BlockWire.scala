@@ -8,7 +8,8 @@ import com.calclavia.edx.core.component.Material
 import com.calclavia.edx.electric.ElectricContent
 import com.calclavia.graph.api.energy.NodeElectric
 import com.calclavia.graph.core.electric.NodeElectricJunction
-import com.calclavia.microblock.core.micro.{Microblock, MicroblockContainer}
+import com.calclavia.microblock.core.micro.Microblock
+import com.calclavia.microblock.micro.{Microblock, MicroblockContainer}
 import com.resonant.lib.util.RotationUtility
 import com.resonant.lib.wrapper.WrapFunctions._
 import nova.core.block.Block
