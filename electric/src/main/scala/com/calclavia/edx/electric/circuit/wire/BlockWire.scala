@@ -15,7 +15,6 @@ import nova.core.block.Block
 import nova.core.block.Block.{BlockPlaceEvent, RightClickEvent}
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.misc.Collider
-import nova.core.entity.Entity
 import nova.core.game.Game
 import nova.core.network.{Packet, PacketHandler, Sync}
 import nova.core.render.model.{BlockModelUtil, Model, StaticCubeTextureCoordinates}
@@ -73,7 +72,7 @@ class BlockWire extends Block with Storable with PacketHandler {
 	 */
 	@Sync
 	@Stored
-	var side: Byte = 0
+	private var side: Byte = 0
 
 	/**
 	 * A map of the connections relative to the {@link side}. Split into four 2-bits.
@@ -88,7 +87,7 @@ class BlockWire extends Block with Storable with PacketHandler {
 	 * 00-00-00-00
 	 */
 	@Sync(ids = Array(0, 1))
-	var connectionMask = 0x00000000
+	private var connectionMask = 0x00000000
 
 	/**
 	 * Add components
@@ -105,7 +104,10 @@ class BlockWire extends Block with Storable with PacketHandler {
 		}))
 
 	add(new Collider())
-		.setBoundingBox(() => BlockWire.occlusionBounds(1)(side) + 0.5)
+		.setBoundingBox(() => {
+		//println("getBounds: " + side)
+		BlockWire.occlusionBounds(1)(side) + 0.5
+	})
 		.isCube(false)
 		.isOpaqueCube(false)
 
@@ -123,24 +125,17 @@ class BlockWire extends Block with Storable with PacketHandler {
 
 	add(new CategoryEDX)
 
-	rightClickEvent.add((evt: RightClickEvent) => System.out.println(side))
-
-
-
-	/*
-	override def getSubParts: JIterable[IndexedCuboid6] = Seq(new IndexedCuboid6(0, BlockWire.selectionBounds(getThickness)(side)))
-	def getOcclusionBoxes: JIterable[Cuboid6] =
-	override def solid(arg0: Int) = false
-	*/
+	rightClickEvent.add((evt: RightClickEvent) => System.out.println(this + " right clicked with side: " + side))
 
 	override def read(packet: Packet) {
 		super[PacketHandler].read(packet)
-		println("Read packet. " + side)
+		println(this + " read packet with side " + side)
 		world.markStaticRender(position)
 	}
 
 	override def write(packet: Packet) {
 		super[PacketHandler].write(packet)
+		println(this + " wrote packet with side " + side)
 	}
 
 	/**
