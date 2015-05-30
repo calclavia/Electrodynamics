@@ -129,13 +129,7 @@ class BlockWire extends Block with Storable with PacketHandler {
 
 	override def read(packet: Packet) {
 		super[PacketHandler].read(packet)
-		println(this + " read packet with side " + side)
 		world.markStaticRender(position)
-	}
-
-	override def write(packet: Packet) {
-		super[PacketHandler].write(packet)
-		println(this + " wrote packet with side " + side)
 	}
 
 	/**
