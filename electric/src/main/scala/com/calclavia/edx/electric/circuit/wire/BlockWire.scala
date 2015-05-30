@@ -99,7 +99,7 @@ class BlockWire extends Block with Storable with PacketHandler {
 		(evt: BlockPlaceEvent) => {
 			this.side = evt.side.opposite.ordinal.toByte
 			//get(classOf[Material[WireMaterial]]).material = WireMaterial.values()(evt.item)
-			BlockWire.init()
+			println("Place pos: " + MicroblockContainer.sidePosition(Direction.fromOrdinal(this.side)))
 			MicroblockContainer.sidePosition(Direction.fromOrdinal(this.side))
 		}))
 
@@ -120,6 +120,7 @@ class BlockWire extends Block with Storable with PacketHandler {
 			    BlockModelUtil.drawCube(model, cuboid - 0.5, StaticCubeTextureCoordinates.instance)
 		    })
 		    model.bindAll(ElectricContent.wireTexture)
+		    println("Render: " + get(classOf[Microblock]).position)
 	    }
 		)
 
