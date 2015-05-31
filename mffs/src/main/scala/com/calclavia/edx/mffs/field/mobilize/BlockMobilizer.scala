@@ -12,7 +12,7 @@ import com.calclavia.edx.mffs.security.{MFFSPermissions, PermissionHandler}
 import com.calclavia.edx.mffs.util.MFFSUtility
 import com.calclavia.edx.mffs.{ModularForceFieldSystem, Settings}
 import com.resonant.core.prefab.block.InventorySimpleProvider
-import com.resonant.lib.wrapper.WrapFunctions._
+import com.resonant.lib.WrapFunctions._
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.misc.Collider
 import nova.core.component.transform.Orientation

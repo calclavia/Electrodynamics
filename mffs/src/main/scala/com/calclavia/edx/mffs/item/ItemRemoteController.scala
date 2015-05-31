@@ -11,7 +11,7 @@ import com.calclavia.edx.mffs.item.card.ItemCardFrequency
 import com.calclavia.edx.mffs.particle.{FXFortronBeam, FieldColor}
 import com.calclavia.edx.mffs.security.MFFSPermissions
 import com.calclavia.edx.mffs.util.MFFSUtility
-import com.resonant.lib.wrapper.WrapFunctions._
+import com.resonant.lib.WrapFunctions._
 import com.resonant.wrapper.lib.utility.science.UnitDisplay
 import nova.core.block.Block
 import nova.core.entity.Entity

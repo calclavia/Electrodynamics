@@ -1,7 +1,7 @@
 package com.calclavia.edx.mffs.security.card
 
 import com.resonant.core.access.{AbstractAccess, AccessUser, Permissions}
-import com.resonant.lib.wrapper.WrapFunctions._
+import com.resonant.lib.WrapFunctions._
 import nova.core.entity.component.Player
 import nova.core.game.Game
 import nova.core.gui.KeyManager.Key

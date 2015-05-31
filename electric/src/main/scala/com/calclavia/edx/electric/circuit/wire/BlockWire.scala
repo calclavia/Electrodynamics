@@ -8,8 +8,7 @@ import com.calclavia.edx.electric.ElectricContent
 import com.calclavia.edx.electric.graph.NodeElectricJunction
 import com.calclavia.edx.electric.graph.api.Electric
 import com.calclavia.microblock.micro.{Microblock, MicroblockContainer}
-import com.resonant.lib.util.RotationUtility
-import com.resonant.lib.wrapper.WrapFunctions._
+import com.resonant.lib.RotationUtility
 import nova.core.block.Block
 import nova.core.block.Block.{BlockPlaceEvent, RightClickEvent}
 import nova.core.block.component.StaticBlockRenderer
@@ -25,7 +24,7 @@ import nova.core.util.transform.shape.Cuboid
 import nova.core.util.transform.vector.Vector3d
 
 import scala.collection.convert.wrapAll._
-
+import com.resonant.lib.WrapFunctions._
 /**
  * This is the class for all flat wire
  *

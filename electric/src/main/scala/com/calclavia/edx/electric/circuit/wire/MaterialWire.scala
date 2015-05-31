@@ -1,13 +1,15 @@
 package com.calclavia.edx.electric.circuit.wire
 
-import com.calclavia.edx.core.component.Material
-import nova.core.network.Packet
+import nova.core.component.Component
+import nova.core.network.{Packet, PacketHandler}
+import nova.core.retention.{Storable, Stored}
 
 /**
  * @author Calclavia
  */
-class MaterialWire extends Material[WireMaterial] {
-	material = WireMaterial.UNKNOWN
+class MaterialWire extends Component with Storable with PacketHandler {
+	@Stored
+	var material = WireMaterial.UNKNOWN
 
 	//TODO: Packet enum reading doesn't work
 	override def read(packet: Packet) {

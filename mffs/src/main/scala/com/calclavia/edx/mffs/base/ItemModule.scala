@@ -7,7 +7,7 @@ import com.calclavia.edx.mffs.api.modules.Module
 import com.calclavia.edx.mffs.field.BlockProjector
 import com.resonant.core.prefab.itemblock.TooltipItem
 import com.resonant.core.prefab.modcontent.AutoItemTexture
-import com.resonant.lib.wrapper.WrapFunctions._
+import com.resonant.lib.WrapFunctions._
 import com.resonant.wrapper.lib.utility.science.UnitDisplay
 import nova.core.entity.Entity
 import nova.core.game.Game
