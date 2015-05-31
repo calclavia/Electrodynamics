@@ -4,7 +4,7 @@ import java.util.Optional
 
 import com.calclavia.edx.mffs.api.machine.IActivatable
 import com.calclavia.edx.mffs.content.Textures
-import com.calclavia.graph.api.energy.NodeRedstone
+import com.calclavia.minecraft.redstone.Redstone
 import com.resonant.lib.wrapper.WrapFunctions._
 import com.resonant.wrapper.core.Placeholder
 import nova.core.block.Block.RightClickEvent
@@ -32,7 +32,7 @@ abstract class BlockMachine extends BlockDefault with PacketHandler with IActiva
 	 */
 	var animation = 0d
 
-	var redstoneNode = Game.instance.componentManager.make(classOf[NodeRedstone], this)
+	var redstoneNode = Game.instance.componentManager.make(classOf[Redstone], this)
 
 	/**
 	 * Is the machine active and working?
@@ -40,8 +40,8 @@ abstract class BlockMachine extends BlockDefault with PacketHandler with IActiva
 	@Stored
 	private var active = false
 
-	redstoneNode.onInputPowerChange((node: NodeRedstone) => {
-		if (node.getWeakPower > 0)
+	redstoneNode.onInputPowerChange((node: Redstone) => {
+		if (node.getOutputWeakPower > 0)
 			setActive(true)
 		else
 			setActive(false)

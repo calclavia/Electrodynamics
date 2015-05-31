@@ -128,63 +128,67 @@ class GraphElectric extends GraphConnect[Electric] with Updater {
 				}
 		}
 
-		/**
-		 * Create the connect adjacency matrix.
-		 */
-		terminalMatrix = new AdjacencyMatrix[AnyRef](nodes ++ junctions ++ virtualBindQueue.keys)
+		if (junctions.size > 0) {
+			/**
+			 * Create the connect adjacency matrix.
+			 */
+			terminalMatrix = new AdjacencyMatrix[AnyRef](nodes ++ junctions ++ virtualBindQueue.keys)
 
-		junctions.foreach {
-			case virtualJunction: VirtualJunction =>
-				val (a, b) = virtualBindQueue(virtualJunction)
-				terminalMatrix(a, virtualJunction) = true
-				terminalMatrix(virtualJunction, b) = true
-			case junction =>
-				//Find all the components connected to this junction
-				val connectedComponents = junction.wires
-					.flatMap(_.connections)
-					.collect { case n: NodeElectricComponent => n }
+			junctions.foreach {
+				case virtualJunction: VirtualJunction =>
+					val (a, b) = virtualBindQueue(virtualJunction)
+					terminalMatrix(a, virtualJunction) = true
+					terminalMatrix(virtualJunction, b) = true
+				case junction =>
+					//Find all the components connected to this junction
+					val connectedComponents = junction.wires
+						.flatMap(_.connections)
+						.collect { case n: NodeElectricComponent => n }
 
-				//Set adjMat connection by marking the component-junction position as true
-				connectedComponents.foreach(component => {
-					if (adjMat.getDirectedFrom(component).exists(c => junction.wires.contains(c))) {
-						//Component is connected to junction via positive terminal
-						terminalMatrix(component, junction) = true
-					}
-					else if (adjMat.getDirectedTo(component).exists(c => junction.wires.contains(c))) {
-						//Component is connected to junction via negative terminal
-						terminalMatrix(junction, component) = true
-					}
-				})
+					//Set adjMat connection by marking the component-junction position as true
+					connectedComponents.foreach(component => {
+						if (adjMat.getDirectedFrom(component).exists(c => junction.wires.contains(c))) {
+							//Component is connected to junction via positive terminal
+							terminalMatrix(component, junction) = true
+						}
+						else if (adjMat.getDirectedTo(component).exists(c => junction.wires.contains(c))) {
+							//Component is connected to junction via negative terminal
+							terminalMatrix(junction, component) = true
+						}
+					})
+			}
+
+			//Select reference ground
+			ground = junctions.head
+			junctions = junctions.splitAt(1)._2
+			ground.voltage = 0
 		}
-
-		//Select reference ground
-		ground = junctions.head
-		junctions = junctions.splitAt(1)._2
-		ground.voltage = 0
 	}
 
 	override def update(deltaTime: Double) {
-		if (mna == null) {
-			setupMNA()
-			generateConnectionMatrix()
-			resistorChanged = true
-			sourceChanged = true
-		}
+		if (junctions.size > 0) {
+			if (mna == null) {
+				setupMNA()
+				generateConnectionMatrix()
+				resistorChanged = true
+				sourceChanged = true
+			}
 
-		if (resistorChanged) {
-			generateConductanceMatrix()
-		}
+			if (resistorChanged) {
+				generateConductanceMatrix()
+			}
 
-		if (sourceChanged) {
-			computeSourceMatrix()
-		}
+			if (sourceChanged) {
+				computeSourceMatrix()
+			}
 
-		if (resistorChanged || sourceChanged) {
-			solve()
-		}
+			if (resistorChanged || sourceChanged) {
+				solve()
+			}
 
-		resistorChanged = false
-		sourceChanged = false
+			resistorChanged = false
+			sourceChanged = false
+		}
 	}
 
 	/**
