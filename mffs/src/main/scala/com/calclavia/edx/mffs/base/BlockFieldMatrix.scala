@@ -7,22 +7,21 @@ import com.calclavia.edx.mffs.api.modules.StructureProvider
 import com.calclavia.edx.mffs.content.Content
 import com.calclavia.edx.mffs.util.CacheHandler
 import com.resonant.core.structure.Structure
-import com.resonant.lib.RotationUtility
 import nova.core.component.transform.Orientation
 import nova.core.game.Game
 import nova.core.item.{Item, ItemFactory}
 import nova.core.network.Sync
 import nova.core.retention.Stored
-import nova.core.util.Direction
 import nova.core.util.transform.matrix.Quaternion
 import nova.core.util.transform.vector.Vector3i
+import nova.core.util.{Direction, RotationUtil}
 
 import scala.collection.convert.wrapAll._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
-abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix  with IPermissionProvider {
+abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with IPermissionProvider {
 	val _getModuleSlots = (14 until 25).toArray
 	protected val modeSlotID = 1
 
@@ -108,19 +107,6 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix  wit
 		}
 	}
 
-	/**
-	 * @return Gets the item that provides a shape
-	 */
-	def getShapeItem: Item with StructureProvider = {
-		val optional = inventory.get(modeSlotID)
-		if (optional.isPresent) {
-			if (optional.get().isInstanceOf[Item with StructureProvider]) {
-				return optional.asInstanceOf[Item with StructureProvider]
-			}
-		}
-		return null
-	}
-
 	protected def generateField = getExteriorPoints
 
 	/**
@@ -152,6 +138,19 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix  wit
 		return structure
 	}
 
+	/**
+	 * @return Gets the item that provides a shape
+	 */
+	def getShapeItem: Item with StructureProvider = {
+		val optional = inventory.get(modeSlotID)
+		if (optional.isPresent) {
+			if (optional.get().isInstanceOf[Item with StructureProvider]) {
+				return optional.asInstanceOf[Item with StructureProvider]
+			}
+		}
+		return null
+	}
+
 	def getScale = (getPositiveScale + getNegativeScale) / 2
 
 	def getPositiveScale: Vector3i =
@@ -168,8 +167,8 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix  wit
 			else {
 				val direction = get(classOf[Orientation]).orientation
 
-				zScalePos = getModuleCount(Content.moduleScale, getDirectionSlots(RotationUtility.getRelativeSide(direction, Direction.SOUTH)): _*)
-				xScalePos = getModuleCount(Content.moduleScale, getDirectionSlots(RotationUtility.getRelativeSide(direction, Direction.EAST)): _*)
+				zScalePos = getModuleCount(Content.moduleScale, getDirectionSlots(RotationUtil.getRelativeSide(direction, Direction.SOUTH)): _*)
+				xScalePos = getModuleCount(Content.moduleScale, getDirectionSlots(RotationUtil.getRelativeSide(direction, Direction.EAST)): _*)
 				yScalePos = getModuleCount(Content.moduleScale, getDirectionSlots(Direction.UP): _*)
 			}
 
@@ -181,8 +180,6 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix  wit
 
 			return new Vector3i(xScalePos, yScalePos, zScalePos)
 		})
-
-	def getModuleSlots: Array[Int] = _getModuleSlots
 
 	def getNegativeScale: Vector3i =
 		getOrSetCache("getNegativeScale", () => {
@@ -198,8 +195,8 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix  wit
 				yScaleNeg = getModuleCount(Content.moduleScale, getDirectionSlots(Direction.DOWN): _*)
 			}
 			else {
-				zScaleNeg = getModuleCount(Content.moduleScale, getDirectionSlots(RotationUtility.getRelativeSide(direction, Direction.NORTH)): _*)
-				xScaleNeg = getModuleCount(Content.moduleScale, getDirectionSlots(RotationUtility.getRelativeSide(direction, Direction.WEST)): _*)
+				zScaleNeg = getModuleCount(Content.moduleScale, getDirectionSlots(RotationUtil.getRelativeSide(direction, Direction.NORTH)): _*)
+				xScaleNeg = getModuleCount(Content.moduleScale, getDirectionSlots(RotationUtil.getRelativeSide(direction, Direction.WEST)): _*)
 				yScaleNeg = getModuleCount(Content.moduleScale, getDirectionSlots(Direction.DOWN): _*)
 			}
 
@@ -210,6 +207,8 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix  wit
 
 			return new Vector3i(xScaleNeg, yScaleNeg, zScaleNeg)
 		})
+
+	def getModuleSlots: Array[Int] = _getModuleSlots
 
 	def getTranslation: Vector3i =
 		getOrSetCache("getTranslation", () => {
@@ -232,42 +231,15 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix  wit
 				yTranslationNeg = getModuleCount(Content.moduleTranslate, getDirectionSlots(Direction.DOWN): _*)
 			}
 			else {
-				zTranslationNeg = getModuleCount(Content.moduleTranslate, getDirectionSlots(RotationUtility.getRelativeSide(direction, Direction.NORTH)): _*)
-				zTranslationPos = getModuleCount(Content.moduleTranslate, getDirectionSlots(RotationUtility.getRelativeSide(direction, Direction.SOUTH)): _*)
-				xTranslationNeg = getModuleCount(Content.moduleTranslate, getDirectionSlots(RotationUtility.getRelativeSide(direction, Direction.WEST)): _*)
-				xTranslationPos = getModuleCount(Content.moduleTranslate, getDirectionSlots(RotationUtility.getRelativeSide(direction, Direction.EAST)): _*)
+				zTranslationNeg = getModuleCount(Content.moduleTranslate, getDirectionSlots(RotationUtil.getRelativeSide(direction, Direction.NORTH)): _*)
+				zTranslationPos = getModuleCount(Content.moduleTranslate, getDirectionSlots(RotationUtil.getRelativeSide(direction, Direction.SOUTH)): _*)
+				xTranslationNeg = getModuleCount(Content.moduleTranslate, getDirectionSlots(RotationUtil.getRelativeSide(direction, Direction.WEST)): _*)
+				xTranslationPos = getModuleCount(Content.moduleTranslate, getDirectionSlots(RotationUtil.getRelativeSide(direction, Direction.EAST)): _*)
 				yTranslationPos = getModuleCount(Content.moduleTranslate, getDirectionSlots(Direction.UP): _*)
 				yTranslationNeg = getModuleCount(Content.moduleTranslate, getDirectionSlots(Direction.DOWN): _*)
 			}
 
 			return new Vector3i(xTranslationPos - xTranslationNeg, yTranslationPos - yTranslationNeg, zTranslationPos - zTranslationNeg)
-		})
-
-	def getRotation = Quaternion.fromEuler(Math.toRadians(getRotationYaw), Math.toRadians(getRotationPitch), 0)
-
-	/**
-	 * @return Gets the rotation yaw in degrees
-	 */
-	def getRotationYaw: Int =
-		getOrSetCache("getRotationYaw", () => {
-
-			var horizontalRotation = 0
-			val direction = get(classOf[Orientation]).orientation
-
-			if (this.absoluteDirection) {
-				horizontalRotation = getModuleCount(Content.moduleRotate, getDirectionSlots(Direction.EAST): _*) - getModuleCount(Content.moduleRotate, getDirectionSlots(Direction.WEST): _*) + getModuleCount(Content.moduleRotate, this.getDirectionSlots(Direction.SOUTH): _*) - this.getModuleCount(Content.moduleRotate, getDirectionSlots(Direction.NORTH): _*)
-			}
-			else {
-				horizontalRotation = getModuleCount(Content.moduleRotate, getDirectionSlots(RotationUtility.getRelativeSide(direction, Direction.EAST)): _*) - getModuleCount(Content.moduleRotate, getDirectionSlots(RotationUtility.getRelativeSide(direction, Direction.WEST)): _*) + this.getModuleCount(Content.moduleRotate, getDirectionSlots(RotationUtility.getRelativeSide(direction, Direction.SOUTH)): _*) - getModuleCount(Content.moduleRotate, getDirectionSlots(RotationUtility.getRelativeSide(direction, Direction.NORTH)): _*)
-			}
-
-			return horizontalRotation * 2
-		})
-
-	def getRotationPitch: Int =
-		getOrSetCache("getRotationPitch", () => {
-			val verticalRotation = getModuleCount(Content.moduleRotate, getDirectionSlots(Direction.UP): _*) - getModuleCount(Content.moduleRotate, getDirectionSlots(Direction.DOWN): _*)
-			return verticalRotation * 2
 		})
 
 	override def getDirectionSlots(direction: Direction): Array[Int] =
@@ -287,6 +259,33 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix  wit
 			case _ =>
 				Array[Int]()
 		}
+
+	def getRotation = Quaternion.fromEuler(Math.toRadians(getRotationYaw), Math.toRadians(getRotationPitch), 0)
+
+	/**
+	 * @return Gets the rotation yaw in degrees
+	 */
+	def getRotationYaw: Int =
+		getOrSetCache("getRotationYaw", () => {
+
+			var horizontalRotation = 0
+			val direction = get(classOf[Orientation]).orientation
+
+			if (this.absoluteDirection) {
+				horizontalRotation = getModuleCount(Content.moduleRotate, getDirectionSlots(Direction.EAST): _*) - getModuleCount(Content.moduleRotate, getDirectionSlots(Direction.WEST): _*) + getModuleCount(Content.moduleRotate, this.getDirectionSlots(Direction.SOUTH): _*) - this.getModuleCount(Content.moduleRotate, getDirectionSlots(Direction.NORTH): _*)
+			}
+			else {
+				horizontalRotation = getModuleCount(Content.moduleRotate, getDirectionSlots(RotationUtil.getRelativeSide(direction, Direction.EAST)): _*) - getModuleCount(Content.moduleRotate, getDirectionSlots(RotationUtil.getRelativeSide(direction, Direction.WEST)): _*) + this.getModuleCount(Content.moduleRotate, getDirectionSlots(RotationUtil.getRelativeSide(direction, Direction.SOUTH)): _*) - getModuleCount(Content.moduleRotate, getDirectionSlots(RotationUtil.getRelativeSide(direction, Direction.NORTH)): _*)
+			}
+
+			return horizontalRotation * 2
+		})
+
+	def getRotationPitch: Int =
+		getOrSetCache("getRotationPitch", () => {
+			val verticalRotation = getModuleCount(Content.moduleRotate, getDirectionSlots(Direction.UP): _*) - getModuleCount(Content.moduleRotate, getDirectionSlots(Direction.DOWN): _*)
+			return verticalRotation * 2
+		})
 
 	/**
 	 * Gets the number of modules in this block that are in specific slots

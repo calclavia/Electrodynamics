@@ -8,7 +8,6 @@ import com.calclavia.edx.electric.ElectricContent
 import com.calclavia.edx.electric.graph.NodeElectricJunction
 import com.calclavia.edx.electric.graph.api.Electric
 import com.calclavia.microblock.micro.{Microblock, MicroblockContainer}
-import com.resonant.lib.RotationUtility
 import nova.core.block.Block
 import nova.core.block.Block.{BlockPlaceEvent, RightClickEvent}
 import nova.core.block.component.StaticBlockRenderer
@@ -18,7 +17,7 @@ import nova.core.game.Game
 import nova.core.network.{Packet, PacketHandler, Sync}
 import nova.core.render.model.{BlockModelUtil, Model, StaticCubeTextureCoordinates}
 import nova.core.retention.{Storable, Stored}
-import nova.core.util.Direction
+import nova.core.util.{RotationUtil, Direction}
 import nova.core.util.transform.matrix.Quaternion
 import nova.core.util.transform.shape.Cuboid
 import nova.core.util.transform.vector.Vector3d
@@ -142,7 +141,7 @@ class BlockWire extends Block with Storable with PacketHandler {
 		var connections = Set.empty[Electric]
 
 		for (relativeSide <- 0 until 4) {
-			val absSide = RotationUtility.rotateSide(relativeSide, relativeSide)
+			val absSide = RotationUtil.rotateSide(relativeSide, relativeSide)
 
 			if (maskOpen(absSide)) {
 				if (!computeInnerConnection(relativeSide, absSide)) {
