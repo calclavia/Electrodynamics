@@ -8,7 +8,7 @@ import nova.core.block.Block
  * Wires will be treated as junctions and collapsed.
  * @author Calclavia
  */
-class NodeElectricJunction(parent: Block) extends com.calclavia.graph.api.energy.NodeElectricJunction(parent) with NodeAbstractElectric {
+class NodeElectricJunction(parent: Block) extends com.calclavia.graph.api.energy.NodeElectricJunction(parent) with TraitElectric {
 
 	override protected val block: Block = parent
 	var junction: Junction = null

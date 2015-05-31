@@ -18,7 +18,7 @@ import scala.collection.convert.wrapAll._
  *
  * @author Calclavia
  */
-class NodeElectricComponent(parent: Block) extends com.calclavia.graph.api.energy.NodeElectricComponent(parent) with NodeAbstractElectric {
+class NodeElectricComponent(parent: Block) extends com.calclavia.graph.api.energy.NodeElectricComponent(parent) with TraitElectric {
 
 	override protected val block: Block = parent
 

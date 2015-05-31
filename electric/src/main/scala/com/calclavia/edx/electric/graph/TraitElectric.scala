@@ -9,10 +9,13 @@ import scala.collection.convert.wrapAll._
 /**
  * @author Calclavia
  */
-trait NodeAbstractElectric extends NodeElectric with NodeBlockConnect[NodeElectric] with DebugInfo {
+trait TraitElectric extends NodeElectric with NodeBlockConnect[NodeElectric] {
 
 	protected[graph] var onResistanceChange = Seq.empty[(NodeElectric) => Unit]
+
 	private var _resistance = 1d
+
+	//Hook block events.
 
 	def resistance = _resistance
 
@@ -24,6 +27,4 @@ trait NodeAbstractElectric extends NodeElectric with NodeBlockConnect[NodeElectr
 	def getResistance = _resistance
 
 	def setResistance(res: Double) = _resistance = res
-
-	override def getDebugInfo = List(toString)
 }

@@ -31,7 +31,9 @@ public enum WireMaterial {
 	/**
 	 * Superconductor: Over-powered
 	 */
-	SUPERCONDUCTOR("Superconductor", 0, 10, 1000000, 0xFFFF01);
+	SUPERCONDUCTOR("Superconductor", 0, 10, 1000000, 0xFFFF01),
+
+	UNKNOWN("unknown", 0, 0, 0, 0);
 
 	public final String name;
 	public final float resistance;

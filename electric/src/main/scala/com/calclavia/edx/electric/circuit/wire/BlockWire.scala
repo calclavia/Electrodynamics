@@ -4,10 +4,9 @@ import java.lang.{Iterable => JIterable}
 import java.util.{Optional, Set => JSet}
 
 import com.calclavia.edx.core.CategoryEDX
-import com.calclavia.edx.core.component.Material
 import com.calclavia.edx.electric.ElectricContent
-import com.calclavia.graph.api.energy.NodeElectric
 import com.calclavia.edx.electric.graph.NodeElectricJunction
+import com.calclavia.graph.api.energy.NodeElectric
 import com.calclavia.microblock.micro.{Microblock, MicroblockContainer}
 import com.resonant.lib.util.RotationUtility
 import com.resonant.lib.wrapper.WrapFunctions._
@@ -93,13 +92,15 @@ class BlockWire extends Block with Storable with PacketHandler {
 	add(electricNode)
 		.setConnectionHandler(computeConnection)
 
-	add(new Microblock(this,
-		(evt: BlockPlaceEvent) => {
-			this.side = evt.side.opposite.ordinal.toByte
-			//TODO: Fix wire material
-			get(classOf[Material[WireMaterial]]).material = WireMaterial.COPPER
-			MicroblockContainer.sidePosition(Direction.fromOrdinal(this.side))
-		}))
+	add(new Microblock(this))
+		.setOnPlace(
+	    (evt: BlockPlaceEvent) => {
+		    this.side = evt.side.opposite.ordinal.toByte
+		    //TODO: Fix wire material
+		    get(classOf[MaterialWire]).material = WireMaterial.COPPER
+		    Optional.of(MicroblockContainer.sidePosition(Direction.fromOrdinal(this.side)))
+	    }
+		)
 
 	add(new Collider())
 		.setBoundingBox(() => {
@@ -109,7 +110,7 @@ class BlockWire extends Block with Storable with PacketHandler {
 		.isCube(false)
 		.isOpaqueCube(false)
 
-	add(new Material[WireMaterial])
+	add(new MaterialWire)
 
 	add(new StaticBlockRenderer(this))
 		.setOnRender(
@@ -117,7 +118,8 @@ class BlockWire extends Block with Storable with PacketHandler {
 		    get(classOf[Collider]).occlusionBoxes.apply(Optional.empty()).foreach(cuboid => {
 			    BlockModelUtil.drawCube(model, cuboid - 0.5, StaticCubeTextureCoordinates.instance)
 		    })
-		    model.foreach(_.faces.foreach(_.vertices.foreach(_.setColor(get(classOf[Material[WireMaterial]]).material.color))))
+
+		    model.faces.foreach(_.vertices.map(_.setColor(get(classOf[MaterialWire]).material.color)))
 		    model.bindAll(ElectricContent.wireTexture)
 	    }
 		)
