@@ -3,7 +3,7 @@ package com.calclavia.edx.mffs.field.structure
 import java.lang.Math.abs
 
 import com.resonant.core.structure.StructureCube
-import com.resonant.wrapper.core.debug.Profiler
+import nova.core.util.Profiler
 import nova.core.util.math.MathUtil._
 import nova.core.util.transform.vector.{Vector3d, Vector3i}
 import org.junit.Test
@@ -26,7 +26,7 @@ class ShapeTest {
 				assertThat(extStruct.size).isEqualTo(2 + (scale * scale * 4) * 6)
 				extStructProf.lap()
 			}
-			extStructProf.printAverage()
+			println(extStructProf.average)
 		}
 		/*
 		iterateSpace(5, v => {
@@ -53,7 +53,7 @@ class ShapeTest {
 				assertThat(extStruct.size).isEqualTo(4 * Math.PI * scale * scale)
 				extStructProf.lap()
 			}
-			extStructProf.printAverage()
+			println(extStructProf.average)
 		}
 	}
 

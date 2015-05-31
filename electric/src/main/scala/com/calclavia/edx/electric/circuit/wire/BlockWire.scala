@@ -47,16 +47,16 @@ object BlockWire {
 			val occlusion = new Cuboid(2 / 8D, 0, 2 / 8D, 6 / 8D, (t + 2) / 16D, 6 / 8D) - 0.5
 
 			for (s <- 0 until 6) {
-				val bound = s match {
-					case 0 => occlusion.transform(Quaternion.identity)
-					case 1 => occlusion.transform(Quaternion.fromAxis(Vector3d.xAxis, Math.PI))
-					case 2 => occlusion.transform(Quaternion.fromAxis(Vector3d.xAxis, Math.PI / 2))
-					case 3 => occlusion.transform(Quaternion.fromAxis(Vector3d.xAxis, -Math.PI / 2))
-					case 4 => occlusion.transform(Quaternion.fromAxis(Vector3d.zAxis, -Math.PI / 2))
-					case 5 => occlusion.transform(Quaternion.fromAxis(Vector3d.zAxis, Math.PI / 2))
+				val rot = s match {
+					case 0 => Quaternion.identity
+					case 1 => Quaternion.fromAxis(Vector3d.xAxis, Math.PI)
+					case 2 => Quaternion.fromAxis(Vector3d.xAxis, Math.PI / 2)
+					case 3 => Quaternion.fromAxis(Vector3d.xAxis, -Math.PI / 2)
+					case 4 => Quaternion.fromAxis(Vector3d.zAxis, -Math.PI / 2)
+					case 5 => Quaternion.fromAxis(Vector3d.zAxis, Math.PI / 2)
 				}
-				selectionBounds(t)(s) = new Cuboid(bound.min.min(bound.max), bound.max.max(bound.min))
-				occlusionBounds(t)(s) = new Cuboid(bound.min.min(bound.max), bound.max.max(bound.min))
+				selectionBounds(t)(s) = occlusion.transform(rot)
+				occlusionBounds(t)(s) = occlusion.transform(rot)
 			}
 		}
 	}
