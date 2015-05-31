@@ -1,7 +1,8 @@
 package com.calclavia.edx.mffs.item.card
 
 import com.calclavia.edx.mffs.api.card.CoordLink
-import com.resonant.lib.wrapper.WrapFunctions._
+import com.resonant.lib.WrapFunctions
+import WrapFunctions._
 import nova.core.game.Game
 import nova.core.item.Item.{TooltipEvent, UseEvent}
 import nova.core.retention.{Storable, Stored}

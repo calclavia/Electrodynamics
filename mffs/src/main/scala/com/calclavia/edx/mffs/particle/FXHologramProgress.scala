@@ -2,7 +2,8 @@ package com.calclavia.edx.mffs.particle
 
 import com.calclavia.edx.mffs.content.Textures
 import com.resonant.core.prefab.block.Updater
-import com.resonant.lib.wrapper.WrapFunctions._
+import com.resonant.lib.WrapFunctions
+import WrapFunctions._
 import nova.core.component.renderer.DynamicRenderer
 import nova.core.render.Color
 import nova.core.render.model.{BlockModelUtil, Model}

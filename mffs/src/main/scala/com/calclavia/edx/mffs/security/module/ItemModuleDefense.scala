@@ -1,7 +1,8 @@
 package com.calclavia.edx.mffs.security.module
 
 import com.calclavia.edx.mffs.base.ItemModule
-import com.resonant.lib.wrapper.WrapFunctions._
+import com.resonant.lib.WrapFunctions
+import WrapFunctions._
 import nova.core.game.Game
 import nova.core.item.Item.TooltipEvent
 

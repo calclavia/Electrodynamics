@@ -1,6 +1,7 @@
 package com.calclavia.edx.mffs.particle
 
 import com.calclavia.edx.mffs.content.Textures
+import com.resonant.lib.WrapFunctions
 import nova.core.component.renderer.DynamicRenderer
 import nova.core.entity.component.RigidBody
 import nova.core.render.Color
@@ -8,7 +9,7 @@ import nova.core.render.model.{BlockModelUtil, Model}
 import nova.core.util.transform.vector.Vector3d
 
 import scala.collection.convert.wrapAll._
-import com.resonant.lib.wrapper.WrapFunctions._
+import WrapFunctions._
 class FXHologram(color: Color, maxAge: Double) extends FXMFFS {
 	var age = 0d
 	private var targetPosition: Vector3d = null

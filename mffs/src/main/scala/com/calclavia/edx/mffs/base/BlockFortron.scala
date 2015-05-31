@@ -6,7 +6,8 @@ import com.calclavia.edx.mffs.GraphFrequency
 import com.calclavia.edx.mffs.api.fortron.FortronFrequency
 import com.calclavia.edx.mffs.util.{FortronUtility, TransferMode}
 import com.resonant.core.prefab.block.Updater
-import com.resonant.lib.wrapper.WrapFunctions._
+import com.resonant.lib.WrapFunctions
+import WrapFunctions._
 import nova.core.block.Block
 import nova.core.block.Stateful.UnloadEvent
 import nova.core.event.EventBus

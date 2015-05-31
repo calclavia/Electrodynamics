@@ -6,7 +6,8 @@ import com.calclavia.edx.mffs.GraphFrequency
 import com.calclavia.edx.mffs.api.Frequency
 import com.calclavia.edx.mffs.item.card.ItemCardFrequency
 import com.resonant.core.prefab.block.InventorySimpleProvider
-import com.resonant.lib.wrapper.WrapFunctions._
+import com.resonant.lib.WrapFunctions
+import WrapFunctions._
 import nova.core.block.Stateful.{LoadEvent, UnloadEvent}
 import nova.core.item.Item
 

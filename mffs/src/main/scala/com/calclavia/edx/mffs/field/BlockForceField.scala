@@ -8,7 +8,8 @@ import com.calclavia.edx.mffs.api.modules.Module
 import com.calclavia.edx.mffs.content.{Content, Textures}
 import com.calclavia.edx.mffs.security.MFFSPermissions
 import com.calclavia.edx.mffs.util.MFFSUtility
-import com.resonant.lib.wrapper.WrapFunctions._
+import com.resonant.lib.WrapFunctions
+import WrapFunctions._
 import nova.core.block.component.{LightEmitter, StaticBlockRenderer}
 import nova.core.block.{Block, BlockDefault}
 import nova.core.component.misc.Collider.CollideEvent

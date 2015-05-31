@@ -1,6 +1,7 @@
 package com.calclavia.edx.mffs.particle
 
 import com.resonant.core.prefab.block.Updater
+import com.resonant.lib.WrapFunctions
 import nova.core.component.renderer.DynamicRenderer
 import nova.core.entity.Entity
 import nova.core.render.Color
@@ -10,7 +11,7 @@ import nova.core.util.transform.vector.Vector3d
 
 import scala.beans.BeanProperty
 import scala.collection.convert.wrapAll._
-import com.resonant.lib.wrapper.WrapFunctions._
+import WrapFunctions._
 /**
  * MFFS Beam Renderer.
  * @author Calclavia, Azanor

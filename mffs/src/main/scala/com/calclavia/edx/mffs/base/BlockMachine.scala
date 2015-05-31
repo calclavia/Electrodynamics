@@ -5,7 +5,8 @@ import java.util.Optional
 import com.calclavia.edx.mffs.api.machine.IActivatable
 import com.calclavia.edx.mffs.content.Textures
 import com.calclavia.minecraft.redstone.Redstone
-import com.resonant.lib.wrapper.WrapFunctions._
+import com.resonant.lib.WrapFunctions
+import WrapFunctions._
 import com.resonant.wrapper.core.Placeholder
 import nova.core.block.Block.RightClickEvent
 import nova.core.block.component.StaticBlockRenderer

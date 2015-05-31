@@ -8,7 +8,8 @@ import com.calclavia.edx.mffs.api.machine.Projector
 import com.calclavia.edx.mffs.content.Content
 import com.calclavia.edx.mffs.util.CacheHandler
 import com.resonant.core.structure.{Structure, StructureCustom}
-import com.resonant.lib.wrapper.WrapFunctions._
+import com.resonant.lib.WrapFunctions
+import WrapFunctions._
 import nova.core.game.Game
 import nova.core.gui.KeyManager.Key
 import nova.core.item.Item.{RightClickEvent, TooltipEvent, UseEvent}

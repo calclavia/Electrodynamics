@@ -3,8 +3,8 @@ package com.calclavia.edx.mffs
 import com.calclavia.edx.mffs.api.fortron.Fortron
 import com.calclavia.edx.mffs.content.{Content, Models, Textures}
 import com.calclavia.edx.mffs.security.MFFSPermissions
-import com.resonant.lib.misc.MovementManager
-import com.resonant.lib.wrapper.WrapFunctions._
+import com.resonant.lib.{WrapFunctions, MovementManager}
+import WrapFunctions._
 import nova.core.event.EventManager.{BlockChangeEvent, EmptyEvent}
 import nova.core.fluid.Fluid
 import nova.core.game.Game

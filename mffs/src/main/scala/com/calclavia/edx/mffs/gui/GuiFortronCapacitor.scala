@@ -1,7 +1,8 @@
 package com.calclavia.edx.mffs.gui
 
 import com.calclavia.edx.mffs.production.BlockFortronCapacitor
-import com.resonant.lib.wrapper.WrapFunctions._
+import com.resonant.lib.WrapFunctions
+import WrapFunctions._
 import com.resonant.wrapper.lib.utility.science.UnitDisplay
 import nova.core.game.Game
 import nova.core.gui.ComponentEvent.ActionEvent

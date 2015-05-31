@@ -11,7 +11,8 @@ import com.calclavia.edx.mffs.field.shape.ItemShapeCustom
 import com.calclavia.edx.mffs.particle.{FXFortronBeam, FXHologramProgress, FieldColor}
 import com.calclavia.edx.mffs.security.PermissionHandler
 import com.calclavia.edx.mffs.util.CacheHandler
-import com.resonant.lib.wrapper.WrapFunctions._
+import com.resonant.lib.WrapFunctions
+import WrapFunctions._
 import nova.core.block.Block
 import nova.core.block.Stateful.UnloadEvent
 import nova.core.block.component.{LightEmitter, StaticBlockRenderer}
