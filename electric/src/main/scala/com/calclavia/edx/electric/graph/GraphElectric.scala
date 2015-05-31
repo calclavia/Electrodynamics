@@ -4,7 +4,7 @@ import com.calclavia.edx.electric.graph.api.Electric
 import com.calclavia.graph.graph.GraphConnect
 import com.calclavia.edx.electric.graph.component.{Junction, VirtualJunction}
 import com.resonant.core.prefab.block.Updater
-import com.resonant.lib.math.matrix.AdjacencyMatrix
+import com.calclavia.graph.matrix.AdjacencyMatrix
 import nova.core.game.Game
 import nova.core.util.transform.matrix.Matrix
 
