@@ -1,6 +1,9 @@
 package com.calclavia.edx.electric
 
 import com.calclavia.edx.core.Reference
+import com.calclavia.edx.electric.graph.NodeElectricComponent
+import nova.core.block.Block
+import nova.core.game.Game
 import nova.core.loader.{Loadable, NovaMod}
 
 @NovaMod(
@@ -39,6 +42,19 @@ object Electric extends Loadable {
 
 	override def preInit() {
 		ElectricContent.preInit()
+
+		/*
+		//TODO: -1000 style points
+		Game.instance.componentManager.register(args -> args.length > 0 ? new NodeElectricComponent((Block) args[ 0] ): new NodeElectricComponent(new Block() {
+			override def getID: String = "dummy"
+		}))
+
+		Game.instance.componentManager.register(args -> args.length > 0 ? new NodeElectricJunction((Block) args[ 0] ): new NodeElectricJunction(new Block() {
+			@Override
+			public String getID() {
+				return "dummy";
+			}
+		}))*/
 
 		/*
 		tierOneBattery = ItemBlockBattery.setTier(new ItemStack(ElectricalContent.blockBattery, 1, 0), 0)

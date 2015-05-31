@@ -1,13 +1,13 @@
 package com.calclavia.edx.electric.circuit.wire;
 
+import nova.core.render.Color;
+
 /**
  * An enumerator for different wire materials. The metadata of the wire determines the componentType of the
  * wire.
- *
  * @author Calclavia
  */
-public enum WireMaterial
-{
+public enum WireMaterial {
 	/**
 	 * Copper: General.
 	 */
@@ -37,15 +37,14 @@ public enum WireMaterial
 	public final float resistance;
 	public final int damage;
 	public final long maxCurrent;
-	public final int color;
+	public final Color color;
 
-	private WireMaterial(String name, float resistance, int damage, long maxCurrent, int color)
-	{
+	private WireMaterial(String name, float resistance, int damage, long maxCurrent, int color) {
 		this.name = name;
 		this.resistance = resistance;
 		this.damage = damage;
 		this.maxCurrent = maxCurrent;
-		this.color = color;
+		this.color = Color.rgb(color);
 	}
 
 }
