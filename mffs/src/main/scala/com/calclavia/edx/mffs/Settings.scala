@@ -1,7 +1,5 @@
 package com.calclavia.edx.mffs
 
-import nova.core.util.Config
-
 /**
  * MFFS Configuration Settings
  *
@@ -9,40 +7,40 @@ import nova.core.util.Config
  */
 object Settings {
 	final val maxFrequencyDigits: Int = 8
-	@Config
+	//@Config
 	var maxForceFieldsPerTick: Int = 5000
-	@Config
+	//@Config
 	var maxForceFieldScale: Int = 200
-	@Config
+	//@Config
 	var fortronProductionMultiplier: Double = 1
-	@Config(comment = "Should the interdiction matrix interact with creative players?.")
+	//@Config(comment = "Should the interdiction matrix interact with creative players?.")
 	var interdictionInteractCreative: Boolean = true
-	@Config(comment = "Set this to false to turn off the MFFS Chunkloading capabilities.")
+	//@Config(comment = "Set this to false to turn off the MFFS Chunkloading capabilities.")
 	var loadFieldChunks: Boolean = true
-	@Config(comment = "Allow the operator(s) to override security measures created by MFFS?")
+	//@Config(comment = "Allow the operator(s) to override security measures created by MFFS?")
 	var allowOpOverride: Boolean = true
-	@Config(comment = "Cache allows temporary data saving to decrease calculations required.")
+	//@Config(comment = "Cache allows temporary data saving to decrease calculations required.")
 	var useCache: Boolean = true
-	@Config(comment = "Turning this to false will make MFFS run without electricity or energy systems required. Great for vanilla!")
+	//@Config(comment = "Turning this to false will make MFFS run without electricity or energy systems required. Great for vanilla!")
 	var enableElectricity: Boolean = true
-	@Config(comment = "Turning this to false will enable better client side packet and updates but in the cost of more packets sent.")
+	//@Config(comment = "Turning this to false will enable better client side packet and updates but in the cost of more packets sent.")
 	var conservePackets: Boolean = true
-	@Config(comment = "Turning this to false will reduce rendering and client side packet graphical packets.")
+	//@Config(comment = "Turning this to false will reduce rendering and client side packet graphical packets.")
 	var highGraphics: Boolean = true
-	@Config(comment = "The energy required to perform a kill for the interdiction matrix.")
+	//@Config(comment = "The energy required to perform a kill for the interdiction matrix.")
 	var interdictionMatrixMurderEnergy: Int = 0
-	@Config(comment = "The maximum range for the interdiction matrix.")
+	//@Config(comment = "The maximum range for the interdiction matrix.")
 	var interdictionMatrixMaxRange: Int = Integer.MAX_VALUE
-	@Config
+	//@Config
 	var enableForceManipulator: Boolean = true
-	@Config
+	//@Config
 	var allowForceManipulatorTeleport: Boolean = true
-	@Config
+	//@Config
 	var allowFortronTeleport: Boolean = true
-	@Config(comment = "A list of block names to not be moved by the force mobilizer.")
+	//@Config(comment = "A list of block names to not be moved by the force mobilizer.")
 	var mobilizerBlacklist: Array[String] = _
-	@Config(comment = "A list of block names to not be stabilized by the electromagnetic projector.")
+	//@Config(comment = "A list of block names to not be stabilized by the electromagnetic projector.")
 	var stabilizationBlacklist: Array[String] = _
-	@Config(comment = "A list of block names to not be disintegrated by the electromagnetic projector.")
+	//@Config(comment = "A list of block names to not be disintegrated by the electromagnetic projector.")
 	var disintegrationBlacklist: Array[String] = _
 }

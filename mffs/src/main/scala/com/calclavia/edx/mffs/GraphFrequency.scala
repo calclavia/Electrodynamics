@@ -4,7 +4,7 @@ import java.util.{List => JList}
 
 import com.calclavia.edx.mffs.api.Frequency
 import com.calclavia.edx.mffs.api.fortron.IServerThread
-import com.calclavia.graph.api.graph.Graph
+import com.calclavia.graph.graph.Graph
 
 import scala.collection.convert.wrapAll._
 

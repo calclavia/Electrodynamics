@@ -1,7 +1,7 @@
 package com.calclavia.edx.electric.graph
 
 import com.calclavia.edx.electric.graph.api.Electric
-import com.calclavia.graph.core.base.NodeBlockConnect
+import com.calclavia.graph.node.BlockConnectable
 import com.resonant.lib.wrapper.WrapFunctions._
 import nova.core.block.Block
 import nova.core.block.Stateful.LoadEvent
@@ -11,7 +11,7 @@ import nova.core.component.Component
  * A class extended by all electric nodes.
  * @author Calclavia
  */
-abstract class NodeElectric(val provider: Block) extends Component with NodeBlockConnect[Electric] with Electric {
+abstract class NodeElectric(val provider: Block) extends Component with BlockConnectable[Electric] with Electric {
 
 	protected[graph] var onResistanceChange = Seq.empty[(Electric) => Unit]
 

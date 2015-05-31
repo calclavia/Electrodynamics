@@ -1,6 +1,6 @@
 package com.calclavia.edx.api.energy
 
-import com.calclavia.graph.api.Node
+import com.calclavia.graph.node.Node
 
 /**
  * Applied to any node that will act as a mechanical object

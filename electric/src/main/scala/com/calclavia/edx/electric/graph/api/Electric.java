@@ -1,6 +1,6 @@
 package com.calclavia.edx.electric.graph.api;
 
-import com.calclavia.graph.api.Node;
+import com.calclavia.graph.node.Node;
 
 /**
  * An abstract interface extended by NodeElectricComponent and NodeElectricJunction.

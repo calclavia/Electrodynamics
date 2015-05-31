@@ -1,7 +1,7 @@
 package com.calclavia.edx.electric.graph
 
 import com.calclavia.edx.electric.graph.api.Electric
-import com.calclavia.graph.core.base.GraphConnect
+import com.calclavia.graph.graph.GraphConnect
 import com.calclavia.edx.electric.graph.component.{Junction, VirtualJunction}
 import com.resonant.core.prefab.block.Updater
 import com.resonant.lib.math.matrix.AdjacencyMatrix

@@ -90,7 +90,7 @@ class BlockWire extends Block with Storable with PacketHandler {
 	 * Add components
 	 */
 	add(electricNode)
-		.setConnectionHandler(computeConnection)
+		.setConnections(() => computeConnection)
 
 	add(new Microblock(this))
 		.setOnPlace(
@@ -137,7 +137,7 @@ class BlockWire extends Block with Storable with PacketHandler {
 	/**
 	 * Return the connections the block currently is connected to
 	 */
-	def computeConnection(): JSet[Electric] = {
+	def computeConnection: Set[Electric] = {
 		//The new 8-bit connection mask
 		var newConnectionMask = 0x00000000
 		var connections = Set.empty[Electric]
