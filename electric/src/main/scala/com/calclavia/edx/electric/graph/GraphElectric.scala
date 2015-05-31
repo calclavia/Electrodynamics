@@ -1,6 +1,6 @@
 package com.calclavia.edx.electric.graph
 
-import com.calclavia.graph.api.energy.NodeElectric
+import com.calclavia.edx.electric.graph.api.Electric
 import com.calclavia.graph.core.base.GraphConnect
 import com.calclavia.edx.electric.graph.component.{Junction, VirtualJunction}
 import com.resonant.core.prefab.block.Updater
@@ -17,7 +17,7 @@ import scala.collection.convert.wrapAll._
  *
  * @author Calclavia
  */
-class GraphElectric extends GraphConnect[NodeElectric] with Updater {
+class GraphElectric extends GraphConnect[Electric] with Updater {
 
 	// There should always at least (node.size - 1) amount of junctions.
 	var junctions = List.empty[Junction]
@@ -39,14 +39,14 @@ class GraphElectric extends GraphConnect[NodeElectric] with Updater {
 	//The component-junction matrix. Rows are from, columns are to. In the directed graph the arrow points from positive to negative in potential difference.
 	protected var terminalMatrix: AdjacencyMatrix[AnyRef] = null
 
-	override def add(node: NodeElectric) {
+	override def add(node: Electric) {
 		super.add(node)
 
 		node match {
 			case node: NodeElectricComponent =>
-				node.onResistanceChange :+= ((resistor: NodeElectric) => resistorChanged = true)
-				node.onSetVoltage :+= ((source: NodeElectric) => sourceChanged = true)
-				node.onSetCurrent :+= ((source: NodeElectric) => sourceChanged = true)
+				node.onResistanceChange :+= ((resistor: Electric) => resistorChanged = true)
+				node.onSetVoltage :+= ((source: Electric) => sourceChanged = true)
+				node.onSetCurrent :+= ((source: Electric) => sourceChanged = true)
 			case _ =>
 		}
 	}
@@ -82,12 +82,12 @@ class GraphElectric extends GraphConnect[NodeElectric] with Updater {
 
 		nodes.foreach {
 			case node: NodeElectricComponent =>
-				for (con <- node.positives) {
+				for (con <- node.positiveConnections()) {
 					if (nodes.contains(con)) {
 						con match {
 							case component: NodeElectricComponent =>
 								//Check if the "component" is negatively connected to the current node
-								if (component.negatives.contains(node)) {
+								if (component.negativeConnections().contains(node)) {
 									adjMat(node, component) = true
 									//This component is connected to another component. Create virtual junctions between them.
 									var junction = new VirtualJunction

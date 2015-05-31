@@ -6,7 +6,7 @@ import java.util.{Optional, Set => JSet}
 import com.calclavia.edx.core.CategoryEDX
 import com.calclavia.edx.electric.ElectricContent
 import com.calclavia.edx.electric.graph.NodeElectricJunction
-import com.calclavia.graph.api.energy.NodeElectric
+import com.calclavia.edx.electric.graph.api.Electric
 import com.calclavia.microblock.micro.{Microblock, MicroblockContainer}
 import com.resonant.lib.util.RotationUtility
 import com.resonant.lib.wrapper.WrapFunctions._
@@ -137,10 +137,10 @@ class BlockWire extends Block with Storable with PacketHandler {
 	/**
 	 * Return the connections the block currently is connected to
 	 */
-	def computeConnection(): JSet[NodeElectric] = {
+	def computeConnection(): JSet[Electric] = {
 		//The new 8-bit connection mask
 		var newConnectionMask = 0x00000000
-		var connections = Set.empty[NodeElectric]
+		var connections = Set.empty[Electric]
 
 		for (relativeSide <- 0 until 4) {
 			val absSide = RotationUtility.rotateSide(relativeSide, relativeSide)
@@ -166,10 +166,10 @@ class BlockWire extends Block with Storable with PacketHandler {
 		 * @return True if a connection is found
 		 */
 		def computeInnerConnection(relativeSide: Int, absSide: Int): Boolean = {
-			val opMicroblock = get(classOf[MicroblockContainer]).get(absSide)
+			val opMicroblock = get(classOf[Microblock]).containers.head.get(Direction.fromOrdinal(absSide))
 			if (opMicroblock.isPresent) {
 				val otherMicroblock = opMicroblock.get()
-				val opElectric = otherMicroblock.block.getOp(classOf[NodeElectric])
+				val opElectric = otherMicroblock.block.getOp(classOf[Electric])
 
 				if (opElectric.isPresent) {
 					connections += opElectric.get
@@ -197,7 +197,7 @@ class BlockWire extends Block with Storable with PacketHandler {
 					//Try to find the microblock that is has the component NodeElectric
 					val opMicroblock = opMicroblockHolder.get().get(this.side)
 					if (opMicroblock.isPresent) {
-						val opElectric = opMicroblock.get.block.getOp(classOf[NodeElectric])
+						val opElectric = opMicroblock.get.block.getOp(classOf[Electric])
 
 						if (opElectric.isPresent) {
 							connections += opElectric.get
@@ -208,7 +208,7 @@ class BlockWire extends Block with Storable with PacketHandler {
 				}
 
 				//A microblock is not present. Try checking if the block is electric
-				val opElectric = checkBlock.get.getOp(classOf[NodeElectric])
+				val opElectric = checkBlock.get.getOp(classOf[Electric])
 
 				if (opElectric.isPresent) {
 					connections += opElectric.get
@@ -238,7 +238,7 @@ class BlockWire extends Block with Storable with PacketHandler {
 					//We look for opposite of the side we are checking, as the block has to be flat placed onto the same block this wire is flat-placed on.
 					val opMicroblock = opMicroblockHolder.get().get(absSide ^ -1)
 					if (opMicroblock.isPresent) {
-						val opElectric = opMicroblock.get.block.getOp(classOf[NodeElectric])
+						val opElectric = opMicroblock.get.block.getOp(classOf[Electric])
 
 						if (opElectric.isPresent) {
 							connections += opElectric.get
@@ -256,7 +256,8 @@ class BlockWire extends Block with Storable with PacketHandler {
 		 */
 		def maskOpen(absSide: Int): Boolean = {
 			//Check bounding space (cuboid)
-			return get(classOf[MicroblockContainer]).get(absSide).isPresent
+			//TODO:Multiple containers?
+			return get(classOf[Microblock]).containers.head.get(absSide).isPresent
 		}
 
 		return connections

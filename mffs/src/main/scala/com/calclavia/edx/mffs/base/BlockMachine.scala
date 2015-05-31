@@ -10,6 +10,7 @@ import com.resonant.wrapper.core.Placeholder
 import nova.core.block.Block.RightClickEvent
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.block.{BlockDefault, Stateful}
+import nova.core.component.Component
 import nova.core.component.misc.Collider
 import nova.core.component.renderer.ItemRenderer
 import nova.core.component.transform.Orientation
@@ -46,7 +47,7 @@ abstract class BlockMachine extends BlockDefault with PacketHandler with IActiva
 			setActive(false)
 	})
 	add(new CategoryMFFS)
-	add(redstoneNode)
+	add(redstoneNode.asInstanceOf[Component])
 	add(new ItemRenderer(this))
 	add(new StaticBlockRenderer(this))
 		.setTexture(func((side: Direction) => Optional.of(Textures.machine)))

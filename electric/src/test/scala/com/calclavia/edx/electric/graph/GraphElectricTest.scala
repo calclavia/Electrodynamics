@@ -2,13 +2,13 @@ package com.calclavia.edx.electric.graph
 
 import java.util
 
-import com.calclavia.graph.api.energy.NodeElectric
-import nova.core.util.{Direction, Profiler}
+import com.calclavia.edx.electric.graph.api.Electric
+import nova.core.util.Profiler
+import nova.testutils.FakeBlock
 import org.junit.Assert._
 import org.junit.Test
 
 import scala.collection.convert.wrapAll._
-import scala.collection.mutable
 
 /**
  * @author Calclavia
@@ -137,9 +137,59 @@ class GraphElectricTest {
 	}
 
 	/**
+	 * Graph 2.
+	 * Series circuit with more than one node.
+	 */
+	@Test
+	def testSolve2() {
+		val profilerGen = new Profiler("Generate graph 2")
+
+		val graph = new GraphElectric
+
+		val battery = new DummyComponent()
+		val wire1 = new DummyWire()
+		val wire2 = new DummyWire()
+		val resistor1 = new DummyComponent()
+		val wire3 = new DummyWire()
+		val resistor2 = new DummyComponent()
+		resistor2.setResistance(2)
+		val wire4 = new DummyWire()
+
+		battery.connectNeg(wire4)
+		val components = connectInSeries(battery, wire1, wire2, resistor1, wire3, resistor2, wire4)
+		wire4.connect(battery)
+
+		components.foreach(graph.add)
+		println(profilerGen)
+
+		graph.buildAll()
+		val profiler = new Profiler("Solving graph 2")
+
+		for (trial <- 1 to 1000) {
+			val voltage = trial * 10d * Math.random()
+			battery.setVoltage(voltage)
+			graph.update(profiler.elapsed)
+
+			val current = voltage / 3d
+			//Test battery
+			assertEquals(voltage, battery.voltage, error)
+			assertEquals(current, battery.current, error)
+			//Test resistor1
+			assertEquals(voltage / 3, resistor1.voltage, error)
+			assertEquals(current, resistor1.current, error)
+			//Test resistor2
+			assertEquals(voltage * 2 / 3, resistor2.voltage, error)
+			assertEquals(current, resistor2.current, error)
+			profiler.lap()
+		}
+
+		print(profiler.average())
+	}
+
+	/**
 	 * Connects a sequence of electric nodes in series excluding the first and last connection.
 	 */
-	def connectInSeries(series: NodeElectric*): Seq[NodeElectric] = {
+	def connectInSeries(series: Electric*): Seq[Electric] = {
 		series.zipWithIndex.foreach {
 			case (component: DummyComponent, index) =>
 				index match {
@@ -365,30 +415,33 @@ class GraphElectricTest {
 		}
 	}
 
-	class DummyComponent extends NodeElectricComponent(null) {
-		connectedMap = mutable.Map.empty[NodeElectric, Direction]
+	class DummyComponent extends NodeElectricComponent(new FakeBlock("dummy")) {
+		var positives = Set.empty[Electric]
+		var negatives = Set.empty[Electric]
 
-		def connectPos(nodeElectricComponent: NodeElectric) {
-			connectedMap += (nodeElectricComponent -> Direction.NORTH)
-			setPositives(Direction.NORTH)
+		setPositiveConnections(() => positives)
+		setNegativeConnections(() => negatives)
+
+		def connectPos(electric: Electric) {
+			positives += electric
 		}
 
-		def connectNeg(nodeElectricComponent: NodeElectric) {
-			connectedMap += (nodeElectricComponent -> Direction.SOUTH)
-			setNegatives(Direction.SOUTH)
+		def connectNeg(electric: Electric) {
+			negatives += electric
 		}
 
-		override def connections(): util.Set[NodeElectric] = connectedMap.keySet()
+		override def connections: util.Set[Electric] = positives ++ negatives
 	}
 
-	class DummyWire extends NodeElectricJunction(null) {
-		connectedMap = mutable.Map.empty[NodeElectric, Direction]
+	class DummyWire extends NodeElectricJunction(new FakeBlock("dummy")) {
 
-		def connect(nodeElectricComponent: NodeElectric) {
-			connectedMap += (nodeElectricComponent -> Direction.UNKNOWN)
+		var _connections = Set.empty[Electric]
+
+		def connect(electric: Electric) {
+			_connections += electric
 		}
 
-		override def connections(): util.Set[NodeElectric] = connectedMap.keySet()
+		override def connections: util.Set[Electric] = _connections
 	}
 
 }

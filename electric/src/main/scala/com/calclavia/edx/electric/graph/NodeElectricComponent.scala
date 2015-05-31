@@ -1,11 +1,10 @@
 package com.calclavia.edx.electric.graph
 
+import java.util.function.Supplier
 import java.util.{Set => JSet}
 
-import com.calclavia.graph.api.energy.NodeElectric
-import com.resonant.wrapper.lib.wrapper.BitmaskWrapper._
+import com.calclavia.edx.electric.graph.api.{Electric, ElectricComponent}
 import nova.core.block.Block
-import nova.core.util.Direction
 
 import scala.collection.convert.wrapAll._
 
@@ -18,9 +17,7 @@ import scala.collection.convert.wrapAll._
  *
  * @author Calclavia
  */
-class NodeElectricComponent(parent: Block) extends com.calclavia.graph.api.energy.NodeElectricComponent(parent) with TraitElectric {
-
-	override protected val block: Block = parent
+class NodeElectricComponent(parent: Block) extends NodeElectric(parent) with ElectricComponent {
 
 	/**
 	 * The current and voltage values are set are determined by the DC Grid
@@ -34,54 +31,33 @@ class NodeElectricComponent(parent: Block) extends com.calclavia.graph.api.energ
 	 */
 	protected[graph] var genVoltage = 0d
 	protected[graph] var genCurrent = 0d
-	protected[graph] var onSetVoltage = Seq.empty[NodeElectric => Unit]
-	protected[graph] var onSetCurrent = Seq.empty[NodeElectric => Unit]
+	protected[graph] var onSetVoltage = Seq.empty[Electric => Unit]
+	protected[graph] var onSetCurrent = Seq.empty[Electric => Unit]
 
 	/**
-	 * The positive terminals are the directions in which charge can flow out of this electric component.
-	 * Positive and negative terminals must be mutually exclusive.
-	 *
-	 * The mask is a 6 bit data each storing a specific side value
+	 * The positive terminal connections
 	 */
-	private var positiveMask = 0
+	protected[graph] var positiveConnections = () => Set.empty[Electric]
+
 	/**
-	 * The negative terminals are the directions in which charge can flow into this electric component.
-	 * Positive and negative terminals must be mutually exclusive.
-	 *
-	 * The mask is a 6 bit data each storing a specific side value
+	 * The negative terminal connections
 	 */
-	private var negativeMask = 0
+	protected[graph] var negativeConnections = () => Set.empty[Electric]
 
-	def positives: JSet[NodeElectric] = connectedMap.filter(keyVal => positiveMask.mask(keyVal._2)).keySet
-
-	def negatives: JSet[NodeElectric] = connectedMap.filter(keyVal => negativeMask.mask(keyVal._2)).keySet
-
-	def setPositive(dir: Direction, open: Boolean = true) {
-		positiveMask = positiveMask.mask(dir, open)
-		negativeMask &= ~positiveMask
-		connectionMask = positiveMask | negativeMask
+	override def setPositiveConnections(supplier: Supplier[JSet[Electric]]) {
+		positiveConnections = () => supplier.get().toSet
 	}
 
-	def setNegative(dir: Direction, open: Boolean = true) {
-		negativeMask = negativeMask.mask(dir, open)
-		positiveMask &= ~negativeMask
-		connectionMask = positiveMask | negativeMask
+	override def setNegativeConnections(supplier: Supplier[JSet[Electric]]) {
+		negativeConnections = () => supplier.get().toSet
 	}
 
-	override def setPositives(dirs: Direction*) {
-		positiveMask = 0
-
-		dirs.foreach(dir => positiveMask = positiveMask.mask(dir, true))
-		negativeMask &= ~positiveMask
-		connectionMask = positiveMask | negativeMask
+	def setPositiveConnections(supplier: () => Set[Electric]) {
+		positiveConnections = supplier
 	}
 
-	override def setNegatives(dirs: Direction*) {
-		negativeMask = 0
-
-		dirs.foreach(dir => negativeMask = negativeMask.mask(dir, true))
-		positiveMask &= ~negativeMask
-		connectionMask = positiveMask | negativeMask
+	def setNegativeConnections(supplier: () => Set[Electric]) {
+		negativeConnections = supplier
 	}
 
 	/**
