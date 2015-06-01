@@ -11,7 +11,7 @@ import com.resonant.core.structure.{Structure, StructureCustom}
 import com.resonant.lib.WrapFunctions
 import WrapFunctions._
 import nova.core.game.Game
-import nova.core.gui.KeyManager.Key
+import nova.core.gui.InputManager.Key
 import nova.core.item.Item.{RightClickEvent, TooltipEvent, UseEvent}
 import nova.core.render.model.Model
 import nova.core.retention.Stored
@@ -35,27 +35,27 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 	var fieldSize = 0
 
 	tooltipEvent.add(eventListener((evt: TooltipEvent) => {
-		evt.tooltips.add(Game.languageManager.translate("info.modeCustom.mode") + " " + (if (isAdditive) Game.languageManager.translate("info.modeCustom.additive") else Game.languageManager.translate("info.modeCustom.substraction")))
-		evt.tooltips.add(Game.languageManager.translate("info.modeCustom.point1") + " " + pointA.xi + ", " + pointA.yi + ", " + pointA.zi)
-		evt.tooltips.add(Game.languageManager.translate("info.modeCustom.point2") + " " + pointB.xi + ", " + pointB.yi + ", " + pointB.zi)
+		evt.tooltips.add(Game.language.translate("info.modeCustom.mode") + " " + (if (isAdditive) Game.language.translate("info.modeCustom.additive") else Game.language.translate("info.modeCustom.substraction")))
+		evt.tooltips.add(Game.language.translate("info.modeCustom.point1") + " " + pointA.xi + ", " + pointA.yi + ", " + pointA.zi)
+		evt.tooltips.add(Game.language.translate("info.modeCustom.point2") + " " + pointB.xi + ", " + pointB.yi + ", " + pointB.zi)
 
 		if (saveID > 0) {
-			evt.tooltips.add(Game.languageManager.translate("info.modeCustom.modeID") + " " + saveID)
+			evt.tooltips.add(Game.language.translate("info.modeCustom.modeID") + " " + saveID)
 			if (fieldSize > 0) {
-				evt.tooltips.add(Game.languageManager.translate("info.modeCustom.fieldSize") + " " + fieldSize)
+				evt.tooltips.add(Game.language.translate("info.modeCustom.fieldSize") + " " + fieldSize)
 			}
 			else {
-				evt.tooltips.add(Game.languageManager.translate("info.modeCustom.notSaved"))
+				evt.tooltips.add(Game.language.translate("info.modeCustom.notSaved"))
 			}
 		}
 
-		if (!Game.keyManager.isKeyDown(Key.KEY_LSHIFT)) {
-			evt.tooltips.add(Game.languageManager.translate("info.modeCustom.shift"))
+		if (!Game.input.isKeyDown(Key.KEY_LSHIFT)) {
+			evt.tooltips.add(Game.language.translate("info.modeCustom.shift"))
 		}
 	}))
 
 	useEvent.add((evt: UseEvent) => {
-		if (Game.networkManager.isServer) {
+		if (Game.network.isServer) {
 
 			if (pointA == null) {
 				pointA = evt.position
@@ -70,8 +70,8 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 	})
 
 	rightClickEvent.add((evt: RightClickEvent) => {
-		if (Game.networkManager.isServer) {
-			if (Game.keyManager.isKeyDown(Key.KEY_LSHIFT)) {
+		if (Game.network.isServer) {
+			if (Game.input.isKeyDown(Key.KEY_LSHIFT)) {
 				//Holding shift saves the item
 
 				if (pointA != null && pointB != null && !pointA.equals(pointB)) {
@@ -91,7 +91,7 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 							saveID = getNextAvaliableID
 						}
 
-						Game.saveManager.load(saveFilePrefix + saveID, customStructure)
+						Game.retention.load(saveFilePrefix + saveID, customStructure)
 
 						for (x <- minPoint.x to maxPoint.x; y <- minPoint.y to maxPoint.y; z <- minPoint.z to maxPoint.z) {
 							val position = new Vector3i(x, y, z)
@@ -112,8 +112,8 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 						}
 
 						fieldSize = customStructure.structure.size
-						//entityPlayer.addChatMessage(new ChatComponentText(Game.get.languageManager.translate("message.modeCustom.saved")))
-						Game.saveManager.queueSave(saveFilePrefix + saveID, customStructure)
+						//entityPlayer.addChatMessage(new ChatComponentText(Game.get.language.translate("message.modeCustom.saved")))
+						Game.retention.queueSave(saveFilePrefix + saveID, customStructure)
 						clearCache()
 					}
 				}
@@ -121,7 +121,7 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 			}
 			else {
 				isAdditive = !isAdditive
-				//entityPlayer.addChatMessage(new ChatComponentText(Game.get.languageManager.translate("message.modeCustom.modeChange").replaceAll("#p", (if (nbt.getBoolean(NBT_MODE)) Game.get.languageManager.translate("info.modeCustom.substraction") else Game.get.languageManager.translate("info.modeCustom.additive")))))
+				//entityPlayer.addChatMessage(new ChatComponentText(Game.get.language.translate("message.modeCustom.modeChange").replaceAll("#p", (if (nbt.getBoolean(NBT_MODE)) Game.get.language.translate("info.modeCustom.substraction") else Game.get.language.translate("info.modeCustom.additive")))))
 			}
 		}
 	})
@@ -131,14 +131,14 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 	override def getStructure: Structure =
 		getOrSetCache("shapeCustom", () => {
 			val custom = new StructureCustom("shapeCustom")
-			Game.saveManager.load(saveFilePrefix + saveID, custom)
+			Game.retention.load(saveFilePrefix + saveID, custom)
 			return custom
 		})
 
 	def getNextAvaliableID: Int = getSaveDirectory.listFiles.length
 
 	def getSaveDirectory: File = {
-		val saveDirectory: File = Game.saveManager.getSaveDirectory
+		val saveDirectory: File = Game.retention.getSaveDirectory
 		if (!saveDirectory.exists) {
 			saveDirectory.mkdir
 		}

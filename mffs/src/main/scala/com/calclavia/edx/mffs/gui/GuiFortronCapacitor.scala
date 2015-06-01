@@ -92,9 +92,9 @@ class GuiFortronCapacitor extends GuiMFFS("fortronCapacitor") {
 
 	override def render(mouseX: Int, mouseY: Int, graphics: Graphics) {
 		super.render(mouseX, mouseY, graphics)
-		getChildElement("layout.north.linkedDevices").get().asInstanceOf[Label].setText(Game.languageManager.translate("gui.linkedDevice", Map("%1" -> (block.getDeviceCount + ""))))
+		getChildElement("layout.north.linkedDevices").get().asInstanceOf[Label].setText(Game.language.translate("gui.linkedDevice", Map("%1" -> (block.getDeviceCount + ""))))
 		getChildElement("layout.north.transmissionRate").get().asInstanceOf[Label].setText(
-			Game.languageManager.translate("gui.transmissionRate", Map("%1" -> (new UnitDisplay(UnitDisplay.Unit.LITER, block.getTransmissionRate * 20).symbol() + "/s")))
+			Game.language.translate("gui.transmissionRate", Map("%1" -> (new UnitDisplay(UnitDisplay.Unit.LITER, block.getTransmissionRate * 20).symbol() + "/s")))
 		)
 		getChildElement("layout.south.toggle").get().asInstanceOf[Button].setText(block.getTransferMode.name())
 	}

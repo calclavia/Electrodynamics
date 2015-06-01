@@ -21,16 +21,16 @@ object ModularForceFieldSystem extends Loadable {
 		/**
 		 * Registration
 		 */
-		Game.eventManager.blockChange.add((evt: BlockChangeEvent) => EventHandler.onBlockChange(evt))
+		Game.events.blockChange.add((evt: BlockChangeEvent) => EventHandler.onBlockChange(evt))
 		//		MinecraftForge.EVENT_BUS.register(SubscribeEventHandler)
 		//		MinecraftForge.EVENT_BUS.register(Content.remoteController)
 
-		Game.eventManager.serverStarting.add((evt: Event) => {
+		Game.events.serverStarting.add((evt: Event) => {
 			GraphFrequency.client = new GraphFrequency
 			GraphFrequency.server = new GraphFrequency
 		})
 
-		Game.fluidManager.register((args: Array[AnyRef]) => new Fluid(Fortron.fortronID))
+		Game.fluids.register((args: Array[AnyRef]) => new Fluid(Fortron.fortronID))
 
 		Content.preInit()
 		Models.preInit()

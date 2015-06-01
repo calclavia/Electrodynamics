@@ -164,6 +164,27 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 		calculateField(postCalculation)
 	}
 
+	def postCalculation() = if (clientSideSimulationRequired) Game.network.sync(PacketBlock.field, this)
+
+	private def clientSideSimulationRequired: Boolean = {
+		return getModuleCount(Content.moduleRepulsion) > 0
+	}
+
+	/**
+	 * Initiate a field calculation
+	 */
+	protected override def calculateField(callBack: () => Unit = null) {
+		if (Game.network.isServer && !isCalculating) {
+			if (getShapeItem != null) {
+				forceFields = Set.empty
+			}
+
+			super.calculateField(callBack)
+			isCompleteConstructing = false
+			fieldRequireTicks = getModules().exists(_.requireTicks)
+		}
+	}
+
 	override def write(packet: Packet) {
 		super.write(packet)
 		packet.getID match {
@@ -185,7 +206,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 	override def read(packet: Packet) {
 		super.read(packet)
 
-		if (Game.networkManager.isClient) {
+		if (Game.network.isClient) {
 			if (packet.getID == PacketBlock.effect) {
 				//Spawns a holographic beam
 				val packetType = packet.readInt
@@ -230,7 +251,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 				}
 			}
 
-			if (isActive && Game.networkManager.isClient) {
+			if (isActive && Game.network.isClient) {
 				animation += getFortronCost / 100f
 			}
 
@@ -239,29 +260,8 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 				//worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, Reference.prefix + "field", 0.6f, (1 - this.worldObj.rand.nextFloat * 0.1f))
 			}
 		}
-		else if (Game.networkManager.isServer) {
+		else if (Game.network.isServer) {
 			destroyField()
-		}
-	}
-
-	def postCalculation() = if (clientSideSimulationRequired) Game.networkManager.sync(PacketBlock.field, this)
-
-	private def clientSideSimulationRequired: Boolean = {
-		return getModuleCount(Content.moduleRepulsion) > 0
-	}
-
-	/**
-	 * Initiate a field calculation
-	 */
-	protected override def calculateField(callBack: () => Unit = null) {
-		if (Game.networkManager.isServer && !isCalculating) {
-			if (getShapeItem != null) {
-				forceFields = Set.empty
-			}
-
-			super.calculateField(callBack)
-			isCompleteConstructing = false
-			fieldRequireTicks = getModules().exists(_.requireTicks)
 		}
 	}
 
@@ -320,7 +320,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 								/**
 								 * Default force field block placement action.
 								 */
-								if (Game.networkManager.isServer) {
+								if (Game.network.isServer) {
 									world.setBlock(pos, Content.forceField)
 									world.getBlock(pos).get().asInstanceOf[BlockForceField].setProjector(position)
 								}
@@ -354,7 +354,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 	}
 
 	def destroyField() {
-		if (Game.networkManager.isServer && calculatedField != null && !isCalculating) {
+		if (Game.network.isServer && calculatedField != null && !isCalculating) {
 			getModules(getModuleSlots: _*).forall(!_.onDestroyField(this, calculatedField))
 			//TODO: Parallelism?
 			calculatedField

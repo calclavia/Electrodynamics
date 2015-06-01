@@ -34,7 +34,7 @@ abstract class BlockModuleHandler extends BlockFortron with CacheHandler {
 	 * Returns Fortron cost in ticks.
 	 */
 	final def getFortronCost: Int = {
-		if (Game.networkManager.isClient) {
+		if (Game.network.isClient) {
 			return clientFortronCost
 		}
 
@@ -78,6 +78,11 @@ abstract class BlockModuleHandler extends BlockFortron with CacheHandler {
 		refresh()
 	}
 
+	def markDirty() {
+		refresh()
+		clearCache()
+	}
+
 	def refresh() {
 		fortronTank.setCapacity((this.getModuleCount(Content.moduleCapacity) * this.capacityBoost + this.capacityBase) * Fluid.bucketVolume)
 	}
@@ -102,11 +107,6 @@ abstract class BlockModuleHandler extends BlockFortron with CacheHandler {
 					.foldLeft(0)(_ + _.count)
 			}
 		)
-
-	def markDirty() {
-		refresh()
-		clearCache()
-	}
 
 	def consumeCost() {
 		removeFortron(getFortronCost, true)

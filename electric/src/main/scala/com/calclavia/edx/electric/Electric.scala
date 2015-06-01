@@ -43,11 +43,11 @@ object Electric extends Loadable {
 
 		/*
 		//TODO: -1000 style points
-		Game.instance.componentManager.register(args -> args.length > 0 ? new NodeElectricComponent((Block) args[ 0] ): new NodeElectricComponent(new Block() {
+		Game.instance.components.register(args -> args.length > 0 ? new NodeElectricComponent((Block) args[ 0] ): new NodeElectricComponent(new Block() {
 			override def getID: String = "dummy"
 		}))
 
-		Game.instance.componentManager.register(args -> args.length > 0 ? new NodeElectricJunction((Block) args[ 0] ): new NodeElectricJunction(new Block() {
+		Game.instance.components.register(args -> args.length > 0 ? new NodeElectricJunction((Block) args[ 0] ): new NodeElectricJunction(new Block() {
 			@Override
 			public String getID() {
 				return "dummy";

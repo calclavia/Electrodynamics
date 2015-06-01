@@ -17,13 +17,13 @@ class ItemCardFrequency extends ItemCard with Frequency {
 	@BeanProperty
 	var frequency: Int = 0
 
-	tooltipEvent.add(eventListener((evt: TooltipEvent) => evt.tooltips.add(Game.languageManager.translate("info.cardFrequency.freq") + " " + getEncodedFrequency)))
+	tooltipEvent.add(eventListener((evt: TooltipEvent) => evt.tooltips.add(Game.language.translate("info.cardFrequency.freq") + " " + getEncodedFrequency)))
 
 	def getEncodedFrequency = Hashing.md5().hashInt(frequency).toString.take(12)
 
 	rightClickEvent.add((evt: RightClickEvent) => {
-		if (Game.networkManager.isServer) {
-			Game.guiFactory.showGui("cardFrequency", evt.entity, Vector3i.zero)
+		if (Game.network.isServer) {
+			Game.gui.showGui("cardFrequency", evt.entity, Vector3i.zero)
 		}
 	})
 

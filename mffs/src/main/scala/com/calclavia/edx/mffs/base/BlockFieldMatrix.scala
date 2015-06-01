@@ -52,6 +52,19 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 
 	override def getShape: StructureProvider = getShapeItem
 
+	/**
+	 * @return Gets the item that provides a shape
+	 */
+	def getShapeItem: Item with StructureProvider = {
+		val optional = inventory.get(modeSlotID)
+		if (optional.isPresent) {
+			if (optional.get().isInstanceOf[Item with StructureProvider]) {
+				return optional.asInstanceOf[Item with StructureProvider]
+			}
+		}
+		return null
+	}
+
 	override def getSidedModuleCount(module: ItemFactory, directions: Direction*): Int = {
 		var actualDirs = directions
 
@@ -105,19 +118,6 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 		structure.setScale(getScale.toDouble)
 		structure.setRotation(getRotation)
 		return structure
-	}
-
-	/**
-	 * @return Gets the item that provides a shape
-	 */
-	def getShapeItem: Item with StructureProvider = {
-		val optional = inventory.get(modeSlotID)
-		if (optional.isPresent) {
-			if (optional.get().isInstanceOf[Item with StructureProvider]) {
-				return optional.asInstanceOf[Item with StructureProvider]
-			}
-		}
-		return null
 	}
 
 	def getScale = (getPositiveScale + getNegativeScale) / 2
@@ -245,7 +245,7 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 	 * @param callBack - Optional callback
 	 */
 	protected def calculateField(callBack: () => Unit = null) {
-		if (Game.networkManager.isServer && !isCalculating) {
+		if (Game.network.isServer && !isCalculating) {
 			if (getShapeItem != null) {
 				//Clear mode cache
 				if (getShapeItem.isInstanceOf[CacheHandler]) {

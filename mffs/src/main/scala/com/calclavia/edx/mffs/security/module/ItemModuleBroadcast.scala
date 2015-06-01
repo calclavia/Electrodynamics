@@ -19,7 +19,7 @@ class ItemModuleBroadcast extends ItemModuleDefense {
 			.filter(_.has(classOf[Player]))
 			.map(_.get(classOf[Player]))
 			.filter(p => !projector.hasPermission(p.getID, MFFSPermissions.defense))
-			.foreach(Game.networkManager.sendChat(_, Game.languageManager.translate("message.moduleWarn.warn")))
+			.foreach(Game.network.sendChat(_, Game.language.translate("message.moduleWarn.warn")))
 		return false
 	}
 

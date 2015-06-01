@@ -117,7 +117,7 @@ object MFFSUtility {
 	}
 
 	def getFilterBlock(item: Item): BlockFactory = {
-		val opItem = Game.itemManager.getBlockFromItem(item)
+		val opItem = Game.items.getBlockFromItem(item)
 		if (opItem.isPresent) {
 			return opItem.get()
 		}

@@ -80,7 +80,7 @@ class ItemModuleStabilize extends ItemModule {
 					inv.remove(item.withAmount(1))
 					//copyStack.getItem.asInstanceOf[ItemBlock].placeBlockAt(copyStack, null, world, position.xi, position.yi, position.zi, 0, 0, 0, 0, metadata)
 					world.setBlock(position, blockFactory)
-					Game.networkManager.sync(PacketBlock.effect2, proj)
+					Game.network.sync(PacketBlock.effect2, proj)
 
 					blockCount += 1
 

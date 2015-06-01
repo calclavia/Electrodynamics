@@ -156,7 +156,7 @@ class BlockWire extends Block with Storable with PacketHandler {
 		if (newConnectionMask != connectionMask) {
 			connectionMask = newConnectionMask
 			//Update client render
-			Game.networkManager.sync(1, this)
+			Game.network.sync(1, this)
 		}
 
 		/**

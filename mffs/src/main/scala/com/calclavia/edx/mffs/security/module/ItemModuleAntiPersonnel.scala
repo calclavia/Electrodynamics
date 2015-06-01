@@ -38,7 +38,7 @@ class ItemModuleAntiPersonnel extends ItemModuleDefense {
 				    )
 
 			    entity.get(classOf[Damageable]).damage(1000)
-			    Game.networkManager.sendChat(player, Game.languageManager.translate("message.moduleAntiPersonnel.death"))
+			    Game.network.sendChat(player, Game.language.translate("message.moduleAntiPersonnel.death"))
 		    }
 			)
 

@@ -11,7 +11,7 @@ import scala.collection.convert.wrapAll._
 @deprecated
 class BlockInventoryDropDelayedEvent(ticks: Int, block: Block, world: World, position: Vector3i, inv: InventoryProvider) extends BlockDropDelayedEvent(ticks, block, world, position) {
 	protected override def onEvent {
-		if (Game.networkManager.isServer) {
+		if (Game.network.isServer) {
 			val checkBlock = world.getBlock(position)
 
 			if (checkBlock.isPresent && checkBlock.get == block) {
