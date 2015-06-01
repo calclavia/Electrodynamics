@@ -7,6 +7,7 @@ import WrapFunctions._
 import nova.core.block.Block
 import nova.core.block.Stateful.LoadEvent
 import nova.core.component.Component
+import nova.core.network.NetworkTarget.Side
 
 /**
  * A class extended by all electric nodes.
@@ -22,7 +23,7 @@ abstract class NodeElectric(val provider: Block) extends Component with BlockCon
 
 	//Hook block events.
 	provider.loadEvent.add((evt: LoadEvent) => {
-		if (graph == null) {
+		if (Side.get().isServer && graph == null) {
 			resetGraph()
 		}
 	})
