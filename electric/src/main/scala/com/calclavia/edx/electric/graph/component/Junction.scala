@@ -6,7 +6,7 @@ import com.calclavia.edx.electric.graph.NodeElectricJunction
  * Essentially a wrapper to collapse wires into junctions for easy management.
  * @author Calclavia
  */
-class Junction {
+class Junction extends ElectricElement {
 	/**
 	 * The electric potential at this junction.
 	 */

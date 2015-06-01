@@ -28,7 +28,7 @@ class GraphElectricTest {
 		 */
 		val profilerGen = new Profiler("Generate graph 1")
 
-		val graph = new GraphElectric
+		val graph = new ElectricGrid
 
 		val battery = new DummyComponent()
 		val wire1 = new DummyWire()
@@ -93,7 +93,7 @@ class GraphElectricTest {
 	def testSolve2() {
 		val profilerGen = new Profiler("Generate graph 2")
 
-		val graph = new GraphElectric
+		val graph = new ElectricGrid
 
 		val battery = new DummyComponent()
 		val wire1 = new DummyWire()
@@ -149,7 +149,7 @@ class GraphElectricTest {
 	def testSolve3() {
 		val profilerGen = new Profiler("Generate graph 3")
 
-		val graph = new GraphElectric
+		val graph = new ElectricGrid
 
 		val battery = new DummyComponent()
 		val wire1 = new DummyWire()
@@ -225,7 +225,7 @@ class GraphElectricTest {
 	def testSolve4() {
 		val profilerGen = new Profiler("Generate graph 3")
 
-		val graph = new GraphElectric
+		val graph = new ElectricGrid
 
 		val battery1 = new DummyComponent()
 		val battery2 = new DummyComponent()
@@ -302,7 +302,7 @@ class GraphElectricTest {
 
 		for (trial <- 2 to 1000) {
 
-			val graph = new GraphElectric
+			val graph = new ElectricGrid
 			val battery = new DummyComponent()
 			val resistors = (0 until trial).map(i => new DummyComponent()).toList
 

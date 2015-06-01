@@ -12,7 +12,25 @@ import java.util.function.Supplier;
  */
 public interface ElectricComponent extends Electric {
 
+	/**
+	 * @return The positive connections
+	 */
+	Set<Electric> positives();
+
+	/**
+	 * @return The negative connections
+	 */
+	Set<Electric> negatives();
+
+	/**
+	 * Sets the positive connection supplier
+	 * @param supplier The function to determine to connections
+	 */
 	void setPositiveConnections(Supplier<Set<Electric>> supplier);
 
+	/**
+	 * Sets the negative connection supplier
+	 * @param supplier The function to determine to connections
+	 */
 	void setNegativeConnections(Supplier<Set<Electric>> supplier);
 }

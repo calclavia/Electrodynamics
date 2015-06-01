@@ -37,12 +37,16 @@ class NodeElectricComponent(parent: Block) extends NodeElectric(parent) with Ele
 	/**
 	 * The positive terminal connections
 	 */
-	protected[graph] var positiveConnections = () => Set.empty[Electric]
+	private var positiveConnections = () => Set.empty[Electric]
 
 	/**
 	 * The negative terminal connections
 	 */
-	protected[graph] var negativeConnections = () => Set.empty[Electric]
+	private var negativeConnections = () => Set.empty[Electric]
+
+	override def positives(): JSet[Electric] = positiveConnections()
+
+	override def negatives(): JSet[Electric] = negativeConnections()
 
 	override def setPositiveConnections(supplier: Supplier[JSet[Electric]]) {
 		positiveConnections = () => supplier.get().toSet

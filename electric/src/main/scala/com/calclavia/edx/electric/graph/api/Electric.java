@@ -1,13 +1,11 @@
 package com.calclavia.edx.electric.graph.api;
 
-import com.calclavia.graph.node.Node;
-
 /**
  * An abstract interface extended by NodeElectricComponent and NodeElectricJunction.
  * This interface is NOT registered.
  * @author Calclavia
  */
-public interface Electric extends Node<Electric> {
+public interface Electric {
 	/**
 	 * @return The resistance of the electric component in ohms.
 	 */

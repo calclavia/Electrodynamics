@@ -19,7 +19,7 @@ abstract class NodeElectric(val provider: Block) extends Component with BlockCon
 
 	private var _resistance = 1d
 
-	private var graph: GraphElectric = _
+	private var graph: ElectricGrid = _
 
 	//Hook block events.
 	provider.loadEvent.add((evt: LoadEvent) => {
@@ -30,7 +30,7 @@ abstract class NodeElectric(val provider: Block) extends Component with BlockCon
 
 	//TODO: We are calling connections() twice. Inefficient!
 	def resetGraph() {
-		graph = new GraphElectric
+		graph = new ElectricGrid
 		val all = graph.findAll(this)
 		all.foreach(node => {
 			graph.add(node)
