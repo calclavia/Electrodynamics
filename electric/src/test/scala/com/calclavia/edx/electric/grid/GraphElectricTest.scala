@@ -1,13 +1,13 @@
-package com.calclavia.edx.electric.graph
+package com.calclavia.edx.electric.grid
 
 import java.util
 
-import com.calclavia.edx.electric.graph.api.Electric
+import com.calclavia.edx.electric.grid.api.Electric
 import nova.core.util.Profiler
 import nova.testutils.FakeBlock
 import org.junit.Assert._
 import org.junit.Test
-
+import org.assertj.core.api.Assertions._
 import scala.collection.convert.wrapAll._
 
 /**
@@ -28,7 +28,7 @@ class GraphElectricTest {
 		 */
 		val profilerGen = new Profiler("Generate graph 1")
 
-		val graph = new ElectricGrid
+		val grid = new ElectricGrid
 
 		val battery = new DummyComponent()
 		val wire1 = new DummyWire()
@@ -39,40 +39,44 @@ class GraphElectricTest {
 		val components = connectInSeries(battery, wire1, resistor1, wire2)
 		wire2.connect(battery)
 
-		components.foreach(graph.add)
+		components.foreach(grid.add)
 		println(profilerGen)
 
 		val profilerAdj = new Profiler("Building adjacency for graph 1")
-		graph.buildAll()
+		grid.build()
 		println(profilerAdj)
 
-		println(graph.adjMat)
+		val graph = grid.electricGraph
+		println(graph)
+
 		//Test component & junction sizes
-		assertEquals(2, graph.components.size)
+		assertEquals(2, grid.components.size)
 		//There should be one less junction in the list, due to the ground
-		assertEquals(1, graph.junctions.size)
+		assertEquals(1, grid.junctions.size)
 		//Test forward connections
-		assertEquals(true, graph.adjMat(battery, wire1))
-		assertEquals(true, graph.adjMat(wire1, resistor1))
-		assertEquals(true, graph.adjMat(resistor1, wire2))
-		assertEquals(true, graph.adjMat(wire2, battery))
-		//Test getDirectedTo connections
-		assertEquals(Set(wire1, wire2), graph.adjMat.getDirectedTo(battery))
-		assertEquals(Set(battery), graph.adjMat.getDirectedTo(wire1))
-		assertEquals(Set(wire1, wire2), graph.adjMat.getDirectedTo(resistor1))
-		assertEquals(Set(resistor1), graph.adjMat.getDirectedTo(wire2))
-		//Test getDirectedFrom connections
-		assertEquals(Set(wire1), graph.adjMat.getDirectedFrom(battery))
-		assertEquals(Set(battery, resistor1), graph.adjMat.getDirectedFrom(wire1))
-		assertEquals(Set(wire2), graph.adjMat.getDirectedFrom(resistor1))
-		assertEquals(Set(resistor1, battery), graph.adjMat.getDirectedFrom(wire2))
+		assertEquals(true, graph.containsEdge(grid.convert(battery), grid.convert(wire1)))
+		assertEquals(true, graph.containsEdge(grid.convert(wire1), grid.convert(resistor1)))
+		assertEquals(true, graph.containsEdge(grid.convert(resistor1), grid.convert(wire2)))
+		assertEquals(true, graph.containsEdge(grid.convert(wire2), grid.convert(battery)))
+		//Test incomingEdgesOf connections
+		val e1 = graph.incomingEdgesOf(grid.convert(battery)).head
+		assertThat(graph.getEdgeSource(e1)).isEqualTo(wire1)
+		assertEquals(Set(wire1, wire2), graph.incomingEdgesOf(grid.convert(battery)))
+		assertEquals(Set(battery), graph.incomingEdgesOf(grid.convert(wire1)))
+		assertEquals(Set(wire1, wire2), graph.incomingEdgesOf(grid.convert(resistor1)))
+		assertEquals(Set(resistor1), graph.incomingEdgesOf(grid.convert(wire2)))
+		//Test outgoingEdgesOf connections
+		assertEquals(Set(wire1), graph.outgoingEdgesOf(grid.convert(battery)))
+		assertEquals(Set(battery, resistor1), graph.outgoingEdgesOf(grid.convert(wire1)))
+		assertEquals(Set(wire2), graph.outgoingEdgesOf(grid.convert(resistor1)))
+		assertEquals(Set(resistor1, battery), graph.outgoingEdgesOf(grid.convert(wire2)))
 
 		val profiler = new Profiler("Solving graph 1")
 
 		for (trial <- 1 to 1000) {
 			val voltage = trial * 10d * Math.random()
 			battery.setVoltage(voltage)
-			graph.update(profiler.elapsed)
+			grid.update(profiler.elapsed)
 
 			//Test battery
 			assertEquals(voltage, battery.voltage, error)
@@ -84,33 +88,6 @@ class GraphElectricTest {
 		}
 
 		println(profiler.average())
-	}
-
-	/**
-	 * Connects a sequence of electric nodes in series excluding the first and last connection.
-	 */
-	def connectInSeries(series: Electric*): Seq[Electric] = {
-		series.zipWithIndex.foreach {
-			case (component: DummyComponent, index) =>
-				index match {
-					case 0 => component.connectPos(series(index + 1))
-					case l if l == series.size - 1 =>
-						component.connectNeg(series(index - 1))
-					case _ =>
-						component.connectNeg(series(index - 1))
-						component.connectPos(series(index + 1))
-				}
-			case (wire: DummyWire, index) =>
-				index match {
-					case 0 => wire.connect(series(index + 1))
-					case l if l == series.size - 1 =>
-						wire.connect(series(index - 1))
-					case _ =>
-						wire.connect(series(index - 1))
-						wire.connect(series(index + 1))
-				}
-		}
-		return series
 	}
 
 	/**
@@ -363,6 +340,33 @@ class GraphElectricTest {
 				assertEquals(current, r.current, error)
 			})
 		}
+	}
+
+	/**
+	 * Connects a sequence of electric nodes in series excluding the first and last connection.
+	 */
+	def connectInSeries(series: Electric*): Seq[Electric] = {
+		series.zipWithIndex.foreach {
+			case (component: DummyComponent, index) =>
+				index match {
+					case 0 => component.connectPos(series(index + 1))
+					case l if l == series.size - 1 =>
+						component.connectNeg(series(index - 1))
+					case _ =>
+						component.connectNeg(series(index - 1))
+						component.connectPos(series(index + 1))
+				}
+			case (wire: DummyWire, index) =>
+				index match {
+					case 0 => wire.connect(series(index + 1))
+					case l if l == series.size - 1 =>
+						wire.connect(series(index - 1))
+					case _ =>
+						wire.connect(series(index - 1))
+						wire.connect(series(index + 1))
+				}
+		}
+		return series
 	}
 
 	class DummyComponent extends NodeElectricComponent(new FakeBlock("dummy")) {

@@ -1,4 +1,4 @@
-package com.calclavia.edx.electric.graph
+package com.calclavia.edx.electric.grid
 
 import java.util.Optional
 

@@ -1,5 +1,6 @@
-package com.calclavia.edx.electric.graph.api;
+package com.calclavia.edx.electric.grid.api;
 
+import com.google.common.collect.Sets;
 import nova.core.block.Block;
 
 import java.util.Set;
@@ -11,6 +12,10 @@ import java.util.function.Supplier;
  * @author Calclavia
  */
 public abstract class ElectricComponent extends Electric {
+
+	public ElectricComponent() {
+		connections = () -> Sets.union(positives(), negatives());
+	}
 
 	/**
 	 * @return The positive connections

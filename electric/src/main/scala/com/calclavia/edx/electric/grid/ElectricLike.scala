@@ -1,6 +1,6 @@
-package com.calclavia.edx.electric.graph
+package com.calclavia.edx.electric.grid
 
-import com.calclavia.edx.electric.graph.api.Electric
+import com.calclavia.edx.electric.grid.api.Electric
 import com.resonant.lib.WrapFunctions._
 import nova.core.block.Stateful.LoadEvent
 import nova.core.block.component.Connectable
@@ -14,7 +14,7 @@ import scala.collection.convert.wrapAll._
 trait ElectricLike extends Electric with BlockConnectable[Electric] {
 
 	//Internal use for graphs
-	protected[graph] var onResistanceChange = Seq.empty[(Electric) => Unit]
+	protected[grid] var onResistanceChange = Seq.empty[(Electric) => Unit]
 
 	private var _resistance = 1d
 

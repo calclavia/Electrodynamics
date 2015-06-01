@@ -1,9 +1,9 @@
-package com.calclavia.edx.electric.graph
+package com.calclavia.edx.electric.grid
 
 import java.util.function.Supplier
 import java.util.{Set => JSet}
 
-import com.calclavia.edx.electric.graph.api.{Electric, ElectricComponent}
+import com.calclavia.edx.electric.grid.api.{Electric, ElectricComponent}
 import nova.core.block.Block
 
 import scala.collection.convert.wrapAll._
@@ -29,10 +29,10 @@ class NodeElectricComponent(parent: Block) extends ElectricComponent with Electr
 	/**
 	 * Variables to keep voltage source states
 	 */
-	protected[graph] var genVoltage = 0d
-	protected[graph] var genCurrent = 0d
-	protected[graph] var onSetVoltage = Seq.empty[Electric => Unit]
-	protected[graph] var onSetCurrent = Seq.empty[Electric => Unit]
+	protected[grid] var genVoltage = 0d
+	protected[grid] var genCurrent = 0d
+	protected[grid] var onSetVoltage = Seq.empty[Electric => Unit]
+	protected[grid] var onSetCurrent = Seq.empty[Electric => Unit]
 
 	/**
 	 * The positive terminal connections

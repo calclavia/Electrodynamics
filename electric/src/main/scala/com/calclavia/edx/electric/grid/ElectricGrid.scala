@@ -1,6 +1,6 @@
-package com.calclavia.edx.electric.graph
+package com.calclavia.edx.electric.grid
 
-import com.calclavia.edx.electric.graph.api.{Electric, ElectricComponent, ElectricJunction}
+import com.calclavia.edx.electric.grid.api.{Electric, ElectricComponent}
 import com.resonant.core.prefab.block.Updater
 import nova.core.game.Game
 import nova.core.util.transform.matrix.Matrix
@@ -23,9 +23,64 @@ object ElectricGrid {
 	def apply(world: World): ElectricGrid = {
 		worldMap.getOrElseUpdate(world, new ElectricGrid)
 	}
+
+	/**
+	 * An element in the electric grid
+	 * @author Calclavia
+	 */
+	class ElectricElement {
+
+	}
+
+	/**
+	 * A component
+	 * @author Calclavia
+	 */
+	class Component(val component: NodeElectricComponent) extends ElectricElement {
+		override def hashCode = component.hashCode()
+	}
+
+	/**
+	 * Essentially a wrapper to collapse wires into junctions for easy management.
+	 * @author Calclavia
+	 */
+	class Junction extends ElectricElement {
+		/**
+		 * The wires that collapsed into this junction
+		 */
+		var wires = Set.empty[NodeElectricJunction]
+		/**
+		 * The electric potential at this junction.
+		 */
+		private var _voltage = 0d
+
+		def voltage = _voltage
+
+		def voltage_=(newVoltage: Double) {
+			_voltage = newVoltage
+			wires.foreach(_._voltage = _voltage)
+		}
+
+		/**
+		 * The total resistance of this junction due to wires
+		 */
+		def resistance = wires.map(_.resistance).sum
+	}
+
+	/**
+	 * A virtual junction is a junction that does not exist in the world, but exists in the graph space.
+	 * @author Calclavia
+	 */
+	class VirtualJunction extends Junction {
+
+	}
+
 }
 
 class ElectricGrid extends Updater {
+
+	import ElectricGrid._
+
 	//The general connection graph between electric
 	protected val connectionGraph = new SimpleGraph[Electric, DefaultEdge](classOf[DefaultEdge])
 	// There should always at least (node.size - 1) amount of junctions.
@@ -33,28 +88,28 @@ class ElectricGrid extends Updater {
 	//The reference ground junction where voltage is zero.
 	var ground: Junction = null
 	//The components in the circuit
-	var components = List.empty[Device]
+	var components = List.empty[Component]
 	//The modified nodal analysis matrix (A) in Ax=b linear equation.
 	var mna: Matrix = null
-	var voltageSources = List.empty[Device]
-	var currentSources = List.empty[Device]
-	var resistors = List.empty[Device]
+	var voltageSources = List.empty[Component]
+	var currentSources = List.empty[Component]
+	var resistors = List.empty[Component]
 	//Changed flags
 	var resistorChanged = false
 	var sourceChanged = false
 	//The source matrix (B)
-	protected var sourceMatrix: Matrix = null
+	protected[grid] var sourceMatrix: Matrix = null
 	//The graph of all electric elements. In this directed graph the arrow points from positive to negative in potential difference.
-	protected var electricGraph = new DefaultDirectedGraph[ElectricElement, DefaultEdge](classOf[DefaultEdge])
+	protected[grid] var electricGraph = new DefaultDirectedGraph[ElectricElement, DefaultEdge](classOf[DefaultEdge])
 
 	Game.syncTicker.add(this)
 
 	def findAll(node: Electric, builder: Set[Electric] = Set.empty): Set[Electric] =
 		node match {
 			case component: ElectricComponent =>
-				(component.positives ++ component.negatives).filterNot(builder.contains(_)).flatMap(n => findAll(n, builder + node)).toSet
-			case junction: ElectricJunction =>
-				junction.connections.get.filterNot(builder.contains(_)).flatMap(n => findAll(n, builder + node)).toSet
+				((component.positives ++ component.negatives) diff builder).flatMap(n => findAll(n, builder + node)).toSet
+			case junction: NodeElectricJunction =>
+				(junction.con diff builder).flatMap(n => findAll(n, builder + node)).toSet
 		}
 
 	def addRecursive(node: Electric): this.type = {
@@ -82,6 +137,8 @@ class ElectricGrid extends Updater {
 
 	def has(node: Electric) = connectionGraph.vertexSet().contains(node)
 
+	def convert(nodeElectric: NodeElectricComponent) = new Component(nodeElectric)
+
 	/**
 	 * Builds the MNA matrix and prepares graph for simulation
 	 */
@@ -106,14 +163,14 @@ class ElectricGrid extends Updater {
 
 		connectionGraph.vertexSet().foreach {
 			case nodeComponent: NodeElectricComponent =>
-				val component = new Device(nodeComponent)
+				val component = new Component(nodeComponent)
 				//Check positive terminal connections
 				nodeComponent.positives().foreach {
 					case checkComponent: NodeElectricComponent =>
 						//Check if the "component" is negatively connected to the current node
 						if (checkComponent.negatives().contains(nodeComponent)) {
 							val junction = new VirtualJunction
-							val checkDevice = new Device(nodeComponent)
+							val checkDevice = new Component(nodeComponent)
 							electricGraph.addVertex(component)
 							electricGraph.addVertex(junction)
 							electricGraph.addVertex(checkDevice)
@@ -126,21 +183,21 @@ class ElectricGrid extends Updater {
 							//junctions :+= junction
 						}
 					case nodeJunction: NodeElectricJunction =>
-						val junction = getOrCreateJunction(nodeJunction)
+						val junction = convert(nodeJunction)
 						electricGraph.addVertex(component)
 						electricGraph.addVertex(junction)
 						electricGraph.addEdge(component, junction)
 				}
 				components :+= component
 			case nodeJunction: NodeElectricJunction =>
-				val junction = getOrCreateJunction(nodeJunction)
+				val junction = convert(nodeJunction)
 				electricGraph.addVertex(junction)
 
 				//Connect the junction to all of this NodeElectricJunction's nodes
 				nodeJunction.con.foreach {
 					case nodeComponent: NodeElectricComponent =>
 						//TODO: Check hashcode connection
-						val device = new Device(nodeComponent)
+						val device = new Component(nodeComponent)
 						electricGraph.addVertex(device)
 						electricGraph.addEdge(junction, device)
 				}
@@ -205,8 +262,10 @@ class ElectricGrid extends Updater {
 		}
 	}
 
-	//Create or get an existing Junction
-	def getOrCreateJunction(nodeJunction: NodeElectricJunction): Junction =
+	/**
+	 * Creates or gets an existing Junction
+	 */
+	def convert(nodeJunction: NodeElectricJunction): Junction =
 		junctions
 			.find(j => j.wires.contains(nodeJunction))
 			.collect {
@@ -386,56 +445,4 @@ class ElectricGrid extends Updater {
 
 		return newResult
 	}
-
-	/**
-	 * An element in the electric grid
-	 * @author Calclavia
-	 */
-	class ElectricElement {
-
-	}
-
-	/**
-	 * A component
-	 * @author Calclavia
-	 */
-	class Device(val component: NodeElectricComponent) extends ElectricElement {
-		override def hashCode = component.hashCode()
-	}
-
-	/**
-	 * Essentially a wrapper to collapse wires into junctions for easy management.
-	 * @author Calclavia
-	 */
-	class Junction extends ElectricElement {
-		/**
-		 * The wires that collapsed into this junction
-		 */
-		var wires = Set.empty[NodeElectricJunction]
-		/**
-		 * The electric potential at this junction.
-		 */
-		private var _voltage = 0d
-
-		def voltage = _voltage
-
-		def voltage_=(newVoltage: Double) {
-			_voltage = newVoltage
-			wires.foreach(_._voltage = _voltage)
-		}
-
-		/**
-		 * The total resistance of this junction due to wires
-		 */
-		def resistance = wires.map(_.resistance).sum
-	}
-
-	/**
-	 * A virtual junction is a junction that does not exist in the world, but exists in the graph space.
-	 * @author Calclavia
-	 */
-	class VirtualJunction extends Junction {
-
-	}
-
 }

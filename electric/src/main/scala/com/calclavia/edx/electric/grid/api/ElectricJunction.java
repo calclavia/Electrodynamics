@@ -1,8 +1,6 @@
-package com.calclavia.edx.electric.graph.api;
+package com.calclavia.edx.electric.grid.api;
 
 import nova.core.block.Block;
-
-import java.util.Set;
 
 /**
  * An electric node that acts as a component in an electric circuit.

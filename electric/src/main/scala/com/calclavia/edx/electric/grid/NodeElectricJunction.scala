@@ -1,6 +1,6 @@
-package com.calclavia.edx.electric.graph
+package com.calclavia.edx.electric.grid
 
-import com.calclavia.edx.electric.graph.api.ElectricJunction
+import com.calclavia.edx.electric.grid.api.ElectricJunction
 import nova.core.block.Block
 
 /**
@@ -10,7 +10,7 @@ import nova.core.block.Block
  */
 class NodeElectricJunction(parent: Block) extends ElectricJunction with ElectricLike {
 
-	protected[graph] var _voltage = 0d
+	protected[grid] var _voltage = 0d
 
 	override def current: Double = voltage * voltage / resistance
 
