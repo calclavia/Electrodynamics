@@ -30,6 +30,41 @@ abstract class BlockModuleHandler extends BlockFortron with CacheHandler {
 		}
 	}
 
+	/**
+	 * Returns Fortron cost in ticks.
+	 */
+	final def getFortronCost: Int = {
+		if (Game.networkManager.isClient) {
+			return clientFortronCost
+		}
+
+		return getOrSetCache("getFortronCost", doGetFortronCost)
+	}
+
+	protected def doGetFortronCost(): Int = Math.round(getModules().foldLeft(0f)((a, b) => a + b.count * b.asInstanceOf[Module].getFortronCost(getAmplifier)))
+
+	protected def getAmplifier: Float = 1f
+
+	/**
+	 * Gets all the modules in this block that are in specific slots
+	 * @param slots The slot IDs. Providing null will search all slots
+	 * @return The set of all item modules in the slots.
+	 */
+	def getModules(slots: Int*): Set[Item with Module] =
+		getOrSetCache(
+			"getModules_" + (if (slots != null) slots.hashCode() else ""),
+			() => {
+				val iterSlots = if (slots == null || slots.length <= 0) startModuleIndex until endModuleIndex else slots
+
+				return iterSlots
+					.view
+					.map(inventory.get)
+					.collect { case item: Optional[Item] if item.isPresent => item.get() }
+					.collect { case item: Item with Module => item }
+					.toSet
+			}
+		)
+
 	override def read(packet: Packet) {
 		super.read(packet)
 
@@ -78,21 +113,6 @@ abstract class BlockModuleHandler extends BlockFortron with CacheHandler {
 	}
 
 	/**
-	 * Returns Fortron cost in ticks.
-	 */
-	final def getFortronCost: Int = {
-		if (Game.instance.networkManager.isClient) {
-			return clientFortronCost
-		}
-
-		return getOrSetCache("getFortronCost", doGetFortronCost)
-	}
-
-	protected def doGetFortronCost(): Int = Math.round(getModules().foldLeft(0f)((a, b) => a + b.count * b.asInstanceOf[Module].getFortronCost(getAmplifier)))
-
-	protected def getAmplifier: Float = 1f
-
-	/**
 	 * Gets the module, if it exists, in this block based on a compareModule.
 	 * @param compareModule The module to compare against
 	 * @return Null if no such module exists
@@ -109,26 +129,6 @@ abstract class BlockModuleHandler extends BlockFortron with CacheHandler {
 				else {
 					return null
 				}
-			}
-		)
-
-	/**
-	 * Gets all the modules in this block that are in specific slots
-	 * @param slots The slot IDs. Providing null will search all slots
-	 * @return The set of all item modules in the slots.
-	 */
-	def getModules(slots: Int*): Set[Item with Module] =
-		getOrSetCache(
-			"getModules_" + (if (slots != null) slots.hashCode() else ""),
-			() => {
-				val iterSlots = if (slots == null || slots.length <= 0) startModuleIndex until endModuleIndex else slots
-
-				return iterSlots
-					.view
-					.map(inventory.get)
-					.collect { case item: Optional[Item] if item.isPresent => item.get() }
-					.collect { case item: Item with Module => item }
-					.toSet
 			}
 		)
 }

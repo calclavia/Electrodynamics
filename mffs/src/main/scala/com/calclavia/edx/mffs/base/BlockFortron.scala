@@ -49,8 +49,8 @@ abstract class BlockFortron extends BlockFrequency with SidedTankProvider with F
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)
 
-		if (Game.instance.networkManager.isServer && ticks % 60 == 0) {
-			Game.instance.networkManager.sync(PacketBlock.fortron, this)
+		if (Game.networkManager.isServer && ticks % 60 == 0) {
+			Game.networkManager.sync(PacketBlock.fortron, this)
 		}
 	}
 

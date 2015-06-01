@@ -31,7 +31,7 @@ public class Timer<K> {
 	}
 
 	public HashMap<K, Integer> getTimeMap() {
-		if (Game.instance.networkManager.isServer()) {
+		if (Game.networkManager().isServer()) {
 			return serverTimer;
 		}
 

@@ -93,20 +93,20 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 			executePreviews()
 			executeFailures()
 		}
-		else if (Game.instance.networkManager.isServer && isActive) {
+		else if (Game.networkManager.isServer && isActive) {
 			setActive(false)
 		}
 	}
 
 	def checkActivation() {
-		if (Game.instance.networkManager.isServer) {
+		if (Game.networkManager.isServer) {
 			if (isActive && !performingMove) {
 				if (calculatedField != null) {
 					performingMove = true
 					executeMovement()
 					calculatedField = null
 
-					if (Game.instance.networkManager.isServer) {
+					if (Game.networkManager.isServer) {
 						setActive(false)
 					}
 				}
@@ -130,9 +130,9 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 			/**
 			 * Queue an entity move event.
 			 */
-			Game.instance.syncTicker.preQueue(new DelayedEvent(getMoveTime, () => {
+			Game.syncTicker.preQueue(new DelayedEvent(getMoveTime, () => {
 				moveEntities()
-				Game.instance.networkManager.sync(PacketBlock.field, this)
+				Game.networkManager.sync(PacketBlock.field, this)
 
 				if (!isTeleport && doAnchor) {
 					anchor += get(classOf[Orientation]).orientation.toVector
@@ -149,7 +149,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 				 *
 				 * Packet Params: id, Type1, Type2, Size, the coordinate
 				 */
-				val packet = Game.instance.networkManager.newPacket()
+				val packet = Game.networkManager.newPacket()
 				packet.setID(PacketBlock.effect)
 
 				if (!isTeleport) {
@@ -161,7 +161,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 						//worldObj.playSoundEffect(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D, Reference.prefix + "fieldmove", 0.6f, 1 - this.worldObj.rand.nextFloat * 0.1f)
 					}
 
-					Game.instance.networkManager.sendPacket(this, packet)
+					Game.networkManager.sendPacket(this, packet)
 					//ModularForceFieldSystem.packetHandler.sendToAllAround(packet, world, position, packetRange)
 				}
 				else {
@@ -173,7 +173,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 					packet <<< renderBlocks
 
 					moveTime = getMoveTime
-					Game.instance.networkManager.sendPacket(this, packet)
+					Game.networkManager.sendPacket(this, packet)
 				}
 			}
 
@@ -187,7 +187,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 	}
 
 	def whileMoving() {
-		if (Game.instance.networkManager.isServer && performingMove) {
+		if (Game.networkManager.isServer && performingMove) {
 			if (removeFortron(getFortronCost, false) >= getFortronCost) {
 				removeFortron(getFortronCost, true)
 
@@ -214,7 +214,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 	}
 
 	def executePreviews() {
-		if (Game.instance.networkManager.isServer) {
+		if (Game.networkManager.isServer) {
 			if (previewMode > 0 && Settings.highGraphics && !performingMove) {
 				if (calculatedField == null) {
 					calculateField()
@@ -226,10 +226,10 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 				if (ticks % 120 == 0 && calculatedField != null) {
 					val renderBlocks = getInteriorPoints.view
 						.filter(isVisibleToPlayer)
-						.filter(pos => previewMode == 2 || !Game.instance.blockManager.getAirBlock.sameType(world.getBlock(pos).get()))
+						.filter(pos => previewMode == 2 || !Game.blockManager.getAirBlock.sameType(world.getBlock(pos).get()))
 						.take(Settings.maxForceFieldsPerTick)
 
-					val packet = Game.instance.networkManager.newPacket()
+					val packet = Game.networkManager.newPacket()
 					packet <<< PacketBlock.effect
 
 					if (isTeleport) {
@@ -255,7 +255,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 					}
 
 					packet <<< renderBlocks
-					Game.instance.networkManager.sendPacket(this, packet)
+					Game.networkManager.sendPacket(this, packet)
 					markDirty()
 				}
 			}
@@ -284,11 +284,11 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 				/**
 				 * Send failure coordinates to client
 				 */
-				val packet = Game.instance.networkManager.newPacket()
+				val packet = Game.networkManager.newPacket()
 				packet <<< PacketBlock.effect
 				packet <<< 3
 				packet <<< failedPositions.asInstanceOf[JSet[Vector3i]]
-				Game.instance.networkManager.sendPacket(this, packet)
+				Game.networkManager.sendPacket(this, packet)
 				//				ModularForceFieldSystem.packetHandler.sendToAllAround(packet, world, position, packetRange)
 			}
 
@@ -315,7 +315,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 		val targetCenterPosition = getTargetPosition
 
 		for (position <- mobilizationPoints) {
-			if (Game.instance.blockManager.getAirBlock.sameType(world.getBlock(position).get())) {
+			if (Game.blockManager.getAirBlock.sameType(world.getBlock(position).get())) {
 				val relativePosition = position - getAbsoluteAnchor
 				val targetPosition = targetCenterPosition._2 + relativePosition
 
@@ -361,8 +361,48 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 			}
 		}
 
-		return Game.instance.blockManager.getAirBlock.sameType(targetBlock)
+		return Game.blockManager.getAirBlock.sameType(targetBlock)
 	}
+
+	/**
+	 * Gets the position in which the manipulator will try to translate the field into.
+	 *
+	 * @return A vector of the target position.
+	 */
+	def getTargetPosition: (World, Vector3i) = {
+		if (isTeleport) {
+			val cardStack = getLinkCard
+
+			if (cardStack != null) {
+				val link = cardStack.asInstanceOf[CoordLink].getLink
+				return (link._1, link._2)
+			}
+		}
+
+		return (world(), getAbsoluteAnchor + get(classOf[Orientation]).orientation.toVector)
+	}
+
+	private def isTeleport: Boolean = {
+		if (Settings.allowForceManipulatorTeleport) {
+			val cardStack = getLinkCard
+
+			if (cardStack != null) {
+				return cardStack.asInstanceOf[CoordLink].getLink != null
+			}
+		}
+		return false
+	}
+
+	def getLinkCard: Item = {
+		inventory
+			.filter(_ != null)
+			.find(_.isInstanceOf[CoordLink]) match {
+			case Some(item) => return item
+			case _ => return null
+		}
+	}
+
+	def getAbsoluteAnchor: Vector3i = transform.position + anchor
 
 	def isVisibleToPlayer(position: Vector3i): Boolean = Direction.DIRECTIONS.count(dir => world.getBlock(position + dir.toVector).get.get(classOf[Collider]).isOpaqueCube.get()) < 6
 
@@ -505,46 +545,6 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 		}
 	}
 
-	/**
-	 * Gets the position in which the manipulator will try to translate the field into.
-	 *
-	 * @return A vector of the target position.
-	 */
-	def getTargetPosition: (World, Vector3i) = {
-		if (isTeleport) {
-			val cardStack = getLinkCard
-
-			if (cardStack != null) {
-				val link = cardStack.asInstanceOf[CoordLink].getLink
-				return (link._1, link._2)
-			}
-		}
-
-		return (world(), getAbsoluteAnchor + get(classOf[Orientation]).orientation.toVector)
-	}
-
-	private def isTeleport: Boolean = {
-		if (Settings.allowForceManipulatorTeleport) {
-			val cardStack = getLinkCard
-
-			if (cardStack != null) {
-				return cardStack.asInstanceOf[CoordLink].getLink != null
-			}
-		}
-		return false
-	}
-
-	def getLinkCard: Item = {
-		inventory
-			.filter(_ != null)
-			.find(_.isInstanceOf[CoordLink]) match {
-			case Some(item) => return item
-			case _ => return null
-		}
-	}
-
-	def getAbsoluteAnchor: Vector3i = transform.position + anchor
-
 	override def write(packet: Packet) {
 		super.write(packet)
 
@@ -630,11 +630,11 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 	 * @return The set of block positions actually moved
 	 */
 	protected def moveBlocks(blockPositions: Set[Vector3i]): Set[Vector3i] = {
-		if (Game.instance.networkManager.isServer) {
+		if (Game.networkManager.isServer) {
 			val actualMovables = blockPositions
 				.filter(blockPos => {
 				val opBlock = world.getBlock(blockPos)
-				opBlock.isPresent && Game.instance.blockManager.getAirBlock.sameType(opBlock.get()) && !sameType(opBlock.get())
+				opBlock.isPresent && Game.blockManager.getAirBlock.sameType(opBlock.get()) && !sameType(opBlock.get())
 			})
 
 			var moveMap = Map.empty[(World, Vector3i), (World, Vector3i)]
@@ -645,7 +645,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 				moveMap += (world, blockPos) ->(getTargetPosition._1, newPosition)
 			})
 
-			Game.instance.syncTicker.preQueue(new DelayedEvent(getMoveTime, () => doMove(moveMap)))
+			Game.syncTicker.preQueue(new DelayedEvent(getMoveTime, () => doMove(moveMap)))
 		}
 
 		return Set.empty
@@ -689,13 +689,13 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Invent
 					newDataMap += (toWorld, toPos) ->(id, null)
 				}
 
-				ModularForceFieldSystem.movementManager.setSneaky(fromWorld, fromPos, Game.instance.blockManager.getAirBlock)
+				ModularForceFieldSystem.movementManager.setSneaky(fromWorld, fromPos, Game.blockManager.getAirBlock)
 		}
 
 		//Do the post-move, which sets all blocks to what they should be
 		newDataMap.foreach {
 			case ((world, pos), (id, data)) =>
-				ModularForceFieldSystem.movementManager.setSneaky(world, pos, Game.instance.blockManager.get(id).get(), data)
+				ModularForceFieldSystem.movementManager.setSneaky(world, pos, Game.blockManager.get(id).get(), data)
 		}
 
 		//Notify block chang in both the old and new positions

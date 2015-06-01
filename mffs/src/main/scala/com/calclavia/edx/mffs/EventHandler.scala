@@ -91,7 +91,7 @@ object EventHandler {
 	 * When a block breaks, mark force field projectors for an update.
 	 */
 	def onBlockChange(evt: GlobalEvents.BlockChangeEvent) {
-		if (Game.instance.networkManager.isServer && evt.newBlock.sameType(Game.instance.blockManager.getAirBlock)) {
+		if (Game.networkManager.isServer && evt.newBlock.sameType(Game.blockManager.getAirBlock)) {
 			GraphFrequency.instance
 				.getNodes
 				.view

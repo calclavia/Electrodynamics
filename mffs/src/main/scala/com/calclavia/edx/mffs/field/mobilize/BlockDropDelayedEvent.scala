@@ -10,7 +10,7 @@ import scala.collection.convert.wrapAll._
 @deprecated
 class BlockDropDelayedEvent(ticks: Int, block: Block, world: World, position: Vector3i) extends DelayedEvent(ticks) {
 	protected override def onEvent {
-		if (Game.instance.networkManager.isServer) {
+		if (Game.networkManager.isServer) {
 			val checkBlock = world.getBlock(position)
 
 			if (checkBlock.isPresent && checkBlock.get == block) {

@@ -24,7 +24,7 @@ abstract class ItemModule extends Item with TooltipItem with Module with AutoIte
 
 	add(new CategoryMFFS)
 
-	tooltipEvent.add(eventListener((evt: TooltipEvent) => evt.tooltips.add(Game.instance.languageManager.translate("info.item.fortron") + " " + new
+	tooltipEvent.add(eventListener((evt: TooltipEvent) => evt.tooltips.add(Game.languageManager.translate("info.item.fortron") + " " + new
 			UnitDisplay(UnitDisplay.Unit.LITER, getFortronCost(1) * 20) + "/s")))
 
 	override def getFortronCost(amplifier: Float) = fortronCost

@@ -144,7 +144,7 @@ class BlockForceField extends BlockDefault with PacketHandler with ForceField wi
 			projector.addFortron(energy, true)
 		}
 
-		if (Game.instance.networkManager.isServer) {
+		if (Game.networkManager.isServer) {
 			world.removeBlock(transform.position)
 		}
 	}
@@ -158,7 +158,7 @@ class BlockForceField extends BlockDefault with PacketHandler with ForceField wi
 			return getProjectorSafe
 		}
 
-		if (Game.instance.networkManager.isServer) {
+		if (Game.networkManager.isServer) {
 			world.removeBlock(transform.position)
 		}
 
@@ -171,7 +171,7 @@ class BlockForceField extends BlockDefault with PacketHandler with ForceField wi
 			val projBlock = world.getBlock(projector)
 			if (projBlock.isPresent) {
 				val proj = projBlock.get().asInstanceOf[BlockProjector]
-				if (Game.instance.networkManager.isClient || (proj.getCalculatedField != null && proj.getCalculatedField.contains(transform.position))) {
+				if (Game.networkManager.isClient || (proj.getCalculatedField != null && proj.getCalculatedField.contains(transform.position))) {
 					return proj
 				}
 			}
@@ -183,7 +183,7 @@ class BlockForceField extends BlockDefault with PacketHandler with ForceField wi
 	def setProjector(position: Vector3i) {
 		projector = position
 
-		if (Game.instance.networkManager.isServer) {
+		if (Game.networkManager.isServer) {
 			refreshCamoBlock()
 		}
 	}

@@ -47,13 +47,13 @@ class ItemModuleDisintegration extends ItemModule {
 				return ProjectState.pass
 			}
 
-			Game.instance.networkManager.sync(PacketBlock.effect, proj)
+			Game.networkManager.sync(PacketBlock.effect, proj)
 
 			if (projector.getModuleCount(Content.moduleCollection) > 0) {
-				Game.instance.syncTicker.preQueue(new BlockInventoryDropDelayedEvent(39, block, world, position, projector.asInstanceOf[InventoryProvider]))
+				Game.syncTicker.preQueue(new BlockInventoryDropDelayedEvent(39, block, world, position, projector.asInstanceOf[InventoryProvider]))
 			}
 			else {
-				Game.instance.syncTicker.preQueue(new BlockDropDelayedEvent(39, block, world, position))
+				Game.syncTicker.preQueue(new BlockDropDelayedEvent(39, block, world, position))
 			}
 
 			blockCount += 1

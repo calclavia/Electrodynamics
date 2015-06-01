@@ -29,10 +29,10 @@ class ItemCardIdentification extends ItemCardAccess with PacketHandler {
 
 	tooltipEvent.add(eventListener((evt: TooltipEvent) => {
 		if (access != null) {
-			evt.tooltips.add(Game.instance.languageManager.translate("info.cardIdentification.username") + " " + access.asInstanceOf[AccessUser].username)
+			evt.tooltips.add(Game.languageManager.translate("info.cardIdentification.username") + " " + access.asInstanceOf[AccessUser].username)
 		}
 		else {
-			evt.tooltips.add(Game.instance.languageManager.translate("info.cardIdentification.empty"))
+			evt.tooltips.add(Game.languageManager.translate("info.cardIdentification.empty"))
 		}
 	}))
 
@@ -40,7 +40,7 @@ class ItemCardIdentification extends ItemCardAccess with PacketHandler {
 		if (Side.get.isServer) {
 			if (evt.entity.has(classOf[Player])) {
 				val player = evt.entity.get(classOf[Player])
-				if (Game.instance.keyManager.isKeyDown(Key.KEY_LSHIFT)) {
+				if (Game.keyManager.isKeyDown(Key.KEY_LSHIFT)) {
 
 					if (access != null) {
 						access = new AccessUser(player.getUsername)
@@ -53,7 +53,7 @@ class ItemCardIdentification extends ItemCardAccess with PacketHandler {
 					/**
 					 * Open item GUI
 					 */
-					Game.instance.guiFactory.showGui("idCard", evt.entity, new Vector3i(0, 0, 0))
+					Game.guiFactory.showGui("idCard", evt.entity, new Vector3i(0, 0, 0))
 				}
 			}
 		}

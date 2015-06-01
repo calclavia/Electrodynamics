@@ -3,9 +3,10 @@ package com.calclavia.edx.mffs
 import com.calclavia.edx.mffs.api.fortron.Fortron
 import com.calclavia.edx.mffs.content.{Content, Models, Textures}
 import com.calclavia.edx.mffs.security.MFFSPermissions
-import com.resonant.lib.{WrapFunctions, MovementManager}
-import WrapFunctions._
-import nova.core.event.GlobalEvents.{BlockChangeEvent, EmptyEvent}
+import com.resonant.lib.WrapFunctions._
+import com.resonant.lib.{MovementManager, WrapFunctions}
+import nova.core.event.Event
+import nova.core.event.GlobalEvents.BlockChangeEvent
 import nova.core.fluid.Fluid
 import nova.core.game.Game
 import nova.core.loader.{Loadable, NovaMod}
@@ -20,16 +21,16 @@ object ModularForceFieldSystem extends Loadable {
 		/**
 		 * Registration
 		 */
-		Game.instance.eventManager.blockChange.add((evt: BlockChangeEvent) => EventHandler.onBlockChange(evt))
+		Game.eventManager.blockChange.add((evt: BlockChangeEvent) => EventHandler.onBlockChange(evt))
 		//		MinecraftForge.EVENT_BUS.register(SubscribeEventHandler)
 		//		MinecraftForge.EVENT_BUS.register(Content.remoteController)
 
-		Game.instance.eventManager.serverStarting.add((evt: EmptyEvent) => {
+		Game.eventManager.serverStarting.add((evt: Event) => {
 			GraphFrequency.client = new GraphFrequency
 			GraphFrequency.server = new GraphFrequency
 		})
 
-		Game.instance.fluidManager.register((args: Array[AnyRef]) => new Fluid(Fortron.fortronID))
+		Game.fluidManager.register((args: Array[AnyRef]) => new Fluid(Fortron.fortronID))
 
 		Content.preInit()
 		Models.preInit()

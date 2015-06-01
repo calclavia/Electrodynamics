@@ -7,7 +7,7 @@ import nova.core.game.Game
 import nova.core.item.Item.TooltipEvent
 
 class ItemModuleDefense extends ItemModule {
-	tooltipEvent.add(eventListener((evt: TooltipEvent) => evt.tooltips.add("\u00a74" + Game.instance.languageManager.translate("info.module.defense"))))
+	tooltipEvent.add(eventListener((evt: TooltipEvent) => evt.tooltips.add("\u00a74" + Game.languageManager.translate("info.module.defense"))))
 
 	override def getID: String = "moduleDefense"
 }

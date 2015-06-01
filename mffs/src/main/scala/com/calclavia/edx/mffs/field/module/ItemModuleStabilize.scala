@@ -80,7 +80,7 @@ class ItemModuleStabilize extends ItemModule {
 					inv.remove(item.withAmount(1))
 					//copyStack.getItem.asInstanceOf[ItemBlock].placeBlockAt(copyStack, null, world, position.xi, position.yi, position.zi, 0, 0, 0, 0, metadata)
 					world.setBlock(position, blockFactory)
-					Game.instance.networkManager.sync(PacketBlock.effect2, proj)
+					Game.networkManager.sync(PacketBlock.effect2, proj)
 
 					blockCount += 1
 
@@ -93,7 +93,7 @@ class ItemModuleStabilize extends ItemModule {
 				}
 				catch {
 					case e: Exception => {
-						Game.instance.logger.error("Stabilizer failed to place item '" + item + "'. The item or block may not have correctly implemented the placement methods.")
+						Game.logger.error("Stabilizer failed to place item '" + item + "'. The item or block may not have correctly implemented the placement methods.")
 						e.printStackTrace()
 					}
 				}

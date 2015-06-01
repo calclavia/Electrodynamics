@@ -43,7 +43,7 @@ public interface Fortron extends SidedTankProvider {
 	 * @return The amount of fortron that was added.
 	 */
 	default int addFortron(int energy, boolean doUse) {
-		return getFortronTank().addFluid(Game.instance.fluidManager.getFactory(fortronID).get().makeFluid().withAmount(energy), !doUse);
+		return getFortronTank().addFluid(Game.fluidManager().getFactory(fortronID).get().makeFluid().withAmount(energy), !doUse);
 	}
 
 	/**

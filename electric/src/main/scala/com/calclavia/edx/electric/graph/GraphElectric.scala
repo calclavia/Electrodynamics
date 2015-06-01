@@ -56,7 +56,7 @@ class GraphElectric extends GraphConnect[Electric] with Updater {
 	 */
 	override def build() {
 		buildAll()
-		Game.instance.syncTicker.add(this)
+		Game.syncTicker.add(this)
 	}
 
 	def buildAll() {

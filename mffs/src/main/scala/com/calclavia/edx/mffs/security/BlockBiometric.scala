@@ -59,7 +59,7 @@ class BlockBiometric extends BlockFrequency with Updater with PermissionHandler 
 		     * Simulate flicker and, hovering
 		     */
 		    val t = System.currentTimeMillis()
-		    val dist = position.distance(Game.instance.clientManager.getPlayer.position)
+		    val dist = position.distance(Game.clientManager.getPlayer.position)
 
 		    if (dist < 3) {
 			    if (Math.random() > 0.05 || (lastFlicker - t) > 200) {
