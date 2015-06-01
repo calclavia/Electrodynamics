@@ -265,18 +265,18 @@ class ElectricGrid extends Updater {
 	/**
 	 * Creates or gets an existing Junction
 	 */
-	def convert(nodeJunction: NodeElectricJunction): Junction =
-		junctions
+	def convert(nodeJunction: NodeElectricJunction): Junction = {
+		val find = junctions
 			.find(j => j.wires.contains(nodeJunction))
-			.collect {
-			case junction: Junction => junction
-			case _ =>
-				val newJunction = new Junction
-				newJunction.wires += nodeJunction
-				junctions.add(newJunction)
-				newJunction
-		}
-			.get
+
+		if (find.isDefined)
+			return find.get
+
+		val newJunction = new Junction
+		newJunction.wires += nodeJunction
+		junctions :+= newJunction
+		return newJunction
+	}
 
 	override def update(deltaTime: Double) {
 		if (junctions.nonEmpty) {
