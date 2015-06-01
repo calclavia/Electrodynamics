@@ -5,7 +5,7 @@ import com.calclavia.edx.mffs.content.{Content, Models, Textures}
 import com.calclavia.edx.mffs.security.MFFSPermissions
 import com.resonant.lib.{WrapFunctions, MovementManager}
 import WrapFunctions._
-import nova.core.event.EventManager.{BlockChangeEvent, EmptyEvent}
+import nova.core.event.GlobalEvents.{BlockChangeEvent, EmptyEvent}
 import nova.core.fluid.Fluid
 import nova.core.game.Game
 import nova.core.loader.{Loadable, NovaMod}
