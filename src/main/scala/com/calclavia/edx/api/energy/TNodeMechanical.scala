@@ -1,13 +1,13 @@
 package com.calclavia.edx.api.energy
 
-import com.calclavia.graph.node.Node
+import nova.core.block.component.Connectable
 
 /**
  * Applied to any node that will act as a mechanical object
  *
  * @author Calclavia, Darkguardsman
  */
-trait TNodeMechanical extends Node[TNodeMechanical] {
+trait TNodeMechanical extends Connectable[TNodeMechanical] {
 	/**
 	 * Gets the angular velocity of the mechanical device from a specific side
 	 *

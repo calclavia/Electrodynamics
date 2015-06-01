@@ -17,7 +17,7 @@ import scala.collection.convert.wrapAll._
  *
  * @author Calclavia
  */
-class NodeElectricComponent(parent: Block) extends NodeElectric(parent) with ElectricComponent {
+class NodeElectricComponent(parent: Block) extends ElectricComponent with ElectricLike {
 
 	/**
 	 * The current and voltage values are set are determined by the DC Grid
@@ -82,5 +82,7 @@ class NodeElectricComponent(parent: Block) extends NodeElectric(parent) with Ele
 		onSetCurrent.foreach(_.apply(this))
 	}
 
-	override def toString = "ElectricComponent [" + connections.size() + " " + BigDecimal(current).setScale(2, BigDecimal.RoundingMode.HALF_UP) + "A " + BigDecimal(voltage).setScale(2, BigDecimal.RoundingMode.HALF_UP) + "V]"
+	override def toString = "ElectricComponent [" + con.size + " " + BigDecimal(current).setScale(2, BigDecimal.RoundingMode.HALF_UP) + "A " + BigDecimal(voltage).setScale(2, BigDecimal.RoundingMode.HALF_UP) + "V]"
+
+	override protected def block: Block = parent
 }

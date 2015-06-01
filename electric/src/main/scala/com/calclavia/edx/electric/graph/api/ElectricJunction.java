@@ -9,6 +9,6 @@ import java.util.Set;
  * Constructor requirement: Provider (An instance of {@link Block}
  * @author Calclavia
  */
-public interface ElectricJunction extends Electric {
-	Set<Electric> connections();
+public abstract class ElectricJunction extends Electric {
+
 }

@@ -87,8 +87,7 @@ class BlockWire extends Block with Storable with PacketHandler {
 	/**
 	 * Add components
 	 */
-	add(electricNode)
-		.setConnections(() => computeConnection)
+	add(electricNode).setConnections(() => computeConnection)
 
 	add(new Microblock(this))
 		.setOnPlace(

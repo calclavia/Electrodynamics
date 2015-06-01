@@ -1,7 +1,6 @@
 package com.calclavia.edx.electric.graph
 
 import com.calclavia.edx.electric.graph.api.ElectricJunction
-import com.calclavia.edx.electric.graph.component.Junction
 import nova.core.block.Block
 
 /**
@@ -9,17 +8,15 @@ import nova.core.block.Block
  * Wires will be treated as junctions and collapsed.
  * @author Calclavia
  */
-class NodeElectricJunction(parent: Block) extends NodeElectric(parent) with ElectricJunction {
+class NodeElectricJunction(parent: Block) extends ElectricJunction with ElectricLike {
 
-	var junction: Junction = null
+	protected[graph] var _voltage = 0d
 
 	override def current: Double = voltage * voltage / resistance
 
-	override def voltage: Double = junction.voltage
+	override def toString: String = "ElectricJunction [" + BigDecimal(voltage).setScale(2, BigDecimal.RoundingMode.HALF_UP) + "V]"
 
-	override def toString: String =
-		if (junction != null)
-			"ElectricJunction [" + BigDecimal(voltage).setScale(2, BigDecimal.RoundingMode.HALF_UP) + "V]"
-		else
-			"ElectricJunction"
+	override def voltage: Double = _voltage
+
+	override protected def block: Block = parent
 }

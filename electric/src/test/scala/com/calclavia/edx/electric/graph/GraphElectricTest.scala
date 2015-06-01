@@ -85,6 +85,34 @@ class GraphElectricTest {
 
 		println(profiler.average())
 	}
+
+	/**
+	 * Connects a sequence of electric nodes in series excluding the first and last connection.
+	 */
+	def connectInSeries(series: Electric*): Seq[Electric] = {
+		series.zipWithIndex.foreach {
+			case (component: DummyComponent, index) =>
+				index match {
+					case 0 => component.connectPos(series(index + 1))
+					case l if l == series.size - 1 =>
+						component.connectNeg(series(index - 1))
+					case _ =>
+						component.connectNeg(series(index - 1))
+						component.connectPos(series(index + 1))
+				}
+			case (wire: DummyWire, index) =>
+				index match {
+					case 0 => wire.connect(series(index + 1))
+					case l if l == series.size - 1 =>
+						wire.connect(series(index - 1))
+					case _ =>
+						wire.connect(series(index - 1))
+						wire.connect(series(index + 1))
+				}
+		}
+		return series
+	}
+
 	/**
 	 * Graph 2.
 	 * Series circuit with more than one node.
@@ -337,33 +365,6 @@ class GraphElectricTest {
 		}
 	}
 
-	/**
-	 * Connects a sequence of electric nodes in series excluding the first and last connection.
-	 */
-	def connectInSeries(series: Electric*): Seq[Electric] = {
-		series.zipWithIndex.foreach {
-			case (component: DummyComponent, index) =>
-				index match {
-					case 0 => component.connectPos(series(index + 1))
-					case l if l == series.size - 1 =>
-						component.connectNeg(series(index - 1))
-					case _ =>
-						component.connectNeg(series(index - 1))
-						component.connectPos(series(index + 1))
-				}
-			case (wire: DummyWire, index) =>
-				index match {
-					case 0 => wire.connect(series(index + 1))
-					case l if l == series.size - 1 =>
-						wire.connect(series(index - 1))
-					case _ =>
-						wire.connect(series(index - 1))
-						wire.connect(series(index + 1))
-				}
-		}
-		return series
-	}
-
 	class DummyComponent extends NodeElectricComponent(new FakeBlock("dummy")) {
 		var positives = Set.empty[Electric]
 		var negatives = Set.empty[Electric]
@@ -379,7 +380,7 @@ class GraphElectricTest {
 			negatives += electric
 		}
 
-		override def connections: util.Set[Electric] = positives ++ negatives
+		override def con: util.Set[Electric] = positives ++ negatives
 	}
 
 	class DummyWire extends NodeElectricJunction(new FakeBlock("dummy")) {
@@ -390,7 +391,7 @@ class GraphElectricTest {
 			_connections += electric
 		}
 
-		override def connections: util.Set[Electric] = _connections
+		override def con: util.Set[Electric] = _connections
 	}
 
 }

@@ -4,7 +4,6 @@ import java.util.{List => JList}
 
 import com.calclavia.edx.mffs.api.Frequency
 import com.calclavia.edx.mffs.api.fortron.IServerThread
-import com.calclavia.graph.graph.Graph
 
 import scala.collection.convert.wrapAll._
 
@@ -22,17 +21,17 @@ object GraphFrequency {
 	}
 }
 
-class GraphFrequency extends Graph[Frequency] {
+class GraphFrequency {
 
 	private var nodes = Set.empty[Frequency]
 	private var frequencyMap = Map.empty[Int, Set[Frequency]].withDefaultValue(Set.empty)
 
-	override def add(node: Frequency) {
+	def add(node: Frequency) {
 		nodes += node
 		build()
 	}
 
-	override def build() {
+	def build() {
 		frequencyMap = Map.empty.withDefaultValue(Set.empty)
 
 		getNodes.map(n => (n.getFrequency, n)).foreach(kv =>
@@ -40,9 +39,9 @@ class GraphFrequency extends Graph[Frequency] {
 		)
 	}
 
-	override def getNodes: JList[Frequency] = nodes.toList
+	def getNodes: JList[Frequency] = nodes.toList
 
-	override def remove(node: Frequency) {
+	def remove(node: Frequency) {
 		nodes -= node
 		build()
 	}
