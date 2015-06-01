@@ -1,9 +1,6 @@
 package com.calclavia.edx.electric
 
 import com.calclavia.edx.core.Reference
-import com.calclavia.edx.electric.graph.NodeElectricComponent
-import nova.core.block.Block
-import nova.core.game.Game
 import nova.core.loader.{Loadable, NovaMod}
 
 @NovaMod(
@@ -11,7 +8,8 @@ import nova.core.loader.{Loadable, NovaMod}
 	name = "Electrodynamics: Electric",
 	version = Reference.version,
 	novaVersion = Reference.novaVersion,
-	dependencies = Array("microblock", "resonantengine")
+	dependencies = Array("microblock", "resonantengine"),
+	domains = Array("edx")
 )
 object Electric extends Loadable {
 	/*
