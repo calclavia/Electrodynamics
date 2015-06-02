@@ -1,51 +1,29 @@
-package com.calclavia.edx.electrical.circuit.source.battery
+package com.calclavia.edx.electric.circuit.source
 
-import java.util.List
+import com.resonant.core.energy.EnergyStorage
+import com.resonant.lib.WrapFunctions._
+import nova.core.block.BlockFactory
+import nova.core.game.Game
+import nova.core.item.Item.TooltipEvent
+import nova.core.item.ItemBlock
+import nova.core.retention.{Storable, Stored}
 
-import net.minecraft.block.Block
-import net.minecraft.creativetab.CreativeTabs
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.item.{Item, ItemBlock, ItemStack}
-import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.world.World
-import resonantengine.lib.utility.LanguageUtility
-import resonantengine.lib.wrapper.CollectionWrapper._
-import resonantengine.prefab.item.TEnergyItem
+class ItemBlockBattery(blockFactory: BlockFactory) extends ItemBlock(blockFactory) with Storable {
+	@Stored
+	var tier = 0
 
-object ItemBlockBattery
-{
-  def setTier(itemStack: ItemStack, tier: Int): ItemStack =
-  {
-    if (itemStack.getTagCompound == null)
-    {
-      itemStack.setTagCompound(new NBTTagCompound)
-    }
-    itemStack.getTagCompound.setByte("tier", tier.toByte)
-    return itemStack
-  }
+	@Stored
+	var energy = add(new EnergyStorage(BlockBattery.getEnergyForTier(tier)))
 
-  def getTier(itemStack: ItemStack): Int =
-  {
-    if (itemStack.getTagCompound == null)
-    {
-      itemStack.setTagCompound(new NBTTagCompound)
-    }
-    return itemStack.getTagCompound.getByte("tier")
-  }
-}
+	tooltipEvent.add(
+		eventListener((evt: TooltipEvent) => {
+			evt.tooltips.add(Game.language().translate("tooltip.tier") + ": " + (tier + 1))
+		})
+	)
 
-class ItemBlockBattery(block: Block) extends ItemBlock(block) with TEnergyItem
-{
-  this.setMaxStackSize(1)
-  this.setMaxDamage(100)
-  this.setNoRepair
+	override def getMaxCount: Int = 1
 
-  override def addInformation(itemStack: ItemStack, entityPlayer: EntityPlayer, list: List[_], par4: Boolean)
-  {
-    list.add(LanguageUtility.getLocal("tooltip.tier") + ": " + (ItemBlockBattery.getTier(itemStack) + 1))
-    super.addInformation(itemStack, entityPlayer, list, par4)
-  }
-
+	/*
   /**
    * Makes sure the item is uncharged when it is crafted and not charged. Change this if you do
    * not want this to happen!
@@ -102,5 +80,5 @@ class ItemBlockBattery(block: Block) extends ItemBlock(block) with TEnergyItem
       list.add(setEnergy(ItemBlockBattery.setTier(new ItemStack(this), tier), 0))
       list.add(setEnergy(ItemBlockBattery.setTier(new ItemStack(this), tier), TileBattery.getEnergyForTier(tier)))
     }
-  }
+  }*/
 }

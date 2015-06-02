@@ -15,6 +15,7 @@ import scala.collection.convert.wrapAll._
  * A node that connects to adjacent blocks.
  * @author Calclavia
  */
+@deprecated
 trait BlockConnectable[N] extends Connectable[N] {
 
 	/**

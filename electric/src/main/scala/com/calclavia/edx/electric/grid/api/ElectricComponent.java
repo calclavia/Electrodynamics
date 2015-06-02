@@ -18,6 +18,18 @@ public abstract class ElectricComponent extends Electric {
 	}
 
 	/**
+	 * Asks the component to generate a potential difference.
+	 * @param voltage The voltage in volts.
+	 */
+	public abstract void generateVoltage(double voltage);
+
+	/**
+	 * Asks the component to generate current.
+	 * @param current The current in amps.
+	 */
+	public abstract void generateCurrent(double current);
+
+	/**
 	 * @return The positive connections
 	 */
 	public abstract Set<Electric> positives();

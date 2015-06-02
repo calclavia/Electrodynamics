@@ -1,7 +1,6 @@
 package com.calclavia.edx.mffs.field
 
-import java.util
-import java.util.Optional
+import java.util.{Collections, Optional}
 
 import com.calclavia.edx.mffs.api.machine.ForceField
 import com.calclavia.edx.mffs.api.modules.Module
@@ -9,7 +8,8 @@ import com.calclavia.edx.mffs.content.{Content, Textures}
 import com.calclavia.edx.mffs.security.MFFSPermissions
 import com.calclavia.edx.mffs.util.MFFSUtility
 import com.resonant.lib.WrapFunctions
-import WrapFunctions._
+import com.resonant.lib.WrapFunctions._
+import nova.core.block.Block.DropEvent
 import nova.core.block.component.{LightEmitter, StaticBlockRenderer}
 import nova.core.block.{Block, BlockDefault}
 import nova.core.component.misc.Collider.CollideEvent
@@ -18,16 +18,12 @@ import nova.core.component.renderer.StaticRenderer
 import nova.core.entity.Entity
 import nova.core.entity.component.Player
 import nova.core.game.Game
-import nova.core.item.Item
 import nova.core.network.NetworkTarget.Side
 import nova.core.network.{PacketHandler, Sync}
 import nova.core.render.model.Model
 import nova.core.retention.{Storable, Stored}
 import nova.core.util.Direction
-import nova.core.util.transform.shape.Cuboid
 import nova.core.util.transform.vector.Vector3i
-
-import scala.collection.convert.wrapAll._
 
 class BlockForceField extends BlockDefault with PacketHandler with ForceField with Storable {
 
@@ -129,11 +125,11 @@ class BlockForceField extends BlockDefault with PacketHandler with ForceField wi
 	    }
 		)
 
+	dropEvent.add((evt: DropEvent) => evt.drops = Collections.emptySet())
+
 	override def getHardness: Double = Double.PositiveInfinity
 
 	override def getResistance: Double = Double.PositiveInfinity
-
-	override def getDrops: util.Set[Item] = Set.empty[Item]
 
 	override def getID: String = "forceField"
 

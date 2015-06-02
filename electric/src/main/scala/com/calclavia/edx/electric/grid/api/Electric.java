@@ -10,6 +10,12 @@ import nova.core.block.component.Connectable;
 public abstract class Electric extends Connectable<Electric> {
 
 	/**
+	 * Sets the resistance.
+	 * @param resistance Resistance in ohms
+	 */
+	public abstract Electric setResistance(double resistance);
+
+	/**
 	 * @return The resistance of the electric component in ohms.
 	 */
 	public abstract double resistance();

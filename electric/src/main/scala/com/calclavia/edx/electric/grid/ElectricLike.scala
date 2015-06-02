@@ -25,28 +25,33 @@ trait ElectricLike extends Electric with BlockConnectable[Electric] {
 		(evt: LoadEvent) => {
 			//Wait for next tick
 			if (Side.get().isServer) {
-				Game.syncTicker().preQueue(() => notifyGrid())
+				Game.syncTicker().preQueue(() => build())
 			}
 		}
 	)
 
-	block.neighborChangeEvent.add((evt: NeighborChangeEvent) => notifyGrid())
+	block.neighborChangeEvent.add((evt: NeighborChangeEvent) => rebuild())
 
-	def notifyGrid() {
-		ElectricGrid(this).addRecursive(this).build()
-		con
+	def rebuild() {
+		ElectricGrid.destroy(this)
+		build()
 	}
 
-	def resistance = _resistance
+	def build() {
+		ElectricGrid(this).addRecursive(this).build()
+	}
+
+	override def resistance = _resistance
 
 	def resistance_=(res: Double) {
 		_resistance = res
 		onResistanceChange.foreach(_.apply(this))
 	}
 
-	def getResistance = _resistance
-
-	def setResistance(res: Double) = _resistance = res
+	override def setResistance(resistance: Double): Electric = {
+		_resistance = resistance
+		this
+	}
 
 	def con: Set[Electric] = connections.get().toSet
 }

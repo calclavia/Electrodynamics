@@ -33,6 +33,10 @@ object ElectricGrid {
 		return grid
 	}
 
+	def destroy(electric: Electric) {
+		grids.removeAll(grids.filter(grid => grid.has(electric)))
+	}
+
 	/**
 	 * An element in the electric grid
 	 * @author Calclavia

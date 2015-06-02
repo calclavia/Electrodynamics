@@ -1,21 +1,6 @@
-package com.calclavia.edx.electrical.circuit.source
+package com.calclavia.edx.electric.circuit.source.disable
 
-import com.calclavia.edx.mechanical.mech.grid.NodeMechanical
-import cpw.mods.fml.relauncher.{Side, SideOnly}
-import edx.core.Reference
-import net.minecraft.block.material.Material
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.util.{ChatComponentText, ResourceLocation}
-import net.minecraftforge.client.model.AdvancedModelLoader
 import nova.core.util.Direction
-import org.lwjgl.opengl.GL11
-import resonantengine.lib.content.prefab.TIO
-import resonantengine.lib.grid.energy.electric.NodeElectricComponent
-import resonantengine.lib.modcontent.block.ResonantTile
-import resonantengine.lib.render.RenderUtility
-import resonantengine.lib.transform.vector.Vector3
-import resonantengine.prefab.block.impl.{TBlockNodeProvider, TRotatable}
 
 /**
  * A kinetic energy to electrical energy converter.

@@ -1,6 +1,7 @@
 package com.calclavia.edx.mffs.field.mobilize
 
 import nova.core.block.Block
+import nova.core.block.Block.DropEvent
 import nova.core.game.Game
 import nova.core.inventory.component.InventoryProvider
 import nova.core.util.transform.vector.Vector3i
@@ -15,8 +16,9 @@ class BlockInventoryDropDelayedEvent(ticks: Int, block: Block, world: World, pos
 			val checkBlock = world.getBlock(position)
 
 			if (checkBlock.isPresent && checkBlock.get == block) {
-				val drops = block.getDrops()
-				drops.foreach(inv.getInventory().head.add)
+				val evt = new DropEvent(block)
+				val drops = block.dropEvent.publish(evt)
+				evt.drops.foreach(inv.getInventory.head.add)
 				world.removeBlock(position)
 			}
 		}

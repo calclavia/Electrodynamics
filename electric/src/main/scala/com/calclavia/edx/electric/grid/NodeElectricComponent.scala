@@ -68,7 +68,7 @@ class NodeElectricComponent(parent: Block) extends ElectricComponent with Electr
 	 * Generates a potential difference across the two intersections that go across this node.
 	 * @param voltage - The target voltage, in Volts
 	 */
-	def setVoltage(voltage: Double) {
+	override def generateVoltage(voltage: Double) {
 		genVoltage = voltage
 		onSetVoltage.foreach(_.apply(this))
 	}
@@ -77,7 +77,7 @@ class NodeElectricComponent(parent: Block) extends ElectricComponent with Electr
 	 * Generates power by adjusting varying the voltage until the target power is reached
 	 * @param power - The target power, in Watts
 	 */
-	def setCurrent(power: Double) {
+	override def generateCurrent(power: Double) {
 		genCurrent = power
 		onSetCurrent.foreach(_.apply(this))
 	}
