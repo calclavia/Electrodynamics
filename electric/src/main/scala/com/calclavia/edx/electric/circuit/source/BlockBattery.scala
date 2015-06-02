@@ -3,12 +3,12 @@ package com.calclavia.edx.electric.circuit.source
 import java.util.function.Supplier
 import java.util.{Collections, Set => JSet}
 
+import com.calclavia.edx.core.prefab.BlockEDX
 import com.calclavia.edx.electric.ElectricContent
 import com.calclavia.edx.electric.grid.NodeElectricComponent
 import com.calclavia.edx.electric.grid.api.{ConnectionBuilder, Electric}
 import com.calclavia.minecraft.redstone.Redstone
 import com.resonant.core.energy.EnergyStorage
-import nova.core.block.Block
 import nova.core.block.Block.{BlockPlaceEvent, DropEvent}
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.misc.Collider
@@ -36,7 +36,7 @@ object BlockBattery {
 	def getEnergyForTier(tier: Int) = Math.round(Math.pow(500000000, (tier / (maxTier + 0.7f)) + 1) / 500000000) * 500000000
 }
 
-class BlockBattery extends Block with PacketHandler with Storable with ExtendedUpdater {
+class BlockBattery extends BlockEDX with PacketHandler with Storable with ExtendedUpdater {
 
 	@Stored
 	@Sync

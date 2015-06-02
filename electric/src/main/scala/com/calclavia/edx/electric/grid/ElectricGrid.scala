@@ -229,7 +229,7 @@ class ElectricGrid extends ExtendedUpdater {
 				val component = new Component(nodeComponent)
 				//Check positive terminal connections
 				connectionGraph
-					.outgoingEdgesOf(nodeComponent)
+					.edgesOf(nodeComponent)
 					.map(connectionGraph.getEdgeTarget)
 					.foreach {
 					case checkNodeComponent: NodeElectricComponent =>
