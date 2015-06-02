@@ -13,7 +13,7 @@ class ItemBlockBattery(blockFactory: BlockFactory) extends ItemBlock(blockFactor
 	var tier = 0
 
 	@Stored
-	var energy = add(new EnergyStorage(BlockBattery.getEnergyForTier(tier)))
+	var energy = add(new EnergyStorage().setMax(BlockBattery.getEnergyForTier(tier)))
 
 	tooltipEvent.add(
 		eventListener((evt: TooltipEvent) => {

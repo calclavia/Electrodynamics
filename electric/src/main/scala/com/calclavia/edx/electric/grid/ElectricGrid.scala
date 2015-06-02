@@ -4,13 +4,15 @@ import java.util
 import java.util.Collections
 
 import com.calclavia.edx.electric.grid.api.{Electric, ElectricComponent}
-import nova.core.game.Game
 import nova.core.util.transform.matrix.Matrix
 import nova.scala.ExtendedUpdater
 import org.jgrapht.alg.CycleDetector
 import org.jgrapht.graph.{DefaultDirectedGraph, DefaultEdge, SimpleGraph}
 
 import scala.collection.convert.wrapAll._
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent._
+import scala.util.{Failure, Success}
 
 /**
  * An electric circuit grid for independent voltage sources.
@@ -129,8 +131,6 @@ class ElectricGrid extends ExtendedUpdater {
 	//The graph of all electric elements. In this directed graph the arrow points from positive to negative in potential difference.
 	protected[grid] var electricGraph: DefaultDirectedGraph[ElectricElement, DefaultEdge] = null
 
-	Game.threadTicker.add(this)
-
 	/**
 	 * Finds all the nodes that are interconnected
 	 * @param node The node to being with
@@ -173,9 +173,19 @@ class ElectricGrid extends ExtendedUpdater {
 			case node: NodeElectricComponent =>
 				connections.foreach(connectionGraph.addVertex)
 				connections.foreach(n => connectionGraph.addEdge(node, n))
-				node.onResistanceChange :+= ((resistor: Electric) => resistorChanged = true)
-				node.onSetVoltage :+= ((source: Electric) => sourceChanged = true)
-				node.onSetCurrent :+= ((source: Electric) => sourceChanged = true)
+
+				node.onResistanceChange :+= ((resistor: Electric) => {
+					resistorChanged = true
+					requestUpdate()
+				})
+				node.onVoltageChange :+= ((source: Electric) => {
+					sourceChanged = true
+					requestUpdate()
+				})
+				node.onCurrentChange :+= ((source: Electric) => {
+					sourceChanged = true
+					requestUpdate()
+				})
 			case node: NodeElectricJunction =>
 				connections.foreach(connectionGraph.addVertex(_))
 		}
@@ -276,36 +286,55 @@ class ElectricGrid extends ExtendedUpdater {
 			ground = junctions.head
 			junctions = junctions.splitAt(1)._2
 			ground.voltage = 0
+
+			println("Built grid successfully")
+			requestUpdate()
 		}
 	}
 
-	override def update(deltaTime: Double) {
+	var updateFuture: Future[Unit] = _
 
-		val detector = new CycleDetector(electricGraph)
-
-		if (junctions.nonEmpty && detector.detectCycles()) {
-			if (mna == null) {
-				setupMNA()
-				generateConnectionMatrix()
-				resistorChanged = true
-				sourceChanged = true
+	def requestUpdate() {
+		if (updateFuture == null || updateFuture.isCompleted) {
+			updateFuture = update()
+			updateFuture.onComplete {
+				case Success(nothing) => println("Circuit solved")
+				case Failure(ex) => println("Circuit failed: " + ex.printStackTrace)
 			}
+		}
+		else {
+			updateFuture.onComplete(f => requestUpdate())
+		}
+	}
 
-			if (resistorChanged) {
-				generateConductanceMatrix()
+	def update(): Future[Unit] = Future {
+		electricGraph.synchronized {
+			val detector = new CycleDetector(electricGraph)
+
+			if (junctions.nonEmpty && detector.detectCycles()) {
+				println("Solving circuit...")
+				if (mna == null) {
+					setupMNA()
+					generateConnectionMatrix()
+					resistorChanged = true
+					sourceChanged = true
+				}
+
+				if (resistorChanged) {
+					generateConductanceMatrix()
+				}
+
+				if (sourceChanged) {
+					computeSourceMatrix()
+				}
+
+				if (resistorChanged || sourceChanged) {
+					solve()
+				}
+
+				resistorChanged = false
+				sourceChanged = false
 			}
-
-			if (sourceChanged) {
-				computeSourceMatrix()
-			}
-
-			if (resistorChanged || sourceChanged) {
-				solve()
-			}
-
-			//TODO: Do not empty voltage
-			resistorChanged = false
-			sourceChanged = false
 		}
 	}
 

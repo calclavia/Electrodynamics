@@ -9,7 +9,7 @@ import com.calclavia.edx.electric.grid.NodeElectricComponent
 import com.calclavia.edx.electric.grid.api.{ConnectionBuilder, Electric}
 import com.calclavia.minecraft.redstone.Redstone
 import com.resonant.core.energy.EnergyStorage
-import nova.core.block.Block.{BlockPlaceEvent, DropEvent}
+import nova.core.block.Block.{BlockPlaceEvent, DropEvent, RightClickEvent}
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.misc.Collider
 import nova.core.component.renderer.ItemRenderer
@@ -119,6 +119,9 @@ class BlockBattery extends BlockEDX with PacketHandler with Storable with Extend
 		evt.drops = Collections.singleton(item)
 	})
 
+	//TODO: Remove debug
+	rightClickEvent.add((evt: RightClickEvent) => println(electricNode))
+
 	override def onRegister() {
 		Game.items.register(func[Array[AnyRef], Item]((args: Array[AnyRef]) => new ItemBlockBattery(factory())))
 	}
@@ -136,6 +139,7 @@ class BlockBattery extends BlockEDX with PacketHandler with Storable with Extend
 			else {
 				//Recharge battery when current is flowing negative direction
 				energy += electricNode.power / 20
+				electricNode.generateVoltage(0)
 			}
 
 			if (energy.prev != energy.value) {
