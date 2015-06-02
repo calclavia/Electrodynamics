@@ -115,7 +115,7 @@ class ElectricGrid extends Updater {
 	//The graph of all electric elements. In this directed graph the arrow points from positive to negative in potential difference.
 	protected[grid] var electricGraph: DefaultDirectedGraph[ElectricElement, DefaultEdge] = null
 
-	Game.syncTicker.add(this)
+	Game.threadTicker.add(this)
 
 	def findAll(node: Electric, builder: Set[Electric] = Set.empty): Set[Electric] =
 		node match {
