@@ -2,7 +2,6 @@ package com.calclavia.edx.electric.grid
 
 import java.io.{File, FileWriter}
 
-import com.calclavia.edx.electric.grid.ElectricGrid.ElectricElement
 import com.calclavia.edx.electric.grid.api.Electric
 import com.resonant.lib.WrapFunctions._
 import nova.core.util.Profiler
@@ -10,8 +9,8 @@ import nova.internal.launch.NovaLauncher
 import nova.testutils.FakeBlock
 import nova.wrappertests.NovaLauncherTestFactory
 import org.assertj.core.api.Assertions._
-import org.jgrapht.ext.DOTExporter
-import org.jgrapht.graph.DefaultEdge
+import org.jgrapht.Graph
+import org.jgrapht.ext.{DOTExporter, VertexNameProvider}
 import org.junit.{BeforeClass, Test}
 
 import scala.collection.convert.wrapAll._
@@ -45,10 +44,10 @@ class GraphElectricTest {
 
 		val grid = new ElectricGrid
 
-		val battery = new DummyComponent()
-		val wire1 = new DummyWire()
-		val resistor1 = new DummyComponent()
-		val wire2 = new DummyWire()
+		val battery = new DummyComponent("Battery")
+		val wire1 = new DummyWire("Wire 1")
+		val resistor1 = new DummyComponent("Resistor 1")
+		val wire2 = new DummyWire("Wire 2")
 
 		battery.connectNeg(wire2)
 		val components = connectInSeries(battery, wire1, resistor1, wire2)
@@ -63,13 +62,7 @@ class GraphElectricTest {
 
 		val graph = grid.electricGraph
 
-		//Export graph
-		val exporter = new DOTExporter[ElectricElement, DefaultEdge]()
-		val targetDirectory = "testresults/graph/"
-		new File(targetDirectory).mkdirs()
-		exporter.export(new FileWriter(targetDirectory + "test-graph.dot"), graph)
-
-		println(graph)
+		exportGraph(graph, "testSolve1")
 
 		//Test component & junction sizes
 		assertThat(grid.components.size).isEqualTo(2)
@@ -77,7 +70,7 @@ class GraphElectricTest {
 		assertThat(grid.junctions.size).isEqualTo(1)
 
 		assertThat(graph.vertexSet.size).isEqualTo(4)
-		assertThat(graph.edgeSet.size).isEqualTo(4)
+		assertThat(graph.edgeSet.size).isEqualTo(6)
 
 		//Test forward connections
 		assertThat(graph.containsEdge(grid.convert(battery), grid.convert(wire1))).isTrue
@@ -400,7 +393,18 @@ class GraphElectricTest {
 		}
 	}
 
-	class DummyComponent extends NodeElectricComponent(new FakeBlock("dummy")) {
+	def exportGraph[A, B](graph: Graph[A, B], name: String = "test") {
+		//Export graph
+		val exporter = new DOTExporter[A, B](new VertexNameProvider[A] {
+			override def getVertexName(v: A): String = v.toString
+		}, null, null)
+
+		val targetDirectory = "edx/graph/"
+		new File(targetDirectory).mkdirs()
+		exporter.export(new FileWriter(targetDirectory + name + ".dot"), graph)
+	}
+
+	class DummyComponent(val name: String = "Component") extends NodeElectricComponent(new FakeBlock("dummy")) {
 		var positivesCon = Set.empty[Electric]
 		var negativesCon = Set.empty[Electric]
 
@@ -416,15 +420,19 @@ class GraphElectricTest {
 		def connectNeg(electric: Electric) {
 			negativesCon += electric
 		}
+
+		override def toString: String = name
 	}
 
-	class DummyWire extends NodeElectricJunction(new FakeBlock("dummy")) {
+	class DummyWire(val name: String = "Wire") extends NodeElectricJunction(new FakeBlock("dummy")) {
 		var _connections = Set.empty[Electric]
 		connections = supplier(() => _connections)
 
 		def connect(electric: Electric) {
 			_connections += electric
 		}
+
+		override def toString: String = name
 	}
 
 }

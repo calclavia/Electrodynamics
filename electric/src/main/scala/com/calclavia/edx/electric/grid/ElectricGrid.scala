@@ -37,7 +37,18 @@ object ElectricGrid {
 	 * @author Calclavia
 	 */
 	class Component(val component: NodeElectricComponent) extends ElectricElement {
+
+		override def equals(obj: scala.Any): Boolean = {
+			if (obj.isInstanceOf[Component]) {
+				return obj.asInstanceOf[Component].component.equals(component)
+			}
+
+			return false
+		}
+
 		override def hashCode = component.hashCode()
+
+		override def toString: String = "Component_" + component.toString.replaceAll(" ", "_")
 	}
 
 	/**
@@ -65,6 +76,19 @@ object ElectricGrid {
 		 * The total resistance of this junction due to wires
 		 */
 		def resistance = wires.map(_.resistance).sum
+
+		override def equals(obj: scala.Any): Boolean = {
+			if (obj.isInstanceOf[Junction]) {
+				val compareWires = obj.asInstanceOf[Junction].wires
+
+				if (compareWires.size == wires.size)
+					if (compareWires.containsAll(wires))
+						return true
+			}
+			return false
+		}
+
+		override def toString: String = "Junction_" + wires.mkString.replaceAll(" ", "_")
 	}
 
 	/**
@@ -72,7 +96,7 @@ object ElectricGrid {
 	 * @author Calclavia
 	 */
 	class VirtualJunction extends Junction {
-
+		override def toString: String = "Virtual Junction"
 	}
 
 }
@@ -140,17 +164,19 @@ class ElectricGrid extends Updater {
 	/**
 	 * Converts a node electric into an electric element
 	 */
-	def convert(nodeElectric: NodeElectricComponent) = new Component(nodeElectric)
+	def convert(nodeElectric: NodeElectricComponent) = components.find(c => c.component.equals(nodeElectric)).getOrElse(new Component(nodeElectric))
 
 	/**
 	 * Creates or gets an existing Junction
 	 */
 	def convert(nodeJunction: NodeElectricJunction): Junction = {
-		val find = junctions
-			.find(j => j.wires.contains(nodeJunction))
+		val find = junctions.find(j => j.wires.contains(nodeJunction))
 
 		if (find.isDefined)
 			return find.get
+
+		if (ground != null && ground.wires.contains(nodeJunction))
+			return ground
 
 		val newJunction = new Junction
 		newJunction.wires += nodeJunction
