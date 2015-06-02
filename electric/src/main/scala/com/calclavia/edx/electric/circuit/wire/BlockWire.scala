@@ -14,7 +14,6 @@ import nova.core.block.Block.{BlockPlaceEvent, RightClickEvent}
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.misc.Collider
 import nova.core.component.renderer.ItemRenderer
-import nova.core.game.Game
 import nova.core.network.{Packet, PacketHandler, Sync}
 import nova.core.render.model.{BlockModelUtil, Model, StaticCubeTextureCoordinates}
 import nova.core.retention.{Storable, Stored}
@@ -145,6 +144,10 @@ class BlockWire extends Block with Storable with PacketHandler {
 	override def read(packet: Packet) {
 		super[PacketHandler].read(packet)
 		world.markStaticRender(position)
+
+		println("RECEVED " + packet.getID)
+		if (packet.getID == 1) {
+		}
 	}
 
 	/**
@@ -172,7 +175,7 @@ class BlockWire extends Block with Storable with PacketHandler {
 			connectionMask = newConnectionMask
 			System.out.println(this + " Con Mask: " + Integer.toBinaryString(newConnectionMask))
 			//Update client render
-			Game.network.sync(1, this)
+			get(classOf[Microblock]).sync(1)
 		}
 
 		/**

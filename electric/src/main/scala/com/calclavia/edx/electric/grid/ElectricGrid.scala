@@ -1,14 +1,15 @@
 package com.calclavia.edx.electric.grid
 
+import java.util
+import java.util.Collections
+
 import com.calclavia.edx.electric.grid.api.{Electric, ElectricComponent}
 import com.resonant.core.prefab.block.ExtendedUpdater
 import nova.core.game.Game
 import nova.core.util.transform.matrix.Matrix
-import nova.core.world.World
 import org.jgrapht.graph.{DefaultDirectedGraph, DefaultEdge, SimpleGraph}
 
 import scala.collection.convert.wrapAll._
-import scala.collection.mutable
 
 /**
  * An electric circuit grid for independent voltage sources.
@@ -18,10 +19,18 @@ import scala.collection.mutable
  * @author Calclavia
  */
 object ElectricGrid {
-	private val worldMap = mutable.WeakHashMap.empty[World, ElectricGrid]
+	private val grids = Collections.newSetFromMap[ElectricGrid](new util.WeakHashMap)
 
-	def apply(world: World): ElectricGrid = {
-		worldMap.getOrElseUpdate(world, new ElectricGrid)
+	def apply(electric: Electric): ElectricGrid = {
+		//TODO: This may be VERY inefficient
+		val find = grids.find(grid => grid.connectionGraph.vertexSet().contains(electric))
+
+		if (find.isDefined)
+			return find.get
+
+		val grid = new ElectricGrid
+		grids += grid
+		return grid
 	}
 
 	/**
@@ -117,34 +126,53 @@ class ElectricGrid extends ExtendedUpdater {
 
 	Game.threadTicker.add(this)
 
-	def findAll(node: Electric, builder: Set[Electric] = Set.empty): Set[Electric] =
+	/**
+	 * Finds all the nodes that are interconnected
+	 * @param node The node to being with
+	 * @param builder The accumulator
+	 * @return A map of nodes with their connections
+	 */
+	def findAll(node: Electric, builder: Set[Electric] = Set.empty): Map[Electric, Set[Electric]] =
 		node match {
 			case component: ElectricComponent =>
-				val electrics = (component.positives ++ component.negatives) diff builder
-				electrics.flatMap(n => findAll(n, builder + node)).toSet + node
+				val connections = (component.positives ++ component.negatives).toSet
+				val electrics = connections diff builder
+				electrics.flatMap(n => findAll(n, builder + node)).toMap + (node -> connections)
 			case junction: NodeElectricJunction =>
-				(junction.con diff builder).flatMap(n => findAll(n, builder + node)) + node
+				val connections = junction.con
+				(connections diff builder).flatMap(n => findAll(n, builder + node)).toMap + (node -> connections)
 		}
 
 	def addRecursive(node: Electric): this.type = {
-		findAll(node).foreach(add)
+		findAll(node).foreach {
+			case (node, con) => add(node, con)
+		}
 		return this
 	}
 
-	def add(node: Electric): this.type = {
+	def add(node: Electric): this.type =
+		add(node,
+			node match {
+				case node: NodeElectricComponent =>
+					(node.positives() ++ node.negatives()).toSet
+				case node: NodeElectricJunction =>
+					node.con
+			}
+		)
+
+	def add(node: Electric, connections: Set[Electric]): this.type = {
 		connectionGraph.addVertex(node)
 
 		//TODO: Can't we build the electric graph from here?
 		node match {
 			case node: NodeElectricComponent =>
-				val connections = node.positives() ++ node.negatives()
 				connections.foreach(connectionGraph.addVertex)
 				connections.foreach(n => connectionGraph.addEdge(node, n))
 				node.onResistanceChange :+= ((resistor: Electric) => resistorChanged = true)
 				node.onSetVoltage :+= ((source: Electric) => sourceChanged = true)
 				node.onSetCurrent :+= ((source: Electric) => sourceChanged = true)
 			case node: NodeElectricJunction =>
-				node.con.foreach(connectionGraph.addVertex(_))
+				connections.foreach(connectionGraph.addVertex(_))
 		}
 		return this
 	}
@@ -196,8 +224,10 @@ class ElectricGrid extends ExtendedUpdater {
 			case nodeComponent: NodeElectricComponent =>
 				val component = new Component(nodeComponent)
 				//Check positive terminal connections
-				//TODO: Reuse connectionGraph instead of calling positives()
-				nodeComponent.positives().foreach {
+				connectionGraph
+					.outgoingEdgesOf(nodeComponent)
+					.map(connectionGraph.getEdgeTarget)
+					.foreach {
 					case checkNodeComponent: NodeElectricComponent =>
 						//Check if the "component" is negatively connected to the current node
 						if (checkNodeComponent.negatives().contains(nodeComponent)) {

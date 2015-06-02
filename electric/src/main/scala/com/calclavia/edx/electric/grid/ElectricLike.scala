@@ -33,10 +33,8 @@ trait ElectricLike extends Electric with BlockConnectable[Electric] {
 	block.neighborChangeEvent.add((evt: NeighborChangeEvent) => notifyGrid())
 
 	def notifyGrid() {
-		val grid = ElectricGrid(world)
-		//if (!grid.has(this))
-		//TODO: Temporary
-		grid.addRecursive(this).build()
+		ElectricGrid(this).addRecursive(this).build()
+		con
 	}
 
 	def resistance = _resistance
