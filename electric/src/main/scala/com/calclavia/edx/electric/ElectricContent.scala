@@ -1,6 +1,7 @@
 package com.calclavia.edx.electric
 
 import com.calclavia.edx.core.Reference
+import com.calclavia.edx.electric.circuit.component.BlockSiren
 import com.calclavia.edx.electric.circuit.source.{BlockBattery, BlockSolarPanel, BlockThermopile}
 import com.calclavia.edx.electric.circuit.wire.BlockWire
 import com.resonant.core.prefab.modcontent.ContentLoader
@@ -19,6 +20,7 @@ object ElectricContent extends ContentLoader {
 	val wire: BlockFactory = classOf[BlockWire]
 	val thermopile: BlockFactory = classOf[BlockThermopile]
 	val solarPanel: BlockFactory = classOf[BlockSolarPanel]
+	val siren: BlockFactory = classOf[BlockSiren]
 
 	/**
 	 * Items
@@ -35,6 +37,7 @@ object ElectricContent extends ContentLoader {
 	val solarPanelTextureEdge = new BlockTexture(Reference.domain, "connectEdge")
 	val thermopileTextureTop = new BlockTexture(Reference.domain, "material_metal_top")
 	val thermopileTextureSide = new BlockTexture(Reference.domain, "thermopile")
+	val sirenTexture = new BlockTexture(Reference.domain, "siren")
 
 	/**
 	 * Models
