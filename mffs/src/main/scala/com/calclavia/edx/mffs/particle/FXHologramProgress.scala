@@ -1,9 +1,9 @@
 package com.calclavia.edx.mffs.particle
 
 import com.calclavia.edx.mffs.content.Textures
-import com.resonant.core.prefab.block.Updater
+import com.resonant.core.prefab.block.ExtendedUpdater
 import com.resonant.lib.WrapFunctions
-import WrapFunctions._
+import com.resonant.lib.WrapFunctions._
 import nova.core.component.renderer.DynamicRenderer
 import nova.core.render.Color
 import nova.core.render.model.{BlockModelUtil, Model}
@@ -11,7 +11,7 @@ import nova.core.render.model.{BlockModelUtil, Model}
 import scala.beans.BeanProperty
 import scala.collection.convert.wrapAll._
 
-class FXHologramProgress(@BeanProperty var color: Color, maxAge: Double) extends FXMFFS with Updater {
+class FXHologramProgress(@BeanProperty var color: Color, maxAge: Double) extends FXMFFS with ExtendedUpdater {
 	var age = 0d
 
 	add(new DynamicRenderer(this))

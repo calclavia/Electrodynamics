@@ -1,6 +1,6 @@
 package com.calclavia.graph.thermal
 
-import com.resonant.core.prefab.block.Updater
+import com.resonant.core.prefab.block.ExtendedUpdater
 import nova.core.game.Game
 import nova.core.util.Direction
 import nova.core.util.transform.vector.Vector3i
@@ -14,7 +14,7 @@ import scala.collection.mutable
  * Heat flows from hot to cold.
  */
 
-object GridThermal extends Updater {
+object GridThermal extends ExtendedUpdater {
 
 	private val worldMap = mutable.WeakHashMap.empty[World, GridThermal]
 
@@ -37,7 +37,7 @@ object GridThermal extends Updater {
 	}
 }
 
-class GridThermal(val world: World) extends Updater {
+class GridThermal(val world: World) extends ExtendedUpdater {
 
 	/**
 	 * A map of positions and heat source energy

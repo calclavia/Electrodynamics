@@ -1,7 +1,7 @@
 package com.calclavia.edx.electric.grid
 
 import com.calclavia.edx.electric.grid.api.{Electric, ElectricComponent}
-import com.resonant.core.prefab.block.Updater
+import com.resonant.core.prefab.block.ExtendedUpdater
 import nova.core.game.Game
 import nova.core.util.transform.matrix.Matrix
 import nova.core.world.World
@@ -90,7 +90,7 @@ object ElectricGrid {
 
 }
 
-class ElectricGrid extends Updater {
+class ElectricGrid extends ExtendedUpdater {
 
 	import ElectricGrid._
 
@@ -375,25 +375,27 @@ class ElectricGrid extends Updater {
 	 * Solve the circuit based on the currently buffered matrices, then injects the data back into the nodes.
 	 */
 	def solve() {
-		//TODO: Check why negation is required?
-		val x = mna.solve(sourceMatrix * -1)
+		if (electricGraph.vertexSet().size() > 2) {
+			//TODO: Check why negation is required?
+			val x = mna.solve(sourceMatrix * -1)
 
-		//Retrieve the voltage of the junctions
-		junctions.indices.foreach(i => junctions(i).voltage = x(i, 0))
+			//Retrieve the voltage of the junctions
+			junctions.indices.foreach(i => junctions(i).voltage = x(i, 0))
 
-		//Retrieve the current values of the voltage sources
-		voltageSources.indices.foreach(i => {
-			voltageSources(i).component.voltage = voltageSources(i).component.genVoltage
-			voltageSources(i).component.current = x(i + junctions.size, 0)
-		})
+			//Retrieve the current values of the voltage sources
+			voltageSources.indices.foreach(i => {
+				voltageSources(i).component.voltage = voltageSources(i).component.genVoltage
+				voltageSources(i).component.current = x(i + junctions.size, 0)
+			})
 
-		//Calculate the potential difference for each component based on its junctions
-		resistors.zipWithIndex.foreach {
-			case (component, index) =>
-				val wireFrom = electricGraph.outgoingEdgesOf(component).map(electricGraph.getEdgeTarget).head.asInstanceOf[Junction]
-				val wireTo = electricGraph.incomingEdgesOf(component).map(electricGraph.getEdgeSource).find(w => w != wireFrom).get.asInstanceOf[Junction]
-				component.component.voltage = wireFrom.voltage - wireTo.voltage
-				component.component.current = component.component.voltage / component.component.resistance
+			//Calculate the potential difference for each component based on its junctions
+			resistors.zipWithIndex.foreach {
+				case (component, index) =>
+					val wireFrom = electricGraph.outgoingEdgesOf(component).map(electricGraph.getEdgeTarget).head.asInstanceOf[Junction]
+					val wireTo = electricGraph.incomingEdgesOf(component).map(electricGraph.getEdgeSource).find(w => w != wireFrom).get.asInstanceOf[Junction]
+					component.component.voltage = wireFrom.voltage - wireTo.voltage
+					component.component.current = component.component.voltage / component.component.resistance
+			}
 		}
 	}
 }

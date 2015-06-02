@@ -8,6 +8,7 @@ import com.calclavia.edx.electric.ElectricContent
 import com.calclavia.edx.electric.grid.NodeElectricJunction
 import com.calclavia.edx.electric.grid.api.Electric
 import com.calclavia.microblock.micro.{Microblock, MicroblockContainer}
+import com.resonant.lib.WrapFunctions._
 import nova.core.block.Block
 import nova.core.block.Block.{BlockPlaceEvent, RightClickEvent}
 import nova.core.block.component.StaticBlockRenderer
@@ -17,13 +18,13 @@ import nova.core.game.Game
 import nova.core.network.{Packet, PacketHandler, Sync}
 import nova.core.render.model.{BlockModelUtil, Model, StaticCubeTextureCoordinates}
 import nova.core.retention.{Storable, Stored}
-import nova.core.util.{RotationUtil, Direction}
 import nova.core.util.transform.matrix.Quaternion
 import nova.core.util.transform.shape.Cuboid
 import nova.core.util.transform.vector.Vector3d
+import nova.core.util.{Direction, RotationUtil}
 
 import scala.collection.convert.wrapAll._
-import com.resonant.lib.WrapFunctions._
+
 /**
  * This is the class for all flat wire
  *
@@ -35,26 +36,32 @@ import com.resonant.lib.WrapFunctions._
  * @author Calclavia
  */
 object BlockWire {
-	var occlusionBounds = Array.ofDim[Cuboid](3, 6)
+	val thickness = 2 / 16d
+	val width = 1 / 3d
+	var occlusionBounds = Array.ofDim[Cuboid](6, 5)
 	init()
 
 	def init() {
-		for (thickness <- 0 until 3) {
-			val occlusion = new Cuboid(2.5 / 8D, 0, 2.5 / 8D, 5.5 / 8D, (thickness + 2) / 16D, 5.5 / 8D) - 0.5
-
-			for (s <- 0 until 6) {
-				val rot = s match {
-					case 0 => Quaternion.identity
-					case 1 => Quaternion.fromAxis(Vector3d.xAxis, Math.PI)
-					case 2 => Quaternion.fromAxis(Vector3d.xAxis, Math.PI / 2)
-					case 3 => Quaternion.fromAxis(Vector3d.xAxis, -Math.PI / 2)
-					case 4 => Quaternion.fromAxis(Vector3d.zAxis, -Math.PI / 2)
-					case 5 => Quaternion.fromAxis(Vector3d.zAxis, Math.PI / 2)
-				}
-				occlusionBounds(thickness)(s) = occlusion.transform(rot)
+		for (s <- 0 until 6) {
+			val rot = s match {
+				case 0 => Quaternion.identity
+				case 1 => Quaternion.fromAxis(Vector3d.xAxis, Math.PI)
+				case 2 => Quaternion.fromAxis(Vector3d.xAxis, Math.PI / 2)
+				case 3 => Quaternion.fromAxis(Vector3d.xAxis, -Math.PI / 2)
+				case 4 => Quaternion.fromAxis(Vector3d.zAxis, -Math.PI / 2)
+				case 5 => Quaternion.fromAxis(Vector3d.zAxis, Math.PI / 2)
 			}
+
+			val center = new Cuboid(width, 0, width, 1 - width, thickness, 1 - width) - 0.5
+			val sides = (2 until 6)
+				.map(Direction.fromOrdinal)
+				.map(d => center + (d.toVector.toDouble * width))
+				.toSeq
+			val face = Array(sides :+ center: _*)
+			occlusionBounds(s) = face.map(_.transform(rot))
 		}
 	}
+
 }
 
 // with TWire with TFacePart with TNormalOcclusion
@@ -80,9 +87,11 @@ class BlockWire extends Block with Storable with PacketHandler {
 	 *
 	 * Format of bitmask:
 	 * 00-00-00-00
+	 *
+	 * 2 Nibbles of data
 	 */
 	@Sync(ids = Array(0, 1))
-	private var connectionMask = 0x00000000
+	private var connectionMask = 0x00
 
 	/**
 	 * Add components
@@ -101,9 +110,16 @@ class BlockWire extends Block with Storable with PacketHandler {
 
 	add(new Collider())
 		.setBoundingBox(() => {
-		//println("getBounds: " + side)
-		BlockWire.occlusionBounds(0)(side) + 0.5
+		BlockWire.occlusionBounds(side)(4) + 0.5
 	})
+		.setOcclusionBoxes(func(entity => {
+		var cuboids = Set.empty[Cuboid]
+		cuboids += BlockWire.occlusionBounds(side)(4) + 0.5
+		cuboids ++= (0 until 4)
+			.filter(dir => (connectionMask & (1 << (dir * 2))) == 1 || (connectionMask & (1 << (dir * 2 + 1))) == 1)
+			.map(dir => BlockWire.occlusionBounds(side)(dir) + 0.5)
+		cuboids
+	}))
 		.isCube(false)
 		.isOpaqueCube(false)
 
@@ -136,16 +152,16 @@ class BlockWire extends Block with Storable with PacketHandler {
 	 */
 	def computeConnection: Set[Electric] = {
 		//The new 8-bit connection mask
-		var newConnectionMask = 0x00000000
+		var newConnectionMask = 0x00
 		var connections = Set.empty[Electric]
 
 		for (relativeSide <- 0 until 4) {
-			val absSide = RotationUtil.rotateSide(relativeSide, relativeSide)
+			val absSide = RotationUtil.rotateSide(side, relativeSide)
 
 			if (maskOpen(absSide)) {
 				if (!computeInnerConnection(relativeSide, absSide)) {
 					if (!computeStraightConnection(relativeSide, absSide)) {
-						computeStraightConnection(relativeSide, absSide)
+						computeCornerConnection(relativeSide, absSide)
 					}
 				}
 			}
@@ -154,6 +170,7 @@ class BlockWire extends Block with Storable with PacketHandler {
 		//Apply connection masks
 		if (newConnectionMask != connectionMask) {
 			connectionMask = newConnectionMask
+			System.out.println(this + " Con Mask: " + Integer.toBinaryString(newConnectionMask))
 			//Update client render
 			Game.network.sync(1, this)
 		}
@@ -170,7 +187,7 @@ class BlockWire extends Block with Storable with PacketHandler {
 
 				if (opElectric.isPresent) {
 					connections += opElectric.get
-					newConnectionMask |= 0x01 << (relativeSide * 2)
+					newConnectionMask |= 0x1 << (relativeSide * 2)
 					return true
 				}
 			}
@@ -187,18 +204,17 @@ class BlockWire extends Block with Storable with PacketHandler {
 			val checkBlock = world.getBlock(checkPos)
 
 			if (checkBlock.isPresent) {
-
 				//First check for microblocks for another wire
 				val opMicroblockHolder = checkBlock.get.getOp(classOf[MicroblockContainer])
 				if (opMicroblockHolder.isPresent) {
 					//Try to find the microblock that is has the component NodeElectric
-					val opMicroblock = opMicroblockHolder.get().get(this.side)
+					val opMicroblock = opMicroblockHolder.get().get(Direction.fromOrdinal(this.side))
 					if (opMicroblock.isPresent) {
 						val opElectric = opMicroblock.get.block.getOp(classOf[Electric])
 
 						if (opElectric.isPresent) {
 							connections += opElectric.get
-							newConnectionMask |= 0x10 << (relativeSide * 2)
+							newConnectionMask |= 0x2 << (relativeSide * 2)
 							return true
 						}
 					}
@@ -209,7 +225,7 @@ class BlockWire extends Block with Storable with PacketHandler {
 
 				if (opElectric.isPresent) {
 					connections += opElectric.get
-					newConnectionMask |= 0x10 << (relativeSide * 2)
+					newConnectionMask |= 0x2 << (relativeSide * 2)
 					return true
 				}
 			}
@@ -233,13 +249,13 @@ class BlockWire extends Block with Storable with PacketHandler {
 				if (opMicroblockHolder.isPresent) {
 					//Try to find the microblock that is has the component NodeElectric
 					//We look for opposite of the side we are checking, as the block has to be flat placed onto the same block this wire is flat-placed on.
-					val opMicroblock = opMicroblockHolder.get().get(absSide ^ -1)
+					val opMicroblock = opMicroblockHolder.get().get(Direction.fromOrdinal(absSide ^ -1))
 					if (opMicroblock.isPresent) {
 						val opElectric = opMicroblock.get.block.getOp(classOf[Electric])
 
 						if (opElectric.isPresent) {
 							connections += opElectric.get
-							newConnectionMask |= 0x11 << (relativeSide * 2)
+							newConnectionMask |= 0x3 << (relativeSide * 2)
 							return true
 						}
 					}
@@ -254,7 +270,7 @@ class BlockWire extends Block with Storable with PacketHandler {
 		def maskOpen(absSide: Int): Boolean = {
 			//Check bounding space (cuboid)
 			//TODO:Multiple containers?
-			return get(classOf[Microblock]).containers.head.get(absSide).isPresent
+			return !get(classOf[Microblock]).containers.head.get(Direction.fromOrdinal(absSide)).isPresent
 		}
 
 		return connections

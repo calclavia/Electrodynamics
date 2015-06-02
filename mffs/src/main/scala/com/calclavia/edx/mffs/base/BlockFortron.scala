@@ -5,9 +5,9 @@ import java.util.{Collections, Set => JSet}
 import com.calclavia.edx.mffs.GraphFrequency
 import com.calclavia.edx.mffs.api.fortron.FortronFrequency
 import com.calclavia.edx.mffs.util.{FortronUtility, TransferMode}
-import com.resonant.core.prefab.block.Updater
+import com.resonant.core.prefab.block.ExtendedUpdater
 import com.resonant.lib.WrapFunctions
-import WrapFunctions._
+import com.resonant.lib.WrapFunctions._
 import nova.core.block.Block
 import nova.core.block.Stateful.UnloadEvent
 import nova.core.event.EventBus
@@ -23,7 +23,7 @@ import nova.core.util.Direction
  *
  * @author Calclavia
  */
-abstract class BlockFortron extends BlockFrequency with SidedTankProvider with FortronFrequency with Updater {
+abstract class BlockFortron extends BlockFrequency with SidedTankProvider with FortronFrequency with ExtendedUpdater {
 	var markSendFortron = true
 
 	@Sync(ids = Array(PacketBlock.fortron))

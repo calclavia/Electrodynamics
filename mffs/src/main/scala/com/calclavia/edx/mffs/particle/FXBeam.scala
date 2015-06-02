@@ -1,7 +1,8 @@
 package com.calclavia.edx.mffs.particle
 
-import com.resonant.core.prefab.block.Updater
+import com.resonant.core.prefab.block.ExtendedUpdater
 import com.resonant.lib.WrapFunctions
+import com.resonant.lib.WrapFunctions._
 import nova.core.component.renderer.DynamicRenderer
 import nova.core.entity.Entity
 import nova.core.render.Color
@@ -11,12 +12,11 @@ import nova.core.util.transform.vector.Vector3d
 
 import scala.beans.BeanProperty
 import scala.collection.convert.wrapAll._
-import WrapFunctions._
 /**
  * MFFS Beam Renderer.
  * @author Calclavia, Azanor
  */
-abstract class FXBeam(texture: Texture, @BeanProperty var color: Color, maxAge: Double) extends Entity with Updater {
+abstract class FXBeam(texture: Texture, @BeanProperty var color: Color, maxAge: Double) extends Entity with ExtendedUpdater {
 
 	private val endModifier: Float = 1.0F
 	private val reverse: Boolean = false
