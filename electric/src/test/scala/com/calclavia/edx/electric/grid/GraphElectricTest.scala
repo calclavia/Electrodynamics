@@ -194,31 +194,33 @@ class GraphElectricTest {
 	def testSolve3() {
 		val profilerGen = new Profiler("Generate graph 3")
 
-		val graph = new ElectricGrid
+		val grid = new ElectricGrid
 
-		val battery = new DummyComponent()
-		val wire1 = new DummyWire()
-		val wire2 = new DummyWire()
-		val resistor1 = new DummyComponent()
-		val wire3 = new DummyWire()
-		val resistor2 = new DummyComponent()
+		val battery = new DummyComponent("Battery 1")
+		val wire1 = new DummyWire("Wire 1")
+		val wire2 = new DummyWire("Wire 2")
+		val resistor1 = new DummyComponent("Resistor 1")
+		val wire3 = new DummyWire("Wire 3")
+		val resistor2 = new DummyComponent("Resistor 2")
 		resistor2.setResistance(2)
-		val wire4 = new DummyWire()
-		val resistor3 = new DummyComponent()
+		val wire4 = new DummyWire("Wire 4")
+		val resistor3 = new DummyComponent("Resistor 3")
 		resistor3.setResistance(3)
-		val resistor4 = new DummyComponent()
+		val resistor4 = new DummyComponent("Resistor 4")
 
 		battery.connectNeg(wire4)
 		val seriesA = connectInSeries(battery, wire1, wire2, resistor1, wire3, resistor2, wire4)
 		wire4.connect(battery)
 		val seriesB = connectInSeries(wire2, resistor3, resistor4, wire4)
 
-		seriesA.foreach(graph.add)
-		seriesB.foreach(graph.add)
+		seriesA.foreach(grid.add)
+		seriesB.foreach(grid.add)
 
+		grid.build()
 		println(profilerGen)
 
-		graph.build()
+		exportGraph(grid.electricGraph, "testSolve3")
+
 		val profiler = new Profiler("Solving graph 3")
 
 		//Using 1/R = 1/R1+1/R2+...
@@ -227,7 +229,7 @@ class GraphElectricTest {
 		for (trial <- 1 to 1000) {
 			val voltage = trial * 10d * Math.random()
 			battery.setVoltage(voltage)
-			graph.update(profiler.elapsed)
+			grid.update(profiler.elapsed)
 
 			//Test battery
 			assertThat(battery.voltage).isCloseTo(voltage, within(error))
@@ -268,22 +270,22 @@ class GraphElectricTest {
 	 */
 	@Test
 	def testSolve4() {
-		val profilerGen = new Profiler("Generate graph 3")
+		val profilerGen = new Profiler("Generate graph 4")
 
-		val graph = new ElectricGrid
+		val grid = new ElectricGrid
 
-		val battery1 = new DummyComponent()
-		val battery2 = new DummyComponent()
-		val resistor1 = new DummyComponent()
-		val resistor2 = new DummyComponent()
+		val battery1 = new DummyComponent("Battery 1")
+		val battery2 = new DummyComponent("Battery 2")
+		val resistor1 = new DummyComponent("Resistor 1")
+		val resistor2 = new DummyComponent("Resistor 2")
 		resistor2.setResistance(2)
-		val resistor3 = new DummyComponent()
+		val resistor3 = new DummyComponent("Resistor 3")
 		resistor3.setResistance(2)
 
-		val wire1 = new DummyWire()
-		val wire2 = new DummyWire()
-		val wire3 = new DummyWire()
-		val wire4 = new DummyWire()
+		val wire1 = new DummyWire("Wire 1")
+		val wire2 = new DummyWire("Wire 2")
+		val wire3 = new DummyWire("Wire 3")
+		val wire4 = new DummyWire("Wire 4")
 
 		battery1.connectPos(wire1)
 		wire1.connect(battery1)
@@ -310,26 +312,28 @@ class GraphElectricTest {
 		resistor3.connectNeg(wire1)
 		wire1.connect(resistor3)
 
-		graph.add(battery1)
-		graph.add(battery2)
-		graph.add(resistor1)
-		graph.add(resistor2)
-		graph.add(resistor3)
-		graph.add(wire1)
-		graph.add(wire2)
-		graph.add(wire3)
-		graph.add(wire4)
+		grid.add(battery1)
+		grid.add(battery2)
+		grid.add(resistor1)
+		grid.add(resistor2)
+		grid.add(resistor3)
+		grid.add(wire1)
+		grid.add(wire2)
+		grid.add(wire3)
+		grid.add(wire4)
 
+		grid.build()
 		println(profilerGen)
 
-		graph.build()
+		exportGraph(grid.electricGraph, "testSolve4")
+
 		val profiler = new Profiler("Solving graph 3")
 
 		for (trial <- 1 to 1000) {
 			val voltage = trial * 10d * Math.random()
 			battery1.setVoltage(voltage)
 			battery2.setVoltage(voltage)
-			graph.update(profiler.elapsed)
+			grid.update(profiler.elapsed)
 			//TODO: Test results
 			profiler.lap()
 		}
@@ -339,34 +343,39 @@ class GraphElectricTest {
 
 	/**
 	 * Series circuit stress test.
+	 * Test addRecursive
 	 * Attempt to generate graphs with more and more resistors.
 	 */
 	@Test
 	def testSolve5() {
 		println("Conducting stress test.")
 
-		for (trial <- 2 to 1000) {
+		for (trial <- 10 to 1000 by 50) {
 
 			val graph = new ElectricGrid
-			val battery = new DummyComponent()
-			val resistors = (0 until trial).map(i => new DummyComponent()).toList
+			val battery = new DummyComponent("Battery")
+			val resistors = (0 until trial).map(i => new DummyComponent("Resistor " + i)).toList
 
 			battery.connectNeg(resistors.last)
-			val components = connectInSeries(battery :: resistors: _*)
+			connectInSeries(battery :: resistors: _*)
 			resistors.last.connectPos(battery)
 
-			components.foreach(graph.add)
+			graph.addRecursive(battery)
 
-			val profilerGen = new Profiler("Generate graph with " + trial + " resistors")
+			val profilerGen = new Profiler("Generate graph with " + trial + " resistors").start()
 			graph.build()
-			println(profilerGen)
+			profilerGen.end()
+
+			assertThat(graph.electricGraph.vertexSet().size()).isEqualTo((trial + 1) * 2)
 
 			val voltage = trial * 10d * Math.random() + 0.1
 			battery.setVoltage(voltage)
 
-			val profiler = new Profiler("Solve circuit with " + trial + " resistors")
+			//exportGraph(graph.electricGraph, "Stress Test " + trial)
+
+			val profiler = new Profiler("Solve circuit with " + trial + " resistors").start()
 			graph.update(profiler.elapsed)
-			println(profiler)
+			profiler.end()
 
 			val current = voltage / trial.toDouble
 

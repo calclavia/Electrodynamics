@@ -77,17 +77,6 @@ object ElectricGrid {
 		 */
 		def resistance = wires.map(_.resistance).sum
 
-		override def equals(obj: scala.Any): Boolean = {
-			if (obj.isInstanceOf[Junction]) {
-				val compareWires = obj.asInstanceOf[Junction].wires
-
-				if (compareWires.size == wires.size)
-					if (compareWires.containsAll(wires))
-						return true
-			}
-			return false
-		}
-
 		override def toString: String = "Junction_" + wires.mkString.replaceAll(" ", "_")
 	}
 
@@ -96,7 +85,7 @@ object ElectricGrid {
 	 * @author Calclavia
 	 */
 	class VirtualJunction extends Junction {
-		override def toString: String = "Virtual Junction"
+		override def toString: String = "Virtual_Junction_" + hashCode()
 	}
 
 }
@@ -131,9 +120,10 @@ class ElectricGrid extends Updater {
 	def findAll(node: Electric, builder: Set[Electric] = Set.empty): Set[Electric] =
 		node match {
 			case component: ElectricComponent =>
-				((component.positives ++ component.negatives) diff builder).flatMap(n => findAll(n, builder + node)).toSet
+				val electrics = (component.positives ++ component.negatives) diff builder
+				electrics.flatMap(n => findAll(n, builder + node)).toSet + node
 			case junction: NodeElectricJunction =>
-				(junction.con diff builder).flatMap(n => findAll(n, builder + node)).toSet
+				(junction.con diff builder).flatMap(n => findAll(n, builder + node)) + node
 		}
 
 	def addRecursive(node: Electric): this.type = {
@@ -199,30 +189,28 @@ class ElectricGrid extends Updater {
 		electricGraph = new DefaultDirectedGraph[ElectricElement, DefaultEdge](classOf[DefaultEdge])
 
 		/**
-		 * Builds the adjacency matrix.
+		 * Builds the electric graph.
 		 * The directed graph indicate current flow from positive terminal to negative terminal.
 		 */
-		var recursedWires = Set.empty[NodeElectricJunction]
-		//A queue of virtual junctions to their corresponding tuple component to be binded together
-		var virtualBindQueue = Map.empty[VirtualJunction, (NodeElectricComponent, NodeElectricComponent)]
-
 		connectionGraph.vertexSet().foreach {
 			case nodeComponent: NodeElectricComponent =>
 				val component = new Component(nodeComponent)
 				//Check positive terminal connections
 				//TODO: Reuse connectionGraph instead of calling positives()
 				nodeComponent.positives().foreach {
-					case checkComponent: NodeElectricComponent =>
+					case checkNodeComponent: NodeElectricComponent =>
 						//Check if the "component" is negatively connected to the current node
-						if (checkComponent.negatives().contains(nodeComponent)) {
+						if (checkNodeComponent.negatives().contains(nodeComponent)) {
 							val junction = new VirtualJunction
-							val checkDevice = convert(nodeComponent)
+							val checkComponent = convert(checkNodeComponent)
 							electricGraph.addVertex(component)
 							electricGraph.addVertex(junction)
-							electricGraph.addVertex(checkDevice)
+							electricGraph.addVertex(checkComponent)
 
 							electricGraph.addEdge(component, junction)
-							electricGraph.addEdge(junction, checkDevice)
+							electricGraph.addEdge(junction, checkComponent)
+							electricGraph.addEdge(junction, component)
+							junctions :+= junction
 						}
 					case nodeJunction: NodeElectricJunction =>
 						val junction = convert(nodeJunction)
@@ -340,11 +328,13 @@ class ElectricGrid extends Updater {
 
 		//The off diagonal elements are the negative conductance of the element connected to the pair of corresponding node.
 		//Therefore a resistor between nodes 1 and 2 goes into the G matrix at location (1,2) and locations (2,1).
-		for (resistor <- resistors) {
+		resistors.foreach(resistor => {
 			val target = electricGraph.getEdgeTarget(electricGraph.outgoingEdgesOf(resistor).head)
 			//The id of the junction at positive terminal
 			val j = junctions.indexOf(target)
-			val source = electricGraph.incomingEdgesOf(resistor).map(electricGraph.getEdgeSource).find(s => s != target).get
+			val of = electricGraph.incomingEdgesOf(resistor)
+			val map = of.map(electricGraph.getEdgeSource)
+			val source = map.find(s => s != target).get
 			//The id of the junction at negative terminal
 			val i = junctions.indexOf(source)
 
@@ -354,7 +344,7 @@ class ElectricGrid extends Updater {
 				mna(i, j) = negConductance
 				mna(j, i) = negConductance
 			}
-		}
+		})
 	}
 
 	/**
@@ -405,20 +395,5 @@ class ElectricGrid extends Updater {
 				component.component.voltage = wireFrom.voltage - wireTo.voltage
 				component.component.current = component.component.voltage / component.component.resistance
 		}
-	}
-
-	/**
-	 * Finds all the interconnected wires that connect to a particular wire.
-	 * @param wire The wire to search for.
-	 * @return A set of wires that are interconnected.
-	 */
-	private def recurseFind(wire: NodeElectricJunction, result: Set[NodeElectricJunction] = Set.empty): Set[NodeElectricJunction] = {
-		//TODO: we're calling connections() too many times!
-		val wireConnections = wire.con.filter(_.isInstanceOf[NodeElectricJunction]).map(_.asInstanceOf[NodeElectricJunction])
-		var newResult = result + wire
-
-		newResult ++= (wireConnections diff result).flatMap(n => recurseFind(n, newResult))
-
-		return newResult
 	}
 }
