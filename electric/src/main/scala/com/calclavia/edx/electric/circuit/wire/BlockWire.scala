@@ -45,14 +45,15 @@ object BlockWire {
 			val rot = s match {
 				case 0 => Quaternion.identity
 				case 1 => Quaternion.fromAxis(Vector3d.xAxis, Math.PI)
-				case 2 => Quaternion.fromAxis(Vector3d.xAxis, Math.PI / 2)
+				case 2 => Quaternion.fromEuler(Math.PI, -Math.PI / 2)
 				case 3 => Quaternion.fromAxis(Vector3d.xAxis, -Math.PI / 2)
-				case 4 => Quaternion.fromAxis(Vector3d.zAxis, -Math.PI / 2)
-				case 5 => Quaternion.fromAxis(Vector3d.zAxis, Math.PI / 2)
+				case 4 => Quaternion.fromEuler(-Math.PI / 2, -Math.PI / 2)
+				case 5 => Quaternion.fromEuler(Math.PI / 2, -Math.PI / 2)
 			}
 
 			val center = new Cuboid(width, 0, width, 1 - width, thickness, 1 - width) - 0.5
-			val sides = (2 until 6)
+			val sides = (0 until 4)
+				.map(RotationUtil.rotateSide(0, _))
 				.map(Direction.fromOrdinal)
 				.map(d => center + (d.toVector.toDouble * width))
 				.toSeq
@@ -102,6 +103,7 @@ class BlockWire extends Block with Storable with PacketHandler {
 	    (evt: BlockPlaceEvent) => {
 		    this.side = evt.side.opposite.ordinal.toByte
 		    //TODO: Fix wire material
+		    BlockWire.init()
 		    get(classOf[MaterialWire]).material = WireMaterial.COPPER
 		    Optional.of(MicroblockContainer.sidePosition(Direction.fromOrdinal(this.side)))
 	    }
@@ -114,8 +116,9 @@ class BlockWire extends Block with Storable with PacketHandler {
 		.setOcclusionBoxes(func(entity => {
 		var cuboids = Set.empty[Cuboid]
 		cuboids += BlockWire.occlusionBounds(side)(4) + 0.5
-		cuboids ++= (0 until 4)
-			.filter(dir => (connectionMask & (1 << (dir * 2))) == 1 || (connectionMask & (1 << (dir * 2 + 1))) == 1)
+		val filter = (0 until 4)
+			.filter(dir => (connectionMask & (1 << (dir * 2))) != 0 || (connectionMask & (1 << (dir * 2 + 1))) != 0)
+		cuboids ++= filter
 			.map(dir => BlockWire.occlusionBounds(side)(dir) + 0.5)
 		cuboids
 	}))
@@ -137,6 +140,19 @@ class BlockWire extends Block with Storable with PacketHandler {
 		)
 
 	add(new ItemRenderer(this))
+		.setOnRender(
+	    (model: Model) => {
+		    (0 until 4)
+			    .map(dir => BlockWire.occlusionBounds(side)(dir))
+			    .foreach(cuboid => {
+			    BlockModelUtil.drawCube(model, cuboid, StaticCubeTextureCoordinates.instance)
+		    })
+
+		    model.faces.foreach(_.vertices.map(_.setColor(get(classOf[MaterialWire]).material.color)))
+		    model.bindAll(ElectricContent.wireTexture)
+	    }
+		)
+
 	add(new CategoryEDX)
 
 	rightClickEvent.add((evt: RightClickEvent) => System.out.println(this + " right clicked with side: " + side))
@@ -144,10 +160,6 @@ class BlockWire extends Block with Storable with PacketHandler {
 	override def read(packet: Packet) {
 		super[PacketHandler].read(packet)
 		world.markStaticRender(position)
-
-		println("RECEVED " + packet.getID)
-		if (packet.getID == 1) {
-		}
 	}
 
 	/**
@@ -252,7 +264,7 @@ class BlockWire extends Block with Storable with PacketHandler {
 				if (opMicroblockHolder.isPresent) {
 					//Try to find the microblock that is has the component NodeElectric
 					//We look for opposite of the side we are checking, as the block has to be flat placed onto the same block this wire is flat-placed on.
-					val opMicroblock = opMicroblockHolder.get().get(Direction.fromOrdinal(absSide ^ -1))
+					val opMicroblock = opMicroblockHolder.get().get(Direction.fromOrdinal(absSide).opposite())
 					if (opMicroblock.isPresent) {
 						val opElectric = opMicroblock.get.block.getOp(classOf[Electric])
 
@@ -271,9 +283,10 @@ class BlockWire extends Block with Storable with PacketHandler {
 		 * Check if there's a cover on a specific side
 		 */
 		def maskOpen(absSide: Int): Boolean = {
-			//Check bounding space (cuboid)
+			//TODO: Check bounding space (cuboid)
 			//TODO:Multiple containers?
-			return !get(classOf[Microblock]).containers.head.get(Direction.fromOrdinal(absSide)).isPresent
+			//return !get(classOf[Microblock]).containers.head.get(Direction.fromOrdinal(absSide)).isPresent
+			return true
 		}
 
 		return connections
