@@ -85,7 +85,7 @@ class GraphElectricTest {
 
 		for (trial <- 1 to 1000) {
 			val voltage = trial * 10d * Math.random()
-			battery.setVoltage(voltage)
+			battery.generateVoltage(voltage)
 			grid.update(profiler.elapsed)
 
 			//Test battery
@@ -161,7 +161,7 @@ class GraphElectricTest {
 
 		for (trial <- 1 to 1000) {
 			val voltage = trial * 10d
-			battery.setVoltage(voltage)
+			battery.generateVoltage(voltage)
 			graph.update(profiler.elapsed)
 
 			val current = voltage / 3d
@@ -228,7 +228,7 @@ class GraphElectricTest {
 
 		for (trial <- 1 to 1000) {
 			val voltage = trial * 10d * Math.random()
-			battery.setVoltage(voltage)
+			battery.generateVoltage(voltage)
 			grid.update(profiler.elapsed)
 
 			//Test battery
@@ -331,8 +331,8 @@ class GraphElectricTest {
 
 		for (trial <- 1 to 1000) {
 			val voltage = trial * 10d * Math.random()
-			battery1.setVoltage(voltage)
-			battery2.setVoltage(voltage)
+			battery1.generateVoltage(voltage)
+			battery2.generateVoltage(voltage)
 			grid.update(profiler.elapsed)
 			//TODO: Test results
 			profiler.lap()
@@ -369,7 +369,7 @@ class GraphElectricTest {
 			assertThat(graph.electricGraph.vertexSet().size()).isEqualTo((trial + 1) * 2)
 
 			val voltage = trial * 10d * Math.random() + 0.1
-			battery.setVoltage(voltage)
+			battery.generateVoltage(voltage)
 
 			//exportGraph(graph.electricGraph, "Stress Test " + trial)
 

@@ -11,7 +11,6 @@ import com.calclavia.edx.mffs.particle.{FXHologramProgress, FieldColor, IEffectC
 import com.calclavia.edx.mffs.security.{MFFSPermissions, PermissionHandler}
 import com.calclavia.edx.mffs.util.MFFSUtility
 import com.calclavia.edx.mffs.{ModularForceFieldSystem, Settings}
-import com.resonant.core.prefab.block.InventorySimpleProvider
 import com.resonant.lib.WrapFunctions._
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.misc.Collider
@@ -33,10 +32,10 @@ import nova.core.world.World
 
 import scala.collection.convert.wrapAll._
 
-class BlockMobilizer extends BlockFieldMatrix with IEffectController with InventorySimpleProvider with PermissionHandler {
+class BlockMobilizer extends BlockFieldMatrix with IEffectController with PermissionHandler {
 	@Stored
 	@Sync(ids = Array(PacketBlock.description, PacketBlock.inventory))
-	override val inventory = new InventorySimple(1 + 25)
+	override val inventory = add(new InventorySimple(1 + 25))
 
 	val packetRange = 60
 	val animationTime = 20

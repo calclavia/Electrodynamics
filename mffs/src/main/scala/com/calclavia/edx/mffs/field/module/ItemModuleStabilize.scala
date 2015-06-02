@@ -10,9 +10,9 @@ import com.calclavia.edx.mffs.content.Content
 import com.calclavia.edx.mffs.field.BlockProjector
 import com.calclavia.edx.mffs.field.shape.ItemShapeCustom
 import nova.core.block.{Block, BlockFactory}
+import nova.core.component.ComponentProvider
 import nova.core.game.Game
 import nova.core.inventory.Inventory
-import nova.core.inventory.component.SidedInventoryProvider
 import nova.core.item.ItemBlock
 import nova.core.util.Direction
 import nova.core.util.transform.matrix.Quaternion
@@ -110,8 +110,7 @@ class ItemModuleStabilize extends ItemModule {
 			.map(dir => (dir, dir.toVector + pos))
 			.map(kv => (kv._1, world.getBlock(kv._2)))
 			.collect { case kv if kv._2.isPresent => (kv._1, kv._2.get) }
-			.collect { case (dir: Direction, inven: SidedInventoryProvider) => inven.getInventory(dir.opposite) }
-			.flatten
+			.collect { case (dir: Direction, inven: ComponentProvider) if inven.has(classOf[Inventory]) => inven.get(classOf[Inventory]) }
 
 	def findOptimalBlock(inventories: Iterable[Inventory], condition: PartialFunction[Block, Block]): Option[(Inventory, ItemBlock)] = {
 		inventories

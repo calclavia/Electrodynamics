@@ -10,8 +10,8 @@ import com.calclavia.edx.mffs.content.Content
 import com.calclavia.edx.mffs.field.BlockProjector
 import com.calclavia.edx.mffs.field.mobilize.{BlockDropDelayedEvent, BlockInventoryDropDelayedEvent}
 import com.calclavia.edx.mffs.util.MFFSUtility
+import nova.core.component.ComponentProvider
 import nova.core.game.Game
-import nova.core.inventory.component.InventoryProvider
 import nova.core.util.transform.vector.Vector3i
 
 class ItemModuleDisintegration extends ItemModule {
@@ -50,7 +50,7 @@ class ItemModuleDisintegration extends ItemModule {
 			Game.network.sync(PacketBlock.effect, proj)
 
 			if (projector.getModuleCount(Content.moduleCollection) > 0) {
-				Game.syncTicker.preQueue(new BlockInventoryDropDelayedEvent(39, block, world, position, projector.asInstanceOf[InventoryProvider]))
+				Game.syncTicker.preQueue(new BlockInventoryDropDelayedEvent(39, block, world, position, projector.asInstanceOf[ComponentProvider]))
 			}
 			else {
 				Game.syncTicker.preQueue(new BlockDropDelayedEvent(39, block, world, position))

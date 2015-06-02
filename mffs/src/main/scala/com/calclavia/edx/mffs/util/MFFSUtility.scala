@@ -7,10 +7,10 @@ import com.calclavia.edx.mffs.field.BlockProjector
 import com.calclavia.edx.mffs.field.shape.ItemShapeCustom
 import com.resonant.core.access.Permission
 import nova.core.block.{Block, BlockFactory}
+import nova.core.component.ComponentProvider
 import nova.core.entity.component.Player
 import nova.core.game.Game
 import nova.core.inventory.Inventory
-import nova.core.inventory.component.InventoryProvider
 import nova.core.item.{Item, ItemBlock}
 import nova.core.network.NetworkTarget.Side
 import nova.core.util.Direction
@@ -36,7 +36,7 @@ object MFFSUtility {
 				val firstItemBlock = projector
 					.getModuleSlots()
 					.view
-					.map(projector.getInventory(Direction.UNKNOWN).head.get)
+					.map(projector.get(classOf[Inventory]).get)
 					.collect { case op if op.isPresent => op.get() }
 					.collect { case item: ItemBlock => item }
 					.headOption
@@ -46,11 +46,11 @@ object MFFSUtility {
 					return firstItemBlock
 				}
 			//TODO: Check with Sided
-			case invProvider: InventoryProvider =>
+			case invProvider: ComponentProvider if invProvider.has(classOf[Inventory]) =>
 				Direction.DIRECTIONS
 					.view
 					//TODO: Check all inventories
-					.collect { case dir if invProvider.getInventory.size() > 0 => invProvider.getInventory.head }
+					.collect { case dir if invProvider.get(classOf[Inventory]).size() > 0 => invProvider.get(classOf[Inventory]) }
 					.flatten
 					.headOption match {
 					case Some(entry) => return entry

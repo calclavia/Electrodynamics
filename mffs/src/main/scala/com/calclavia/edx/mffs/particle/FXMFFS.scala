@@ -1,7 +1,7 @@
 package com.calclavia.edx.mffs.particle
 
-import com.resonant.core.prefab.block.ExtendedUpdater
 import nova.core.entity.Entity
+import nova.scala.ExtendedUpdater
 
 /**
  * @author Calclavia

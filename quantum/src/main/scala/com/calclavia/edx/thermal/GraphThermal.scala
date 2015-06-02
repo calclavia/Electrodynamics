@@ -1,10 +1,10 @@
 package com.calclavia.graph.thermal
 
-import com.resonant.core.prefab.block.ExtendedUpdater
 import nova.core.game.Game
 import nova.core.util.Direction
 import nova.core.util.transform.vector.Vector3i
 import nova.core.world.World
+import nova.scala.ExtendedUpdater
 
 import scala.collection.mutable
 

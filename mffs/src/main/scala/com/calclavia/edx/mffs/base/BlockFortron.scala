@@ -5,8 +5,6 @@ import java.util.{Collections, Set => JSet}
 import com.calclavia.edx.mffs.GraphFrequency
 import com.calclavia.edx.mffs.api.fortron.FortronFrequency
 import com.calclavia.edx.mffs.util.{FortronUtility, TransferMode}
-import com.resonant.core.prefab.block.ExtendedUpdater
-import com.resonant.lib.WrapFunctions
 import com.resonant.lib.WrapFunctions._
 import nova.core.block.Block
 import nova.core.block.Stateful.UnloadEvent
@@ -17,6 +15,7 @@ import nova.core.game.Game
 import nova.core.network.Sync
 import nova.core.retention.Stored
 import nova.core.util.Direction
+import nova.scala.ExtendedUpdater
 
 /**
  * A TileEntity that is powered by FortronHelper.

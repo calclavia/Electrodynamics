@@ -7,11 +7,8 @@ import com.calclavia.edx.mffs.field.BlockProjector
 import com.calclavia.edx.mffs.security.MFFSPermissions
 import nova.core.entity.component.Player
 import nova.core.game.Game
-import nova.core.inventory.component.InventoryProvider
-import nova.core.util.Direction
+import nova.core.inventory.Inventory
 import nova.core.util.transform.vector.Vector3i
-
-import scala.collection.convert.wrapAll._
 
 class ItemModuleConfiscate extends ItemModuleDefense {
 
@@ -26,7 +23,7 @@ class ItemModuleConfiscate extends ItemModuleDefense {
 			.foreach(
 		    player => {
 			    val filterItems = proj.getFilterItems
-			    val inventory = player.asInstanceOf[InventoryProvider].getInventory.head
+			    val inventory = player.getInventory
 
 			    val relevantSlots = (0 until inventory.size)
 				    .filter(
@@ -39,7 +36,7 @@ class ItemModuleConfiscate extends ItemModuleDefense {
 			    relevantSlots foreach (i => {
 				    val opItem = inventory.get(i)
 				    if (opItem.isPresent) {
-					    proj.getInventory(Direction.UNKNOWN).head.add(opItem.get())
+					    proj.get(classOf[Inventory]).add(opItem.get())
 					    inventory.remove(i, opItem.get().count())
 				    }
 

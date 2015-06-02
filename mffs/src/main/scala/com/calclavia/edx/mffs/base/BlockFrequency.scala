@@ -5,17 +5,17 @@ import java.util.{Set => JSet}
 import com.calclavia.edx.mffs.GraphFrequency
 import com.calclavia.edx.mffs.api.Frequency
 import com.calclavia.edx.mffs.item.card.ItemCardFrequency
-import com.resonant.core.prefab.block.InventorySimpleProvider
-import com.resonant.lib.WrapFunctions
-import WrapFunctions._
+import com.resonant.lib.WrapFunctions._
 import nova.core.block.Stateful.{LoadEvent, UnloadEvent}
+import nova.core.inventory.InventorySimple
 import nova.core.item.Item
 
 /**
  * All blocks that have a frequency value should extend this
  * @author Calclavia
  */
-abstract class BlockFrequency extends BlockMachine with Frequency with InventorySimpleProvider {
+abstract class BlockFrequency extends BlockMachine with Frequency {
+	val inventory: InventorySimple
 	val frequencySlot = 0
 
 	loadEvent.add((evt: LoadEvent) => GraphFrequency.instance.add(this))

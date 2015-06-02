@@ -1,12 +1,11 @@
 package com.calclavia.edx.mffs.particle
 
 import com.calclavia.edx.mffs.content.Textures
-import com.resonant.core.prefab.block.ExtendedUpdater
-import com.resonant.lib.WrapFunctions
 import com.resonant.lib.WrapFunctions._
 import nova.core.component.renderer.DynamicRenderer
 import nova.core.render.Color
 import nova.core.render.model.{BlockModelUtil, Model}
+import nova.scala.ExtendedUpdater
 
 import scala.beans.BeanProperty
 import scala.collection.convert.wrapAll._

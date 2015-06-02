@@ -8,7 +8,6 @@ import com.calclavia.edx.electric.grid.NodeElectricComponent
 import com.calclavia.edx.electric.grid.api.{ConnectionBuilder, Electric}
 import com.calclavia.minecraft.redstone.Redstone
 import com.resonant.core.energy.EnergyStorage
-import com.resonant.core.prefab.block.{ExtendedUpdater, IO}
 import nova.core.block.Block
 import nova.core.block.Block.{BlockPlaceEvent, DropEvent}
 import nova.core.block.component.StaticBlockRenderer
@@ -20,6 +19,7 @@ import nova.core.item.Item
 import nova.core.network.{PacketHandler, Sync}
 import nova.core.render.model.Model
 import nova.core.retention.{Storable, Stored}
+import nova.scala.{ExtendedUpdater, IO}
 
 /** A modular battery box that allows shared connections with boxes next to it.
   *

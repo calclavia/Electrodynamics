@@ -4,9 +4,9 @@ import java.util
 import java.util.Collections
 
 import com.calclavia.edx.electric.grid.api.{Electric, ElectricComponent}
-import com.resonant.core.prefab.block.ExtendedUpdater
 import nova.core.game.Game
 import nova.core.util.transform.matrix.Matrix
+import nova.scala.ExtendedUpdater
 import org.jgrapht.graph.{DefaultDirectedGraph, DefaultEdge, SimpleGraph}
 
 import scala.collection.convert.wrapAll._

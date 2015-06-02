@@ -1,7 +1,5 @@
 package com.calclavia.edx.mffs.particle
 
-import com.resonant.core.prefab.block.ExtendedUpdater
-import com.resonant.lib.WrapFunctions
 import com.resonant.lib.WrapFunctions._
 import nova.core.component.renderer.DynamicRenderer
 import nova.core.entity.Entity
@@ -9,6 +7,7 @@ import nova.core.render.Color
 import nova.core.render.model.{Model, Vertex}
 import nova.core.render.texture.Texture
 import nova.core.util.transform.vector.Vector3d
+import nova.scala.ExtendedUpdater
 
 import scala.beans.BeanProperty
 import scala.collection.convert.wrapAll._

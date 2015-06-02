@@ -6,8 +6,6 @@ import com.calclavia.edx.mffs.api.card.AccessCard
 import com.calclavia.edx.mffs.base.BlockFrequency
 import com.calclavia.edx.mffs.content.{Models, Textures}
 import com.resonant.core.access.Permission
-import com.resonant.core.prefab.block.ExtendedUpdater
-import com.resonant.lib.WrapFunctions
 import com.resonant.lib.WrapFunctions._
 import nova.core.block.Block.{BlockPlaceEvent, RightClickEvent}
 import nova.core.block.component.StaticBlockRenderer
@@ -17,6 +15,7 @@ import nova.core.game.Game
 import nova.core.inventory.InventorySimple
 import nova.core.item.Item
 import nova.core.render.model.Model
+import nova.scala.ExtendedUpdater
 
 import scala.collection.convert.wrapAll._
 

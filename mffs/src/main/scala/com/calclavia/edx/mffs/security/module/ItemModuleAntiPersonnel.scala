@@ -8,10 +8,8 @@ import com.calclavia.edx.mffs.security.MFFSPermissions
 import nova.core.component.misc.Damageable
 import nova.core.entity.component.Player
 import nova.core.game.Game
-import nova.core.util.Direction
+import nova.core.inventory.Inventory
 import nova.core.util.transform.vector.Vector3i
-
-import scala.collection.convert.wrapAll._
 
 class ItemModuleAntiPersonnel extends ItemModuleDefense {
 
@@ -31,7 +29,7 @@ class ItemModuleAntiPersonnel extends ItemModuleDefense {
 			        i => {
 				        val stackInSlot = player.getInventory.get(i)
 				        if (stackInSlot.isPresent) {
-					        proj.getInventory(Direction.UNKNOWN).head.add(stackInSlot.get)
+					        proj.get(classOf[Inventory]).add(stackInSlot.get)
 					        player.getInventory.remove(i, stackInSlot.get().count)
 				        }
 			        }
