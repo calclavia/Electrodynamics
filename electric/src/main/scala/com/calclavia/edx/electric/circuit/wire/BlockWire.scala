@@ -37,7 +37,7 @@ import scala.collection.convert.wrapAll._
 object BlockWire {
 	val thickness = 2 / 16d
 	val width = 1 / 3d
-	var occlusionBounds = Array.ofDim[Cuboid](6, 5)
+	var occlusionBounds = Array.ofDim[Cuboid](6, 9)
 	init()
 
 	def init() {
@@ -52,12 +52,29 @@ object BlockWire {
 			}
 
 			val center = new Cuboid(width, 0, width, 1 - width, thickness, 1 - width) - 0.5
+
+			//Short sides
 			val sides = (0 until 4)
 				.map(RotationUtil.rotateSide(0, _))
 				.map(Direction.fromOrdinal)
 				.map(d => center + (d.toVector.toDouble * width))
 				.toSeq
-			val face = Array(sides :+ center: _*)
+
+			//Long sides
+			val sideExtension = (0 until 4)
+				.map(RotationUtil.rotateSide(0, _))
+				.map(Direction.fromOrdinal)
+				.map(
+			    d => {
+				    val dir = d.toVector.toDouble
+				    val min = if (d.toVector.x < 0 || d.toVector.y < 0 || d.toVector.z < 0) dir * thickness else Vector3d.zero
+				    val max = if (d.toVector.x > 0 || d.toVector.y > 0 || d.toVector.z > 0) dir * thickness else Vector3d.zero
+				    (center + (dir * width)) + new Cuboid(min, max)
+			    }
+				)
+				.toSeq
+
+			val face = Array((sides :+ center) ++ sideExtension: _*)
 			occlusionBounds(s) = face.map(_.transform(rot))
 		}
 	}
@@ -116,10 +133,13 @@ class BlockWire extends Block with Storable with PacketHandler {
 		.setOcclusionBoxes(func(entity => {
 		var cuboids = Set.empty[Cuboid]
 		cuboids += BlockWire.occlusionBounds(side)(4) + 0.5
-		val filter = (0 until 4)
-			.filter(dir => (connectionMask & (1 << (dir * 2))) != 0 || (connectionMask & (1 << (dir * 2 + 1))) != 0)
-		cuboids ++= filter
-			.map(dir => BlockWire.occlusionBounds(side)(dir) + 0.5)
+		cuboids ++= (0 until 4)
+			.collect {
+			case dir if (connectionMask & (1 << (dir * 2))) != 0 && (connectionMask & (1 << (dir * 2 + 1))) != 0 =>
+				BlockWire.occlusionBounds(side)(dir + 5) + 0.5
+			case dir if (connectionMask & (1 << (dir * 2))) != 0 || (connectionMask & (1 << (dir * 2 + 1))) != 0 =>
+				BlockWire.occlusionBounds(side)(dir) + 0.5
+		}
 		cuboids
 	}))
 		.isCube(false)
