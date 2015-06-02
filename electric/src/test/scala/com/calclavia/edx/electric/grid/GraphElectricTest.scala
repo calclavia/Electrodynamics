@@ -1,5 +1,8 @@
 package com.calclavia.edx.electric.grid
 
+import java.io.{File, FileWriter}
+
+import com.calclavia.edx.electric.grid.ElectricGrid.ElectricElement
 import com.calclavia.edx.electric.grid.api.Electric
 import com.resonant.lib.WrapFunctions._
 import nova.core.util.Profiler
@@ -7,6 +10,8 @@ import nova.internal.launch.NovaLauncher
 import nova.testutils.FakeBlock
 import nova.wrappertests.NovaLauncherTestFactory
 import org.assertj.core.api.Assertions._
+import org.jgrapht.ext.DOTExporter
+import org.jgrapht.graph.DefaultEdge
 import org.junit.{BeforeClass, Test}
 
 import scala.collection.convert.wrapAll._
@@ -57,12 +62,23 @@ class GraphElectricTest {
 		println(profilerAdj)
 
 		val graph = grid.electricGraph
+
+		//Export graph
+		val exporter = new DOTExporter[ElectricElement, DefaultEdge]()
+		val targetDirectory = "testresults/graph/"
+		new File(targetDirectory).mkdirs()
+		exporter.export(new FileWriter(targetDirectory + "test-graph.dot"), graph)
+
 		println(graph)
 
 		//Test component & junction sizes
 		assertThat(grid.components.size).isEqualTo(2)
 		//There should be one less junction in the list, due to the ground
 		assertThat(grid.junctions.size).isEqualTo(1)
+
+		assertThat(graph.vertexSet.size).isEqualTo(4)
+		assertThat(graph.edgeSet.size).isEqualTo(4)
+
 		//Test forward connections
 		assertThat(graph.containsEdge(grid.convert(battery), grid.convert(wire1))).isTrue
 		assertThat(graph.containsEdge(grid.convert(wire1), grid.convert(resistor1))).isTrue
@@ -403,7 +419,6 @@ class GraphElectricTest {
 	}
 
 	class DummyWire extends NodeElectricJunction(new FakeBlock("dummy")) {
-
 		var _connections = Set.empty[Electric]
 		connections = supplier(() => _connections)
 

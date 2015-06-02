@@ -137,7 +137,26 @@ class ElectricGrid extends Updater {
 
 	def has(node: Electric) = connectionGraph.vertexSet().contains(node)
 
+	/**
+	 * Converts a node electric into an electric element
+	 */
 	def convert(nodeElectric: NodeElectricComponent) = new Component(nodeElectric)
+
+	/**
+	 * Creates or gets an existing Junction
+	 */
+	def convert(nodeJunction: NodeElectricJunction): Junction = {
+		val find = junctions
+			.find(j => j.wires.contains(nodeJunction))
+
+		if (find.isDefined)
+			return find.get
+
+		val newJunction = new Junction
+		newJunction.wires += nodeJunction
+		junctions :+= newJunction
+		return newJunction
+	}
 
 	/**
 	 * Builds the MNA matrix and prepares graph for simulation
@@ -165,12 +184,13 @@ class ElectricGrid extends Updater {
 			case nodeComponent: NodeElectricComponent =>
 				val component = new Component(nodeComponent)
 				//Check positive terminal connections
+				//TODO: Reuse connectionGraph instead of calling positives()
 				nodeComponent.positives().foreach {
 					case checkComponent: NodeElectricComponent =>
 						//Check if the "component" is negatively connected to the current node
 						if (checkComponent.negatives().contains(nodeComponent)) {
 							val junction = new VirtualJunction
-							val checkDevice = new Component(nodeComponent)
+							val checkDevice = convert(nodeComponent)
 							electricGraph.addVertex(component)
 							electricGraph.addVertex(junction)
 							electricGraph.addVertex(checkDevice)
@@ -197,7 +217,7 @@ class ElectricGrid extends Updater {
 				nodeJunction.con.foreach {
 					case nodeComponent: NodeElectricComponent =>
 						//TODO: Check hashcode connection
-						val device = new Component(nodeComponent)
+						val device = convert(nodeComponent)
 						electricGraph.addVertex(device)
 						electricGraph.addEdge(junction, device)
 				}
@@ -260,22 +280,6 @@ class ElectricGrid extends Updater {
 			junctions = junctions.splitAt(1)._2
 			ground.voltage = 0
 		}
-	}
-
-	/**
-	 * Creates or gets an existing Junction
-	 */
-	def convert(nodeJunction: NodeElectricJunction): Junction = {
-		val find = junctions
-			.find(j => j.wires.contains(nodeJunction))
-
-		if (find.isDefined)
-			return find.get
-
-		val newJunction = new Junction
-		newJunction.wires += nodeJunction
-		junctions :+= newJunction
-		return newJunction
 	}
 
 	override def update(deltaTime: Double) {
