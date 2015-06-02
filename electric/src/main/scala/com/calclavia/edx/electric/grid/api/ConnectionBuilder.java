@@ -2,7 +2,6 @@ package com.calclavia.edx.electric.grid.api;
 
 import nova.core.block.Block;
 import nova.core.util.Direction;
-import nova.core.world.World;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -19,16 +18,12 @@ import java.util.stream.Collectors;
 public class ConnectionBuilder<T> {
 
 	private final Class<T> componentType;
-	private final World world;
-	private final Block block;
-
+	private Block block;
 	public int connectMask = 0x3f;
 	public int connectedMask = 0;
 
-	public ConnectionBuilder(Class<T> componentType, Block block) {
+	public ConnectionBuilder(Class<T> componentType) {
 		this.componentType = componentType;
-		this.world = block.world();
-		this.block = block;
 	}
 
 	public ConnectionBuilder setConnectMask(int connectMask) {
@@ -36,11 +31,16 @@ public class ConnectionBuilder<T> {
 		return this;
 	}
 
+	public ConnectionBuilder setBlock(Block block) {
+		this.block = block;
+		return this;
+	}
+
 	/**
 	 * @return A supplier that provides adjacent nodes as connections.
 	 */
 	public Supplier<Set<T>> adjacentSupplier() {
-		return () -> adjacentNodes();
+		return this::adjacentNodes;
 	}
 
 	public Set<T> adjacentNodes() {
@@ -71,6 +71,6 @@ public class ConnectionBuilder<T> {
 	}
 
 	protected Map<Direction, Optional<Block>> adjacentBlocks() {
-		return Arrays.stream(Direction.DIRECTIONS).collect(Collectors.toMap(Function.identity(), dir -> world.getBlock(block.position().add(dir.toVector()))));
+		return Arrays.stream(Direction.DIRECTIONS).collect(Collectors.toMap(Function.identity(), dir -> block.world().getBlock(block.position().add(dir.toVector()))));
 	}
 }

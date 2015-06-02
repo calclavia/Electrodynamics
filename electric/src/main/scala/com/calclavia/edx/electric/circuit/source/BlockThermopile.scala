@@ -27,10 +27,10 @@ class BlockThermopile extends Block with ExtendedUpdater {
 
 	io.mask = 728
 
-	renderer.setTexture(func[Direction, Optional[Texture]]((dir: Direction) => if (dir == Direction.UP) Optional.of(ElectricContent.thermopileTexture) else Optional.empty[Texture]))
+	renderer.setTexture(func[Direction, Optional[Texture]]((dir: Direction) => if (dir == Direction.UP) Optional.of(ElectricContent.thermopileTextureTop) else Optional.of(ElectricContent.thermopileTextureSide)))
 
-	electricNode.setPositiveConnections(new ConnectionBuilder(classOf[Electric], this).setConnectMask(io.inputMask).adjacentSupplier().asInstanceOf[Supplier[JSet[Electric]]])
-	electricNode.setNegativeConnections(new ConnectionBuilder(classOf[Electric], this).setConnectMask(io.outputMask).adjacentNodes().asInstanceOf[Supplier[JSet[Electric]]])
+	electricNode.setPositiveConnections(new ConnectionBuilder(classOf[Electric]).setBlock(this).setConnectMask(io.inputMask).adjacentSupplier().asInstanceOf[Supplier[JSet[Electric]]])
+	electricNode.setNegativeConnections(new ConnectionBuilder(classOf[Electric]).setBlock(this).setConnectMask(io.outputMask).adjacentSupplier().asInstanceOf[Supplier[JSet[Electric]]])
 
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)

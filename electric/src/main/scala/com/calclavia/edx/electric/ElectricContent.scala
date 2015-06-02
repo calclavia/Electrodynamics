@@ -27,10 +27,11 @@ object ElectricContent extends ContentLoader {
 	 */
 	val wireTexture = new BlockTexture(Reference.domain, "wire")
 	val batteryTexture = new BlockTexture(Reference.domain, "battery")
-	val solarPanelTextureSide = new BlockTexture(Reference.domain, "solarPanel_side")
+	val solarPanelTextureSide = new BlockTexture(Reference.domain, "material_metal_top")
 	val solarPanelTextureBottom = new BlockTexture(Reference.domain, "solarPanel_bottom")
-	val solarPanelTextureEdge = new BlockTexture(Reference.domain, "solarPanelEdge")
-	val thermopileTexture = new BlockTexture(Reference.domain, "thermopile_top")
+	val solarPanelTextureEdge = new BlockTexture(Reference.domain, "connectEdge")
+	val thermopileTextureTop = new BlockTexture(Reference.domain, "material_metal_top")
+	val thermopileTextureSide = new BlockTexture(Reference.domain, "thermopile")
 
 	/**
 	 * Models

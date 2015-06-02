@@ -28,8 +28,8 @@ class BlockSolarPanel extends Block with ExtendedUpdater {
 	collider.isCube(false)
 	collider.isOpaqueCube(false)
 
-	electricNode.setPositiveConnections(new ConnectionBuilder(classOf[Electric], this).setConnectMask(io.inputMask).adjacentSupplier().asInstanceOf[Supplier[JSet[Electric]]])
-	electricNode.setNegativeConnections(new ConnectionBuilder(classOf[Electric], this).setConnectMask(io.outputMask).adjacentNodes().asInstanceOf[Supplier[JSet[Electric]]])
+	electricNode.setPositiveConnections(new ConnectionBuilder(classOf[Electric]).setBlock(this).setConnectMask(io.inputMask).adjacentSupplier().asInstanceOf[Supplier[JSet[Electric]]])
+	electricNode.setNegativeConnections(new ConnectionBuilder(classOf[Electric]).setBlock(this).setConnectMask(io.outputMask).adjacentSupplier().asInstanceOf[Supplier[JSet[Electric]]])
 
 	renderer.setTexture(
 		func((dir: Direction) => {
