@@ -303,7 +303,7 @@ class ElectricGrid extends ExtendedUpdater {
 			}
 		}
 		else {
-			updateFuture.onComplete(f => requestUpdate())
+			//	updateFuture.onComplete(f => requestUpdate())
 		}
 	}
 

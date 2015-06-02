@@ -131,6 +131,10 @@ class BlockBattery extends BlockEDX with PacketHandler with Storable with Extend
 
 		if (Game.network().isServer) {
 			if (redstone.getOutputWeakPower > 0) {
+				//TODO: Remove free energy
+				energy = new EnergyStorage().setMax(BlockBattery.getEnergyForTier(tier))
+				energy.value = energy.max
+
 				//Discharge battery when current is flowing positive direction
 				electricNode.generateVoltage(Math.min(energy.max * 0.0001, energy.value))
 				val dissipatedEnergy = electricNode.power / 20

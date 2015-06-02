@@ -1,4 +1,4 @@
-package com.calclavia.edx.electrical.circuit.source
+package com.calclavia.edx.electric.circuit.source
 
 import java.util.function.Supplier
 import java.util.{Optional, Set => JSet}
@@ -10,6 +10,7 @@ import com.calclavia.edx.electric.grid.api.{ConnectionBuilder, Electric}
 import com.resonant.lib.WrapFunctions._
 import nova.core.block.component.ConnectedTextureRenderer
 import nova.core.component.misc.Collider
+import nova.core.component.renderer.ItemRenderer
 import nova.core.game.Game
 import nova.core.util.Direction
 import nova.core.util.transform.shape.Cuboid
@@ -21,6 +22,7 @@ class BlockSolarPanel extends BlockEDX with ExtendedUpdater {
 	private val io = add(new IO(this))
 	private val collider = add(new Collider())
 	private val renderer = add(new ConnectedTextureRenderer(this, ElectricContent.solarPanelTextureEdge))
+	private val itemRenderer = add(new ItemRenderer())
 
 	io.mask = 728
 

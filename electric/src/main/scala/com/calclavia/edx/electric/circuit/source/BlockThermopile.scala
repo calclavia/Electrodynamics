@@ -9,6 +9,7 @@ import com.calclavia.edx.electric.grid.NodeElectricComponent
 import com.calclavia.edx.electric.grid.api.{ConnectionBuilder, Electric}
 import com.resonant.lib.WrapFunctions._
 import nova.core.block.component.StaticBlockRenderer
+import nova.core.component.renderer.ItemRenderer
 import nova.core.game.Game
 import nova.core.render.texture.Texture
 import nova.core.util.Direction
@@ -23,11 +24,12 @@ class BlockThermopile extends BlockEDX with ExtendedUpdater {
 	private val electricNode = add(new NodeElectricComponent(this))
 	private var ticksUsed = 0
 	private val io = add(new IO(this))
-	private val renderer = add(new StaticBlockRenderer(this))
+	private val staticRenderer = add(new StaticBlockRenderer(this))
+	private val itemRenderer = add(new ItemRenderer())
 
 	io.mask = 728
 
-	renderer.setTexture(func[Direction, Optional[Texture]]((dir: Direction) => if (dir == Direction.UP) Optional.of(ElectricContent.thermopileTextureTop) else Optional.of(ElectricContent.thermopileTextureSide)))
+	staticRenderer.setTexture(func[Direction, Optional[Texture]]((dir: Direction) => if (dir == Direction.UP) Optional.of(ElectricContent.thermopileTextureTop) else Optional.of(ElectricContent.thermopileTextureSide)))
 
 	electricNode.setPositiveConnections(new ConnectionBuilder(classOf[Electric]).setBlock(this).setConnectMask(io.inputMask).adjacentSupplier().asInstanceOf[Supplier[JSet[Electric]]])
 	electricNode.setNegativeConnections(new ConnectionBuilder(classOf[Electric]).setBlock(this).setConnectMask(io.outputMask).adjacentSupplier().asInstanceOf[Supplier[JSet[Electric]]])

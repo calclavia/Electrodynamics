@@ -1,7 +1,7 @@
 package com.calclavia.edx.electric
 
 import com.calclavia.edx.core.Reference
-import com.calclavia.edx.electric.circuit.source.BlockBattery
+import com.calclavia.edx.electric.circuit.source.{BlockBattery, BlockSolarPanel, BlockThermopile}
 import com.calclavia.edx.electric.circuit.wire.BlockWire
 import com.resonant.core.prefab.modcontent.ContentLoader
 import nova.core.block.BlockFactory
@@ -15,8 +15,10 @@ object ElectricContent extends ContentLoader {
 	/**
 	 * Blocks
 	 */
-	val wire: BlockFactory = classOf[BlockWire]
 	val battery: BlockFactory = classOf[BlockBattery]
+	val wire: BlockFactory = classOf[BlockWire]
+	val thermopile: BlockFactory = classOf[BlockThermopile]
+	val solarPanel: BlockFactory = classOf[BlockSolarPanel]
 
 	/**
 	 * Items
