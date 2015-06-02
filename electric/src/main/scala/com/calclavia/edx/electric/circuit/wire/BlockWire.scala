@@ -176,7 +176,7 @@ class BlockWire extends Block with Storable with PacketHandler {
 
 	add(new CategoryEDX)
 
-	rightClickEvent.add((evt: RightClickEvent) => System.out.println(this + " right clicked with side: " + side))
+	rightClickEvent.add((evt: RightClickEvent) => System.out.println(electricNode))
 
 	override def read(packet: Packet) {
 		super[PacketHandler].read(packet)
@@ -206,7 +206,6 @@ class BlockWire extends Block with Storable with PacketHandler {
 		//Apply connection masks
 		if (newConnectionMask != connectionMask) {
 			connectionMask = newConnectionMask
-			System.out.println(this + " Con Mask: " + Integer.toBinaryString(newConnectionMask))
 			//Update client render
 			get(classOf[Microblock]).sync(1)
 		}

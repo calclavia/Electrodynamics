@@ -8,6 +8,7 @@ import com.calclavia.edx.electric.ElectricContent
 import com.calclavia.edx.electric.grid.NodeElectricComponent
 import com.calclavia.edx.electric.grid.api.{ConnectionBuilder, Electric}
 import com.resonant.lib.WrapFunctions._
+import nova.core.block.Stateful
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.renderer.ItemRenderer
 import nova.core.game.Game
@@ -15,7 +16,7 @@ import nova.core.render.texture.Texture
 import nova.core.util.Direction
 import nova.scala.{ExtendedUpdater, IO}
 
-class BlockThermopile extends BlockEDX with ExtendedUpdater {
+class BlockThermopile extends BlockEDX with ExtendedUpdater with Stateful {
 	/**
 	 * The amount of ticks the thermopile will use the temperature differences before turning all
 	 * adjacent sides to thermal equilibrium.
@@ -25,7 +26,7 @@ class BlockThermopile extends BlockEDX with ExtendedUpdater {
 	private var ticksUsed = 0
 	private val io = add(new IO(this))
 	private val staticRenderer = add(new StaticBlockRenderer(this))
-	private val itemRenderer = add(new ItemRenderer())
+	private val itemRenderer = add(new ItemRenderer(this))
 
 	io.mask = 728
 

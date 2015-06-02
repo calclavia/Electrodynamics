@@ -11,7 +11,6 @@ import com.calclavia.minecraft.redstone.Redstone
 import com.resonant.core.energy.EnergyStorage
 import nova.core.block.Block.{BlockPlaceEvent, DropEvent, RightClickEvent}
 import nova.core.block.component.StaticBlockRenderer
-import nova.core.component.misc.Collider
 import nova.core.component.renderer.ItemRenderer
 import nova.core.event.Event
 import nova.core.game.Game
@@ -45,7 +44,6 @@ class BlockBattery extends BlockEDX with PacketHandler with Storable with Extend
 	private var energy = add(new EnergyStorage)
 	private val electricNode = add(new NodeElectricComponent(this))
 	private val io = add(new IO(this))
-	private val collider = add(new Collider)
 	private val redstone = add(Game.components().make(classOf[Redstone], this))
 	private val staticRenderer = add(new StaticBlockRenderer(this))
 	private val itemRenderer = add(new ItemRenderer(this))

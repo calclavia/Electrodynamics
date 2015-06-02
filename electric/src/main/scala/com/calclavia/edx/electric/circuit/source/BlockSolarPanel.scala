@@ -8,21 +8,21 @@ import com.calclavia.edx.electric.ElectricContent
 import com.calclavia.edx.electric.grid.NodeElectricComponent
 import com.calclavia.edx.electric.grid.api.{ConnectionBuilder, Electric}
 import com.resonant.lib.WrapFunctions._
+import nova.core.block.Stateful
 import nova.core.block.component.ConnectedTextureRenderer
-import nova.core.component.misc.Collider
 import nova.core.component.renderer.ItemRenderer
 import nova.core.game.Game
+import nova.core.render.model.{BlockModelUtil, Model}
 import nova.core.util.Direction
 import nova.core.util.transform.shape.Cuboid
 import nova.scala.{ExtendedUpdater, IO}
 
-class BlockSolarPanel extends BlockEDX with ExtendedUpdater {
+class BlockSolarPanel extends BlockEDX with ExtendedUpdater with Stateful {
 
 	private val electricNode = add(new NodeElectricComponent(this))
 	private val io = add(new IO(this))
-	private val collider = add(new Collider())
 	private val renderer = add(new ConnectedTextureRenderer(this, ElectricContent.solarPanelTextureEdge))
-	private val itemRenderer = add(new ItemRenderer())
+	private val itemRenderer = add(new ItemRenderer(this))
 
 	io.mask = 728
 
@@ -37,10 +37,13 @@ class BlockSolarPanel extends BlockEDX with ExtendedUpdater {
 		func((dir: Direction) => {
 			dir match {
 				case Direction.DOWN => Optional.of(ElectricContent.solarPanelTextureBottom)
+				case Direction.UP => Optional.of(ElectricContent.solarPanelTextureTop)
 				case _ => Optional.of(ElectricContent.solarPanelTextureSide)
 			}
 		})
 	)
+
+	itemRenderer.setOnRender((model: Model) => BlockModelUtil.drawBlock(model, this))
 
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)
