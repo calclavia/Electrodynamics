@@ -162,13 +162,14 @@ class BlockWire extends Block with Storable with PacketHandler {
 	add(new ItemRenderer(this))
 		.setOnRender(
 	    (model: Model) => {
-		    (0 until 4)
+		    (0 until 5)
 			    .map(dir => BlockWire.occlusionBounds(side)(dir))
 			    .foreach(cuboid => {
 			    BlockModelUtil.drawCube(model, cuboid, StaticCubeTextureCoordinates.instance)
 		    })
 
-		    model.faces.foreach(_.vertices.map(_.setColor(get(classOf[MaterialWire]).material.color)))
+		    //TODO: Change color
+		    model.faces.foreach(_.vertices.map(_.setColor(WireMaterial.COPPER.color)))
 		    model.bindAll(ElectricContent.wireTexture)
 	    }
 		)

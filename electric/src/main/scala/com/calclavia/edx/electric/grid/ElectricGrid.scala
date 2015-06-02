@@ -7,6 +7,7 @@ import com.calclavia.edx.electric.grid.api.{Electric, ElectricComponent}
 import nova.core.game.Game
 import nova.core.util.transform.matrix.Matrix
 import nova.scala.ExtendedUpdater
+import org.jgrapht.alg.CycleDetector
 import org.jgrapht.graph.{DefaultDirectedGraph, DefaultEdge, SimpleGraph}
 
 import scala.collection.convert.wrapAll._
@@ -279,7 +280,10 @@ class ElectricGrid extends ExtendedUpdater {
 	}
 
 	override def update(deltaTime: Double) {
-		if (junctions.nonEmpty) {
+
+		val detector = new CycleDetector(electricGraph)
+
+		if (junctions.nonEmpty && detector.detectCycles()) {
 			if (mna == null) {
 				setupMNA()
 				generateConnectionMatrix()
