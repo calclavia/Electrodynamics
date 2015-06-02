@@ -72,29 +72,15 @@ class GraphElectricTest {
 		assertThat(graph.vertexSet.size).isEqualTo(4)
 		assertThat(graph.edgeSet.size).isEqualTo(6)
 
-		//Test forward connections
+		//Test edges connections
 		assertThat(graph.containsEdge(grid.convert(battery), grid.convert(wire1))).isTrue
 		assertThat(graph.containsEdge(grid.convert(wire1), grid.convert(resistor1))).isTrue
 		assertThat(graph.containsEdge(grid.convert(resistor1), grid.convert(wire2))).isTrue
 		assertThat(graph.containsEdge(grid.convert(wire2), grid.convert(battery))).isTrue
-		//Test incomingEdgesOf connections
-		val e1 = graph.incomingEdgesOf(grid.convert(battery)).head
-		assert(graph.getEdgeSource(e1).equals(grid.convert(wire1)))
-		assert(graph.getEdgeTarget(e1).equals(grid.convert(wire2)))
-		val e2 = graph.incomingEdgesOf(grid.convert(wire1)).head
-		assert(graph.getEdgeSource(e2).equals(grid.convert(battery)))
-		val e3 = graph.incomingEdgesOf(grid.convert(resistor1)).head
-		assert(graph.getEdgeSource(e3).equals(grid.convert(wire1)))
-		assert(graph.getEdgeTarget(e3).equals(grid.convert(wire2)))
-		val e4 = graph.incomingEdgesOf(grid.convert(wire2)).head
-		assert(graph.getEdgeSource(e4).equals(resistor1))
-		//Test outgoingEdgesOf connections
-		/*
-		assert(Set(wire1), graph.outgoingEdgesOf(grid.convert(battery)))
-		assert(Set(battery, resistor1), graph.outgoingEdgesOf(grid.convert(wire1)))
-		assert(Set(wire2), graph.outgoingEdgesOf(grid.convert(resistor1)))
-		assert(Set(resistor1, battery), graph.outgoingEdgesOf(grid.convert(wire2)))
-*/
+
+		assertThat(graph.containsEdge(grid.convert(wire1), grid.convert(battery))).isTrue
+		assertThat(graph.containsEdge(grid.convert(wire2), grid.convert(resistor1))).isTrue
+
 		val profiler = new Profiler("Solving graph 1")
 
 		for (trial <- 1 to 1000) {
@@ -111,7 +97,7 @@ class GraphElectricTest {
 			profiler.lap()
 		}
 
-		println(profiler.average())
+		println("Average: " + profiler.average())
 	}
 
 	/**
@@ -151,27 +137,30 @@ class GraphElectricTest {
 
 		val graph = new ElectricGrid
 
-		val battery = new DummyComponent()
-		val wire1 = new DummyWire()
-		val wire2 = new DummyWire()
-		val resistor1 = new DummyComponent()
-		val wire3 = new DummyWire()
-		val resistor2 = new DummyComponent()
+		val battery = new DummyComponent("Battery")
+		val wire1 = new DummyWire("Wire 1")
+		val wire2 = new DummyWire("Wire 2")
+		val resistor1 = new DummyComponent("Resistor 1")
+		val wire3 = new DummyWire("Wire 3")
+		val resistor2 = new DummyComponent("Resistor 2")
 		resistor2.setResistance(2)
-		val wire4 = new DummyWire()
+		val wire4 = new DummyWire("Wire 4")
 
 		battery.connectNeg(wire4)
 		val components = connectInSeries(battery, wire1, wire2, resistor1, wire3, resistor2, wire4)
 		wire4.connect(battery)
 
 		components.foreach(graph.add)
-		println(profilerGen)
 
 		graph.build()
+		println(profilerGen)
+
+		exportGraph(graph.electricGraph, "testSolve2")
+
 		val profiler = new Profiler("Solving graph 2")
 
 		for (trial <- 1 to 1000) {
-			val voltage = trial * 10d * Math.random()
+			val voltage = trial * 10d
 			battery.setVoltage(voltage)
 			graph.update(profiler.elapsed)
 
@@ -180,15 +169,15 @@ class GraphElectricTest {
 			assertThat(battery.voltage).isCloseTo(voltage, within(error))
 			assertThat(battery.current).isCloseTo(current, within(error))
 			//Test resistor1
-			assertThat(resistor1.voltage).isCloseTo(voltage / 3, within(error))
+			assertThat(resistor1.voltage).isCloseTo(voltage / 3d, within(error))
 			assertThat(resistor1.current).isCloseTo(current, within(error))
 			//Test resistor2
-			assertThat(resistor2.voltage).isCloseTo(voltage * 2 / 3, within(error))
+			assertThat(resistor2.voltage).isCloseTo(voltage * 2d / 3d, within(error))
 			assertThat(resistor2.current).isCloseTo(current, within(error))
 			profiler.lap()
 		}
 
-		print(profiler.average())
+		println("Average: " + profiler.average())
 	}
 
 	/**
