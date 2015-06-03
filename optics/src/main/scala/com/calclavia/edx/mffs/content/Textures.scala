@@ -32,6 +32,7 @@ object Textures extends ContentLoader {
 	val laserMiddleTexture = new BlockTexture(Reference.domain, "laserMiddle")
 	val laserEndTexture = new BlockTexture(Reference.domain, "laserEnd")
 	val laserNoiseTexture = new BlockTexture(Reference.domain, "noise")
+	val scortchTexture = new BlockTexture(Reference.domain, "scorch")
 
 	override def id: String = Reference.opticsID
 }
