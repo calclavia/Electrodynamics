@@ -3,7 +3,9 @@ package com.calclavia.edx.electric.grid
 import java.util
 import java.util.Collections
 
+import com.calclavia.edx.electric.api.Electric.ElectricChangeEvent
 import com.calclavia.edx.electric.api.{Electric, ElectricComponent}
+import com.resonant.lib.WrapFunctions._
 import nova.core.util.transform.matrix.Matrix
 import nova.scala.ExtendedUpdater
 import org.jgrapht.alg.CycleDetector
@@ -13,7 +15,6 @@ import scala.collection.convert.wrapAll._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent._
 import scala.util.{Failure, Success}
-
 /**
  * An electric circuit grid for independent voltage sources.
  * The circuit solver uses MNA, based on http://www.swarthmore.edu/NatSci/echeeve1/Ref/mna/MNA3.html
@@ -174,15 +175,15 @@ class ElectricGrid extends ExtendedUpdater {
 				connections.foreach(connectionGraph.addVertex)
 				connections.foreach(n => connectionGraph.addEdge(node, n))
 
-				node.onResistanceChange :+= ((resistor: Electric) => {
+				node.onResistanceChange.add((evt: ElectricChangeEvent) => {
 					resistorChanged = true
 					requestUpdate()
 				})
-				node.onVoltageChange :+= ((source: Electric) => {
+				node.onInternalVoltageChange :+= ((source: Electric) => {
 					sourceChanged = true
 					requestUpdate()
 				})
-				node.onCurrentChange :+= ((source: Electric) => {
+				node.onInternalCurrentChange :+= ((source: Electric) => {
 					sourceChanged = true
 					requestUpdate()
 				})
@@ -460,8 +461,18 @@ class ElectricGrid extends ExtendedUpdater {
 				case (component, index) =>
 					val wireFrom = electricGraph.outgoingEdgesOf(component).map(electricGraph.getEdgeTarget).head.asInstanceOf[Junction]
 					val wireTo = electricGraph.incomingEdgesOf(component).map(electricGraph.getEdgeSource).find(w => w != wireFrom).get.asInstanceOf[Junction]
-					component.component.voltage = wireFrom.voltage - wireTo.voltage
-					component.component.current = component.component.voltage / component.component.resistance
+					val newVoltage = wireFrom.voltage - wireTo.voltage
+
+					if (newVoltage != component.component.voltage) {
+						component.component.voltage = newVoltage
+						component.component.onVoltageChange.publish(new ElectricChangeEvent)
+					}
+
+					val newCurrent = component.component.voltage / component.component.resistance
+					if (newCurrent != component.component.current) {
+						component.component.current = newCurrent
+						component.component.onCurrentChange.publish(new ElectricChangeEvent)
+					}
 			}
 		}
 	}

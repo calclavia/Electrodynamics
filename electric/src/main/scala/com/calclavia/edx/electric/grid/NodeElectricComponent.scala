@@ -33,8 +33,8 @@ class NodeElectricComponent(parent: Block) extends ElectricComponent with Electr
 	protected[grid] var genCurrent = 0d
 
 	//TODO: Change to event bus
-	protected[grid] var onVoltageChange = Seq.empty[Electric => Unit]
-	protected[grid] var onCurrentChange = Seq.empty[Electric => Unit]
+	protected[grid] var onInternalVoltageChange = Seq.empty[Electric => Unit]
+	protected[grid] var onInternalCurrentChange = Seq.empty[Electric => Unit]
 
 	/**
 	 * The positive terminal connections
@@ -74,7 +74,7 @@ class NodeElectricComponent(parent: Block) extends ElectricComponent with Electr
 		val prevGenVoltage = genVoltage
 		genVoltage = voltage
 		if (prevGenVoltage != genVoltage)
-			onVoltageChange.foreach(_.apply(this))
+			onInternalVoltageChange.foreach(_.apply(this))
 	}
 
 	/**
@@ -85,7 +85,7 @@ class NodeElectricComponent(parent: Block) extends ElectricComponent with Electr
 		val prevGenCurrent = genCurrent
 		genCurrent = power
 		if (prevGenCurrent != genCurrent)
-			onCurrentChange.foreach(_.apply(this))
+			onInternalCurrentChange.foreach(_.apply(this))
 	}
 
 	override def toString = "ElectricComponent [" + con.size + " " + BigDecimal(current).setScale(2, BigDecimal.RoundingMode.HALF_UP) + "A " + BigDecimal(voltage).setScale(2, BigDecimal.RoundingMode.HALF_UP) + "V]"

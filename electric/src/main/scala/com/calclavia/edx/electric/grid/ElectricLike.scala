@@ -1,6 +1,7 @@
 package com.calclavia.edx.electric.grid
 
 import com.calclavia.edx.electric.api.Electric
+import com.calclavia.edx.electric.api.Electric.ElectricChangeEvent
 import com.resonant.lib.WrapFunctions._
 import nova.core.block.Block.NeighborChangeEvent
 import nova.core.block.Stateful.{LoadEvent, UnloadEvent}
@@ -14,9 +15,6 @@ import scala.collection.convert.wrapAll._
  * @author Calclavia
  */
 trait ElectricLike extends Electric with BlockConnectable[Electric] {
-
-	//Internal use for graphs
-	protected[grid] var onResistanceChange = Seq.empty[(Electric) => Unit]
 
 	private var _resistance = 1d
 
@@ -50,7 +48,7 @@ trait ElectricLike extends Electric with BlockConnectable[Electric] {
 
 	def resistance_=(res: Double) {
 		_resistance = res
-		onResistanceChange.foreach(_.apply(this))
+		onResistanceChange.publish(new ElectricChangeEvent)
 	}
 
 	override def setResistance(resistance: Double): Electric = {
