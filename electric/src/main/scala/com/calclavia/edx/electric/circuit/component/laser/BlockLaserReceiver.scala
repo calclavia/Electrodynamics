@@ -41,11 +41,11 @@ class BlockLaserReceiver extends BlockEDX with Stateful
 	electricNode.setNegativeConnections(new ConnectionBuilder(classOf[Electric]).setBlock(this).setConnectMask(io.outputMask).adjacentSupplier().asInstanceOf[Supplier[JSet[Electric]]])
 	electricNode.setResistance(100)
 
-	laserHandler.onEnergyChange.add((evt: Event) => {
+	laserHandler.onPowerChange.add((evt: Event) => {
 		//if (hit.sideHit == getDirection.ordinal)
 		{
 			//TODO: Change voltage until power = energy
-			electricNode.generateVoltage(laserHandler.energyReceiving)
+			electricNode.generateVoltage(laserHandler.receivingPower)
 		}
 	})
 

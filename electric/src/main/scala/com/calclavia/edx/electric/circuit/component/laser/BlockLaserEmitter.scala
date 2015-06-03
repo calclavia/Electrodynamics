@@ -6,7 +6,7 @@ import java.util.{Set => JSet}
 import com.calclavia.edx.core.prefab.BlockEDX
 import com.calclavia.edx.electric.ElectricContent
 import com.calclavia.edx.electric.api.{ConnectionBuilder, Electric}
-import com.calclavia.edx.electric.circuit.component.laser.LaserHandler.Laser
+import com.calclavia.edx.electric.circuit.component.laser.LaserGrid.Laser
 import com.calclavia.edx.electric.grid.NodeElectricComponent
 import com.resonant.lib.WrapFunctions._
 import nova.core.block.Stateful
@@ -44,7 +44,7 @@ class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater {
 	collider.isCube(false)
 	collider.isOpaqueCube(false)
 
-	lightEmitter.setEmittedLevel(supplier(() => (electricNode.power / LaserHandler.maxEnergy).toFloat))
+	lightEmitter.setEmittedLevel(supplier(() => (electricNode.power / LaserGrid.maxEnergy).toFloat))
 
 	renderer.setOnRender(
 		(model: Model) => {
@@ -60,10 +60,12 @@ class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater {
 
 			model.rotate(rot)
 
-			if (orientation.orientation.y == 0)
+			if (orientation.orientation.y == 0) {
 				model.rotate(Vector3d.yAxis, -Math.PI / 2)
-			else
+			}
+			else {
 				model.rotate(Vector3d.xAxis, Math.PI)
+			}
 
 			model.children.add(ElectricContent.laserEmitterModel.getModel)
 			model.bindAll(ElectricContent.laserEmitterTexture)
