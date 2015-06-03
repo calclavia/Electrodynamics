@@ -15,6 +15,7 @@ import scala.collection.convert.wrapAll._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent._
 import scala.util.{Failure, Success}
+
 /**
  * An electric circuit grid for independent voltage sources.
  * The circuit solver uses MNA, based on http://www.swarthmore.edu/NatSci/echeeve1/Ref/mna/MNA3.html

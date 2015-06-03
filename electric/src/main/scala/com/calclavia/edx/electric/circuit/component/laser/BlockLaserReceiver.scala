@@ -8,8 +8,9 @@ import com.calclavia.edx.electric.ElectricContent
 import com.calclavia.edx.electric.api.{ConnectionBuilder, Electric}
 import com.calclavia.edx.electric.grid.NodeElectricComponent
 import com.resonant.lib.WrapFunctions._
-import nova.core.block.component.LightEmitter
-import nova.core.component.renderer.{DynamicRenderer, ItemRenderer}
+import nova.core.block.Stateful
+import nova.core.block.component.{LightEmitter, StaticBlockRenderer}
+import nova.core.component.renderer.ItemRenderer
 import nova.core.component.transform.Orientation
 import nova.core.event.Event
 import nova.core.render.model.Model
@@ -21,15 +22,17 @@ import nova.scala.IO
  * A block that receives laser light and generates a voltage.
  * @author Calclavia
  */
-class BlockLaserReceiver extends BlockEDX
+class BlockLaserReceiver extends BlockEDX with Stateful
 {
 	private val electricNode = new NodeElectricComponent(this)
 	private val orientation = add(new Orientation(this)).hookBlockEvents()
 	private val laserHandler = add(new LaserHandler(this))
 	private val io = add(new IO(this))
-	private val renderer = add(new DynamicRenderer())
+	private val renderer = add(new StaticBlockRenderer(this))
 	private val itemRenderer = add(new ItemRenderer(this))
 	private val lightEmitter = add(new LightEmitter())
+
+	orientation.setMask(63)
 
 	collider.isCube(false)
 	collider.isOpaqueCube(false)
@@ -45,7 +48,6 @@ class BlockLaserReceiver extends BlockEDX
 			electricNode.generateVoltage(laserHandler.energyReceiving)
 		}
 	})
-
 
 	renderer.setOnRender(
 		(model: Model) => {
@@ -71,5 +73,5 @@ class BlockLaserReceiver extends BlockEDX
 		}
 	)
 
-	override def getID: String = "laserEmitter"
+	override def getID: String = "laserReceiver"
 }
