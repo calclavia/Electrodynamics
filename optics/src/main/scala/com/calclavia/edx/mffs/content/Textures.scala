@@ -1,5 +1,6 @@
 package com.calclavia.edx.mffs.content
 
+import com.calclavia.edx.core.Reference
 import com.resonant.core.prefab.modcontent.ContentLoader
 import nova.core.render.texture.BlockTexture
 
@@ -24,6 +25,13 @@ object Textures extends ContentLoader {
 	val mobilizerOn = new BlockTexture(Reference.domain, "forceMobilizer_on")
 	val mobilizerOff = new BlockTexture(Reference.domain, "forceMobilizer_off")
 
-	override def id: String = Reference.id
+	/**
+	 * Particle FX
+	 */
+	val laserStartTexture = new BlockTexture(Reference.domain, "laserStart")
+	val laserMiddleTexture = new BlockTexture(Reference.domain, "laserMiddle")
+	val laserEndTexture = new BlockTexture(Reference.domain, "laserEnd")
+	val laserNoiseTexture = new BlockTexture(Reference.domain, "noise")
 
+	override def id: String = Reference.opticsID
 }
