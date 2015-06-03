@@ -12,7 +12,7 @@ import com.calclavia.edx.mffs.particle.{FXFortronBeam, FXHologramProgress, Field
 import com.calclavia.edx.mffs.security.PermissionHandler
 import com.calclavia.edx.mffs.util.CacheHandler
 import com.resonant.lib.WrapFunctions
-import WrapFunctions._
+import com.resonant.lib.WrapFunctions._
 import nova.core.block.Block
 import nova.core.block.Stateful.UnloadEvent
 import nova.core.block.component.{LightEmitter, StaticBlockRenderer}
@@ -72,7 +72,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 	    }
 		)
 
-	add(new DynamicRenderer(this))
+	add(new DynamicRenderer())
 		.setOnRender(
 	    (model: Model) => {
 		    /**

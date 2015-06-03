@@ -50,7 +50,7 @@ class BlockBiometric extends BlockFrequency with ExtendedUpdater with Permission
 	    }
 		)
 
-	add(new DynamicRenderer(this))
+	add(new DynamicRenderer())
 		.setOnRender(
 	    (model: Model) => {
 		    model.rotate(get(classOf[Orientation]).orientation.rotation)

@@ -8,7 +8,7 @@ import com.calclavia.edx.mffs.base.{BlockModuleHandler, PacketBlock}
 import com.calclavia.edx.mffs.content.{Content, Models, Textures}
 import com.calclavia.edx.mffs.item.card.ItemCardFrequency
 import com.resonant.lib.WrapFunctions
-import WrapFunctions._
+import com.resonant.lib.WrapFunctions._
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.renderer.{DynamicRenderer, ItemRenderer, StaticRenderer}
 import nova.core.fluid.component.Tank
@@ -72,7 +72,7 @@ class BlockCoercionDeriver extends BlockModuleHandler {
 	    }
 		)
 
-	add(new DynamicRenderer(this))
+	add(new DynamicRenderer())
 		.setOnRender(
 	    (model: Model) => {
 		    model.translate(0, (0.3 + Math.sin(Math.toRadians(animation)) * 0.08) * animationTween - 0.1, 0)

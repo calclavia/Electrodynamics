@@ -1,91 +1,75 @@
 package com.calclavia.edx.electric.circuit.component.laser
 
-import nova.core.block.Block
-import nova.core.util.Direction
+import java.util.function.Supplier
+import java.util.{Set => JSet}
 
+import com.calclavia.edx.core.prefab.BlockEDX
+import com.calclavia.edx.electric.ElectricContent
+import com.calclavia.edx.electric.api.{ConnectionBuilder, Electric}
+import com.calclavia.edx.electric.grid.NodeElectricComponent
+import com.resonant.lib.WrapFunctions._
+import nova.core.block.component.LightEmitter
+import nova.core.component.renderer.{DynamicRenderer, ItemRenderer}
+import nova.core.component.transform.Orientation
+import nova.core.event.Event
+import nova.core.render.model.Model
+import nova.core.util.Direction
+import nova.core.util.transform.matrix.Quaternion
+import nova.core.util.transform.vector.Vector3d
+import nova.scala.IO
 /**
  * A block that receives laser light and generates a voltage.
  * @author Calclavia
  */
-class BlockLaserReceiver extends Block with LaserHandler with TBlockNodeProvider with TRotatable
+class BlockLaserReceiver extends BlockEDX
 {
-  val electricNode = new NodeElectricComponent(this)
+	private val electricNode = new NodeElectricComponent(this)
+	private val orientation = add(new Orientation(this)).hookBlockEvents()
+	private val laserHandler = add(new LaserHandler(this))
+	private val io = add(new IO(this))
+	private val renderer = add(new DynamicRenderer())
+	private val itemRenderer = add(new ItemRenderer(this))
+	private val lightEmitter = add(new LightEmitter())
 
-  private var energy = 0D
+	collider.isCube(false)
+	collider.isOpaqueCube(false)
 
-  domain = ""
-  textureName = "stone"
-  normalRender = false
-  isOpaqueCube = false
-  nodes.add(electricNode)
+	electricNode.setPositiveConnections(new ConnectionBuilder(classOf[Electric]).setBlock(this).setConnectMask(io.inputMask).adjacentSupplier().asInstanceOf[Supplier[JSet[Electric]]])
+	electricNode.setNegativeConnections(new ConnectionBuilder(classOf[Electric]).setBlock(this).setConnectMask(io.outputMask).adjacentSupplier().asInstanceOf[Supplier[JSet[Electric]]])
+	electricNode.setResistance(100)
 
-  electricNode.dynamicTerminals = true
-  electricNode.setPositives(Set(Direction.NORTH, Direction.EAST))
-  electricNode.setNegatives(Set(Direction.SOUTH, Direction.WEST))
+	laserHandler.onEnergyChange.add((evt: Event) => {
+		//if (hit.sideHit == getDirection.ordinal)
+		{
+			//TODO: Change voltage until power = energy
+			electricNode.generateVoltage(laserHandler.energyReceiving)
+		}
+	})
 
-  override def canUpdate: Boolean = false
 
-	override def onLaserHit(renderStart: Vector3d, incident: Vector3d, hit: MovingObjectPosition, color: Vector3d, energy: Double): Boolean =
-  {
-    if (hit.sideHit == getDirection.ordinal)
-    {
-      electricNode.generatePower(energy)
-    }
+	renderer.setOnRender(
+		(model: Model) => {
+			val rot = orientation.orientation match {
+				case Direction.UP => Quaternion.fromAxis(Vector3d.xAxis, -Math.PI / 2)
+				case Direction.DOWN => Quaternion.fromAxis(Vector3d.xAxis, Math.PI / 2)
+				case Direction.NORTH => Quaternion.fromAxis(Vector3d.yAxis, Math.PI / 2)
+				case Direction.SOUTH => Quaternion.fromAxis(Vector3d.yAxis, -Math.PI / 2)
+				case Direction.WEST => Quaternion.fromAxis(Vector3d.yAxis, Math.PI)
+				case Direction.EAST => Quaternion.fromAxis(Vector3d.yAxis, 0)
+				case _ => Quaternion.identity
+			}
 
-    return false
-  }
+			model.rotate(rot)
 
-  override def onPlaced(entityLiving: EntityLivingBase, itemStack: ItemStack)
-  {
-    val l = BlockPistonBase.determineOrientation(world, x, y, z, entityLiving)
-    world.setBlockMetadataWithNotify(x, y, z, l, 2)
-  }
+			if (orientation.orientation.y == 0)
+				model.rotate(Vector3d.yAxis, -Math.PI / 2)
+			else
+				model.rotate(Vector3d.xAxis, Math.PI)
 
-  @SideOnly(Side.CLIENT)
-  override def renderDynamic(pos: Vector3d, frame: Float, pass: Int)
-  {
-    glPushMatrix()
-    glTranslated(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5)
+			model.children.add(ElectricContent.laserReceiverModel.getModel)
+			model.bindAll(ElectricContent.laserReceiverTexture)
+		}
+	)
 
-    RenderUtility.enableBlending()
-
-    getDirection match
-    {
-      case Direction.UNKNOWN =>
-      case Direction.UP => glRotatef(-90, 1, 0, 0)
-      case Direction.DOWN => glRotatef(90, 1, 0, 0)
-      case Direction.NORTH => glRotatef(90, 0, 1, 0)
-      case Direction.SOUTH => glRotatef(-90, 0, 1, 0)
-      case Direction.WEST => glRotatef(-180, 0, 1, 0)
-      case Direction.EAST => glRotatef(0, 0, 1, 0)
-    }
-
-    if (getDirection.offsetY == 0)
-      glRotatef(-90, 0, 1, 0)
-    else
-      glRotatef(180, 1, 0, 0)
-
-	  FMLClientHandler.instance.getClient.renderEngine.bindTexture(BlockLaserReceiver.texture)
-	  BlockLaserReceiver.model.renderAll()
-
-    RenderUtility.disableBlending()
-
-    glPopMatrix()
-  }
-
-  @SideOnly(Side.CLIENT)
-  override def renderInventory(itemStack: ItemStack)
-  {
-    glPushMatrix()
-    glRotated(180, 0, 1, 0)
-
-    RenderUtility.enableBlending()
-
-	  FMLClientHandler.instance.getClient.renderEngine.bindTexture(BlockLaserReceiver.texture)
-	  BlockLaserReceiver.model.renderAll()
-
-    RenderUtility.disableBlending()
-
-    glPopMatrix()
-  }
+	override def getID: String = "laserEmitter"
 }

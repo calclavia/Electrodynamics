@@ -13,7 +13,7 @@ import scala.collection.convert.wrapAll._
 class FXHologramProgress(@BeanProperty var color: Color, maxAge: Double) extends FXMFFS with ExtendedUpdater {
 	var age = 0d
 
-	add(new DynamicRenderer(this))
+	add(new DynamicRenderer())
 		.setOnRender(
 	    (model: Model) => {
 		    //		GL11.glPushMatrix

@@ -2,6 +2,7 @@ package com.calclavia.edx.mffs.particle
 
 import com.calclavia.edx.mffs.content.Textures
 import com.resonant.lib.WrapFunctions
+import com.resonant.lib.WrapFunctions._
 import nova.core.component.renderer.DynamicRenderer
 import nova.core.entity.component.RigidBody
 import nova.core.render.Color
@@ -9,12 +10,11 @@ import nova.core.render.model.{BlockModelUtil, Model}
 import nova.core.util.transform.vector.Vector3d
 
 import scala.collection.convert.wrapAll._
-import WrapFunctions._
 class FXHologram(color: Color, maxAge: Double) extends FXMFFS {
 	var age = 0d
 	private var targetPosition: Vector3d = null
 
-	add(new DynamicRenderer(this))
+	add(new DynamicRenderer())
 		.setOnRender(
 	    (model: Model) => {
 			model.scale(1.01, 1.01, 1.01)

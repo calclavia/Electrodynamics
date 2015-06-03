@@ -3,7 +3,7 @@ package com.calclavia.edx.electric.grid
 import com.calclavia.edx.electric.api.Electric
 import com.resonant.lib.WrapFunctions._
 import nova.core.block.Block.NeighborChangeEvent
-import nova.core.block.Stateful.LoadEvent
+import nova.core.block.Stateful.{LoadEvent, UnloadEvent}
 import nova.core.game.Game
 import nova.core.network.NetworkTarget.Side
 
@@ -27,6 +27,11 @@ trait ElectricLike extends Electric with BlockConnectable[Electric] {
 			if (Side.get().isServer) {
 				Game.syncTicker().preQueue(() => build())
 			}
+		}
+	)
+	block.unloadEvent.add(
+		(evt: UnloadEvent) => {
+			ElectricGrid.destroy(this)
 		}
 	)
 
