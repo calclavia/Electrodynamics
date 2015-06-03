@@ -1,6 +1,6 @@
 package com.calclavia.edx.electric.grid
 
-import com.calclavia.edx.electric.grid.api.ElectricJunction
+import com.calclavia.edx.electric.api.ElectricJunction
 import nova.core.block.Block
 
 /**

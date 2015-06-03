@@ -1,23 +1,10 @@
 package com.calclavia.edx.electrical.circuit.component.laser.fx
 
-import com.calclavia.edx.electrical.Electric
-import com.calclavia.edx.electrical.circuit.component.laser.Laser
-import cpw.mods.fml.client.FMLClientHandler
-import cpw.mods.fml.relauncher.{Side, SideOnly}
-import edx.core.Reference
-import Laser
-import net.minecraft.client.particle.EntityFX
-import net.minecraft.client.renderer.Tessellator
-import net.minecraft.util.ResourceLocation
-import net.minecraft.world.World
-import org.lwjgl.opengl.GL11._
-import resonantengine.lib.transform.vector.Vector3
-
 /**
  * @author Calclavia
  */
 @SideOnly(Side.CLIENT)
-class EntityLaserFX(par1World: World, start: Vector3, end: Vector3, color: Vector3, energy: Double) extends EntityFX(par1World, start.x, start.y, start.z)
+class EntityLaserFX(par1World: World, start: Vector3d, end: Vector3d, color: Vector3d, energy: Double) extends EntityFX(par1World, start.x, start.y, start.z)
 {
   val laserStartTexture = new ResourceLocation(Reference.domain, Reference.FX_DIRECTORY + "laserStart.png")
   val laserMiddleTexture = new ResourceLocation(Reference.domain, Reference.FX_DIRECTORY + "laserMiddle.png")

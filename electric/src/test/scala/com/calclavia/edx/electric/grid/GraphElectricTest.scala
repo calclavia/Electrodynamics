@@ -2,7 +2,7 @@ package com.calclavia.edx.electric.grid
 
 import java.io.{File, FileWriter}
 
-import com.calclavia.edx.electric.grid.api.Electric
+import com.calclavia.edx.electric.api.Electric
 import com.resonant.lib.WrapFunctions._
 import nova.core.util.Profiler
 import nova.internal.launch.NovaLauncher

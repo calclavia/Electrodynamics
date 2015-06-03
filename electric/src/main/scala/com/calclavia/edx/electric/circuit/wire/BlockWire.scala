@@ -5,8 +5,8 @@ import java.util.{Optional, Set => JSet}
 
 import com.calclavia.edx.core.CategoryEDX
 import com.calclavia.edx.electric.ElectricContent
+import com.calclavia.edx.electric.api.Electric
 import com.calclavia.edx.electric.grid.NodeElectricJunction
-import com.calclavia.edx.electric.grid.api.Electric
 import com.calclavia.microblock.micro.{Microblock, MicroblockContainer}
 import com.resonant.lib.WrapFunctions._
 import nova.core.block.Block

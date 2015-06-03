@@ -1,6 +1,6 @@
 package com.calclavia.edx.electrical.circuit.component.laser.focus;
 
-import resonantengine.lib.transform.vector.Vector3;
+import resonantengine.lib.transform.vector.Vector3d;
 
 import java.util.List;
 
@@ -16,11 +16,11 @@ public interface IFocus
 	 *
 	 * @param position
 	 */
-	public void focus(Vector3 position);
+	public void focus(Vector3d position);
 
-	public Vector3 getFocus();
+	public Vector3d getFocus();
 
-	public void setFocus(Vector3 focus);
+	public void setFocus(Vector3d focus);
 
-	public List<Vector3> getCacheDirections();
+	public List<Vector3d> getCacheDirections();
 }

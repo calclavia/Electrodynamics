@@ -1,23 +1,13 @@
 package com.calclavia.edx.electrical.circuit.component.laser.fx
 
-import com.calclavia.edx.electrical.Electric
-import cpw.mods.fml.client.FMLClientHandler
-import cpw.mods.fml.relauncher.{Side, SideOnly}
-import edx.core.Reference
-import net.minecraft.client.particle.EntityFX
-import net.minecraft.client.renderer.Tessellator
-import net.minecraft.util.ResourceLocation
-import net.minecraft.world.World
 import nova.core.util.Direction
-import org.lwjgl.opengl.GL11._
-import resonantengine.lib.transform.vector.Vector3
 
 /**
  * @author Calclavia
  */
 
 @SideOnly(Side.CLIENT)
-class EntityScorchFX(par1World: World, position: Vector3, side: Int) extends EntityFX(par1World, position.x, position.y, position.z)
+class EntityScorchFX(par1World: World, position: Vector3d, side: Int) extends EntityFX(par1World, position.x, position.y, position.z)
 {
   val texture = new ResourceLocation(Reference.domain, Reference.FX_DIRECTORY + "scorch.png")
 

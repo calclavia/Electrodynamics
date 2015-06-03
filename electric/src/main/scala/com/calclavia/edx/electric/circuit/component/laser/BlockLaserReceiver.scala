@@ -1,35 +1,13 @@
-package com.calclavia.edx.electrical.circuit.component.laser
+package com.calclavia.edx.electric.circuit.component.laser
 
-import cpw.mods.fml.client.FMLClientHandler
-import cpw.mods.fml.relauncher.{Side, SideOnly}
-import edx.core.Reference
-import net.minecraft.block.BlockPistonBase
-import net.minecraft.block.material.Material
-import net.minecraft.entity.EntityLivingBase
-import net.minecraft.item.ItemStack
-import net.minecraft.util.{MovingObjectPosition, ResourceLocation}
-import net.minecraftforge.client.model.AdvancedModelLoader
+import nova.core.block.Block
 import nova.core.util.Direction
-import org.lwjgl.opengl.GL11._
-import resonantengine.lib.grid.energy.electric.NodeElectricComponent
-import resonantengine.lib.modcontent.block.ResonantTile
-import resonantengine.lib.render.RenderUtility
-import resonantengine.lib.transform.vector.Vector3
-import resonantengine.prefab.block.impl.{TBlockNodeProvider, TRotatable}
-
-import scala.collection.convert.wrapAll._
 
 /**
  * A block that receives laser light and generates a voltage.
  * @author Calclavia
  */
-object TileLaserReceiver
-{
-  @SideOnly(Side.CLIENT) val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "laserReceiver.tcn"))
-  @SideOnly(Side.CLIENT) val texture = new ResourceLocation(Reference.domain, Reference.modelPath + "laserReceiver.png")
-}
-
-class TileLaserReceiver extends ResonantTile(Material.rock) with ILaserHandler with TBlockNodeProvider with TRotatable
+class BlockLaserReceiver extends Block with LaserHandler with TBlockNodeProvider with TRotatable
 {
   val electricNode = new NodeElectricComponent(this)
 
@@ -47,7 +25,7 @@ class TileLaserReceiver extends ResonantTile(Material.rock) with ILaserHandler w
 
   override def canUpdate: Boolean = false
 
-  override def onLaserHit(renderStart: Vector3, incident: Vector3, hit: MovingObjectPosition, color: Vector3, energy: Double): Boolean =
+	override def onLaserHit(renderStart: Vector3d, incident: Vector3d, hit: MovingObjectPosition, color: Vector3d, energy: Double): Boolean =
   {
     if (hit.sideHit == getDirection.ordinal)
     {
@@ -64,7 +42,7 @@ class TileLaserReceiver extends ResonantTile(Material.rock) with ILaserHandler w
   }
 
   @SideOnly(Side.CLIENT)
-  override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
+  override def renderDynamic(pos: Vector3d, frame: Float, pass: Int)
   {
     glPushMatrix()
     glTranslated(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5)
@@ -87,8 +65,8 @@ class TileLaserReceiver extends ResonantTile(Material.rock) with ILaserHandler w
     else
       glRotatef(180, 1, 0, 0)
 
-    FMLClientHandler.instance.getClient.renderEngine.bindTexture(TileLaserReceiver.texture)
-    TileLaserReceiver.model.renderAll()
+	  FMLClientHandler.instance.getClient.renderEngine.bindTexture(BlockLaserReceiver.texture)
+	  BlockLaserReceiver.model.renderAll()
 
     RenderUtility.disableBlending()
 
@@ -103,8 +81,8 @@ class TileLaserReceiver extends ResonantTile(Material.rock) with ILaserHandler w
 
     RenderUtility.enableBlending()
 
-    FMLClientHandler.instance.getClient.renderEngine.bindTexture(TileLaserReceiver.texture)
-    TileLaserReceiver.model.renderAll()
+	  FMLClientHandler.instance.getClient.renderEngine.bindTexture(BlockLaserReceiver.texture)
+	  BlockLaserReceiver.model.renderAll()
 
     RenderUtility.disableBlending()
 

@@ -3,7 +3,7 @@ package com.calclavia.edx.electric.grid
 import java.util
 import java.util.Collections
 
-import com.calclavia.edx.electric.grid.api.{Electric, ElectricComponent}
+import com.calclavia.edx.electric.api.{Electric, ElectricComponent}
 import nova.core.util.transform.matrix.Matrix
 import nova.scala.ExtendedUpdater
 import org.jgrapht.alg.CycleDetector

@@ -1,4 +1,4 @@
-package com.calclavia.edx.electric.grid.api;
+package com.calclavia.edx.electric.api;
 
 import nova.core.block.component.Connectable;
 

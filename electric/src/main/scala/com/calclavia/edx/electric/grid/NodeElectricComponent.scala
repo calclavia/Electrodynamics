@@ -3,7 +3,7 @@ package com.calclavia.edx.electric.grid
 import java.util.function.Supplier
 import java.util.{Set => JSet}
 
-import com.calclavia.edx.electric.grid.api.{Electric, ElectricComponent}
+import com.calclavia.edx.electric.api.{Electric, ElectricComponent}
 import nova.core.block.Block
 
 import scala.collection.convert.wrapAll._

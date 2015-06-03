@@ -1,16 +1,5 @@
 package com.calclavia.edx.electrical.circuit.component.laser.focus
 
-import cpw.mods.fml.relauncher.{Side, SideOnly}
-import edx.core.{EDXCreativeTab, Reference}
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.item.{Item, ItemStack}
-import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.util.{ChatComponentText, EnumChatFormatting}
-import net.minecraft.world.World
-import resonantengine.lib.transform.rotation.Quaternion
-import resonantengine.lib.transform.vector.Vector3
-
-import scala.collection.convert.wrapAsScala._
 import scala.util.Random
 
 /**
@@ -34,7 +23,7 @@ class ItemFocusingMatrix extends Item
 
     add(list, "Focusing:")
 
-    val vec: Vector3 = getControlCoordinate(itemStack)
+	  val vec: Vector3d = getControlCoordinate(itemStack)
 
     if (vec != null)
       add(list, "[" + vec.xi + ", " + vec.yi + ", " + vec.z.toInt + "]")
@@ -42,13 +31,13 @@ class ItemFocusingMatrix extends Item
       add(list, "None")
   }
 
-  def getControlCoordinate(stack: ItemStack): Vector3 =
+	def getControlCoordinate(stack: ItemStack): Vector3d =
   {
     val nbt = stack.getTagCompound
 
     if (nbt != null)
     {
-      return new Vector3(nbt)
+	    return new Vector3d(nbt)
     }
 
     return null
@@ -62,7 +51,7 @@ class ItemFocusingMatrix extends Item
     {
       if (!world.isRemote)
       {
-        setControlCoordinate(itemStack, new Vector3(tile))
+	      setControlCoordinate(itemStack, new Vector3d(tile))
         player.addChatMessage(new ChatComponentText("Focusing matrix control block set."))
       }
       return true
@@ -80,7 +69,7 @@ class ItemFocusingMatrix extends Item
           if (controlTile.isInstanceOf[IFocus])
           {
             val focusDevice = controlTile.asInstanceOf[IFocus]
-            val clickPos = new Vector3(x, y, z) + 0.5
+	          val clickPos = new Vector3d(x, y, z) + 0.5
 
             if ((focusDevice.getFocus - ((clickPos - controlVec) - 0.5).normalize).magnitude < 0.1)
             {
@@ -95,12 +84,12 @@ class ItemFocusingMatrix extends Item
                 val random_index = rand.nextInt(cachedHits.size)
                 val incident = cachedHits(random_index).normalize
 
-                val targetDirection: Vector3 = (new Vector3(x, y, z) - controlVec).normalize
+	              val targetDirection: Vector3d = (new Vector3d(x, y, z) - controlVec).normalize
 
                 if (targetDirection.magnitude > 0)
                 {
                   val angle = Math.acos(incident $ targetDirection)
-                  val axis: Vector3 = incident.cross(targetDirection)
+	                val axis: Vector3d = incident.cross(targetDirection)
                   var focusDirection = incident.clone.transform(new Quaternion(-90 - Math.toDegrees(angle / 2), axis)).normalize
 
                   if (focusDirection.magnitude == 0 || focusDirection.magnitude.equals(Double.NaN))
@@ -128,7 +117,7 @@ class ItemFocusingMatrix extends Item
     return false
   }
 
-  def setControlCoordinate(stack: ItemStack, vec: Vector3)
+	def setControlCoordinate(stack: ItemStack, vec: Vector3d)
   {
     val nbt = if (stack.getTagCompound != null) stack.getTagCompound else new NBTTagCompound()
     vec.writeNBT(nbt)

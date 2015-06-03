@@ -1,21 +1,7 @@
 package com.calclavia.edx.electrical.circuit.component.laser.focus
 
-import com.calclavia.edx.electrical.circuit.component.laser.{Laser, ILaserHandler}
-import cpw.mods.fml.client.FMLClientHandler
-import cpw.mods.fml.relauncher.{Side, SideOnly}
-import edx.core.{Electrodynamics, Reference}
-import edx.electrical.circuit.component.laser.Laser
-import net.minecraft.block.material.Material
-import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity
-import net.minecraft.network.{NetworkManager, Packet}
-import net.minecraft.util.{MovingObjectPosition, ResourceLocation}
-import net.minecraftforge.client.model.AdvancedModelLoader
+import com.calclavia.edx.electric.circuit.component.laser.LaserHandler
 import nova.core.util.Direction
-import org.lwjgl.opengl.GL11._
-import resonantengine.lib.transform.rotation.Quaternion
-import resonantengine.lib.transform.vector.Vector3
 
 import scala.collection.convert.wrapAsJava._
 
@@ -32,10 +18,10 @@ object TileMirror
  *
  * @author Calclavia
  */
-class TileMirror extends TileFocus(Material.glass) with ILaserHandler with IFocus
+class TileMirror extends TileFocus(Material.glass) with LaserHandler with IFocus
 {
-  private var normal = new Vector3(0, 1, 0)
-  private var cachedHits = List[Vector3]()
+	private var normal = new Vector3d(0, 1, 0)
+	private var cachedHits = List[Vector3d]()
 
   domain = ""
   textureName = "stone"
@@ -49,7 +35,7 @@ class TileMirror extends TileFocus(Material.glass) with ILaserHandler with IFocu
       for (a <- 0 to 5)
       {
         val dir = Direction.getOrientation(a)
-        val axis = new Vector3(dir)
+	      val axis = new Vector3d(dir)
         val rotateAngle = world.getIndirectPowerLevelTo(x + axis.x.toInt, y + axis.y.toInt, z + axis.z.toInt, a) * 15
 
         if (rotateAngle > 0)
@@ -65,22 +51,22 @@ class TileMirror extends TileFocus(Material.glass) with ILaserHandler with IFocu
       cachedHits = List()
   }
 
-  override def focus(newPosition: Vector3)
+	override def focus(newPosition: Vector3d)
   {
     normal = ((newPosition - position) - 0.5).normalize
     world.markBlockForUpdate(x, y, z)
   }
 
-  override def getFocus: Vector3 = normal
+	override def getFocus: Vector3d = normal
 
-  def setFocus(focus: Vector3)
+	def setFocus(focus: Vector3d)
   {
     normal = focus
   }
 
-  override def getCacheDirections: java.util.List[Vector3] = cachedHits.toList
+	override def getCacheDirections: java.util.List[Vector3d] = cachedHits.toList
 
-  override def onLaserHit(renderStart: Vector3, incidentDirection: Vector3, hit: MovingObjectPosition, color: Vector3, energy: Double): Boolean =
+	override def onLaserHit(renderStart: Vector3d, incidentDirection: Vector3d, hit: MovingObjectPosition, color: Vector3d, energy: Double): Boolean =
   {
     /**
      * Cache hits
@@ -133,11 +119,11 @@ class TileMirror extends TileFocus(Material.glass) with ILaserHandler with IFocu
   override def readFromNBT(nbt: NBTTagCompound)
   {
     super.readFromNBT(nbt)
-    normal = new Vector3(nbt.getCompoundTag("normal"))
+	  normal = new Vector3d(nbt.getCompoundTag("normal"))
   }
 
   @SideOnly(Side.CLIENT)
-  override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
+  override def renderDynamic(pos: Vector3d, frame: Float, pass: Int)
   {
     glPushMatrix()
     glTranslated(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5)

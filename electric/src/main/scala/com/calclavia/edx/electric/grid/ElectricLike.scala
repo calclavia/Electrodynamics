@@ -1,6 +1,6 @@
 package com.calclavia.edx.electric.grid
 
-import com.calclavia.edx.electric.grid.api.Electric
+import com.calclavia.edx.electric.api.Electric
 import com.resonant.lib.WrapFunctions._
 import nova.core.block.Block.NeighborChangeEvent
 import nova.core.block.Stateful.LoadEvent

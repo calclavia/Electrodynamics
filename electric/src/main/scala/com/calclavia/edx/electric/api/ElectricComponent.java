@@ -1,4 +1,4 @@
-package com.calclavia.edx.electric.grid.api;
+package com.calclavia.edx.electric.api;
 
 import com.google.common.collect.Sets;
 import nova.core.block.Block;
