@@ -6,7 +6,7 @@ import java.util.{Set => JSet}
 import com.calclavia.edx.core.prefab.BlockEDX
 import com.calclavia.edx.electric.ElectricContent
 import com.calclavia.edx.electric.api.{ConnectionBuilder, Electric}
-import com.calclavia.edx.electric.circuit.component.laser.LaserGrid.Laser
+import com.calclavia.edx.electric.circuit.component.laser.WaveGrid.Electromagnetic
 import com.calclavia.edx.electric.grid.NodeElectricComponent
 import com.resonant.lib.WrapFunctions._
 import nova.core.block.Stateful
@@ -29,7 +29,7 @@ import nova.scala.{ExtendedUpdater, IO}
 class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater {
 	private val electricNode = add(new NodeElectricComponent(this))
 	private val orientation = add(new Orientation(this)).hookBlockEvents()
-	private val laserHandler = add(new LaserHandler(this))
+	private val laserHandler = add(new WaveHandler(this))
 	private val io = add(new IO(this))
 	private val renderer = add(new StaticBlockRenderer(this))
 	private val itemRenderer = add(new ItemRenderer(this))
@@ -44,7 +44,7 @@ class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater {
 	collider.isCube(false)
 	collider.isOpaqueCube(false)
 
-	lightEmitter.setEmittedLevel(supplier(() => (electricNode.power / LaserGrid.maxEnergy).toFloat))
+	lightEmitter.setEmittedLevel(supplier(() => (electricNode.power / WaveGrid.maxEnergy).toFloat))
 
 	renderer.setOnRender(
 		(model: Model) => {
@@ -77,7 +77,7 @@ class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater {
 
 		if (electricNode.power > 0) {
 			val dir = orientation.orientation.toVector.toDouble
-			laserHandler.emit(new Laser(new Ray(position.toDouble + 0.5 + dir * 0.51, dir), position.toDouble + dir * 0.6 + 0.5, electricNode.power / 20))
+			laserHandler.emit(new Electromagnetic(new Ray(position.toDouble + 0.5 + dir * 0.51, dir), position.toDouble + dir * 0.6 + 0.5, electricNode.power / 20))
 		}
 	}
 

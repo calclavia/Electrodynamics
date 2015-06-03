@@ -3,7 +3,7 @@ package com.calclavia.edx.electric.circuit.component.laser
 import java.util
 import java.util.Optional
 
-import com.calclavia.edx.electric.circuit.component.laser.LaserGrid.Laser
+import com.calclavia.edx.electric.circuit.component.laser.WaveGrid.Electromagnetic
 import com.resonant.lib.WrapFunctions._
 import nova.core.block.Block.DropEvent
 import nova.core.component.Updater
@@ -20,9 +20,10 @@ import org.jgrapht.graph.{DefaultDirectedGraph, DefaultEdge}
 import scala.collection.convert.wrapAll._
 
 /**
+ * A grid that manages all waves produced in the world
  * @author Calclavia
  */
-object LaserGrid {
+object WaveGrid {
 
 	//Max laser render distance
 	val maxDistance = 100
@@ -35,17 +36,17 @@ object LaserGrid {
 	val maxEnergyToMine = 500000d
 	val minBurnEnergy = minEnergyToMine
 
-	private val grids = new util.WeakHashMap[World, LaserGrid]
+	private val grids = new util.WeakHashMap[World, WaveGrid]
 
-	def apply(world: World): LaserGrid = {
+	def apply(world: World): WaveGrid = {
 		if (!grids.containsKey(world)) {
-			grids += (world -> new LaserGrid(world))
+			grids += (world -> new WaveGrid(world))
 		}
 
 		return grids(world)
 	}
 
-	class Beam(val source: Ray, val renderOrigin: Vector3d, val power: Double, val color: Color) {
+	class Wave(val source: Ray, val renderOrigin: Vector3d, val power: Double, val color: Color) {
 		def computeHit(world: World) =
 			new RayTracer(source)
 				.setDistance(maxDistance)
@@ -53,7 +54,7 @@ object LaserGrid {
 				.findFirst()
 	}
 
-	class Laser(source: Ray, renderOrigin: Vector3d, power: Double, color: Color) extends Beam(source, renderOrigin, power, color) {
+	class Electromagnetic(source: Ray, renderOrigin: Vector3d, power: Double, color: Color) extends Wave(source, renderOrigin, power, color) {
 
 		var hit: RayTraceResult = null
 		var hitTime = -1L
@@ -82,18 +83,18 @@ object LaserGrid {
 
 }
 
-class LaserGrid(world: World) extends Updater {
+class WaveGrid(world: World) extends Updater {
 
-	val laserGraph = new DefaultDirectedGraph[Laser, DefaultEdge](classOf[DefaultEdge])
+	val laserGraph = new DefaultDirectedGraph[Electromagnetic, DefaultEdge](classOf[DefaultEdge])
 
 	Game.syncTicker().add(this)
 
 	/**
 	 * Creates a laser emission point
 	 */
-	def create(laser: Laser, from: Laser = null) {
+	def create(laser: Electromagnetic, from: Electromagnetic = null) {
 		//Do ray trace
-		if (laser.power > LaserGrid.minEnergy) {
+		if (laser.power > WaveGrid.minEnergy) {
 			//Mark node in graph
 			laserGraph.addVertex(laser)
 
@@ -115,8 +116,8 @@ class LaserGrid(world: World) extends Updater {
 							/**
 							 * Handle other laser handlers
 							 */
-							case hitBlock if hitBlock.has(classOf[LaserHandler]) =>
-								hitBlock.get(classOf[LaserHandler]).receive(laser)
+							case hitBlock if hitBlock.has(classOf[WaveHandler]) =>
+								hitBlock.get(classOf[WaveHandler]).receive(laser)
 							//Electrodynamics.proxy.renderLaser(world, laser.renderOrigin, hitVec, laser.color, laser.energy)
 							/**
 							 * Change laser.color when hit glass
@@ -132,15 +133,15 @@ class LaserGrid(world: World) extends Updater {
 								}
 								//TODO: do refraction
 								val refractiveIndex = 1
-								create(new Laser(new Ray(hitVec + laser.source.dir * 0.9, laser.source.dir), hitVec, laser.power * 0.95, newColor.average(laser.color)), laser)
+								create(new Electromagnetic(new Ray(hitVec + laser.source.dir * 0.9, laser.source.dir), hitVec, laser.power * 0.95, newColor.average(laser.color)), laser)
 						}
 					case hit: RayTraceEntityResult =>
-						if (laser.power > LaserGrid.minBurnEnergy) {
-							val fireTime = (10 * (laser.power / LaserGrid.maxEnergy)).toInt
+						if (laser.power > WaveGrid.minBurnEnergy) {
+							val fireTime = (10 * (laser.power / WaveGrid.maxEnergy)).toInt
 
 							if (fireTime > 0) {
 								//hit.entity.setFire (fireTime)
-								hit.entity.getOp(classOf[Damageable]).ifPresent(consumer(d => d.damage(20 * (laser.power / LaserGrid.maxEnergy))))
+								hit.entity.getOp(classOf[Damageable]).ifPresent(consumer(d => d.damage(20 * (laser.power / WaveGrid.maxEnergy))))
 							}
 						}
 					//Electrodynamics.proxy.renderLaser (world, laser.renderOrigin, new Vector3d (hit.hitVec), laser.color, laser.energy)
@@ -170,7 +171,7 @@ class LaserGrid(world: World) extends Updater {
 						 */
 						val hit = v.hit.asInstanceOf[RayTraceBlockResult]
 						val hitBlock = hit.block
-						val energyRequiredToMineBlock = hitBlock.getHardness * LaserGrid.maxEnergyToMine
+						val energyRequiredToMineBlock = hitBlock.getHardness * WaveGrid.maxEnergyToMine
 
 						//TODO: Render breaking effect
 						//world.destroyBlockInWorldPartially(Block.blockRegistry.getIDForObject(hitBlock), hitBlockPos.x.toInt, hitBlockPos.y.toInt, hitBlockPos.z.toInt, (accumulatedEnergy / energyRequiredToMineBlock * 10).toInt)
@@ -215,7 +216,7 @@ class LaserGrid(world: World) extends Updater {
 	 * Destroys the laser, removing all verticies in the graph.
 	 * @param laser The laser to remove
 	 */
-	def destroy(laser: Laser) {
+	def destroy(laser: Electromagnetic) {
 		val inspector = new ConnectivityInspector(laserGraph)
 		val connected = inspector.connectedSetOf(laser)
 		laserGraph.removeAllVertices(connected)

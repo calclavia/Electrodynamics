@@ -1,6 +1,6 @@
 package com.calclavia.edx.electric.circuit.component.laser
 
-import com.calclavia.edx.electric.circuit.component.laser.LaserGrid.Laser
+import com.calclavia.edx.electric.circuit.component.laser.WaveGrid.Electromagnetic
 import com.resonant.lib.WrapFunctions._
 import nova.core.block.Block
 import nova.core.block.Stateful.UnloadEvent
@@ -14,10 +14,10 @@ import scala.collection.convert.wrapAll._
  * Handles laser interaction
  * @author Calclavia
  */
-class LaserHandler(block: Block) extends Component {
+class WaveHandler(block: Block) extends Component {
 
 	/**
-	 * Called when the total energy due to incident lasers changes
+	 * Called when the total energy due to incident waves changes
 	 */
 	var onPowerChange = new EventBus[Event]
 
@@ -26,7 +26,7 @@ class LaserHandler(block: Block) extends Component {
 	 */
 	var onReceive = new EventBus[Event]
 
-	private var emittingLaser: Laser = _
+	private var emittingLaser: Electromagnetic = _
 
 	private var prevEnergy = -1d
 
@@ -35,7 +35,7 @@ class LaserHandler(block: Block) extends Component {
 		(evt: UnloadEvent) => {
 			//Destroy laser
 			if (emittingLaser != null) {
-				LaserGrid(block.world).destroy(emittingLaser)
+				WaveGrid(block.world).destroy(emittingLaser)
 			}
 		}
 	)
@@ -44,7 +44,7 @@ class LaserHandler(block: Block) extends Component {
 	 * The current power being received
 	 */
 	def receivingPower =
-		LaserGrid(block.world)
+		WaveGrid(block.world)
 			.laserGraph
 			.vertexSet()
 			.filter(_.hit.isInstanceOf[RayTraceBlockResult])
@@ -52,20 +52,23 @@ class LaserHandler(block: Block) extends Component {
 			.map(_.hitPower)
 			.sum
 
-	def receive(incident: Laser) {
+	def receive(incident: Electromagnetic) {
 		onReceive.publish(new Event)
 
-		if (prevEnergy != receivingPower) {
+		val power = receivingPower
+
+		if (prevEnergy != power) {
 			onPowerChange.publish(new Event)
+			prevEnergy = power
 		}
 	}
 
-	def emit(laser: Laser) {
+	def emit(laser: Electromagnetic) {
 		if (emittingLaser != null) {
-			LaserGrid(block.world).destroy(emittingLaser)
+			WaveGrid(block.world).destroy(emittingLaser)
 		}
 
-		LaserGrid(block.world).create(laser)
+		WaveGrid(block.world).create(laser)
 		emittingLaser = laser
 	}
 }

@@ -26,7 +26,7 @@ class BlockLaserReceiver extends BlockEDX with Stateful
 {
 	private val electricNode = new NodeElectricComponent(this)
 	private val orientation = add(new Orientation(this)).hookBlockEvents()
-	private val laserHandler = add(new LaserHandler(this))
+	private val laserHandler = add(new WaveHandler(this))
 	private val io = add(new IO(this))
 	private val renderer = add(new StaticBlockRenderer(this))
 	private val itemRenderer = add(new ItemRenderer(this))
