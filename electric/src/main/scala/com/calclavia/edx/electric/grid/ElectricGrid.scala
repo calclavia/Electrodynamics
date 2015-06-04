@@ -6,9 +6,9 @@ import java.util.Collections
 import com.calclavia.edx.electric.api.Electric.ElectricChangeEvent
 import com.calclavia.edx.electric.api.{Electric, ElectricComponent}
 import com.resonant.lib.WrapFunctions._
+import nova.core.util.exception.NovaException
 import nova.core.util.transform.matrix.Matrix
 import nova.scala.ExtendedUpdater
-import org.jgrapht.alg.CycleDetector
 import org.jgrapht.graph.{DefaultDirectedGraph, DefaultEdge, SimpleGraph}
 
 import scala.collection.convert.wrapAll._
@@ -30,8 +30,9 @@ object ElectricGrid {
 		//TODO: This may be VERY inefficient
 		val find = grids.find(grid => grid.connectionGraph.vertexSet().contains(electric))
 
-		if (find.isDefined)
+		if (find.isDefined) {
 			return find.get
+		}
 
 		val grid = new ElectricGrid
 		grids += grid
@@ -207,11 +208,13 @@ class ElectricGrid extends ExtendedUpdater {
 	def convert(nodeJunction: NodeElectricJunction): Junction = {
 		val find = junctions.find(j => j.wires.contains(nodeJunction))
 
-		if (find.isDefined)
+		if (find.isDefined) {
 			return find.get
+		}
 
-		if (ground != null && ground.wires.contains(nodeJunction))
+		if (ground != null && ground.wires.contains(nodeJunction)) {
 			return ground
+		}
 
 		val newJunction = new Junction
 		newJunction.wires += nodeJunction
@@ -311,12 +314,16 @@ class ElectricGrid extends ExtendedUpdater {
 
 	def update(): Future[Unit] = Future {
 		electricGraph.synchronized {
-			val detector = new CycleDetector(electricGraph)
-
-			if (junctions.nonEmpty && detector.detectCycles()) {
+			//You need a junction and a ground
+			if (junctions.nonEmpty) {
 				println("Solving circuit...")
 				if (mna == null) {
 					setupMNA()
+
+					if (voltageSources.size == 0 && currentSources.size == 0) {
+						throw new NovaException("No voltage or current source")
+					}
+
 					generateConnectionMatrix()
 					resistorChanged = true
 					sourceChanged = true
@@ -331,11 +338,20 @@ class ElectricGrid extends ExtendedUpdater {
 				}
 
 				if (resistorChanged || sourceChanged) {
-					solve()
+					try {
+						solve()
+					}
+					catch {
+						case e: Exception =>
+							println("Failed to solve circuit")
+					}
 				}
 
 				resistorChanged = false
 				sourceChanged = false
+			}
+			else {
+				println("Circuit incomplete")
 			}
 		}
 	}
@@ -398,7 +414,13 @@ class ElectricGrid extends ExtendedUpdater {
 		//The off diagonal elements are the negative conductance of the element connected to the pair of corresponding node.
 		//Therefore a resistor between nodes 1 and 2 goes into the G matrix at location (1,2) and locations (2,1).
 		resistors.foreach(resistor => {
-			val target = electricGraph.getEdgeTarget(electricGraph.outgoingEdgesOf(resistor).head)
+			val outgoingEdges = electricGraph.outgoingEdgesOf(resistor)
+
+			if (outgoingEdges.size == 0) {
+				throw new NovaException("Resistor not connected properly.")
+			}
+
+			val target = electricGraph.getEdgeTarget(outgoingEdges.head)
 			//The id of the junction at positive terminal
 			val j = junctions.indexOf(target)
 			val of = electricGraph.incomingEdgesOf(resistor)
@@ -428,9 +450,9 @@ class ElectricGrid extends ExtendedUpdater {
 			//A set of current sources that is going into this junction
 			sourceMatrix(i, 0) = currentSources
 				.filter(
-			    source =>
-				    (electricGraph.incomingEdgesOf(source).map(electricGraph.getEdgeSource).contains(junctions(i)) && source.component.current > 0) ||
-					    (electricGraph.incomingEdgesOf(source).map(electricGraph.getEdgeSource).contains(junctions(i)) && source.component.current < 0)
+					source =>
+						(electricGraph.incomingEdgesOf(source).map(electricGraph.getEdgeSource).contains(junctions(i)) && source.component.current > 0) ||
+							(electricGraph.incomingEdgesOf(source).map(electricGraph.getEdgeSource).contains(junctions(i)) && source.component.current < 0)
 				)
 				.map(_.component.current)
 				.sum

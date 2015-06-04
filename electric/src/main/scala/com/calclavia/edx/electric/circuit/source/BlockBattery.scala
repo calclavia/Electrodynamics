@@ -19,6 +19,7 @@ import nova.core.network.{PacketHandler, Sync}
 import nova.core.render.model.Model
 import nova.core.retention.{Storable, Stored}
 import nova.scala.{ExtendedUpdater, IO}
+import com.resonant.lib.WrapFunctions._
 
 /** A modular battery box that allows shared connections with boxes next to it.
   *
@@ -59,10 +60,9 @@ class BlockBattery extends BlockEDX with PacketHandler with Storable with Extend
 	collider.isCube(false)
 	collider.isOpaqueCube(false)
 
-	import com.resonant.lib.WrapFunctions._
-
 	staticRenderer.setOnRender(
 		(model: Model) => {
+			//TODO: Switch the model
 			model.children.add(ElectricContent.batteryModel.getModel)
 			model.bindAll(ElectricContent.batteryTexture)
 		}
@@ -128,7 +128,7 @@ class BlockBattery extends BlockEDX with PacketHandler with Storable with Extend
 		super.update(deltaTime)
 
 		if (Game.network().isServer) {
-			if (redstone.getOutputWeakPower > 0) {
+			if (redstone.getInputWeakPower > 0) {
 				//TODO: Remove free energy
 				energy = new EnergyStorage().setMax(BlockBattery.getEnergyForTier(tier))
 				energy.value = energy.max
