@@ -9,7 +9,7 @@ import com.calclavia.edx.electric.api.{ConnectionBuilder, Electric}
 import com.calclavia.edx.electric.circuit.component.laser.WaveGrid.Electromagnetic
 import com.calclavia.edx.electric.grid.NodeElectricComponent
 import com.resonant.lib.WrapFunctions._
-import nova.core.block.Block.BlockPlaceEvent
+import nova.core.block.Block.{BlockPlaceEvent, RightClickEvent}
 import nova.core.block.Stateful
 import nova.core.block.component.{LightEmitter, StaticBlockRenderer}
 import nova.core.component.renderer.ItemRenderer
@@ -47,7 +47,12 @@ class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater {
 
 	lightEmitter.setEmittedLevel(supplier(() => (electricNode.power / WaveGrid.maxEnergy).toFloat))
 
-	placeEvent.add((evt: BlockPlaceEvent) => world.markStaticRender(position))
+	placeEvent.add((evt: BlockPlaceEvent) => {
+		io.setIOAlternatingOrientation()
+		world.markStaticRender(position)
+	})
+
+	rightClickEvent.add((evt: RightClickEvent) => println(electricNode.positives()))
 
 	renderer.setOnRender(
 		(model: Model) => {

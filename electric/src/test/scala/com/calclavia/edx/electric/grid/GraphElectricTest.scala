@@ -62,7 +62,7 @@ class GraphElectricTest {
 
 		val graph = grid.electricGraph
 
-		exportGraph(graph, "testSolve1")
+		ElectricGrid.exportGraph(graph, "testSolve1")
 
 		//Test component & junction sizes
 		assertThat(grid.components.size).isEqualTo(2)
@@ -155,7 +155,7 @@ class GraphElectricTest {
 		graph.build()
 		println(profilerGen)
 
-		exportGraph(graph.electricGraph, "testSolve2")
+		ElectricGrid.exportGraph(graph.electricGraph, "testSolve2")
 
 		val profiler = new Profiler("Solving graph 2")
 
@@ -219,7 +219,7 @@ class GraphElectricTest {
 		grid.build()
 		println(profilerGen)
 
-		exportGraph(grid.electricGraph, "testSolve3")
+		ElectricGrid.exportGraph(grid.electricGraph, "testSolve3")
 
 		val profiler = new Profiler("Solving graph 3")
 
@@ -325,7 +325,7 @@ class GraphElectricTest {
 		grid.build()
 		println(profilerGen)
 
-		exportGraph(grid.electricGraph, "testSolve4")
+		ElectricGrid.exportGraph(grid.electricGraph, "testSolve4")
 
 		val profiler = new Profiler("Solving graph 3")
 
@@ -371,7 +371,7 @@ class GraphElectricTest {
 			val voltage = trial * 10d * Math.random() + 0.1
 			battery.generateVoltage(voltage)
 
-			//exportGraph(graph.electricGraph, "Stress Test " + trial)
+			//ElectricGrid.exportGraph(graph.electricGraph, "Stress Test " + trial)
 
 			val profiler = new Profiler("Solve circuit with " + trial + " resistors").start()
 			graph.update(profiler.elapsed)
@@ -391,16 +391,6 @@ class GraphElectricTest {
 		}
 	}
 
-	def exportGraph[A, B](graph: Graph[A, B], name: String = "test") {
-		//Export graph
-		val exporter = new DOTExporter[A, B](new VertexNameProvider[A] {
-			override def getVertexName(v: A): String = v.toString
-		}, null, null)
-
-		val targetDirectory = "edx/graph/"
-		new File(targetDirectory).mkdirs()
-		exporter.export(new FileWriter(targetDirectory + name + ".dot"), graph)
-	}
 
 	class DummyComponent(val name: String = "Component") extends NodeElectricComponent(new FakeBlock("dummy")) {
 		var positivesCon = Set.empty[Electric]

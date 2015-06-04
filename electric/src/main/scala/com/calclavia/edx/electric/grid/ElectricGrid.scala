@@ -1,5 +1,6 @@
 package com.calclavia.edx.electric.grid
 
+import java.io.{File, FileWriter}
 import java.util
 import java.util.Collections
 
@@ -9,12 +10,14 @@ import com.resonant.lib.WrapFunctions._
 import nova.core.util.exception.NovaException
 import nova.core.util.transform.matrix.Matrix
 import nova.scala.ExtendedUpdater
+import org.jgrapht.Graph
+import org.jgrapht.ext.{DOTExporter, VertexNameProvider}
 import org.jgrapht.graph.{DefaultDirectedGraph, DefaultEdge, SimpleGraph}
 
 import scala.collection.convert.wrapAll._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent._
-import scala.util.{Failure, Success}
+import scala.util.{Failure, Random, Success}
 
 /**
  * An electric circuit grid for independent voltage sources.
@@ -41,6 +44,17 @@ object ElectricGrid {
 
 	def destroy(electric: Electric) {
 		grids.removeAll(grids.filter(grid => grid.has(electric)))
+	}
+
+	def exportGraph[A, B](graph: Graph[A, B], name: String = "test") {
+		//Export graph
+		val exporter = new DOTExporter[A, B](new VertexNameProvider[A] {
+			override def getVertexName(v: A): String = v.toString
+		}, null, null)
+
+		val targetDirectory = "edx/graph/"
+		new File(targetDirectory).mkdirs()
+		exporter.export(new FileWriter(targetDirectory + name + ".dot"), graph)
 	}
 
 	/**
@@ -292,7 +306,10 @@ class ElectricGrid extends ExtendedUpdater {
 			junctions = junctions.splitAt(1)._2
 			ground.voltage = 0
 
-			println("Built grid successfully")
+			//TODO: Debug code, remove
+			val gridID = new Random().nextInt()
+			println("Built grid successfully: " + gridID)
+			//exportGraph(electricGraph, "Electric Grid " + gridID)
 			requestUpdate()
 		}
 	}

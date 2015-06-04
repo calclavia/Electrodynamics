@@ -24,8 +24,6 @@ class BlockSolarPanel extends BlockEDX with ExtendedUpdater with Stateful {
 	private val renderer = add(new ConnectedTextureRenderer(this, ElectricContent.solarPanelTextureEdge)).setFaceMask(2)
 	private val itemRenderer = add(new ItemRenderer(this))
 
-	io.mask = 728
-
 	collider.setBoundingBox(new Cuboid(0, 0, 0, 1, 0.3f, 1))
 	collider.isCube(false)
 	collider.isOpaqueCube(false)

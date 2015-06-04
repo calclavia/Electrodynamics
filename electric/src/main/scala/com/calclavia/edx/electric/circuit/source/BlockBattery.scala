@@ -12,6 +12,7 @@ import com.resonant.core.energy.EnergyStorage
 import nova.core.block.Block.{BlockPlaceEvent, DropEvent, RightClickEvent}
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.renderer.ItemRenderer
+import nova.core.component.transform.Orientation
 import nova.core.event.Event
 import nova.core.game.Game
 import nova.core.item.Item
@@ -44,6 +45,7 @@ class BlockBattery extends BlockEDX with PacketHandler with Storable with Extend
 	private var energyRenderLevel = 0
 	private var energy = add(new EnergyStorage)
 	private val electricNode = add(new NodeElectricComponent(this))
+	private val orientation = add(new Orientation(this)).hookBlockEvents()
 	private val io = add(new IO(this))
 	private val redstone = add(Game.components().make(classOf[Redstone], this))
 	private val staticRenderer = add(new StaticBlockRenderer(this))
@@ -59,6 +61,10 @@ class BlockBattery extends BlockEDX with PacketHandler with Storable with Extend
 
 	collider.isCube(false)
 	collider.isOpaqueCube(false)
+
+	placeEvent.add((evt: BlockPlaceEvent) => {
+		io.setIOAlternatingOrientation()
+	})
 
 	staticRenderer.setOnRender(
 		(model: Model) => {
