@@ -1,7 +1,7 @@
 package com.calclavia.edx.electric.circuit.component.laser.fx
 
 import com.calclavia.edx.core.prefab.EntityAgeLike
-import com.calclavia.edx.mffs.content.Textures
+import com.calclavia.edx.optics.content.Textures
 import com.resonant.lib.WrapFunctions._
 import nova.core.component.renderer.DynamicRenderer
 import nova.core.entity.Entity
