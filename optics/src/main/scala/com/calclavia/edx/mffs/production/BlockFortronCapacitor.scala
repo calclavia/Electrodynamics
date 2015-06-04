@@ -8,7 +8,6 @@ import com.calclavia.edx.mffs.base.{BlockModuleHandler, PacketBlock}
 import com.calclavia.edx.mffs.content.{Content, Models, Textures}
 import com.calclavia.edx.mffs.item.card.ItemCardFrequency
 import com.calclavia.edx.mffs.util.{FortronUtility, TransferMode}
-import com.resonant.lib.WrapFunctions
 import com.resonant.lib.WrapFunctions._
 import nova.core.block.Block
 import nova.core.block.component.StaticBlockRenderer

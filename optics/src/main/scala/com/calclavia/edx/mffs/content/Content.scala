@@ -1,5 +1,6 @@
 package com.calclavia.edx.mffs.content
 
+import com.calclavia.edx.core.Reference
 import com.calclavia.edx.mffs.base.{ItemModule, Named}
 import com.calclavia.edx.mffs.field.mobilize.BlockMobilizer
 import com.calclavia.edx.mffs.field.module._

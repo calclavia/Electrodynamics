@@ -1,5 +1,6 @@
 package com.calclavia.edx.mffs.content
 
+import com.calclavia.edx.core.Reference
 import com.resonant.core.prefab.modcontent.ContentLoader
 import nova.core.render.model.TechneModel
 
