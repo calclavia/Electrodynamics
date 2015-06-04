@@ -38,8 +38,8 @@ class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater {
 
 	orientation.setMask(63)
 
-	electricNode.setPositiveConnections(new ConnectionBuilder(classOf[Electric]).setBlock(this).setConnectMask(io.inputMask).adjacentSupplier().asInstanceOf[Supplier[JSet[Electric]]])
-	electricNode.setNegativeConnections(new ConnectionBuilder(classOf[Electric]).setBlock(this).setConnectMask(io.outputMask).adjacentSupplier().asInstanceOf[Supplier[JSet[Electric]]])
+	electricNode.setPositiveConnections(new ConnectionBuilder(classOf[Electric]).setBlock(this).setConnectMask(io.inputMask).adjacentWireSupplier().asInstanceOf[Supplier[JSet[Electric]]])
+	electricNode.setNegativeConnections(new ConnectionBuilder(classOf[Electric]).setBlock(this).setConnectMask(io.outputMask).adjacentWireSupplier().asInstanceOf[Supplier[JSet[Electric]]])
 	electricNode.setResistance(100)
 
 	collider.isCube(false)
