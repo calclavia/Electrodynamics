@@ -3,6 +3,8 @@ package com.calclavia.edx.electric.api;
 import nova.core.block.component.Connectable;
 import nova.core.event.EventBus;
 
+import java.util.Set;
+
 /**
  * An abstract interface extended by NodeElectricComponent and NodeElectricJunction.
  * This interface is NOT registered.
@@ -22,6 +24,10 @@ public abstract class Electric extends Connectable<Electric> {
 	 * Called when the resistance changes
 	 */
 	public final EventBus<ElectricChangeEvent> onResistanceChange = new EventBus<>();
+	/**
+	 * Called when the electric grid finished building all connections.
+	 */
+	public final EventBus<GraphBuiltEvent> onGridBuilt = new EventBus<>();
 
 	/**
 	 * Sets the resistance.
@@ -53,5 +59,18 @@ public abstract class Electric extends Connectable<Electric> {
 
 	public static class ElectricChangeEvent {
 
+	}
+
+	public static class GraphBuiltEvent{
+
+		/**
+		 * The set of connections this node has actually connected to.
+		 * In order for a connection to occur, the connection has to be mutual (A connects to B and B connects to A)
+		 */
+		public final Set<Electric> connections;
+
+		public GraphBuiltEvent(Set<Electric> connections) {
+			this.connections = connections;
+		}
 	}
 }

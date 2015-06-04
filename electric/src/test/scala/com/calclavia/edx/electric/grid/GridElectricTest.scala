@@ -18,7 +18,7 @@ import scala.collection.convert.wrapAll._
 /**
  * @author Calclavia
  */
-object GraphElectricTest {
+object GridElectricTest {
 	var launcher: NovaLauncher = _
 
 	@BeforeClass
@@ -27,7 +27,7 @@ object GraphElectricTest {
 	}
 }
 
-class GraphElectricTest {
+class GridElectricTest {
 
 	val error = 0.001
 
@@ -86,7 +86,7 @@ class GraphElectricTest {
 		for (trial <- 1 to 1000) {
 			val voltage = trial * 10d * Math.random()
 			battery.generateVoltage(voltage)
-			grid.update(profiler.elapsed)
+			grid.update()
 
 			//Test battery
 			assertThat(battery.voltage).isCloseTo(voltage, within(error))
@@ -162,7 +162,7 @@ class GraphElectricTest {
 		for (trial <- 1 to 1000) {
 			val voltage = trial * 10d
 			battery.generateVoltage(voltage)
-			graph.update(profiler.elapsed)
+			graph.update()
 
 			val current = voltage / 3d
 			//Test battery
@@ -229,7 +229,7 @@ class GraphElectricTest {
 		for (trial <- 1 to 1000) {
 			val voltage = trial * 10d * Math.random()
 			battery.generateVoltage(voltage)
-			grid.update(profiler.elapsed)
+			grid.update()
 
 			//Test battery
 			assertThat(battery.voltage).isCloseTo(voltage, within(error))
@@ -333,7 +333,7 @@ class GraphElectricTest {
 			val voltage = trial * 10d * Math.random()
 			battery1.generateVoltage(voltage)
 			battery2.generateVoltage(voltage)
-			grid.update(profiler.elapsed)
+			grid.update()
 			//TODO: Test results
 			profiler.lap()
 		}
@@ -374,7 +374,7 @@ class GraphElectricTest {
 			//ElectricGrid.exportGraph(graph.electricGraph, "Stress Test " + trial)
 
 			val profiler = new Profiler("Solve circuit with " + trial + " resistors").start()
-			graph.update(profiler.elapsed)
+			graph.update()
 			profiler.end()
 
 			val current = voltage / trial.toDouble

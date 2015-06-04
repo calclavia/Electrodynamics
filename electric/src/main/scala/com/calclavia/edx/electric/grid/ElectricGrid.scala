@@ -4,12 +4,11 @@ import java.io.{File, FileWriter}
 import java.util
 import java.util.Collections
 
-import com.calclavia.edx.electric.api.Electric.ElectricChangeEvent
+import com.calclavia.edx.electric.api.Electric.{ElectricChangeEvent, GraphBuiltEvent}
 import com.calclavia.edx.electric.api.{Electric, ElectricComponent}
 import com.resonant.lib.WrapFunctions._
 import nova.core.util.exception.NovaException
 import nova.core.util.transform.matrix.Matrix
-import nova.scala.ExtendedUpdater
 import org.jgrapht.Graph
 import org.jgrapht.ext.{DOTExporter, VertexNameProvider}
 import org.jgrapht.graph.{DefaultDirectedGraph, DefaultEdge, SimpleGraph}
@@ -17,7 +16,7 @@ import org.jgrapht.graph.{DefaultDirectedGraph, DefaultEdge, SimpleGraph}
 import scala.collection.convert.wrapAll._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent._
-import scala.util.{Failure, Random, Success}
+import scala.util.{Failure, Success}
 
 /**
  * An electric circuit grid for independent voltage sources.
@@ -123,7 +122,7 @@ object ElectricGrid {
 
 }
 
-class ElectricGrid extends ExtendedUpdater {
+class ElectricGrid {
 
 	import ElectricGrid._
 
@@ -140,9 +139,6 @@ class ElectricGrid extends ExtendedUpdater {
 	var voltageSources = List.empty[Component]
 	var currentSources = List.empty[Component]
 	var resistors = List.empty[Component]
-	//Changed flags
-	var resistorChanged = false
-	var sourceChanged = false
 	//The source matrix (B)
 	protected[grid] var sourceMatrix: Matrix = null
 	//The graph of all electric elements. In this directed graph the arrow points from positive to negative in potential difference.
@@ -192,16 +188,13 @@ class ElectricGrid extends ExtendedUpdater {
 				connections.foreach(n => connectionGraph.addEdge(node, n))
 
 				node.onResistanceChange.add((evt: ElectricChangeEvent) => {
-					resistorChanged = true
-					requestUpdate()
+					requestUpdate(resistorChanged = true)
 				})
 				node.onInternalVoltageChange :+= ((source: Electric) => {
-					sourceChanged = true
-					requestUpdate()
+					requestUpdate(sourceChanged = true)
 				})
 				node.onInternalCurrentChange :+= ((source: Electric) => {
-					sourceChanged = true
-					requestUpdate()
+					requestUpdate(sourceChanged = true)
 				})
 			case node: NodeElectricJunction =>
 				connections.foreach(connectionGraph.addVertex(_))
@@ -258,12 +251,10 @@ class ElectricGrid extends ExtendedUpdater {
 			case nodeComponent: NodeElectricComponent =>
 				val component = new Component(nodeComponent)
 				//Check positive terminal connections
-				connectionGraph
-					.edgesOf(nodeComponent)
-					.map(connectionGraph.getEdgeTarget)
+				nodeComponent.positives()
 					.foreach {
 					case checkNodeComponent: NodeElectricComponent =>
-						//Check if the "component" is negatively connected to the current node
+						//Mutual connection check. Check if the "component" is negatively connected to the current node.
 						if (checkNodeComponent.negatives().contains(nodeComponent)) {
 							val junction = new VirtualJunction
 							val checkComponent = convert(checkNodeComponent)
@@ -306,19 +297,38 @@ class ElectricGrid extends ExtendedUpdater {
 			junctions = junctions.splitAt(1)._2
 			ground.voltage = 0
 
-			//TODO: Debug code, remove
-			val gridID = new Random().nextInt()
-			println("Built grid successfully: " + gridID)
+			println("Built grid successfully")
 			//exportGraph(electricGraph, "Electric Grid " + gridID)
+			connectionGraph.vertexSet()
+				.foreach(
+					v => v.onGridBuilt.publish(new GraphBuiltEvent(connectionGraph.connectionsOf(v)))
+				)
+
 			requestUpdate()
 		}
 	}
 
+	implicit class GraphWrapper[V, E](underlying: Graph[V, E]) {
+		/**
+		 * The undirected connections of a vertex
+		 * @param vertex The vertex
+		 */
+		def connectionsOf(vertex: V): Set[V] =
+			underlying
+				.edgesOf(vertex)
+				.flatMap(e => Set(underlying.getEdgeSource(e), underlying.getEdgeTarget(e)))
+				.filter(_ != vertex)
+				.toSet
+	}
+
 	var updateFuture: Future[Unit] = _
 
-	def requestUpdate() {
+	def requestUpdate(resistorChanged: Boolean = true, sourceChanged: Boolean = true) {
 		if (updateFuture == null || updateFuture.isCompleted) {
-			updateFuture = update()
+			println("Preparing to solve circuit in the future")
+			updateFuture = Future {
+				update()
+			}
 			updateFuture.onComplete {
 				case Success(nothing) => println("Circuit solved")
 				case Failure(ex) => println("Circuit failed: " + ex.printStackTrace)
@@ -329,32 +339,36 @@ class ElectricGrid extends ExtendedUpdater {
 		}
 	}
 
-	def update(): Future[Unit] = Future {
+	def update(resistorChanged: Boolean = true, sourceChanged: Boolean = true) {
 		electricGraph.synchronized {
 			//You need a junction and a ground
 			if (junctions.nonEmpty) {
 				println("Solving circuit...")
-				if (mna == null) {
+
+				val allChange = mna == null || sourceChanged
+
+				if (allChange) {
 					setupMNA()
-
-					if (voltageSources.size == 0 && currentSources.size == 0) {
-						throw new NovaException("No voltage or current source")
-					}
-
-					generateConnectionMatrix()
-					resistorChanged = true
-					sourceChanged = true
 				}
 
-				if (resistorChanged) {
+				if (voltageSources.isEmpty && currentSources.isEmpty) {
+					println("No voltage or current source. Skipping circuit solve.")
+					return
+				}
+
+				if (allChange) {
+					generateConnectionMatrix()
+				}
+
+				if (resistorChanged || allChange) {
 					generateConductanceMatrix()
 				}
 
-				if (sourceChanged) {
+				if (sourceChanged || allChange) {
 					computeSourceMatrix()
 				}
 
-				if (resistorChanged || sourceChanged) {
+				if (resistorChanged || sourceChanged || allChange) {
 					try {
 						solve()
 					}
@@ -363,9 +377,6 @@ class ElectricGrid extends ExtendedUpdater {
 							println("Failed to solve circuit")
 					}
 				}
-
-				resistorChanged = false
-				sourceChanged = false
 			}
 			else {
 				println("Circuit incomplete")

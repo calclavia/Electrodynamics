@@ -3,13 +3,13 @@ package com.calclavia.edx.electric.circuit.wire
 import java.lang.{Iterable => JIterable}
 import java.util.{Optional, Set => JSet}
 
-import com.calclavia.edx.core.CategoryEDX
+import com.calclavia.edx.core.prefab.BlockEDX
 import com.calclavia.edx.electric.ElectricContent
 import com.calclavia.edx.electric.api.Electric
+import com.calclavia.edx.electric.api.Electric.GraphBuiltEvent
 import com.calclavia.edx.electric.grid.NodeElectricJunction
 import com.calclavia.microblock.micro.{Microblock, MicroblockContainer}
 import com.resonant.lib.WrapFunctions._
-import nova.core.block.Block
 import nova.core.block.Block.{BlockPlaceEvent, RightClickEvent}
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.misc.Collider
@@ -83,9 +83,7 @@ object BlockWire {
 }
 
 // with TWire with TFacePart with TNormalOcclusion
-class BlockWire extends Block with Storable with PacketHandler {
-
-	private val electricNode = new NodeElectricJunction(this)
+class BlockWire extends BlockEDX with Storable with PacketHandler {
 
 	/**
 	 * The side the wire is placed on.
@@ -112,11 +110,16 @@ class BlockWire extends Block with Storable with PacketHandler {
 	private var connectionMask = 0x00
 
 	/**
+	 * Caches the sidem ask and electric nodes
+	 */
+	private var connectionCache = Map.empty[Electric, Int]
+
+	/**
 	 * Add components
 	 */
-	add(electricNode).setConnections(() => computeConnection)
+	private val electricNode = add(new NodeElectricJunction(this))
 
-	val microblock = add(new Microblock(this))
+	private val microblock = add(new Microblock(this))
 		.setOnPlace(
 			(evt: BlockPlaceEvent) => {
 				this.side = evt.side.opposite.ordinal.toByte
@@ -126,25 +129,6 @@ class BlockWire extends Block with Storable with PacketHandler {
 				Optional.of(MicroblockContainer.sidePosition(Direction.fromOrdinal(this.side)))
 			}
 		)
-
-	add(new Collider())
-		.setBoundingBox(() => {
-		BlockWire.occlusionBounds(side)(4) + 0.5
-	})
-		.setOcclusionBoxes(func(entity => {
-		var cuboids = Set.empty[Cuboid]
-		cuboids += BlockWire.occlusionBounds(side)(4) + 0.5
-		cuboids ++= (0 until 4)
-			.collect {
-			case dir if (connectionMask & (1 << (dir * 2))) != 0 && (connectionMask & (1 << (dir * 2 + 1))) != 0 =>
-				BlockWire.occlusionBounds(side)(dir + 5) + 0.5
-			case dir if (connectionMask & (1 << (dir * 2))) != 0 || (connectionMask & (1 << (dir * 2 + 1))) != 0 =>
-				BlockWire.occlusionBounds(side)(dir) + 0.5
-		}
-		cuboids
-	}))
-		.isCube(false)
-		.isOpaqueCube(false)
 
 	add(new MaterialWire)
 
@@ -175,9 +159,41 @@ class BlockWire extends Block with Storable with PacketHandler {
 			}
 		)
 
-	add(new CategoryEDX)
+	electricNode.setConnections(() => computeConnection)
+	electricNode.onGridBuilt.add((evt: GraphBuiltEvent) => {
+		//The new 8-bit connection mask
+		val newConnectionMask = evt.connections
+			.map(connectionCache)
+			.foldLeft(0)(_ | _)
+
+		//Apply connection masks
+		if (newConnectionMask != connectionMask) {
+			connectionMask = newConnectionMask
+			//Update client render
+			Game.network().sync(1, microblock)
+		}
+	})
 
 	rightClickEvent.add((evt: RightClickEvent) => System.out.println(electricNode))
+
+	collider.setBoundingBox(() => {
+		BlockWire.occlusionBounds(side)(4) + 0.5
+	})
+		.setOcclusionBoxes(func(entity => {
+		var cuboids = Set.empty[Cuboid]
+		cuboids += BlockWire.occlusionBounds(side)(4) + 0.5
+		cuboids ++= (0 until 4)
+			.collect {
+			case dir if (connectionMask & (1 << (dir * 2))) != 0 && (connectionMask & (1 << (dir * 2 + 1))) != 0 =>
+				BlockWire.occlusionBounds(side)(dir + 5) + 0.5
+			case dir if (connectionMask & (1 << (dir * 2))) != 0 || (connectionMask & (1 << (dir * 2 + 1))) != 0 =>
+				BlockWire.occlusionBounds(side)(dir) + 0.5
+		}
+		cuboids
+	}))
+
+	collider.isCube(false)
+	collider.isOpaqueCube(false)
 
 	override def read(packet: Packet) {
 		super[PacketHandler].read(packet)
@@ -188,8 +204,7 @@ class BlockWire extends Block with Storable with PacketHandler {
 	 * Return the connections the block currently is connected to
 	 */
 	def computeConnection: Set[Electric] = {
-		//The new 8-bit connection mask
-		var newConnectionMask = 0x00
+		connectionCache = Map.empty
 		var connections = Set.empty[Electric]
 
 		for (relativeSide <- 0 until 4) {
@@ -204,13 +219,6 @@ class BlockWire extends Block with Storable with PacketHandler {
 			}
 		}
 
-		//Apply connection masks
-		if (newConnectionMask != connectionMask) {
-			connectionMask = newConnectionMask
-			//Update client render
-			Game.network().sync(1, microblock)
-		}
-
 		/**
 		 * Check inner connection (01)
 		 * @return True if a connection is found
@@ -222,8 +230,9 @@ class BlockWire extends Block with Storable with PacketHandler {
 				val opElectric = otherMicroblock.block.getOp(classOf[Electric])
 
 				if (opElectric.isPresent) {
-					connections += opElectric.get
-					newConnectionMask |= 0x1 << (relativeSide * 2)
+					val electric = opElectric.get
+					connections += electric
+					connectionCache += (electric -> (0x1 << (relativeSide * 2)))
 					return true
 				}
 			}
@@ -249,8 +258,9 @@ class BlockWire extends Block with Storable with PacketHandler {
 						val opElectric = opMicroblock.get.block.getOp(classOf[Electric])
 
 						if (opElectric.isPresent) {
-							connections += opElectric.get
-							newConnectionMask |= 0x2 << (relativeSide * 2)
+							val electric = opElectric.get
+							connections += electric
+							connectionCache += (electric -> (0x2 << (relativeSide * 2)))
 							return true
 						}
 					}
@@ -260,8 +270,9 @@ class BlockWire extends Block with Storable with PacketHandler {
 				val opElectric = checkBlock.get.getOp(classOf[Electric])
 
 				if (opElectric.isPresent) {
-					connections += opElectric.get
-					newConnectionMask |= 0x2 << (relativeSide * 2)
+					val electric = opElectric.get
+					connections += electric
+					connectionCache += (electric -> (0x2 << (relativeSide * 2)))
 					return true
 				}
 			}
@@ -290,8 +301,9 @@ class BlockWire extends Block with Storable with PacketHandler {
 						val opElectric = opMicroblock.get.block.getOp(classOf[Electric])
 
 						if (opElectric.isPresent) {
-							connections += opElectric.get
-							newConnectionMask |= 0x3 << (relativeSide * 2)
+							val electric = opElectric.get
+							connections += electric
+							connectionCache += (electric -> (0x3 << (relativeSide * 2)))
 							return true
 						}
 					}
