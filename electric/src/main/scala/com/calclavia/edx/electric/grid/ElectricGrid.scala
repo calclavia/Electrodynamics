@@ -11,7 +11,7 @@ import nova.core.util.exception.NovaException
 import nova.core.util.transform.matrix.Matrix
 import org.jgrapht.Graph
 import org.jgrapht.ext.{DOTExporter, VertexNameProvider}
-import org.jgrapht.graph.{DefaultDirectedGraph, DefaultEdge, SimpleGraph}
+import org.jgrapht.graph.{DefaultDirectedGraph, DefaultEdge}
 
 import scala.collection.convert.wrapAll._
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -126,8 +126,14 @@ class ElectricGrid {
 
 	import ElectricGrid._
 
-	//The general connection graph between electric
-	protected val connectionGraph = new SimpleGraph[Electric, DefaultEdge](classOf[DefaultEdge])
+	/**
+	 * The general connection graph between electric
+	 * Positive goes to negative always.
+	 * Therefore, a negative terminal points to the next positive terminal
+	 */
+	protected[grid] val connectionGraph = new DefaultDirectedGraph[Electric, DefaultEdge](classOf[DefaultEdge])
+	//The graph of all electric elements. In this directed graph the arrow points from positive to negative in potential difference.
+	protected[grid] var electricGraph: DefaultDirectedGraph[ElectricElement, DefaultEdge] = null
 	// There should always at least (node.size - 1) amount of junctions.
 	var junctions = List.empty[Junction]
 	//The reference ground junction where voltage is zero.
@@ -136,13 +142,14 @@ class ElectricGrid {
 	var components = List.empty[Component]
 	//The modified nodal analysis matrix (A) in Ax=b linear equation.
 	var mna: Matrix = null
+	//A list of voltage sources
 	var voltageSources = List.empty[Component]
+	//A list of current sources
 	var currentSources = List.empty[Component]
+	//A list of resistors
 	var resistors = List.empty[Component]
 	//The source matrix (B)
 	protected[grid] var sourceMatrix: Matrix = null
-	//The graph of all electric elements. In this directed graph the arrow points from positive to negative in potential difference.
-	protected[grid] var electricGraph: DefaultDirectedGraph[ElectricElement, DefaultEdge] = null
 
 	/**
 	 * Finds all the nodes that are interconnected
@@ -153,9 +160,10 @@ class ElectricGrid {
 	def findAll(node: Electric, builder: Set[Electric] = Set.empty): Map[Electric, Set[Electric]] =
 		node match {
 			case component: ElectricComponent =>
-				val connections = (component.positives ++ component.negatives).toSet
+				val negatives = component.negatives.toSet
+				val connections = (component.positives ++ negatives).toSet
 				val electrics = connections diff builder
-				electrics.flatMap(n => findAll(n, builder + node)).toMap + (node -> connections)
+				electrics.flatMap(n => findAll(n, builder + node)).toMap + (node -> negatives)
 			case junction: NodeElectricJunction =>
 				val connections = junction.con
 				(connections diff builder).flatMap(n => findAll(n, builder + node)).toMap + (node -> connections)
@@ -163,42 +171,47 @@ class ElectricGrid {
 
 	def addRecursive(node: Electric): this.type = {
 		findAll(node).foreach {
-			case (node, con) => add(node, con)
+			case (node: NodeElectricComponent, negatives) => add(node, negatives)
+			case (node: NodeElectricJunction, con) => add(node, con)
 		}
 		return this
 	}
 
-	def add(node: Electric): this.type =
-		add(node,
-			node match {
-				case node: NodeElectricComponent =>
-					(node.positives() ++ node.negatives()).toSet
-				case node: NodeElectricJunction =>
-					node.con
-			}
-		)
+	def add(node: Electric): this.type = {
 
-	def add(node: Electric, connections: Set[Electric]): this.type = {
+		node match {
+			case nodeComponent: NodeElectricComponent => add(nodeComponent, nodeComponent.negatives().toSet)
+			case nodeJunction: NodeElectricJunction => add(nodeJunction, nodeJunction.con)
+		}
+		return this
+	}
+
+	def add(node: NodeElectricComponent, neg: Set[Electric]): this.type = {
+		connectionGraph.addVertex(node)
+		neg.foreach(connectionGraph.addVertex)
+		neg.foreach(neighbor => connectionGraph.addEdge(node, neighbor))
+
+		node.onResistanceChange.add((evt: ElectricChangeEvent) => {
+			requestUpdate(resistorChanged = true)
+		})
+		node.onInternalVoltageChange :+= ((source: Electric) => {
+			requestUpdate(sourceChanged = true)
+		})
+		node.onInternalCurrentChange :+= ((source: Electric) => {
+			requestUpdate(sourceChanged = true)
+		})
+		return this
+	}
+
+	def add(node: NodeElectricJunction, connections: Set[Electric]): this.type = {
 		connectionGraph.addVertex(node)
 
-		//TODO: Can't we build the electric graph from here?
-		node match {
-			case node: NodeElectricComponent =>
-				connections.foreach(connectionGraph.addVertex)
-				connections.foreach(n => connectionGraph.addEdge(node, n))
-
-				node.onResistanceChange.add((evt: ElectricChangeEvent) => {
-					requestUpdate(resistorChanged = true)
-				})
-				node.onInternalVoltageChange :+= ((source: Electric) => {
-					requestUpdate(sourceChanged = true)
-				})
-				node.onInternalCurrentChange :+= ((source: Electric) => {
-					requestUpdate(sourceChanged = true)
-				})
-			case node: NodeElectricJunction =>
-				connections.foreach(connectionGraph.addVertex(_))
-		}
+		connections.foreach(
+			neighbor => {
+				connectionGraph.addVertex(neighbor)
+				connectionGraph.addEdge(node, neighbor)
+			}
+		)
 		return this
 	}
 
@@ -316,8 +329,9 @@ class ElectricGrid {
 		def connectionsOf(vertex: V): Set[V] =
 			underlying
 				.edgesOf(vertex)
-				.flatMap(e => Set(underlying.getEdgeSource(e), underlying.getEdgeTarget(e)))
-				.filter(_ != vertex)
+				.map(underlying.getEdgeTarget)
+				//.flatMap(e => Set(underlying.getEdgeSource(e), underlying.getEdgeTarget(e)))
+				//.filter(_ != vertex)
 				.toSet
 	}
 

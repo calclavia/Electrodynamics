@@ -112,7 +112,7 @@ class BlockWire extends BlockEDX with Storable with PacketHandler {
 	/**
 	 * Caches the sidem ask and electric nodes
 	 */
-	private var connectionCache = Map.empty[Electric, Int]
+	private var connectionCache = Map.empty[Electric, Int].withDefaultValue(0)
 
 	/**
 	 * Add components
@@ -166,6 +166,8 @@ class BlockWire extends BlockEDX with Storable with PacketHandler {
 			.map(connectionCache)
 			.foldLeft(0)(_ | _)
 
+		println(evt.connections)
+
 		//Apply connection masks
 		if (newConnectionMask != connectionMask) {
 			connectionMask = newConnectionMask
@@ -204,7 +206,7 @@ class BlockWire extends BlockEDX with Storable with PacketHandler {
 	 * Return the connections the block currently is connected to
 	 */
 	def computeConnection: Set[Electric] = {
-		connectionCache = Map.empty
+		connectionCache = Map.empty.withDefaultValue(0)
 		var connections = Set.empty[Electric]
 
 		for (relativeSide <- 0 until 4) {
