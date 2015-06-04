@@ -14,6 +14,7 @@ import nova.core.block.Block.{BlockPlaceEvent, RightClickEvent}
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.misc.Collider
 import nova.core.component.renderer.ItemRenderer
+import nova.core.game.Game
 import nova.core.network.{Packet, PacketHandler, Sync}
 import nova.core.render.model.{BlockModelUtil, Model, StaticCubeTextureCoordinates}
 import nova.core.retention.{Storable, Stored}
@@ -65,12 +66,12 @@ object BlockWire {
 				.map(RotationUtil.rotateSide(0, _))
 				.map(Direction.fromOrdinal)
 				.map(
-			    d => {
-				    val dir = d.toVector.toDouble
-				    val min = if (d.toVector.x < 0 || d.toVector.y < 0 || d.toVector.z < 0) dir * thickness else Vector3d.zero
-				    val max = if (d.toVector.x > 0 || d.toVector.y > 0 || d.toVector.z > 0) dir * thickness else Vector3d.zero
-				    (center + (dir * width)) + new Cuboid(min, max)
-			    }
+					d => {
+						val dir = d.toVector.toDouble
+						val min = if (d.toVector.x < 0 || d.toVector.y < 0 || d.toVector.z < 0) dir * thickness else Vector3d.zero
+						val max = if (d.toVector.x > 0 || d.toVector.y > 0 || d.toVector.z > 0) dir * thickness else Vector3d.zero
+						(center + (dir * width)) + new Cuboid(min, max)
+					}
 				)
 				.toSeq
 
@@ -115,15 +116,15 @@ class BlockWire extends Block with Storable with PacketHandler {
 	 */
 	add(electricNode).setConnections(() => computeConnection)
 
-	add(new Microblock(this))
+	val microblock = add(new Microblock(this))
 		.setOnPlace(
-	    (evt: BlockPlaceEvent) => {
-		    this.side = evt.side.opposite.ordinal.toByte
-		    //TODO: Fix wire material
-		    BlockWire.init()
-		    get(classOf[MaterialWire]).material = WireMaterial.COPPER
-		    Optional.of(MicroblockContainer.sidePosition(Direction.fromOrdinal(this.side)))
-	    }
+			(evt: BlockPlaceEvent) => {
+				this.side = evt.side.opposite.ordinal.toByte
+				//TODO: Fix wire material
+				BlockWire.init()
+				get(classOf[MaterialWire]).material = WireMaterial.COPPER
+				Optional.of(MicroblockContainer.sidePosition(Direction.fromOrdinal(this.side)))
+			}
 		)
 
 	add(new Collider())
@@ -149,29 +150,29 @@ class BlockWire extends Block with Storable with PacketHandler {
 
 	add(new StaticBlockRenderer(this))
 		.setOnRender(
-	    (model: Model) => {
-		    get(classOf[Collider]).occlusionBoxes.apply(Optional.empty()).foreach(cuboid => {
-			    BlockModelUtil.drawCube(model, cuboid - 0.5, StaticCubeTextureCoordinates.instance)
-		    })
+			(model: Model) => {
+				get(classOf[Collider]).occlusionBoxes.apply(Optional.empty()).foreach(cuboid => {
+					BlockModelUtil.drawCube(model, cuboid - 0.5, StaticCubeTextureCoordinates.instance)
+				})
 
-		    model.faces.foreach(_.vertices.map(_.setColor(get(classOf[MaterialWire]).material.color)))
-		    model.bindAll(ElectricContent.wireTexture)
-	    }
+				model.faces.foreach(_.vertices.map(_.setColor(get(classOf[MaterialWire]).material.color)))
+				model.bindAll(ElectricContent.wireTexture)
+			}
 		)
 
 	add(new ItemRenderer(this))
 		.setOnRender(
-	    (model: Model) => {
-		    (0 until 5)
-			    .map(dir => BlockWire.occlusionBounds(side)(dir))
-			    .foreach(cuboid => {
-			    BlockModelUtil.drawCube(model, cuboid, StaticCubeTextureCoordinates.instance)
-		    })
+			(model: Model) => {
+				(0 until 5)
+					.map(dir => BlockWire.occlusionBounds(side)(dir))
+					.foreach(cuboid => {
+					BlockModelUtil.drawCube(model, cuboid, StaticCubeTextureCoordinates.instance)
+				})
 
-		    //TODO: Change color
-		    model.faces.foreach(_.vertices.map(_.setColor(WireMaterial.COPPER.color)))
-		    model.bindAll(ElectricContent.wireTexture)
-	    }
+				//TODO: Change color
+				model.faces.foreach(_.vertices.map(_.setColor(WireMaterial.COPPER.color)))
+				model.bindAll(ElectricContent.wireTexture)
+			}
 		)
 
 	add(new CategoryEDX)
@@ -207,7 +208,7 @@ class BlockWire extends Block with Storable with PacketHandler {
 		if (newConnectionMask != connectionMask) {
 			connectionMask = newConnectionMask
 			//Update client render
-			get(classOf[Microblock]).sync(1)
+			Game.network().sync(1, microblock)
 		}
 
 		/**
