@@ -2,7 +2,7 @@ package com.calclavia.edx.optics.content
 
 import com.calclavia.edx.core.Reference
 import com.resonant.core.prefab.modcontent.ContentLoader
-import nova.core.render.texture.BlockTexture
+import nova.core.render.texture.{BlockTexture, EntityTexture}
 
 /**
  * Textures
@@ -28,11 +28,11 @@ object Textures extends ContentLoader {
 	/**
 	 * Particle FX
 	 */
-	val laserStartTexture = new BlockTexture(Reference.domain, "laserStart")
-	val laserMiddleTexture = new BlockTexture(Reference.domain, "laserMiddle")
-	val laserEndTexture = new BlockTexture(Reference.domain, "laserEnd")
-	val laserNoiseTexture = new BlockTexture(Reference.domain, "noise")
-	val scortchTexture = new BlockTexture(Reference.domain, "scorch")
+	val laserStartTexture = new EntityTexture(Reference.domain, "laserStart")
+	val laserMiddleTexture = new EntityTexture(Reference.domain, "laserMiddle")
+	val laserEndTexture = new EntityTexture(Reference.domain, "laserEnd")
+	val laserNoiseTexture = new EntityTexture(Reference.domain, "noise")
+	val scortchTexture = new EntityTexture(Reference.domain, "scorch")
 
 	override def id: String = Reference.opticsID
 }
