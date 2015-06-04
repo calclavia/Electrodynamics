@@ -1,6 +1,7 @@
 package com.calclavia.edx.electric
 
 import com.calclavia.edx.core.Reference
+import com.calclavia.microblock.injection.ComponentInjection
 import nova.core.loader.{Loadable, NovaMod}
 
 @NovaMod(
@@ -37,6 +38,8 @@ object Electric extends Loadable {
 	var tierOneBattery: ItemStack = null
 	var tierTwoBattery: ItemStack = null
 	var tierThreeBattery: ItemStack = null*/
+
+	var componentInjection: ComponentInjection = null
 
 	override def preInit() {
 		ElectricContent.preInit()

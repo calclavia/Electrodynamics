@@ -36,6 +36,7 @@ trait ElectricLike extends Electric with BlockConnectable[Electric] {
 	block.neighborChangeEvent.add((evt: NeighborChangeEvent) => rebuild())
 
 	def rebuild() {
+		//TODO: Only when connection changes!
 		ElectricGrid.destroy(this)
 		build()
 	}

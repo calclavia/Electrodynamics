@@ -287,7 +287,7 @@ class ElectricGrid {
 			case nodeJunction: NodeElectricJunction =>
 				val junction = convert(nodeJunction)
 				electricGraph.addVertex(junction)
-
+				//TODO: Extra junction generated?
 				//Connect the junction to all of this NodeElectricJunction's nodes. These are mutual connections as defined by #connectionOf.
 				connectionGraph
 					.connectionsOf(nodeJunction)
@@ -392,10 +392,14 @@ class ElectricGrid {
 
 				if (sourceChanged || allChange) {
 					computeSourceMatrix()
+					println("Computed source matrix: ")
+					println(sourceMatrix)
 				}
 
 				if (resistorChanged || sourceChanged || allChange) {
 					try {
+						println("Computed MNA matrix: ")
+						println(mna)
 						solve()
 					}
 					catch {
