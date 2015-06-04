@@ -8,6 +8,7 @@ import com.calclavia.edx.electric.ElectricContent
 import com.calclavia.edx.electric.api.{ConnectionBuilder, Electric}
 import com.calclavia.edx.electric.grid.NodeElectricComponent
 import com.resonant.lib.WrapFunctions._
+import nova.core.block.Block.BlockPlaceEvent
 import nova.core.block.Stateful
 import nova.core.block.component.{LightEmitter, StaticBlockRenderer}
 import nova.core.component.renderer.ItemRenderer
@@ -40,6 +41,8 @@ class BlockLaserReceiver extends BlockEDX with Stateful
 	electricNode.setPositiveConnections(new ConnectionBuilder(classOf[Electric]).setBlock(this).setConnectMask(io.inputMask).adjacentSupplier().asInstanceOf[Supplier[JSet[Electric]]])
 	electricNode.setNegativeConnections(new ConnectionBuilder(classOf[Electric]).setBlock(this).setConnectMask(io.outputMask).adjacentSupplier().asInstanceOf[Supplier[JSet[Electric]]])
 	electricNode.setResistance(100)
+
+	placeEvent.add((evt: BlockPlaceEvent) => world.markStaticRender(position))
 
 	laserHandler.onPowerChange.add((evt: Event) => {
 		//if (hit.sideHit == getDirection.ordinal)
