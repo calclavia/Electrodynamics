@@ -34,10 +34,10 @@ misc.refinedDust=Refined Dust
 misc.bucketMolten=Molten Bucket
 
 # Blocks
-tile.oreCopper.name=Copper Ore
-tile.oreTin.name=Tin Ore
-tile.glassJar.name=Glass Jar
-tile.sieve.name=Sieve
+block.oreCopper.name=Copper Ore
+block.oreTin.name=Tin Ore
+block.glassJar.name=Glass Jar
+block.sieve.name=Sieve
 
 # Items
 item.circuitBasic.name=Basic Circuit
@@ -63,21 +63,21 @@ item.dustBronze.name=Bronze Dust
 item.dustSteel.name=Steel Dust
 
 ### Archaic Module
-tile.gutter.name=Gutter
-tile.gutter.tooltip=A primitive way of transferring fluid.
+block.gutter.name=Gutter
+block.gutter.tooltip=A primitive way of transferring fluid.
 
 ## Industrial Stone Blocks
-tile.industrialStone.0.name=Industrial Brick
-tile.industrialStone.1.name=Industrial Double Slab Brick
-tile.industrialStone.2.name=Industrial Chiseled Brick
-tile.industrialStone.3.name=Industrial Cobblestone
-tile.industrialStone.4.name=Industrial Cracked Stone
-tile.industrialStone.5.name=Industrial Stone
-tile.industrialStone.6.name=Industrial Stone Slab
-tile.industrialStone.7.name=Industrial Mossy Stone
-tile.industrialStone.8.name=Dark Iron
-tile.industrialStone.9.name=Tinted Steel
-tile.industrialStone.10.name=Steel
+block.industrialStone.0.name=Industrial Brick
+block.industrialStone.1.name=Industrial Double Slab Brick
+block.industrialStone.2.name=Industrial Chiseled Brick
+block.industrialStone.3.name=Industrial Cobblestone
+block.industrialStone.4.name=Industrial Cracked Stone
+block.industrialStone.5.name=Industrial Stone
+block.industrialStone.6.name=Industrial Stone Slab
+block.industrialStone.7.name=Industrial Mossy Stone
+block.industrialStone.8.name=Dark Iron
+block.industrialStone.9.name=Tinted Steel
+block.industrialStone.10.name=Steel
 
 ## Items
 item.imprint.name=Imprint
@@ -87,29 +87,29 @@ item.biomass.name=Biomass
 item.focusingMatrix.name=Focusing Matrix
 
 ## Machines
-tile.castingMold.name=Casting Mold
-tile.castingMold.tooltip=Pour molten metal into the cast to form an ingot.
-tile.millstone.name=Millstone
-tile.millstone.tooltip=Put some rubble in the millstone and use a hand crank to grind rubble into dust.
-tile.imprinter.name=Imprinter
+block.castingMold.name=Casting Mold
+block.castingMold.tooltip=Pour molten metal into the cast to form an ingot.
+block.millstone.name=Millstone
+block.millstone.tooltip=Put some rubble in the millstone and use a hand crank to grind rubble into dust.
+block.imprinter.name=Imprinter
 
-tile.firebox.name=Firebox
-tile.firebox.0.name=Firebox
-tile.firebox.1.name=Electric Firebox
+block.firebox.name=Firebox
+block.firebox.0.name=Firebox
+block.firebox.1.name=Electric Firebox
 
-tile.hotPlate.name=Hot Plate
+block.hotPlate.name=Hot Plate
 
-tile.workbench.name=Workbench
-tile.workbench.tooltip=The workbench is used for hammering and sawing resources.
-tile.engineeringTable.name=Engineering Table
+block.workbench.name=Workbench
+block.workbench.tooltip=The workbench is used for hammering and sawing resources.
+block.engineeringTable.name=Engineering Table
 engineerTable.config.inventory.true=Engineering table is now connected to nearby inventories.
 engineerTable.config.inventory.false=Engineering table is now disconnected from nearby inventories.
 
 ## Transport
-tile.turntable.name=Turntable
-tile.crate.0.name=Wooden Crate
-tile.crate.1.name=Iron Crate
-tile.crate.2.name=Steel Crate
+block.turntable.name=Turntable
+block.crate.0.name=Wooden Crate
+block.crate.1.name=Iron Crate
+block.crate.2.name=Steel Crate
 
 info.waila.crate.stack=Item:
 info.waila.crate.stored=Stored:
@@ -119,13 +119,13 @@ crate.orefilter.true= Same OreName stacking enabled
 crate.orefilter.false= Same OreName stacking disabled
 crate.tooltip.amount= Amount: 
 
-tile.crate.0.tooltip=Right click to add items Left click to remove items Ctrl Click sets itemstack filter
-tile.crate.1.tooltip=Right click to add items Left click to remove items Ctrl Click sets itemstack filter
-tile.crate.2.tooltip=Right click to add items Left click to remove items Ctrl Click sets itemstack filter
+block.crate.0.tooltip=Right click to add items Left click to remove items Ctrl Click sets itemstack filter
+block.crate.1.tooltip=Right click to add items Left click to remove items Ctrl Click sets itemstack filter
+block.crate.2.tooltip=Right click to add items Left click to remove items Ctrl Click sets itemstack filter
 
-tile.tank.name=Tank
-tile.tank.0.name=Tank
-tile.tank.tooltip=Shift right click to pick up with fluid contained within.
+block.tank.name=Tank
+block.tank.0.name=Tank
+block.tank.tooltip=Shift right click to pick up with fluid contained within.
 info.waila.tank.fluid=Fluid:
 info.waila.tank.vol=Volume:
 info.waila.tank.empty=Empty
@@ -140,21 +140,21 @@ item.gearShaft.0.name=Wooden Gear Shaft
 item.gearShaft.1.name=Stone Gear Shaft
 item.gearShaft.2.name=Metal Gear Shaft
 
-tile.windTurbine.name=Wind Turbine
-tile.windTurbine.0.name=Wooden Wind Turbine
-tile.windTurbine.0.tooltip=The wooden wind turbine is light, fragile and spins fast.
-tile.windTurbine.1.name=Stone Wind Turbine
-tile.windTurbine.1.tooltip=The stone turbine is heavy, strong and durable.
-tile.windTurbine.2.name=Metal Wind Turbine
-tile.windTurbine.2.tooltip=The metal wind turbine is strong and agile.
+block.windTurbine.name=Wind Turbine
+block.windTurbine.0.name=Wooden Wind Turbine
+block.windTurbine.0.tooltip=The wooden wind turbine is light, fragile and spins fast.
+block.windTurbine.1.name=Stone Wind Turbine
+block.windTurbine.1.tooltip=The stone turbine is heavy, strong and durable.
+block.windTurbine.2.name=Metal Wind Turbine
+block.windTurbine.2.tooltip=The metal wind turbine is strong and agile.
 
-tile.waterTurbine.name=Water Turbine
-tile.waterTurbine.0.name=Wooden Water Turbine
-tile.waterTurbine.0.tooltip=The wooden water turbine is light and moves fast.
-tile.waterTurbine.1.name=Stone Water Turbine
-tile.waterTurbine.1.tooltip=The stone water turbine is heavy, strong and durable.
-tile.waterTurbine.2.name=Metal Water Turbine
-tile.waterTurbine.2.tooltip=The metal water turbine is strong and agile.
+block.waterTurbine.name=Water Turbine
+block.waterTurbine.0.name=Wooden Water Turbine
+block.waterTurbine.0.tooltip=The wooden water turbine is light and moves fast.
+block.waterTurbine.1.name=Stone Water Turbine
+block.waterTurbine.1.tooltip=The stone water turbine is heavy, strong and durable.
+block.waterTurbine.2.name=Metal Water Turbine
+block.waterTurbine.2.tooltip=The metal water turbine is strong and agile.
 
 ## Transport
 item.pipe.ceramic.name=Ceramic Pipe
@@ -163,25 +163,25 @@ item.pipe.plastic.name=Plastic Pipe
 item.pipe.iron.name=Iron Pipe
 item.pipe.steel.name=Steel Pipe
 item.pipe.fiberglass.name=Fiberglass Pipe
-tile.pump.name=Pump
-tile.grate.name=Grate
-tile.conveyorBelt.name=Conveyor Belt
+block.pump.name=Pump
+block.grate.name=Grate
+block.conveyorBelt.name=Conveyor Belt
 
-tile.detector.name=Detector
-tile.detector.tooltip=Outputs a Redstone signal upon item detection. Configure to invert imprint filter.
-tile.manipulator.name=Manipulator
-tile.rejector.name=Rejector
-tile.sorter.name=Sorter
-tile.breaker.name=Breaker
-tile.placer.name=Placer
+block.detector.name=Detector
+block.detector.tooltip=Outputs a Redstone signal upon item detection. Configure to invert imprint filter.
+block.manipulator.name=Manipulator
+block.rejector.name=Rejector
+block.sorter.name=Sorter
+block.breaker.name=Breaker
+block.placer.name=Placer
 
 ## Machines and Processing
-tile.mixer.name=Mixer
-tile.mixer.tooltip=The mixer mixes dusts with water to wash and refine the ore dust. Mixer prefers more angular velocity (spin) to process dusts.
-tile.mechanicalPiston.name=Mechanical Piston
-tile.grindingWheel.name=Grinding Wheel
-tile.grindingWheel.tooltip=The grinding wheel grinds ores into rubble and dust. Larger torque allows faster grinding.
-tile.filter.name=Filter
+block.mixer.name=Mixer
+block.mixer.tooltip=The mixer mixes dusts with water to wash and refine the ore dust. Mixer prefers more angular velocity (spin) to process dusts.
+block.mechanicalPiston.name=Mechanical Piston
+block.grindingWheel.name=Grinding Wheel
+block.grindingWheel.tooltip=The grinding wheel grinds ores into rubble and dust. Larger torque allows faster grinding.
+block.filter.name=Filter
 edx.machine.grinder=Grinder
 edx.machine.crusher=Crusher
 edx.machine.mixer=Mixer
@@ -190,18 +190,18 @@ edx.machine.smelter=Smelter
 
 ### Electrical
 ## Blocks
-tile.tesla.name=Tesla Coil
-tile.tesla.tooltip=Transfer electricity wirelessly. Link with a configurator for cross dimension teleportation.
+block.tesla.name=Tesla Coil
+block.tesla.tooltip=Transfer electricity wirelessly. Link with a configurator for cross dimension teleportation.
 item.levitator.name=Electromagnetic Levitator
-tile.battery.name=Battery
-tile.armbot.name=Armbot
-tile.encoder.name=Encoder
+block.battery.name=Battery
+block.armbot.name=Armbot
+block.encoder.name=Encoder
 item.charger.name=Charging Plate
 item.insulation.name=Insulation
-tile.laserEmitter.name=Laser Emitter
-tile.laserReceiver.name=Laser Receiver
-tile.focusCrystal.name=Focus Crystal
-tile.mirror.name=Mirror
+block.laserEmitter.name=Laser Emitter
+block.laserReceiver.name=Laser Receiver
+block.focusCrystal.name=Focus Crystal
+block.mirror.name=Mirror
 
 tool.mode.set=Mode set to:
 laser.toolmode.remove=Remove
@@ -209,10 +209,10 @@ laser.toolmode.smelt=Smelt
 laser.toolmode.damage=Damage
 
 ## Generators
-tile.solarPanel.name=Solar Panel
-tile.motor.name=Electric Motor
-tile.thermopile.name=Thermopile
-tile.thermopile.tooltip=Generates a voltage proportional to local temperature difference.
+block.solarPanel.name=Solar Panel
+block.motor.name=Electric Motor
+block.thermopile.name=Thermopile
+block.thermopile.tooltip=Generates a voltage proportional to local temperature difference.
 
 #Transport
 item.disk.name=Program Disk
@@ -229,7 +229,7 @@ item.multimeter.name=Multimeter
 item.multimeter.tooltip=Multimeter is a panel that display the energy and fluid information of a block.
 
 ### Quantum Tier
-tile.quantumGate.name=Quantum Gate
+block.quantumGate.name=Quantum Gate
 item.quantumGlyph.0.name=Nought Glyph
 item.quantumGlyph.1.name=Monogon Glyph
 item.quantumGlyph.2.name=Digon Glyph
@@ -302,7 +302,7 @@ fluid.tritium=Tritium
 fluid.plasma=Plasma
 fluid.steam=Steam
 fluid.toxicwaste=Toxic Waste
-fluid.tile.water=Water
+fluid.block.water=Water
 
 item.hazmatMask.name=Hazmat Mask
 item.hazmatBody.name=Hazmat Body
@@ -335,47 +335,47 @@ item.uraniumHexafluoride.name=Uranium Hexafluoride
 item.steam.name=Steam
 
 ## Blocks
-tile.oreUranium.name=Uranium Ore
-tile.oreUraniumOre.tooltip=A precious and useful ore used for fission reactions.
-tile.reactorDrain.name=Reactor Drain
-tile.reactorDrain.tooltip=Extracts fluids out of the reactor, such as toxic waste.
-tile.nuclearBoiler.name=Nuclear Boiler
-tile.nuclearBoiler.tooltip=Boils yellowcake into uranium hexaflouride gas.
-tile.centrifuge.name=Centrifuge
-tile.centrifuge.tooltip=Refines Uranium Hexafluoride gas into usable uranium.
-tile.reactorCell.name=Reactor Cell
-tile.reactorCell.tooltip=The primary components for all types of reactors. Fuel rods or plasma may be injected into the cell.
-tile.plasmaHeater.name=Plasma Heater
-tile.plasmaHeater.tooltip=A plasma heater is used to heat deuterium and tritium to plasma state for fusion power. Plasma must be moved into the reactor cell.
-tile.electricTurbine.name=Electric Turbine
-tile.electricTurbine.tooltip=Transform the kinetic energy from moving steam into electrical energy.
-tile.radioactive.name=Radioactive Waste
-tile.radioactive.tooltip=Generates harmful radiation and spreads around the world, mutating organisms.
-tile.thermometer.name=Thermometer
-tile.thermometer.tooltip=Reads the temperature at the current coordinate. Shift-right click to lock the reading to a specific coordinate.
-tile.electromagnet.name=Electromagnet
-tile.electromagnet.0.name=Electromagnet
-tile.electromagnet.1.name=Electromagnet
-tile.electromagnet.tooltip=Creates an electromagnetic field preventing plasma and particles from getting near.
-tile.chemicalExtractor.name=Chemical Extractor
-tile.chemicalExtractor.tooltip=Extracts uranium ores to yellowcake, water to deuterium and deuterium to tritium.
-tile.siren.name=Siren
-tile.siren.tooltip=Creates an alarm with customizable pitch and volume with a Redstone signal.
-tile.controlRod.name=Control Rod
-tile.controlRod.tooltip=Suppresses fission reaction in adjacent reactor cells.
-tile.plasma.name=Plasma
-tile.plasma.tooltip=Generates extreme heat for boiling water.
-tile.funnel.name=Gas Funnel
-tile.funnel.tooltip=Captures gas to allow it to be transported with piping.
-tile.accelerator.name=Particle Accelerator
-tile.accelerator.tooltip=Accelerates particles and creates antimatter and dark matter.
-tile.fulmination.name=Fulmination Generator
-tile.fulmination.tooltip=Transforms the kinetic energy from explosions into electrical energy.
-tile.quantumAssembler.name=Quantum Assembler
-tile.quantumAssembler.tooltip=Reassembles Dark Matter atoms into usable materials.
-tile.toxicWaste.name=Toxic Waste
-tile.toxicWaste.tooltip=Toxic, nuclear waste that pollutes the world.
-tile.mirror.name = Mirror
+block.oreUranium.name=Uranium Ore
+block.oreUraniumOre.tooltip=A precious and useful ore used for fission reactions.
+block.reactorDrain.name=Reactor Drain
+block.reactorDrain.tooltip=Extracts fluids out of the reactor, such as toxic waste.
+block.nuclearBoiler.name=Nuclear Boiler
+block.nuclearBoiler.tooltip=Boils yellowcake into uranium hexaflouride gas.
+block.centrifuge.name=Centrifuge
+block.centrifuge.tooltip=Refines Uranium Hexafluoride gas into usable uranium.
+block.reactorCell.name=Reactor Cell
+block.reactorCell.tooltip=The primary components for all types of reactors. Fuel rods or plasma may be injected into the cell.
+block.plasmaHeater.name=Plasma Heater
+block.plasmaHeater.tooltip=A plasma heater is used to heat deuterium and tritium to plasma state for fusion power. Plasma must be moved into the reactor cell.
+block.electricTurbine.name=Electric Turbine
+block.electricTurbine.tooltip=Transform the kinetic energy from moving steam into electrical energy.
+block.radioactive.name=Radioactive Waste
+block.radioactive.tooltip=Generates harmful radiation and spreads around the world, mutating organisms.
+block.thermometer.name=Thermometer
+block.thermometer.tooltip=Reads the temperature at the current coordinate. Shift-right click to lock the reading to a specific coordinate.
+block.electromagnet.name=Electromagnet
+block.electromagnet.0.name=Electromagnet
+block.electromagnet.1.name=Electromagnet
+block.electromagnet.tooltip=Creates an electromagnetic field preventing plasma and particles from getting near.
+block.chemicalExtractor.name=Chemical Extractor
+block.chemicalExtractor.tooltip=Extracts uranium ores to yellowcake, water to deuterium and deuterium to tritium.
+block.siren.name=Siren
+block.siren.tooltip=Creates an alarm with customizable pitch and volume with a Redstone signal.
+block.controlRod.name=Control Rod
+block.controlRod.tooltip=Suppresses fission reaction in adjacent reactor cells.
+block.plasma.name=Plasma
+block.plasma.tooltip=Generates extreme heat for boiling water.
+block.funnel.name=Gas Funnel
+block.funnel.tooltip=Captures gas to allow it to be transported with piping.
+block.accelerator.name=Particle Accelerator
+block.accelerator.tooltip=Accelerates particles and creates antimatter and dark matter.
+block.fulmination.name=Fulmination Generator
+block.fulmination.tooltip=Transforms the kinetic energy from explosions into electrical energy.
+block.quantumAssembler.name=Quantum Assembler
+block.quantumAssembler.tooltip=Reassembles Dark Matter atoms into usable materials.
+block.toxicWaste.name=Toxic Waste
+block.toxicWaste.tooltip=Toxic, nuclear waste that pollutes the world.
+block.mirror.name = Mirror
 
 ## Tooltips
 tooltip.energy=Energy

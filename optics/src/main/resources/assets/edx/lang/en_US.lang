@@ -21,13 +21,13 @@ message.modeCustom.modeChange=Changed selection mode to #p
 message.modeCustom.saved=Field structure saved.
 
 # Blocks
-tile.fortronite.name=Fortronite
-tile.biometric.name=Biometric Identifier
-tile.fortronCapacitor.name=Fortron Capacitor
-tile.projector.name=Electromagnetic Projector
-tile.coercionDeriver.name=Coercion Deriver
-tile.mobilizer.name=Force Mobilizer
-tile.forceField.name=Force Field
+block.fortronite.name=Fortronite
+block.biometric.name=Biometric Identifier
+block.fortronCapacitor.name=Fortron Capacitor
+block.projector.name=Electromagnetic Projector
+block.coercionDeriver.name=Coercion Deriver
+block.mobilizer.name=Force Mobilizer
+block.forceField.name=Force Field
 
 
 # Cards
