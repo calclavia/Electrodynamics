@@ -8,19 +8,20 @@ import nova.core.entity.Entity
 import nova.core.render.Color
 import nova.core.render.model.{Model, Vertex}
 import nova.core.util.Direction
+import nova.core.util.transform.matrix.Quaternion
+import nova.core.util.transform.vector.Vector3d
 
 /**
  * An entity scorch effect
  * @author Calclavia
  */
-class EntityScorchFX(side: Int) extends Entity with EntityAgeLike
-{
+class EntityScorchFX(side: Int) extends Entity with EntityAgeLike {
 	val renderer = add(new DynamicRenderer)
 
 	val particleScale = 0.2f
 	var particleAlpha = 0d
 
-	override def maxAge: Double = 10
+	override def maxAge: Double = 1
 
 	override def getID: String = "scortchFx"
 
@@ -31,21 +32,17 @@ class EntityScorchFX(side: Int) extends Entity with EntityAgeLike
 
 	renderer.setOnRender(
 		(model: Model) => {
-			// glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
-			/**
-			 * Translation
-			 See LaserFX
-			val f11 = this.prevPosX + (this.posX - this.prevPosX) * par2 - EntityFX.interpPosX
-			val f12 = this.prevPosY + (this.posY - this.prevPosY) * par2 - EntityFX.interpPosY
-			val f13 = this.prevPosZ + (this.posZ - this.prevPosZ) * par2 - EntityFX.interpPosZ
-
-			glTranslated(f11, f12, f13)
-			 */
+			//GL_SRC_ALPHA
+			model.blendSFactor = 0x302
+			//GL_ Minus One
+			model.blendDFactor = 0x303
 
 			/**
 			 * Rotate the scorch effect
 			 */
+			model.rotate(Quaternion.fromAxis(Vector3d.yAxis, -Math.PI / 2))
+
 			val rot = Direction.fromOrdinal(side).rotation
 			/*match
 			{

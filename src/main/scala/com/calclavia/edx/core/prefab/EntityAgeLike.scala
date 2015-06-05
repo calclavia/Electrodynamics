@@ -21,5 +21,8 @@ trait EntityAgeLike extends Entity with Updater {
 		time += deltaTime
 	}
 
+	/**
+	 * @return The maximum age of the entity in seconds
+	 */
 	def maxAge: Double
 }

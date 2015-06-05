@@ -5,8 +5,9 @@ import java.util.Optional
 
 import com.calclavia.edx.core.extension.GraphExtension._
 import com.calclavia.edx.electric.circuit.component.laser.WaveGrid.{Electromagnetic, Wave}
-import com.calclavia.edx.electric.circuit.component.laser.fx.EntityLaser
+import com.calclavia.edx.electric.circuit.component.laser.fx.{EntityLaser, EntityScorchFX}
 import com.resonant.lib.WrapFunctions._
+import nova.core.block.Block.DropEvent
 import nova.core.component.Updater
 import nova.core.component.misc.Damageable
 import nova.core.game.Game
@@ -63,8 +64,12 @@ object WaveGrid {
 				.findFirst()
 
 		def fire(world: World): Optional[RayTraceResult] = {
+			val prevHit = hit
 			hit = computeHit(world).orElseGet(() => null)
-			hitTime = System.currentTimeMillis
+
+			if (prevHit == null || hit == null || hit.hit.equals(prevHit.hit)) {
+				hitTime = System.currentTimeMillis
+			}
 			return Optional.ofNullable(hit)
 		}
 
@@ -123,6 +128,12 @@ object WaveGrid {
 			//TODO: Source shouldn't be null, but Storable makes it so it's not thread safe :(
 			if (hit != null && source != null) {
 				world.addClientEntity(new EntityLaser(renderOrigin, hit.hit, color, power))
+
+				if (hit.isInstanceOf[RayTraceBlockResult]) {
+					val scorch = new EntityScorchFX(hit.side.ordinal())
+					world.addClientEntity(scorch)
+					scorch.setPosition(hit.hit - source.dir * 0.01)
+				}
 			}
 		}
 	}
@@ -238,7 +249,6 @@ class WaveGrid(val world: World) extends Updater {
 					opHit.get match {
 						case hit: RayTraceBlockResult =>
 							val hitVec = hit.hit
-							val hitBlockPos = hit.block.position
 
 							//TODO: Render laser to the hit position
 							//TODO: Load rendering to client ticker (packets)
@@ -248,6 +258,7 @@ class WaveGrid(val world: World) extends Updater {
 								 */
 								case hitBlock if hitBlock.has(classOf[WaveHandler]) =>
 									hitBlock.get(classOf[WaveHandler]).receive(laser)
+
 								/**
 								 * Change laser.color when hit glass
 								 */
@@ -289,7 +300,7 @@ class WaveGrid(val world: World) extends Updater {
 					.filter(v => v.hit.isInstanceOf[RayTraceBlockResult])
 					.foreach(
 						v => {
-							//TODO: Handle furnace smelting
+							v.fire(world)
 							val energyUsed = v.timeElapsed * v.power
 
 							/**
@@ -302,25 +313,25 @@ class WaveGrid(val world: World) extends Updater {
 							//TODO: Render breaking effect
 							//world.destroyBlockInWorldPartially(Block.blockRegistry.getIDForObject(hitBlock), hitBlockPos.x.toInt, hitBlockPos.y.toInt, hitBlockPos.z.toInt, (accumulatedEnergy / energyRequiredToMineBlock * 10).toInt)
 
-							/*if (energyUsed >= energyRequiredToMineBlock) {
+							if (energyUsed >= energyRequiredToMineBlock) {
 								//We can disintegrate the block!
-								//TODO: Add drop event override to BWBlock
 								val event = new DropEvent(hitBlock)
 								hitBlock.dropEvent.publish(event)
 								event.drops.foreach(drop => hitBlock.world.addEntity(hitBlock.position.toDouble + 0.5, drop))
 								world.removeBlock(hitBlock.position)
 								//Re-calculate raycast because block is now broken.
-								v.fire(world)
-							}*/
+							}
+
+							//TODO: Handle furnace smelting
 							//TODO: Burnable
 							/**
 							 * Catch Fire
-						if (energyOnBlock > minBurnEnergy && hitBlock.getMaterial.getCanBurn) {
-							if (hitBlock.isInstanceOf[BlockTNT]) {
-								hitBlock.asInstanceOf[BlockTNT].func_150114_a(world, hitBlockPos.x.toInt, hitBlockPos.y.toInt, hitBlockPos.z.toInt, 1, null)
-							}
-							world.setBlock(hitBlockPos.x.toInt, hitBlockPos.y.toInt, hitBlockPos.z.toInt, Blocks.fire)
-						}*/
+							if (energyOnBlock > minBurnEnergy && hitBlock.getMaterial.getCanBurn) {
+								if (hitBlock.isInstanceOf[BlockTNT]) {
+									hitBlock.asInstanceOf[BlockTNT].func_150114_a(world, hitBlockPos.x.toInt, hitBlockPos.y.toInt, hitBlockPos.z.toInt, 1, null)
+								}
+								world.setBlock(hitBlockPos.x.toInt, hitBlockPos.y.toInt, hitBlockPos.z.toInt, Blocks.fire)
+							}*/
 						}
 					)
 
@@ -341,12 +352,6 @@ class WaveGrid(val world: World) extends Updater {
 					wave.fire(world)
 					wave.render(world)
 				})
-
-				/**
-				 * Render scorch and particles
-				 */
-				//Electrodynamics.proxy.renderScorch(world, hitVec - (direction * 0.02), hit.sideHit)
-				//Electrodynamics.proxy.renderBlockParticle(world, hitVec, hitBlock, hit.sideHit)
 			}
 		}
 
@@ -357,13 +362,15 @@ class WaveGrid(val world: World) extends Updater {
 	 * @param laser The laser to remove
 	 */
 	def destroy(laser: Electromagnetic) {
-		if (graph.containsVertex(laser)) {
-			val inspector = new ConnectivityInspector(graph)
-			val connected = inspector.connectedSetOf(laser)
-			graph.removeAllVertices(connected)
-			graphChanged = true
-		} else {
-			Game.logger().error("Attempt to remove node that does not exist in wave grid.")
+		graph.synchronized {
+			if (graph.containsVertex(laser)) {
+				val inspector = new ConnectivityInspector(graph)
+				val connected = inspector.connectedSetOf(laser)
+				graph.removeAllVertices(connected)
+				graphChanged = true
+			} else {
+				Game.logger().error("Attempt to remove node that does not exist in wave grid.")
+			}
 		}
 	}
 
