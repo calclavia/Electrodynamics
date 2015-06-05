@@ -85,8 +85,8 @@ object WaveGrid {
 
 		override def load(data: Data) {
 			super.load(data)
-			source = new Ray(data.get("origin"), data.get("dir"))
-			renderOrigin = data.get("renderOrigin")
+			source = new Ray(data.getStorable("origin"), data.getStorable("dir"))
+			renderOrigin = data.getStorable("renderOrigin")
 			color = Color.rgba(data.get("color"))
 		}
 	}
@@ -112,7 +112,7 @@ object WaveGrid {
 	class WaveGridPacket extends PacketType[WaveGrid] {
 		override def read(packet: Packet) {
 			val worldID = packet.readString()
-			val opWorld = Game.worlds().worldRegistry.get(worldID)
+			val opWorld = Game.worlds().findWorld(worldID)
 			if (opWorld.isPresent) {
 				val world = opWorld.get
 				val grid = WaveGrid(world)
