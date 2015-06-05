@@ -1,6 +1,7 @@
 package com.calclavia.edx.optics
 
 import com.calclavia.edx.core.Reference
+import com.calclavia.edx.electric.circuit.component.laser.WaveGrid.WaveGridPacket
 import com.calclavia.edx.optics.api.fortron.Fortron
 import com.calclavia.edx.optics.content.{Content, Models, Textures}
 import com.calclavia.edx.optics.security.MFFSPermissions
@@ -19,13 +20,13 @@ object Optics extends Loadable {
 	var movementManager: MovementManager = null
 
 	override def preInit() {
-		/**
-		 * Registration
-		 */
-		Game.events.blockChange.add((evt: BlockChangeEvent) => EventHandler.onBlockChange(evt))
-		//		MinecraftForge.EVENT_BUS.register(SubscribeEventHandler)
-		//		MinecraftForge.EVENT_BUS.register(Content.remoteController)
+		//Register WaveGrid packets
+		Game.network.register(new WaveGridPacket)
 
+		//Hook block change event
+		Game.events.blockChange.add((evt: BlockChangeEvent) => EventHandler.onBlockChange(evt))
+
+		//Init frequency grid1
 		Game.events.serverStarting.add((evt: Event) => {
 			GraphFrequency.client = new GraphFrequency
 			GraphFrequency.server = new GraphFrequency

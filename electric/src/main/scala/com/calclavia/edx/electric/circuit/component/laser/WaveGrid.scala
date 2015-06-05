@@ -3,19 +3,25 @@ package com.calclavia.edx.electric.circuit.component.laser
 import java.util
 import java.util.Optional
 
-import com.calclavia.edx.electric.circuit.component.laser.WaveGrid.Electromagnetic
+import com.calclavia.edx.core.extension.GraphExtension._
+import com.calclavia.edx.electric.circuit.component.laser.WaveGrid.{Electromagnetic, Wave}
 import com.resonant.lib.WrapFunctions._
 import nova.core.block.Block.DropEvent
 import nova.core.component.Updater
 import nova.core.component.misc.Damageable
 import nova.core.game.Game
+import nova.core.network.Packet
+import nova.core.network.handler.PacketType
 import nova.core.render.Color
+import nova.core.retention.{Data, Storable, Stored}
 import nova.core.util.RayTracer.{RayTraceBlockResult, RayTraceEntityResult, RayTraceResult}
+import nova.core.util.exception.NovaException
 import nova.core.util.transform.vector.Vector3d
 import nova.core.util.{Ray, RayTracer}
 import nova.core.world.World
 import org.jgrapht.alg.ConnectivityInspector
-import org.jgrapht.graph.{DefaultDirectedGraph, DefaultEdge}
+import org.jgrapht.graph.{DefaultEdge, SimpleDirectedGraph}
+import org.jgrapht.traverse.BreadthFirstIterator
 
 import scala.collection.convert.wrapAll._
 
@@ -46,26 +52,15 @@ object WaveGrid {
 		return grids(world)
 	}
 
-	class Wave(val source: Ray, val renderOrigin: Vector3d, val power: Double, val color: Color) {
+	abstract class Wave(var source: Ray, @Stored var renderOrigin: Vector3d, @Stored var power: Double, var color: Color) extends Storable {
+		var hit: RayTraceResult = null
+		var hitTime = -1L
+
 		def computeHit(world: World) =
 			new RayTracer(source)
 				.setDistance(maxDistance)
 				.rayTraceAll(world)
 				.findFirst()
-	}
-
-	class Electromagnetic(source: Ray, renderOrigin: Vector3d, power: Double, color: Color) extends Wave(source, renderOrigin, power, color) {
-
-		var hit: RayTraceResult = null
-		var hitTime = -1L
-
-		def this(source: Ray, renderOrigin: Vector3d, energy: Double) {
-			this(source, renderOrigin, energy, Color.white)
-		}
-
-		def this(source: Ray, energy: Double, color: Color = Color.white) {
-			this(source, source.origin, energy, color)
-		}
 
 		def fire(world: World): Optional[RayTraceResult] = {
 			hit = computeHit(world).orElseGet(() => null)
@@ -79,15 +74,116 @@ object WaveGrid {
 		 * The power at the receiving end (after energy loss)
 		 */
 		def hitPower = if (hit != null) Math.max(power - power * hit.distance * 0.95, 0) else 0d
+
+		override def save(data: Data) {
+			super.save(data)
+			data.put("origin", source.origin)
+			data.put("dir", source.dir)
+			data.put("renderOrigin", renderOrigin)
+			data.put("color", color.rgba())
+		}
+
+		override def load(data: Data) {
+			super.load(data)
+			source = new Ray(data.get("origin"), data.get("dir"))
+			renderOrigin = data.get("renderOrigin")
+			color = Color.rgba(data.get("color"))
+		}
+	}
+
+	class Electromagnetic(source: Ray, renderOrigin: Vector3d, power: Double, color: Color) extends Wave(source, renderOrigin, power, color) {
+		//For Storable
+		def this() {
+			this(null, null, 0, Color.white)
+		}
+
+		def this(source: Ray, renderOrigin: Vector3d, energy: Double) {
+			this(source, renderOrigin, energy, Color.white)
+		}
+
+		def this(source: Ray, energy: Double, color: Color = Color.white) {
+			this(source, source.origin, energy, color)
+		}
+	}
+
+	/**
+	 * Handles the packets for waves.
+	 */
+	class WaveGridPacket extends PacketType[WaveGrid] {
+		override def read(packet: Packet) {
+			val worldID = packet.readString()
+			val opWorld = Game.worlds().worldRegistry.get(worldID)
+			if (opWorld.isPresent) {
+				val world = opWorld.get
+				val grid = WaveGrid(world)
+
+				grid.graph = new SimpleDirectedGraph(classOf[DefaultEdge])
+
+				//Read graph
+				(0 until packet.readInt())
+					.foreach(i => {
+					val path = List.empty[Wave]
+					(0 until packet.readInt())
+						.foreach(j => {
+						val wave = packet.readStorable().asInstanceOf[Wave]
+						grid.graph.addVertex(wave)
+						path.lastOption match {
+							case Some(last) => grid.graph.addEdge(last, wave)
+						}
+					})
+				})
+			}
+			else {
+				throw new NovaException("Failed to read wave graph for invalid world: " + opWorld)
+			}
+		}
+
+		override def write(handler: WaveGrid, packet: Packet) {
+			packet.writeString(handler.world.getID)
+			//Write graph.
+			val paths = handler.getWavePaths
+			packet.writeInt(paths.size)
+
+			paths.foreach(path => {
+				packet.writeInt(path.size)
+				path.foreach(packet.writeStorable)
+			})
+		}
+
+		override def isHandlerFor(handler: AnyRef): Boolean = handler.isInstanceOf[WaveGrid]
 	}
 
 }
 
-class WaveGrid(world: World) extends Updater {
+class WaveGrid(val world: World) extends Updater {
 
-	val laserGraph = new DefaultDirectedGraph[Electromagnetic, DefaultEdge](classOf[DefaultEdge])
+	var graph = new SimpleDirectedGraph[Wave, DefaultEdge](classOf[DefaultEdge])
 
 	Game.syncTicker().add(this)
+
+	/**
+	 * Gets the set of wave sources
+	 */
+	def getSources: Set[Wave] = graph.vertexSet().filter(v => graph.sourcesOf(v).isEmpty).toSet
+
+	/**
+	 * @return The set of paths formed by all waves
+	 */
+	def getWavePaths: Set[List[Wave]] = {
+		var orderedPaths = Set.empty[List[Wave]]
+
+		//Find each wave path
+		getSources
+			.foreach(
+				source => {
+					var orderedPath = List.empty[Wave]
+					val iterator = new BreadthFirstIterator(graph, source)
+					iterator.foreach(wave => orderedPath :+= wave)
+					orderedPaths += orderedPath
+				}
+			)
+		return orderedPaths
+	}
 
 	/**
 	 * Creates a laser emission point
@@ -96,10 +192,10 @@ class WaveGrid(world: World) extends Updater {
 		//Do ray trace
 		if (laser.power > WaveGrid.minEnergy) {
 			//Mark node in graph
-			laserGraph.addVertex(laser)
+			graph.addVertex(laser)
 
 			if (from != null) {
-				laserGraph.addEdge(from, laser)
+				graph.addEdge(from, laser)
 			}
 
 			val opHit = laser.fire(world)
@@ -157,11 +253,13 @@ class WaveGrid(world: World) extends Updater {
 		super.update(deltaTime)
 
 		if (Game.network().isServer) {
-			val loneLasers = laserGraph.vertexSet()
-				.filter(v => laserGraph.outgoingEdgesOf(v).size == 0)
+			val loneLasers = graph.vertexSet()
+				.filter(v => graph.outgoingEdgesOf(v).size == 0)
 
+			//TODO: Generalize and OOP it
 			//Find lasers that are not hitting another laser handler, but another block
 			loneLasers
+				.collect { case v: Electromagnetic => v }
 				.filter(v => v.hit.isInstanceOf[RayTraceBlockResult])
 				.foreach(
 					v => {
@@ -197,6 +295,9 @@ class WaveGrid(world: World) extends Updater {
 						}*/
 					}
 				)
+
+			//Update client
+			Game.network.sync(this)
 		}
 		else {
 			//TODO: Traverse all graph nodes, render laser fxs
@@ -218,9 +319,9 @@ class WaveGrid(world: World) extends Updater {
 	 * @param laser The laser to remove
 	 */
 	def destroy(laser: Electromagnetic) {
-		val inspector = new ConnectivityInspector(laserGraph)
+		val inspector = new ConnectivityInspector(graph)
 		val connected = inspector.connectedSetOf(laser)
-		laserGraph.removeAllVertices(connected)
+		graph.removeAllVertices(connected)
 	}
 
 	def blockToDye(blockMeta: Int): Int = ~blockMeta & 15

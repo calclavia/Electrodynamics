@@ -45,7 +45,7 @@ class WaveHandler(block: Block) extends Component {
 	 */
 	def receivingPower =
 		WaveGrid(block.world)
-			.laserGraph
+			.graph
 			.vertexSet()
 			.filter(_.hit.isInstanceOf[RayTraceBlockResult])
 			.filter(_.hit.asInstanceOf[RayTraceBlockResult].block == block)
