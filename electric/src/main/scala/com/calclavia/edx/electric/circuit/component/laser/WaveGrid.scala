@@ -35,7 +35,7 @@ object WaveGrid {
 	val maxDistance = 100
 
 	//Minimum energy for laser
-	val minEnergy = 100d
+	val minPower = 100d
 	val maxPower = 20000d
 
 	val minEnergyToMine = 10000d
@@ -138,23 +138,25 @@ object WaveGrid {
 				val world = opWorld.get
 				val grid = WaveGrid(world)
 
-				grid.graph = new SimpleDirectedGraph(classOf[DefaultEdge])
+				grid.graph.synchronized {
+					grid.graph = new SimpleDirectedGraph(classOf[DefaultEdge])
 
-				//Read graph
-				(0 until packet.readInt())
-					.foreach(i => {
-					val path = List.empty[Wave]
+					//Read graph
 					(0 until packet.readInt())
-						.foreach(j => {
-						val wave = packet.readStorable().asInstanceOf[Wave]
+						.foreach(i => {
+						val path = List.empty[Wave]
+						(0 until packet.readInt())
+							.foreach(j => {
+							val wave = packet.readStorable().asInstanceOf[Wave]
 
-						grid.graph.addVertex(wave)
-						path.lastOption match {
-							case Some(last) => grid.graph.addEdge(last, wave)
-							case _ =>
-						}
+							grid.graph.addVertex(wave)
+							path.lastOption match {
+								case Some(last) => grid.graph.addEdge(last, wave)
+								case _ =>
+							}
+						})
 					})
-				})
+				}
 			}
 			else {
 				throw new NovaException("Failed to read wave graph for invalid world: " + opWorld)
@@ -221,7 +223,7 @@ class WaveGrid(val world: World) extends Updater {
 	def create(laser: Electromagnetic, from: Electromagnetic = null) {
 		graph synchronized {
 			//Do ray trace
-			if (laser.power > WaveGrid.minEnergy) {
+			if (laser.power > WaveGrid.minPower) {
 				//Mark node in graph
 				graph.addVertex(laser)
 				graphChanged = true
@@ -246,12 +248,10 @@ class WaveGrid(val world: World) extends Updater {
 								 */
 								case hitBlock if hitBlock.has(classOf[WaveHandler]) =>
 									hitBlock.get(classOf[WaveHandler]).receive(laser)
-								//Electrodynamics.proxy.renderLaser(world, laser.renderOrigin, hitVec, laser.color, laser.energy)
 								/**
 								 * Change laser.color when hit glass
 								 */
 								case hitBlock if hitBlock.getID.equals("glass") =>
-									//Electrodynamics.proxy.renderLaser(world, laser.renderOrigin, hitVec, laser.color, laser.energy)
 									var newColor = laser.color
 
 									//TODO: Check block IDs

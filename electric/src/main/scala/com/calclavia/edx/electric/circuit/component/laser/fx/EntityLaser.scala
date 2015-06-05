@@ -12,6 +12,8 @@ import nova.core.render.model.{Model, Vertex}
 import nova.core.util.transform.matrix.Quaternion
 import nova.core.util.transform.vector.Vector3d
 
+import scala.util.Random
+
 /**
  * The laser beam effect for electromagnetic waves
  * @author Calclavia
@@ -21,12 +23,12 @@ class EntityLaser(start: Vector3d, end: Vector3d, color: Color, power: Double) e
 	val renderer = add(new DynamicRenderer)
 
 	val energyPercentage = Math.min(power / WaveGrid.maxPower, 1).toFloat
-	// + (0.2 - 0.01) * energyPercentage
-	val detail = 15
+	val detail = (6 + 14 * energyPercentage).toInt
 	val rotationSpeed = 18
 
-	val particleAlpha = 1 / (detail.asInstanceOf[Float] / (5f * energyPercentage))
-	val particleScale = 0.15f * energyPercentage
+	val rand = new Random()
+	val particleAlpha = 1 / (detail / (5 * energyPercentage) + 2 * rand.nextFloat())
+	val particleScale = 0.13f * energyPercentage + 0.03 * rand.nextDouble()
 	val length = start.distance(end)
 	val endSize = particleScale
 	val modifierTranslation = (length / 2) + endSize
@@ -128,11 +130,12 @@ class EntityLaser(start: Vector3d, end: Vector3d, color: Color, power: Double) e
 				//noise.translate(new Vector3d(0, -modifierTranslation, 0))
 				//noise.rotate(Vector3d.xAxis, Math.PI)
 
+				val noiseColor = renderColor.alpha(100)
 				val noiseFace = noise.createFace()
-				noiseFace.drawVertex(new Vertex(-particleScale, -length / 2 + endSize, 0, 0, 0).setColor(renderColor))
-				noiseFace.drawVertex(new Vertex(-particleScale, length / 2 - endSize, 0, 0, 1).setColor(renderColor))
-				noiseFace.drawVertex(new Vertex(particleScale, length / 2 - endSize, 0, 1, 1).setColor(renderColor))
-				noiseFace.drawVertex(new Vertex(particleScale, -length / 2 + endSize, 0, 1, 0).setColor(renderColor))
+				noiseFace.drawVertex(new Vertex(-particleScale, -length / 2 + endSize, 0, 0, 0).setColor(noiseColor))
+				noiseFace.drawVertex(new Vertex(-particleScale, length / 2 - endSize, 0, 0, 1).setColor(noiseColor))
+				noiseFace.drawVertex(new Vertex(particleScale, length / 2 - endSize, 0, 1, 1).setColor(noiseColor))
+				noiseFace.drawVertex(new Vertex(particleScale, -length / 2 + endSize, 0, 1, 0).setColor(noiseColor))
 
 				noise.drawFace(noiseFace)
 				noiseFace.brightness = 1

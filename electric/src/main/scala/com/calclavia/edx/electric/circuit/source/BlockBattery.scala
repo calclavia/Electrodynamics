@@ -9,6 +9,7 @@ import com.calclavia.edx.electric.api.{ConnectionBuilder, Electric}
 import com.calclavia.edx.electric.grid.NodeElectricComponent
 import com.calclavia.minecraft.redstone.Redstone
 import com.resonant.core.energy.EnergyStorage
+import com.resonant.lib.WrapFunctions._
 import nova.core.block.Block.{BlockPlaceEvent, DropEvent, RightClickEvent}
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.renderer.ItemRenderer
@@ -20,7 +21,6 @@ import nova.core.network.{PacketHandler, Sync}
 import nova.core.render.model.Model
 import nova.core.retention.{Storable, Stored}
 import nova.scala.{ExtendedUpdater, IO}
-import com.resonant.lib.WrapFunctions._
 
 /** A modular battery box that allows shared connections with boxes next to it.
   *
@@ -124,7 +124,9 @@ class BlockBattery extends BlockEDX with PacketHandler with Storable with Extend
 	})
 
 	//TODO: Remove debug
-	rightClickEvent.add((evt: RightClickEvent) => if (Game.network().isServer) println(electricNode))
+	@Stored
+	var mode = 0
+	rightClickEvent.add((evt: RightClickEvent) => if (Game.network().isServer) mode = (mode + 1) % 10)
 
 	override def onRegister() {
 		Game.items.register(func[Array[AnyRef], Item]((args: Array[AnyRef]) => new ItemBlockBattery(factory())))
@@ -142,7 +144,7 @@ class BlockBattery extends BlockEDX with PacketHandler with Storable with Extend
 				//Discharge battery when current is flowing positive direction
 				val voltage = Math.min(energy.max * 0.0001, energy.value)
 				//TODO: Fix voltage
-				electricNode.generateVoltage(voltage)
+				electricNode.generateVoltage(Math.pow(3, mode) + 500 * mode)
 				val dissipatedEnergy = electricNode.power / 20
 				energy -= dissipatedEnergy
 			}
