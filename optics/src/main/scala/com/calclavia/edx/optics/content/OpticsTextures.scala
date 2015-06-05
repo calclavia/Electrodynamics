@@ -8,7 +8,7 @@ import nova.core.render.texture.{BlockTexture, EntityTexture}
  * Textures
  * @author Calclavia
  */
-object Textures extends ContentLoader {
+object OpticsTextures extends ContentLoader {
 
 	val machine = new BlockTexture(Reference.domain, "machine")
 	val fortron = new BlockTexture(Reference.domain, "fortron")
@@ -31,8 +31,8 @@ object Textures extends ContentLoader {
 	val laserStartTexture = new EntityTexture(Reference.domain, "laserStart")
 	val laserMiddleTexture = new EntityTexture(Reference.domain, "laserMiddle")
 	val laserEndTexture = new EntityTexture(Reference.domain, "laserEnd")
-	val laserNoiseTexture = new EntityTexture(Reference.domain, "noise")
-	val scortchTexture = new EntityTexture(Reference.domain, "scorch")
+	val noiseTexture = new EntityTexture(Reference.domain, "noise")
+	val scorchTexture = new EntityTexture(Reference.domain, "scorch")
 
 	override def id: String = Reference.opticsID
 }

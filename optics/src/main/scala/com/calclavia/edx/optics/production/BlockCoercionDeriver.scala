@@ -5,7 +5,7 @@ import java.util
 import com.calclavia.edx.optics.Settings
 import com.calclavia.edx.optics.api.modules.Module
 import com.calclavia.edx.optics.base.{BlockModuleHandler, PacketBlock}
-import com.calclavia.edx.optics.content.{Content, Models, Textures}
+import com.calclavia.edx.optics.content.{OpticsContent, Models, OpticsTextures}
 import com.calclavia.edx.optics.item.card.ItemCardFrequency
 import com.resonant.lib.WrapFunctions._
 import nova.core.block.component.StaticBlockRenderer
@@ -67,7 +67,7 @@ class BlockCoercionDeriver extends BlockModuleHandler {
 		    val capacitorModel = new Model
 		    capacitorModel.children.addAll(originalModel.filterNot(_.name.equals("crystal")))
 		    model.children.add(capacitorModel)
-		    model.bindAll(if (isActive) Textures.coercionDeriverOn else Textures.coercionDeriverOff)
+			model.bindAll(if (isActive) OpticsTextures.coercionDeriverOn else OpticsTextures.coercionDeriverOff)
 	    }
 		)
 
@@ -83,7 +83,7 @@ class BlockCoercionDeriver extends BlockModuleHandler {
 		    //Enable Blending
 		    model.children.add(crystalModel)
 		    //Disable Blending
-		    model.bindAll(if (isActive) Textures.coercionDeriverOn else Textures.coercionDeriverOff)
+			model.bindAll(if (isActive) OpticsTextures.coercionDeriverOn else OpticsTextures.coercionDeriverOff)
 	    }
 		)
 
@@ -173,7 +173,7 @@ class BlockCoercionDeriver extends BlockModuleHandler {
 		return 0
 	}
 
-	def getPower: Double = BlockCoercionDeriver.power + (BlockCoercionDeriver.power * (getModuleCount(Content.moduleSpeed) / 8d))
+	def getPower: Double = BlockCoercionDeriver.power + (BlockCoercionDeriver.power * (getModuleCount(OpticsContent.moduleSpeed) / 8d))
 
 	def isItemValidForSlot(slotID: Int, item: Item): Boolean = {
 		if (item != null) {

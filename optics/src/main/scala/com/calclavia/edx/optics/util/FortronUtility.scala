@@ -3,7 +3,7 @@ package com.calclavia.edx.optics.util
 import com.calclavia.edx.optics.Settings
 import com.calclavia.edx.optics.api.fortron.FortronFrequency
 import com.calclavia.edx.optics.base.BlockModuleHandler
-import com.calclavia.edx.optics.content.Content
+import com.calclavia.edx.optics.content.OpticsContent
 import com.calclavia.edx.optics.particle.{FXFortronBeam, FieldColor}
 import nova.core.block.Block
 import nova.core.network.NetworkTarget.Side
@@ -78,7 +78,7 @@ object FortronUtility {
 
 			val isCamo = {
 				if (transferer.isInstanceOf[BlockModuleHandler]) {
-					transferer.asInstanceOf[BlockModuleHandler].getModuleCount(Content.moduleCamouflage) > 0
+					transferer.asInstanceOf[BlockModuleHandler].getModuleCount(OpticsContent.moduleCamouflage) > 0
 				}
 				else {
 					false

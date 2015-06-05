@@ -3,7 +3,7 @@ package com.calclavia.edx.optics.base
 import java.util.Optional
 
 import com.calclavia.edx.optics.api.machine.IActivatable
-import com.calclavia.edx.optics.content.Textures
+import com.calclavia.edx.optics.content.OpticsTextures
 import com.calclavia.minecraft.redstone.Redstone
 import com.resonant.lib.WrapFunctions._
 import com.resonant.wrapper.core.Placeholder
@@ -50,7 +50,7 @@ abstract class BlockMachine extends BlockDefault with PacketHandler with IActiva
 	add(redstoneNode.asInstanceOf[Component])
 	add(new ItemRenderer(this))
 	add(new StaticBlockRenderer(this))
-		.setTexture(func((side: Direction) => Optional.of(Textures.machine)))
+		.setTexture(func((side: Direction) => Optional.of(OpticsTextures.machine)))
 
 	get(classOf[Collider])
 		.isCube(false)

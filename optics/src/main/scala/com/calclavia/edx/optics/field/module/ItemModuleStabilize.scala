@@ -6,7 +6,7 @@ import com.calclavia.edx.optics.api.Blacklist
 import com.calclavia.edx.optics.api.machine.Projector
 import com.calclavia.edx.optics.api.modules.Module.ProjectState
 import com.calclavia.edx.optics.base.{ItemModule, PacketBlock}
-import com.calclavia.edx.optics.content.Content
+import com.calclavia.edx.optics.content.OpticsContent
 import com.calclavia.edx.optics.field.BlockProjector
 import com.calclavia.edx.optics.field.shape.ItemShapeCustom
 import nova.core.block.{Block, BlockFactory}
@@ -42,7 +42,7 @@ class ItemModuleStabilize extends ItemModule {
 		 * Handle custom shape block placement
 		 */
 		val sampleBlock: BlockFactory = {
-			if (projector.getShape.isInstanceOf[ItemShapeCustom] && !(projector.getModuleCount(Content.moduleCamouflage) > 0)) {
+			if (projector.getShape.isInstanceOf[ItemShapeCustom] && !(projector.getModuleCount(OpticsContent.moduleCamouflage) > 0)) {
 				val fieldBlockMap = projector.getShape.asInstanceOf[ItemShapeCustom].getStructure.getBlockStructure
 				val fieldCenter = proj.position + projector.getTranslation
 				val relativePosition = position - fieldCenter
@@ -84,7 +84,7 @@ class ItemModuleStabilize extends ItemModule {
 
 					blockCount += 1
 
-					if (blockCount >= projector.getModuleCount(Content.moduleSpeed) / 3) {
+					if (blockCount >= projector.getModuleCount(OpticsContent.moduleSpeed) / 3) {
 						return ProjectState.skip
 					}
 					else {

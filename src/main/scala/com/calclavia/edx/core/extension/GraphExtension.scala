@@ -1,6 +1,5 @@
 package com.calclavia.edx.core.extension
 
-import nova.core.network.PacketHandler
 import org.jgrapht.DirectedGraph
 
 import scala.collection.convert.wrapAll._

@@ -22,7 +22,7 @@ trait ElectricLike extends Electric with BlockConnectable[Electric] {
 	block.loadEvent.add(
 		(evt: LoadEvent) => {
 			//Wait for next tick
-			if (Side.get().isServer) {
+			if (Game.network.isServer) {
 				Game.syncTicker().preQueue(() => build())
 			}
 		}

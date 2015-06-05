@@ -166,8 +166,6 @@ class BlockWire extends BlockEDX with Storable with PacketHandler {
 			.map(connectionCache)
 			.foldLeft(0)(_ | _)
 
-		println(evt.connections)
-
 		//Apply connection masks
 		if (newConnectionMask != connectionMask) {
 			connectionMask = newConnectionMask

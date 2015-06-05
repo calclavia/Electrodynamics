@@ -5,7 +5,7 @@ import java.util.{Set => JSet}
 
 import com.calclavia.edx.optics.Settings
 import com.calclavia.edx.optics.api.machine.Projector
-import com.calclavia.edx.optics.content.Content
+import com.calclavia.edx.optics.content.OpticsContent
 import com.calclavia.edx.optics.util.CacheHandler
 import com.resonant.core.structure.{Structure, StructureCustom}
 import com.resonant.lib.WrapFunctions._
@@ -21,7 +21,7 @@ import scala.util.Random
 class ItemShapeCustom extends ItemShape with CacheHandler {
 
 	private final val saveFilePrefix: String = "custom_mode_"
-	val modes = Array(Content.modeCube, Content.modeSphere, Content.modeTube, Content.modePyramid)
+	val modes = Array(OpticsContent.modeCube, OpticsContent.modeSphere, OpticsContent.modeTube, OpticsContent.modePyramid)
 	@Stored
 	var saveID = -1
 	@Stored

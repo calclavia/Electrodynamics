@@ -6,7 +6,7 @@ import com.calclavia.edx.optics.api.MFFSEvent.EventForceMobilize
 import com.calclavia.edx.optics.api.card.CoordLink
 import com.calclavia.edx.optics.api.{Blacklist, MFFSEvent}
 import com.calclavia.edx.optics.base.{BlockFieldMatrix, PacketBlock}
-import com.calclavia.edx.optics.content.{Content, Models, Textures}
+import com.calclavia.edx.optics.content.{OpticsContent, Models, OpticsTextures}
 import com.calclavia.edx.optics.particle.{FXHologramProgress, FieldColor, IEffectController}
 import com.calclavia.edx.optics.security.{MFFSPermissions, PermissionHandler}
 import com.calclavia.edx.optics.util.MFFSUtility
@@ -70,7 +70,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 			    .getMatrix
 
 		    model.children.add(Models.mobilizer.getModel)
-		    model.bindAll(if (isActive) Textures.mobilizerOn else Textures.mobilizerOff)
+			model.bindAll(if (isActive) OpticsTextures.mobilizerOn else OpticsTextures.mobilizerOff)
 	    }
 		)
 
@@ -156,7 +156,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 					packet <<< 2
 					packet <<< renderBlocks
 
-					if (getModuleCount(Content.moduleSilence) <= 0) {
+					if (getModuleCount(OpticsContent.moduleSilence) <= 0) {
 						//worldObj.playSoundEffect(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D, Reference.prefix + "fieldmove", 0.6f, 1 - this.worldObj.rand.nextFloat * 0.1f)
 					}
 
@@ -192,7 +192,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 
 				if (moveTime > 0) {
 					if (isTeleport) {
-						if (getModuleCount(Content.moduleSilence) <= 0 && ticks % 10 == 0) {
+						if (getModuleCount(OpticsContent.moduleSilence) <= 0 && ticks % 10 == 0) {
 							val moveTime = getMoveTime
 							//worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, Reference.prefix + "fieldmove", 1.5f, 0.5f + 0.8f * (moveTime - this.moveTime) / moveTime)
 						}
@@ -432,7 +432,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 							hologramRenderPoints.foreach(
 								pos =>
 									world
-										.addClientEntity(Content.fxHologramProgress).asInstanceOf[FXHologramProgress]
+										.addClientEntity(OpticsContent.fxHologramProgress).asInstanceOf[FXHologramProgress]
 										.setColor(
 									    isTeleportPacket match {
 										    case 1 => FieldColor.blue
@@ -454,7 +454,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 
 							hologramRenderPoints.foreach(pos => {
 								//Render teleport start
-								val hologramA = world.addClientEntity(Content.fxHologramProgress).asInstanceOf[FXHologramProgress]
+								val hologramA = world.addClientEntity(OpticsContent.fxHologramProgress).asInstanceOf[FXHologramProgress]
 								hologramA.setColor(color)
 								hologramA.transform.setPosition(pos.toDouble + 0.5)
 								//TODO: Not clean

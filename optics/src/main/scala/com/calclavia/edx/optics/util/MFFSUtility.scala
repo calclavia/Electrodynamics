@@ -2,7 +2,7 @@ package com.calclavia.edx.optics.util
 
 import com.calclavia.edx.optics.GraphFrequency
 import com.calclavia.edx.optics.api.machine.Projector
-import com.calclavia.edx.optics.content.Content
+import com.calclavia.edx.optics.content.OpticsContent
 import com.calclavia.edx.optics.field.BlockProjector
 import com.calclavia.edx.optics.field.shape.ItemShapeCustom
 import com.resonant.core.access.Permission
@@ -85,7 +85,7 @@ object MFFSUtility {
 
 		if (projector != null) {
 			if (Side.get().isServer) {
-				if (projector.getModuleCount(Content.moduleCamouflage) > 0) {
+				if (projector.getModuleCount(OpticsContent.moduleCamouflage) > 0) {
 					if (projector.getShapeItem.isInstanceOf[ItemShapeCustom]) {
 						val fieldMap = projector.getShapeItem.asInstanceOf[ItemShapeCustom].getStructure
 

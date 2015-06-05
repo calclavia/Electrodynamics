@@ -3,7 +3,7 @@ package com.calclavia.edx.optics.base
 import java.util.{Optional, Set => JSet}
 
 import com.calclavia.edx.optics.api.modules.Module
-import com.calclavia.edx.optics.content.Content
+import com.calclavia.edx.optics.content.OpticsContent
 import com.calclavia.edx.optics.util.CacheHandler
 import nova.core.fluid.Fluid
 import nova.core.game.Game
@@ -84,7 +84,7 @@ abstract class BlockModuleHandler extends BlockFortron with CacheHandler {
 	}
 
 	def refresh() {
-		fortronTank.setCapacity((this.getModuleCount(Content.moduleCapacity) * this.capacityBoost + this.capacityBase) * Fluid.bucketVolume)
+		fortronTank.setCapacity((this.getModuleCount(OpticsContent.moduleCapacity) * this.capacityBoost + this.capacityBase) * Fluid.bucketVolume)
 	}
 
 	/**

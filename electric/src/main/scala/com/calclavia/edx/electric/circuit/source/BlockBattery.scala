@@ -140,7 +140,9 @@ class BlockBattery extends BlockEDX with PacketHandler with Storable with Extend
 				energy.value = energy.max
 
 				//Discharge battery when current is flowing positive direction
-				electricNode.generateVoltage(Math.min(energy.max * 0.0001, energy.value))
+				val voltage = Math.min(energy.max * 0.0001, energy.value)
+				//TODO: Fix voltage
+				electricNode.generateVoltage(voltage)
 				val dissipatedEnergy = electricNode.power / 20
 				energy -= dissipatedEnergy
 			}

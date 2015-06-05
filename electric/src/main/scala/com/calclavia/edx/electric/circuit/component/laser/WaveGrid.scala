@@ -5,8 +5,8 @@ import java.util.Optional
 
 import com.calclavia.edx.core.extension.GraphExtension._
 import com.calclavia.edx.electric.circuit.component.laser.WaveGrid.{Electromagnetic, Wave}
+import com.calclavia.edx.electric.circuit.component.laser.fx.EntityLaser
 import com.resonant.lib.WrapFunctions._
-import nova.core.block.Block.DropEvent
 import nova.core.component.Updater
 import nova.core.component.misc.Damageable
 import nova.core.game.Game
@@ -36,7 +36,7 @@ object WaveGrid {
 
 	//Minimum energy for laser
 	val minEnergy = 100d
-	val maxEnergy = 20000d
+	val maxPower = 20000d
 
 	val minEnergyToMine = 10000d
 	val maxEnergyToMine = 500000d
@@ -89,6 +89,20 @@ object WaveGrid {
 			renderOrigin = data.getStorable("renderOrigin")
 			color = Color.rgba(data.get("color"))
 		}
+
+		def render(world: World)
+
+		override def equals(obj: scala.Any): Boolean = {
+			if (obj.isInstanceOf[Wave]) {
+				val otherWave = obj.asInstanceOf[Wave]
+				return source.origin.equals(otherWave.source.origin) &&
+					source.dir.equals(otherWave.source.dir) &&
+					renderOrigin.equals(otherWave.renderOrigin) &&
+					color.equals(otherWave.color) &&
+					power.equals(otherWave.power)
+			}
+			return false
+		}
 	}
 
 	class Electromagnetic(source: Ray, renderOrigin: Vector3d, power: Double, color: Color) extends Wave(source, renderOrigin, power, color) {
@@ -103,6 +117,13 @@ object WaveGrid {
 
 		def this(source: Ray, energy: Double, color: Color = Color.white) {
 			this(source, source.origin, energy, color)
+		}
+
+		override def render(world: World) {
+			//TODO: Source shouldn't be null, but Storable makes it so it's not thread safe :(
+			if (hit != null && source != null) {
+				world.addClientEntity(new EntityLaser(source.origin, hit.hit, color, power))
+			}
 		}
 	}
 
@@ -126,9 +147,11 @@ object WaveGrid {
 					(0 until packet.readInt())
 						.foreach(j => {
 						val wave = packet.readStorable().asInstanceOf[Wave]
+
 						grid.graph.addVertex(wave)
 						path.lastOption match {
 							case Some(last) => grid.graph.addEdge(last, wave)
+							case _ =>
 						}
 					})
 				})
@@ -159,12 +182,19 @@ class WaveGrid(val world: World) extends Updater {
 
 	var graph = new SimpleDirectedGraph[Wave, DefaultEdge](classOf[DefaultEdge])
 
+	private var graphChanged = true
+
 	Game.syncTicker().add(this)
 
 	/**
 	 * Gets the set of wave sources
 	 */
-	def getSources: Set[Wave] = graph.vertexSet().filter(v => graph.sourcesOf(v).isEmpty).toSet
+	def waveSources: Set[Wave] = graph.vertexSet().filter(v => graph.sourcesOf(v).isEmpty).toSet
+
+	/**
+	 * Gets the set of wave targets
+	 */
+	def waveTargets: Set[Wave] = graph.vertexSet().filter(v => graph.targetsOf(v).isEmpty).toSet
 
 	/**
 	 * @return The set of paths formed by all waves
@@ -173,7 +203,7 @@ class WaveGrid(val world: World) extends Updater {
 		var orderedPaths = Set.empty[List[Wave]]
 
 		//Find each wave path
-		getSources
+		waveSources
 			.foreach(
 				source => {
 					var orderedPath = List.empty[Wave]
@@ -189,62 +219,62 @@ class WaveGrid(val world: World) extends Updater {
 	 * Creates a laser emission point
 	 */
 	def create(laser: Electromagnetic, from: Electromagnetic = null) {
-		//Do ray trace
-		if (laser.power > WaveGrid.minEnergy) {
-			//Mark node in graph
-			graph.addVertex(laser)
+		graph synchronized {
+			//Do ray trace
+			if (laser.power > WaveGrid.minEnergy) {
+				//Mark node in graph
+				graph.addVertex(laser)
+				graphChanged = true
 
-			if (from != null) {
-				graph.addEdge(from, laser)
-			}
-
-			val opHit = laser.fire(world)
-
-			if (opHit.isPresent) {
-				opHit.get match {
-					case hit: RayTraceBlockResult =>
-						val hitVec = hit.hit
-						val hitBlockPos = hit.block.position
-
-						//TODO: Render laser to the hit position
-						//TODO: Load rendering to client ticker (packets)
-						hit.block match {
-							/**
-							 * Handle other laser handlers
-							 */
-							case hitBlock if hitBlock.has(classOf[WaveHandler]) =>
-								hitBlock.get(classOf[WaveHandler]).receive(laser)
-							//Electrodynamics.proxy.renderLaser(world, laser.renderOrigin, hitVec, laser.color, laser.energy)
-							/**
-							 * Change laser.color when hit glass
-							 */
-							case hitBlock if hitBlock.getID.equals("glass") =>
-								//Electrodynamics.proxy.renderLaser(world, laser.renderOrigin, hitVec, laser.color, laser.energy)
-								var newColor = laser.color
-
-								//TODO: Check block IDs
-								if (hitBlock.getID.equals("stainedGlass") || hitBlock.getID.equals("stainedGlassPane")) {
-									//val dyeColor = new laser.color(ItemDye.field_150922_c(blockToDye(hitMetadata)))
-									//newColor = new Vector3d(dyeColor.getRed, dyeColor.getGreen, dyeColor.getBlue).normalize
-								}
-								//TODO: do refraction
-								val refractiveIndex = 1
-								create(new Electromagnetic(new Ray(hitVec + laser.source.dir * 0.9, laser.source.dir), hitVec, laser.power * 0.95, newColor.average(laser.color)), laser)
-							case _ =>
-						}
-					case hit: RayTraceEntityResult =>
-						if (laser.power > WaveGrid.minBurnEnergy) {
-							val fireTime = (10 * (laser.power / WaveGrid.maxEnergy)).toInt
-
-							if (fireTime > 0) {
-								//hit.entity.setFire (fireTime)
-								hit.entity.getOp(classOf[Damageable]).ifPresent(consumer(d => d.damage(20 * (laser.power / WaveGrid.maxEnergy))))
-							}
-						}
-					//Electrodynamics.proxy.renderLaser (world, laser.renderOrigin, new Vector3d (hit.hitVec), laser.color, laser.energy)
+				if (from != null) {
+					graph.addEdge(from, laser)
 				}
-			} else {
-				//Electrodynamics.proxy.renderLaser(world, laser.renderOrigin, maxPos, laser.color, energy)
+
+				val opHit = laser.fire(world)
+
+				if (opHit.isPresent) {
+					opHit.get match {
+						case hit: RayTraceBlockResult =>
+							val hitVec = hit.hit
+							val hitBlockPos = hit.block.position
+
+							//TODO: Render laser to the hit position
+							//TODO: Load rendering to client ticker (packets)
+							hit.block match {
+								/**
+								 * Handle other laser handlers
+								 */
+								case hitBlock if hitBlock.has(classOf[WaveHandler]) =>
+									hitBlock.get(classOf[WaveHandler]).receive(laser)
+								//Electrodynamics.proxy.renderLaser(world, laser.renderOrigin, hitVec, laser.color, laser.energy)
+								/**
+								 * Change laser.color when hit glass
+								 */
+								case hitBlock if hitBlock.getID.equals("glass") =>
+									//Electrodynamics.proxy.renderLaser(world, laser.renderOrigin, hitVec, laser.color, laser.energy)
+									var newColor = laser.color
+
+									//TODO: Check block IDs
+									if (hitBlock.getID.equals("stainedGlass") || hitBlock.getID.equals("stainedGlassPane")) {
+										//val dyeColor = new laser.color(ItemDye.field_150922_c(blockToDye(hitMetadata)))
+										//newColor = new Vector3d(dyeColor.getRed, dyeColor.getGreen, dyeColor.getBlue).normalize
+									}
+									//TODO: do refraction
+									val refractiveIndex = 1
+									create(new Electromagnetic(new Ray(hitVec + laser.source.dir * 0.9, laser.source.dir), hitVec, laser.power * 0.95, newColor.average(laser.color)), laser)
+								case _ =>
+							}
+						case hit: RayTraceEntityResult =>
+							if (laser.power > WaveGrid.minBurnEnergy) {
+								val fireTime = (10 * (laser.power / WaveGrid.maxPower)).toInt
+
+								if (fireTime > 0) {
+									//hit.entity.setFire (fireTime)
+									hit.entity.getOp(classOf[Damageable]).ifPresent(consumer(d => d.damage(20 * (laser.power / WaveGrid.maxPower))))
+								}
+							}
+					}
+				}
 			}
 		}
 	}
@@ -252,66 +282,74 @@ class WaveGrid(val world: World) extends Updater {
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)
 
-		if (Game.network().isServer) {
-			val loneLasers = graph.vertexSet()
-				.filter(v => graph.outgoingEdgesOf(v).size == 0)
+		graph synchronized {
+			if (Game.network().isServer) {
+				//Find lasers that are not hitting another laser handler, but another block
+				waveTargets
+					.filter(v => v.hit.isInstanceOf[RayTraceBlockResult])
+					.foreach(
+						v => {
+							//TODO: Handle furnace smelting
+							val energyUsed = v.timeElapsed * v.power
 
-			//TODO: Generalize and OOP it
-			//Find lasers that are not hitting another laser handler, but another block
-			loneLasers
-				.collect { case v: Electromagnetic => v }
-				.filter(v => v.hit.isInstanceOf[RayTraceBlockResult])
-				.foreach(
-					v => {
-						//TODO: Handle furnace smelting
-						val energyUsed = v.timeElapsed * v.power
-						/**
-						 * Mine the block
-						 */
-						val hit = v.hit.asInstanceOf[RayTraceBlockResult]
-						val hitBlock = hit.block
-						val energyRequiredToMineBlock = hitBlock.getHardness * WaveGrid.maxEnergyToMine
+							/**
+							 * Mine the block
+							 */
+							val hit = v.hit.asInstanceOf[RayTraceBlockResult]
+							val hitBlock = hit.block
+							val energyRequiredToMineBlock = hitBlock.getHardness * WaveGrid.maxEnergyToMine
 
-						//TODO: Render breaking effect
-						//world.destroyBlockInWorldPartially(Block.blockRegistry.getIDForObject(hitBlock), hitBlockPos.x.toInt, hitBlockPos.y.toInt, hitBlockPos.z.toInt, (accumulatedEnergy / energyRequiredToMineBlock * 10).toInt)
+							//TODO: Render breaking effect
+							//world.destroyBlockInWorldPartially(Block.blockRegistry.getIDForObject(hitBlock), hitBlockPos.x.toInt, hitBlockPos.y.toInt, hitBlockPos.z.toInt, (accumulatedEnergy / energyRequiredToMineBlock * 10).toInt)
 
-						if (energyUsed >= energyRequiredToMineBlock) {
-							//We can disintegrate the block!
-							val event = new DropEvent(hitBlock)
-							hitBlock.dropEvent.publish(event)
-							event.drops.foreach(drop => hitBlock.world.addEntity(hitBlock.position.toDouble + 0.5, drop))
-							world.removeBlock(hitBlock.position)
-							//Re-calculate raycast because block is now broken.
-							v.computeHit(world)
-						}
-						//TODO: Burnable
-						/**
-						 * Catch Fire
+							/*if (energyUsed >= energyRequiredToMineBlock) {
+								//We can disintegrate the block!
+								//TODO: Add drop event override to BWBlock
+								val event = new DropEvent(hitBlock)
+								hitBlock.dropEvent.publish(event)
+								event.drops.foreach(drop => hitBlock.world.addEntity(hitBlock.position.toDouble + 0.5, drop))
+								world.removeBlock(hitBlock.position)
+								//Re-calculate raycast because block is now broken.
+								v.fire(world)
+							}*/
+							//TODO: Burnable
+							/**
+							 * Catch Fire
 						if (energyOnBlock > minBurnEnergy && hitBlock.getMaterial.getCanBurn) {
 							if (hitBlock.isInstanceOf[BlockTNT]) {
 								hitBlock.asInstanceOf[BlockTNT].func_150114_a(world, hitBlockPos.x.toInt, hitBlockPos.y.toInt, hitBlockPos.z.toInt, 1, null)
 							}
 							world.setBlock(hitBlockPos.x.toInt, hitBlockPos.y.toInt, hitBlockPos.z.toInt, Blocks.fire)
 						}*/
-					}
-				)
+						}
+					)
 
-			//Update client
-			Game.network.sync(this)
-		}
-		else {
-			//TODO: Traverse all graph nodes, render laser fxs
-			/**
-			 * Render laser hit
-			 */
-			//Electrodynamics.proxy.renderLaser(world, laser.renderOrigin, hitVec, laser.color, laser.energy)
+				//TODO: Only update when graph changes
+				//Update client
+				if (graphChanged) {
+					Game.network.sync(this)
+					println("Sent wave packet")
+					graphChanged = false
+				}
+			}
+			else {
+				/**
+				 * Render all wave
+				 */
+				graph.vertexSet().foreach(wave => {
+					//Recalculate raycast
+					wave.fire(world)
+					wave.render(world)
+				})
 
-			/**
-			 * Render scorch and particles
-			 */
-			//Electrodynamics.proxy.renderScorch(world, hitVec - (direction * 0.02), hit.sideHit)
-			//Electrodynamics.proxy.renderBlockParticle(world, hitVec, hitBlock, hit.sideHit)
+				/**
+				 * Render scorch and particles
+				 */
+				//Electrodynamics.proxy.renderScorch(world, hitVec - (direction * 0.02), hit.sideHit)
+				//Electrodynamics.proxy.renderBlockParticle(world, hitVec, hitBlock, hit.sideHit)
+			}
 		}
+
 	}
 
 	/**
@@ -319,9 +357,14 @@ class WaveGrid(val world: World) extends Updater {
 	 * @param laser The laser to remove
 	 */
 	def destroy(laser: Electromagnetic) {
-		val inspector = new ConnectivityInspector(graph)
-		val connected = inspector.connectedSetOf(laser)
-		graph.removeAllVertices(connected)
+		if (graph.containsVertex(laser)) {
+			val inspector = new ConnectivityInspector(graph)
+			val connected = inspector.connectedSetOf(laser)
+			graph.removeAllVertices(connected)
+			graphChanged = true
+		} else {
+			Game.logger().error("Attempt to remove node that does not exist in wave grid.")
+		}
 	}
 
 	def blockToDye(blockMeta: Int): Int = ~blockMeta & 15

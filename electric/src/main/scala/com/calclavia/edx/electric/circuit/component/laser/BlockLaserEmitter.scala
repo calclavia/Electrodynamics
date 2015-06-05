@@ -14,6 +14,7 @@ import nova.core.block.Stateful
 import nova.core.block.component.{LightEmitter, StaticBlockRenderer}
 import nova.core.component.renderer.ItemRenderer
 import nova.core.component.transform.Orientation
+import nova.core.game.Game
 import nova.core.render.model.Model
 import nova.core.util.transform.matrix.Quaternion
 import nova.core.util.transform.vector.Vector3d
@@ -45,7 +46,7 @@ class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater {
 	collider.isCube(false)
 	collider.isOpaqueCube(false)
 
-	lightEmitter.setEmittedLevel(supplier(() => (electricNode.power / WaveGrid.maxEnergy).toFloat))
+	lightEmitter.setEmittedLevel(supplier(() => (electricNode.power / WaveGrid.maxPower).toFloat))
 
 	placeEvent.add((evt: BlockPlaceEvent) => {
 		io.setIOAlternatingOrientation()
@@ -83,9 +84,14 @@ class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater {
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)
 
-		if (electricNode.power > 0) {
-			val dir = orientation.orientation.toVector.toDouble
-			laserHandler.emit(new Electromagnetic(new Ray(position.toDouble + 0.5 + dir * 0.51, dir), position.toDouble + dir * 0.6 + 0.5, electricNode.power / 20))
+		if (Game.network.isServer) {
+			if (electricNode.power > 0) {
+				val dir = orientation.orientation.toVector.toDouble
+				laserHandler.create(new Electromagnetic(new Ray(position.toDouble + 0.5 + dir * 0.51, dir), position.toDouble + dir * 0.6 + 0.5, electricNode.power / 20))
+			}
+			else {
+				laserHandler.remove()
+			}
 		}
 	}
 

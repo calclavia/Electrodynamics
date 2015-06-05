@@ -3,7 +3,7 @@ package com.calclavia.edx.optics
 import com.calclavia.edx.core.Reference
 import com.calclavia.edx.electric.circuit.component.laser.WaveGrid.WaveGridPacket
 import com.calclavia.edx.optics.api.fortron.Fortron
-import com.calclavia.edx.optics.content.{Content, Models, Textures}
+import com.calclavia.edx.optics.content.{OpticsContent, Models, OpticsTextures}
 import com.calclavia.edx.optics.security.MFFSPermissions
 import com.resonant.lib.MovementManager
 import com.resonant.lib.WrapFunctions._
@@ -34,15 +34,15 @@ object Optics extends Loadable {
 
 		Game.fluids.register((args: Array[AnyRef]) => new Fluid(Fortron.fortronID))
 
-		Content.preInit()
+		OpticsContent.preInit()
 		Models.preInit()
-		Textures.preInit()
+		OpticsTextures.preInit()
 	}
 
 	override def init() {
-		Content.init()
+		OpticsContent.init()
 		Models.init()
-		Textures.init()
+		OpticsTextures.init()
 	}
 
 	override def postInit() {
@@ -74,9 +74,9 @@ object Optics extends Loadable {
 		//Initiate MFFS Permissions
 		MFFSPermissions
 
-		Content.postInit()
+		OpticsContent.postInit()
 		Models.postInit()
-		Textures.postInit()
+		OpticsTextures.postInit()
 	}
 
 }

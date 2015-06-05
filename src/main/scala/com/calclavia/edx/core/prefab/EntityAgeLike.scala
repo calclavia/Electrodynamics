@@ -12,7 +12,8 @@ trait EntityAgeLike extends Entity with Updater {
 	var time = 0d
 
 	override def update(deltaTime: Double) {
-		super.update(deltaTime)
+		//TODO: Wait for Scala 12
+		//super.update(deltaTime)
 		if (time >= maxAge) {
 			world.removeEntity(this)
 		}

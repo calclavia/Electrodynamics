@@ -4,7 +4,7 @@ import java.util.{Collections, Optional}
 
 import com.calclavia.edx.optics.api.machine.ForceField
 import com.calclavia.edx.optics.api.modules.Module
-import com.calclavia.edx.optics.content.{Content, Textures}
+import com.calclavia.edx.optics.content.{OpticsContent, OpticsTextures}
 import com.calclavia.edx.optics.security.MFFSPermissions
 import com.calclavia.edx.optics.util.MFFSUtility
 import com.resonant.lib.WrapFunctions._
@@ -87,7 +87,7 @@ class BlockForceField extends BlockDefault with PacketHandler with ForceField wi
 	add(new LightEmitter().setEmittedLevel(supplier(() => {
 		val projector = getProjectorSafe
 		if (projector != null) {
-			Math.min(projector.getModuleCount(Content.moduleGlow), 64) / 64f
+			Math.min(projector.getModuleCount(OpticsContent.moduleGlow), 64) / 64f
 		}
 		0f
 	})))
@@ -112,7 +112,7 @@ class BlockForceField extends BlockDefault with PacketHandler with ForceField wi
 	    }
 	    )
 		)
-		.setTexture(func((dir: Direction) => Optional.of(Textures.forceField)))
+		.setTexture(func((dir: Direction) => Optional.of(OpticsTextures.forceField)))
 		.setOnRender(
 	    (model: Model) => {
 		    val opRenderer = camoBlock.getOp(classOf[StaticRenderer])

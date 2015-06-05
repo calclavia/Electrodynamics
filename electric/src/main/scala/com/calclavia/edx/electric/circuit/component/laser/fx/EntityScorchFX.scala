@@ -1,7 +1,7 @@
 package com.calclavia.edx.electric.circuit.component.laser.fx
 
 import com.calclavia.edx.core.prefab.EntityAgeLike
-import com.calclavia.edx.optics.content.Textures
+import com.calclavia.edx.optics.content.OpticsTextures
 import com.resonant.lib.WrapFunctions._
 import nova.core.component.renderer.DynamicRenderer
 import nova.core.entity.Entity
@@ -72,7 +72,7 @@ class EntityScorchFX(side: Int) extends Entity with EntityAgeLike
 
 			scorch.drawFace(endFace)
 			endFace.brightness = 1
-			scorch.bindAll(Textures.scortchTexture)
+			scorch.bindAll(OpticsTextures.scorchTexture)
 			model.children.add(scorch)
 		})
 

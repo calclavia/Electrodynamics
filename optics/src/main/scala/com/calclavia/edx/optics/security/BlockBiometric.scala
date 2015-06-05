@@ -4,7 +4,7 @@ import java.util.{Set => JSet}
 
 import com.calclavia.edx.optics.api.card.AccessCard
 import com.calclavia.edx.optics.base.BlockFrequency
-import com.calclavia.edx.optics.content.{Models, Textures}
+import com.calclavia.edx.optics.content.{Models, OpticsTextures}
 import com.resonant.core.access.Permission
 import com.resonant.lib.WrapFunctions._
 import nova.core.block.Block.{BlockPlaceEvent, RightClickEvent}
@@ -46,7 +46,7 @@ class BlockBiometric extends BlockFrequency with ExtendedUpdater with Permission
 		    val modelBiometric: Model = Models.biometric.getModel
 		    modelBiometric.children.removeAll(modelBiometric.children.filter(_.name.equals("holoScreen")))
 		    model.children.add(modelBiometric)
-		    model.bindAll(if (isActive) Textures.biometricOn else Textures.biometricOff)
+			model.bindAll(if (isActive) OpticsTextures.biometricOn else OpticsTextures.biometricOff)
 	    }
 		)
 
@@ -72,7 +72,7 @@ class BlockBiometric extends BlockFrequency with ExtendedUpdater with Permission
 			    }
 		    }
 
-		    model.bindAll(if (isActive) Textures.biometricOn else Textures.biometricOff)
+			model.bindAll(if (isActive) OpticsTextures.biometricOn else OpticsTextures.biometricOff)
 	    }
 		)
 

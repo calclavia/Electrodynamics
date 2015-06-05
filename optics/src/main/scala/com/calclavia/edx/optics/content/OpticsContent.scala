@@ -24,7 +24,7 @@ import nova.core.item.{Item, ItemFactory}
  * The main mffs.content of MFFS
  * @author Calclavia
  */
-object Content extends ContentLoader {
+object OpticsContent extends ContentLoader {
 
 	/**
 	 * Blocks

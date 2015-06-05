@@ -63,12 +63,20 @@ class WaveHandler(block: Block) extends Component {
 		}
 	}
 
-	def emit(laser: Electromagnetic) {
+	def create(laser: Electromagnetic) {
+		//Check equality
 		if (emittingLaser != null) {
+			if (laser.equals(emittingLaser)) {
+				//	return
+			}
 			WaveGrid(block.world).destroy(emittingLaser)
 		}
 
 		WaveGrid(block.world).create(laser)
 		emittingLaser = laser
+	}
+
+	def remove() {
+		WaveGrid(block.world).destroy(emittingLaser)
 	}
 }

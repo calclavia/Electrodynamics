@@ -4,7 +4,7 @@ import java.util.{Optional, Set => JSet}
 
 import com.calclavia.edx.optics.api.machine.{FieldMatrix, IPermissionProvider}
 import com.calclavia.edx.optics.api.modules.StructureProvider
-import com.calclavia.edx.optics.content.Content
+import com.calclavia.edx.optics.content.OpticsContent
 import com.calclavia.edx.optics.util.CacheHandler
 import com.resonant.core.structure.Structure
 import nova.core.component.transform.Orientation
@@ -113,7 +113,7 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 
 	def getStructure: Structure = {
 		val structure = getShapeItem.getStructure
-		structure.setBlockFactory(Optional.of(Content.forceField))
+		structure.setBlockFactory(Optional.of(OpticsContent.forceField))
 		structure.setTranslate((getTranslation + transform.position).toDouble)
 		structure.setScale(getScale.toDouble)
 		structure.setRotation(getRotation)
@@ -129,19 +129,19 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 			var yScalePos = 0
 
 			if (absoluteDirection) {
-				zScalePos = getModuleCount(Content.moduleScale, getDirectionSlots(Direction.SOUTH): _*)
-				xScalePos = getModuleCount(Content.moduleScale, getDirectionSlots(Direction.EAST): _*)
-				yScalePos = getModuleCount(Content.moduleScale, getDirectionSlots(Direction.UP): _*)
+				zScalePos = getModuleCount(OpticsContent.moduleScale, getDirectionSlots(Direction.SOUTH): _*)
+				xScalePos = getModuleCount(OpticsContent.moduleScale, getDirectionSlots(Direction.EAST): _*)
+				yScalePos = getModuleCount(OpticsContent.moduleScale, getDirectionSlots(Direction.UP): _*)
 			}
 			else {
 				val direction = get(classOf[Orientation]).orientation
 
-				zScalePos = getModuleCount(Content.moduleScale, getDirectionSlots(RotationUtil.getRelativeSide(direction, Direction.SOUTH)): _*)
-				xScalePos = getModuleCount(Content.moduleScale, getDirectionSlots(RotationUtil.getRelativeSide(direction, Direction.EAST)): _*)
-				yScalePos = getModuleCount(Content.moduleScale, getDirectionSlots(Direction.UP): _*)
+				zScalePos = getModuleCount(OpticsContent.moduleScale, getDirectionSlots(RotationUtil.getRelativeSide(direction, Direction.SOUTH)): _*)
+				xScalePos = getModuleCount(OpticsContent.moduleScale, getDirectionSlots(RotationUtil.getRelativeSide(direction, Direction.EAST)): _*)
+				yScalePos = getModuleCount(OpticsContent.moduleScale, getDirectionSlots(Direction.UP): _*)
 			}
 
-			val omnidirectionalScale = getModuleCount(Content.moduleScale, getModuleSlots: _*)
+			val omnidirectionalScale = getModuleCount(OpticsContent.moduleScale, getModuleSlots: _*)
 
 			zScalePos += omnidirectionalScale
 			xScalePos += omnidirectionalScale
@@ -159,17 +159,17 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 			val direction = get(classOf[Orientation]).orientation
 
 			if (absoluteDirection) {
-				zScaleNeg = getModuleCount(Content.moduleScale, getDirectionSlots(Direction.NORTH): _*)
-				xScaleNeg = getModuleCount(Content.moduleScale, getDirectionSlots(Direction.WEST): _*)
-				yScaleNeg = getModuleCount(Content.moduleScale, getDirectionSlots(Direction.DOWN): _*)
+				zScaleNeg = getModuleCount(OpticsContent.moduleScale, getDirectionSlots(Direction.NORTH): _*)
+				xScaleNeg = getModuleCount(OpticsContent.moduleScale, getDirectionSlots(Direction.WEST): _*)
+				yScaleNeg = getModuleCount(OpticsContent.moduleScale, getDirectionSlots(Direction.DOWN): _*)
 			}
 			else {
-				zScaleNeg = getModuleCount(Content.moduleScale, getDirectionSlots(RotationUtil.getRelativeSide(direction, Direction.NORTH)): _*)
-				xScaleNeg = getModuleCount(Content.moduleScale, getDirectionSlots(RotationUtil.getRelativeSide(direction, Direction.WEST)): _*)
-				yScaleNeg = getModuleCount(Content.moduleScale, getDirectionSlots(Direction.DOWN): _*)
+				zScaleNeg = getModuleCount(OpticsContent.moduleScale, getDirectionSlots(RotationUtil.getRelativeSide(direction, Direction.NORTH)): _*)
+				xScaleNeg = getModuleCount(OpticsContent.moduleScale, getDirectionSlots(RotationUtil.getRelativeSide(direction, Direction.WEST)): _*)
+				yScaleNeg = getModuleCount(OpticsContent.moduleScale, getDirectionSlots(Direction.DOWN): _*)
 			}
 
-			val omnidirectionalScale = this.getModuleCount(Content.moduleScale, getModuleSlots: _*)
+			val omnidirectionalScale = this.getModuleCount(OpticsContent.moduleScale, getModuleSlots: _*)
 			zScaleNeg += omnidirectionalScale
 			xScaleNeg += omnidirectionalScale
 			yScaleNeg += omnidirectionalScale
@@ -192,20 +192,20 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 			var yTranslationNeg = 0
 
 			if (absoluteDirection) {
-				zTranslationNeg = getModuleCount(Content.moduleTranslate, getDirectionSlots(Direction.NORTH): _*)
-				zTranslationPos = getModuleCount(Content.moduleTranslate, getDirectionSlots(Direction.SOUTH): _*)
-				xTranslationNeg = getModuleCount(Content.moduleTranslate, getDirectionSlots(Direction.WEST): _*)
-				xTranslationPos = getModuleCount(Content.moduleTranslate, getDirectionSlots(Direction.EAST): _*)
-				yTranslationPos = getModuleCount(Content.moduleTranslate, getDirectionSlots(Direction.UP): _*)
-				yTranslationNeg = getModuleCount(Content.moduleTranslate, getDirectionSlots(Direction.DOWN): _*)
+				zTranslationNeg = getModuleCount(OpticsContent.moduleTranslate, getDirectionSlots(Direction.NORTH): _*)
+				zTranslationPos = getModuleCount(OpticsContent.moduleTranslate, getDirectionSlots(Direction.SOUTH): _*)
+				xTranslationNeg = getModuleCount(OpticsContent.moduleTranslate, getDirectionSlots(Direction.WEST): _*)
+				xTranslationPos = getModuleCount(OpticsContent.moduleTranslate, getDirectionSlots(Direction.EAST): _*)
+				yTranslationPos = getModuleCount(OpticsContent.moduleTranslate, getDirectionSlots(Direction.UP): _*)
+				yTranslationNeg = getModuleCount(OpticsContent.moduleTranslate, getDirectionSlots(Direction.DOWN): _*)
 			}
 			else {
-				zTranslationNeg = getModuleCount(Content.moduleTranslate, getDirectionSlots(RotationUtil.getRelativeSide(direction, Direction.NORTH)): _*)
-				zTranslationPos = getModuleCount(Content.moduleTranslate, getDirectionSlots(RotationUtil.getRelativeSide(direction, Direction.SOUTH)): _*)
-				xTranslationNeg = getModuleCount(Content.moduleTranslate, getDirectionSlots(RotationUtil.getRelativeSide(direction, Direction.WEST)): _*)
-				xTranslationPos = getModuleCount(Content.moduleTranslate, getDirectionSlots(RotationUtil.getRelativeSide(direction, Direction.EAST)): _*)
-				yTranslationPos = getModuleCount(Content.moduleTranslate, getDirectionSlots(Direction.UP): _*)
-				yTranslationNeg = getModuleCount(Content.moduleTranslate, getDirectionSlots(Direction.DOWN): _*)
+				zTranslationNeg = getModuleCount(OpticsContent.moduleTranslate, getDirectionSlots(RotationUtil.getRelativeSide(direction, Direction.NORTH)): _*)
+				zTranslationPos = getModuleCount(OpticsContent.moduleTranslate, getDirectionSlots(RotationUtil.getRelativeSide(direction, Direction.SOUTH)): _*)
+				xTranslationNeg = getModuleCount(OpticsContent.moduleTranslate, getDirectionSlots(RotationUtil.getRelativeSide(direction, Direction.WEST)): _*)
+				xTranslationPos = getModuleCount(OpticsContent.moduleTranslate, getDirectionSlots(RotationUtil.getRelativeSide(direction, Direction.EAST)): _*)
+				yTranslationPos = getModuleCount(OpticsContent.moduleTranslate, getDirectionSlots(Direction.UP): _*)
+				yTranslationNeg = getModuleCount(OpticsContent.moduleTranslate, getDirectionSlots(Direction.DOWN): _*)
 			}
 
 			return new Vector3i(xTranslationPos - xTranslationNeg, yTranslationPos - yTranslationNeg, zTranslationPos - zTranslationNeg)
@@ -223,10 +223,10 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 			val direction = get(classOf[Orientation]).orientation
 
 			if (this.absoluteDirection) {
-				horizontalRotation = getModuleCount(Content.moduleRotate, getDirectionSlots(Direction.EAST): _*) - getModuleCount(Content.moduleRotate, getDirectionSlots(Direction.WEST): _*) + getModuleCount(Content.moduleRotate, this.getDirectionSlots(Direction.SOUTH): _*) - this.getModuleCount(Content.moduleRotate, getDirectionSlots(Direction.NORTH): _*)
+				horizontalRotation = getModuleCount(OpticsContent.moduleRotate, getDirectionSlots(Direction.EAST): _*) - getModuleCount(OpticsContent.moduleRotate, getDirectionSlots(Direction.WEST): _*) + getModuleCount(OpticsContent.moduleRotate, this.getDirectionSlots(Direction.SOUTH): _*) - this.getModuleCount(OpticsContent.moduleRotate, getDirectionSlots(Direction.NORTH): _*)
 			}
 			else {
-				horizontalRotation = getModuleCount(Content.moduleRotate, getDirectionSlots(RotationUtil.getRelativeSide(direction, Direction.EAST)): _*) - getModuleCount(Content.moduleRotate, getDirectionSlots(RotationUtil.getRelativeSide(direction, Direction.WEST)): _*) + this.getModuleCount(Content.moduleRotate, getDirectionSlots(RotationUtil.getRelativeSide(direction, Direction.SOUTH)): _*) - getModuleCount(Content.moduleRotate, getDirectionSlots(RotationUtil.getRelativeSide(direction, Direction.NORTH)): _*)
+				horizontalRotation = getModuleCount(OpticsContent.moduleRotate, getDirectionSlots(RotationUtil.getRelativeSide(direction, Direction.EAST)): _*) - getModuleCount(OpticsContent.moduleRotate, getDirectionSlots(RotationUtil.getRelativeSide(direction, Direction.WEST)): _*) + this.getModuleCount(OpticsContent.moduleRotate, getDirectionSlots(RotationUtil.getRelativeSide(direction, Direction.SOUTH)): _*) - getModuleCount(OpticsContent.moduleRotate, getDirectionSlots(RotationUtil.getRelativeSide(direction, Direction.NORTH)): _*)
 			}
 
 			return horizontalRotation * 2
@@ -234,7 +234,7 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 
 	def getRotationPitch: Int =
 		getOrSetCache("getRotationPitch", () => {
-			val verticalRotation = getModuleCount(Content.moduleRotate, getDirectionSlots(Direction.UP): _*) - getModuleCount(Content.moduleRotate, getDirectionSlots(Direction.DOWN): _*)
+			val verticalRotation = getModuleCount(OpticsContent.moduleRotate, getDirectionSlots(Direction.UP): _*) - getModuleCount(OpticsContent.moduleRotate, getDirectionSlots(Direction.DOWN): _*)
 			return verticalRotation * 2
 		})
 
@@ -283,7 +283,7 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 		getModules().foreach(_.onCalculateExterior(this, structure))
 
 		val field = {
-			if (getModuleCount(Content.moduleInvert) > 0) {
+			if (getModuleCount(OpticsContent.moduleInvert) > 0) {
 				structure.getInteriorStructure
 			}
 			else {

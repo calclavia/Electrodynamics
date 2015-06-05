@@ -1,6 +1,6 @@
 package com.calclavia.edx.optics.particle
 
-import com.calclavia.edx.optics.content.Textures
+import com.calclavia.edx.optics.content.OpticsTextures
 import com.resonant.lib.WrapFunctions._
 import nova.core.component.renderer.DynamicRenderer
 import nova.core.entity.component.RigidBody
@@ -27,7 +27,7 @@ class FXHologram(color: Color, maxAge: Double) extends FXMFFS {
 			//		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F)
 			//		RenderUtility.enableBlending
 			BlockModelUtil.drawCube(model)
-			model.bindAll(Textures.hologram)
+			model.bindAll(OpticsTextures.hologram)
 			model.faces.foreach(_.vertices.foreach(_.setColor(color.alpha((op * 255).toInt))))
 			//		RenderUtility.disableBlending
 		}

@@ -4,6 +4,7 @@ import java.io.{File, FileWriter}
 import java.util
 import java.util.Collections
 
+import com.calclavia.edx.core.extension.GraphExtension._
 import com.calclavia.edx.electric.api.Electric.{ElectricChangeEvent, GraphBuiltEvent}
 import com.calclavia.edx.electric.api.{Electric, ElectricComponent}
 import com.resonant.lib.WrapFunctions._
@@ -17,7 +18,7 @@ import scala.collection.convert.wrapAll._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
-import com.calclavia.edx.core.extension.GraphExtension._
+
 /**
  * An electric circuit grid for independent voltage sources.
  * The circuit solver uses MNA, based on http://www.swarthmore.edu/NatSci/echeeve1/Ref/mna/MNA3.html
@@ -334,7 +335,6 @@ class ElectricGrid {
 
 	def requestUpdate(resistorChanged: Boolean = true, sourceChanged: Boolean = true) {
 		if (updateFuture == null || updateFuture.isCompleted) {
-			println("Preparing to solve circuit in the future")
 			updateFuture = Future {
 				update()
 			}
@@ -350,10 +350,18 @@ class ElectricGrid {
 
 	def update(resistorChanged: Boolean = true, sourceChanged: Boolean = true) {
 		electricGraph.synchronized {
+			//Reset all componets
+			electricGraph.vertexSet().foreach {
+				case component: Component =>
+					component.component.voltage = 0
+					component.component.current = 0
+				case junction: Junction =>
+					junction.voltage = 0
+			}
+
+
 			//You need a junction and a ground
 			if (junctions.nonEmpty) {
-				println("Solving circuit...")
-
 				val allChange = mna == null || sourceChanged
 
 				if (allChange) {
@@ -361,7 +369,7 @@ class ElectricGrid {
 				}
 
 				if (voltageSources.isEmpty && currentSources.isEmpty) {
-					println("No voltage or current source. Skipping circuit solve.")
+					println("No voltage or current source. Skipping.")
 					return
 				}
 
@@ -375,14 +383,10 @@ class ElectricGrid {
 
 				if (sourceChanged || allChange) {
 					computeSourceMatrix()
-					//println("Computed source matrix: ")
-					//println(sourceMatrix)
 				}
 
 				if (resistorChanged || sourceChanged || allChange) {
 					try {
-						//println("Computed MNA matrix: ")
-						//println(mna)
 						solve()
 					}
 					catch {
@@ -393,7 +397,7 @@ class ElectricGrid {
 				}
 			}
 			else {
-				println("Circuit incomplete")
+				println("Circuit incomplete. Skipping.")
 			}
 		}
 	}
@@ -504,9 +508,6 @@ class ElectricGrid {
 	def solve() {
 		if (electricGraph.vertexSet().size() > 2) {
 			val x = mna.solve(sourceMatrix)
-
-			//println("Solved matrix: ")
-			println(x)
 
 			//Retrieve the voltage of the junctions
 			junctions.indices.foreach(i => junctions(i).voltage = x(i, 0))

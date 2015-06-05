@@ -6,7 +6,7 @@ import com.calclavia.edx.optics.api.Blacklist
 import com.calclavia.edx.optics.api.machine.Projector
 import com.calclavia.edx.optics.api.modules.Module.ProjectState
 import com.calclavia.edx.optics.base.{ItemModule, PacketBlock}
-import com.calclavia.edx.optics.content.Content
+import com.calclavia.edx.optics.content.OpticsContent
 import com.calclavia.edx.optics.field.BlockProjector
 import com.calclavia.edx.optics.field.mobilize.{BlockDropDelayedEvent, BlockInventoryDropDelayedEvent}
 import com.calclavia.edx.optics.util.MFFSUtility
@@ -49,7 +49,7 @@ class ItemModuleDisintegration extends ItemModule {
 
 			Game.network.sync(PacketBlock.effect, proj)
 
-			if (projector.getModuleCount(Content.moduleCollection) > 0) {
+			if (projector.getModuleCount(OpticsContent.moduleCollection) > 0) {
 				Game.syncTicker.preQueue(new BlockInventoryDropDelayedEvent(39, block, world, position, projector.asInstanceOf[ComponentProvider]))
 			}
 			else {
@@ -58,7 +58,7 @@ class ItemModuleDisintegration extends ItemModule {
 
 			blockCount += 1
 
-			if (blockCount >= projector.getModuleCount(Content.moduleSpeed) / 3) {
+			if (blockCount >= projector.getModuleCount(OpticsContent.moduleSpeed) / 3) {
 				return ProjectState.cancel
 			}
 			else {

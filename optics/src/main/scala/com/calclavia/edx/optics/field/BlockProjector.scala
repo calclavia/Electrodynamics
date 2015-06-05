@@ -6,7 +6,7 @@ import com.calclavia.edx.optics.Settings
 import com.calclavia.edx.optics.api.machine.Projector
 import com.calclavia.edx.optics.api.modules.Module.ProjectState
 import com.calclavia.edx.optics.base.{BlockFieldMatrix, PacketBlock}
-import com.calclavia.edx.optics.content.{Content, Models, Textures}
+import com.calclavia.edx.optics.content.{OpticsContent, Models, OpticsTextures}
 import com.calclavia.edx.optics.field.shape.ItemShapeCustom
 import com.calclavia.edx.optics.particle.{FXFortronBeam, FXHologramProgress, FieldColor}
 import com.calclavia.edx.optics.security.PermissionHandler
@@ -67,7 +67,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 	    (model: Model) => {
 		    model.rotate(get(classOf[Orientation]).orientation.rotation)
 		    model.children.add(Models.projector.getModel)
-		    model.bindAll(if (isActive) Textures.projectorOn else Textures.projectorOff)
+			model.bindAll(if (isActive) OpticsTextures.projectorOn else OpticsTextures.projectorOff)
 	    }
 		)
 
@@ -140,7 +140,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 
 				    val color = if (isActive) FieldColor.blue else FieldColor.red
 				    hologram.faces.foreach(_.vertices.foreach(_.setColor(color.alpha((Math.sin(ticks.toDouble / 10) * 255).toInt))))
-				    hologram.bind(Textures.hologram)
+					hologram.bind(OpticsTextures.hologram)
 			    }
 		    }
 	    }
@@ -166,7 +166,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 	def postCalculation() = if (clientSideSimulationRequired) Game.network.sync(PacketBlock.field, this)
 
 	private def clientSideSimulationRequired: Boolean = {
-		return getModuleCount(Content.moduleRepulsion) > 0
+		return getModuleCount(OpticsContent.moduleRepulsion) > 0
 	}
 
 	/**
@@ -213,12 +213,12 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 				val pos = transform.position.toDouble + 0.5
 
 				if (packetType == 1) {
-					world.addClientEntity(Content.fxFortronBeam).transform.setPosition(pos).asInstanceOf[FXFortronBeam].setTarget(target)
-					world.addClientEntity(Content.fxHologramProgress).transform.setPosition(pos)
+					world.addClientEntity(OpticsContent.fxFortronBeam).transform.setPosition(pos).asInstanceOf[FXFortronBeam].setTarget(target)
+					world.addClientEntity(OpticsContent.fxHologramProgress).transform.setPosition(pos)
 				}
 				else if (packetType == 2) {
-					world.addClientEntity(Content.fxFortronBeam).transform.setPosition(pos).asInstanceOf[FXFortronBeam].setTarget(target).setColor(FieldColor.red)
-					world.addClientEntity(Content.fxHologramProgress).transform.setPosition(pos).asInstanceOf[FXHologramProgress].setColor(FieldColor.red)
+					world.addClientEntity(OpticsContent.fxFortronBeam).transform.setPosition(pos).asInstanceOf[FXFortronBeam].setTarget(target).setColor(FieldColor.red)
+					world.addClientEntity(OpticsContent.fxHologramProgress).transform.setPosition(pos).asInstanceOf[FXHologramProgress].setColor(FieldColor.red)
 				}
 			}
 			else if (packet.getID == PacketBlock.field) {
@@ -254,7 +254,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 				animation += getFortronCost / 100f
 			}
 
-			if (ticks % (2 * 20) == 0 && getModuleCount(Content.moduleSilence) <= 0) {
+			if (ticks % (2 * 20) == 0 && getModuleCount(OpticsContent.moduleSilence) <= 0) {
 				//TODO: Fix world sound effects
 				//worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, Reference.prefix + "field", 0.6f, (1 - this.worldObj.rand.nextFloat * 0.1f))
 			}
@@ -290,7 +290,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 						.view.par
 						.filter(!_.equals(transform.position))
 						.filter(v => !world.getBlock(v).isPresent || canReplaceBlock(v, world.getBlock(v).get()))
-						.filter(v => world.getBlock(v).isPresent && world.getBlock(v).get().sameType(Content.forceField))
+						.filter(v => world.getBlock(v).isPresent && world.getBlock(v).get().sameType(OpticsContent.forceField))
 						.take(constructionSpeed)
 
 					//The collection containing the coordinates to actually place the field blocks.
@@ -320,7 +320,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 								 * Default force field block placement action.
 								 */
 								if (Game.network.isServer) {
-									world.setBlock(pos, Content.forceField)
+									world.setBlock(pos, OpticsContent.forceField)
 									world.getBlock(pos).get().asInstanceOf[BlockForceField].setProjector(position)
 								}
 
@@ -342,7 +342,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 		return true
 	}
 
-	def getProjectionSpeed: Int = 28 + 28 * getModuleCount(Content.moduleSpeed, getModuleSlots: _*)
+	def getProjectionSpeed: Int = 28 + 28 * getModuleCount(OpticsContent.moduleSpeed, getModuleSlots: _*)
 
 	override def markDirty() {
 		super.markDirty()
@@ -358,7 +358,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 			//TODO: Parallelism?
 			calculatedField
 				.view
-				.filter(v => world.getBlock(v).isPresent && world.getBlock(v).get().sameType(Content.forceField))
+				.filter(v => world.getBlock(v).isPresent && world.getBlock(v).get().sameType(OpticsContent.forceField))
 				.foreach(v => world.removeBlock(v))
 
 			forceFields = Set.empty
