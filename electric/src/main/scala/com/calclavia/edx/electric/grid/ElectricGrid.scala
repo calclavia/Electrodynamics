@@ -8,13 +8,14 @@ import com.calclavia.edx.electric.api.Electric.{ElectricChangeEvent, GraphBuiltE
 import com.calclavia.edx.electric.api.{Electric, ElectricComponent}
 import com.resonant.lib.WrapFunctions._
 import nova.core.util.transform.matrix.Matrix
+import org.jgrapht.alg.ConnectivityInspector
 import org.jgrapht.ext.{DOTExporter, VertexNameProvider}
 import org.jgrapht.graph.{DefaultDirectedGraph, DefaultEdge}
 import org.jgrapht.{DirectedGraph, Graph}
 
 import scala.collection.convert.wrapAll._
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent._
+import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
 /**
@@ -186,10 +187,16 @@ class ElectricGrid {
 
 	def add(node: Electric, connections: Set[Electric]): this.type = {
 		connectionGraph.addVertex(node)
+
+		connections.foreach(
+			neighbor => {
+				connectionGraph.addVertex(neighbor)
+				connectionGraph.addEdge(node, neighbor)
+			}
+		)
+
 		node match {
 			case node: NodeElectricComponent =>
-				connections.foreach(connectionGraph.addVertex)
-				connections.foreach(neighbor => connectionGraph.addEdge(node, neighbor))
 
 				node.onResistanceChange.add((evt: ElectricChangeEvent) => {
 					requestUpdate(resistorChanged = true)
@@ -201,12 +208,6 @@ class ElectricGrid {
 					requestUpdate(sourceChanged = true)
 				})
 			case node: NodeElectricJunction =>
-				connections.foreach(
-					neighbor => {
-						connectionGraph.addVertex(neighbor)
-						connectionGraph.addEdge(node, neighbor)
-					}
-				)
 		}
 
 		return this
@@ -234,7 +235,14 @@ class ElectricGrid {
 		}
 
 		val newJunction = new Junction
-		newJunction.wires += nodeJunction
+
+		val clonedGraph = connectionGraph.clone.asInstanceOf[DirectedGraph[Electric, DefaultEdge]]
+		clonedGraph.vertexSet()
+			.filterNot(_.isInstanceOf[NodeElectricJunction])
+			.foreach(clonedGraph.removeVertex)
+
+		val inspector = new ConnectivityInspector(clonedGraph)
+		newJunction.wires ++= inspector.connectedSetOf(nodeJunction).map(_.asInstanceOf[NodeElectricJunction])
 		junctions :+= newJunction
 		return newJunction
 	}
@@ -242,7 +250,7 @@ class ElectricGrid {
 	/**
 	 * Builds the MNA matrix and prepares graph for simulation
 	 */
-	def build() {
+	def build(): this.type = {
 		/**
 		 * Clean all variables
 		 */
@@ -260,24 +268,27 @@ class ElectricGrid {
 		connectionGraph.vertexSet().foreach {
 			case nodeComponent: NodeElectricComponent =>
 				val component = new Component(nodeComponent)
-				//Check positive terminal connections
-				nodeComponent.positives()
+				//Check all mutual connections
+				(connectionGraph.connectionsOf(nodeComponent) & nodeComponent.positives().toSet)
 					.foreach {
 					case checkNodeComponent: NodeElectricComponent =>
-						//Mutual connection check. Check if the "component" is negatively connected to the current node.
-						if (checkNodeComponent.negatives().contains(nodeComponent)) {
-							val junction = new VirtualJunction
-							val checkComponent = convert(checkNodeComponent)
-							electricGraph.addVertex(component)
-							electricGraph.addVertex(junction)
-							electricGraph.addVertex(checkComponent)
+						//Let the checkComponent connect to this. Don't need to check negative terminal for incoming connections
+						//TODO: Cache the terminal. It's expensive calculation!
+						val junction = new VirtualJunction
+						val checkComponent = convert(checkNodeComponent)
 
-							electricGraph.addEdge(component, junction)
-							electricGraph.addEdge(junction, checkComponent)
-							electricGraph.addEdge(junction, component)
-							junctions :+= junction
-						}
-					case nodeJunction: NodeElectricJunction if connectionGraph.connectionsOf(nodeComponent).contains(nodeJunction) =>
+						electricGraph.addVertex(component)
+						electricGraph.addVertex(junction)
+						electricGraph.addVertex(checkComponent)
+
+						//It's a negative terminal connection, so point this component to the checkComponent
+						electricGraph.addEdge(component, junction)
+						electricGraph.addEdge(junction, checkComponent)
+						electricGraph.addEdge(junction, component)
+
+						junctions :+= junction
+
+					case nodeJunction: NodeElectricJunction =>
 						val junction = convert(nodeJunction)
 						electricGraph.addVertex(component)
 						electricGraph.addVertex(junction)
@@ -286,8 +297,9 @@ class ElectricGrid {
 				components :+= component
 			case nodeJunction: NodeElectricJunction =>
 				val junction = convert(nodeJunction)
+
 				electricGraph.addVertex(junction)
-				//TODO: Extra junction generated?
+
 				//Connect the junction to all of this NodeElectricJunction's nodes. These are mutual connections as defined by #connectionOf.
 				connectionGraph
 					.connectionsOf(nodeJunction)
@@ -297,7 +309,6 @@ class ElectricGrid {
 						electricGraph.addVertex(component)
 						electricGraph.addEdge(junction, component)
 					case nodeJunction: NodeElectricJunction =>
-						junction.wires += nodeJunction
 				}
 
 			//TODO: Create virtual junctions with resistors to simulate wire resistance
@@ -315,9 +326,8 @@ class ElectricGrid {
 				.foreach(
 					v => v.onGridBuilt.publish(new GraphBuiltEvent(connectionGraph.connectionsOf(v)))
 				)
-
-			requestUpdate()
 		}
+		return this
 	}
 
 	implicit class GraphWrapper[V, E](underlying: DirectedGraph[V, E]) {
@@ -392,19 +402,20 @@ class ElectricGrid {
 
 				if (sourceChanged || allChange) {
 					computeSourceMatrix()
-					println("Computed source matrix: ")
-					println(sourceMatrix)
+					//println("Computed source matrix: ")
+					//println(sourceMatrix)
 				}
 
 				if (resistorChanged || sourceChanged || allChange) {
 					try {
-						println("Computed MNA matrix: ")
-						println(mna)
+						//println("Computed MNA matrix: ")
+						//println(mna)
 						solve()
 					}
 					catch {
 						case e: Exception =>
 							println("Failed to solve circuit")
+							e.printStackTrace()
 					}
 				}
 			}
@@ -472,11 +483,11 @@ class ElectricGrid {
 		//The off diagonal elements are the negative conductance of the element connected to the pair of corresponding node.
 		//Therefore a resistor between nodes 1 and 2 goes into the G matrix at location (1,2) and locations (2,1).
 		resistors.foreach(resistor => {
-			val target = electricGraph.targetsOf(resistor)
+			val target = electricGraph.targetsOf(resistor).head
 			//The id of the junction at positive terminal
 			val j = junctions.indexOf(target)
 
-			val source = electricGraph.sourcesOf(resistor).find(s => s != target).get
+			val source = electricGraph.sourcesOf(resistor).find(s => s != target).getOrElse(null)
 			//The id of the junction at negative terminal
 			val i = junctions.indexOf(source)
 
@@ -519,8 +530,10 @@ class ElectricGrid {
 	 */
 	def solve() {
 		if (electricGraph.vertexSet().size() > 2) {
-			//TODO: Check why negation is required?
-			val x = mna.solve(sourceMatrix * -1)
+			val x = mna.solve(sourceMatrix)
+
+			//println("Solved matrix: ")
+			println(x)
 
 			//Retrieve the voltage of the junctions
 			junctions.indices.foreach(i => junctions(i).voltage = x(i, 0))
@@ -528,14 +541,14 @@ class ElectricGrid {
 			//Retrieve the current values of the voltage sources
 			voltageSources.indices.foreach(i => {
 				voltageSources(i).component.voltage = voltageSources(i).component.genVoltage
-				voltageSources(i).component.current = x(i + junctions.size, 0)
+				voltageSources(i).component.current = -x(i + junctions.size, 0)
 			})
 
 			//Calculate the potential difference for each component based on its junctions
 			resistors.zipWithIndex.foreach {
 				case (component, index) =>
-					val wireFrom = electricGraph.targetsOf(component).head.asInstanceOf[Junction]
-					val wireTo = electricGraph.sourcesOf(component).find(w => w != wireFrom).get.asInstanceOf[Junction]
+					val wireTo = electricGraph.targetsOf(component).map(_.asInstanceOf[Junction]).head
+					val wireFrom = electricGraph.sourcesOf(component).map(_.asInstanceOf[Junction]).filter(_ != wireTo).head
 					val newVoltage = wireFrom.voltage - wireTo.voltage
 
 					if (newVoltage != component.component.voltage) {

@@ -14,7 +14,7 @@ class NodeElectricJunction(parent: Block) extends ElectricJunction with Electric
 
 	override def current: Double = voltage * voltage / resistance
 
-	override def toString: String = "ElectricJunction [" + BigDecimal(voltage).setScale(2, BigDecimal.RoundingMode.HALF_UP) + "V]"
+	override def toString: String = "ElectricJunction [" + BigDecimal(voltage).setScale(2, BigDecimal.RoundingMode.HALF_UP) + "V " + hashCode() + "]"
 
 	override def voltage: Double = _voltage
 

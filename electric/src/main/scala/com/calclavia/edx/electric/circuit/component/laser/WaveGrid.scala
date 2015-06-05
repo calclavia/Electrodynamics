@@ -134,6 +134,7 @@ class WaveGrid(world: World) extends Updater {
 								//TODO: do refraction
 								val refractiveIndex = 1
 								create(new Electromagnetic(new Ray(hitVec + laser.source.dir * 0.9, laser.source.dir), hitVec, laser.power * 0.95, newColor.average(laser.color)), laser)
+							case _ =>
 						}
 					case hit: RayTraceEntityResult =>
 						if (laser.power > WaveGrid.minBurnEnergy) {

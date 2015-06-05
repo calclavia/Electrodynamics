@@ -176,7 +176,7 @@ class BlockWire extends BlockEDX with Storable with PacketHandler {
 		}
 	})
 
-	rightClickEvent.add((evt: RightClickEvent) => System.out.println(electricNode))
+	rightClickEvent.add((evt: RightClickEvent) => if (Game.network().isServer) System.out.println(electricNode))
 
 	collider.setBoundingBox(() => {
 		BlockWire.occlusionBounds(side)(4) + 0.5

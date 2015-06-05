@@ -18,7 +18,7 @@ import scala.collection.convert.wrapAll._
 /**
  * @author Calclavia
  */
-object GridElectricTest {
+object ElectricGridTest {
 	var launcher: NovaLauncher = _
 
 	@BeforeClass
@@ -27,7 +27,7 @@ object GridElectricTest {
 	}
 }
 
-class GridElectricTest {
+class ElectricGridTest {
 
 	val error = 0.001
 
@@ -153,9 +153,12 @@ class GridElectricTest {
 		components.foreach(graph.add)
 
 		graph.build()
-		println(profilerGen)
+		profilerGen.end()
 
 		ElectricGrid.exportGraph(graph.electricGraph, "testSolve2")
+
+		//One junction became the ground
+		assertThat(graph.junctions.size).isEqualTo(2)
 
 		val profiler = new Profiler("Solving graph 2")
 

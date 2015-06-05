@@ -124,7 +124,7 @@ class BlockBattery extends BlockEDX with PacketHandler with Storable with Extend
 	})
 
 	//TODO: Remove debug
-	rightClickEvent.add((evt: RightClickEvent) => println(electricNode))
+	rightClickEvent.add((evt: RightClickEvent) => if (Game.network().isServer) println(electricNode))
 
 	override def onRegister() {
 		Game.items.register(func[Array[AnyRef], Item]((args: Array[AnyRef]) => new ItemBlockBattery(factory())))

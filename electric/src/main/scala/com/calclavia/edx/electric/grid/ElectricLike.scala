@@ -36,13 +36,20 @@ trait ElectricLike extends Electric with BlockConnectable[Electric] {
 	block.neighborChangeEvent.add((evt: NeighborChangeEvent) => rebuild())
 
 	def rebuild() {
-		//TODO: Only when connection changes!
-		ElectricGrid.destroy(this)
-		build()
+		if (Game.network().isServer) {
+			//TODO: Only when connection changes!
+			ElectricGrid.destroy(this)
+			build()
+		}
 	}
 
 	def build() {
-		ElectricGrid(this).addRecursive(this).build()
+		if (Game.network().isServer) {
+			ElectricGrid(this)
+				.addRecursive(this)
+				.build()
+				.requestUpdate()
+		}
 	}
 
 	override def resistance = _resistance
