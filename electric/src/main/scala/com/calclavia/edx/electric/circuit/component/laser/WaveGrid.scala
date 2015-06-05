@@ -122,7 +122,7 @@ object WaveGrid {
 		override def render(world: World) {
 			//TODO: Source shouldn't be null, but Storable makes it so it's not thread safe :(
 			if (hit != null && source != null) {
-				world.addClientEntity(new EntityLaser(source.origin, hit.hit, color, power))
+				world.addClientEntity(new EntityLaser(renderOrigin, hit.hit, color, power))
 			}
 		}
 	}

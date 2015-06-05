@@ -87,7 +87,7 @@ class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater {
 		if (Game.network.isServer) {
 			if (electricNode.power > 0) {
 				val dir = orientation.orientation.toVector.toDouble
-				laserHandler.create(new Electromagnetic(new Ray(position.toDouble + 0.5 + dir * 0.51, dir), position.toDouble + dir * 0.6 + 0.5, electricNode.power / 20))
+				laserHandler.create(new Electromagnetic(new Ray(position.toDouble + 0.5 + dir * 0.51, dir), position.toDouble + dir * 0.2 + 0.5, electricNode.power / 20))
 			}
 			else {
 				laserHandler.remove()

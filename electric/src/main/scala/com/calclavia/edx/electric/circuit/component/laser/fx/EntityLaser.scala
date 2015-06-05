@@ -21,14 +21,14 @@ class EntityLaser(start: Vector3d, end: Vector3d, color: Color, power: Double) e
 	val renderer = add(new DynamicRenderer)
 
 	val energyPercentage = Math.min(power / WaveGrid.maxPower, 1).toFloat
-	val endSize = 0.01
 	// + (0.2 - 0.01) * energyPercentage
-	val detail = 20
+	val detail = 15
 	val rotationSpeed = 18
 
 	val particleAlpha = 1 / (detail.asInstanceOf[Float] / (5f * energyPercentage))
 	val particleScale = 0.15f * energyPercentage
 	val length = start.distance(end)
+	val endSize = particleScale
 	val modifierTranslation = (length / 2) + endSize
 	/**
 	 * Set position
@@ -46,19 +46,20 @@ class EntityLaser(start: Vector3d, end: Vector3d, color: Color, power: Double) e
 
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)
+		setRotation(rotation.multiply(Quaternion.fromAxis(Vector3d.xAxis, time % (Math.PI * 2 / rotationSpeed) * rotationSpeed + rotationSpeed * deltaTime)))
 	}
 
 	renderer.setOnRender(
 		(model: Model) => {
+			//GL_SRC_ALPHA
+			model.blendSFactor = 0x302
+			//GL_ONE
+			model.blendDFactor = 0x1
 
 			/**
 			 * Rotate the beam
 			 */
 			model.rotate(Vector3d.xAxis, Math.PI / 2)
-			model.translate(0, 1, 0)
-
-			val frameRate = 1
-			//model.rotate(Vector3d.yAxis, time % (360 / rotationSpeed) * rotationSpeed + rotationSpeed * frameRate)
 
 			val renderColor = color.alpha((particleAlpha * 255).toInt)
 
@@ -67,14 +68,13 @@ class EntityLaser(start: Vector3d, end: Vector3d, color: Color, power: Double) e
 			 */
 			for (a <- 0 to detail) {
 				val beam = new Model()
-				beam.rotate(Vector3d.yAxis, a * 360 / detail)
+				beam.rotate(Vector3d.yAxis, a * Math.PI * 2 / detail)
 
 				/**
 				 * Render Cap
 				 */
 				val cap = new Model()
-				cap.translate(new Vector3d(0, -modifierTranslation, 0))
-				cap.rotate(Vector3d.xAxis, Math.PI)
+				cap.translate(new Vector3d(0, length / 2 - endSize, 0))
 
 				val capFace = cap.createFace()
 				capFace.drawVertex(new Vertex(-particleScale, -particleScale, 0, 0, 0).setColor(renderColor))
@@ -91,8 +91,6 @@ class EntityLaser(start: Vector3d, end: Vector3d, color: Color, power: Double) e
 				 * Render Middle
 				 */
 				val middle = new Model()
-				middle.translate(new Vector3d(0, -modifierTranslation, 0))
-				middle.rotate(Vector3d.xAxis, Math.PI)
 
 				val middleFace = middle.createFace()
 				middleFace.drawVertex(new Vertex(-particleScale, -length / 2 + endSize, 0, 0, 0).setColor(renderColor))
@@ -105,16 +103,14 @@ class EntityLaser(start: Vector3d, end: Vector3d, color: Color, power: Double) e
 				middle.bindAll(OpticsTextures.laserMiddleTexture)
 				beam.children.add(middle)
 
-
 				/**
 				 * Render End
 				 */
 				val end = new Model()
-				end.translate(new Vector3d(0, -modifierTranslation, 0))
-				//end.rotate(Vector3d.xAxis, Math.PI)
+				end.translate(new Vector3d(0, -length / 2 + endSize, 0))
 
 				val endFace = end.createFace()
-				endFace.drawVertex(new Vertex(-particleScale + 1, -particleScale, 0, 0, 0).setColor(renderColor))
+				endFace.drawVertex(new Vertex(-particleScale, -particleScale, 0, 0, 0).setColor(renderColor))
 				endFace.drawVertex(new Vertex(-particleScale, particleScale, 0, 0, 1).setColor(renderColor))
 				endFace.drawVertex(new Vertex(particleScale, particleScale, 0, 1, 1).setColor(renderColor))
 				endFace.drawVertex(new Vertex(particleScale, -particleScale, 0, 1, 0).setColor(renderColor))
@@ -142,7 +138,6 @@ class EntityLaser(start: Vector3d, end: Vector3d, color: Color, power: Double) e
 				noiseFace.brightness = 1
 				noise.bindAll(OpticsTextures.noiseTexture)
 				beam.children.add(noise)
-
 
 				model.children.add(beam)
 			}
