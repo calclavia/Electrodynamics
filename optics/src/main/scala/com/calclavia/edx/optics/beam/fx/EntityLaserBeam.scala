@@ -2,7 +2,7 @@ package com.calclavia.edx.optics.beam.fx
 
 import com.calclavia.edx.core.prefab.EntityAgeLike
 import com.calclavia.edx.optics.content.OpticsTextures
-import com.calclavia.edx.optics.grid.{OpticGrid, OpticGrid$}
+import com.calclavia.edx.optics.grid.OpticGrid
 import com.resonant.lib.WrapFunctions._
 import nova.core.block.Stateful.LoadEvent
 import nova.core.component.renderer.DynamicRenderer
@@ -39,16 +39,13 @@ class EntityLaserBeam(start: Vector3d, end: Vector3d, color: Color, power: Doubl
 
 	loadEvent.add((evt: LoadEvent) => {
 		setPosition(midPoint)
-		val difference = end - start
-		val rot = Quaternion.fromAxis(Vector3d.xAxis, Vector3d.xAxis.angle(difference))
-			.multiply(Quaternion.fromAxis(Vector3d.yAxis, Vector3d.yAxis.angle(difference)))
-			.multiply(Quaternion.fromAxis(Vector3d.zAxis, Vector3d.zAxis.angle(difference)))
-		setRotation(rot)
+		val difference = (end - start).normalize
+		setRotation(Quaternion.fromEuler(difference))
 	})
 
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)
-		setRotation(rotation.multiply(Quaternion.fromAxis(Vector3d.xAxis, time % (Math.PI * 2 / rotationSpeed) * rotationSpeed + rotationSpeed * deltaTime)))
+		setRotation(rotation.multiply(Quaternion.fromAxis(Vector3d.zAxis, time % (Math.PI * 2 / rotationSpeed) * rotationSpeed + rotationSpeed * deltaTime)))
 	}
 
 	renderer.setOnRender(
@@ -58,12 +55,13 @@ class EntityLaserBeam(start: Vector3d, end: Vector3d, color: Color, power: Doubl
 			//GL_ONE
 			model.blendDFactor = 0x1
 
+			model.rotate(Vector3d.xAxis, Math.PI / 2)
+
 			/**
 			 * Rotate the beam
 			 */
-			model.rotate(Vector3d.xAxis, Math.PI / 2)
-
 			val renderColor = color.alpha((particleAlpha * 255).toInt)
+			val halfColor = renderColor.alpha(127)
 
 			/**
 			 * Tessellate laser
@@ -95,10 +93,10 @@ class EntityLaserBeam(start: Vector3d, end: Vector3d, color: Color, power: Doubl
 				val middle = new Model()
 
 				val middleFace = middle.createFace()
-				middleFace.drawVertex(new Vertex(-particleScale, -length / 2 + endSize, 0, 0, 0).setColor(renderColor))
-				middleFace.drawVertex(new Vertex(-particleScale, length / 2 - endSize, 0, 0, 1).setColor(renderColor))
-				middleFace.drawVertex(new Vertex(particleScale, length / 2 - endSize, 0, 1, 1).setColor(renderColor))
-				middleFace.drawVertex(new Vertex(particleScale, -length / 2 + endSize, 0, 1, 0).setColor(renderColor))
+				middleFace.drawVertex(new Vertex(-particleScale, -length / 2 + endSize, 0, 0, 0).setColor(halfColor))
+				middleFace.drawVertex(new Vertex(-particleScale, length / 2 - endSize, 0, 0, 1).setColor(halfColor))
+				middleFace.drawVertex(new Vertex(particleScale, length / 2 - endSize, 0, 1, 1).setColor(halfColor))
+				middleFace.drawVertex(new Vertex(particleScale, -length / 2 + endSize, 0, 1, 0).setColor(halfColor))
 
 				middle.drawFace(middleFace)
 				middleFace.brightness = 1
@@ -122,20 +120,17 @@ class EntityLaserBeam(start: Vector3d, end: Vector3d, color: Color, power: Doubl
 				end.bindAll(OpticsTextures.laserEndTexture)
 				beam.children.add(end)
 
-				//TODO: Not rendering anything
+				//TODO: Not rendering right texture size
 				/**
 				 * Render Noise
 				 */
 				val noise = new Model()
-				//noise.translate(new Vector3d(0, -modifierTranslation, 0))
-				//noise.rotate(Vector3d.xAxis, Math.PI)
 
-				val noiseColor = renderColor.alpha(100)
 				val noiseFace = noise.createFace()
-				noiseFace.drawVertex(new Vertex(-particleScale, -length / 2 + endSize, 0, 0, 0).setColor(noiseColor))
-				noiseFace.drawVertex(new Vertex(-particleScale, length / 2 - endSize, 0, 0, 1).setColor(noiseColor))
-				noiseFace.drawVertex(new Vertex(particleScale, length / 2 - endSize, 0, 1, 1).setColor(noiseColor))
-				noiseFace.drawVertex(new Vertex(particleScale, -length / 2 + endSize, 0, 1, 0).setColor(noiseColor))
+				noiseFace.drawVertex(new Vertex(-particleScale, -length / 2 + endSize, 0, 0, 0).setColor(halfColor))
+				noiseFace.drawVertex(new Vertex(-particleScale, length / 2 - endSize, 0, 0, 1).setColor(halfColor))
+				noiseFace.drawVertex(new Vertex(particleScale, length / 2 - endSize, 0, 1, 1).setColor(halfColor))
+				noiseFace.drawVertex(new Vertex(particleScale, -length / 2 + endSize, 0, 1, 0).setColor(halfColor))
 
 				noise.drawFace(noiseFace)
 				noiseFace.brightness = 1
@@ -147,7 +142,7 @@ class EntityLaserBeam(start: Vector3d, end: Vector3d, color: Color, power: Doubl
 		}
 	)
 
-	override def maxAge: Double = 1
+	override def maxAge: Double = 0.5
 
 	override def getID: String = "laserFx"
 }

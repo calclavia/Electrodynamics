@@ -89,7 +89,7 @@ class OpticGrid(val world: World) extends Updater {
 				if (from != null) {
 					graph.addEdge(from, laser)
 				}
-				else {
+				else if (Game.network.isServer) {
 					graphChanged = true
 				}
 			}
@@ -112,25 +112,33 @@ class OpticGrid(val world: World) extends Updater {
 			}
 		}
 	}
+
+	var timer = 0d
+
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)
+		timer += deltaTime
 
-		graph synchronized {
-			val sources = waveSources
+		if (timer >= 0.2) {
+			timer = 0
 
-			//Reset graph
-			graph = new SimpleDirectedGraph(classOf[DefaultEdge])
+			graph synchronized {
+				val sources = waveSources
 
-			//Regenerate graph based on sources
-			sources.foreach(graph.addVertex)
-			sources.foreach(_.update(deltaTime))
+				//Reset graph
+				graph = new SimpleDirectedGraph(classOf[DefaultEdge])
 
-			if (Game.network().isServer) {
-				//Update client
-				if (graphChanged) {
-					println("Sent optic packet: " + graph.vertexSet().size())
-					Game.network.sync(this)
-					graphChanged = false
+				//Regenerate graph based on sources
+				sources.foreach(graph.addVertex)
+				sources.foreach(_.update(deltaTime))
+
+				if (Game.network().isServer) {
+					//Update client
+					if (graphChanged) {
+						println("Sent optic packet: " + graph.vertexSet().size())
+						Game.network.sync(this)
+						graphChanged = false
+					}
 				}
 			}
 		}

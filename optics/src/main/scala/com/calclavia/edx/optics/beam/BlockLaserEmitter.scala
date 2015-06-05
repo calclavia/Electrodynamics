@@ -7,7 +7,7 @@ import com.calclavia.edx.core.prefab.BlockEDX
 import com.calclavia.edx.electric.api.{ConnectionBuilder, Electric}
 import com.calclavia.edx.electric.grid.NodeElectricComponent
 import com.calclavia.edx.optics.content.{OpticsModels, OpticsTextures}
-import com.calclavia.edx.optics.grid.{Electromagnetic, OpticGrid, OpticHandler}
+import com.calclavia.edx.optics.grid.{ElectromagneticBeam, OpticGrid, OpticHandler}
 import com.resonant.lib.WrapFunctions._
 import nova.core.block.Block.{BlockPlaceEvent, RightClickEvent}
 import nova.core.block.Stateful
@@ -52,22 +52,26 @@ class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater with
 	placeEvent.add((evt: BlockPlaceEvent) => {
 		io.setIOAlternatingOrientation()
 		world.markStaticRender(position)
+		electricNode.rebuild()
 	})
 
 	rightClickEvent.add((evt: RightClickEvent) => {
 		io.setIOAlternatingOrientation()
 		world.markStaticRender(position)
+		electricNode.rebuild()
 	})
 
-	rightClickEvent.add((evt: RightClickEvent) => println(electricNode.positives()))
+	rightClickEvent.add((evt: RightClickEvent) => {
+		laserHandler.destroy()
+	})
 
 	renderer.setOnRender(
 		(model: Model) => {
 			val rot = orientation.orientation match {
 				case Direction.UP => Quaternion.fromAxis(Vector3d.xAxis, -Math.PI / 2)
 				case Direction.DOWN => Quaternion.fromAxis(Vector3d.xAxis, Math.PI / 2)
-				case Direction.NORTH => Quaternion.fromAxis(Vector3d.yAxis, -Math.PI / 2)
 				case Direction.SOUTH => Quaternion.fromAxis(Vector3d.yAxis, Math.PI / 2)
+				case Direction.NORTH => Quaternion.fromAxis(Vector3d.yAxis, -Math.PI / 2)
 				case Direction.WEST => Quaternion.fromAxis(Vector3d.yAxis, Math.PI)
 				case Direction.EAST => Quaternion.fromAxis(Vector3d.yAxis, 0)
 				case _ => Quaternion.identity
@@ -93,7 +97,7 @@ class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater with
 		if (Game.network.isServer) {
 			if (electricNode.power > 0) {
 				val dir = orientation.orientation.toVector.toDouble
-				val beam = new Electromagnetic()
+				val beam = new ElectromagneticBeam()
 				beam.world = world
 				beam.source = new Ray(position.toDouble + 0.5 + dir * 0.51, dir)
 				beam.renderOffset = dir * 0.31

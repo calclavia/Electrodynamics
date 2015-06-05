@@ -1,4 +1,4 @@
-package com.calclavia.edx.electrical.circuit.component.laser.focus
+package com.calclavia.edx.optics..circuit.component.laser.focus
 
 import scala.util.Random
 

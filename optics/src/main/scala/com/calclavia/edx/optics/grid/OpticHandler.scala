@@ -3,7 +3,7 @@ package com.calclavia.edx.optics.grid
 import com.calclavia.edx.optics.grid.OpticHandler.ReceiveBeamEvent
 import com.resonant.lib.WrapFunctions._
 import nova.core.block.Block
-import nova.core.block.Stateful.LoadEvent
+import nova.core.block.Stateful.{LoadEvent, UnloadEvent}
 import nova.core.component.Component
 import nova.core.event.{Event, EventBus}
 import nova.core.util.RayTracer.RayTraceResult
@@ -27,22 +27,18 @@ class OpticHandler(block: Block) extends Component {
 	 */
 	var onReceive = new EventBus[ReceiveBeamEvent]
 
-	private var emitting: Electromagnetic = null
+	private var emitting: ElectromagneticBeam = null
 
 	//Hook block events.
-	block.loadEvent.add(
-		eventListener((evt: LoadEvent) => {
-			//Init grid
-			OpticGrid(block.world)
-		})
-	)
+	block.loadEvent.add(eventListener((evt: LoadEvent) => OpticGrid(block.world)))
+	block.unloadEvent.add((evt: UnloadEvent) => destroy())
 
-	def create(laser: Electromagnetic) {
-
+	def create(laser: ElectromagneticBeam) {
 		if (emitting != null) {
-			if (!emitting.equals(laser)) {
-				destroy()
+			if (emitting.equals(laser)) {
+				return
 			}
+			destroy()
 		}
 
 		OpticGrid(block.world).create(laser)
@@ -50,8 +46,10 @@ class OpticHandler(block: Block) extends Component {
 	}
 
 	def destroy() {
-		OpticGrid(block.world).destroy(emitting)
-		emitting = null
+		if (emitting != null) {
+			OpticGrid(block.world).destroy(emitting)
+			emitting = null
+		}
 	}
 
 }

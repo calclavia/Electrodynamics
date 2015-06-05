@@ -25,7 +25,11 @@ class OpticGridPacket extends PacketType[OpticGrid] {
 
 				//Read graph
 				(0 until packet.readInt())
-					.foreach(i => grid.create(packet.readStorable().asInstanceOf[Beam]))
+					.foreach(i => {
+					val newBeam = packet.readStorable().asInstanceOf[Beam]
+					newBeam.world = world
+					grid.create(newBeam)
+				})
 
 			}
 		}
@@ -35,11 +39,13 @@ class OpticGridPacket extends PacketType[OpticGrid] {
 	}
 
 	override def write(handler: OpticGrid, packet: Packet) {
-		packet.writeString(handler.world.getID)
-		//Write sources
-		val sources = handler.waveSources
-		packet.writeInt(sources.size)
-		sources.foreach(packet.writeStorable)
+		handler.graph synchronized {
+			packet.writeString(handler.world.getID)
+			//Write sources
+			val sources = handler.waveSources
+			packet.writeInt(sources.size)
+			sources.foreach(packet.writeStorable)
+		}
 	}
 
 	override def isHandlerFor(handler: AnyRef): Boolean = handler.isInstanceOf[OpticGrid]

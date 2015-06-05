@@ -2,6 +2,7 @@ package com.calclavia.edx.optics.grid
 
 import com.calclavia.edx.optics.grid.OpticHandler.ReceiveBeamEvent
 import nova.core.component.Updater
+import nova.core.game.Game
 import nova.core.render.Color
 import nova.core.retention.{Data, Storable, Stored}
 import nova.core.util.RayTracer.{RayTraceBlockResult, RayTraceEntityResult, RayTraceResult}
@@ -113,7 +114,9 @@ abstract class Beam extends Storable with Updater {
 			}
 		}
 
-		render(opHit.orElse(null))
+		if (Game.network.isClient) {
+			render(opHit.orElse(null))
+		}
 	}
 
 	def onHitBlock(rayTrace: RayTraceBlockResult)

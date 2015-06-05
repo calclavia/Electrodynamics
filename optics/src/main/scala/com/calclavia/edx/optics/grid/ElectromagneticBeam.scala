@@ -11,7 +11,7 @@ import scala.collection.convert.wrapAll._
 /**
  * @author Calclavia
  */
-class Electromagnetic extends Beam {
+class ElectromagneticBeam extends Beam {
 
 	override def onHitEntity(rayTrace: RayTraceEntityResult) {
 		if (power > OpticGrid.minBurnEnergy) {
