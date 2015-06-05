@@ -5,7 +5,7 @@ import java.util.Optional
 
 import com.calclavia.edx.core.extension.GraphExtension._
 import com.calclavia.edx.electric.circuit.component.laser.WaveGrid.{Electromagnetic, Wave}
-import com.calclavia.edx.electric.circuit.component.laser.fx.{EntityLaser, EntityScorchFX}
+import com.calclavia.edx.electric.circuit.component.laser.fx.{EntityBlockParticle, EntityLaser, EntityScorchFX}
 import com.resonant.lib.WrapFunctions._
 import nova.core.block.Block.DropEvent
 import nova.core.component.Updater
@@ -132,6 +132,9 @@ object WaveGrid {
 				if (hit.isInstanceOf[RayTraceBlockResult]) {
 					val scorch = new EntityScorchFX(hit.side.ordinal())
 					world.addClientEntity(scorch)
+					scorch.setPosition(hit.hit - source.dir * 0.01)
+					val blockParticle = new EntityBlockParticle(hit.asInstanceOf[RayTraceBlockResult].block)
+					world.addClientEntity(blockParticle)
 					scorch.setPosition(hit.hit - source.dir * 0.01)
 				}
 			}

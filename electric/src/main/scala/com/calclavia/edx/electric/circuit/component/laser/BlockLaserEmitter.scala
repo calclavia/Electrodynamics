@@ -16,6 +16,7 @@ import nova.core.component.renderer.ItemRenderer
 import nova.core.component.transform.Orientation
 import nova.core.game.Game
 import nova.core.render.model.Model
+import nova.core.retention.Storable
 import nova.core.util.transform.matrix.Quaternion
 import nova.core.util.transform.vector.Vector3d
 import nova.core.util.{Direction, Ray}
@@ -28,7 +29,7 @@ import nova.scala.{ExtendedUpdater, IO}
  *
  * @author Calclavia
  */
-class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater {
+class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater with Storable {
 	private val electricNode = add(new NodeElectricComponent(this))
 	private val orientation = add(new Orientation(this)).hookBlockEvents()
 	private val laserHandler = add(new WaveHandler(this))
@@ -49,6 +50,11 @@ class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater {
 	lightEmitter.setEmittedLevel(supplier(() => (electricNode.power / WaveGrid.maxPower).toFloat))
 
 	placeEvent.add((evt: BlockPlaceEvent) => {
+		io.setIOAlternatingOrientation()
+		world.markStaticRender(position)
+	})
+
+	rightClickEvent.add((evt: RightClickEvent) => {
 		io.setIOAlternatingOrientation()
 		world.markStaticRender(position)
 	})

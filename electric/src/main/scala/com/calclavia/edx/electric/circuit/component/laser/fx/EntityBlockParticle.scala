@@ -35,6 +35,7 @@ class EntityBlockParticle(block: Block) extends Entity {
 	renderer.setOnRender(
 		(model: Model) => {
 			//Renders a small version of the block
+			//TODO: Does not work yet.
 			BlockModelUtil.drawBlock(model, block)
 		}
 	)
