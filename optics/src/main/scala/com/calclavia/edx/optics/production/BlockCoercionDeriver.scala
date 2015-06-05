@@ -5,7 +5,7 @@ import java.util
 import com.calclavia.edx.optics.Settings
 import com.calclavia.edx.optics.api.modules.Module
 import com.calclavia.edx.optics.base.{BlockModuleHandler, PacketBlock}
-import com.calclavia.edx.optics.content.{OpticsContent, Models, OpticsTextures}
+import com.calclavia.edx.optics.content.{OpticsContent, OpticsModels, OpticsTextures}
 import com.calclavia.edx.optics.item.card.ItemCardFrequency
 import com.resonant.lib.WrapFunctions._
 import nova.core.block.component.StaticBlockRenderer
@@ -63,7 +63,7 @@ class BlockCoercionDeriver extends BlockModuleHandler {
 	get(classOf[StaticBlockRenderer])
 		.setOnRender(
 	    (model: Model) => {
-		    val originalModel = Models.deriver.getModel
+			val originalModel = OpticsModels.deriver.getModel
 		    val capacitorModel = new Model
 		    capacitorModel.children.addAll(originalModel.filterNot(_.name.equals("crystal")))
 		    model.children.add(capacitorModel)
@@ -77,7 +77,7 @@ class BlockCoercionDeriver extends BlockModuleHandler {
 		    model.translate(0, (0.3 + Math.sin(Math.toRadians(animation)) * 0.08) * animationTween - 0.1, 0)
 		    model.rotate(Vector3d.yAxis, animation)
 
-		    val originalModel = Models.deriver.getModel
+			val originalModel = OpticsModels.deriver.getModel
 		    val crystalModel = new Model
 		    crystalModel.children.addAll(originalModel.filter(_.name.equals("crystal")))
 		    //Enable Blending

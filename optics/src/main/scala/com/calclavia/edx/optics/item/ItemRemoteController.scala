@@ -5,7 +5,8 @@ import com.calclavia.edx.optics.api.MFFSEvent.EventForceMobilize
 import com.calclavia.edx.optics.api.card.CoordLink
 import com.calclavia.edx.optics.base.BlockFortron
 import com.calclavia.edx.optics.item.card.ItemCardFrequency
-import com.calclavia.edx.optics.particle.{FXFortronBeam, FieldColor}
+import com.calclavia.edx.optics.fx.FieldColor
+import com.calclavia.edx.optics.beam.fx.EntityMagneticBeam
 import com.calclavia.edx.optics.security.MFFSPermissions
 import com.calclavia.edx.optics.util.MFFSUtility
 import com.resonant.lib.WrapFunctions._
@@ -89,7 +90,7 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 
 							if (consumedEnergy > 0) {
 								if (Side.get().isServer) {
-									val newFX = evt.entity.world.addClientEntity(new FXFortronBeam(FieldColor.blue, 20))
+									val newFX = evt.entity.world.addClientEntity(new EntityMagneticBeam(FieldColor.blue, 20))
 									newFX.setPosition(evt.entity.position /*.add(new Vector3d(0, entity.getEyeHeight - 0.2, 0))*/)
 									newFX.setTarget(fortronBlock.position.toDouble.add(0.5))
 								}

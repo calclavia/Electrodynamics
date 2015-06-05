@@ -1,4 +1,4 @@
-package com.calclavia.edx.electric.circuit.component.laser.fx
+package com.calclavia.edx.optics.beam.fx
 
 import com.calclavia.edx.core.prefab.EntityAgeLike
 import com.calclavia.edx.optics.content.OpticsTextures
@@ -15,7 +15,7 @@ import nova.core.util.transform.vector.Vector3d
  * An entity scorch effect
  * @author Calclavia
  */
-class EntityScorchFX(side: Int) extends Entity with EntityAgeLike {
+class EntityScorch(side: Int) extends Entity with EntityAgeLike {
 	val renderer = add(new DynamicRenderer)
 
 	val particleScale = 0.2f

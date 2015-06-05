@@ -1,13 +1,13 @@
-package com.calclavia.edx.electric.circuit.component.laser
+package com.calclavia.edx.optics.beam
 
 import java.util.function.Supplier
 import java.util.{Set => JSet}
 
 import com.calclavia.edx.core.prefab.BlockEDX
-import com.calclavia.edx.electric.ElectricContent
 import com.calclavia.edx.electric.api.{ConnectionBuilder, Electric}
-import com.calclavia.edx.electric.circuit.component.laser.WaveGrid.Electromagnetic
 import com.calclavia.edx.electric.grid.NodeElectricComponent
+import com.calclavia.edx.optics.content.{OpticsModels, OpticsTextures}
+import com.calclavia.edx.optics.grid.{Electromagnetic, OpticGrid, OpticHandler}
 import com.resonant.lib.WrapFunctions._
 import nova.core.block.Block.{BlockPlaceEvent, RightClickEvent}
 import nova.core.block.Stateful
@@ -32,13 +32,13 @@ import nova.scala.{ExtendedUpdater, IO}
 class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater with Storable {
 	private val electricNode = add(new NodeElectricComponent(this))
 	private val orientation = add(new Orientation(this)).hookBlockEvents()
-	private val laserHandler = add(new WaveHandler(this))
+	private val laserHandler = add(new OpticHandler(this))
 	private val io = add(new IO(this))
 	private val renderer = add(new StaticBlockRenderer(this))
 	private val itemRenderer = add(new ItemRenderer(this))
 	private val lightEmitter = add(new LightEmitter())
 
-	orientation.setMask(63)
+	orientation.setMask(0x3F)
 
 	electricNode.setPositiveConnections(new ConnectionBuilder(classOf[Electric]).setBlock(this).setConnectMask(io.inputMask).adjacentWireSupplier().asInstanceOf[Supplier[JSet[Electric]]])
 	electricNode.setNegativeConnections(new ConnectionBuilder(classOf[Electric]).setBlock(this).setConnectMask(io.outputMask).adjacentWireSupplier().asInstanceOf[Supplier[JSet[Electric]]])
@@ -47,7 +47,7 @@ class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater with
 	collider.isCube(false)
 	collider.isOpaqueCube(false)
 
-	lightEmitter.setEmittedLevel(supplier(() => (electricNode.power / WaveGrid.maxPower).toFloat))
+	lightEmitter.setEmittedLevel(supplier(() => (electricNode.power / OpticGrid.maxPower).toFloat))
 
 	placeEvent.add((evt: BlockPlaceEvent) => {
 		io.setIOAlternatingOrientation()
@@ -66,8 +66,8 @@ class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater with
 			val rot = orientation.orientation match {
 				case Direction.UP => Quaternion.fromAxis(Vector3d.xAxis, -Math.PI / 2)
 				case Direction.DOWN => Quaternion.fromAxis(Vector3d.xAxis, Math.PI / 2)
-				case Direction.NORTH => Quaternion.fromAxis(Vector3d.yAxis, Math.PI / 2)
-				case Direction.SOUTH => Quaternion.fromAxis(Vector3d.yAxis, -Math.PI / 2)
+				case Direction.NORTH => Quaternion.fromAxis(Vector3d.yAxis, -Math.PI / 2)
+				case Direction.SOUTH => Quaternion.fromAxis(Vector3d.yAxis, Math.PI / 2)
 				case Direction.WEST => Quaternion.fromAxis(Vector3d.yAxis, Math.PI)
 				case Direction.EAST => Quaternion.fromAxis(Vector3d.yAxis, 0)
 				case _ => Quaternion.identity
@@ -82,8 +82,8 @@ class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater with
 				model.rotate(Vector3d.xAxis, Math.PI)
 			}
 
-			model.children.add(ElectricContent.laserEmitterModel.getModel)
-			model.bindAll(ElectricContent.laserEmitterTexture)
+			model.children.add(OpticsModels.laserEmitterModel.getModel)
+			model.bindAll(OpticsTextures.laserEmitterTexture)
 		}
 	)
 
@@ -93,10 +93,15 @@ class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater with
 		if (Game.network.isServer) {
 			if (electricNode.power > 0) {
 				val dir = orientation.orientation.toVector.toDouble
-				laserHandler.create(new Electromagnetic(new Ray(position.toDouble + 0.5 + dir * 0.51, dir), position.toDouble + dir * 0.2 + 0.5, electricNode.power / 20))
+				val beam = new Electromagnetic()
+				beam.world = world
+				beam.source = new Ray(position.toDouble + 0.5 + dir * 0.51, dir)
+				beam.renderOffset = dir * 0.31
+				beam.power = electricNode.power
+				laserHandler.create(beam)
 			}
 			else {
-				laserHandler.remove()
+				laserHandler.destroy()
 			}
 		}
 	}

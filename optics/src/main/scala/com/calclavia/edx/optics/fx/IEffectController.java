@@ -1,4 +1,4 @@
-package com.calclavia.edx.optics.particle;
+package com.calclavia.edx.optics.fx;
 
 /**
  * A class that controls the behaviour of an EntityFx.

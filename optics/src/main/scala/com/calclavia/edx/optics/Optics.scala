@@ -1,9 +1,9 @@
 package com.calclavia.edx.optics
 
 import com.calclavia.edx.core.Reference
-import com.calclavia.edx.electric.circuit.component.laser.WaveGrid.WaveGridPacket
 import com.calclavia.edx.optics.api.fortron.Fortron
-import com.calclavia.edx.optics.content.{OpticsContent, Models, OpticsTextures}
+import com.calclavia.edx.optics.content.{OpticsContent, OpticsModels, OpticsTextures}
+import com.calclavia.edx.optics.grid.OpticGridPacket
 import com.calclavia.edx.optics.security.MFFSPermissions
 import com.resonant.lib.MovementManager
 import com.resonant.lib.WrapFunctions._
@@ -20,8 +20,8 @@ object Optics extends Loadable {
 	var movementManager: MovementManager = null
 
 	override def preInit() {
-		//Register WaveGrid packets
-		Game.network.register(new WaveGridPacket)
+		//Register OpticGrid packets
+		Game.network.register(new OpticGridPacket)
 
 		//Hook block change event
 		Game.events.blockChange.add((evt: BlockChangeEvent) => EventHandler.onBlockChange(evt))
@@ -35,13 +35,13 @@ object Optics extends Loadable {
 		Game.fluids.register((args: Array[AnyRef]) => new Fluid(Fortron.fortronID))
 
 		OpticsContent.preInit()
-		Models.preInit()
+		OpticsModels.preInit()
 		OpticsTextures.preInit()
 	}
 
 	override def init() {
 		OpticsContent.init()
-		Models.init()
+		OpticsModels.init()
 		OpticsTextures.init()
 	}
 
@@ -75,7 +75,7 @@ object Optics extends Loadable {
 		MFFSPermissions
 
 		OpticsContent.postInit()
-		Models.postInit()
+		OpticsModels.postInit()
 		OpticsTextures.postInit()
 	}
 

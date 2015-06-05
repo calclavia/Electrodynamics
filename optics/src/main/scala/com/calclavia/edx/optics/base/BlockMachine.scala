@@ -114,7 +114,7 @@ abstract class BlockMachine extends BlockDefault with PacketHandler with IActiva
 		val opOriented = getOp(classOf[Orientation])
 
 		if (opOriented.isPresent) {
-			evt.result = opOriented.get().rotate(evt.side.ordinal(), evt.position)
+			evt.result = opOriented.get().wave(evt.side.ordinal(), evt.position)
 			return
 		}
 

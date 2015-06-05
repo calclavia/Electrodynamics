@@ -2,7 +2,7 @@ package com.calclavia.edx.electric
 
 import com.calclavia.edx.core.Reference
 import com.calclavia.edx.electric.circuit.component.BlockSiren
-import com.calclavia.edx.electric.circuit.component.laser.{BlockLaserEmitter, BlockLaserReceiver}
+import com.calclavia.edx.optics.beam.{BlockLaserEmitter, BlockLaserReceiver}
 import com.calclavia.edx.electric.circuit.source.{BlockBattery, BlockSolarPanel, BlockThermopile}
 import com.calclavia.edx.electric.circuit.wire.BlockWire
 import com.resonant.core.prefab.modcontent.ContentLoader
@@ -22,8 +22,6 @@ object ElectricContent extends ContentLoader {
 	val thermopile: BlockFactory = classOf[BlockThermopile]
 	val solarPanel: BlockFactory = classOf[BlockSolarPanel]
 	val siren: BlockFactory = classOf[BlockSiren]
-	val laserEmitter: BlockFactory = classOf[BlockLaserEmitter]
-	val laserReceiver: BlockFactory = classOf[BlockLaserReceiver]
 
 	/**
 	 * Items
@@ -41,15 +39,11 @@ object ElectricContent extends ContentLoader {
 	val thermopileTextureTop = new BlockTexture(Reference.domain, "material_metal_top")
 	val thermopileTextureSide = new BlockTexture(Reference.domain, "thermopile")
 	val sirenTexture = new BlockTexture(Reference.domain, "siren")
-	val laserEmitterTexture = new BlockTexture(Reference.domain, "laserEmitter")
-	val laserReceiverTexture = new BlockTexture(Reference.domain, "laserReceiver")
 
 	/**
 	 * Models
 	 */
 	val batteryModel = new TechneModel(Reference.domain, "battery")
-	val laserReceiverModel = new TechneModel(Reference.domain, "laserReceiver")
-	val laserEmitterModel = new TechneModel(Reference.domain, "laserEmitter")
 
 	override def id: String = Reference.electricID
 }

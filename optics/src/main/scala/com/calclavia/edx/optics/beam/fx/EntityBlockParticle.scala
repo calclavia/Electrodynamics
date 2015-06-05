@@ -1,4 +1,4 @@
-package com.calclavia.edx.electric.circuit.component.laser.fx
+package com.calclavia.edx.optics.beam.fx
 
 import com.resonant.lib.WrapFunctions._
 import nova.core.block.Block

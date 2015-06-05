@@ -1,4 +1,4 @@
-package com.calclavia.edx.optics.particle
+package com.calclavia.edx.optics.fx
 
 import nova.core.entity.Entity
 import nova.scala.ExtendedUpdater

@@ -5,7 +5,7 @@ import com.calclavia.edx.optics.api.card.CoordLink
 import com.calclavia.edx.optics.api.fortron.FortronFrequency
 import com.calclavia.edx.optics.api.modules.Module
 import com.calclavia.edx.optics.base.{BlockModuleHandler, PacketBlock}
-import com.calclavia.edx.optics.content.{OpticsContent, Models, OpticsTextures}
+import com.calclavia.edx.optics.content.{OpticsContent, OpticsModels, OpticsTextures}
 import com.calclavia.edx.optics.item.card.ItemCardFrequency
 import com.calclavia.edx.optics.util.{FortronUtility, TransferMode}
 import com.resonant.lib.WrapFunctions._
@@ -51,7 +51,7 @@ class BlockFortronCapacitor extends BlockModuleHandler {
 				.scale(1.3, 1.3, 1.3)
 				.getMatrix
 
-			model.children.add(Models.fortronCapacitor.getModel)
+			model.children.add(OpticsModels.fortronCapacitor.getModel)
 			model.bindAll(if (isActive) OpticsTextures.fortronCapacitorOn else OpticsTextures.fortronCapacitorOff)
 		}
 	)

@@ -9,7 +9,9 @@ import com.calclavia.edx.optics.field.{BlockForceField, BlockProjector}
 import com.calclavia.edx.optics.gui.GuiFortronCapacitor
 import com.calclavia.edx.optics.item.ItemRemoteController
 import com.calclavia.edx.optics.item.card.{ItemCard, ItemCardFrequency, ItemCardInfinite, ItemCardLink}
-import com.calclavia.edx.optics.particle.{FXFortronBeam, FXHologram, FXHologramProgress, FieldColor}
+import com.calclavia.edx.optics.beam.fx.EntityMagneticBeam
+import com.calclavia.edx.optics.beam.{BlockLaserReceiver, BlockLaserEmitter}
+import com.calclavia.edx.optics.fx.{FXHologram, FXHologramProgress, FieldColor}
 import com.calclavia.edx.optics.production.{BlockCoercionDeriver, BlockFortronCapacitor}
 import com.calclavia.edx.optics.security.BlockBiometric
 import com.calclavia.edx.optics.security.card.ItemCardIdentification
@@ -35,6 +37,10 @@ object OpticsContent extends ContentLoader {
 	val biometricIdentifier: BlockFactory = classOf[BlockBiometric]
 	val forceMobilizer: BlockFactory = classOf[BlockMobilizer]
 	val forceField: BlockFactory = classOf[BlockForceField]
+
+	val laserEmitter: BlockFactory = classOf[BlockLaserEmitter]
+	val laserReceiver: BlockFactory = classOf[BlockLaserReceiver]
+
 	/**
 	 * Misc Items
 	 */
@@ -88,7 +94,7 @@ object OpticsContent extends ContentLoader {
 	val moduleBlockAlter: ItemFactory = () => (new ItemModuleDefense with Named).setCost(15).setName("moduleBlockAlter")
 	val moduleAntiSpawn: ItemFactory = () => (new ItemModuleDefense with Named).setCost(10).setName("moduleAntiSpawn")
 	//TODO: Allow args.
-	val fxFortronBeam: EntityFactory = () => new FXFortronBeam(FieldColor.blue, 40)
+	val fxFortronBeam: EntityFactory = () => new EntityMagneticBeam(FieldColor.blue, 40)
 	val fxHologram: EntityFactory = () => new FXHologram(FieldColor.blue, 40)
 	val fxHologramProgress: EntityFactory = () => new FXHologramProgress(FieldColor.blue, 40)
 	//GUI

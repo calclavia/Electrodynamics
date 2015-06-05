@@ -6,8 +6,8 @@ import com.calclavia.edx.optics.api.MFFSEvent.EventForceMobilize
 import com.calclavia.edx.optics.api.card.CoordLink
 import com.calclavia.edx.optics.api.{Blacklist, MFFSEvent}
 import com.calclavia.edx.optics.base.{BlockFieldMatrix, PacketBlock}
-import com.calclavia.edx.optics.content.{OpticsContent, Models, OpticsTextures}
-import com.calclavia.edx.optics.particle.{FXHologramProgress, FieldColor, IEffectController}
+import com.calclavia.edx.optics.content.{OpticsContent, OpticsModels, OpticsTextures}
+import com.calclavia.edx.optics.fx.{FXHologramProgress, FieldColor, IEffectController}
 import com.calclavia.edx.optics.security.{MFFSPermissions, PermissionHandler}
 import com.calclavia.edx.optics.util.MFFSUtility
 import com.calclavia.edx.optics.{Optics, Settings}
@@ -69,7 +69,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 			    .rotate(get(classOf[Orientation]).orientation.rotation)
 			    .getMatrix
 
-		    model.children.add(Models.mobilizer.getModel)
+			model.children.add(OpticsModels.mobilizer.getModel)
 			model.bindAll(if (isActive) OpticsTextures.mobilizerOn else OpticsTextures.mobilizerOff)
 	    }
 		)

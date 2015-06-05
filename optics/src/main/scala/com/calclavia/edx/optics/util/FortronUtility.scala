@@ -4,7 +4,8 @@ import com.calclavia.edx.optics.Settings
 import com.calclavia.edx.optics.api.fortron.FortronFrequency
 import com.calclavia.edx.optics.base.BlockModuleHandler
 import com.calclavia.edx.optics.content.OpticsContent
-import com.calclavia.edx.optics.particle.{FXFortronBeam, FieldColor}
+import com.calclavia.edx.optics.fx.FieldColor
+import com.calclavia.edx.optics.beam.fx.EntityMagneticBeam
 import nova.core.block.Block
 import nova.core.network.NetworkTarget.Side
 
@@ -90,7 +91,7 @@ object FortronUtility {
 				var toBeInjected: Int = receiver.removeFortron(transferer.addFortron(transferEnergy, false), false)
 				toBeInjected = transferer.addFortron(receiver.removeFortron(toBeInjected, true), true)
 				if (Side.get().isClient && toBeInjected > 0 && !isCamo) {
-					val particle = world.addClientEntity(new FXFortronBeam(FieldColor.blue, 20))
+					val particle = world.addClientEntity(new EntityMagneticBeam(FieldColor.blue, 20))
 					particle.setPosition(block.position.toDouble + 0.5)
 					particle.setTarget(receiver.asInstanceOf[Block].position.toDouble + 0.5)
 				}
@@ -100,7 +101,7 @@ object FortronUtility {
 				var toBeEjected: Int = transferer.removeFortron(receiver.addFortron(transferEnergy, false), false)
 				toBeEjected = receiver.addFortron(transferer.removeFortron(toBeEjected, true), true)
 				if (Side.get().isClient && toBeEjected > 0 && !isCamo) {
-					val particle = world.addClientEntity(new FXFortronBeam(FieldColor.blue, 20))
+					val particle = world.addClientEntity(new EntityMagneticBeam(FieldColor.blue, 20))
 					particle.setTarget(block.position.toDouble + 0.5)
 					particle.setPosition(receiver.asInstanceOf[Block].position.toDouble + 0.5)
 				}

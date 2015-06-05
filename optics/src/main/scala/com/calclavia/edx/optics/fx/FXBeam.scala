@@ -1,4 +1,4 @@
-package com.calclavia.edx.optics.particle
+package com.calclavia.edx.optics.fx
 
 import com.resonant.lib.WrapFunctions._
 import nova.core.component.renderer.DynamicRenderer

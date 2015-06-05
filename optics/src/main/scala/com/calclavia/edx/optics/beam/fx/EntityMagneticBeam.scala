@@ -1,6 +1,7 @@
-package com.calclavia.edx.optics.particle
+package com.calclavia.edx.optics.beam.fx
 
 import com.calclavia.edx.optics.content.OpticsTextures
+import com.calclavia.edx.optics.fx.FXBeam
 import nova.core.render.Color
 
 /**
@@ -8,6 +9,6 @@ import nova.core.render.Color
  *
  * @author Calclavia, Azanor
  */
-class FXFortronBeam(color: Color, maxAge: Double)
+class EntityMagneticBeam(color: Color, maxAge: Double)
 	extends FXBeam(OpticsTextures.fortron, color, maxAge) {
 }

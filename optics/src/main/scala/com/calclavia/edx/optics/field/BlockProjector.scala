@@ -6,9 +6,10 @@ import com.calclavia.edx.optics.Settings
 import com.calclavia.edx.optics.api.machine.Projector
 import com.calclavia.edx.optics.api.modules.Module.ProjectState
 import com.calclavia.edx.optics.base.{BlockFieldMatrix, PacketBlock}
-import com.calclavia.edx.optics.content.{OpticsContent, Models, OpticsTextures}
+import com.calclavia.edx.optics.content.{OpticsContent, OpticsModels, OpticsTextures}
 import com.calclavia.edx.optics.field.shape.ItemShapeCustom
-import com.calclavia.edx.optics.particle.{FXFortronBeam, FXHologramProgress, FieldColor}
+import com.calclavia.edx.optics.fx.{FXHologramProgress, FieldColor}
+import com.calclavia.edx.optics.beam.fx.EntityMagneticBeam
 import com.calclavia.edx.optics.security.PermissionHandler
 import com.calclavia.edx.optics.util.CacheHandler
 import com.resonant.lib.WrapFunctions._
@@ -66,7 +67,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 		.setOnRender(
 	    (model: Model) => {
 		    model.rotate(get(classOf[Orientation]).orientation.rotation)
-		    model.children.add(Models.projector.getModel)
+			model.children.add(OpticsModels.projector.getModel)
 			model.bindAll(if (isActive) OpticsTextures.projectorOn else OpticsTextures.projectorOff)
 	    }
 		)
@@ -213,11 +214,11 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 				val pos = transform.position.toDouble + 0.5
 
 				if (packetType == 1) {
-					world.addClientEntity(OpticsContent.fxFortronBeam).transform.setPosition(pos).asInstanceOf[FXFortronBeam].setTarget(target)
+					world.addClientEntity(OpticsContent.fxFortronBeam).transform.setPosition(pos).asInstanceOf[EntityMagneticBeam].setTarget(target)
 					world.addClientEntity(OpticsContent.fxHologramProgress).transform.setPosition(pos)
 				}
 				else if (packetType == 2) {
-					world.addClientEntity(OpticsContent.fxFortronBeam).transform.setPosition(pos).asInstanceOf[FXFortronBeam].setTarget(target).setColor(FieldColor.red)
+					world.addClientEntity(OpticsContent.fxFortronBeam).transform.setPosition(pos).asInstanceOf[EntityMagneticBeam].setTarget(target).setColor(FieldColor.red)
 					world.addClientEntity(OpticsContent.fxHologramProgress).transform.setPosition(pos).asInstanceOf[FXHologramProgress].setColor(FieldColor.red)
 				}
 			}

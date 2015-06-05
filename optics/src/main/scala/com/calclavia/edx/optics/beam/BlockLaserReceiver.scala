@@ -1,4 +1,4 @@
-package com.calclavia.edx.electric.circuit.component.laser
+package com.calclavia.edx.optics.beam
 
 import java.util.function.Supplier
 import java.util.{Set => JSet}
@@ -7,6 +7,9 @@ import com.calclavia.edx.core.prefab.BlockEDX
 import com.calclavia.edx.electric.ElectricContent
 import com.calclavia.edx.electric.api.{ConnectionBuilder, Electric}
 import com.calclavia.edx.electric.grid.NodeElectricComponent
+import com.calclavia.edx.optics.content.{OpticsTextures, OpticsModels}
+import com.calclavia.edx.optics.grid.OpticHandler
+import com.calclavia.edx.optics.grid.OpticHandler.ReceiveBeamEvent
 import com.resonant.lib.WrapFunctions._
 import nova.core.block.Block.{BlockPlaceEvent, RightClickEvent}
 import nova.core.block.Stateful
@@ -28,7 +31,7 @@ import nova.scala.IO
 class BlockLaserReceiver extends BlockEDX with Stateful with Storable {
 	private val electricNode = new NodeElectricComponent(this)
 	private val orientation = add(new Orientation(this)).hookBlockEvents()
-	private val laserHandler = add(new WaveHandler(this))
+	private val laserHandler = add(new OpticHandler(this))
 	private val io = add(new IO(this))
 	private val renderer = add(new StaticBlockRenderer(this))
 	private val itemRenderer = add(new ItemRenderer(this))
@@ -53,11 +56,11 @@ class BlockLaserReceiver extends BlockEDX with Stateful with Storable {
 		world.markStaticRender(position)
 	})
 
-	laserHandler.onPowerChange.add((evt: Event) => {
+	laserHandler.onReceive.add((evt: ReceiveBeamEvent) => {
 		//if (hit.sideHit == getDirection.ordinal)
 		{
 			//TODO: Change voltage until power = energy
-			electricNode.generateVoltage(laserHandler.receivingPower)
+			electricNode.generateVoltage(evt.receivingPower)
 		}
 	})
 
@@ -82,8 +85,8 @@ class BlockLaserReceiver extends BlockEDX with Stateful with Storable {
 				model.rotate(Vector3d.xAxis, Math.PI)
 			}
 
-			model.children.add(ElectricContent.laserReceiverModel.getModel)
-			model.bindAll(ElectricContent.laserReceiverTexture)
+			model.children.add(OpticsModels.laserReceiverModel.getModel)
+			model.bindAll(OpticsTextures.laserReceiverTexture)
 		}
 	)
 

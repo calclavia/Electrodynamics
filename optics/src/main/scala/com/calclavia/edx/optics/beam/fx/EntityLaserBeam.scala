@@ -1,8 +1,8 @@
-package com.calclavia.edx.electric.circuit.component.laser.fx
+package com.calclavia.edx.optics.beam.fx
 
 import com.calclavia.edx.core.prefab.EntityAgeLike
-import com.calclavia.edx.electric.circuit.component.laser.WaveGrid
 import com.calclavia.edx.optics.content.OpticsTextures
+import com.calclavia.edx.optics.grid.{OpticGrid, OpticGrid$}
 import com.resonant.lib.WrapFunctions._
 import nova.core.block.Stateful.LoadEvent
 import nova.core.component.renderer.DynamicRenderer
@@ -18,11 +18,11 @@ import scala.util.Random
  * The laser beam effect for electromagnetic waves
  * @author Calclavia
  */
-class EntityLaser(start: Vector3d, end: Vector3d, color: Color, power: Double) extends Entity with EntityAgeLike {
+class EntityLaserBeam(start: Vector3d, end: Vector3d, color: Color, power: Double) extends Entity with EntityAgeLike {
 
 	val renderer = add(new DynamicRenderer)
 
-	val energyPercentage = Math.min(power / WaveGrid.maxPower, 1).toFloat
+	val energyPercentage = Math.min(power / OpticGrid.maxPower, 1).toFloat
 	val detail = (6 + 14 * energyPercentage).toInt
 	val rotationSpeed = 18
 

@@ -1,4 +1,4 @@
-package com.calclavia.edx.optics.particle
+package com.calclavia.edx.optics.fx
 
 import com.calclavia.edx.optics.content.OpticsTextures
 import com.resonant.lib.WrapFunctions._

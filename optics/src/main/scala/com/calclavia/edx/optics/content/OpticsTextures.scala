@@ -25,6 +25,8 @@ object OpticsTextures extends ContentLoader {
 	val mobilizerOn = new BlockTexture(Reference.domain, "forceMobilizer_on")
 	val mobilizerOff = new BlockTexture(Reference.domain, "forceMobilizer_off")
 
+	val laserEmitterTexture = new BlockTexture(Reference.domain, "laserEmitter")
+	val laserReceiverTexture = new BlockTexture(Reference.domain, "laserReceiver")
 	/**
 	 * Particle FX
 	 */
