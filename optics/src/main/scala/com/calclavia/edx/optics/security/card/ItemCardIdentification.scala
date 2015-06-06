@@ -7,13 +7,13 @@ import nova.core.game.Game
 import nova.core.gui.InputManager.Key
 import nova.core.item.Item.{RightClickEvent, TooltipEvent}
 import nova.core.network.NetworkTarget.Side
-import nova.core.network.{Packet, PacketHandler}
+import nova.core.network.{Packet, Syncable}
 import nova.core.retention.Stored
 import nova.core.util.transform.vector.Vector3i
 
 import scala.beans.BeanProperty
 
-class ItemCardIdentification extends ItemCardAccess with PacketHandler {
+class ItemCardIdentification extends ItemCardAccess with Syncable {
 	/*
 	override def hitEntity(Item: Item, entityLiving: EntityLivingBase, par3EntityLiving: EntityLivingBase): Boolean = {
 		if (entityLiving.isInstanceOf[Player]) {

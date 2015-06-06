@@ -2,7 +2,7 @@ package com.calclavia.edx.optics.grid
 
 import nova.core.game.Game
 import nova.core.network.Packet
-import nova.core.network.handler.PacketType
+import nova.core.network.handler.PacketHandler
 import nova.core.util.exception.NovaException
 import org.jgrapht.graph.{DefaultEdge, SimpleDirectedGraph}
 
@@ -12,7 +12,7 @@ import org.jgrapht.graph.{DefaultEdge, SimpleDirectedGraph}
 /**
  * Handles the packets for waves.
  */
-class OpticGridPacket extends PacketType[OpticGrid] {
+class OpticGridPacket extends PacketHandler[OpticGrid] {
 	override def read(packet: Packet) {
 		val worldID = packet.readString()
 		val opWorld = Game.worlds().findWorld(worldID)

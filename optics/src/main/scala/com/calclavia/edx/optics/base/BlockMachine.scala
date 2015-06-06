@@ -17,7 +17,7 @@ import nova.core.component.transform.Orientation
 import nova.core.game.Game
 import nova.core.gui.InputManager.Key
 import nova.core.network.NetworkTarget.Side
-import nova.core.network.{Packet, PacketHandler}
+import nova.core.network.{Packet, Syncable}
 import nova.core.retention.{Storable, Stored}
 import nova.core.util.Direction
 
@@ -26,7 +26,7 @@ import nova.core.util.Direction
  * @author Calclavia
  */
 //TODO: Redstone state is not properly saved
-abstract class BlockMachine extends BlockDefault with PacketHandler with IActivatable with Stateful with Storable {
+abstract class BlockMachine extends BlockDefault with Syncable with IActivatable with Stateful with Storable {
 	/**
 	 * Used for client side animations.
 	 */

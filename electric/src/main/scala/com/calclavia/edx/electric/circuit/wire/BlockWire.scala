@@ -15,7 +15,7 @@ import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.misc.Collider
 import nova.core.component.renderer.ItemRenderer
 import nova.core.game.Game
-import nova.core.network.{Packet, PacketHandler, Sync}
+import nova.core.network.{Packet, Syncable, Sync}
 import nova.core.render.model.{BlockModelUtil, Model, StaticCubeTextureCoordinates}
 import nova.core.retention.{Storable, Stored}
 import nova.core.util.transform.matrix.Quaternion
@@ -83,7 +83,7 @@ object BlockWire {
 }
 
 // with TWire with TFacePart with TNormalOcclusion
-class BlockWire extends BlockEDX with Storable with PacketHandler {
+class BlockWire extends BlockEDX with Storable with Syncable {
 
 	/**
 	 * The side the wire is placed on.
@@ -197,7 +197,7 @@ class BlockWire extends BlockEDX with Storable with PacketHandler {
 	collider.isOpaqueCube(false)
 
 	override def read(packet: Packet) {
-		super[PacketHandler].read(packet)
+		super[Syncable].read(packet)
 		world.markStaticRender(position)
 	}
 

@@ -18,13 +18,13 @@ import nova.core.entity.Entity
 import nova.core.entity.component.Player
 import nova.core.game.Game
 import nova.core.network.NetworkTarget.Side
-import nova.core.network.{PacketHandler, Sync}
+import nova.core.network.{Syncable, Sync}
 import nova.core.render.model.Model
 import nova.core.retention.{Storable, Stored}
 import nova.core.util.Direction
 import nova.core.util.transform.vector.Vector3i
 
-class BlockForceField extends BlockDefault with PacketHandler with ForceField with Storable {
+class BlockForceField extends BlockDefault with Syncable with ForceField with Storable {
 
 	@Stored
 	@Sync

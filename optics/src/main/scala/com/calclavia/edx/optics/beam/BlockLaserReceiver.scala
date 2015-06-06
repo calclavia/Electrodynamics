@@ -15,7 +15,7 @@ import nova.core.block.Stateful
 import nova.core.block.component.{LightEmitter, StaticBlockRenderer}
 import nova.core.component.renderer.ItemRenderer
 import nova.core.component.transform.Orientation
-import nova.core.network.PacketHandler
+import nova.core.network.Syncable
 import nova.core.render.model.Model
 import nova.core.retention.Storable
 import nova.core.util.Direction
@@ -27,7 +27,7 @@ import nova.scala.{ExtendedUpdater, IO}
  * A block that receives laser light and generates a voltage.
  * @author Calclavia
  */
-class BlockLaserReceiver extends BlockEDX with Stateful with ExtendedUpdater with Storable with PacketHandler {
+class BlockLaserReceiver extends BlockEDX with Stateful with ExtendedUpdater with Storable with Syncable {
 	private val electricNode = new NodeElectricComponent(this)
 	private val orientation = add(new Orientation(this)).hookBlockEvents()
 	private val laserHandler = add(new OpticHandler(this))

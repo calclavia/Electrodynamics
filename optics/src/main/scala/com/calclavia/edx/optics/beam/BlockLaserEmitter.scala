@@ -16,7 +16,7 @@ import nova.core.component.renderer.ItemRenderer
 import nova.core.component.transform.Orientation
 import nova.core.event.Event
 import nova.core.game.Game
-import nova.core.network.{Sync, Packet, PacketHandler}
+import nova.core.network.{Sync, Packet, Syncable}
 import nova.core.render.model.Model
 import nova.core.retention.{Stored, Data, Storable}
 import nova.core.util.transform.matrix.Quaternion
@@ -31,7 +31,7 @@ import nova.scala.{ExtendedUpdater, IO}
  *
  * @author Calclavia
  */
-class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater with Storable with PacketHandler {
+class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater with Storable with Syncable {
 	private val electricNode = add(new NodeElectricComponent(this))
 	@Stored
 	@Sync

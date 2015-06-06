@@ -17,7 +17,7 @@ import nova.core.component.transform.Orientation
 import nova.core.event.Event
 import nova.core.game.Game
 import nova.core.item.Item
-import nova.core.network.{PacketHandler, Sync}
+import nova.core.network.{Syncable, Sync}
 import nova.core.render.model.Model
 import nova.core.retention.{Storable, Stored}
 import nova.scala.{ExtendedUpdater, IO}
@@ -37,7 +37,7 @@ object BlockBattery {
 	def getEnergyForTier(tier: Int) = Math.round(Math.pow(500000000, (tier / (maxTier + 0.7f)) + 1) / 500000000) * 500000000
 }
 
-class BlockBattery extends BlockEDX with PacketHandler with Storable with ExtendedUpdater {
+class BlockBattery extends BlockEDX with Syncable with Storable with ExtendedUpdater {
 
 	@Stored
 	@Sync
