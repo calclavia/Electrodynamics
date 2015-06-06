@@ -43,9 +43,11 @@ class BlockBattery extends BlockEDX with PacketHandler with Storable with Extend
 	@Sync
 	private var tier = 0
 	private var energyRenderLevel = 0
+	@Stored
 	private var energy = add(new EnergyStorage)
 	private val electricNode = add(new NodeElectricComponent(this))
 	private val orientation = add(new Orientation(this)).hookBlockEvents()
+	@Stored
 	private val io = add(new IO(this))
 	private val redstone = add(Game.components().make(classOf[Redstone], this))
 	private val staticRenderer = add(new StaticBlockRenderer(this))

@@ -45,7 +45,7 @@ class EntityLaserBeam(start: Vector3d, end: Vector3d, color: Color, power: Doubl
 
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)
-		setRotation(rotation.multiply(Quaternion.fromAxis(Vector3d.zAxis, time % (Math.PI * 2 / rotationSpeed) * rotationSpeed + rotationSpeed * deltaTime)))
+		//setRotation(rotation.multiply(Quaternion.fromAxis(Vector3d.zAxis, time % (Math.PI * 2 / rotationSpeed) * rotationSpeed + rotationSpeed * deltaTime)))
 	}
 
 	renderer.setOnRender(

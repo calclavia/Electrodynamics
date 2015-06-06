@@ -4,10 +4,9 @@ import java.util.function.Supplier
 import java.util.{Set => JSet}
 
 import com.calclavia.edx.core.prefab.BlockEDX
-import com.calclavia.edx.electric.ElectricContent
 import com.calclavia.edx.electric.api.{ConnectionBuilder, Electric}
 import com.calclavia.edx.electric.grid.NodeElectricComponent
-import com.calclavia.edx.optics.content.{OpticsTextures, OpticsModels}
+import com.calclavia.edx.optics.content.{OpticsModels, OpticsTextures}
 import com.calclavia.edx.optics.grid.OpticHandler
 import com.calclavia.edx.optics.grid.OpticHandler.ReceiveBeamEvent
 import com.resonant.lib.WrapFunctions._
@@ -16,19 +15,19 @@ import nova.core.block.Stateful
 import nova.core.block.component.{LightEmitter, StaticBlockRenderer}
 import nova.core.component.renderer.ItemRenderer
 import nova.core.component.transform.Orientation
-import nova.core.event.Event
+import nova.core.network.PacketHandler
 import nova.core.render.model.Model
 import nova.core.retention.Storable
 import nova.core.util.Direction
 import nova.core.util.transform.matrix.Quaternion
 import nova.core.util.transform.vector.Vector3d
-import nova.scala.IO
+import nova.scala.{ExtendedUpdater, IO}
 
 /**
  * A block that receives laser light and generates a voltage.
  * @author Calclavia
  */
-class BlockLaserReceiver extends BlockEDX with Stateful with Storable {
+class BlockLaserReceiver extends BlockEDX with Stateful with ExtendedUpdater with Storable with PacketHandler {
 	private val electricNode = new NodeElectricComponent(this)
 	private val orientation = add(new Orientation(this)).hookBlockEvents()
 	private val laserHandler = add(new OpticHandler(this))

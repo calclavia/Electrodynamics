@@ -9,14 +9,16 @@ import com.calclavia.edx.electric.grid.NodeElectricComponent
 import com.calclavia.edx.optics.content.{OpticsModels, OpticsTextures}
 import com.calclavia.edx.optics.grid.{ElectromagneticBeam, OpticGrid, OpticHandler}
 import com.resonant.lib.WrapFunctions._
-import nova.core.block.Block.{BlockPlaceEvent, RightClickEvent}
+import nova.core.block.Block.RightClickEvent
 import nova.core.block.Stateful
 import nova.core.block.component.{LightEmitter, StaticBlockRenderer}
 import nova.core.component.renderer.ItemRenderer
 import nova.core.component.transform.Orientation
+import nova.core.event.Event
 import nova.core.game.Game
+import nova.core.network.{Sync, Packet, PacketHandler}
 import nova.core.render.model.Model
-import nova.core.retention.Storable
+import nova.core.retention.{Stored, Data, Storable}
 import nova.core.util.transform.matrix.Quaternion
 import nova.core.util.transform.vector.Vector3d
 import nova.core.util.{Direction, Ray}
@@ -29,10 +31,14 @@ import nova.scala.{ExtendedUpdater, IO}
  *
  * @author Calclavia
  */
-class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater with Storable {
+class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater with Storable with PacketHandler {
 	private val electricNode = add(new NodeElectricComponent(this))
+	@Stored
+	@Sync
 	private val orientation = add(new Orientation(this)).hookBlockEvents()
 	private val laserHandler = add(new OpticHandler(this))
+	@Stored
+	@Sync
 	private val io = add(new IO(this))
 	private val renderer = add(new StaticBlockRenderer(this))
 	private val itemRenderer = add(new ItemRenderer(this))
@@ -49,16 +55,15 @@ class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater with
 
 	lightEmitter.setEmittedLevel(supplier(() => (electricNode.power / OpticGrid.maxPower).toFloat))
 
-	placeEvent.add((evt: BlockPlaceEvent) => {
-		io.setIOAlternatingOrientation()
-		world.markStaticRender(position)
-		electricNode.rebuild()
-	})
-
-	rightClickEvent.add((evt: RightClickEvent) => {
-		io.setIOAlternatingOrientation()
-		world.markStaticRender(position)
-		electricNode.rebuild()
+	orientation.onOrientationChange.add((evt: Event) => {
+		if (Game.network.isServer) {
+			io.setIOAlternatingOrientation()
+			electricNode.rebuild()
+			Game.network().sync(this)
+		}
+		else {
+			world.markStaticRender(position)
+		}
 	})
 
 	rightClickEvent.add((evt: RightClickEvent) => {
@@ -108,6 +113,16 @@ class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater with
 				laserHandler.destroy()
 			}
 		}
+	}
+
+	override def load(data: Data) {
+		super.load(data)
+		world.markStaticRender(position)
+	}
+
+	override def read(packet: Packet) {
+		super.read(packet)
+		world.markStaticRender(position)
 	}
 
 	override def getID: String = "laserEmitter"

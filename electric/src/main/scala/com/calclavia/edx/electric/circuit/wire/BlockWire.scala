@@ -129,8 +129,9 @@ class BlockWire extends BlockEDX with Storable with PacketHandler {
 				Optional.of(MicroblockContainer.sidePosition(Direction.fromOrdinal(this.side)))
 			}
 		)
-
-	add(new MaterialWire)
+	@Sync
+	@Stored
+	private val material = add(new MaterialWire)
 
 	add(new StaticBlockRenderer(this))
 		.setOnRender(
@@ -144,7 +145,7 @@ class BlockWire extends BlockEDX with Storable with PacketHandler {
 			}
 		)
 
-	add(new ItemRenderer(this))
+	private val itemRenderer = add(new ItemRenderer(this))
 		.setOnRender(
 			(model: Model) => {
 				(0 until 5)

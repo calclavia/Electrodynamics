@@ -148,7 +148,7 @@ class TileReactorCell extends TileInventory(Material.iron) with IMultiBlockStruc
         val drain: FluidStack = tank.drain(FluidContainerRegistry.BUCKET_VOLUME, false)
         if (drain != null && drain.amount >= FluidContainerRegistry.BUCKET_VOLUME)
         {
-          val spawnDir: ForgeDirection = ForgeDirection.getOrientation(worldObj.rand.nextInt(3) + 2)
+          val spawnDir: ForgeDirection = ForgeDirection.orientation(worldObj.rand.nextInt(3) + 2)
           val spawnPos: Vector3 = position + spawnDir + spawnDir
           spawnPos.add(0, Math.max(worldObj.rand.nextInt(getHeight) - 1, 0), 0)
           if (worldObj.isAirBlock(spawnPos.xi, spawnPos.yi, spawnPos.zi))
