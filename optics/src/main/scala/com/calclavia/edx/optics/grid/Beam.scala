@@ -1,5 +1,7 @@
 package com.calclavia.edx.optics.grid
 
+import java.util.stream.Collectors
+
 import com.calclavia.edx.optics.grid.OpticHandler.ReceiveBeamEvent
 import nova.core.component.Updater
 import nova.core.game.Game
@@ -72,6 +74,11 @@ abstract class Beam extends Storable with Updater {
 
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)
+
+		val collect = new RayTracer(source)
+			.setDistance(OpticGrid.maxDistance)
+			.rayTraceAll(world)
+			.collect(Collectors.toList())
 
 		val opHit = rayTrace
 

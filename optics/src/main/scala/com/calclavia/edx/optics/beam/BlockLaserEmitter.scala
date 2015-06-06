@@ -36,7 +36,7 @@ class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater with
 	@Store
 	@Sync
 	private val orientation = add(new Orientation(this)).hookBlockEvents()
-	private val laserHandler = add(new OpticHandler(this))
+	private val optic = add(new OpticHandler(this))
 	@Store
 	@Sync
 	private val io = add(new IO(this))
@@ -79,7 +79,7 @@ class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater with
 	})
 
 	rightClickEvent.add((evt: RightClickEvent) => {
-		laserHandler.destroy()
+		optic.destroy()
 	})
 
 	renderer.setOnRender(
@@ -117,12 +117,12 @@ class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater with
 				val beam = new ElectromagneticBeam()
 				beam.world = world
 				beam.source = new Ray(position.toDouble + 0.5 + dir * 0.51, dir)
-				beam.renderOffset = dir * 0.31
+				beam.renderOffset = -dir * 0.31
 				beam.power = electricNode.power
-				laserHandler.create(beam)
+				optic.create(beam)
 			}
 			else {
-				laserHandler.destroy()
+				optic.destroy()
 			}
 		}
 	}

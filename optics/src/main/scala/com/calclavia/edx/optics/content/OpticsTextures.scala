@@ -27,6 +27,8 @@ object OpticsTextures extends ContentLoader {
 
 	val laserEmitterTexture = new BlockTexture(Reference.domain, "laserEmitter")
 	val laserReceiverTexture = new BlockTexture(Reference.domain, "laserReceiver")
+	val mirrorTexture = new BlockTexture(Reference.domain, "mirror")
+
 	/**
 	 * Particle FX
 	 */

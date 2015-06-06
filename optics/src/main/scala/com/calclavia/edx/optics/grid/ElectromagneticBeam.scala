@@ -37,11 +37,13 @@ class ElectromagneticBeam extends Beam {
 		//world.destroyBlockInWorldPartially(Block.blockRegistry.getIDForObject(hitBlock), hitBlockPos.x.toInt, hitBlockPos.y.toInt, hitBlockPos.z.toInt, (accumulatedEnergy / energyRequiredToMineBlock * 10).toInt)
 
 		if (energyUsed >= energyRequiredToMineBlock) {
+			//TODO: Fix BWItem casting to ItemFactory
 			//We can disintegrate the block!
+			/*
 			val event = new DropEvent(hitBlock)
 			hitBlock.dropEvent.publish(event)
 			event.drops.foreach(drop => hitBlock.world.addEntity(hitBlock.position.toDouble + 0.5, drop))
-			world.removeBlock(hitBlock.position)
+			world.removeBlock(hitBlock.position)*/
 		}
 
 		//TODO: Handle furnace smelting
