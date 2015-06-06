@@ -14,8 +14,13 @@ import nova.core.util.RayTracer.RayTraceResult
  */
 object OpticHandler {
 
-	class ReceiveBeamEvent(val incident: Beam, val hit: RayTraceResult) extends Event {
+	class ReceiveBeamEvent(val incident: Beam, var hit: RayTraceResult) extends Event {
 		def receivingPower = incident.power - OpticGrid.minPower / 5 * hit.distance
+
+		//Continues the beam
+		def continue(outgoing: Beam) {
+			OpticGrid(incident.world).create(outgoing, incident)
+		}
 	}
 
 }

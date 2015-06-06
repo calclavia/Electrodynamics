@@ -2,8 +2,8 @@ package com.calclavia.edx.optics.beam
 
 import com.calclavia.edx.core.prefab.BlockEDX
 import com.calclavia.edx.optics.content.{OpticsModels, OpticsTextures}
-import com.calclavia.edx.optics.grid.OpticHandler
 import com.calclavia.edx.optics.grid.OpticHandler.ReceiveBeamEvent
+import com.calclavia.edx.optics.grid.{ElectromagneticBeam, OpticHandler}
 import com.resonant.lib.WrapFunctions._
 import nova.core.block.Block.RightClickEvent
 import nova.core.block.Stateful
@@ -12,8 +12,9 @@ import nova.core.game.Game
 import nova.core.network.{Packet, Sync, Syncable}
 import nova.core.render.model.Model
 import nova.core.retention.{Storable, Store}
+import nova.core.util.Ray
 import nova.core.util.transform.matrix.Quaternion
-import nova.core.util.transform.vector.Vector3d
+import nova.core.util.transform.vector.{Vector3, Vector3d}
 
 /**
  * A mirror reflects lasers.
@@ -52,28 +53,35 @@ class BlockMirror extends BlockEDX with Stateful with Syncable with Storable {
 
 	rightClickEvent.add((evt: RightClickEvent) => Game.network().sync(this))
 
-	optic.onReceive.add((evt: ReceiveBeamEvent) => {
-		/**
-		 * Render incoming laser
-		 */
-		//TODO: Change render endpoint
-		//Electrodynamics.proxy.renderLaser(worldObj, renderStart, position + 0.5, color, energy)
+	optic.onReceive.add(
+		(evt: ReceiveBeamEvent) => {
+			/**
+			 * Render incoming laser
+			 */
+			//TODO: Change render endpoint
+			//Electrodynamics.proxy.renderLaser(worldObj, renderStart, position + 0.5, color, energy)
 
-		/**
-		 * Calculate Reflection
-		 */
-		val incidentDirection = evt.incident.source.dir
-		val angle = Math.acos(incidentDirection dot (focus.normal))
+			/**
+			 * Calculate Reflection
+			 */
+			val incidentDirection = evt.incident.source.dir
+			val angle = Math.acos(incidentDirection.dot(focus.normal))
 
-		val axisOfReflection = incidentDirection * focus.normal
-		val rotateAngle = 2 * angle - Math.PI
+			val axisOfReflection = incidentDirection * focus.normal
+			val rotateAngle = 2 * angle - Math.PI
 
-		if (rotateAngle < Math.PI) {
-			//Emit beam
-			val newDirection = (incidentDirection.clone.transform(new Quaternion(rotateAngle, axisOfReflection))).normalize
-			Laser.spawn(worldObj, position + 0.5 + newDirection * 0.9, position + 0.5, newDirection, color, energy / 1.2)
-		}
-	})
+			if (rotateAngle < Math.PI) {
+				//Emit beam
+				val newDirection = incidentDirection.transform(Quaternion.fromAxis(axisOfReflection, rotateAngle)).normalize
+				val beam = new ElectromagneticBeam
+				beam.world = world
+				beam.source = new Ray(position.toDouble + 0.5 + newDirection * 0.9, newDirection)
+				beam.renderOffset = -newDirection * 0.9
+				beam.color = evt.incident.color
+				beam.power = evt.receivingPower
+				evt.continue(beam)
+			}
+		})
 
 	//TODO: Think of better ways to control mirror
 	/*
