@@ -19,7 +19,7 @@ import nova.core.gui.InputManager.Key
 import nova.core.item.Item
 import nova.core.item.Item.{RightClickEvent, TooltipEvent, UseEvent}
 import nova.core.network.NetworkTarget.Side
-import nova.core.retention.{Storable, Stored}
+import nova.core.retention.{Storable, Store}
 import nova.core.util.Direction
 import nova.core.util.collection.Tuple2
 import nova.core.util.transform.vector.{Vector3d, Vector3i}
@@ -30,9 +30,9 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 	private var remotesCached = Set.empty[Item]
 	private var temporaryRemoteBlacklist = Set.empty[Item]
 
-	@Stored
+	@Store
 	private var linkWorld: World = _
-	@Stored
+	@Store
 	private var linkPos: Vector3i = _
 
 	tooltipEvent.add(eventListener((evt: TooltipEvent) => {

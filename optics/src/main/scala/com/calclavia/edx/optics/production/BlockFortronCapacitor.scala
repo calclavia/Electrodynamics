@@ -16,7 +16,7 @@ import nova.core.inventory.InventorySimple
 import nova.core.item.Item
 import nova.core.network.Sync
 import nova.core.render.model.Model
-import nova.core.retention.Stored
+import nova.core.retention.Store
 import nova.core.util.transform.matrix.MatrixStack
 import scala.collection.convert.wrapAll._
 class BlockFortronCapacitor extends BlockModuleHandler {
@@ -25,7 +25,7 @@ class BlockFortronCapacitor extends BlockModuleHandler {
 	private var tickAccumulator = 0d
 
 	@Sync(ids = Array(PacketBlock.description, PacketBlock.toggleMode))
-	@Stored
+	@Store
 	private var transferMode = TransferMode.equalize
 
 	inventory.isItemValidForSlot = biFunc((slot: Integer, item: Item) => {

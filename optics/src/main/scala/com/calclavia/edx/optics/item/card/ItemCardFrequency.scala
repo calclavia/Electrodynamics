@@ -5,14 +5,14 @@ import com.google.common.hash.Hashing
 import com.resonant.lib.WrapFunctions._
 import nova.core.game.Game
 import nova.core.item.Item.{RightClickEvent, TooltipEvent}
-import nova.core.retention.Stored
+import nova.core.retention.Store
 import nova.core.util.transform.vector.Vector3i
 
 import scala.beans.BeanProperty
 
 class ItemCardFrequency extends ItemCard with Frequency {
 
-	@Stored
+	@Store
 	@BeanProperty
 	var frequency: Int = 0
 

@@ -19,7 +19,7 @@ import nova.core.game.Game
 import nova.core.item.Item
 import nova.core.network.{Syncable, Sync}
 import nova.core.render.model.Model
-import nova.core.retention.{Storable, Stored}
+import nova.core.retention.{Storable, Store}
 import nova.scala.{ExtendedUpdater, IO}
 
 /** A modular battery box that allows shared connections with boxes next to it.
@@ -39,15 +39,15 @@ object BlockBattery {
 
 class BlockBattery extends BlockEDX with Syncable with Storable with ExtendedUpdater {
 
-	@Stored
+	@Store
 	@Sync
 	private var tier = 0
 	private var energyRenderLevel = 0
-	@Stored
+	@Store
 	private var energy = add(new EnergyStorage)
 	private val electricNode = add(new NodeElectricComponent(this))
 	private val orientation = add(new Orientation(this)).hookBlockEvents()
-	@Stored
+	@Store
 	private val io = add(new IO(this))
 	private val redstone = add(Game.components().make(classOf[Redstone], this))
 	private val staticRenderer = add(new StaticBlockRenderer(this))
@@ -126,7 +126,7 @@ class BlockBattery extends BlockEDX with Syncable with Storable with ExtendedUpd
 	})
 
 	//TODO: Remove debug
-	@Stored
+	@Store
 	var mode = 0
 	rightClickEvent.add((evt: RightClickEvent) => if (Game.network().isServer) mode = (mode + 1) % 10)
 

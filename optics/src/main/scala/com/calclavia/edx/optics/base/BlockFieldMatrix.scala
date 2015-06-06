@@ -11,7 +11,7 @@ import nova.core.component.transform.Orientation
 import nova.core.game.Game
 import nova.core.item.{Item, ItemFactory}
 import nova.core.network.Sync
-import nova.core.retention.Stored
+import nova.core.retention.Store
 import nova.core.util.transform.matrix.Quaternion
 import nova.core.util.transform.vector.Vector3i
 import nova.core.util.{Direction, RotationUtil}
@@ -29,7 +29,7 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 	 * Are the directions on the GUI absolute values?
 	 */
 	@Sync(ids = Array(PacketBlock.description, PacketBlock.toggleMode4))
-	@Stored
+	@Store
 	var absoluteDirection = false
 
 	protected var calculatedField: Set[Vector3i] = null

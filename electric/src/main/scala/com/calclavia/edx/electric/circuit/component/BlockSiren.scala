@@ -14,7 +14,7 @@ import nova.core.block.Stateful
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.renderer.ItemRenderer
 import nova.core.game.Game
-import nova.core.retention.Stored
+import nova.core.retention.Store
 import nova.core.util.Direction
 import nova.scala.{ExtendedUpdater, IO}
 
@@ -28,7 +28,7 @@ class BlockSiren extends BlockEDX with ExtendedUpdater with Stateful {
 	private val renderer = add(new StaticBlockRenderer(this))
 	private val itemRenderer = add(new ItemRenderer(this))
 
-	@Stored
+	@Store
 	private var metadata = 0
 
 	renderer.setTexture(func(dir => Optional.of(ElectricContent.sirenTexture)))

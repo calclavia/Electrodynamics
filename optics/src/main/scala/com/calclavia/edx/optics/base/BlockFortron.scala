@@ -13,7 +13,7 @@ import nova.core.fluid.component.{Tank, TankSimple}
 import nova.core.fluid.{Fluid, SidedTankProvider}
 import nova.core.game.Game
 import nova.core.network.Sync
-import nova.core.retention.Stored
+import nova.core.retention.Store
 import nova.core.util.Direction
 import nova.scala.ExtendedUpdater
 
@@ -26,7 +26,7 @@ abstract class BlockFortron extends BlockFrequency with SidedTankProvider with F
 	var markSendFortron = true
 
 	@Sync(ids = Array(PacketBlock.fortron))
-	@Stored
+	@Store
 	protected var fortronTank = new TankSimple(Fluid.bucketVolume)
 
 	unloadEvent.add((evt: UnloadEvent) => {

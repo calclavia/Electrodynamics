@@ -4,7 +4,7 @@ import com.calclavia.edx.optics.api.card.CoordLink
 import com.resonant.lib.WrapFunctions._
 import nova.core.game.Game
 import nova.core.item.Item.{TooltipEvent, UseEvent}
-import nova.core.retention.{Storable, Stored}
+import nova.core.retention.{Storable, Store}
 import nova.core.util.collection.Tuple2
 import nova.core.util.transform.vector.Vector3i
 import nova.core.world.World
@@ -16,9 +16,9 @@ import nova.core.world.World
  */
 class ItemCardLink extends ItemCard with CoordLink with Storable {
 
-	@Stored
+	@Store
 	var linkWorld: World = null
-	@Stored
+	@Store
 	var linkPos: Vector3i = null
 
 	override def setLink(world: World, position: Vector3i) {

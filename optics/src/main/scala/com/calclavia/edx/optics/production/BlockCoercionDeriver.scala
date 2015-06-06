@@ -16,7 +16,7 @@ import nova.core.item.Item
 import nova.core.network.NetworkTarget.Side
 import nova.core.network.Packet
 import nova.core.render.model.Model
-import nova.core.retention.Stored
+import nova.core.retention.Store
 import nova.core.util.Direction
 import nova.core.util.transform.vector.Vector3d
 
@@ -50,12 +50,12 @@ object BlockCoercionDeriver {
 class BlockCoercionDeriver extends BlockModuleHandler {
 	override val inventory = new InventorySimple(6)
 
-	@Stored
+	@Store
 	var processTime: Int = 0
 
 	capacityBase = 30
 	startModuleIndex = 3
-	@Stored
+	@Store
 	var isInversed = false
 	//Client
 	var animationTween = 0f

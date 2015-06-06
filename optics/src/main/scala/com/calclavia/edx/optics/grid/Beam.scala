@@ -4,7 +4,7 @@ import com.calclavia.edx.optics.grid.OpticHandler.ReceiveBeamEvent
 import nova.core.component.Updater
 import nova.core.game.Game
 import nova.core.render.Color
-import nova.core.retention.{Data, Storable, Stored}
+import nova.core.retention.{Data, Storable, Store}
 import nova.core.util.RayTracer.{RayTraceBlockResult, RayTraceEntityResult, RayTraceResult}
 import nova.core.util.transform.vector.Vector3d
 import nova.core.util.{Ray, RayTracer}
@@ -26,13 +26,13 @@ abstract class Beam extends Storable with Updater {
 	/**
 	 * The render offset position for the wave.
 	 */
-	@Stored
+	@Store
 	var renderOffset = Vector3d.zero
 
 	/**
 	 * The power of the wave.
 	 */
-	@Stored
+	@Store
 	var power = 0d
 
 	/**

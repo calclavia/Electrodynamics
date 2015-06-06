@@ -28,7 +28,7 @@ import nova.core.item.Item
 import nova.core.network.{Packet, Sync}
 import nova.core.render.Color
 import nova.core.render.model.{Model, Vertex}
-import nova.core.retention.Stored
+import nova.core.retention.Store
 import nova.core.util.transform.matrix.MatrixStack
 import nova.core.util.transform.shape.Cuboid
 import nova.core.util.transform.vector.{Vector3d, Vector3i}
@@ -37,7 +37,7 @@ import scala.collection.convert.wrapAll._
 
 class BlockProjector extends BlockFieldMatrix with Projector with PermissionHandler {
 
-	@Stored
+	@Store
 	@Sync(ids = Array(PacketBlock.description, PacketBlock.inventory))
 	override val inventory = new InventorySimple(1 + 25 + 6)
 	/** A set containing all positions of all force field blocks generated. */

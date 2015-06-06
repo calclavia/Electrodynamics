@@ -13,7 +13,7 @@ import nova.core.game.Game
 import nova.core.gui.InputManager.Key
 import nova.core.item.Item.{RightClickEvent, TooltipEvent, UseEvent}
 import nova.core.render.model.Model
-import nova.core.retention.Stored
+import nova.core.retention.Store
 import nova.core.util.transform.vector.Vector3i
 
 import scala.util.Random
@@ -22,15 +22,15 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 
 	private final val saveFilePrefix: String = "custom_mode_"
 	val modes = Array(OpticsContent.modeCube, OpticsContent.modeSphere, OpticsContent.modeTube, OpticsContent.modePyramid)
-	@Stored
+	@Store
 	var saveID = -1
-	@Stored
+	@Store
 	var pointA: Vector3i = null
-	@Stored
+	@Store
 	var pointB: Vector3i = null
-	@Stored
+	@Store
 	var isAdditive = true
-	@Stored
+	@Store
 	var fieldSize = 0
 
 	tooltipEvent.add(eventListener((evt: TooltipEvent) => {

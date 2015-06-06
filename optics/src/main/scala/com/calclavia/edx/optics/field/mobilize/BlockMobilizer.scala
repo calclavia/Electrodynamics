@@ -23,7 +23,7 @@ import nova.core.item.Item
 import nova.core.network.NetworkTarget.Side
 import nova.core.network.{Packet, Sync}
 import nova.core.render.model.Model
-import nova.core.retention.{Data, Storable, Stored}
+import nova.core.retention.{Data, Storable, Store}
 import nova.core.util.Direction
 import nova.core.util.transform.matrix.MatrixStack
 import nova.core.util.transform.shape.Cuboid
@@ -33,21 +33,21 @@ import nova.core.world.World
 import scala.collection.convert.wrapAll._
 
 class BlockMobilizer extends BlockFieldMatrix with IEffectController with PermissionHandler {
-	@Stored
+	@Store
 	@Sync(ids = Array(PacketBlock.description, PacketBlock.inventory))
 	override val inventory = add(new InventorySimple(1 + 25))
 
 	val packetRange = 60
 	val animationTime = 20
 	var failedPositions = Set.empty[Vector3i]
-	@Stored
+	@Store
 	var anchor = new Vector3i()
 	/**
 	 * The display mode. 0 = none, 1 = minimal, 2 = maximal.
 	 */
-	@Stored
+	@Store
 	var previewMode = 1
-	@Stored
+	@Store
 	var doAnchor = true
 	var clientMoveTime = 0
 	var performingMove = false

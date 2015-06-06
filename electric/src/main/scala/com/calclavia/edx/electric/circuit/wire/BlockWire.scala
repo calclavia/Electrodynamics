@@ -17,7 +17,7 @@ import nova.core.component.renderer.ItemRenderer
 import nova.core.game.Game
 import nova.core.network.{Packet, Syncable, Sync}
 import nova.core.render.model.{BlockModelUtil, Model, StaticCubeTextureCoordinates}
-import nova.core.retention.{Storable, Stored}
+import nova.core.retention.{Storable, Store}
 import nova.core.util.transform.matrix.Quaternion
 import nova.core.util.transform.shape.Cuboid
 import nova.core.util.transform.vector.Vector3d
@@ -89,7 +89,7 @@ class BlockWire extends BlockEDX with Storable with Syncable {
 	 * The side the wire is placed on.
 	 */
 	@Sync
-	@Stored
+	@Store
 	private var side: Byte = 0
 
 	/**
@@ -130,7 +130,7 @@ class BlockWire extends BlockEDX with Storable with Syncable {
 			}
 		)
 	@Sync
-	@Stored
+	@Store
 	private val material = add(new MaterialWire)
 
 	add(new StaticBlockRenderer(this))

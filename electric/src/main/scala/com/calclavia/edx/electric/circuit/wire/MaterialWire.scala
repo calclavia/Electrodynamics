@@ -2,13 +2,13 @@ package com.calclavia.edx.electric.circuit.wire
 
 import nova.core.component.Component
 import nova.core.network.{Packet, Syncable}
-import nova.core.retention.{Storable, Stored}
+import nova.core.retention.{Storable, Store}
 
 /**
  * @author Calclavia
  */
 class MaterialWire extends Component with Storable with Syncable {
-	@Stored
+	@Store
 	var material = WireMaterial.UNKNOWN
 
 	//TODO: Packet enum reading doesn't work

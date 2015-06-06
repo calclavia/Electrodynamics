@@ -8,7 +8,7 @@ import nova.core.gui.InputManager.Key
 import nova.core.item.Item.{RightClickEvent, TooltipEvent}
 import nova.core.network.NetworkTarget.Side
 import nova.core.network.{Packet, Syncable}
-import nova.core.retention.Stored
+import nova.core.retention.Store
 import nova.core.util.transform.vector.Vector3i
 
 import scala.beans.BeanProperty
@@ -24,7 +24,7 @@ class ItemCardIdentification extends ItemCardAccess with Syncable {
 	}*/
 
 	@BeanProperty
-	@Stored
+	@Store
 	override var access: AbstractAccess = null
 
 	tooltipEvent.add(eventListener((evt: TooltipEvent) => {

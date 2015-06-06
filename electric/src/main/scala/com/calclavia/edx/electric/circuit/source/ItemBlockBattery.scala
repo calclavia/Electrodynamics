@@ -6,13 +6,13 @@ import nova.core.block.BlockFactory
 import nova.core.game.Game
 import nova.core.item.Item.TooltipEvent
 import nova.core.item.ItemBlock
-import nova.core.retention.{Storable, Stored}
+import nova.core.retention.{Storable, Store}
 
 class ItemBlockBattery(blockFactory: BlockFactory) extends ItemBlock(blockFactory) with Storable {
-	@Stored
+  @Store
 	var tier = 0
 
-	@Stored
+  @Store
 	var energy = add(new EnergyStorage().setMax(BlockBattery.getEnergyForTier(tier)))
 
 	tooltipEvent.add(

@@ -18,7 +18,7 @@ import nova.core.game.Game
 import nova.core.gui.InputManager.Key
 import nova.core.network.NetworkTarget.Side
 import nova.core.network.{Packet, Syncable}
-import nova.core.retention.{Storable, Stored}
+import nova.core.retention.{Storable, Store}
 import nova.core.util.Direction
 
 /**
@@ -37,7 +37,7 @@ abstract class BlockMachine extends BlockDefault with Syncable with IActivatable
 	/**
 	 * Is the machine active and working?
 	 */
-	@Stored
+	@Store
 	private var active = false
 
 	redstoneNode.onInputPowerChange((node: Redstone) => {
