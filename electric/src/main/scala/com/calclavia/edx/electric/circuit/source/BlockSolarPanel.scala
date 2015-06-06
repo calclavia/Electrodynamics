@@ -28,8 +28,21 @@ class BlockSolarPanel extends BlockEDX with ExtendedUpdater with Stateful {
 	collider.isCube(false)
 	collider.isOpaqueCube(false)
 
-	electricNode.setPositiveConnections(new ConnectionBuilder(classOf[Electric]).setBlock(this).setConnectMask(io.inputMask).adjacentSupplier().asInstanceOf[Supplier[JSet[Electric]]])
-	electricNode.setNegativeConnections(new ConnectionBuilder(classOf[Electric]).setBlock(this).setConnectMask(io.outputMask).adjacentSupplier().asInstanceOf[Supplier[JSet[Electric]]])
+	//TODO: Solar panels should only connect to wires o nthe same side
+	electricNode.setPositiveConnections(
+		new ConnectionBuilder(classOf[Electric])
+			.setBlock(this)
+			.setConnectMask(supplier(() => io.inputMask))
+			.adjacentWireSupplier()
+			.asInstanceOf[Supplier[JSet[Electric]]]
+	)
+	electricNode.setNegativeConnections(
+		new ConnectionBuilder(classOf[Electric])
+			.setBlock(this)
+			.setConnectMask(supplier(() => io.outputMask))
+			.adjacentWireSupplier()
+			.asInstanceOf[Supplier[JSet[Electric]]]
+	)
 
 	renderer.setTexture(
 		func((dir: Direction) => {

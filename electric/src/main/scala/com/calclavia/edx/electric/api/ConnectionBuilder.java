@@ -21,13 +21,13 @@ public class ConnectionBuilder<T> {
 
 	private final Class<T> componentType;
 	private Block block;
-	public int connectMask = 0x3f;
+	public Supplier<Integer> connectMask = () -> 0x3f;
 
 	public ConnectionBuilder(Class<T> componentType) {
 		this.componentType = componentType;
 	}
 
-	public ConnectionBuilder setConnectMask(int connectMask) {
+	public ConnectionBuilder setConnectMask(Supplier<Integer> connectMask) {
 		this.connectMask = connectMask;
 		return this;
 	}
@@ -93,7 +93,7 @@ public class ConnectionBuilder<T> {
 					//Check the sides of the microblock instead. We only want to connect to appropriate sides
 					Arrays.stream(Direction.DIRECTIONS)
 						.filter(
-							//Find all directions except the facing dir
+							//Find all directions except the facing dir and its opposite
 							dir ->
 								!dir.toVector().toDouble().abs().equals(
 									//TODO: Use HashBiMap
@@ -123,7 +123,7 @@ public class ConnectionBuilder<T> {
 		return adjacentBlocks()
 			.entrySet()
 			.stream()
-			.filter(entry -> connectMask == -1 || (connectMask & (1 << entry.getKey().ordinal())) != 0)
+			.filter(entry -> (connectMask.get() & (1 << entry.getKey().ordinal())) != 0)
 			.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 	}
 

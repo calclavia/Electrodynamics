@@ -56,8 +56,21 @@ class BlockBattery extends BlockEDX with Syncable with Storable with ExtendedUpd
 	/**
 	 * Components
 	 */
-	electricNode.setPositiveConnections(new ConnectionBuilder(classOf[Electric]).setBlock(this).setConnectMask(io.inputMask).adjacentWireSupplier().asInstanceOf[Supplier[JSet[Electric]]])
-	electricNode.setNegativeConnections(new ConnectionBuilder(classOf[Electric]).setBlock(this).setConnectMask(io.outputMask).adjacentWireSupplier().asInstanceOf[Supplier[JSet[Electric]]])
+	electricNode.setPositiveConnections(
+		new ConnectionBuilder(classOf[Electric])
+			.setBlock(this)
+			.setConnectMask(supplier(() => io.inputMask))
+			.adjacentWireSupplier()
+			.asInstanceOf[Supplier[JSet[Electric]]]
+	)
+	electricNode.setNegativeConnections(
+		new ConnectionBuilder(classOf[Electric])
+			.setBlock(this)
+			.setConnectMask(supplier(() => io.outputMask))
+			.adjacentWireSupplier()
+			.asInstanceOf[Supplier[JSet[Electric]]]
+	)
+
 	electricNode.setResistance(10)
 	electricNode.asInstanceOf[NodeElectricComponent]
 

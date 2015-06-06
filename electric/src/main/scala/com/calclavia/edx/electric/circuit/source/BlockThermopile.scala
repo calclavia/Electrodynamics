@@ -30,9 +30,20 @@ class BlockThermopile extends BlockEDX with ExtendedUpdater with Stateful {
 
 	staticRenderer.setTexture(func[Direction, Optional[Texture]]((dir: Direction) => if (dir == Direction.UP) Optional.of(ElectricContent.thermopileTextureTop) else Optional.of(ElectricContent.thermopileTextureSide)))
 
-	electricNode.setPositiveConnections(new ConnectionBuilder(classOf[Electric]).setBlock(this).setConnectMask(io.inputMask).adjacentSupplier().asInstanceOf[Supplier[JSet[Electric]]])
-	electricNode.setNegativeConnections(new ConnectionBuilder(classOf[Electric]).setBlock(this).setConnectMask(io.outputMask).adjacentSupplier().asInstanceOf[Supplier[JSet[Electric]]])
-
+	electricNode.setPositiveConnections(
+		new ConnectionBuilder(classOf[Electric])
+			.setBlock(this)
+			.setConnectMask(supplier(() => io.inputMask))
+			.adjacentWireSupplier()
+			.asInstanceOf[Supplier[JSet[Electric]]]
+	)
+	electricNode.setNegativeConnections(
+		new ConnectionBuilder(classOf[Electric])
+			.setBlock(this)
+			.setConnectMask(supplier(() => io.outputMask))
+			.adjacentWireSupplier()
+			.asInstanceOf[Supplier[JSet[Electric]]]
+	)
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)
 
