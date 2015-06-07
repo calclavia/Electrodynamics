@@ -3,7 +3,6 @@ package com.calclavia.edx.optics.grid
 import com.calclavia.edx.core.EDX
 import nova.core.network.Packet
 import nova.core.network.handler.PacketHandler
-import nova.core.util.exception.NovaException
 import org.jgrapht.graph.{DefaultEdge, SimpleDirectedGraph}
 
 /**
@@ -34,7 +33,7 @@ class OpticGridPacket extends PacketHandler[OpticGrid] {
 			}
 		}
 		else {
-			throw new NovaException("Failed to read wave graph for invalid world: " + opWorld)
+			throw new RuntimeException("Failed to read wave graph for invalid world: " + opWorld)
 		}
 	}
 
