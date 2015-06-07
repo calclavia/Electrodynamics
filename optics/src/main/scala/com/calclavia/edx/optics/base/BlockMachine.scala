@@ -2,11 +2,11 @@ package com.calclavia.edx.optics.base
 
 import java.util.Optional
 
+import com.calclavia.edx.core.{EDX, Placeholder}
 import com.calclavia.edx.optics.api.machine.IActivatable
 import com.calclavia.edx.optics.content.OpticsTextures
 import com.calclavia.minecraft.redstone.Redstone
 import com.resonant.lib.WrapFunctions._
-import com.resonant.wrapper.core.Placeholder
 import nova.core.block.Block.RightClickEvent
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.block.{BlockDefault, Stateful}
@@ -14,7 +14,6 @@ import nova.core.component.Component
 import nova.core.component.misc.Collider
 import nova.core.component.renderer.ItemRenderer
 import nova.core.component.transform.Orientation
-import com.calclavia.edx.core.EDX
 import nova.core.gui.InputManager.Key
 import nova.core.network.NetworkTarget.Side
 import nova.core.network.{Packet, Syncable}
@@ -41,10 +40,12 @@ abstract class BlockMachine extends BlockDefault with Syncable with IActivatable
 	private var active = false
 
 	redstoneNode.onInputPowerChange((node: Redstone) => {
-		if (node.getOutputWeakPower > 0)
+		if (node.getOutputWeakPower > 0) {
 			setActive(true)
-		else
+		}
+		else {
 			setActive(false)
+		}
 	})
 	add(new CategoryMFFS)
 	add(redstoneNode.asInstanceOf[Component])
@@ -73,8 +74,9 @@ abstract class BlockMachine extends BlockDefault with Syncable with IActivatable
 				val prevActive = active
 				active = packet.readBoolean()
 
-				if (prevActive != this.active)
+				if (prevActive != this.active) {
 					world.markStaticRender(transform.position)
+				}
 			}
 		}
 	}

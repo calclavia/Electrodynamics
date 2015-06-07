@@ -1,8 +1,7 @@
 package com.calclavia.edx.core.recipe;
 
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.oredict.OreDictionary;
+import nova.core.fluid.Fluid;
+import nova.core.item.Item;
 
 public abstract class RecipeResource {
 	public final boolean hasChance;
@@ -26,40 +25,40 @@ public abstract class RecipeResource {
 		return this.chance;
 	}
 
-	public abstract ItemStack getItemStack();
+	public abstract Item getItem();
 
-	public static class ItemStackResource extends RecipeResource {
-		public final ItemStack itemStack;
+	public static class ItemResource extends RecipeResource {
+		public final Item item;
 
-		public ItemStackResource(ItemStack is) {
+		public ItemResource(Item is) {
 			super();
-			this.itemStack = is;
+			this.item = is;
 		}
 
-		public ItemStackResource(ItemStack is, float chance) {
+		public ItemResource(Item is, float chance) {
 			super(chance);
-			this.itemStack = is;
+			this.item = is;
 		}
 
 		@Override
 		public boolean equals(Object obj) {
-			if (obj instanceof ItemStackResource) {
-				return this.itemStack.isItemEqual(((ItemStackResource) obj).itemStack);
+			if (obj instanceof ItemResource) {
+				return this.item.sameType(((ItemResource) obj).item);
 			}
-			if (obj instanceof ItemStack) {
-				return this.itemStack.isItemEqual((ItemStack) obj);
+			if (obj instanceof Item) {
+				return this.item.sameType((Item) obj);
 			}
 			return false;
 		}
 
 		@Override
-		public ItemStack getItemStack() {
-			return itemStack.copy();
+		public Item getItem() {
+			return item.clone();
 		}
 
 		@Override
 		public String toString() {
-			return "[ItemStackResource: " + itemStack.toString() + "]";
+			return "[ItemResource: " + item.toString() + "]";
 		}
 	}
 
@@ -69,10 +68,10 @@ public abstract class RecipeResource {
 		public OreDictResource(String s) {
 			super();
 			this.name = s;
-
+/*
 			if (OreDictionary.getOres(name).size() <= 0) {
 				throw new RuntimeException("Added invalid OreDictResource recipe: " + name);
-			}
+			}*/
 		}
 
 		public OreDictResource(String s, float chance) {
@@ -86,24 +85,24 @@ public abstract class RecipeResource {
 				return name.equals(((OreDictResource) obj).name);
 			}
 
-			if (obj instanceof ItemStackResource) {
-				return equals(((ItemStackResource) obj).itemStack);
+			if (obj instanceof ItemResource) {
+				return equals(((ItemResource) obj).item);
 			}
 
-			if (obj instanceof ItemStack) {
-				for (ItemStack is : OreDictionary.getOres(name)) {
-					if (is.isItemEqual((ItemStack) obj)) {
+			if (obj instanceof Item) {
+			/*	for (Item is : OreDictionary.getOres(name)) {
+					if (is.sameType((Item) obj)) {
 						return true;
 					}
-				}
+				}*/
 			}
 
 			return false;
 		}
 
 		@Override
-		public ItemStack getItemStack() {
-			return OreDictionary.getOres(name).get(0).copy();
+		public Item getItem() {
+			return null;//OreDictionary.getOres(name).get(0).copy();
 		}
 
 		@Override
@@ -112,36 +111,36 @@ public abstract class RecipeResource {
 		}
 	}
 
-	public static class FluidStackResource extends RecipeResource {
-		public final FluidStack fluidStack;
+	public static class FluidResource extends RecipeResource {
+		public final Fluid fluid;
 
-		public FluidStackResource(FluidStack fs) {
+		public FluidResource(Fluid fs) {
 			super();
-			this.fluidStack = fs;
+			this.fluid = fs;
 		}
 
-		public FluidStackResource(FluidStack fs, float chance) {
+		public FluidResource(Fluid fs, float chance) {
 			super(chance);
-			this.fluidStack = fs;
+			this.fluid = fs;
 		}
 
 		@Override
 		public boolean equals(Object obj) {
-			if (obj instanceof FluidStackResource) {
-				return equals(((FluidStackResource) obj).fluidStack);
+			if (obj instanceof FluidResource) {
+				return equals(((FluidResource) obj).fluid);
 			}
 
-			return (obj instanceof FluidStack) ? ((FluidStack) obj).equals(fluidStack) : false;
+			return (obj instanceof Fluid) ? ((Fluid) obj).equals(fluid) : false;
 		}
 
 		@Override
-		public ItemStack getItemStack() {
+		public Item getItem() {
 			return null;
 		}
 
 		@Override
 		public String toString() {
-			return "[FluidStackResource: " + fluidStack.getFluid().getName() + "]";
+			return "[FluidResource: " + fluid.getID() + "]";
 		}
 	}
 }
