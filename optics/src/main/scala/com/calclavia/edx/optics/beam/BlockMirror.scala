@@ -9,6 +9,7 @@ import nova.core.block.Block.RightClickEvent
 import nova.core.block.Stateful
 import nova.core.block.component.StaticBlockRenderer
 import com.calclavia.edx.core.EDX
+import nova.core.component.renderer.ItemRenderer
 import nova.core.network.{Packet, Sync, Syncable}
 import nova.core.render.model.Model
 import nova.core.retention.{Storable, Store}
@@ -28,6 +29,7 @@ class BlockMirror extends BlockEDX with Stateful with Syncable with Storable {
 	@Sync
 	private val focus = add(new Focus(this))
 	private val renderer = add(new StaticBlockRenderer(this))
+	private val itemRenderer = add(new ItemRenderer(this))
 	private val optic = add(new OpticHandler(this))
 
 	private var cachedHits = List[Vector3d]()

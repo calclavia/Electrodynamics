@@ -36,6 +36,7 @@ class EntityLaserBeam(start: Vector3d, end: Vector3d, color: Color, power: Doubl
 	 * Set position
 	 */
 	val midPoint = end.midpoint(start)
+	val dir = (end - start).normalize
 
 	loadEvent.add((evt: LoadEvent) => {
 		setPosition(midPoint)
@@ -57,8 +58,7 @@ class EntityLaserBeam(start: Vector3d, end: Vector3d, color: Color, power: Doubl
 			/**
 			 * Rotate the beam
 			 */
-			val difference = (end - start).normalize
-			model.rotate(Quaternion.fromDirection(difference))
+			model.rotate(Quaternion.fromDirection(dir))
 			model.rotate(Vector3d.zAxis, Math.PI / 2)
 
 			val renderColor = color.alpha((particleAlpha * 255).toInt)

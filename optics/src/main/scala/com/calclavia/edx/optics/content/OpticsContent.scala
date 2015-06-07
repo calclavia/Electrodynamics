@@ -10,7 +10,7 @@ import com.calclavia.edx.optics.gui.GuiFortronCapacitor
 import com.calclavia.edx.optics.item.ItemRemoteController
 import com.calclavia.edx.optics.item.card.{ItemCard, ItemCardFrequency, ItemCardInfinite, ItemCardLink}
 import com.calclavia.edx.optics.beam.fx.EntityMagneticBeam
-import com.calclavia.edx.optics.beam.{BlockLaserReceiver, BlockLaserEmitter}
+import com.calclavia.edx.optics.beam.{BlockMirror, BlockLaserReceiver, BlockLaserEmitter}
 import com.calclavia.edx.optics.fx.{FXHologram, FXHologramProgress, FieldColor}
 import com.calclavia.edx.optics.production.{BlockCoercionDeriver, BlockFortronCapacitor}
 import com.calclavia.edx.optics.security.BlockBiometric
@@ -40,6 +40,7 @@ object OpticsContent extends ContentLoader {
 
 	val laserEmitter: BlockFactory = classOf[BlockLaserEmitter]
 	val laserReceiver: BlockFactory = classOf[BlockLaserReceiver]
+	val mirror: BlockFactory = classOf[BlockMirror]
 
 	/**
 	 * Misc Items
