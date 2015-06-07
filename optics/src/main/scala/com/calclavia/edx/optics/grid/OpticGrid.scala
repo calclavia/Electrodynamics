@@ -119,7 +119,7 @@ class OpticGrid(val world: World) extends Updater {
 		super.update(deltaTime)
 		timer += deltaTime
 
-		if (timer >= 0.2) {
+		if (timer >= 0.1) {
 			timer = 0
 
 			graph synchronized {

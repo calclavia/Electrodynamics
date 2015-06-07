@@ -49,9 +49,8 @@ object EDX extends Loadable {
 	val threadTicker: UpdateTicker.ThreadTicker = null
 
 	override def preInit() {
-		super.preInit()
 
-		CoreContent.preInit()
+		//		CoreContent.preInit()
 
 		/**
 		 * Register GUI

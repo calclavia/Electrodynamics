@@ -75,11 +75,6 @@ abstract class Beam extends Storable with Updater {
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)
 
-		val collect = new RayTracer(source)
-			.setDistance(OpticGrid.maxDistance)
-			.rayTraceAll(world)
-			.collect(Collectors.toList())
-
 		val opHit = rayTrace
 
 		//Check with previous hit and compute hit time

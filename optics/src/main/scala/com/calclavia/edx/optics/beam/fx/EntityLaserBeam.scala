@@ -27,7 +27,7 @@ class EntityLaserBeam(start: Vector3d, end: Vector3d, color: Color, power: Doubl
 	val rotationSpeed = 18
 
 	val rand = new Random()
-	val particleAlpha = 1 / (detail / (5 * energyPercentage) + 2 * rand.nextFloat())
+	val particleAlpha = 0.8 * energyPercentage + 0.2
 	val particleScale = 0.13f * energyPercentage + 0.03 * rand.nextDouble()
 	val length = start.distance(end)
 	val endSize = particleScale
@@ -35,12 +35,10 @@ class EntityLaserBeam(start: Vector3d, end: Vector3d, color: Color, power: Doubl
 	/**
 	 * Set position
 	 */
-	val midPoint = (end + start) / 2
+	val midPoint = end.midpoint(start)
 
 	loadEvent.add((evt: LoadEvent) => {
 		setPosition(midPoint)
-		val difference = (end - start).normalize
-		setRotation(Quaternion.fromEuler(difference))
 	})
 
 	override def update(deltaTime: Double) {
@@ -55,11 +53,14 @@ class EntityLaserBeam(start: Vector3d, end: Vector3d, color: Color, power: Doubl
 			//GL_ONE
 			model.blendDFactor = 0x1
 
-			model.rotate(Vector3d.xAxis, Math.PI / 2)
 
 			/**
 			 * Rotate the beam
 			 */
+			val difference = (end - start).normalize
+			model.rotate(Quaternion.fromDirection(difference))
+			model.rotate(Vector3d.zAxis, Math.PI / 2)
+
 			val renderColor = color.alpha((particleAlpha * 255).toInt)
 			val halfColor = renderColor.alpha(127)
 
@@ -142,7 +143,7 @@ class EntityLaserBeam(start: Vector3d, end: Vector3d, color: Color, power: Doubl
 		}
 	)
 
-	override def maxAge: Double = 0.5
+	override def maxAge: Double = 1
 
 	override def getID: String = "laserFx"
 }
