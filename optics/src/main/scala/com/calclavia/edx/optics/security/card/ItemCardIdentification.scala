@@ -3,7 +3,7 @@ package com.calclavia.edx.optics.security.card
 import com.resonant.core.access.{AbstractAccess, AccessUser, Permissions}
 import com.resonant.lib.WrapFunctions._
 import nova.core.entity.component.Player
-import nova.core.game.Game
+import com.calclavia.edx.core.EDX
 import nova.core.gui.InputManager.Key
 import nova.core.item.Item.{RightClickEvent, TooltipEvent}
 import nova.core.network.NetworkTarget.Side
@@ -29,10 +29,10 @@ class ItemCardIdentification extends ItemCardAccess with Syncable {
 
 	tooltipEvent.add(eventListener((evt: TooltipEvent) => {
 		if (access != null) {
-			evt.tooltips.add(Game.language.translate("info.cardIdentification.username") + " " + access.asInstanceOf[AccessUser].username)
+			evt.tooltips.add(EDX.language.translate("info.cardIdentification.username") + " " + access.asInstanceOf[AccessUser].username)
 		}
 		else {
-			evt.tooltips.add(Game.language.translate("info.cardIdentification.empty"))
+			evt.tooltips.add(EDX.language.translate("info.cardIdentification.empty"))
 		}
 	}))
 
@@ -40,7 +40,7 @@ class ItemCardIdentification extends ItemCardAccess with Syncable {
 		if (Side.get.isServer) {
 			if (evt.entity.has(classOf[Player])) {
 				val player = evt.entity.get(classOf[Player])
-				if (Game.input.isKeyDown(Key.KEY_LSHIFT)) {
+				if (EDX.input.isKeyDown(Key.KEY_LSHIFT)) {
 
 					if (access != null) {
 						access = new AccessUser(player.getUsername)
@@ -53,7 +53,7 @@ class ItemCardIdentification extends ItemCardAccess with Syncable {
 					/**
 					 * Open item GUI
 					 */
-					Game.gui.showGui("idCard", evt.entity, new Vector3i(0, 0, 0))
+					//		EDX.gui.showGui("idCard", evt.entity, new Vector3i(0, 0, 0))
 				}
 			}
 		}

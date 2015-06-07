@@ -11,7 +11,7 @@ import com.calclavia.edx.optics.field.BlockProjector
 import com.calclavia.edx.optics.field.shape.ItemShapeCustom
 import nova.core.block.{Block, BlockFactory}
 import nova.core.component.ComponentProvider
-import nova.core.game.Game
+import com.calclavia.edx.core.EDX
 import nova.core.inventory.Inventory
 import nova.core.item.ItemBlock
 import nova.core.util.Direction
@@ -80,7 +80,7 @@ class ItemModuleStabilize extends ItemModule {
 					inv.remove(item.withAmount(1))
 					//copyStack.getItem.asInstanceOf[ItemBlock].placeBlockAt(copyStack, null, world, position.xi, position.yi, position.zi, 0, 0, 0, 0, metadata)
 					world.setBlock(position, blockFactory)
-					Game.network.sync(PacketBlock.effect2, proj)
+					EDX.network.sync(PacketBlock.effect2, proj)
 
 					blockCount += 1
 
@@ -93,7 +93,7 @@ class ItemModuleStabilize extends ItemModule {
 				}
 				catch {
 					case e: Exception => {
-						Game.logger.error("Stabilizer failed to place item '" + item + "'. The item or block may not have correctly implemented the placement methods.")
+						EDX.logger.error("Stabilizer failed to place item '" + item + "'. The item or block may not have correctly implemented the placement methods.")
 						e.printStackTrace()
 					}
 				}

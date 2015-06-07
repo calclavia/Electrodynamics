@@ -3,7 +3,7 @@ package com.calclavia.edx.electric.circuit.source
 import com.resonant.core.energy.EnergyStorage
 import com.resonant.lib.WrapFunctions._
 import nova.core.block.BlockFactory
-import nova.core.game.Game
+import com.calclavia.edx.core.EDX
 import nova.core.item.Item.TooltipEvent
 import nova.core.item.ItemBlock
 import nova.core.retention.{Storable, Store}
@@ -17,7 +17,7 @@ class ItemBlockBattery(blockFactory: BlockFactory) extends ItemBlock(blockFactor
 
 	tooltipEvent.add(
 		eventListener((evt: TooltipEvent) => {
-			evt.tooltips.add(Game.language().translate("tooltip.tier") + ": " + (tier + 1))
+          evt.tooltips.add(EDX.language.translate("tooltip.tier") + ": " + (tier + 1))
 		})
 	)
 

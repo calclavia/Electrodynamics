@@ -3,7 +3,7 @@ package com.calclavia.edx.optics.gui
 import com.calclavia.edx.optics.production.BlockFortronCapacitor
 import com.resonant.lib.WrapFunctions._
 import com.resonant.wrapper.lib.utility.science.UnitDisplay
-import nova.core.game.Game
+import com.calclavia.edx.core.EDX
 import nova.core.gui.ComponentEvent.ActionEvent
 import nova.core.gui.component.inventory.{PlayerInventory, Slot}
 import nova.core.gui.component.{Button, Container, Label}
@@ -91,9 +91,9 @@ class GuiFortronCapacitor extends GuiMFFS("fortronCapacitor") {
 
 	override def render(mouseX: Int, mouseY: Int, graphics: Graphics) {
 		super.render(mouseX, mouseY, graphics)
-		getChildElement("layout.north.linkedDevices").get().asInstanceOf[Label].setText(Game.language.translate("gui.linkedDevice", Map("%1" -> (block.getDeviceCount + ""))))
+		getChildElement("layout.north.linkedDevices").get().asInstanceOf[Label].setText(EDX.language.translate("gui.linkedDevice", Map("%1" -> (block.getDeviceCount + ""))))
 		getChildElement("layout.north.transmissionRate").get().asInstanceOf[Label].setText(
-			Game.language.translate("gui.transmissionRate", Map("%1" -> (new UnitDisplay(UnitDisplay.Unit.LITER, block.getTransmissionRate * 20).symbol() + "/s")))
+			EDX.language.translate("gui.transmissionRate", Map("%1" -> (new UnitDisplay(UnitDisplay.Unit.LITER, block.getTransmissionRate * 20).symbol() + "/s")))
 		)
 		getChildElement("layout.south.toggle").get().asInstanceOf[Button].setText(block.getTransferMode.name())
 	}

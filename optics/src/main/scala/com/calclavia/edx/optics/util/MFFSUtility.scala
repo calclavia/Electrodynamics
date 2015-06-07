@@ -9,7 +9,7 @@ import com.resonant.core.access.Permission
 import nova.core.block.{Block, BlockFactory}
 import nova.core.component.ComponentProvider
 import nova.core.entity.component.Player
-import nova.core.game.Game
+import com.calclavia.edx.core.EDX
 import nova.core.inventory.Inventory
 import nova.core.item.{Item, ItemBlock}
 import nova.core.network.NetworkTarget.Side
@@ -117,7 +117,7 @@ object MFFSUtility {
 	}
 
 	def getFilterBlock(item: Item): BlockFactory = {
-		val opItem = Game.items.getBlockFromItem(item)
+		val opItem = EDX.items.getBlockFromItem(item)
 		if (opItem.isPresent) {
 			return opItem.get()
 		}

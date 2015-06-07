@@ -8,7 +8,7 @@ import com.calclavia.edx.optics.content.OpticsContent
 import com.calclavia.edx.optics.util.CacheHandler
 import com.resonant.core.structure.Structure
 import nova.core.component.transform.Orientation
-import nova.core.game.Game
+import com.calclavia.edx.core.EDX
 import nova.core.item.{Item, ItemFactory}
 import nova.core.network.Sync
 import nova.core.retention.Store
@@ -245,7 +245,7 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 	 * @param callBack - Optional callback
 	 */
 	protected def calculateField(callBack: () => Unit = null) {
-		if (Game.network.isServer && !isCalculating) {
+		if (EDX.network.isServer && !isCalculating) {
 			if (getShapeItem != null) {
 				//Clear mode cache
 				if (getShapeItem.isInstanceOf[CacheHandler]) {

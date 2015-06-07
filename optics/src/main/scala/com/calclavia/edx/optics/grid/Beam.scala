@@ -4,7 +4,7 @@ import java.util.stream.Collectors
 
 import com.calclavia.edx.optics.grid.OpticHandler.ReceiveBeamEvent
 import nova.core.component.Updater
-import nova.core.game.Game
+import com.calclavia.edx.core.EDX
 import nova.core.render.Color
 import nova.core.retention.{Data, Storable, Store}
 import nova.core.util.RayTracer.{RayTraceBlockResult, RayTraceEntityResult, RayTraceResult}
@@ -121,7 +121,7 @@ abstract class Beam extends Storable with Updater {
 			}
 		}
 
-		if (Game.network.isClient) {
+		if (EDX.network.isClient) {
 			render(opHit.orElse(null))
 		}
 	}

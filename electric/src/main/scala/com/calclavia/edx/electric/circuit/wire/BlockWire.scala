@@ -14,7 +14,7 @@ import nova.core.block.Block.{BlockPlaceEvent, RightClickEvent}
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.misc.Collider
 import nova.core.component.renderer.ItemRenderer
-import nova.core.game.Game
+import com.calclavia.edx.core.EDX
 import nova.core.network.{Packet, Syncable, Sync}
 import nova.core.render.model.{BlockModelUtil, Model, StaticCubeTextureCoordinates}
 import nova.core.retention.{Storable, Store}
@@ -171,11 +171,11 @@ class BlockWire extends BlockEDX with Storable with Syncable {
 		if (newConnectionMask != connectionMask) {
 			connectionMask = newConnectionMask
 			//Update client render
-			Game.network().sync(1, microblock)
+			EDX.network.sync(1, microblock)
 		}
 	})
 
-	rightClickEvent.add((evt: RightClickEvent) => if (Game.network().isServer) System.out.println(electricNode))
+	rightClickEvent.add((evt: RightClickEvent) => if (EDX.network.isServer) System.out.println(electricNode))
 
 	collider.setBoundingBox(() => {
 		BlockWire.occlusionBounds(side)(4) + 0.5

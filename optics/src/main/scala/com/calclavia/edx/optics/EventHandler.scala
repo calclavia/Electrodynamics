@@ -4,7 +4,7 @@ import com.calclavia.edx.optics.api.MFFSEvent.EventForceMobilize
 import com.calclavia.edx.optics.base.BlockFortron
 import com.calclavia.edx.optics.field.BlockProjector
 import nova.core.event.GlobalEvents
-import nova.core.game.Game
+import com.calclavia.edx.core.EDX
 
 import scala.collection.convert.wrapAll._
 
@@ -91,7 +91,7 @@ object EventHandler {
 	 * When a block breaks, mark force field projectors for an update.
 	 */
 	def onBlockChange(evt: GlobalEvents.BlockChangeEvent) {
-		if (Game.network.isServer && evt.newBlock.sameType(Game.blocks.getAirBlock)) {
+		if (EDX.network.isServer && evt.newBlock.sameType(EDX.blocks.getAirBlock)) {
 			GraphFrequency.instance
 				.getNodes
 				.view

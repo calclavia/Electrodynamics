@@ -14,7 +14,7 @@ import com.resonant.wrapper.lib.utility.science.UnitDisplay
 import nova.core.block.Block
 import nova.core.entity.component.Player
 import nova.core.fluid.Fluid
-import nova.core.game.Game
+import com.calclavia.edx.core.EDX
 import nova.core.gui.InputManager.Key
 import nova.core.item.Item
 import nova.core.item.Item.{RightClickEvent, TooltipEvent, UseEvent}
@@ -40,25 +40,25 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 			val block = linkWorld.getBlock(linkPos)
 			if (block.isPresent) {
 				//TODO: Get the real block name?
-				evt.tooltips.add(Game.language.translate("info.item.linkedWith") + " " + block.get().getID)
+				evt.tooltips.add(EDX.language.translate("info.item.linkedWith") + " " + block.get().getID)
 			}
 			evt.tooltips.add(linkPos.xi + ", " + linkPos.yi + ", " + linkPos.zi)
-			evt.tooltips.add(Game.language.translate("info.item.dimension") + " '" + linkWorld.getID + "'")
+			evt.tooltips.add(EDX.language.translate("info.item.dimension") + " '" + linkWorld.getID + "'")
 		}
 		else {
-			evt.tooltips.add(Game.language.translate("info.item.notLinked"))
+			evt.tooltips.add(EDX.language.translate("info.item.notLinked"))
 		}
 	}))
 
 
 	useEvent.add((evt: UseEvent) => {
-		if (Side.get().isServer && Game.input.isKeyDown(Key.KEY_LSHIFT)) {
+		if (Side.get().isServer && EDX.input.isKeyDown(Key.KEY_LSHIFT)) {
 			linkWorld = evt.entity.world
 			linkPos = evt.position
 			val block = linkWorld.getBlock(linkPos).get()
 
 			if (block != null) {
-				Game.network.sendChat(evt.entity.asInstanceOf[Player], Game.language.translate("message.remoteController.linked").replaceAll("#p", evt.position.x + ", " + evt.position.y + ", " + evt.position.z).replaceAll("#q", block.getID))
+				EDX.network.sendChat(evt.entity.asInstanceOf[Player], EDX.language.translate("message.remoteController.linked").replaceAll("#p", evt.position.x + ", " + evt.position.y + ", " + evt.position.z).replaceAll("#q", block.getID))
 			}
 		}
 		evt.action = true
@@ -66,7 +66,7 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 
 
 	rightClickEvent.add((evt: RightClickEvent) => {
-		if (!Game.input.isKeyDown(Key.KEY_LSHIFT)) {
+		if (!EDX.input.isKeyDown(Key.KEY_LSHIFT)) {
 			if (linkPos != null) {
 				val op = linkWorld.getBlock(linkPos)
 
@@ -110,7 +110,7 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 							}
 						}
 						if (!finished && Side.get().isServer) {
-							Game.network.sendChat(evt.entity.get(classOf[Player]), Game.language.translate("message.remoteController.fail").replaceAll("#p", new
+							EDX.network.sendChat(evt.entity.get(classOf[Player]), EDX.language.translate("message.remoteController.fail").replaceAll("#p", new
 									UnitDisplay(UnitDisplay.Unit.JOULES, requiredEnergy).toString))
 						}
 					}

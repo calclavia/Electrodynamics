@@ -11,7 +11,7 @@ import com.resonant.lib.WrapFunctions._
 import nova.core.block.Stateful
 import nova.core.block.component.ConnectedTextureRenderer
 import nova.core.component.renderer.ItemRenderer
-import nova.core.game.Game
+import com.calclavia.edx.core.EDX
 import nova.core.render.model.{BlockModelUtil, Model}
 import nova.core.util.Direction
 import nova.core.util.transform.shape.Cuboid
@@ -59,7 +59,7 @@ class BlockSolarPanel extends BlockEDX with ExtendedUpdater with Stateful {
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)
 
-		if (Game.network().isServer) {
+		if (EDX.network.isServer) {
 			//if (world.canBlockSeeTheSky(xCoord, yCoord + 1, zCoord) && !this.worldObj.provider.hasNoSky) {
 			//if (world.isDaytime) {
 			//if (!(world.isThundering || world.isRaining)) {

@@ -11,7 +11,7 @@ import com.resonant.lib.WrapFunctions._
 import nova.core.block.Stateful
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.renderer.ItemRenderer
-import nova.core.game.Game
+import com.calclavia.edx.core.EDX
 import nova.core.render.texture.Texture
 import nova.core.util.Direction
 import nova.scala.{ExtendedUpdater, IO}
@@ -47,7 +47,7 @@ class BlockThermopile extends BlockEDX with ExtendedUpdater with Stateful {
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)
 
-		if (Game.network().isServer) {
+		if (EDX.network.isServer) {
 			var heatSources = 0
 			var coolingSources = 0
 

@@ -11,7 +11,7 @@ import nova.core.block.Stateful.UnloadEvent
 import nova.core.event.EventBus
 import nova.core.fluid.component.{Tank, TankSimple}
 import nova.core.fluid.{Fluid, SidedTankProvider}
-import nova.core.game.Game
+import com.calclavia.edx.core.EDX
 import nova.core.network.Sync
 import nova.core.retention.Store
 import nova.core.util.Direction
@@ -48,8 +48,8 @@ abstract class BlockFortron extends BlockFrequency with SidedTankProvider with F
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)
 
-		if (Game.network.isServer && ticks % 60 == 0) {
-			Game.network.sync(PacketBlock.fortron, this)
+		if (EDX.network.isServer && ticks % 60 == 0) {
+			EDX.network.sync(PacketBlock.fortron, this)
 		}
 	}
 

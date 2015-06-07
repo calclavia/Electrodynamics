@@ -4,7 +4,7 @@ import java.util
 
 import com.calclavia.edx.core.extension.GraphExtension._
 import nova.core.component.Updater
-import nova.core.game.Game
+import com.calclavia.edx.core.EDX
 import nova.core.world.World
 import org.jgrapht.alg.ConnectivityInspector
 import org.jgrapht.graph.{DefaultEdge, SimpleDirectedGraph}
@@ -46,7 +46,7 @@ class OpticGrid(val world: World) extends Updater {
 
 	private var graphChanged = true
 
-	Game.syncTicker().add(this)
+	EDX.syncTicker.add(this)
 
 	/**
 	 * Gets the set of wave sources
@@ -89,7 +89,7 @@ class OpticGrid(val world: World) extends Updater {
 				if (from != null) {
 					graph.addEdge(from, laser)
 				}
-				else if (Game.network.isServer) {
+				else if (EDX.network.isServer) {
 					graphChanged = true
 				}
 			}
@@ -108,7 +108,7 @@ class OpticGrid(val world: World) extends Updater {
 				graph.removeAllVertices(connected)
 				graphChanged = true
 			} else {
-				Game.logger().error("Attempt to remove node that does not exist in wave grid.")
+				EDX.logger.error("Attempt to remove node that does not exist in wave grid.")
 			}
 		}
 	}
@@ -132,11 +132,11 @@ class OpticGrid(val world: World) extends Updater {
 				sources.foreach(graph.addVertex)
 				sources.foreach(_.update(deltaTime))
 
-				if (Game.network().isServer) {
+				if (EDX.network.isServer) {
 					//Update client
 					if (graphChanged) {
 						println("Sent optic packet: " + graph.vertexSet().size())
-						Game.network.sync(this)
+						EDX.network.sync(this)
 						graphChanged = false
 					}
 				}

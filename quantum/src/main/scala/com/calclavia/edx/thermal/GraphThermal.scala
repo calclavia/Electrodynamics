@@ -1,6 +1,6 @@
 package com.calclavia.graph.thermal
 
-import nova.core.game.Game
+import com.calclavia.edx.core.EDX
 import nova.core.util.Direction
 import nova.core.util.transform.vector.Vector3i
 import nova.core.world.World
@@ -26,7 +26,7 @@ object GridThermal extends ExtendedUpdater {
 		if (!worldMap.contains(world)) {
 			val thermal: GridThermal = new GridThermal(world)
 			worldMap += (world -> thermal)
-			Game.instance.syncTicker.add(thermal)
+			EDX.instance.syncTicker.add(thermal)
 		}
 
 		return worldMap(world)

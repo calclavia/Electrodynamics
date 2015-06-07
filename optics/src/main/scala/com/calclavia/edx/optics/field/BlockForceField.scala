@@ -16,7 +16,7 @@ import nova.core.component.misc.{Collider, Damageable}
 import nova.core.component.renderer.StaticRenderer
 import nova.core.entity.Entity
 import nova.core.entity.component.Player
-import nova.core.game.Game
+import com.calclavia.edx.core.EDX
 import nova.core.network.NetworkTarget.Side
 import nova.core.network.{Syncable, Sync}
 import nova.core.render.model.Model
@@ -139,7 +139,7 @@ class BlockForceField extends BlockDefault with Syncable with ForceField with St
 			projector.addFortron(energy, true)
 		}
 
-		if (Game.network.isServer) {
+		if (EDX.network.isServer) {
 			world.removeBlock(transform.position)
 		}
 	}
@@ -153,7 +153,7 @@ class BlockForceField extends BlockDefault with Syncable with ForceField with St
 			return getProjectorSafe
 		}
 
-		if (Game.network.isServer) {
+		if (EDX.network.isServer) {
 			world.removeBlock(transform.position)
 		}
 
@@ -166,7 +166,7 @@ class BlockForceField extends BlockDefault with Syncable with ForceField with St
 			val projBlock = world.getBlock(projector)
 			if (projBlock.isPresent) {
 				val proj = projBlock.get().asInstanceOf[BlockProjector]
-				if (Game.network.isClient || (proj.getCalculatedField != null && proj.getCalculatedField.contains(transform.position))) {
+				if (EDX.network.isClient || (proj.getCalculatedField != null && proj.getCalculatedField.contains(transform.position))) {
 					return proj
 				}
 			}
@@ -178,7 +178,7 @@ class BlockForceField extends BlockDefault with Syncable with ForceField with St
 	def setProjector(position: Vector3i) {
 		projector = position
 
-		if (Game.network.isServer) {
+		if (EDX.network.isServer) {
 			refreshCamoBlock()
 		}
 	}

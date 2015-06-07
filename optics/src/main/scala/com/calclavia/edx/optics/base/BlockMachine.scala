@@ -14,7 +14,7 @@ import nova.core.component.Component
 import nova.core.component.misc.Collider
 import nova.core.component.renderer.ItemRenderer
 import nova.core.component.transform.Orientation
-import nova.core.game.Game
+import com.calclavia.edx.core.EDX
 import nova.core.gui.InputManager.Key
 import nova.core.network.NetworkTarget.Side
 import nova.core.network.{Packet, Syncable}
@@ -32,7 +32,7 @@ abstract class BlockMachine extends BlockDefault with Syncable with IActivatable
 	 */
 	var animation = 0d
 
-	var redstoneNode = Game.components.make(classOf[Redstone], this)
+	var redstoneNode = EDX.components.make(classOf[Redstone], this)
 
 	/**
 	 * Is the machine active and working?
@@ -91,14 +91,14 @@ abstract class BlockMachine extends BlockDefault with Syncable with IActivatable
 
 	def setActive(flag: Boolean) {
 		active = flag
-		Game.network.sync(PacketBlock.description, this)
+		EDX.network.sync(PacketBlock.description, this)
 		world().markStaticRender(transform.position)
 	}
 
 	def onRightClick(evt: RightClickEvent) {
 		active = !active
 		if (Placeholder.isHoldingConfigurator(evt.entity)) {
-			if (Game.input.isKeyDown(Key.KEY_LSHIFT)) {
+			if (EDX.input.isKeyDown(Key.KEY_LSHIFT)) {
 				if (Side.get().isServer) {
 					//TODO: Fix this
 					// InventoryUtility.dropBlockAsItem(world, position)

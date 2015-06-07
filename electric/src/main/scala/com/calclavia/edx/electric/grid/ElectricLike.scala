@@ -5,7 +5,7 @@ import com.calclavia.edx.electric.api.Electric.ElectricChangeEvent
 import com.resonant.lib.WrapFunctions._
 import nova.core.block.Block.NeighborChangeEvent
 import nova.core.block.Stateful.{LoadEvent, UnloadEvent}
-import nova.core.game.Game
+import com.calclavia.edx.core.EDX
 import nova.core.network.NetworkTarget.Side
 
 import scala.collection.convert.wrapAll._
@@ -22,8 +22,8 @@ trait ElectricLike extends Electric with BlockConnectable[Electric] {
 	block.loadEvent.add(
 		(evt: LoadEvent) => {
 			//Wait for next tick
-			if (Game.network.isServer) {
-				Game.syncTicker().preQueue(() => build())
+			if (EDX.network.isServer) {
+				EDX.syncTicker.preQueue(() => build())
 			}
 		}
 	)
@@ -36,7 +36,7 @@ trait ElectricLike extends Electric with BlockConnectable[Electric] {
 	block.neighborChangeEvent.add((evt: NeighborChangeEvent) => rebuild())
 
 	def rebuild() {
-		if (Game.network().isServer) {
+		if (EDX.network.isServer) {
 			//TODO: Only when connection changes!
 			ElectricGrid.destroy(this)
 			build()
@@ -44,7 +44,7 @@ trait ElectricLike extends Electric with BlockConnectable[Electric] {
 	}
 
 	def build() {
-		if (Game.network().isServer) {
+		if (EDX.network.isServer) {
 			ElectricGrid(this)
 				.addRecursive(this)
 				.build()

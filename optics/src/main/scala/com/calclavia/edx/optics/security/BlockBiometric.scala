@@ -11,7 +11,7 @@ import nova.core.block.Block.{BlockPlaceEvent, RightClickEvent}
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.renderer.DynamicRenderer
 import nova.core.component.transform.Orientation
-import nova.core.game.Game
+import com.calclavia.edx.core.EDX
 import nova.core.inventory.InventorySimple
 import nova.core.item.Item
 import nova.core.render.model.Model
@@ -58,7 +58,7 @@ class BlockBiometric extends BlockFrequency with ExtendedUpdater with Permission
 		     * Simulate flicker and, hovering
 		     */
 		    val t = System.currentTimeMillis()
-		    val dist = position.distance(Game.clientManager.getPlayer.position)
+			val dist = position.distance(EDX.clientManager.getPlayer.position)
 
 		    if (dist < 3) {
 			    if (Math.random() > 0.05 || (lastFlicker - t) > 200) {

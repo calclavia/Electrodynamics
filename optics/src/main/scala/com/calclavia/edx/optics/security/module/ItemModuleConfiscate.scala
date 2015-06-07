@@ -6,7 +6,7 @@ import com.calclavia.edx.optics.api.machine.Projector
 import com.calclavia.edx.optics.field.BlockProjector
 import com.calclavia.edx.optics.security.MFFSPermissions
 import nova.core.entity.component.Player
-import nova.core.game.Game
+import com.calclavia.edx.core.EDX
 import nova.core.inventory.Inventory
 import nova.core.util.transform.vector.Vector3i
 
@@ -41,7 +41,7 @@ class ItemModuleConfiscate extends ItemModuleDefense {
 				    }
 
 				    if (relevantSlots.size > 0) {
-					    Game.network.sendChat(player, Game.language.translate("message.moduleConfiscate.confiscate"))
+						EDX.network.sendChat(player, EDX.language.translate("message.moduleConfiscate.confiscate"))
 				    }
 			    })
 		    })

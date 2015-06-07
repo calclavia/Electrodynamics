@@ -15,7 +15,7 @@ import nova.core.block.component.{LightEmitter, StaticBlockRenderer}
 import nova.core.component.renderer.ItemRenderer
 import nova.core.component.transform.Orientation
 import nova.core.event.Event
-import nova.core.game.Game
+import com.calclavia.edx.core.EDX
 import nova.core.network.{Sync, Packet, Syncable}
 import nova.core.render.model.Model
 import nova.core.retention.{Store, Data, Storable}
@@ -68,10 +68,10 @@ class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater with
 	lightEmitter.setEmittedLevel(supplier(() => (electricNode.power / OpticGrid.maxPower).toFloat))
 
 	orientation.onOrientationChange.add((evt: Event) => {
-		if (Game.network.isServer) {
+		if (EDX.network.isServer) {
 			io.setIOAlternatingOrientation()
 			electricNode.rebuild()
-			Game.network().sync(this)
+			EDX.network.sync(this)
 		}
 		else {
 			world.markStaticRender(position)
@@ -111,7 +111,7 @@ class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater with
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)
 
-		if (Game.network.isServer) {
+		if (EDX.network.isServer) {
 			if (electricNode.power > 0) {
 				val dir = orientation.orientation.toVector.toDouble
 				val beam = new ElectromagneticBeam()

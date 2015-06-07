@@ -3,7 +3,7 @@ package com.calclavia.edx.optics.api.fortron;
 import nova.core.fluid.Fluid;
 import nova.core.fluid.SidedTankProvider;
 import nova.core.fluid.component.Tank;
-import nova.core.game.Game;
+import com.calclavia.edx.core.EDX;
 
 import java.util.Optional;
 
@@ -43,7 +43,7 @@ public interface Fortron extends SidedTankProvider {
 	 * @return The amount of fortron that was added.
 	 */
 	default int addFortron(int energy, boolean doUse) {
-		return getFortronTank().addFluid(Game.fluids().getFactory(fortronID).get().makeFluid().withAmount(energy), !doUse);
+		return getFortronTank().addFluid(EDX.fluids().getFactory(fortronID).get().makeFluid().withAmount(energy), !doUse);
 	}
 
 	/**

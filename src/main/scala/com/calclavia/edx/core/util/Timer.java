@@ -1,6 +1,6 @@
 package com.calclavia.edx.core.util;
 
-import nova.core.game.Game;
+import com.calclavia.edx.core.EDX;
 
 import java.util.HashMap;
 
@@ -31,7 +31,7 @@ public class Timer<K> {
 	}
 
 	public HashMap<K, Integer> getTimeMap() {
-		if (Game.network().isServer()) {
+		if (EDX.network().isServer()) {
 			return serverTimer;
 		}
 

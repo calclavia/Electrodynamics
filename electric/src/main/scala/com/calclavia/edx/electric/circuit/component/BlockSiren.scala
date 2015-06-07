@@ -13,7 +13,7 @@ import nova.core.block.Block.RightClickEvent
 import nova.core.block.Stateful
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.renderer.ItemRenderer
-import nova.core.game.Game
+import com.calclavia.edx.core.EDX
 import nova.core.retention.Store
 import nova.core.util.Direction
 import nova.scala.{ExtendedUpdater, IO}
@@ -24,7 +24,7 @@ import nova.scala.{ExtendedUpdater, IO}
 class BlockSiren extends BlockEDX with ExtendedUpdater with Stateful {
 	private val electricNode = add(new NodeElectricComponent(this))
 	private val io = add(new IO(this))
-	private val redstone = add(Game.components().make(classOf[Redstone], this))
+	private val redstone = add(EDX.components.make(classOf[Redstone], this))
 	private val renderer = add(new StaticBlockRenderer(this))
 	private val itemRenderer = add(new ItemRenderer(this))
 

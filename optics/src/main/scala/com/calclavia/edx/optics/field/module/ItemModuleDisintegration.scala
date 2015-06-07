@@ -11,7 +11,7 @@ import com.calclavia.edx.optics.field.BlockProjector
 import com.calclavia.edx.optics.field.mobilize.{BlockDropDelayedEvent, BlockInventoryDropDelayedEvent}
 import com.calclavia.edx.optics.util.MFFSUtility
 import nova.core.component.ComponentProvider
-import nova.core.game.Game
+import com.calclavia.edx.core.EDX
 import nova.core.util.transform.vector.Vector3i
 
 class ItemModuleDisintegration extends ItemModule {
@@ -47,13 +47,13 @@ class ItemModuleDisintegration extends ItemModule {
 				return ProjectState.pass
 			}
 
-			Game.network.sync(PacketBlock.effect, proj)
+			EDX.network.sync(PacketBlock.effect, proj)
 
 			if (projector.getModuleCount(OpticsContent.moduleCollection) > 0) {
-				Game.syncTicker.preQueue(new BlockInventoryDropDelayedEvent(39, block, world, position, projector.asInstanceOf[ComponentProvider]))
+				EDX.syncTicker.preQueue(new BlockInventoryDropDelayedEvent(39, block, world, position, projector.asInstanceOf[ComponentProvider]))
 			}
 			else {
-				Game.syncTicker.preQueue(new BlockDropDelayedEvent(39, block, world, position))
+				EDX.syncTicker.preQueue(new BlockDropDelayedEvent(39, block, world, position))
 			}
 
 			blockCount += 1

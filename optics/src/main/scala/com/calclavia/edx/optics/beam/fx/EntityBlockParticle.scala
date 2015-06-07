@@ -7,7 +7,7 @@ import nova.core.component.misc.Collider
 import nova.core.component.renderer.DynamicRenderer
 import nova.core.entity.Entity
 import nova.core.entity.component.RigidBody
-import nova.core.game.Game
+import com.calclavia.edx.core.EDX
 import nova.core.render.model.{BlockModelUtil, Model}
 import nova.core.util.transform.vector.Vector3d
 
@@ -20,7 +20,7 @@ import scala.util.Random
 class EntityBlockParticle(block: Block) extends Entity {
 
 	val renderer = add(new DynamicRenderer)
-	val rigidBody = add(Game.components().make(classOf[RigidBody], this))
+	val rigidBody = add(EDX.components.make(classOf[RigidBody], this))
 	val collider = add(new Collider)
 
 	val random = new Random()

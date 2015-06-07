@@ -6,7 +6,7 @@ import com.calclavia.edx.optics.api.machine.Projector
 import com.calclavia.edx.optics.field.BlockProjector
 import com.calclavia.edx.optics.security.MFFSPermissions
 import nova.core.entity.component.Player
-import nova.core.game.Game
+import com.calclavia.edx.core.EDX
 import nova.core.util.transform.vector.Vector3i
 
 class ItemModuleBroadcast extends ItemModuleDefense {
@@ -19,7 +19,7 @@ class ItemModuleBroadcast extends ItemModuleDefense {
 			.filter(_.has(classOf[Player]))
 			.map(_.get(classOf[Player]))
 			.filter(p => !projector.hasPermission(p.getID, MFFSPermissions.defense))
-			.foreach(Game.network.sendChat(_, Game.language.translate("message.moduleWarn.warn")))
+			.foreach(EDX.network.sendChat(_, EDX.language.translate("message.moduleWarn.warn")))
 		return false
 	}
 

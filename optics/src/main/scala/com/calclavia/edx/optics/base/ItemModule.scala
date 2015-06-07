@@ -10,7 +10,7 @@ import com.resonant.core.prefab.modcontent.AutoItemTexture
 import com.resonant.lib.WrapFunctions._
 import com.resonant.wrapper.lib.utility.science.UnitDisplay
 import nova.core.entity.Entity
-import nova.core.game.Game
+import com.calclavia.edx.core.EDX
 import nova.core.item.Item
 import nova.core.item.Item.TooltipEvent
 import nova.core.util.transform.shape.Cuboid
@@ -24,7 +24,7 @@ abstract class ItemModule extends Item with TooltipItem with Module with AutoIte
 
 	add(new CategoryMFFS)
 
-	tooltipEvent.add(eventListener((evt: TooltipEvent) => evt.tooltips.add(Game.language.translate("info.item.fortron") + " " + new
+	tooltipEvent.add(eventListener((evt: TooltipEvent) => evt.tooltips.add(EDX.language.translate("info.item.fortron") + " " + new
 			UnitDisplay(UnitDisplay.Unit.LITER, getFortronCost(1) * 20) + "/s")))
 
 	override def getFortronCost(amplifier: Float) = fortronCost

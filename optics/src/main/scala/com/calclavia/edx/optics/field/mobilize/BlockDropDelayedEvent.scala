@@ -2,7 +2,7 @@ package com.calclavia.edx.optics.field.mobilize
 
 import nova.core.block.Block
 import nova.core.block.Block.DropEvent
-import nova.core.game.Game
+import com.calclavia.edx.core.EDX
 import nova.core.util.transform.vector.Vector3i
 import nova.core.world.World
 
@@ -11,7 +11,7 @@ import scala.collection.convert.wrapAll._
 @deprecated
 class BlockDropDelayedEvent(ticks: Int, block: Block, world: World, position: Vector3i) extends DelayedEvent(ticks) {
 	protected override def onEvent {
-		if (Game.network.isServer) {
+		if (EDX.network.isServer) {
 			val checkBlock = world.getBlock(position)
 
 			if (checkBlock.isPresent && checkBlock.get == block) {

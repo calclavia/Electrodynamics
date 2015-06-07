@@ -10,7 +10,7 @@ import com.resonant.lib.WrapFunctions._
 import nova.core.event.Event
 import nova.core.event.GlobalEvents.BlockChangeEvent
 import nova.core.fluid.Fluid
-import nova.core.game.Game
+import com.calclavia.edx.core.EDX
 import nova.core.loader.{Loadable, NovaMod}
 
 @NovaMod(id = Reference.opticsID, name = Reference.name + ": Optics", version = Reference.version, novaVersion = "0.0.1", dependencies = Array("resonantengine", "nodeAPI"))
@@ -21,18 +21,18 @@ object Optics extends Loadable {
 
 	override def preInit() {
 		//Register OpticGrid packets
-		Game.network.register(new OpticGridPacket)
+		EDX.network.register(new OpticGridPacket)
 
 		//Hook block change event
-		Game.events.blockChange.add((evt: BlockChangeEvent) => EventHandler.onBlockChange(evt))
+		EDX.events.blockChange.add((evt: BlockChangeEvent) => EventHandler.onBlockChange(evt))
 
 		//Init frequency grid1
-		Game.events.serverStarting.add((evt: Event) => {
+		EDX.events.serverStarting.add((evt: Event) => {
 			GraphFrequency.client = new GraphFrequency
 			GraphFrequency.server = new GraphFrequency
 		})
 
-		Game.fluids.register((args: Array[AnyRef]) => new Fluid(Fortron.fortronID))
+		EDX.fluids.register((args: Array[AnyRef]) => new Fluid(Fortron.fortronID))
 
 		OpticsContent.preInit()
 		OpticsModels.preInit()

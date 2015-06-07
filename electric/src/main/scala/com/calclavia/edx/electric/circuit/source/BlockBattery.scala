@@ -15,7 +15,7 @@ import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.renderer.ItemRenderer
 import nova.core.component.transform.Orientation
 import nova.core.event.Event
-import nova.core.game.Game
+import com.calclavia.edx.core.EDX
 import nova.core.item.Item
 import nova.core.network.{Syncable, Sync}
 import nova.core.render.model.Model
@@ -49,7 +49,7 @@ class BlockBattery extends BlockEDX with Syncable with Storable with ExtendedUpd
 	private val orientation = add(new Orientation(this)).hookBlockEvents()
 	@Store
 	private val io = add(new IO(this))
-	private val redstone = add(Game.components().make(classOf[Redstone], this))
+	private val redstone = add(EDX.components.make(classOf[Redstone], this))
 	private val staticRenderer = add(new StaticBlockRenderer(this))
 	private val itemRenderer = add(new ItemRenderer(this))
 
@@ -124,7 +124,7 @@ class BlockBattery extends BlockEDX with Syncable with Storable with ExtendedUpd
 
 	placeEvent.add(
 		(evt: BlockPlaceEvent) => {
-			if (Game.network().isServer) {
+			if (EDX.network.isServer) {
 				val item = evt.item.asInstanceOf[ItemBlockBattery]
 				tier = item.tier
 				energy = item.energy
@@ -141,16 +141,16 @@ class BlockBattery extends BlockEDX with Syncable with Storable with ExtendedUpd
 	//TODO: Remove debug
 	@Store
 	var mode = 0
-	rightClickEvent.add((evt: RightClickEvent) => if (Game.network().isServer) mode = (mode + 1) % 10)
+	rightClickEvent.add((evt: RightClickEvent) => if (EDX.network.isServer) mode = (mode + 1) % 10)
 
 	override def onRegister() {
-		Game.items.register(func[Array[AnyRef], Item]((args: Array[AnyRef]) => new ItemBlockBattery(factory())))
+		EDX.items.register(func[Array[AnyRef], Item]((args: Array[AnyRef]) => new ItemBlockBattery(factory())))
 	}
 
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)
 
-		if (Game.network().isServer) {
+		if (EDX.network.isServer) {
 			if (redstone.getInputWeakPower > 0) {
 				//TODO: Remove free energy
 				energy = new EnergyStorage().setMax(BlockBattery.getEnergyForTier(tier))
@@ -171,7 +171,7 @@ class BlockBattery extends BlockEDX with Syncable with Storable with ExtendedUpd
 
 			if (energy.prev != energy.value) {
 				energyRenderLevel = Math.round((energy.value / BlockBattery.getEnergyForTier(tier).toDouble) * 8).toInt
-				Game.network().sync(this)
+				EDX.network.sync(this)
 			}
 
 			/**

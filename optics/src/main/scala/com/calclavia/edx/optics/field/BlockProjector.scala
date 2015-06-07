@@ -22,7 +22,7 @@ import nova.core.component.transform.Orientation
 import nova.core.entity.Entity
 import nova.core.entity.component.Player
 import nova.core.event.EventBus
-import nova.core.game.Game
+import com.calclavia.edx.core.EDX
 import nova.core.inventory.InventorySimple
 import nova.core.item.Item
 import nova.core.network.{Packet, Sync}
@@ -82,7 +82,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 			    val lightBeam = new Model()
 			    //TODO: Lighting, RenderHelper.disableStandardItemLighting
 
-			    val player = Game.clientManager.getPlayer.asInstanceOf[Entity with Player]
+				val player = EDX.clientManager.getPlayer.asInstanceOf[Entity with Player]
 			    val xDifference: Double = player.transform.position.x - (x + 0.5)
 			    val zDifference: Double = player.transform.position.z - (y + 0.5)
 			    val rot = Math.atan2(zDifference, xDifference)
@@ -164,7 +164,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 		calculateField(postCalculation)
 	}
 
-	def postCalculation() = if (clientSideSimulationRequired) Game.network.sync(PacketBlock.field, this)
+	def postCalculation() = if (clientSideSimulationRequired) EDX.network.sync(PacketBlock.field, this)
 
 	private def clientSideSimulationRequired: Boolean = {
 		return getModuleCount(OpticsContent.moduleRepulsion) > 0
@@ -174,7 +174,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 	 * Initiate a field calculation
 	 */
 	protected override def calculateField(callBack: () => Unit = null) {
-		if (Game.network.isServer && !isCalculating) {
+		if (EDX.network.isServer && !isCalculating) {
 			if (getShapeItem != null) {
 				forceFields = Set.empty
 			}
@@ -206,7 +206,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 	override def read(packet: Packet) {
 		super.read(packet)
 
-		if (Game.network.isClient) {
+		if (EDX.network.isClient) {
 			if (packet.getID == PacketBlock.effect) {
 				//Spawns a holographic beam
 				val packetType = packet.readInt
@@ -251,7 +251,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 				}
 			}
 
-			if (isActive && Game.network.isClient) {
+			if (isActive && EDX.network.isClient) {
 				animation += getFortronCost / 100f
 			}
 
@@ -260,7 +260,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 				//worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, Reference.prefix + "field", 0.6f, (1 - this.worldObj.rand.nextFloat * 0.1f))
 			}
 		}
-		else if (Game.network.isServer) {
+		else if (EDX.network.isServer) {
 			destroyField()
 		}
 	}
@@ -320,7 +320,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 								/**
 								 * Default force field block placement action.
 								 */
-								if (Game.network.isServer) {
+								if (EDX.network.isServer) {
 									world.setBlock(pos, OpticsContent.forceField)
 									world.getBlock(pos).get().asInstanceOf[BlockForceField].setProjector(position)
 								}
@@ -354,7 +354,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 	}
 
 	def destroyField() {
-		if (Game.network.isServer && calculatedField != null && !isCalculating) {
+		if (EDX.network.isServer && calculatedField != null && !isCalculating) {
 			getModules(getModuleSlots: _*).forall(!_.onDestroyField(this, calculatedField))
 			//TODO: Parallelism?
 			calculatedField

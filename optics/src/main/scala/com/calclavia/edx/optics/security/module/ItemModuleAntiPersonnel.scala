@@ -7,7 +7,7 @@ import com.calclavia.edx.optics.field.BlockProjector
 import com.calclavia.edx.optics.security.MFFSPermissions
 import nova.core.component.misc.Damageable
 import nova.core.entity.component.Player
-import nova.core.game.Game
+import com.calclavia.edx.core.EDX
 import nova.core.inventory.Inventory
 import nova.core.util.transform.vector.Vector3i
 
@@ -36,7 +36,7 @@ class ItemModuleAntiPersonnel extends ItemModuleDefense {
 				    )
 
 			    entity.get(classOf[Damageable]).damage(1000)
-			    Game.network.sendChat(player, Game.language.translate("message.moduleAntiPersonnel.death"))
+				EDX.network.sendChat(player, EDX.language.translate("message.moduleAntiPersonnel.death"))
 		    }
 			)
 

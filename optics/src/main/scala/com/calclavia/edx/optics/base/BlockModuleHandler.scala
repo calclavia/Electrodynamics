@@ -6,7 +6,7 @@ import com.calclavia.edx.optics.api.modules.Module
 import com.calclavia.edx.optics.content.OpticsContent
 import com.calclavia.edx.optics.util.CacheHandler
 import nova.core.fluid.Fluid
-import nova.core.game.Game
+import com.calclavia.edx.core.EDX
 import nova.core.item.{Item, ItemFactory}
 import nova.core.network.Packet
 
@@ -34,7 +34,7 @@ abstract class BlockModuleHandler extends BlockFortron with CacheHandler {
 	 * Returns Fortron cost in ticks.
 	 */
 	final def getFortronCost: Int = {
-		if (Game.network.isClient) {
+		if (EDX.network.isClient) {
 			return clientFortronCost
 		}
 

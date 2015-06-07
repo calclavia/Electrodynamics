@@ -8,7 +8,7 @@ import com.resonant.lib.WrapFunctions._
 import nova.core.block.Block.RightClickEvent
 import nova.core.block.Stateful
 import nova.core.block.component.StaticBlockRenderer
-import nova.core.game.Game
+import com.calclavia.edx.core.EDX
 import nova.core.network.{Packet, Sync, Syncable}
 import nova.core.render.model.Model
 import nova.core.retention.{Storable, Store}
@@ -51,7 +51,7 @@ class BlockMirror extends BlockEDX with Stateful with Syncable with Storable {
 	collider.isCube(false)
 	collider.isOpaqueCube(false)
 
-	rightClickEvent.add((evt: RightClickEvent) => Game.network().sync(this))
+	rightClickEvent.add((evt: RightClickEvent) => EDX.network.sync(this))
 
 	optic.onReceive.add(
 		(evt: ReceiveBeamEvent) => {
