@@ -14,7 +14,8 @@ import nova.core.component.renderer.ItemRenderer
 import com.calclavia.edx.core.EDX
 import nova.core.render.texture.Texture
 import nova.core.util.Direction
-import nova.scala.{ExtendedUpdater, IO}
+import nova.scala.component.IO
+import nova.scala.util.ExtendedUpdater
 
 class BlockThermopile extends BlockEDX with ExtendedUpdater with Stateful {
 	/**

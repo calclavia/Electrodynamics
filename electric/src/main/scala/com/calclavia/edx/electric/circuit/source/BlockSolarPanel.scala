@@ -15,7 +15,8 @@ import com.calclavia.edx.core.EDX
 import nova.core.render.model.{BlockModelUtil, Model}
 import nova.core.util.Direction
 import nova.core.util.transform.shape.Cuboid
-import nova.scala.{ExtendedUpdater, IO}
+import nova.scala.component.IO
+import nova.scala.util.ExtendedUpdater
 
 class BlockSolarPanel extends BlockEDX with ExtendedUpdater with Stateful {
 

@@ -15,7 +15,7 @@ import com.calclavia.edx.core.EDX
 import nova.core.network.Sync
 import nova.core.retention.Store
 import nova.core.util.Direction
-import nova.scala.ExtendedUpdater
+import nova.scala.util.ExtendedUpdater
 
 /**
  * A TileEntity that is powered by FortronHelper.

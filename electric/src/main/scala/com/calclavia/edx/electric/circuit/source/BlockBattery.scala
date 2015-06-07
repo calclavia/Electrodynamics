@@ -20,7 +20,8 @@ import nova.core.item.Item
 import nova.core.network.{Syncable, Sync}
 import nova.core.render.model.Model
 import nova.core.retention.{Storable, Store}
-import nova.scala.{ExtendedUpdater, IO}
+import nova.scala.component.IO
+import nova.scala.util.ExtendedUpdater
 
 /** A modular battery box that allows shared connections with boxes next to it.
   *

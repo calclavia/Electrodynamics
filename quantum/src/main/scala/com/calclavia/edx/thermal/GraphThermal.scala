@@ -4,7 +4,7 @@ import com.calclavia.edx.core.EDX
 import nova.core.util.Direction
 import nova.core.util.transform.vector.Vector3i
 import nova.core.world.World
-import nova.scala.ExtendedUpdater
+import nova.scala.util.ExtendedUpdater
 
 import scala.collection.mutable
 

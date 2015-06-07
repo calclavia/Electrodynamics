@@ -22,7 +22,8 @@ import nova.core.retention.{Store, Data, Storable}
 import nova.core.util.transform.matrix.Quaternion
 import nova.core.util.transform.vector.Vector3d
 import nova.core.util.{Direction, Ray}
-import nova.scala.{ExtendedUpdater, IO}
+import nova.scala.component.IO
+import nova.scala.util.ExtendedUpdater
 
 /**
  * An emitter that shoots out lasers.

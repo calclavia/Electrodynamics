@@ -16,7 +16,8 @@ import nova.core.component.renderer.ItemRenderer
 import com.calclavia.edx.core.EDX
 import nova.core.retention.Store
 import nova.core.util.Direction
-import nova.scala.{ExtendedUpdater, IO}
+import nova.scala.component.IO
+import nova.scala.util.ExtendedUpdater
 
 /**
  * Siren block

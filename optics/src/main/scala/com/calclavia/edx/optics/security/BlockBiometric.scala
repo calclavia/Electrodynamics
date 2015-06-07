@@ -15,7 +15,7 @@ import com.calclavia.edx.core.EDX
 import nova.core.inventory.InventorySimple
 import nova.core.item.Item
 import nova.core.render.model.Model
-import nova.scala.ExtendedUpdater
+import nova.scala.util.ExtendedUpdater
 
 import scala.collection.convert.wrapAll._
 

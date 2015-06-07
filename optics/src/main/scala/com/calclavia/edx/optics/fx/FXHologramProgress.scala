@@ -5,7 +5,7 @@ import com.resonant.lib.WrapFunctions._
 import nova.core.component.renderer.DynamicRenderer
 import nova.core.render.Color
 import nova.core.render.model.{BlockModelUtil, Model}
-import nova.scala.ExtendedUpdater
+import nova.scala.util.ExtendedUpdater
 
 import scala.beans.BeanProperty
 import scala.collection.convert.wrapAll._

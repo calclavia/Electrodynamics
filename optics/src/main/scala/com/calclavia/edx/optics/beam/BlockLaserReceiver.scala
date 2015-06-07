@@ -21,7 +21,8 @@ import nova.core.retention.Storable
 import nova.core.util.Direction
 import nova.core.util.transform.matrix.Quaternion
 import nova.core.util.transform.vector.Vector3d
-import nova.scala.{ExtendedUpdater, IO}
+import nova.scala.component.IO
+import nova.scala.util.ExtendedUpdater
 
 /**
  * A block that receives laser light and generates a voltage.
