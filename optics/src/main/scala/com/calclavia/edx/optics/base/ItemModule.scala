@@ -8,13 +8,13 @@ import com.calclavia.edx.optics.field.BlockProjector
 import com.resonant.core.prefab.itemblock.TooltipItem
 import com.resonant.core.prefab.modcontent.AutoItemTexture
 import com.resonant.lib.WrapFunctions._
-import com.resonant.wrapper.lib.utility.science.UnitDisplay
 import nova.core.entity.Entity
 import com.calclavia.edx.core.EDX
 import nova.core.item.Item
 import nova.core.item.Item.TooltipEvent
 import nova.core.util.transform.shape.Cuboid
 import nova.core.util.transform.vector.Vector3i
+import nova.energy.UnitDisplay
 
 import scala.collection.convert.wrapAll._
 

@@ -2,7 +2,6 @@ package com.calclavia.edx.optics.gui
 
 import com.calclavia.edx.optics.production.BlockFortronCapacitor
 import com.resonant.lib.WrapFunctions._
-import com.resonant.wrapper.lib.utility.science.UnitDisplay
 import com.calclavia.edx.core.EDX
 import nova.core.gui.ComponentEvent.ActionEvent
 import nova.core.gui.component.inventory.{PlayerInventory, Slot}
@@ -11,6 +10,7 @@ import nova.core.gui.layout.{Anchor, FlowLayout}
 import nova.core.gui.render.Graphics
 import nova.core.gui.{ComponentEvent, GuiEvent}
 import nova.core.network.NetworkTarget.Side
+import nova.energy.UnitDisplay
 
 import scala.collection.convert.wrapAll._
 

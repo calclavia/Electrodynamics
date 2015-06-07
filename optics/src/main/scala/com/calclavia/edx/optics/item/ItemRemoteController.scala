@@ -10,7 +10,6 @@ import com.calclavia.edx.optics.beam.fx.EntityMagneticBeam
 import com.calclavia.edx.optics.security.MFFSPermissions
 import com.calclavia.edx.optics.util.MFFSUtility
 import com.resonant.lib.WrapFunctions._
-import com.resonant.wrapper.lib.utility.science.UnitDisplay
 import nova.core.block.Block
 import nova.core.entity.component.Player
 import nova.core.fluid.Fluid
@@ -24,6 +23,7 @@ import nova.core.util.Direction
 import nova.core.util.collection.Tuple2
 import nova.core.util.transform.vector.{Vector3d, Vector3i}
 import nova.core.world.World
+import nova.energy.UnitDisplay
 
 class ItemRemoteController extends ItemCardFrequency with CoordLink with Storable {
 	//TODO: Is this needed?
