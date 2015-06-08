@@ -2,7 +2,6 @@ package com.calclavia.edx.electric
 
 import com.calclavia.edx.core.Reference
 import com.calclavia.edx.electric.circuit.component.BlockSiren
-import com.calclavia.edx.optics.beam.{BlockLaserEmitter, BlockLaserReceiver}
 import com.calclavia.edx.electric.circuit.source.{BlockBattery, BlockSolarPanel, BlockThermopile}
 import com.calclavia.edx.electric.circuit.wire.BlockWire
 import com.resonant.core.prefab.modcontent.ContentLoader

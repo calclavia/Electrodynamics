@@ -2,13 +2,13 @@ package com.calclavia.edx.electric.grid
 
 import java.util.Optional
 
-import nova.scala.wrapper.FunctionalWrapper
-import FunctionalWrapper._
 import nova.core.block.Block
 import nova.core.block.component.Connectable
 import nova.core.util.Direction
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 import nova.core.world.World
+import nova.scala.wrapper.FunctionalWrapper._
+import nova.scala.wrapper.VectorWrapper._
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 import scala.collection.convert.wrapAll._
 
