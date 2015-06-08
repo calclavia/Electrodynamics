@@ -3,18 +3,19 @@ package com.calclavia.edx.optics.field.shape
 import java.io.File
 import java.util.{Set => JSet}
 
+import com.calclavia.edx.core.EDX
 import com.calclavia.edx.optics.Settings
 import com.calclavia.edx.optics.api.machine.Projector
 import com.calclavia.edx.optics.content.OpticsContent
 import com.calclavia.edx.optics.util.CacheHandler
 import com.resonant.core.structure.{Structure, StructureCustom}
-import nova.scala.wrapper.FunctionalWrapper
-import FunctionalWrapper._
-import com.calclavia.edx.core.EDX
 import nova.core.gui.InputManager.Key
 import nova.core.item.Item.{RightClickEvent, TooltipEvent, UseEvent}
 import nova.core.render.model.Model
 import nova.core.retention.Store
+import nova.scala.wrapper.FunctionalWrapper
+import nova.scala.wrapper.FunctionalWrapper._
+import nova.scala.wrapper.VectorWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 import scala.util.Random
@@ -93,7 +94,7 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 
 						EDX.retention.load(saveFilePrefix + saveID, customStructure)
 
-						for (x <- minPoint.getX() to maxPoint.getX(); y <- minPoint.getY() to maxPoint.getY(); z <- minPoint.getZ() to maxPoint.getZ()) {
+						for (x <- minPoint.xi to maxPoint.xi; y <- minPoint.yi to maxPoint.yi; z <- minPoint.zi to maxPoint.zi) {
 							val position = new Vector3D(x, y, z)
 							val targetCheck = midPoint + position
 							val block = evt.entity.world().getBlock(targetCheck)

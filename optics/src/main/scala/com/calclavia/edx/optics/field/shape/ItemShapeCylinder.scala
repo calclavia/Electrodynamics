@@ -24,7 +24,7 @@ class ItemShapeCylinder extends ItemShape {
 		val detail = 0.5f
 		val radius = (1.5f * detail).toInt
 
-		model.scale(scale, scale, scale)
+		model.matrix.scale(scale, scale, scale)
 
 		var i = 0
 
@@ -33,7 +33,7 @@ class ItemShapeCylinder extends ItemShape {
 				if (i % 2 == 0) {
 					val vector = new Vector3D(renderX / detail, renderY / detail, renderZ / detail)
 					val cube = BlockModelUtil.drawCube(new Model())
-					cube.translate(vector.getX(), vector.getY(), vector.getZ())
+					cube.matrix.translate(vector.getX(), vector.getY(), vector.getZ())
 					model.children.add(cube)
 				}
 				i += 1

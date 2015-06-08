@@ -1,20 +1,18 @@
 package com.calclavia.edx.optics.item
 
+import com.calclavia.edx.core.EDX
 import com.calclavia.edx.optics.GraphFrequency
 import com.calclavia.edx.optics.api.MFFSEvent.EventForceMobilize
 import com.calclavia.edx.optics.api.card.CoordLink
 import com.calclavia.edx.optics.base.BlockFortron
-import com.calclavia.edx.optics.item.card.ItemCardFrequency
-import com.calclavia.edx.optics.fx.FieldColor
 import com.calclavia.edx.optics.beam.fx.EntityMagneticBeam
+import com.calclavia.edx.optics.fx.FieldColor
+import com.calclavia.edx.optics.item.card.ItemCardFrequency
 import com.calclavia.edx.optics.security.MFFSPermissions
 import com.calclavia.edx.optics.util.MFFSUtility
-import nova.scala.wrapper.FunctionalWrapper
-import FunctionalWrapper._
 import nova.core.block.Block
 import nova.core.entity.component.Player
 import nova.core.fluid.Fluid
-import com.calclavia.edx.core.EDX
 import nova.core.gui.InputManager.Key
 import nova.core.item.Item
 import nova.core.item.Item.{RightClickEvent, TooltipEvent, UseEvent}
@@ -22,9 +20,11 @@ import nova.core.network.NetworkTarget.Side
 import nova.core.retention.{Storable, Store}
 import nova.core.util.Direction
 import nova.core.util.collection.Tuple2
-import nova.core.util.transform.vector.{Vector3D, Vector3D}
 import nova.core.world.World
 import nova.energy.UnitDisplay
+import nova.scala.wrapper.FunctionalWrapper._
+import nova.scala.wrapper.VectorWrapper._
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 class ItemRemoteController extends ItemCardFrequency with CoordLink with Storable {
 	//TODO: Is this needed?
@@ -93,7 +93,7 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 								if (Side.get().isServer) {
 									val newFX = evt.entity.world.addClientEntity(new EntityMagneticBeam(FieldColor.blue, 20))
 									newFX.setPosition(evt.entity.position /*.add(new Vector3d(0, entity.getEyeHeight - 0.2, 0))*/)
-									newFX.setTarget(fortronBlock.position.add(0.5))
+									newFX.setTarget(fortronBlock.position + 0.5)
 								}
 								receivedEnergy += consumedEnergy
 							}

@@ -6,6 +6,7 @@ import com.calclavia.edx.optics.api.machine.FieldMatrix
 import com.calclavia.edx.optics.base.ItemModule
 import com.resonant.core.structure.Structure
 import nova.core.util.Direction
+import nova.scala.wrapper.VectorWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 class ItemModuleArray extends ItemModule {
@@ -59,23 +60,23 @@ class ItemModuleArray extends ItemModule {
 		longestDirectional += (Direction.EAST -> 0)
 
 		for (fieldPosition <- field) {
-			if (fieldPosition.getX() > 0 && fieldPosition.getX() > longestDirectional(Direction.EAST)) {
-				longestDirectional += (Direction.EAST -> fieldPosition.getX())
+			if (fieldPosition.xi > 0 && fieldPosition.xi > longestDirectional(Direction.EAST)) {
+				longestDirectional += (Direction.EAST -> fieldPosition.xi)
 			}
-			else if (fieldPosition.getX() < 0 && fieldPosition.getX() < longestDirectional(Direction.WEST)) {
-				longestDirectional += (Direction.WEST -> fieldPosition.getX())
+			else if (fieldPosition.xi < 0 && fieldPosition.xi < longestDirectional(Direction.WEST)) {
+				longestDirectional += (Direction.WEST -> fieldPosition.xi)
 			}
-			if (fieldPosition.getY() > 0 && fieldPosition.getY() > longestDirectional(Direction.UP)) {
-				longestDirectional += (Direction.UP -> fieldPosition.getY())
+			if (fieldPosition.yi > 0 && fieldPosition.yi > longestDirectional(Direction.UP)) {
+				longestDirectional += (Direction.UP -> fieldPosition.yi)
 			}
-			else if (fieldPosition.getY() < 0 && fieldPosition.getY() < longestDirectional(Direction.DOWN)) {
-				longestDirectional += (Direction.DOWN -> fieldPosition.getY())
+			else if (fieldPosition.yi < 0 && fieldPosition.yi < longestDirectional(Direction.DOWN)) {
+				longestDirectional += (Direction.DOWN -> fieldPosition.yi)
 			}
-			if (fieldPosition.getZ() > 0 && fieldPosition.getZ() > longestDirectional(Direction.SOUTH)) {
-				longestDirectional += (Direction.SOUTH -> fieldPosition.getZ())
+			if (fieldPosition.zi > 0 && fieldPosition.zi > longestDirectional(Direction.SOUTH)) {
+				longestDirectional += (Direction.SOUTH -> fieldPosition.zi)
 			}
-			else if (fieldPosition.getZ() < 0 && fieldPosition.getZ() < longestDirectional(Direction.NORTH)) {
-				longestDirectional += (Direction.NORTH -> fieldPosition.getZ())
+			else if (fieldPosition.zi < 0 && fieldPosition.zi < longestDirectional(Direction.NORTH)) {
+				longestDirectional += (Direction.NORTH -> fieldPosition.zi)
 			}
 		}
 

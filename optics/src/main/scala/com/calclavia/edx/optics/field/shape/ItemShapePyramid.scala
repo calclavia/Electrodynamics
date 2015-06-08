@@ -17,7 +17,7 @@ class ItemShapePyramid extends ItemShape {
 		val uvMaxX = 2
 		val uvMaxY = 2
 		val translation = new Vector3D(0, -0.4, 0)
-		model.rotate(new Vector3D(0, 0, 1), Math.PI)
+		model.matrix.rotate(new Vector3D(0, 0, 1), Math.PI)
 		val face = model.createFace()
 		face.drawVertex(new Vertex(0 + translation.getX(), 0 + translation.getY(), 0 + translation.getZ(), 0, 0))
 		face.drawVertex(new Vertex(-width + translation.getX(), height + translation.getY(), -width + translation.getZ(), -uvMaxX, -uvMaxY))

@@ -2,11 +2,14 @@ package com.calclavia.edx.optics.field.module
 
 import java.util.{Set => JSet}
 
+import com.calclavia.edx.optics.api.machine.Projector
+import com.calclavia.edx.optics.base.ItemModule
+import com.calclavia.edx.optics.security.MFFSPermissions
 import nova.core.entity.Entity
 import nova.core.entity.component.{Player, RigidBody}
 import nova.core.util.math.Vector3DUtil
+import nova.scala.wrapper.VectorWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
-
 /**
  * Generates a repulsion field instead of a solid one made out of blocks.
  * Entities are repelled from entering the force field.
@@ -27,7 +30,7 @@ class ItemModuleRepulsion extends ItemModule {
 		}
 			.foreach(
 		    entity => {
-			    val repelDirection = entity.transform.position - (entity.transform.position.toInt + 0.5).normalize
+			    val repelDirection = entity.transform.position - (entity.transform.position + 0.5).normalize
 			    val rigidBody = entity.get(classOf[RigidBody])
 			    val velocity = rigidBody.velocity
 			    val force = repelDirection * repellForce.max(velocity.abs)

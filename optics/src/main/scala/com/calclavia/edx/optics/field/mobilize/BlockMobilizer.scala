@@ -3,6 +3,15 @@ package com.calclavia.edx.optics.field.mobilize
 import java.util.{Set => JSet}
 
 import com.calclavia.edx.core.EDX
+import com.calclavia.edx.optics.api.MFFSEvent.EventForceMobilize
+import com.calclavia.edx.optics.api.card.CoordLink
+import com.calclavia.edx.optics.api.{Blacklist, MFFSEvent}
+import com.calclavia.edx.optics.base.{BlockFieldMatrix, PacketBlock}
+import com.calclavia.edx.optics.content.{OpticsContent, OpticsModels, OpticsTextures}
+import com.calclavia.edx.optics.fx.{FXHologramProgress, FieldColor, IEffectController}
+import com.calclavia.edx.optics.security.{MFFSPermissions, PermissionHandler}
+import com.calclavia.edx.optics.util.MFFSUtility
+import com.calclavia.edx.optics.{Optics, Settings}
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.misc.Collider
 import nova.core.component.transform.Orientation
@@ -15,9 +24,11 @@ import nova.core.network.{Packet, Sync}
 import nova.core.render.model.Model
 import nova.core.retention.{Data, Storable, Store}
 import nova.core.util.Direction
-import nova.core.util.math.MatrixStack
 import nova.core.util.shape.Cuboid
 import nova.core.world.World
+import nova.scala.wrapper.FunctionalWrapper._
+import nova.scala.wrapper.VectorWrapper._
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 import scala.collection.convert.wrapAll._
 
@@ -30,7 +41,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 	val animationTime = 20
 	var failedPositions = Set.empty[Vector3D]
 	@Store
-	var anchor = new Vector3D()
+	var anchor = Vector3D.ZERO
 	/**
 	 * The display mode. 0 = none, 1 = minimal, 2 = maximal.
 	 */
@@ -53,13 +64,9 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 	get(classOf[StaticBlockRenderer])
 		.setOnRender(
 	    (model: Model) => {
-		    model.matrix = new MatrixStack()
-			    .loadMatrix(model.matrix)
-			    .rotate(get(classOf[Orientation]).orientation.rotation)
-			    .getMatrix
-
-			model.children.add(OpticsModels.mobilizer.getModel)
-			model.bindAll(if (isActive) OpticsTextures.mobilizerOn else OpticsTextures.mobilizerOff)
+		    model.matrix.rotate(get(classOf[Orientation]).orientation.rotation)
+		    model.children.add(OpticsModels.mobilizer.getModel)
+		    model.bindAll(if (isActive) OpticsTextures.mobilizerOn else OpticsTextures.mobilizerOff)
 	    }
 		)
 
@@ -483,7 +490,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 		else {
 			packet.getID match {
 				case PacketBlock.toggleMode =>
-					anchor = new Vector3D()
+					anchor = Vector3D.ZERO
 					markDirty()
 				case PacketBlock.toggleMode2 =>
 					previewMode = (previewMode + 1) % 3
@@ -561,7 +568,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 		return animationTime
 	}
 
-	override def doGetFortronCost: Int = Math.round(super.doGetFortronCost + (if (this.anchor != null) this.anchor.magnitude * 1000 else 0)).toInt
+	override def doGetFortronCost: Int = Math.round(super.doGetFortronCost + (if (this.anchor != null) this.anchor.getNorm * 1000 else 0)).toInt
 
 	/*
 	override def isItemValidForSlot(slotID: Int, item: Item): Boolean = {

@@ -12,14 +12,14 @@ class StructureSphere extends Structure {
 	 * The transformation should be default.
 	 * @return The result of the equation. Zero if the position satisfy the equation.
 	 */
-	override def surfaceEquation(position: Vector3D): Double = position.magnitude() - 1
+	override def surfaceEquation(position: Vector3D): Double = position.getNorm() - 1
 
 	/**
 	 * Gets the equation that define the 3D volume in standard form.
 	 * The transformation should be default.
 	 * @return The result of the equation. Zero if the position satisfy the equation.
 	 */
-	override def volumeEquation(position: Vector3D): Double = if (position.magnitude() < 1) 1 else 0
+	override def volumeEquation(position: Vector3D): Double = if (position.getNorm() < 1) 1 else 0
 
 	override def getID: String = "sphere"
 }

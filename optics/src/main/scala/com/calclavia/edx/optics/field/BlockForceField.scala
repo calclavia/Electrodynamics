@@ -2,13 +2,12 @@ package com.calclavia.edx.optics.field
 
 import java.util.{Collections, Optional}
 
+import com.calclavia.edx.core.EDX
 import com.calclavia.edx.optics.api.machine.ForceField
 import com.calclavia.edx.optics.api.modules.Module
 import com.calclavia.edx.optics.content.{OpticsContent, OpticsTextures}
 import com.calclavia.edx.optics.security.MFFSPermissions
 import com.calclavia.edx.optics.util.MFFSUtility
-import nova.scala.wrapper.FunctionalWrapper
-import FunctionalWrapper._
 import nova.core.block.Block.DropEvent
 import nova.core.block.component.{LightEmitter, StaticBlockRenderer}
 import nova.core.block.{Block, BlockDefault}
@@ -17,12 +16,14 @@ import nova.core.component.misc.{Collider, Damageable}
 import nova.core.component.renderer.StaticRenderer
 import nova.core.entity.Entity
 import nova.core.entity.component.Player
-import com.calclavia.edx.core.EDX
 import nova.core.network.NetworkTarget.Side
-import nova.core.network.{Syncable, Sync}
+import nova.core.network.{Sync, Syncable}
 import nova.core.render.model.Model
 import nova.core.retention.{Storable, Store}
 import nova.core.util.Direction
+import nova.scala.wrapper.FunctionalWrapper
+import nova.scala.wrapper.FunctionalWrapper._
+import nova.scala.wrapper.VectorWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 class BlockForceField extends BlockDefault with Syncable with ForceField with Storable {

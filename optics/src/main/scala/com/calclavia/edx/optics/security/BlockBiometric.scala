@@ -2,21 +2,21 @@ package com.calclavia.edx.optics.security
 
 import java.util.{Set => JSet}
 
+import com.calclavia.edx.core.EDX
 import com.calclavia.edx.optics.api.card.AccessCard
 import com.calclavia.edx.optics.base.BlockFrequency
 import com.calclavia.edx.optics.content.{OpticsModels, OpticsTextures}
 import com.resonant.core.access.Permission
-import nova.scala.wrapper.FunctionalWrapper
-import FunctionalWrapper._
 import nova.core.block.Block.{BlockPlaceEvent, RightClickEvent}
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.renderer.DynamicRenderer
 import nova.core.component.transform.Orientation
-import com.calclavia.edx.core.EDX
 import nova.core.inventory.InventorySimple
 import nova.core.item.Item
 import nova.core.render.model.Model
 import nova.scala.util.ExtendedUpdater
+import nova.scala.wrapper.FunctionalWrapper
+import nova.scala.wrapper.FunctionalWrapper._
 
 import scala.collection.convert.wrapAll._
 
@@ -43,7 +43,7 @@ class BlockBiometric extends BlockFrequency with ExtendedUpdater with Permission
 	get(classOf[StaticBlockRenderer])
 		.setOnRender(
 	    (model: Model) => {
-		    model.rotate(get(classOf[Orientation]).orientation.rotation)
+		    model.matrix.rotate(get(classOf[Orientation]).orientation.rotation)
 			val modelBiometric: Model = OpticsModels.biometric.getModel
 		    modelBiometric.children.removeAll(modelBiometric.children.filter(_.name.equals("holoScreen")))
 		    model.children.add(modelBiometric)
@@ -54,7 +54,7 @@ class BlockBiometric extends BlockFrequency with ExtendedUpdater with Permission
 	add(new DynamicRenderer())
 		.setOnRender(
 	    (model: Model) => {
-		    model.rotate(get(classOf[Orientation]).orientation.rotation)
+		    model.matrix.rotate(get(classOf[Orientation]).orientation.rotation)
 		    /**
 		     * Simulate flicker and, hovering
 		     */
@@ -63,7 +63,7 @@ class BlockBiometric extends BlockFrequency with ExtendedUpdater with Permission
 
 		    if (dist < 3) {
 			    if (Math.random() > 0.05 || (lastFlicker - t) > 200) {
-				    model.translate(0, Math.sin(Math.toRadians(animation)) * 0.05, 0)
+				    model.matrix.translate(0, Math.sin(Math.toRadians(animation)) * 0.05, 0)
 				    //RenderUtility.enableBlending()
 					val screenModel = OpticsModels.biometric.getModel
 				    screenModel.children.removeAll(screenModel.filterNot(_.name.equals("holoScreen")))

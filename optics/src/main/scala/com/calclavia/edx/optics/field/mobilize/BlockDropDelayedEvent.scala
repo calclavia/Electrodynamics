@@ -1,10 +1,11 @@
 package com.calclavia.edx.optics.field.mobilize
 
+import com.calclavia.edx.core.EDX
 import nova.core.block.Block
 import nova.core.block.Block.DropEvent
-import com.calclavia.edx.core.EDX
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 import nova.core.world.World
+import nova.scala.wrapper.VectorWrapper._
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 import scala.collection.convert.wrapAll._
 

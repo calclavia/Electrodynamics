@@ -1,13 +1,10 @@
 package com.calclavia.edx.optics.grid
 
 import com.calclavia.edx.optics.beam.fx.{EntityBlockParticle, EntityLaserBeam, EntityScorch}
-import nova.scala.wrapper.FunctionalWrapper
-import FunctionalWrapper._
-import nova.core.block.Block.DropEvent
 import nova.core.component.misc.Damageable
 import nova.core.util.RayTracer.{RayTraceBlockResult, RayTraceEntityResult, RayTraceResult}
-
-import scala.collection.convert.wrapAll._
+import nova.scala.wrapper.FunctionalWrapper._
+import nova.scala.wrapper.VectorWrapper._
 
 /**
  * @author Calclavia

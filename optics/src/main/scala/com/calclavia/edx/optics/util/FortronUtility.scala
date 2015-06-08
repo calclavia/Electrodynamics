@@ -3,11 +3,12 @@ package com.calclavia.edx.optics.util
 import com.calclavia.edx.optics.Settings
 import com.calclavia.edx.optics.api.fortron.FortronFrequency
 import com.calclavia.edx.optics.base.BlockModuleHandler
+import com.calclavia.edx.optics.beam.fx.EntityMagneticBeam
 import com.calclavia.edx.optics.content.OpticsContent
 import com.calclavia.edx.optics.fx.FieldColor
-import com.calclavia.edx.optics.beam.fx.EntityMagneticBeam
 import nova.core.block.Block
 import nova.core.network.NetworkTarget.Side
+import nova.scala.wrapper.VectorWrapper._
 
 /**
  * A class with useful functions related to Fortron.
