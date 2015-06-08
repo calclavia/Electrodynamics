@@ -6,7 +6,9 @@ import java.util.{Set => JSet}
 import com.calclavia.edx.core.prefab.BlockEDX
 import com.calclavia.edx.electric.api.{ConnectionBuilder, Electric}
 import com.calclavia.edx.electric.grid.NodeElectricComponent
+import com.calclavia.edx.optics.content.{OpticsModels, OpticsTextures}
 import com.calclavia.edx.optics.grid.OpticHandler
+import com.calclavia.edx.optics.grid.OpticHandler.ReceiveBeamEvent
 import nova.core.block.Block.{BlockPlaceEvent, RightClickEvent}
 import nova.core.block.Stateful
 import nova.core.block.component.{LightEmitter, StaticBlockRenderer}
@@ -87,13 +89,13 @@ class BlockLaserReceiver extends BlockEDX with Stateful with ExtendedUpdater wit
 				case _ => Rotation.IDENTITY
 			}
 
-			model.rotate(rot)
+			model.matrix.rotate(rot)
 
 			if (orientation.orientation.y == 0) {
-				model.rotate(Vector3D.PLUS_J, -Math.PI / 2)
+				model.matrix.rotate(Vector3D.PLUS_J, -Math.PI / 2)
 			}
 			else {
-				model.rotate(Vector3D.PLUS_I, Math.PI)
+				model.matrix.rotate(Vector3D.PLUS_I, Math.PI)
 			}
 
 			model.children.add(OpticsModels.laserReceiverModel.getModel)

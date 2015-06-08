@@ -1,15 +1,15 @@
 package com.calclavia.edx.optics.beam.fx
 
 import com.calclavia.edx.core.prefab.EntityAgeLike
+import com.calclavia.edx.optics.grid.OpticGrid
 import nova.core.block.Stateful.LoadEvent
 import nova.core.component.renderer.DynamicRenderer
 import nova.core.entity.Entity
 import nova.core.render.Color
 import nova.core.render.model.{Model, Vertex}
-
-org.apache.commons.math3.geometry.euclidean.threed.Rotation
 import nova.scala.wrapper.FunctionalWrapper._
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
+import nova.scala.wrapper.VectorWrapper._
+import org.apache.commons.math3.geometry.euclidean.threed.{Rotation, Vector3D}
 
 import scala.util.Random
 

@@ -1,15 +1,14 @@
 package com.calclavia.edx.optics.beam.fx
 
 import com.calclavia.edx.core.prefab.EntityAgeLike
+import com.calclavia.edx.optics.content.OpticsTextures
 import nova.core.component.renderer.DynamicRenderer
 import nova.core.entity.Entity
 import nova.core.render.Color
 import nova.core.render.model.{Model, Vertex}
 import nova.core.util.Direction
-
-org.apache.commons.math3.geometry.euclidean.threed.Rotation
 import nova.scala.wrapper.FunctionalWrapper._
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
+import org.apache.commons.math3.geometry.euclidean.threed.{Rotation, Vector3D}
 
 /**
  * An entity scorch effect
@@ -41,7 +40,7 @@ class EntityScorch(side: Int) extends Entity with EntityAgeLike {
 			/**
 			 * Rotate the scorch effect
 			 */
-			model.rotate(new Rotation(Vector3D.PLUS_J, -Math.PI / 2))
+			model.matrix.rotate(new Rotation(Vector3D.PLUS_J, -Math.PI / 2))
 
 			val rot = Direction.fromOrdinal(side).rotation
 			/*match

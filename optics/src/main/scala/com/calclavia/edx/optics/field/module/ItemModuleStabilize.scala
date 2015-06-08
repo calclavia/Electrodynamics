@@ -8,10 +8,8 @@ import nova.core.component.ComponentProvider
 import nova.core.inventory.Inventory
 import nova.core.item.ItemBlock
 import nova.core.util.Direction
-
-org.apache.commons.math3.geometry.euclidean.threed.Rotation
 import nova.core.world.World
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
+import org.apache.commons.math3.geometry.euclidean.threed.{Rotation, Vector3D}
 
 import scala.collection.convert.wrapAll._
 

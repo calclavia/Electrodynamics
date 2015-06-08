@@ -1,6 +1,11 @@
 package com.calclavia.edx.optics.util
 
 import com.calclavia.edx.core.EDX
+import com.calclavia.edx.optics.GraphFrequency
+import com.calclavia.edx.optics.api.machine.Projector
+import com.calclavia.edx.optics.content.OpticsContent
+import com.calclavia.edx.optics.field.BlockProjector
+import com.calclavia.edx.optics.field.shape.ItemShapeCustom
 import com.resonant.core.access.Permission
 import nova.core.block.{Block, BlockFactory}
 import nova.core.component.ComponentProvider
@@ -9,9 +14,9 @@ import nova.core.inventory.Inventory
 import nova.core.item.{Item, ItemBlock}
 import nova.core.network.NetworkTarget.Side
 import nova.core.util.Direction
-
-org.apache.commons.math3.geometry.euclidean.threed.Rotation
+import nova.core.util.math.RotationUtil
 import nova.core.world.World
+import org.apache.commons.math3.geometry.euclidean.threed.{Rotation, Vector3D}
 
 import scala.collection.convert.wrapAll._
 

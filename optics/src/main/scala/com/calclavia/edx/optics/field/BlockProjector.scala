@@ -3,6 +3,16 @@ package com.calclavia.edx.optics.field
 import java.util.{Optional, Set => JSet}
 
 import com.calclavia.edx.core.EDX
+import com.calclavia.edx.optics.Settings
+import com.calclavia.edx.optics.api.machine.Projector
+import com.calclavia.edx.optics.api.modules.Module.ProjectState
+import com.calclavia.edx.optics.base.{BlockFieldMatrix, PacketBlock}
+import com.calclavia.edx.optics.beam.fx.EntityMagneticBeam
+import com.calclavia.edx.optics.content.{OpticsContent, OpticsModels, OpticsTextures}
+import com.calclavia.edx.optics.field.shape.ItemShapeCustom
+import com.calclavia.edx.optics.fx.{FXHologramProgress, FieldColor}
+import com.calclavia.edx.optics.security.PermissionHandler
+import com.calclavia.edx.optics.util.CacheHandler
 import nova.core.block.Block
 import nova.core.block.Stateful.UnloadEvent
 import nova.core.block.component.{LightEmitter, StaticBlockRenderer}
@@ -18,9 +28,10 @@ import nova.core.network.{Packet, Sync}
 import nova.core.render.Color
 import nova.core.render.model.{Model, Vertex}
 import nova.core.retention.Store
-import nova.core.util.math.MatrixStack
 import nova.core.util.shape.Cuboid
 import nova.scala.wrapper.FunctionalWrapper._
+import nova.scala.wrapper.VectorWrapper._
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 import scala.collection.convert.wrapAll._
 
@@ -55,9 +66,9 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 	get(classOf[StaticBlockRenderer])
 		.setOnRender(
 	    (model: Model) => {
-		    model.rotate(get(classOf[Orientation]).orientation.rotation)
-			model.children.add(OpticsModels.projector.getModel)
-			model.bindAll(if (isActive) OpticsTextures.projectorOn else OpticsTextures.projectorOff)
+		    model.matrix.rotate(get(classOf[Orientation]).orientation.rotation)
+		    model.children.add(OpticsModels.projector.getModel)
+		    model.bindAll(if (isActive) OpticsTextures.projectorOn else OpticsTextures.projectorOff)
 	    }
 		)
 
@@ -71,11 +82,11 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 			    val lightBeam = new Model()
 			    //TODO: Lighting, RenderHelper.disableStandardItemLighting
 
-				val player = EDX.clientManager.getPlayer.asInstanceOf[Entity with Player]
-				val xDifference: Double = player.transform.position.getX() - (x + 0.5)
-				val zDifference: Double = player.transform.position.getZ() - (y + 0.5)
+			    val player = EDX.clientManager.getPlayer.asInstanceOf[Entity with Player]
+			    val xDifference: Double = player.transform.position.getX() - (x + 0.5)
+			    val zDifference: Double = player.transform.position.getZ() - (y + 0.5)
 			    val rot = Math.atan2(zDifference, xDifference)
-				lightBeam.matrix = new MatrixStack().rotate(Vector3D.PLUS_J, -rot + Math.toRadians(27)).getMatrix
+			    lightBeam.matrix.rotate(Vector3D.PLUS_J, -rot + Math.toRadians(27)).getMatrix
 
 			    /*
 			glDisable(GL_TEXTURE_2D)
@@ -120,17 +131,16 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 			    if (Settings.highGraphics) {
 
 				    val hologram = new Model()
-				    hologram.matrix = new MatrixStack()
+				    hologram.matrix
 					    .translate(0, 0.85 + Math.sin(Math.toRadians(ticks * 3)).toFloat / 7, 0)
-						.rotate(Vector3D.PLUS_J, Math.toRadians(ticks * 4))
-						.rotate(new Vector3D(0, 1, 1), Math.toRadians(36f + ticks * 4))
-					    .getMatrix
+					    .rotate(Vector3D.PLUS_J, Math.toRadians(ticks * 4))
+					    .rotate(new Vector3D(0, 1, 1), Math.toRadians(36f + ticks * 4))
 
 				    getShapeItem.render(BlockProjector.this, model)
 
 				    val color = if (isActive) FieldColor.blue else FieldColor.red
-					hologram.faces.foreach(_.vertices.foreach(_.setColor(color.alpha((Math.sin(ticks / 10) * 255).toInt))))
-					hologram.bind(OpticsTextures.hologram)
+				    hologram.faces.foreach(_.vertices.foreach(_.setColor(color.alpha((Math.sin(ticks / 10) * 255).toInt))))
+				    hologram.bind(OpticsTextures.hologram)
 			    }
 		    }
 	    }

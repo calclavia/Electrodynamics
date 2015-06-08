@@ -22,8 +22,8 @@ import nova.core.util.{Direction, Ray}
 import nova.scala.component.IO
 import nova.scala.util.ExtendedUpdater
 import nova.scala.wrapper.FunctionalWrapper._
+import nova.scala.wrapper.VectorWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.{Rotation, Vector3D}
-
 /**
  * An emitter that shoots out lasers.
  *
@@ -94,13 +94,13 @@ class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater with
 				case _ => Rotation.IDENTITY
 			}
 
-			model.rotate(rot)
+			model.matrix.rotate(rot)
 
 			if (orientation.orientation.y == 0) {
-				model.rotate(Vector3D.PLUS_J, -Math.PI / 2)
+				model.matrix.rotate(Vector3D.PLUS_J, -Math.PI / 2)
 			}
 			else {
-				model.rotate(Vector3D.PLUS_I, Math.PI)
+				model.matrix.rotate(Vector3D.PLUS_I, Math.PI)
 			}
 
 			model.children.add(OpticsModels.laserEmitterModel.getModel)

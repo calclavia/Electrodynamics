@@ -2,6 +2,9 @@ package com.calclavia.edx.optics.beam
 
 import com.calclavia.edx.core.EDX
 import com.calclavia.edx.core.prefab.BlockEDX
+import com.calclavia.edx.optics.content.{OpticsModels, OpticsTextures}
+import com.calclavia.edx.optics.grid.OpticHandler.ReceiveBeamEvent
+import com.calclavia.edx.optics.grid.{ElectromagneticBeam, OpticHandler}
 import nova.core.block.Block.RightClickEvent
 import nova.core.block.Stateful
 import nova.core.block.component.StaticBlockRenderer
@@ -10,10 +13,10 @@ import nova.core.network.{Packet, Sync, Syncable}
 import nova.core.render.model.Model
 import nova.core.retention.{Storable, Store}
 import nova.core.util.Ray
-
-org.apache.commons.math3.geometry.euclidean.threed.Rotation
+import nova.core.util.math.Vector3DUtil
 import nova.scala.wrapper.FunctionalWrapper._
-
+import nova.scala.wrapper.VectorWrapper._
+import org.apache.commons.math3.geometry.euclidean.threed.{Rotation, Vector3D}
 /**
  * A mirror reflects lasers.
  *
@@ -39,8 +42,8 @@ class BlockMirror extends BlockEDX with Stateful with Syncable with Storable {
 			glRotated(angle.pitch, 1, 0, 0)
 			glRotated(90, 1, 0, 0)
 			*/
-			model.rotate(Rotation.fromDirection(focus.normal))
-			model.rotate(Vector3D.PLUS_I, Math.PI / 2)
+			model.matrix.rotate(new Rotation(Vector3DUtil.FORWARD, focus.normal))
+			model.matrix.rotate(Vector3D.PLUS_I, Math.PI / 2)
 
 			val child = OpticsModels.mirrorModel.getModel.combineChildren("mirror", "mirror", "mirrorBacking", "standConnector")
 			model.children.add(child)
@@ -66,12 +69,12 @@ class BlockMirror extends BlockEDX with Stateful with Syncable with Storable {
 			val incidentDirection = evt.incident.source.dir
 			val angle = Math.acos(incidentDirection.dotProduct(focus.normal))
 
-			val axisOfReflection = incidentDirection * focus.normal
+			val axisOfReflection = incidentDirection.crossProduct(focus.normal)
 			val rotateAngle = 2 * angle - Math.PI
 
 			if (rotateAngle < Math.PI) {
 				//Emit beam
-				val newDirection = incidentDirection.transform(new Rotation(axisOfReflection, rotateAngle)).normalize
+				val newDirection = new Rotation(axisOfReflection, rotateAngle).applyTo(incidentDirection)
 				val beam = new ElectromagneticBeam
 				beam.world = world
 				beam.source = new Ray(position + 0.5 + newDirection * 0.9, newDirection)
