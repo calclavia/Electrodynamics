@@ -1,5 +1,8 @@
 package com.calclavia.edx.optics.production
 
+import com.calclavia.edx.optics.api.card.CoordLink
+import com.calclavia.edx.optics.api.fortron.FortronFrequency
+import com.calclavia.edx.optics.util.TransferMode
 import nova.core.block.Block
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.fluid.component.FluidHandler
@@ -9,7 +12,6 @@ import nova.core.network.Sync
 import nova.core.render.model.Model
 import nova.core.retention.Store
 import nova.core.util.math.MatrixStack
-import nova.scala.wrapper.FunctionalWrapper
 import nova.scala.wrapper.FunctionalWrapper._
 class BlockFortronCapacitor extends BlockModuleHandler {
 

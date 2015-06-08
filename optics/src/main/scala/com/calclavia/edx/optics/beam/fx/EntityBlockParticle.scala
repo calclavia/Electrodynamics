@@ -9,11 +9,10 @@ import nova.core.entity.Entity
 import nova.core.entity.component.RigidBody
 import nova.core.render.model.{BlockModelUtil, Model}
 import nova.core.util.math.Vector3DUtil
-import nova.scala.wrapper.FunctionalWrapper
 import nova.scala.wrapper.FunctionalWrapper._
+import nova.scala.wrapper.VectorWrapper._
 
 import scala.util.Random
-
 /**
  * A block breaking particle effect
  * @author Calclavia

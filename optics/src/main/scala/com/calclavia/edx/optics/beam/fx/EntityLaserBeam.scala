@@ -1,12 +1,14 @@
 package com.calclavia.edx.optics.beam.fx
 
 import com.calclavia.edx.core.prefab.EntityAgeLike
+import com.calclavia.edx.optics.content.OpticsTextures
 import com.calclavia.edx.optics.grid.OpticGrid
 import nova.core.block.Stateful.LoadEvent
 import nova.core.component.renderer.DynamicRenderer
 import nova.core.entity.Entity
 import nova.core.render.Color
 import nova.core.render.model.{Model, Vertex}
+import nova.core.util.math.Vector3DUtil
 import nova.scala.wrapper.FunctionalWrapper._
 import nova.scala.wrapper.VectorWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.{Rotation, Vector3D}
@@ -57,8 +59,8 @@ class EntityLaserBeam(start: Vector3D, end: Vector3D, color: Color, power: Doubl
 			/**
 			 * Rotate the beam
 			 */
-			model.rotate(Rotation.fromDirection(dir))
-			model.rotate(Vector3D.PLUS_K, Math.PI / 2)
+			model.matrix.rotate(new Rotation(Vector3DUtil.FORWARD, dir))
+			model.matrix.rotate(Vector3D.PLUS_K, Math.PI / 2)
 
 			val renderColor = color.alpha((particleAlpha * 255).toInt)
 			val halfColor = renderColor.alpha(127)
@@ -68,13 +70,13 @@ class EntityLaserBeam(start: Vector3D, end: Vector3D, color: Color, power: Doubl
 			 */
 			for (a <- 0 to detail) {
 				val beam = new Model()
-				beam.rotate(Vector3D.PLUS_J, a * Math.PI * 2 / detail)
+				beam.matrix.rotate(Vector3D.PLUS_J, a * Math.PI * 2 / detail)
 
 				/**
 				 * Render Cap
 				 */
 				val cap = new Model()
-				cap.translate(new Vector3D(0, length / 2 - endSize, 0))
+				cap.matrix.translate(new Vector3D(0, length / 2 - endSize, 0))
 
 				val capFace = cap.createFace()
 				capFace.drawVertex(new Vertex(-particleScale, -particleScale, 0, 0, 0).setColor(renderColor))
@@ -107,7 +109,7 @@ class EntityLaserBeam(start: Vector3D, end: Vector3D, color: Color, power: Doubl
 				 * Render End
 				 */
 				val end = new Model()
-				end.translate(new Vector3D(0, -length / 2 + endSize, 0))
+				end.matrix.translate(new Vector3D(0, -length / 2 + endSize, 0))
 
 				val endFace = end.createFace()
 				endFace.drawVertex(new Vertex(-particleScale, -particleScale, 0, 0, 0).setColor(renderColor))

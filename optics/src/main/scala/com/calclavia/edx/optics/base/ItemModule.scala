@@ -3,15 +3,21 @@ package com.calclavia.edx.optics.base
 import java.util.{List => JList, Set => JSet}
 
 import com.calclavia.edx.core.EDX
+import com.calclavia.edx.optics.api.machine.Projector
+import com.calclavia.edx.optics.api.modules.Module
+import com.calclavia.edx.optics.field.BlockProjector
 import com.resonant.core.prefab.itemblock.TooltipItem
 import com.resonant.core.prefab.modcontent.AutoItemTexture
 import nova.core.entity.Entity
 import nova.core.item.Item
 import nova.core.item.Item.TooltipEvent
+import nova.core.util.math.Vector3DUtil
 import nova.core.util.shape.Cuboid
 import nova.energy.UnitDisplay
-import nova.scala.wrapper.FunctionalWrapper
 import nova.scala.wrapper.FunctionalWrapper._
+import nova.scala.wrapper.VectorWrapper._
+
+import scala.collection.convert.wrapAll._
 
 abstract class ItemModule extends Item with TooltipItem with Module with AutoItemTexture {
 	private var fortronCost = 0.5f
@@ -38,10 +44,10 @@ abstract class ItemModule extends Item with TooltipItem with Module with AutoIte
 
 	def getEntitiesInField(projector: Projector): Set[Entity] = {
 		val blockProjector = projector.asInstanceOf[BlockProjector]
-		val bound = new Cuboid(-projector.getNegativeScale, projector.getPositiveScale + VectorUtil.ONE) + blockProjector.transform.position + projector.getTranslation
+		val bound = new Cuboid(-projector.getNegativeScale, projector.getPositiveScale + Vector3DUtil.ONE) + blockProjector.transform.position + projector.getTranslation
 
 		return blockProjector.world.getEntities(bound)
-			.filter(entity => projector.isInField(entity.transform.position))
+			.filter(entity => projector.isInField(entity.position))
 			.toSet
 	}
 }
