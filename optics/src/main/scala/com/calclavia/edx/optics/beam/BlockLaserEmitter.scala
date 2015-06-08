@@ -7,6 +7,8 @@ import com.calclavia.edx.core.EDX
 import com.calclavia.edx.core.prefab.BlockEDX
 import com.calclavia.edx.electric.api.{ConnectionBuilder, Electric}
 import com.calclavia.edx.electric.grid.NodeElectricComponent
+import com.calclavia.edx.optics.content.{OpticsModels, OpticsTextures}
+import com.calclavia.edx.optics.grid.{ElectromagneticBeam, OpticGrid, OpticHandler}
 import nova.core.block.Block.RightClickEvent
 import nova.core.block.Stateful
 import nova.core.block.component.{LightEmitter, StaticBlockRenderer}
@@ -16,13 +18,11 @@ import nova.core.event.Event
 import nova.core.network.{Packet, Sync, Syncable}
 import nova.core.render.model.Model
 import nova.core.retention.{Data, Storable, Store}
-
-org.apache.commons.math3.geometry.euclidean.threed.Rotation
 import nova.core.util.{Direction, Ray}
 import nova.scala.component.IO
 import nova.scala.util.ExtendedUpdater
 import nova.scala.wrapper.FunctionalWrapper._
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
+import org.apache.commons.math3.geometry.euclidean.threed.{Rotation, Vector3D}
 
 /**
  * An emitter that shoots out lasers.
