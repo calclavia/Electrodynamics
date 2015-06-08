@@ -2,23 +2,12 @@ package com.calclavia.edx.optics.field.mobilize
 
 import java.util.{Set => JSet}
 
-import com.calclavia.edx.optics.api.MFFSEvent.EventForceMobilize
-import com.calclavia.edx.optics.api.card.CoordLink
-import com.calclavia.edx.optics.api.{Blacklist, MFFSEvent}
-import com.calclavia.edx.optics.base.{BlockFieldMatrix, PacketBlock}
-import com.calclavia.edx.optics.content.{OpticsContent, OpticsModels, OpticsTextures}
-import com.calclavia.edx.optics.fx.{FXHologramProgress, FieldColor, IEffectController}
-import com.calclavia.edx.optics.security.{MFFSPermissions, PermissionHandler}
-import com.calclavia.edx.optics.util.MFFSUtility
-import com.calclavia.edx.optics.{Optics, Settings}
-import nova.scala.wrapper.FunctionalWrapper
-import FunctionalWrapper._
+import com.calclavia.edx.core.EDX
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.misc.Collider
 import nova.core.component.transform.Orientation
 import nova.core.entity.Entity
 import nova.core.entity.component.RigidBody
-import com.calclavia.edx.core.EDX
 import nova.core.inventory.InventorySimple
 import nova.core.item.Item
 import nova.core.network.NetworkTarget.Side
@@ -26,9 +15,8 @@ import nova.core.network.{Packet, Sync}
 import nova.core.render.model.Model
 import nova.core.retention.{Data, Storable, Store}
 import nova.core.util.Direction
-import nova.core.util.transform.matrix.MatrixStack
+import nova.core.util.math.MatrixStack
 import nova.core.util.transform.shape.Cuboid
-import nova.core.util.transform.vector.{Vector3D, Vector3D}
 import nova.core.world.World
 
 import scala.collection.convert.wrapAll._

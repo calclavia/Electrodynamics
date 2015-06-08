@@ -1,21 +1,15 @@
 package com.calclavia.edx.optics.util
 
-import com.calclavia.edx.optics.GraphFrequency
-import com.calclavia.edx.optics.api.machine.Projector
-import com.calclavia.edx.optics.content.OpticsContent
-import com.calclavia.edx.optics.field.BlockProjector
-import com.calclavia.edx.optics.field.shape.ItemShapeCustom
+import com.calclavia.edx.core.EDX
 import com.resonant.core.access.Permission
 import nova.core.block.{Block, BlockFactory}
 import nova.core.component.ComponentProvider
 import nova.core.entity.component.Player
-import com.calclavia.edx.core.EDX
 import nova.core.inventory.Inventory
 import nova.core.item.{Item, ItemBlock}
 import nova.core.network.NetworkTarget.Side
 import nova.core.util.Direction
-import nova.core.util.transform.matrix.Quaternion
-import nova.core.util.transform.vector.{Vector3D, Vector3D}
+import nova.core.util.transform.matrix.Rotation
 import nova.core.world.World
 
 import scala.collection.convert.wrapAll._
@@ -92,7 +86,7 @@ object MFFSUtility {
 						if (fieldMap != null) {
 							val fieldCenter = projector.position() + projector.getTranslation()
 							var relativePosition = position - fieldCenter
-							relativePosition = relativePosition.transform(Quaternion.fromEuler(-projector.getRotationYaw, -projector.getRotationPitch, 0))
+							relativePosition = relativePosition.transform(Rotation.fromEuler(-projector.getRotationYaw, -projector.getRotationPitch, 0))
 
 							val theBlock = fieldMap.getBlockFactory(relativePosition)
 

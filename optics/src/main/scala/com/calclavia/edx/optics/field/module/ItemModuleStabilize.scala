@@ -2,22 +2,15 @@ package com.calclavia.edx.optics.field.module
 
 import java.util
 
-import com.calclavia.edx.optics.api.Blacklist
-import com.calclavia.edx.optics.api.machine.Projector
-import com.calclavia.edx.optics.api.modules.Module.ProjectState
-import com.calclavia.edx.optics.base.{ItemModule, PacketBlock}
-import com.calclavia.edx.optics.content.OpticsContent
-import com.calclavia.edx.optics.field.BlockProjector
-import com.calclavia.edx.optics.field.shape.ItemShapeCustom
+import com.calclavia.edx.core.EDX
 import nova.core.block.{Block, BlockFactory}
 import nova.core.component.ComponentProvider
-import com.calclavia.edx.core.EDX
 import nova.core.inventory.Inventory
 import nova.core.item.ItemBlock
 import nova.core.util.Direction
-import nova.core.util.transform.matrix.Quaternion
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
+import nova.core.util.transform.matrix.Rotation
 import nova.core.world.World
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 import scala.collection.convert.wrapAll._
 
@@ -46,7 +39,7 @@ class ItemModuleStabilize extends ItemModule {
 				val fieldBlockMap = projector.getShape.asInstanceOf[ItemShapeCustom].getStructure.getBlockStructure
 				val fieldCenter = proj.position + projector.getTranslation
 				val relativePosition = position - fieldCenter
-				relativePosition.transform(Quaternion.fromEuler(-projector.getRotationYaw, -projector.getRotationPitch, 0))
+				relativePosition.transform(Rotation.fromEuler(-projector.getRotationYaw, -projector.getRotationPitch, 0))
 				fieldBlockMap(relativePosition)
 			} else {
 				null

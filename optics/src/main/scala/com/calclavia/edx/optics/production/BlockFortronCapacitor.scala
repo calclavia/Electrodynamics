@@ -1,15 +1,5 @@
 package com.calclavia.edx.optics.production
 
-import com.calclavia.edx.optics.GraphFrequency
-import com.calclavia.edx.optics.api.card.CoordLink
-import com.calclavia.edx.optics.api.fortron.FortronFrequency
-import com.calclavia.edx.optics.api.modules.Module
-import com.calclavia.edx.optics.base.{BlockModuleHandler, PacketBlock}
-import com.calclavia.edx.optics.content.{OpticsContent, OpticsModels, OpticsTextures}
-import com.calclavia.edx.optics.item.card.ItemCardFrequency
-import com.calclavia.edx.optics.util.{FortronUtility, TransferMode}
-import nova.scala.wrapper.FunctionalWrapper
-import FunctionalWrapper._
 import nova.core.block.Block
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.fluid.component.FluidHandler
@@ -18,8 +8,9 @@ import nova.core.item.Item
 import nova.core.network.Sync
 import nova.core.render.model.Model
 import nova.core.retention.Store
-import nova.core.util.transform.matrix.MatrixStack
-import scala.collection.convert.wrapAll._
+import nova.core.util.math.MatrixStack
+import nova.scala.wrapper.FunctionalWrapper
+import nova.scala.wrapper.FunctionalWrapper._
 class BlockFortronCapacitor extends BlockModuleHandler {
 
 	override val inventory: InventorySimple = new InventorySimple(3 + 4 * 2 + 1)

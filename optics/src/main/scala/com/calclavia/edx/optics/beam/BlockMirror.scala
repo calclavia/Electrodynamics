@@ -1,22 +1,18 @@
 package com.calclavia.edx.optics.beam
 
+import com.calclavia.edx.core.EDX
 import com.calclavia.edx.core.prefab.BlockEDX
-import com.calclavia.edx.optics.content.{OpticsModels, OpticsTextures}
-import com.calclavia.edx.optics.grid.OpticHandler.ReceiveBeamEvent
-import com.calclavia.edx.optics.grid.{ElectromagneticBeam, OpticHandler}
-import nova.scala.wrapper.FunctionalWrapper
-import FunctionalWrapper._
 import nova.core.block.Block.RightClickEvent
 import nova.core.block.Stateful
 import nova.core.block.component.StaticBlockRenderer
-import com.calclavia.edx.core.EDX
 import nova.core.component.renderer.ItemRenderer
 import nova.core.network.{Packet, Sync, Syncable}
 import nova.core.render.model.Model
 import nova.core.retention.{Storable, Store}
 import nova.core.util.Ray
-import nova.core.util.transform.matrix.Quaternion
-import nova.core.util.transform.vector.{Vector3, Vector3D}
+import nova.core.util.transform.matrix.Rotation
+import nova.scala.wrapper.FunctionalWrapper
+import nova.scala.wrapper.FunctionalWrapper._
 
 /**
  * A mirror reflects lasers.
@@ -43,7 +39,7 @@ class BlockMirror extends BlockEDX with Stateful with Syncable with Storable {
 			glRotated(angle.pitch, 1, 0, 0)
 			glRotated(90, 1, 0, 0)
 			*/
-			model.rotate(Quaternion.fromDirection(focus.normal))
+			model.rotate(Rotation.fromDirection(focus.normal))
 			model.rotate(Vector3D.PLUS_I, Math.PI / 2)
 
 			val child = OpticsModels.mirrorModel.getModel.combineChildren("mirror", "mirror", "mirrorBacking", "standConnector")
@@ -75,7 +71,7 @@ class BlockMirror extends BlockEDX with Stateful with Syncable with Storable {
 
 			if (rotateAngle < Math.PI) {
 				//Emit beam
-				val newDirection = incidentDirection.transform(Quaternion.fromAxis(axisOfReflection, rotateAngle)).normalize
+				val newDirection = incidentDirection.transform(Rotation.fromAxis(axisOfReflection, rotateAngle)).normalize
 				val beam = new ElectromagneticBeam
 				beam.world = world
 				beam.source = new Ray(position + 0.5 + newDirection * 0.9, newDirection)

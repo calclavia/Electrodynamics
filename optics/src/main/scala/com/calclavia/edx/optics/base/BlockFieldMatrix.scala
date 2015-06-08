@@ -2,19 +2,15 @@ package com.calclavia.edx.optics.base
 
 import java.util.{Optional, Set => JSet}
 
-import com.calclavia.edx.optics.api.machine.{FieldMatrix, IPermissionProvider}
-import com.calclavia.edx.optics.api.modules.StructureProvider
-import com.calclavia.edx.optics.content.OpticsContent
-import com.calclavia.edx.optics.util.CacheHandler
+import com.calclavia.edx.core.EDX
 import com.resonant.core.structure.Structure
 import nova.core.component.transform.Orientation
-import com.calclavia.edx.core.EDX
 import nova.core.item.{Item, ItemFactory}
 import nova.core.network.Sync
 import nova.core.retention.Store
-import nova.core.util.transform.matrix.Quaternion
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
+import nova.core.util.transform.matrix.Rotation
 import nova.core.util.{Direction, RotationUtil}
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 import scala.collection.convert.wrapAll._
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -211,7 +207,7 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 			return new Vector3D(xTranslationPos - xTranslationNeg, yTranslationPos - yTranslationNeg, zTranslationPos - zTranslationNeg)
 		})
 
-	def getRotation = Quaternion.fromEuler(Math.toRadians(getRotationYaw), Math.toRadians(getRotationPitch), 0)
+	def getRotation = Rotation.fromEuler(Math.toRadians(getRotationYaw), Math.toRadians(getRotationPitch), 0)
 
 	/**
 	 * @return Gets the rotation yaw in degrees

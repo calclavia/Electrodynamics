@@ -1,16 +1,14 @@
 package com.calclavia.edx.optics.beam.fx
 
 import com.calclavia.edx.core.prefab.EntityAgeLike
-import com.calclavia.edx.optics.content.OpticsTextures
-import com.calclavia.edx.optics.grid.OpticGrid
-import nova.scala.wrapper.FunctionalWrapper
-import FunctionalWrapper._
 import nova.core.block.Stateful.LoadEvent
 import nova.core.component.renderer.DynamicRenderer
 import nova.core.entity.Entity
 import nova.core.render.Color
 import nova.core.render.model.{Model, Vertex}
-import nova.core.util.transform.matrix.Quaternion
+import nova.core.util.transform.matrix.Rotation
+import nova.scala.wrapper.FunctionalWrapper
+import nova.scala.wrapper.FunctionalWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 import scala.util.Random
@@ -59,7 +57,7 @@ class EntityLaserBeam(start: Vector3D, end: Vector3D, color: Color, power: Doubl
 			/**
 			 * Rotate the beam
 			 */
-			model.rotate(Quaternion.fromDirection(dir))
+			model.rotate(Rotation.fromDirection(dir))
 			model.rotate(Vector3D.PLUS_K, Math.PI / 2)
 
 			val renderColor = color.alpha((particleAlpha * 255).toInt)

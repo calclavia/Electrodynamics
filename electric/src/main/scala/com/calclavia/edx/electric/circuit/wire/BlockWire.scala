@@ -3,26 +3,26 @@ package com.calclavia.edx.electric.circuit.wire
 import java.lang.{Iterable => JIterable}
 import java.util.{Optional, Set => JSet}
 
+import com.calclavia.edx.core.EDX
 import com.calclavia.edx.core.prefab.BlockEDX
 import com.calclavia.edx.electric.ElectricContent
 import com.calclavia.edx.electric.api.Electric
 import com.calclavia.edx.electric.api.Electric.GraphBuiltEvent
 import com.calclavia.edx.electric.grid.NodeElectricJunction
 import com.calclavia.microblock.micro.{Microblock, MicroblockContainer}
-import nova.scala.wrapper.FunctionalWrapper
-import FunctionalWrapper._
 import nova.core.block.Block.{BlockPlaceEvent, RightClickEvent}
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.misc.Collider
 import nova.core.component.renderer.ItemRenderer
-import com.calclavia.edx.core.EDX
-import nova.core.network.{Packet, Syncable, Sync}
+import nova.core.network.{Packet, Sync, Syncable}
 import nova.core.render.model.{BlockModelUtil, Model, StaticCubeTextureCoordinates}
 import nova.core.retention.{Storable, Store}
-import nova.core.util.transform.matrix.Quaternion
+import nova.core.util.transform.matrix.Rotation
 import nova.core.util.transform.shape.Cuboid
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 import nova.core.util.{Direction, RotationUtil}
+import nova.scala.wrapper.FunctionalWrapper
+import nova.scala.wrapper.FunctionalWrapper._
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 import scala.collection.convert.wrapAll._
 
@@ -45,12 +45,12 @@ object BlockWire {
 	def init() {
 		for (s <- 0 until 6) {
 			val rot = s match {
-				case 0 => Quaternion.identity
-				case 1 => Quaternion.fromAxis(Vector3D.PLUS_I, Math.PI)
-				case 2 => Quaternion.fromEuler(Math.PI, -Math.PI / 2)
-				case 3 => Quaternion.fromAxis(Vector3D.PLUS_I, -Math.PI / 2)
-				case 4 => Quaternion.fromEuler(-Math.PI / 2, -Math.PI / 2)
-				case 5 => Quaternion.fromEuler(Math.PI / 2, -Math.PI / 2)
+				case 0 => Rotation.identity
+				case 1 => Rotation.fromAxis(Vector3D.PLUS_I, Math.PI)
+				case 2 => Rotation.fromEuler(Math.PI, -Math.PI / 2)
+				case 3 => Rotation.fromAxis(Vector3D.PLUS_I, -Math.PI / 2)
+				case 4 => Rotation.fromEuler(-Math.PI / 2, -Math.PI / 2)
+				case 5 => Rotation.fromEuler(Math.PI / 2, -Math.PI / 2)
 			}
 
 			val center = new Cuboid(width, 0, width, 1 - width, thickness, 1 - width) - 0.5

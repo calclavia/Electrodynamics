@@ -1,9 +1,8 @@
 package com.calclavia.edx.optics.field.shape
 
-import com.calclavia.edx.optics.api.machine.Projector
 import com.resonant.core.structure.{Structure, StructureCube}
 import nova.core.render.model.{BlockModelUtil, Model}
-import nova.core.util.transform.matrix.MatrixStack
+import nova.core.util.math.MatrixStack
 
 class ItemShapeCube extends ItemShape {
 

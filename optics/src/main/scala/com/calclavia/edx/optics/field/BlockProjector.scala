@@ -2,18 +2,7 @@ package com.calclavia.edx.optics.field
 
 import java.util.{Optional, Set => JSet}
 
-import com.calclavia.edx.optics.Settings
-import com.calclavia.edx.optics.api.machine.Projector
-import com.calclavia.edx.optics.api.modules.Module.ProjectState
-import com.calclavia.edx.optics.base.{BlockFieldMatrix, PacketBlock}
-import com.calclavia.edx.optics.content.{OpticsContent, OpticsModels, OpticsTextures}
-import com.calclavia.edx.optics.field.shape.ItemShapeCustom
-import com.calclavia.edx.optics.fx.{FXHologramProgress, FieldColor}
-import com.calclavia.edx.optics.beam.fx.EntityMagneticBeam
-import com.calclavia.edx.optics.security.PermissionHandler
-import com.calclavia.edx.optics.util.CacheHandler
-import nova.scala.wrapper.FunctionalWrapper
-import FunctionalWrapper._
+import com.calclavia.edx.core.EDX
 import nova.core.block.Block
 import nova.core.block.Stateful.UnloadEvent
 import nova.core.block.component.{LightEmitter, StaticBlockRenderer}
@@ -23,16 +12,16 @@ import nova.core.component.transform.Orientation
 import nova.core.entity.Entity
 import nova.core.entity.component.Player
 import nova.core.event.EventBus
-import com.calclavia.edx.core.EDX
 import nova.core.inventory.InventorySimple
 import nova.core.item.Item
 import nova.core.network.{Packet, Sync}
 import nova.core.render.Color
 import nova.core.render.model.{Model, Vertex}
 import nova.core.retention.Store
-import nova.core.util.transform.matrix.MatrixStack
+import nova.core.util.math.MatrixStack
 import nova.core.util.transform.shape.Cuboid
-import nova.core.util.transform.vector.{Vector3D, Vector3D}
+import nova.scala.wrapper.FunctionalWrapper
+import nova.scala.wrapper.FunctionalWrapper._
 
 import scala.collection.convert.wrapAll._
 
