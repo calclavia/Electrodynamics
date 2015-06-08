@@ -1,17 +1,12 @@
 package com.calclavia.edx.electric.grid
 
-import java.io.{File, FileWriter}
-
 import com.calclavia.edx.electric.api.Electric
-import nova.scala.wrapper.FunctionalWrapper
-import FunctionalWrapper._
 import nova.core.util.Profiler
-import nova.internal.launch.NovaLauncher
+import nova.internal.core.launch.NovaLauncher
+import nova.scala.wrapper.FunctionalWrapper._
 import nova.testutils.FakeBlock
 import nova.wrappertests.NovaLauncherTestFactory
 import org.assertj.core.api.Assertions._
-import org.jgrapht.Graph
-import org.jgrapht.ext.{DOTExporter, VertexNameProvider}
 import org.junit.{BeforeClass, Test}
 
 import scala.collection.convert.wrapAll._
@@ -394,7 +389,6 @@ class ElectricGridTest {
 			})
 		}
 	}
-
 
 	class DummyComponent(val name: String = "Component") extends NodeElectricComponent(new FakeBlock("dummy")) {
 		var positivesCon = Set.empty[Electric]

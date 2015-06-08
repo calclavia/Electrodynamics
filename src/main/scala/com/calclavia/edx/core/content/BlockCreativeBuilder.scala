@@ -11,9 +11,10 @@ import nova.core.component.Category
 import nova.core.component.transform.Orientation
 import nova.core.network.{Packet, Syncable}
 import nova.core.util.Direction
-import nova.scala.wrapper.FunctionalWrapper
+import nova.internal.core.Game
 import nova.scala.wrapper.FunctionalWrapper._
 import nova.scala.wrapper.VectorWrapper._
+
 object BlockCreativeBuilder {
 	var schematics: Seq[Structure] = Seq.empty
 }
