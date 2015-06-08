@@ -16,7 +16,7 @@ import nova.core.render.model.Model
 import nova.core.retention.{Data, Storable, Store}
 import nova.core.util.Direction
 import nova.core.util.math.MatrixStack
-import nova.core.util.transform.shape.Cuboid
+import nova.core.util.shape.Cuboid
 import nova.core.world.World
 
 import scala.collection.convert.wrapAll._

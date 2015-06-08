@@ -19,8 +19,7 @@ import nova.core.render.Color
 import nova.core.render.model.{Model, Vertex}
 import nova.core.retention.Store
 import nova.core.util.math.MatrixStack
-import nova.core.util.transform.shape.Cuboid
-import nova.scala.wrapper.FunctionalWrapper
+import nova.core.util.shape.Cuboid
 import nova.scala.wrapper.FunctionalWrapper._
 
 import scala.collection.convert.wrapAll._

@@ -8,8 +8,11 @@ import nova.core.component.transform.Orientation
 import nova.core.item.{Item, ItemFactory}
 import nova.core.network.Sync
 import nova.core.retention.Store
-import nova.core.util.transform.matrix.Rotation
-import nova.core.util.{Direction, RotationUtil}
+import nova.core.util.math.RotationUtil
+
+org.apache.commons.math3.geometry.euclidean.threed.Rotation
+
+import nova.core.util.Direction
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 import scala.collection.convert.wrapAll._
@@ -207,7 +210,7 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 			return new Vector3D(xTranslationPos - xTranslationNeg, yTranslationPos - yTranslationNeg, zTranslationPos - zTranslationNeg)
 		})
 
-	def getRotation = Rotation.fromEuler(Math.toRadians(getRotationYaw), Math.toRadians(getRotationPitch), 0)
+	def getRotation = new Rotation(RotationUtil.DEFAULT_ORDER, Math.toRadians(getRotationYaw), Math.toRadians(getRotationPitch), 0)
 
 	/**
 	 * @return Gets the rotation yaw in degrees

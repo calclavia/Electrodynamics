@@ -2,12 +2,10 @@ package com.calclavia.edx.optics.field.module
 
 import java.util.{Set => JSet}
 
-import com.calclavia.edx.optics.api.machine.Projector
-import com.calclavia.edx.optics.base.ItemModule
-import com.calclavia.edx.optics.security.MFFSPermissions
 import nova.core.entity.Entity
 import nova.core.entity.component.{Player, RigidBody}
-import nova.core.util.transform.vector.{Vector3D, Vector3D}
+import nova.core.util.math.Vector3DUtil
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 /**
  * Generates a repulsion field instead of a solid one made out of blocks.
@@ -20,7 +18,7 @@ class ItemModuleRepulsion extends ItemModule {
 	override def getID: String = "moduleRepulsion"
 
 	override def onCreateField(projector: Projector, field: JSet[Vector3D]): Boolean = {
-		val repellForce = VectorUtil.ONE * Math.max(projector.getSidedModuleCount(factory()) / 20, 1.2)
+		val repellForce = Vector3DUtil.ONE * Math.max(projector.getSidedModuleCount(factory()) / 20, 1.2)
 
 		getEntitiesInField(projector).par
 			.collect {
@@ -29,7 +27,7 @@ class ItemModuleRepulsion extends ItemModule {
 		}
 			.foreach(
 		    entity => {
-				val repelDirection = entity.transform.position - (entity.transform.position.toInt + 0.5).normalize
+			    val repelDirection = entity.transform.position - (entity.transform.position.toInt + 0.5).normalize
 			    val rigidBody = entity.get(classOf[RigidBody])
 			    val velocity = rigidBody.velocity
 			    val force = repelDirection * repellForce.max(velocity.abs)

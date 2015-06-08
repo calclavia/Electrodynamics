@@ -8,7 +8,8 @@ import nova.core.component.ComponentProvider
 import nova.core.inventory.Inventory
 import nova.core.item.ItemBlock
 import nova.core.util.Direction
-import nova.core.util.transform.matrix.Rotation
+
+org.apache.commons.math3.geometry.euclidean.threed.Rotation
 import nova.core.world.World
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
@@ -39,7 +40,7 @@ class ItemModuleStabilize extends ItemModule {
 				val fieldBlockMap = projector.getShape.asInstanceOf[ItemShapeCustom].getStructure.getBlockStructure
 				val fieldCenter = proj.position + projector.getTranslation
 				val relativePosition = position - fieldCenter
-				relativePosition.transform(Rotation.fromEuler(-projector.getRotationYaw, -projector.getRotationPitch, 0))
+				relativePosition.transform(new Rotation(RotationUtil.DEFAULT_ORDER, -projector.getRotationYaw, -projector.getRotationPitch, 0))
 				fieldBlockMap(relativePosition)
 			} else {
 				null

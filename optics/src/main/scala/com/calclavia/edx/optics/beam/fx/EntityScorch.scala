@@ -6,8 +6,8 @@ import nova.core.entity.Entity
 import nova.core.render.Color
 import nova.core.render.model.{Model, Vertex}
 import nova.core.util.Direction
-import nova.core.util.transform.matrix.Rotation
-import nova.scala.wrapper.FunctionalWrapper
+
+org.apache.commons.math3.geometry.euclidean.threed.Rotation
 import nova.scala.wrapper.FunctionalWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
@@ -41,7 +41,7 @@ class EntityScorch(side: Int) extends Entity with EntityAgeLike {
 			/**
 			 * Rotate the scorch effect
 			 */
-			model.rotate(Rotation.fromAxis(Vector3D.PLUS_J, -Math.PI / 2))
+			model.rotate(new Rotation(Vector3D.PLUS_J, -Math.PI / 2))
 
 			val rot = Direction.fromOrdinal(side).rotation
 			/*match

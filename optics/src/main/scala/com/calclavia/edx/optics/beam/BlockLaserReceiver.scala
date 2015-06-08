@@ -15,10 +15,10 @@ import nova.core.network.Syncable
 import nova.core.render.model.Model
 import nova.core.retention.Storable
 import nova.core.util.Direction
-import nova.core.util.transform.matrix.Rotation
+
+org.apache.commons.math3.geometry.euclidean.threed.Rotation
 import nova.scala.component.IO
 import nova.scala.util.ExtendedUpdater
-import nova.scala.wrapper.FunctionalWrapper
 import nova.scala.wrapper.FunctionalWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
@@ -78,13 +78,13 @@ class BlockLaserReceiver extends BlockEDX with Stateful with ExtendedUpdater wit
 	renderer.setOnRender(
 		(model: Model) => {
 			val rot = orientation.orientation match {
-				case Direction.UP => Rotation.fromAxis(Vector3D.PLUS_I, -Math.PI / 2)
-				case Direction.DOWN => Rotation.fromAxis(Vector3D.PLUS_I, Math.PI / 2)
-				case Direction.NORTH => Rotation.fromAxis(Vector3D.PLUS_J, Math.PI / 2)
-				case Direction.SOUTH => Rotation.fromAxis(Vector3D.PLUS_J, -Math.PI / 2)
-				case Direction.WEST => Rotation.fromAxis(Vector3D.PLUS_J, Math.PI)
-				case Direction.EAST => Rotation.fromAxis(Vector3D.PLUS_J, 0)
-				case _ => Rotation.identity
+				case Direction.UP => new Rotation(Vector3D.PLUS_I, -Math.PI / 2)
+				case Direction.DOWN => new Rotation(Vector3D.PLUS_I, Math.PI / 2)
+				case Direction.NORTH => new Rotation(Vector3D.PLUS_J, Math.PI / 2)
+				case Direction.SOUTH => new Rotation(Vector3D.PLUS_J, -Math.PI / 2)
+				case Direction.WEST => new Rotation(Vector3D.PLUS_J, Math.PI)
+				case Direction.EAST => new Rotation(Vector3D.PLUS_J, 0)
+				case _ => Rotation.IDENTITY
 			}
 
 			model.rotate(rot)

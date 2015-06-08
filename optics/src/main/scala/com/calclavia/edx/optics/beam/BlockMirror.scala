@@ -10,8 +10,8 @@ import nova.core.network.{Packet, Sync, Syncable}
 import nova.core.render.model.Model
 import nova.core.retention.{Storable, Store}
 import nova.core.util.Ray
-import nova.core.util.transform.matrix.Rotation
-import nova.scala.wrapper.FunctionalWrapper
+
+org.apache.commons.math3.geometry.euclidean.threed.Rotation
 import nova.scala.wrapper.FunctionalWrapper._
 
 /**
@@ -71,7 +71,7 @@ class BlockMirror extends BlockEDX with Stateful with Syncable with Storable {
 
 			if (rotateAngle < Math.PI) {
 				//Emit beam
-				val newDirection = incidentDirection.transform(Rotation.fromAxis(axisOfReflection, rotateAngle)).normalize
+				val newDirection = incidentDirection.transform(new Rotation(axisOfReflection, rotateAngle)).normalize
 				val beam = new ElectromagneticBeam
 				beam.world = world
 				beam.source = new Ray(position + 0.5 + newDirection * 0.9, newDirection)

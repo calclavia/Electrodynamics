@@ -6,8 +6,8 @@ import nova.core.component.renderer.DynamicRenderer
 import nova.core.entity.Entity
 import nova.core.render.Color
 import nova.core.render.model.{Model, Vertex}
-import nova.core.util.transform.matrix.Rotation
-import nova.scala.wrapper.FunctionalWrapper
+
+org.apache.commons.math3.geometry.euclidean.threed.Rotation
 import nova.scala.wrapper.FunctionalWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 

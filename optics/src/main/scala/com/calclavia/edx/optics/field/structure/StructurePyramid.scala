@@ -1,7 +1,7 @@
 package com.calclavia.edx.optics.field.structure
 
 import com.resonant.core.structure.Structure
-import nova.core.util.transform.shape.Cuboid
+import nova.core.util.shape.Cuboid
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 /**

@@ -9,7 +9,8 @@ import nova.core.inventory.Inventory
 import nova.core.item.{Item, ItemBlock}
 import nova.core.network.NetworkTarget.Side
 import nova.core.util.Direction
-import nova.core.util.transform.matrix.Rotation
+
+org.apache.commons.math3.geometry.euclidean.threed.Rotation
 import nova.core.world.World
 
 import scala.collection.convert.wrapAll._
@@ -86,7 +87,7 @@ object MFFSUtility {
 						if (fieldMap != null) {
 							val fieldCenter = projector.position() + projector.getTranslation()
 							var relativePosition = position - fieldCenter
-							relativePosition = relativePosition.transform(Rotation.fromEuler(-projector.getRotationYaw, -projector.getRotationPitch, 0))
+							relativePosition = relativePosition.transform(new Rotation(RotationUtil.DEFAULT_ORDER, -projector.getRotationYaw, -projector.getRotationPitch, 0))
 
 							val theBlock = fieldMap.getBlockFactory(relativePosition)
 

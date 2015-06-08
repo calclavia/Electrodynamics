@@ -2,22 +2,16 @@ package com.calclavia.edx.optics.base
 
 import java.util.{List => JList, Set => JSet}
 
-import com.calclavia.edx.optics.api.machine.Projector
-import com.calclavia.edx.optics.api.modules.Module
-import com.calclavia.edx.optics.field.BlockProjector
+import com.calclavia.edx.core.EDX
 import com.resonant.core.prefab.itemblock.TooltipItem
 import com.resonant.core.prefab.modcontent.AutoItemTexture
-import nova.scala.wrapper.FunctionalWrapper
-import FunctionalWrapper._
 import nova.core.entity.Entity
-import com.calclavia.edx.core.EDX
 import nova.core.item.Item
 import nova.core.item.Item.TooltipEvent
-import nova.core.util.transform.shape.Cuboid
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
+import nova.core.util.shape.Cuboid
 import nova.energy.UnitDisplay
-
-import scala.collection.convert.wrapAll._
+import nova.scala.wrapper.FunctionalWrapper
+import nova.scala.wrapper.FunctionalWrapper._
 
 abstract class ItemModule extends Item with TooltipItem with Module with AutoItemTexture {
 	private var fortronCost = 0.5f
