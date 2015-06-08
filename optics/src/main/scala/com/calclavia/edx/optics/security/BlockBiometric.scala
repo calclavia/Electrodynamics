@@ -6,7 +6,8 @@ import com.calclavia.edx.optics.api.card.AccessCard
 import com.calclavia.edx.optics.base.BlockFrequency
 import com.calclavia.edx.optics.content.{OpticsModels, OpticsTextures}
 import com.resonant.core.access.Permission
-import com.resonant.lib.WrapFunctions._
+import nova.scala.wrapper.FunctionalWrapper
+import FunctionalWrapper._
 import nova.core.block.Block.{BlockPlaceEvent, RightClickEvent}
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.renderer.DynamicRenderer

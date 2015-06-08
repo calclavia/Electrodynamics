@@ -12,7 +12,7 @@ class ItemModuleDome extends ItemModule {
 	override def onCalculateInterior(projector: FieldMatrix, structure: Structure) {
 		//Cuts the field in half.
 		structure.postMapper = structure.postMapper.andThen({
-			case vec if vec.y > 0 => vec
+			case vec if vec.getY() > 0 => vec
 		})
 	}
 }

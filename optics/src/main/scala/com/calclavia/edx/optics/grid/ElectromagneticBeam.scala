@@ -1,7 +1,8 @@
 package com.calclavia.edx.optics.grid
 
 import com.calclavia.edx.optics.beam.fx.{EntityBlockParticle, EntityLaserBeam, EntityScorch}
-import com.resonant.lib.WrapFunctions._
+import nova.scala.wrapper.FunctionalWrapper
+import FunctionalWrapper._
 import nova.core.block.Block.DropEvent
 import nova.core.component.misc.Damageable
 import nova.core.util.RayTracer.{RayTraceBlockResult, RayTraceEntityResult, RayTraceResult}
@@ -42,7 +43,7 @@ class ElectromagneticBeam extends Beam {
 			/*
 			val event = new DropEvent(hitBlock)
 			hitBlock.dropEvent.publish(event)
-			event.drops.foreach(drop => hitBlock.world.addEntity(hitBlock.position.toDouble + 0.5, drop))
+			event.drops.foreach(drop => hitBlock.world.addEntity(hitBlock.position + 0.5, drop))
 			world.removeBlock(hitBlock.position)*/
 		}
 

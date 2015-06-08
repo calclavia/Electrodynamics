@@ -8,13 +8,14 @@ import com.calclavia.edx.optics.api.machine.Projector
 import com.calclavia.edx.optics.content.OpticsContent
 import com.calclavia.edx.optics.util.CacheHandler
 import com.resonant.core.structure.{Structure, StructureCustom}
-import com.resonant.lib.WrapFunctions._
+import nova.scala.wrapper.FunctionalWrapper
+import FunctionalWrapper._
 import com.calclavia.edx.core.EDX
 import nova.core.gui.InputManager.Key
 import nova.core.item.Item.{RightClickEvent, TooltipEvent, UseEvent}
 import nova.core.render.model.Model
 import nova.core.retention.Store
-import nova.core.util.transform.vector.Vector3i
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 import scala.util.Random
 
@@ -25,9 +26,9 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 	@Store
 	var saveID = -1
 	@Store
-	var pointA: Vector3i = null
+	var pointA: Vector3D = null
 	@Store
-	var pointB: Vector3i = null
+	var pointB: Vector3D = null
 	@Store
 	var isAdditive = true
 	@Store
@@ -35,8 +36,8 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 
 	tooltipEvent.add(eventListener((evt: TooltipEvent) => {
 		evt.tooltips.add(EDX.language.translate("info.modeCustom.mode") + " " + (if (isAdditive) EDX.language.translate("info.modeCustom.additive") else EDX.language.translate("info.modeCustom.substraction")))
-		evt.tooltips.add(EDX.language.translate("info.modeCustom.point1") + " " + pointA.xi + ", " + pointA.yi + ", " + pointA.zi)
-		evt.tooltips.add(EDX.language.translate("info.modeCustom.point2") + " " + pointB.xi + ", " + pointB.yi + ", " + pointB.zi)
+		evt.tooltips.add(EDX.language.translate("info.modeCustom.point1") + " " + pointA.getX + ", " + pointA.getY + ", " + pointA.getZ)
+		evt.tooltips.add(EDX.language.translate("info.modeCustom.point2") + " " + pointB.getX + ", " + pointB.getY + ", " + pointB.getZ)
 
 		if (saveID > 0) {
 			evt.tooltips.add(EDX.language.translate("info.modeCustom.modeID") + " " + saveID)
@@ -92,8 +93,8 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 
 						EDX.retention.load(saveFilePrefix + saveID, customStructure)
 
-						for (x <- minPoint.x to maxPoint.x; y <- minPoint.y to maxPoint.y; z <- minPoint.z to maxPoint.z) {
-							val position = new Vector3i(x, y, z)
+						for (x <- minPoint.getX() to maxPoint.getX(); y <- minPoint.getY() to maxPoint.getY(); z <- minPoint.getZ() to maxPoint.getZ()) {
+							val position = new Vector3D(x, y, z)
 							val targetCheck = midPoint + position
 							val block = evt.entity.world().getBlock(targetCheck)
 

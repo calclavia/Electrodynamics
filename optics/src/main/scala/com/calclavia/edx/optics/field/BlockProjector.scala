@@ -12,7 +12,8 @@ import com.calclavia.edx.optics.fx.{FXHologramProgress, FieldColor}
 import com.calclavia.edx.optics.beam.fx.EntityMagneticBeam
 import com.calclavia.edx.optics.security.PermissionHandler
 import com.calclavia.edx.optics.util.CacheHandler
-import com.resonant.lib.WrapFunctions._
+import nova.scala.wrapper.FunctionalWrapper
+import FunctionalWrapper._
 import nova.core.block.Block
 import nova.core.block.Stateful.UnloadEvent
 import nova.core.block.component.{LightEmitter, StaticBlockRenderer}
@@ -31,7 +32,7 @@ import nova.core.render.model.{Model, Vertex}
 import nova.core.retention.Store
 import nova.core.util.transform.matrix.MatrixStack
 import nova.core.util.transform.shape.Cuboid
-import nova.core.util.transform.vector.{Vector3d, Vector3i}
+import nova.core.util.transform.vector.{Vector3D, Vector3D}
 
 import scala.collection.convert.wrapAll._
 
@@ -41,7 +42,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 	@Sync(ids = Array(PacketBlock.description, PacketBlock.inventory))
 	override val inventory = new InventorySimple(1 + 25 + 6)
 	/** A set containing all positions of all force field blocks generated. */
-	var forceFields = Set.empty[Vector3i]
+	var forceFields = Set.empty[Vector3D]
 	/** Marks the field for an update call */
 	var markFieldUpdate = true
 	/** True if the field is done constructing and the projector is simply maintaining the field  */
@@ -83,10 +84,10 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 			    //TODO: Lighting, RenderHelper.disableStandardItemLighting
 
 				val player = EDX.clientManager.getPlayer.asInstanceOf[Entity with Player]
-			    val xDifference: Double = player.transform.position.x - (x + 0.5)
-			    val zDifference: Double = player.transform.position.z - (y + 0.5)
+				val xDifference: Double = player.transform.position.getX() - (x + 0.5)
+				val zDifference: Double = player.transform.position.getZ() - (y + 0.5)
 			    val rot = Math.atan2(zDifference, xDifference)
-			    lightBeam.matrix = new MatrixStack().rotate(Vector3d.yAxis, -rot + Math.toRadians(27)).getMatrix
+				lightBeam.matrix = new MatrixStack().rotate(Vector3D.PLUS_J, -rot + Math.toRadians(27)).getMatrix
 
 			    /*
 			glDisable(GL_TEXTURE_2D)
@@ -133,14 +134,14 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 				    val hologram = new Model()
 				    hologram.matrix = new MatrixStack()
 					    .translate(0, 0.85 + Math.sin(Math.toRadians(ticks * 3)).toFloat / 7, 0)
-					    .rotate(Vector3d.yAxis, Math.toRadians(ticks * 4))
-					    .rotate(new Vector3d(0, 1, 1), Math.toRadians(36f + ticks * 4))
+						.rotate(Vector3D.PLUS_J, Math.toRadians(ticks * 4))
+						.rotate(new Vector3D(0, 1, 1), Math.toRadians(36f + ticks * 4))
 					    .getMatrix
 
 				    getShapeItem.render(BlockProjector.this, model)
 
 				    val color = if (isActive) FieldColor.blue else FieldColor.red
-				    hologram.faces.foreach(_.vertices.foreach(_.setColor(color.alpha((Math.sin(ticks.toDouble / 10) * 255).toInt))))
+					hologram.faces.foreach(_.vertices.foreach(_.setColor(color.alpha((Math.sin(ticks / 10) * 255).toInt))))
 					hologram.bind(OpticsTextures.hologram)
 			    }
 		    }
@@ -210,8 +211,8 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 			if (packet.getID == PacketBlock.effect) {
 				//Spawns a holographic beam
 				val packetType = packet.readInt
-				val target = new Vector3d(packet.readInt, packet.readInt, packet.readInt) + 0.5
-				val pos = transform.position.toDouble + 0.5
+				val target = new Vector3D(packet.readInt, packet.readInt, packet.readInt) + 0.5
+				val pos = transform.position + 0.5
 
 				if (packetType == 1) {
 					world.addClientEntity(OpticsContent.fxFortronBeam).transform.setPosition(pos).asInstanceOf[EntityMagneticBeam].setTarget(target)
@@ -295,7 +296,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 						.take(constructionSpeed)
 
 					//The collection containing the coordinates to actually place the field blocks.
-					var constructField = Set.empty[Vector3i]
+					var constructField = Set.empty[Vector3D]
 
 					val result = evaluateField.forall(
 						vector => {
@@ -335,7 +336,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 		}
 	}
 
-	private def canReplaceBlock(vector: Vector3i, block: Block): Boolean = {
+	private def canReplaceBlock(vector: Vector3D, block: Block): Boolean = {
 		/*	return block == null ||
 				(getModuleCount(Content.moduleDisintegration) > 0 && block.getBlockHardness(this.worldObj, vector.xi, vector.yi, vector.zi) != -1) ||
 				(block.getMaterial.isLiquid || block == Blocks.snow || block == Blocks.vine || block == Blocks.tallgrass || block == Blocks.deadbush || block.isReplaceable(world, vector.xi, vector.yi, vector.zi))
@@ -369,9 +370,9 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 		}
 	}
 
-	override def getForceFields: JSet[Vector3i] = forceFields
+	override def getForceFields: JSet[Vector3D] = forceFields
 
-	override def isInField(position: Vector3d) = if (getShapeItem != null) getStructure.intersects(position) else false
+	override def isInField(position: Vector3D) = if (getShapeItem != null) getStructure.intersects(position) else false
 
 	/*
 	def isAccessGranted(checkWorld: World, checkPos: Vector3d, player: EntityPlayer, action: PlayerInteractEvent.Action): Boolean = {

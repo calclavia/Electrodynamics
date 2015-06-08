@@ -5,7 +5,8 @@ import java.util.{Set => JSet}
 import com.calclavia.edx.optics.GraphFrequency
 import com.calclavia.edx.optics.api.Frequency
 import com.calclavia.edx.optics.item.card.ItemCardFrequency
-import com.resonant.lib.WrapFunctions._
+import nova.scala.wrapper.FunctionalWrapper
+import FunctionalWrapper._
 import nova.core.block.Stateful.{LoadEvent, UnloadEvent}
 import nova.core.inventory.InventorySimple
 import nova.core.item.Item

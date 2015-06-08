@@ -7,13 +7,14 @@ import com.calclavia.edx.optics.api.modules.Module
 import com.calclavia.edx.optics.field.BlockProjector
 import com.resonant.core.prefab.itemblock.TooltipItem
 import com.resonant.core.prefab.modcontent.AutoItemTexture
-import com.resonant.lib.WrapFunctions._
+import nova.scala.wrapper.FunctionalWrapper
+import FunctionalWrapper._
 import nova.core.entity.Entity
 import com.calclavia.edx.core.EDX
 import nova.core.item.Item
 import nova.core.item.Item.TooltipEvent
 import nova.core.util.transform.shape.Cuboid
-import nova.core.util.transform.vector.Vector3i
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 import nova.energy.UnitDisplay
 
 import scala.collection.convert.wrapAll._
@@ -43,7 +44,7 @@ abstract class ItemModule extends Item with TooltipItem with Module with AutoIte
 
 	def getEntitiesInField(projector: Projector): Set[Entity] = {
 		val blockProjector = projector.asInstanceOf[BlockProjector]
-		val bound = new Cuboid(-projector.getNegativeScale, projector.getPositiveScale + Vector3i.one) + blockProjector.transform.position + projector.getTranslation
+		val bound = new Cuboid(-projector.getNegativeScale, projector.getPositiveScale + VectorUtil.ONE) + blockProjector.transform.position + projector.getTranslation
 
 		return blockProjector.world.getEntities(bound)
 			.filter(entity => projector.isInField(entity.transform.position))

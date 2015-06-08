@@ -4,7 +4,8 @@ import com.calclavia.edx.optics.GraphFrequency
 import com.calclavia.edx.optics.api.card.CoordLink
 import com.calclavia.edx.optics.base.BlockFrequency
 import com.resonant.core.access.Permission
-import com.resonant.lib.WrapFunctions._
+import nova.scala.wrapper.FunctionalWrapper
+import FunctionalWrapper._
 import nova.core.block.Block.RightClickEvent
 import nova.core.entity.component.Player
 /**

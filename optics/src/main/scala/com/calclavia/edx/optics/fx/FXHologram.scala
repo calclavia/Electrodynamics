@@ -1,17 +1,18 @@
 package com.calclavia.edx.optics.fx
 
 import com.calclavia.edx.optics.content.OpticsTextures
-import com.resonant.lib.WrapFunctions._
+import nova.scala.wrapper.FunctionalWrapper
+import FunctionalWrapper._
 import nova.core.component.renderer.DynamicRenderer
 import nova.core.entity.component.RigidBody
 import nova.core.render.Color
 import nova.core.render.model.{BlockModelUtil, Model}
-import nova.core.util.transform.vector.Vector3d
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 import scala.collection.convert.wrapAll._
 class FXHologram(color: Color, maxAge: Double) extends FXMFFS {
 	var age = 0d
-	private var targetPosition: Vector3d = null
+	private var targetPosition: Vector3D = null
 
 	add(new DynamicRenderer())
 		.setOnRender(
@@ -41,7 +42,7 @@ class FXHologram(color: Color, maxAge: Double) extends FXMFFS {
 	 * @param targetPosition
 	 * @return
 	 */
-	def setTarget(targetPosition: Vector3d): FXHologram = {
+	def setTarget(targetPosition: Vector3D): FXHologram = {
 		this.targetPosition = targetPosition
 		get(classOf[RigidBody]).setVelocity((targetPosition - position) / maxAge)
 		return this

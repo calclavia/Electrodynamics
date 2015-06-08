@@ -16,7 +16,7 @@ import nova.core.inventory.Inventory
 import nova.core.item.ItemBlock
 import nova.core.util.Direction
 import nova.core.util.transform.matrix.Quaternion
-import nova.core.util.transform.vector.Vector3i
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 import nova.core.world.World
 
 import scala.collection.convert.wrapAll._
@@ -29,12 +29,12 @@ class ItemModuleStabilize extends ItemModule {
 
 	override def getID: String = "moduleStabilize"
 
-	override def onCreateField(projector: Projector, field: util.Set[Vector3i]): Boolean = {
+	override def onCreateField(projector: Projector, field: util.Set[Vector3D]): Boolean = {
 		blockCount = 0
 		return false
 	}
 
-	override def onProject(projector: Projector, position: Vector3i): ProjectState = {
+	override def onProject(projector: Projector, position: Vector3D): ProjectState = {
 		val proj = projector.asInstanceOf[BlockProjector]
 		val world = proj.world()
 
@@ -104,7 +104,7 @@ class ItemModuleStabilize extends ItemModule {
 		return ProjectState.pass
 	}
 
-	def getAdjacentInventories(world: World, pos: Vector3i): Iterable[Inventory] =
+	def getAdjacentInventories(world: World, pos: Vector3D): Iterable[Inventory] =
 		Direction.DIRECTIONS
 			.view
 			.map(dir => (dir, dir.toVector + pos))

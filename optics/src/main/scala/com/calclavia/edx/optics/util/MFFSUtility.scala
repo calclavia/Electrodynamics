@@ -15,7 +15,7 @@ import nova.core.item.{Item, ItemBlock}
 import nova.core.network.NetworkTarget.Side
 import nova.core.util.Direction
 import nova.core.util.transform.matrix.Quaternion
-import nova.core.util.transform.vector.{Vector3d, Vector3i}
+import nova.core.util.transform.vector.{Vector3D, Vector3D}
 import nova.core.world.World
 
 import scala.collection.convert.wrapAll._
@@ -80,7 +80,7 @@ object MFFSUtility {
 		return inventory.toSet.headOption.orNull
 	}
 
-	def getCamoBlock(proj: Projector, position: Vector3i): BlockFactory = {
+	def getCamoBlock(proj: Projector, position: Vector3D): BlockFactory = {
 		val projector = proj.asInstanceOf[BlockProjector]
 
 		if (projector != null) {
@@ -125,7 +125,7 @@ object MFFSUtility {
 		return null
 	}
 
-	def hasPermission(world: World, position: Vector3d, permission: Permission, player: Player): Boolean =
+	def hasPermission(world: World, position: Vector3D, permission: Permission, player: Player): Boolean =
 		hasPermission(world, position, permission, player.getID())
 
 	/*
@@ -133,14 +133,14 @@ object MFFSUtility {
 			getRelevantProjectors(world, position) forall (_.isAccessGranted(world, position, player, action))
 	*/
 
-	def hasPermission(world: World, position: Vector3d, permission: Permission, id: String): Boolean =
+	def hasPermission(world: World, position: Vector3D, permission: Permission, id: String): Boolean =
 		getRelevantProjectors(world, position)
 			.forall(_.hasPermission(id, permission))
 
 	/**
 	 * Gets the set of projectors that have an intersect in this position.
 	 */
-	def getRelevantProjectors(world: World, position: Vector3d): Set[BlockProjector] =
+	def getRelevantProjectors(world: World, position: Vector3D): Set[BlockProjector] =
 		GraphFrequency
 			.instance
 			.getNodes

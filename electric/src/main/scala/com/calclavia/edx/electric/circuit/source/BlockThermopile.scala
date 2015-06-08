@@ -7,7 +7,8 @@ import com.calclavia.edx.core.prefab.BlockEDX
 import com.calclavia.edx.electric.ElectricContent
 import com.calclavia.edx.electric.api.{ConnectionBuilder, Electric}
 import com.calclavia.edx.electric.grid.NodeElectricComponent
-import com.resonant.lib.WrapFunctions._
+import nova.scala.wrapper.FunctionalWrapper
+import FunctionalWrapper._
 import nova.core.block.Stateful
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.renderer.ItemRenderer

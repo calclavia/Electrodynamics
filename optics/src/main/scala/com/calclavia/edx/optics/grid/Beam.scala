@@ -8,7 +8,7 @@ import com.calclavia.edx.core.EDX
 import nova.core.render.Color
 import nova.core.retention.{Data, Storable, Store}
 import nova.core.util.RayTracer.{RayTraceBlockResult, RayTraceEntityResult, RayTraceResult}
-import nova.core.util.transform.vector.Vector3d
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 import nova.core.util.{Ray, RayTracer}
 import nova.core.world.World
 
@@ -29,7 +29,7 @@ abstract class Beam extends Storable with Updater {
 	 * The render offset position for the wave.
 	 */
 	@Store
-	var renderOffset = Vector3d.zero
+	var renderOffset = Vector3D.ZERO
 
 	/**
 	 * The power of the wave.

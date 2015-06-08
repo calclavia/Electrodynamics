@@ -6,7 +6,8 @@ import com.calclavia.edx.optics.content.{OpticsContent, OpticsModels, OpticsText
 import com.calclavia.edx.optics.grid.OpticGridPacket
 import com.calclavia.edx.optics.security.MFFSPermissions
 import com.resonant.lib.MovementManager
-import com.resonant.lib.WrapFunctions._
+import nova.scala.wrapper.FunctionalWrapper
+import FunctionalWrapper._
 import nova.core.event.Event
 import nova.core.event.GlobalEvents.BlockChangeEvent
 import nova.core.fluid.Fluid

@@ -4,7 +4,8 @@ import java.util.Optional
 
 import com.calclavia.edx.core.CoreContent
 import com.resonant.core.structure.Structure
-import com.resonant.lib.WrapFunctions._
+import nova.scala.wrapper.FunctionalWrapper
+import FunctionalWrapper._
 import nova.core.block.Block
 import nova.core.block.Block.RightClickEvent
 import nova.core.block.component.StaticBlockRenderer

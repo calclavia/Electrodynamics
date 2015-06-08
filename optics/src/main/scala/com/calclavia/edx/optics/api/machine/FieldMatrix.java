@@ -4,7 +4,7 @@ import com.calclavia.edx.optics.api.modules.StructureProvider;
 import nova.core.item.Item;
 import nova.core.item.ItemFactory;
 import nova.core.util.Direction;
-import nova.core.util.transform.vector.Vector3i;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.Set;
 
@@ -39,11 +39,11 @@ public interface FieldMatrix extends IActivatable, IPermissionProvider {
 	 * Transformation information functions. Returns CACHED information unless the cache is cleared.
 	 * Note that these are all RELATIVE to the projector's position.
 	 */
-	Vector3i getTranslation();
+	Vector3D getTranslation();
 
-	Vector3i getPositiveScale();
+	Vector3D getPositiveScale();
 
-	Vector3i getNegativeScale();
+	Vector3D getNegativeScale();
 
 	int getRotationYaw();
 
@@ -52,11 +52,11 @@ public interface FieldMatrix extends IActivatable, IPermissionProvider {
 	/**
 	 * @return Gets all the absolute block coordinates that are occupying the force field. Note that this is a copy of the actual field set.
 	 */
-	Set<Vector3i> getCalculatedField();
+	Set<Vector3D> getCalculatedField();
 
 	/**
 	 * Gets the absolute interior points of the projector. This might cause lag so call sparingly.
 	 * @return
 	 */
-	Set<Vector3i> getInteriorPoints();
+	Set<Vector3D> getInteriorPoints();
 }

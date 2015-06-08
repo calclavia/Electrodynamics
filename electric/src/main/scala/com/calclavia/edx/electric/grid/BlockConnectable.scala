@@ -2,11 +2,12 @@ package com.calclavia.edx.electric.grid
 
 import java.util.Optional
 
-import com.resonant.lib.WrapFunctions._
+import nova.scala.wrapper.FunctionalWrapper
+import FunctionalWrapper._
 import nova.core.block.Block
 import nova.core.block.component.Connectable
 import nova.core.util.Direction
-import nova.core.util.transform.vector.Vector3i
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 import nova.core.world.World
 
 import scala.collection.convert.wrapAll._
@@ -58,7 +59,7 @@ trait BlockConnectable[N] extends Connectable[N] {
 
 	def world: World = block.world()
 
-	def position: Vector3i = block.transform.position
+	def position: Vector3D = block.transform.position
 
 	protected def compareClass: Class[N] = getClass.asInstanceOf[Class[N]]
 }

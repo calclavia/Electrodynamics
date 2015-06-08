@@ -13,7 +13,7 @@ import nova.core.item.{Item, ItemFactory}
 import nova.core.network.Sync
 import nova.core.retention.Store
 import nova.core.util.transform.matrix.Quaternion
-import nova.core.util.transform.vector.Vector3i
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 import nova.core.util.{Direction, RotationUtil}
 
 import scala.collection.convert.wrapAll._
@@ -32,7 +32,7 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 	@Store
 	var absoluteDirection = false
 
-	protected var calculatedField: Set[Vector3i] = null
+	protected var calculatedField: Set[Vector3D] = null
 
 	protected var isCalculating = false
 
@@ -100,7 +100,7 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 	 */
 	override def getModuleCount(compareModule: ItemFactory, slots: Int*): Int = super[BlockModuleHandler].getModuleCount(compareModule, slots: _*)
 
-	def getInteriorPoints: JSet[Vector3i] =
+	def getInteriorPoints: JSet[Vector3D] =
 		getOrSetCache("getInteriorPoints", () => {
 			if (getShapeItem.isInstanceOf[CacheHandler]) {
 				getShapeItem.asInstanceOf[CacheHandler].clearCache
@@ -114,15 +114,15 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 	def getStructure: Structure = {
 		val structure = getShapeItem.getStructure
 		structure.setBlockFactory(Optional.of(OpticsContent.forceField))
-		structure.setTranslate((getTranslation + transform.position).toDouble)
-		structure.setScale(getScale.toDouble)
+		structure.setTranslate((getTranslation + transform.position))
+		structure.setScale(getScale)
 		structure.setRotation(getRotation)
 		return structure
 	}
 
 	def getScale = (getPositiveScale + getNegativeScale) / 2
 
-	def getPositiveScale: Vector3i =
+	def getPositiveScale: Vector3D =
 		getOrSetCache("getPositiveScale", () => {
 			var zScalePos = 0
 			var xScalePos = 0
@@ -147,10 +147,10 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 			xScalePos += omnidirectionalScale
 			yScalePos += omnidirectionalScale
 
-			return new Vector3i(xScalePos, yScalePos, zScalePos)
+			return new Vector3D(xScalePos, yScalePos, zScalePos)
 		})
 
-	def getNegativeScale: Vector3i =
+	def getNegativeScale: Vector3D =
 		getOrSetCache("getNegativeScale", () => {
 			var zScaleNeg = 0
 			var xScaleNeg = 0
@@ -174,12 +174,12 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 			xScaleNeg += omnidirectionalScale
 			yScaleNeg += omnidirectionalScale
 
-			return new Vector3i(xScaleNeg, yScaleNeg, zScaleNeg)
+			return new Vector3D(xScaleNeg, yScaleNeg, zScaleNeg)
 		})
 
 	def getModuleSlots: Array[Int] = _getModuleSlots
 
-	def getTranslation: Vector3i =
+	def getTranslation: Vector3D =
 		getOrSetCache("getTranslation", () => {
 
 			val direction = get(classOf[Orientation]).orientation
@@ -208,7 +208,7 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 				yTranslationNeg = getModuleCount(OpticsContent.moduleTranslate, getDirectionSlots(Direction.DOWN): _*)
 			}
 
-			return new Vector3i(xTranslationPos - xTranslationNeg, yTranslationPos - yTranslationNeg, zTranslationPos - zTranslationNeg)
+			return new Vector3D(xTranslationPos - xTranslationNeg, yTranslationPos - yTranslationNeg, zTranslationPos - zTranslationNeg)
 		})
 
 	def getRotation = Quaternion.fromEuler(Math.toRadians(getRotationYaw), Math.toRadians(getRotationPitch), 0)
@@ -238,7 +238,7 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 			return verticalRotation * 2
 		})
 
-	def getCalculatedField: JSet[Vector3i] = if (calculatedField != null) calculatedField else Set.empty[Vector3i]
+	def getCalculatedField: JSet[Vector3D] = if (calculatedField != null) calculatedField else Set.empty[Vector3D]
 
 	/**
 	 * Calculates the force field
@@ -277,7 +277,7 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 	/**
 	 * Gets the exterior points of the field based on the matrix.
 	 */
-	protected def getExteriorPoints: JSet[Vector3i] = {
+	protected def getExteriorPoints: JSet[Vector3D] = {
 		val structure = getStructure
 
 		getModules().foreach(_.onCalculateExterior(this, structure))

@@ -1,7 +1,8 @@
 package com.calclavia.edx.optics.grid
 
 import com.calclavia.edx.optics.grid.OpticHandler.ReceiveBeamEvent
-import com.resonant.lib.WrapFunctions._
+import nova.scala.wrapper.FunctionalWrapper
+import FunctionalWrapper._
 import nova.core.block.Block
 import nova.core.block.Stateful.{LoadEvent, UnloadEvent}
 import nova.core.component.Component

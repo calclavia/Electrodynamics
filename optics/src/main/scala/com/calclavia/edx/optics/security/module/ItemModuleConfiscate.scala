@@ -8,11 +8,11 @@ import com.calclavia.edx.optics.security.MFFSPermissions
 import nova.core.entity.component.Player
 import com.calclavia.edx.core.EDX
 import nova.core.inventory.Inventory
-import nova.core.util.transform.vector.Vector3i
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 class ItemModuleConfiscate extends ItemModuleDefense {
 
-	override def onCreateField(projector: Projector, field: util.Set[Vector3i]): Boolean = {
+	override def onCreateField(projector: Projector, field: util.Set[Vector3D]): Boolean = {
 		val proj = projector.asInstanceOf[BlockProjector]
 		val entities = getEntitiesInField(projector)
 

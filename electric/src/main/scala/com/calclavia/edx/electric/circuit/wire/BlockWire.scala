@@ -9,7 +9,8 @@ import com.calclavia.edx.electric.api.Electric
 import com.calclavia.edx.electric.api.Electric.GraphBuiltEvent
 import com.calclavia.edx.electric.grid.NodeElectricJunction
 import com.calclavia.microblock.micro.{Microblock, MicroblockContainer}
-import com.resonant.lib.WrapFunctions._
+import nova.scala.wrapper.FunctionalWrapper
+import FunctionalWrapper._
 import nova.core.block.Block.{BlockPlaceEvent, RightClickEvent}
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.misc.Collider
@@ -20,7 +21,7 @@ import nova.core.render.model.{BlockModelUtil, Model, StaticCubeTextureCoordinat
 import nova.core.retention.{Storable, Store}
 import nova.core.util.transform.matrix.Quaternion
 import nova.core.util.transform.shape.Cuboid
-import nova.core.util.transform.vector.Vector3d
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 import nova.core.util.{Direction, RotationUtil}
 
 import scala.collection.convert.wrapAll._
@@ -45,9 +46,9 @@ object BlockWire {
 		for (s <- 0 until 6) {
 			val rot = s match {
 				case 0 => Quaternion.identity
-				case 1 => Quaternion.fromAxis(Vector3d.xAxis, Math.PI)
+				case 1 => Quaternion.fromAxis(Vector3D.PLUS_I, Math.PI)
 				case 2 => Quaternion.fromEuler(Math.PI, -Math.PI / 2)
-				case 3 => Quaternion.fromAxis(Vector3d.xAxis, -Math.PI / 2)
+				case 3 => Quaternion.fromAxis(Vector3D.PLUS_I, -Math.PI / 2)
 				case 4 => Quaternion.fromEuler(-Math.PI / 2, -Math.PI / 2)
 				case 5 => Quaternion.fromEuler(Math.PI / 2, -Math.PI / 2)
 			}
@@ -58,7 +59,7 @@ object BlockWire {
 			val sides = (0 until 4)
 				.map(RotationUtil.rotateSide(0, _))
 				.map(Direction.fromOrdinal)
-				.map(d => center + (d.toVector.toDouble * width))
+				.map(d => center + (d.toVector * width))
 				.toSeq
 
 			//Long sides
@@ -67,9 +68,9 @@ object BlockWire {
 				.map(Direction.fromOrdinal)
 				.map(
 					d => {
-						val dir = d.toVector.toDouble
-						val min = if (d.toVector.x < 0 || d.toVector.y < 0 || d.toVector.z < 0) dir * thickness else Vector3d.zero
-						val max = if (d.toVector.x > 0 || d.toVector.y > 0 || d.toVector.z > 0) dir * thickness else Vector3d.zero
+						val dir = d.toVector
+						val min = if (d.toVector.getX() < 0 || d.toVector.getY() < 0 || d.toVector.getZ() < 0) dir * thickness else Vector3D.ZERO
+						val max = if (d.toVector.getX() > 0 || d.toVector.getY() > 0 || d.toVector.getZ() > 0) dir * thickness else Vector3D.ZERO
 						(center + (dir * width)) + new Cuboid(min, max)
 					}
 				)

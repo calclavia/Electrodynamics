@@ -7,7 +7,8 @@ import java.util.Collections
 import com.calclavia.edx.core.extension.GraphExtension._
 import com.calclavia.edx.electric.api.Electric.{ElectricChangeEvent, GraphBuiltEvent}
 import com.calclavia.edx.electric.api.{Electric, ElectricComponent}
-import com.resonant.lib.WrapFunctions._
+import nova.scala.wrapper.FunctionalWrapper
+import FunctionalWrapper._
 import nova.core.util.transform.matrix.Matrix
 import org.jgrapht.alg.ConnectivityInspector
 import org.jgrapht.ext.{DOTExporter, VertexNameProvider}

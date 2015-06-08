@@ -2,7 +2,7 @@ package com.calclavia.graph.thermal
 
 import com.calclavia.edx.core.EDX
 import nova.core.util.Direction
-import nova.core.util.transform.vector.Vector3i
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 import nova.core.world.World
 import nova.scala.util.ExtendedUpdater
 
@@ -42,12 +42,12 @@ class GridThermal(val world: World) extends ExtendedUpdater {
 	/**
 	 * A map of positions and heat source energy
 	 */
-	private var heatMap = Map.empty[Vector3i, Double].withDefaultValue(0d)
+	private var heatMap = Map.empty[Vector3D, Double].withDefaultValue(0d)
 
 	/**
 	 * A map of temperature at every block position relative to its default temperature
 	 */
-	private var deltaTemperatureMap = Map.empty[Vector3i, Int].withDefaultValue(0)
+	private var deltaTemperatureMap = Map.empty[Vector3D, Int].withDefaultValue(0)
 
 	private var markClear = false
 
@@ -118,11 +118,11 @@ class GridThermal(val world: World) extends ExtendedUpdater {
 		}
 	}
 
-	def addHeat(position: Vector3i, heat: Double) {
+	def addHeat(position: Vector3D, heat: Double) {
 		heatMap += position -> (heatMap(position) + heat)
 	}
 
-	def removeHeat(position: Vector3i, heat: Double) {
+	def removeHeat(position: Vector3D, heat: Double) {
 		heatMap += position -> (heatMap(position) - heat)
 	}
 
@@ -130,7 +130,7 @@ class GridThermal(val world: World) extends ExtendedUpdater {
 	 * Gets the temperature at a specific position
 	 * @return - Temperature in Kelvin
 	 */
-	def getTemperature(pos: Vector3i): Int = 295 /*ThermalPhysics.getDefaultTemperature(pos)*/ + deltaTemperatureMap(pos)
+	def getTemperature(pos: Vector3D): Int = 295 /*ThermalPhysics.getDefaultTemperature(pos)*/ + deltaTemperatureMap(pos)
 
 	def clear() {
 		markClear = true

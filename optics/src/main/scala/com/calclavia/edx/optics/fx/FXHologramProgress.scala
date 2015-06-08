@@ -1,7 +1,8 @@
 package com.calclavia.edx.optics.fx
 
 import com.calclavia.edx.optics.content.OpticsTextures
-import com.resonant.lib.WrapFunctions._
+import nova.scala.wrapper.FunctionalWrapper
+import FunctionalWrapper._
 import nova.core.component.renderer.DynamicRenderer
 import nova.core.render.Color
 import nova.core.render.model.{BlockModelUtil, Model}

@@ -2,11 +2,12 @@ package com.calclavia.edx.optics.item.card
 
 import com.calclavia.edx.optics.api.Frequency
 import com.google.common.hash.Hashing
-import com.resonant.lib.WrapFunctions._
+import nova.scala.wrapper.FunctionalWrapper
+import FunctionalWrapper._
 import com.calclavia.edx.core.EDX
 import nova.core.item.Item.{RightClickEvent, TooltipEvent}
 import nova.core.retention.Store
-import nova.core.util.transform.vector.Vector3i
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 import scala.beans.BeanProperty
 

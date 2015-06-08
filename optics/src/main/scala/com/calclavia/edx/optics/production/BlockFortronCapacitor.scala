@@ -8,7 +8,8 @@ import com.calclavia.edx.optics.base.{BlockModuleHandler, PacketBlock}
 import com.calclavia.edx.optics.content.{OpticsContent, OpticsModels, OpticsTextures}
 import com.calclavia.edx.optics.item.card.ItemCardFrequency
 import com.calclavia.edx.optics.util.{FortronUtility, TransferMode}
-import com.resonant.lib.WrapFunctions._
+import nova.scala.wrapper.FunctionalWrapper
+import FunctionalWrapper._
 import nova.core.block.Block
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.fluid.component.FluidHandler

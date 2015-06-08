@@ -95,7 +95,7 @@ public class ConnectionBuilder<T> {
 						.filter(
 							//Find all directions except the facing dir and its opposite
 							dir ->
-								!dir.toVector().toDouble().abs().equals(
+								!dir.toVector().abs().equals(
 									//TODO: Use HashBiMap
 									blocks.entrySet()
 										.stream()
@@ -104,7 +104,7 @@ public class ConnectionBuilder<T> {
 										.findFirst()
 										.get()
 										.toVector()
-										.toDouble()
+
 										.abs()
 								)
 						)

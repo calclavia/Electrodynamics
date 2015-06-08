@@ -6,7 +6,8 @@ import com.calclavia.edx.core.{EDX, Placeholder}
 import com.calclavia.edx.optics.api.machine.IActivatable
 import com.calclavia.edx.optics.content.OpticsTextures
 import com.calclavia.minecraft.redstone.Redstone
-import com.resonant.lib.WrapFunctions._
+import nova.scala.wrapper.FunctionalWrapper
+import FunctionalWrapper._
 import nova.core.block.Block.RightClickEvent
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.block.{BlockDefault, Stateful}

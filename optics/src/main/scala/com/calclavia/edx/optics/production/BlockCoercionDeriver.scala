@@ -7,7 +7,8 @@ import com.calclavia.edx.optics.api.modules.Module
 import com.calclavia.edx.optics.base.{BlockModuleHandler, PacketBlock}
 import com.calclavia.edx.optics.content.{OpticsContent, OpticsModels, OpticsTextures}
 import com.calclavia.edx.optics.item.card.ItemCardFrequency
-import com.resonant.lib.WrapFunctions._
+import nova.scala.wrapper.FunctionalWrapper
+import FunctionalWrapper._
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.renderer.{DynamicRenderer, ItemRenderer, StaticRenderer}
 import nova.core.fluid.component.Tank
@@ -18,7 +19,7 @@ import nova.core.network.Packet
 import nova.core.render.model.Model
 import nova.core.retention.Store
 import nova.core.util.Direction
-import nova.core.util.transform.vector.Vector3d
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 import scala.collection.convert.wrapAll._
 
@@ -75,7 +76,7 @@ class BlockCoercionDeriver extends BlockModuleHandler {
 		.setOnRender(
 	    (model: Model) => {
 		    model.translate(0, (0.3 + Math.sin(Math.toRadians(animation)) * 0.08) * animationTween - 0.1, 0)
-		    model.rotate(Vector3d.yAxis, animation)
+			model.rotate(Vector3D.PLUS_J, animation)
 
 			val originalModel = OpticsModels.deriver.getModel
 		    val crystalModel = new Model

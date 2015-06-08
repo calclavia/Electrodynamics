@@ -1,7 +1,8 @@
 package com.calclavia.edx.optics.security.card
 
 import com.resonant.core.access.{AbstractAccess, AccessUser, Permissions}
-import com.resonant.lib.WrapFunctions._
+import nova.scala.wrapper.FunctionalWrapper
+import FunctionalWrapper._
 import nova.core.entity.component.Player
 import com.calclavia.edx.core.EDX
 import nova.core.gui.InputManager.Key
@@ -9,7 +10,7 @@ import nova.core.item.Item.{RightClickEvent, TooltipEvent}
 import nova.core.network.NetworkTarget.Side
 import nova.core.network.{Packet, Syncable}
 import nova.core.retention.Store
-import nova.core.util.transform.vector.Vector3i
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 import scala.beans.BeanProperty
 

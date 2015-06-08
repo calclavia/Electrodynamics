@@ -1,6 +1,7 @@
 package com.calclavia.edx.optics.beam.fx
 
-import com.resonant.lib.WrapFunctions._
+import nova.scala.wrapper.FunctionalWrapper
+import FunctionalWrapper._
 import nova.core.block.Block
 import nova.core.block.Stateful.LoadEvent
 import nova.core.component.misc.Collider
@@ -9,7 +10,8 @@ import nova.core.entity.Entity
 import nova.core.entity.component.RigidBody
 import com.calclavia.edx.core.EDX
 import nova.core.render.model.{BlockModelUtil, Model}
-import nova.core.util.transform.vector.Vector3d
+import nova.core.util.math.VectorUtil
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 import scala.util.Random
 
@@ -28,8 +30,8 @@ class EntityBlockParticle(block: Block) extends Entity {
 
 	loadEvent.add(
 		(evt: LoadEvent) => {
-			transform.setScale(Vector3d.one * randScale)
-			rigidBody.setVelocity(Vector3d.random)
+			transform.setScale(VectorUtil.ONE * randScale)
+			rigidBody.setVelocity(VectorUtil.random)
 		})
 
 	renderer.setOnRender(

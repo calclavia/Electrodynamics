@@ -1,12 +1,13 @@
 package com.calclavia.edx.optics.fx
 
-import com.resonant.lib.WrapFunctions._
+import nova.scala.wrapper.FunctionalWrapper
+import FunctionalWrapper._
 import nova.core.component.renderer.DynamicRenderer
 import nova.core.entity.Entity
 import nova.core.render.Color
 import nova.core.render.model.{Model, Vertex}
 import nova.core.render.texture.Texture
-import nova.core.util.transform.vector.Vector3d
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 import nova.scala.util.ExtendedUpdater
 
 import scala.beans.BeanProperty
@@ -21,7 +22,7 @@ abstract class FXBeam(texture: Texture, @BeanProperty var color: Color, maxAge: 
 	private val reverse: Boolean = false
 	private val pulse: Boolean = true
 	private val rotationSpeed: Int = 20
-	private var target: Vector3d = _
+	private var target: Vector3D = _
 	private var length: Double = _
 	/**
 	 * Angles are in radians
@@ -33,7 +34,7 @@ abstract class FXBeam(texture: Texture, @BeanProperty var color: Color, maxAge: 
 	private var prevSize = 0d
 	private var age: Double = 0
 
-	private var prevPos: Vector3d = null
+	private var prevPos: Vector3D = null
 
 	add(new DynamicRenderer())
 		.setOnRender(
@@ -69,16 +70,16 @@ abstract class FXBeam(texture: Texture, @BeanProperty var color: Color, maxAge: 
 			val ry = prevYaw + (rotYaw - prevYaw) * f
 			val rp = prevPitch + (rotPitch - prevPitch) * f
 
-			model.rotate(Vector3d.xAxis, Math.PI)
-			model.rotate(-Vector3d.zAxis, Math.PI * 2 + ry)
-			model.rotate(Vector3d.xAxis, rp)
+			model.rotate(Vector3D.PLUS_I, Math.PI)
+			model.rotate(-Vector3D.PLUS_K, Math.PI * 2 + ry)
+			model.rotate(Vector3D.PLUS_I, rp)
 
 			val var44: Double = -0.15D * size
 			val var17: Double = 0.15D * size
 			val var44b: Double = -0.15D * size * endModifier
 			val var17b: Double = 0.15D * size * endModifier
 
-			model.rotate(Vector3d.yAxis, rot)
+			model.rotate(Vector3D.PLUS_J, rot)
 
 			for (t <- 0 until 3) {
 
@@ -89,7 +90,7 @@ abstract class FXBeam(texture: Texture, @BeanProperty var color: Color, maxAge: 
 				val var37: Double = length * size * var9 + var35
 
 				val beamModel = new Model()
-				beamModel.rotate(Vector3d.yAxis, Math.PI / 3)
+				beamModel.rotate(Vector3D.PLUS_J, Math.PI / 3)
 				val face = beamModel.createFace()
 				face.drawVertex(new Vertex(var44b, var29, 0.0D, var33, var37))
 				face.drawVertex(new Vertex(var44, 0.0D, 0.0D, var33, var35))
@@ -111,14 +112,14 @@ abstract class FXBeam(texture: Texture, @BeanProperty var color: Color, maxAge: 
 		}
 		)
 
-	def setTarget(target: Vector3d): this.type = {
+	def setTarget(target: Vector3D): this.type = {
 		this.target = target
 		length = position.distance(this.target)
 
 		val diff = position - target
-		val horizontalDist = Math.sqrt(diff.x * diff.x + diff.z * diff.z)
-		this.rotYaw = Math.atan2(diff.x, diff.z)
-		this.rotPitch = Math.atan2(diff.y, horizontalDist)
+		val horizontalDist = Math.sqrt(diff.getX() * diff.getX() + diff.getZ() * diff.getZ())
+		this.rotYaw = Math.atan2(diff.getX(), diff.getZ())
+		this.rotPitch = Math.atan2(diff.getY(), horizontalDist)
 		this.prevYaw = this.rotYaw
 		this.prevPitch = this.rotPitch
 		return this
@@ -132,9 +133,9 @@ abstract class FXBeam(texture: Texture, @BeanProperty var color: Color, maxAge: 
 
 		this.prevYaw = this.rotYaw
 		this.prevPitch = this.rotPitch
-		val xd: Float = (position.x - target.x).asInstanceOf[Float]
-		val yd: Float = (position.y - target.y).asInstanceOf[Float]
-		val zd: Float = (position.z - target.z).asInstanceOf[Float]
+		val xd: Float = (position.getX() - target.getX()).asInstanceOf[Float]
+		val yd: Float = (position.getY() - target.getY()).asInstanceOf[Float]
+		val zd: Float = (position.getZ() - target.getZ()).asInstanceOf[Float]
 		this.length = Math.sqrt(xd * xd + yd * yd + zd * zd)
 		val var7 = Math.sqrt(xd * xd + zd * zd)
 		this.rotYaw = Math.atan2(xd, zd)

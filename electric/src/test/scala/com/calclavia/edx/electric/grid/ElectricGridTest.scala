@@ -3,7 +3,8 @@ package com.calclavia.edx.electric.grid
 import java.io.{File, FileWriter}
 
 import com.calclavia.edx.electric.api.Electric
-import com.resonant.lib.WrapFunctions._
+import nova.scala.wrapper.FunctionalWrapper
+import FunctionalWrapper._
 import nova.core.util.Profiler
 import nova.internal.launch.NovaLauncher
 import nova.testutils.FakeBlock

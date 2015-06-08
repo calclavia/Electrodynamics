@@ -5,7 +5,7 @@ import java.lang.Math.abs
 import com.resonant.core.structure.StructureCube
 import nova.core.util.Profiler
 import nova.core.util.math.MathUtil._
-import nova.core.util.transform.vector.{Vector3d, Vector3i}
+import nova.core.util.transform.vector.{Vector3D, Vector3D}
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
@@ -20,9 +20,9 @@ class ShapeTest {
 		for (scale <- 1 to 500 by 25) {
 			val extStructProf = new Profiler("Cube " + scale)
 			for (trial <- 1 to 10) {
-				struct.setScale(Vector3d.one * scale * 2)
+				struct.setScale(VectorUtil.ONE * scale * 2)
 				val extStruct = struct.getExteriorStructure
-				extStruct.foreach(v => assertThat(max(abs(v.x), abs(v.y), abs(v.z))).isEqualTo(scale))
+				extStruct.foreach(v => assertThat(max(abs(v.getX()), abs(v.getY()), abs(v.getZ()))).isEqualTo(scale))
 				assertThat(extStruct.size).isEqualTo(2 + (scale * scale * 4) * 6)
 				extStructProf.lap()
 			}
@@ -47,7 +47,7 @@ class ShapeTest {
 		for (scale <- 10 to 500 by 25) {
 			val extStructProf = new Profiler("Sphere " + scale)
 			for (trial <- 1 to 10) {
-				struct.setScale(Vector3d.one * scale)
+				struct.setScale(VectorUtil.ONE * scale)
 				val extStruct = struct.getExteriorStructure
 				extStruct.foreach(v => assertThat(v.magnitude()).isBetween(scale - 1d, scale + 1d))
 				assertThat(extStruct.size).isEqualTo(4 * Math.PI * scale * scale)
@@ -57,9 +57,9 @@ class ShapeTest {
 		}
 	}
 
-	def iterateSpace(size: Int, f: (Vector3i => Unit)) {
+	def iterateSpace(size: Int, f: (Vector3D => Unit)) {
 		for (x <- -size to size; z <- -size to size; y <- -size to size) {
-			f(new Vector3i(x, y, z))
+			f(new Vector3D(x, y, z))
 		}
 	}
 }

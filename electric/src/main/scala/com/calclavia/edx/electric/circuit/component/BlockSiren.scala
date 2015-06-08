@@ -8,7 +8,8 @@ import com.calclavia.edx.electric.ElectricContent
 import com.calclavia.edx.electric.api.{ConnectionBuilder, Electric}
 import com.calclavia.edx.electric.grid.NodeElectricComponent
 import com.calclavia.minecraft.redstone.Redstone
-import com.resonant.lib.WrapFunctions._
+import nova.scala.wrapper.FunctionalWrapper
+import FunctionalWrapper._
 import nova.core.block.Block.RightClickEvent
 import nova.core.block.Stateful
 import nova.core.block.component.StaticBlockRenderer

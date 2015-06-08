@@ -1,7 +1,8 @@
 package com.calclavia.edx.optics.gui
 
 import com.calclavia.edx.optics.production.BlockFortronCapacitor
-import com.resonant.lib.WrapFunctions._
+import nova.scala.wrapper.FunctionalWrapper
+import FunctionalWrapper._
 import com.calclavia.edx.core.EDX
 import nova.core.gui.ComponentEvent.ActionEvent
 import nova.core.gui.component.inventory.{PlayerInventory, Slot}

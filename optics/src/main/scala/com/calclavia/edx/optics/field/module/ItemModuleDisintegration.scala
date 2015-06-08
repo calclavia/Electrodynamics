@@ -12,7 +12,7 @@ import com.calclavia.edx.optics.field.mobilize.{BlockDropDelayedEvent, BlockInve
 import com.calclavia.edx.optics.util.MFFSUtility
 import nova.core.component.ComponentProvider
 import com.calclavia.edx.core.EDX
-import nova.core.util.transform.vector.Vector3i
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 class ItemModuleDisintegration extends ItemModule {
 	private var blockCount = 0
@@ -21,12 +21,12 @@ class ItemModuleDisintegration extends ItemModule {
 
 	override def getID: String = "moduleDisintegration"
 
-	override def onCreateField(projector: Projector, field: util.Set[Vector3i]): Boolean = {
+	override def onCreateField(projector: Projector, field: util.Set[Vector3D]): Boolean = {
 		blockCount = 0
 		return false
 	}
 
-	override def onProject(projector: Projector, position: Vector3i): ProjectState = {
+	override def onProject(projector: Projector, position: Vector3D): ProjectState = {
 		val proj = projector.asInstanceOf[BlockProjector]
 		val world = proj.world
 
