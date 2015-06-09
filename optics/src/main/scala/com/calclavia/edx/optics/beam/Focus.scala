@@ -8,7 +8,6 @@ import nova.core.gui.InputManager.Key
 import nova.core.network.{Sync, Syncable}
 import nova.core.retention.{Storable, Store}
 import nova.core.util.math.Vector3DUtil
-import nova.scala.wrapper.FunctionalWrapper
 import nova.scala.wrapper.FunctionalWrapper._
 import nova.scala.wrapper.VectorWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
@@ -22,7 +21,7 @@ class Focus(val block: Block) extends Component with Storable with Syncable {
 	//The normal representing the direction of focus
 	@Store
 	@Sync
-	var normal = Vector3D.ZERO
+	var normal = Vector3DUtil.FORWARD
 
 	block.placeEvent.add((evt: BlockPlaceEvent) => {
 		normal = evt.placer.rotation.applyTo(Vector3DUtil.FORWARD)

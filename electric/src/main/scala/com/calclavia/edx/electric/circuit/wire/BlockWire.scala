@@ -53,7 +53,7 @@ object BlockWire {
 				case 5 => new Rotation(RotationUtil.DEFAULT_ORDER, Math.PI / 2, -Math.PI / 2, 0)
 			}
 
-			val center = new Cuboid(width, 0, width, 1 - width, thickness, 1 - width) - 0.5
+			val center = new Cuboid(width, 0, width, 1 - width, thickness, 1 - width)
 
 			//Short sides
 			val sides = (0 until 4)
@@ -69,8 +69,8 @@ object BlockWire {
 				.map(
 			    d => {
 				    val dir = d.toVector
-				    val min = if (d.toVector.getX() < 0 || d.toVector.getY() < 0 || d.toVector.getZ() < 0) dir * thickness else Vector3D.ZERO
-				    val max = if (d.toVector.getX() > 0 || d.toVector.getY() > 0 || d.toVector.getZ() > 0) dir * thickness else Vector3D.ZERO
+				    val min = if (d.toVector.x < 0 || d.toVector.y < 0 || d.toVector.z < 0) dir * thickness else Vector3D.ZERO
+				    val max = if (d.toVector.x > 0 || d.toVector.y > 0 || d.toVector.z > 0) dir * thickness else Vector3D.ZERO
 				    (center + (dir * width)) + new Cuboid(min, max)
 			    }
 				)
@@ -125,7 +125,6 @@ class BlockWire extends BlockEDX with Storable with Syncable {
 	    (evt: BlockPlaceEvent) => {
 		    this.side = evt.side.opposite.ordinal.toByte
 		    //TODO: Fix wire material
-		    BlockWire.init()
 		    get(classOf[MaterialWire]).material = WireMaterial.COPPER
 		    Optional.of(MicroblockContainer.sidePosition(Direction.fromOrdinal(this.side)))
 	    }
@@ -152,7 +151,7 @@ class BlockWire extends BlockEDX with Storable with Syncable {
 		    (0 until 5)
 			    .map(dir => BlockWire.occlusionBounds(side)(dir))
 			    .foreach(cuboid => {
-			    BlockModelUtil.drawCube(model, cuboid, StaticCubeTextureCoordinates.instance)
+			    BlockModelUtil.drawCube(model, cuboid - 0.5, StaticCubeTextureCoordinates.instance)
 		    })
 
 		    //TODO: Change color
@@ -179,17 +178,17 @@ class BlockWire extends BlockEDX with Storable with Syncable {
 	rightClickEvent.add((evt: RightClickEvent) => if (EDX.network.isServer) System.out.println(electricNode))
 
 	collider.setBoundingBox(() => {
-		BlockWire.occlusionBounds(side)(4) + 0.5
+		BlockWire.occlusionBounds(side)(4)
 	})
 		.setOcclusionBoxes(func(entity => {
 		var cuboids = Set.empty[Cuboid]
-		cuboids += BlockWire.occlusionBounds(side)(4) + 0.5
+		cuboids += BlockWire.occlusionBounds(side)(4)
 		cuboids ++= (0 until 4)
 			.collect {
 			case dir if (connectionMask & (1 << (dir * 2))) != 0 && (connectionMask & (1 << (dir * 2 + 1))) != 0 =>
-				BlockWire.occlusionBounds(side)(dir + 5) + 0.5
+				BlockWire.occlusionBounds(side)(dir + 5)
 			case dir if (connectionMask & (1 << (dir * 2))) != 0 || (connectionMask & (1 << (dir * 2 + 1))) != 0 =>
-				BlockWire.occlusionBounds(side)(dir) + 0.5
+				BlockWire.occlusionBounds(side)(dir)
 		}
 		cuboids
 	}))
