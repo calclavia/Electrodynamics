@@ -35,6 +35,6 @@ class Focus(val block: Block) extends Component with Storable with Syncable {
 	})
 
 	def lookAt(pos: Vector3D) {
-		normal = ((pos - block.position) - 0.5).normalize
+		normal = (pos - (block.position + 0.5)).normalize
 	}
 }

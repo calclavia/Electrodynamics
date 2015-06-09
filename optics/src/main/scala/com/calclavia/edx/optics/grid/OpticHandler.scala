@@ -1,13 +1,13 @@
 package com.calclavia.edx.optics.grid
 
 import com.calclavia.edx.optics.grid.OpticHandler.ReceiveBeamEvent
-import nova.scala.wrapper.FunctionalWrapper
-import FunctionalWrapper._
 import nova.core.block.Block
 import nova.core.block.Stateful.{LoadEvent, UnloadEvent}
 import nova.core.component.Component
 import nova.core.event.{Event, EventBus}
 import nova.core.util.RayTracer.RayTraceResult
+import nova.scala.wrapper.FunctionalWrapper
+import nova.scala.wrapper.FunctionalWrapper._
 
 /**
  * Handles laser interaction
@@ -21,6 +21,8 @@ object OpticHandler {
 		//Continues the beam
 		def continue(outgoing: Beam) {
 			OpticGrid(incident.world).create(outgoing, incident)
+			//TODO: Offload to ticker
+			outgoing.update(0.05)
 		}
 	}
 

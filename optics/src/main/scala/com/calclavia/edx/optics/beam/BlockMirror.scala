@@ -8,11 +8,13 @@ import com.calclavia.edx.optics.grid.{ElectromagneticBeam, OpticHandler}
 import nova.core.block.Block.RightClickEvent
 import nova.core.block.Stateful
 import nova.core.block.component.StaticBlockRenderer
+import nova.core.component.misc.Collider
 import nova.core.component.renderer.ItemRenderer
 import nova.core.network.{Packet, Sync, Syncable}
 import nova.core.render.model.Model
 import nova.core.retention.{Storable, Store}
 import nova.core.util.Ray
+import nova.core.util.RayTracer.RayTraceBlockResult
 import nova.core.util.math.Vector3DUtil
 import nova.scala.wrapper.FunctionalWrapper._
 import nova.scala.wrapper.VectorWrapper._
@@ -36,13 +38,7 @@ class BlockMirror extends BlockEDX with Stateful with Syncable with Storable {
 
 	renderer.setOnRender(
 		(model: Model) => {
-			/*
-			val angle = normal.toEulerAngle
-			glRotated(angle.yaw, 0, 1, 0)
-			glRotated(angle.pitch, 1, 0, 0)
-			glRotated(90, 1, 0, 0)
-			*/
-			model.matrix.rotate(new Rotation(Vector3DUtil.FORWARD, focus.normal))
+			model.matrix.rotate(new Rotation(Vector3DUtil.FORWARD, focus.normal).revert())
 			model.matrix.rotate(Vector3D.PLUS_I, Math.PI / 2)
 
 			val child = OpticsModels.mirrorModel.getModel.combineChildren("mirror", "mirror", "mirrorBacking", "standConnector")
@@ -58,10 +54,11 @@ class BlockMirror extends BlockEDX with Stateful with Syncable with Storable {
 	optic.onReceive.add(
 		(evt: ReceiveBeamEvent) => {
 			/**
-			 * Render incoming laser
+			 * Change incoming render laser position
 			 */
-			//TODO: Change render endpoint
-			//Electrodynamics.proxy.renderLaser(worldObj, renderStart, position + 0.5, color, energy)
+			val newHit = position + 0.5
+			val newBound = get(classOf[Collider]).boundingBox.get + position
+			evt.hit = new RayTraceBlockResult(newHit, evt.incident.source.origin.distance(newHit), evt.hit.side, newBound, this)
 
 			/**
 			 * Calculate Reflection
@@ -77,8 +74,8 @@ class BlockMirror extends BlockEDX with Stateful with Syncable with Storable {
 				val newDirection = new Rotation(axisOfReflection, rotateAngle).applyTo(incidentDirection)
 				val beam = new ElectromagneticBeam
 				beam.world = world
-				beam.source = new Ray(position + 0.5 + newDirection * 0.9, newDirection)
-				beam.renderOffset = -newDirection * 0.9
+				beam.source = new Ray(position + 0.5 + newDirection * 0.6, newDirection)
+				beam.renderOffset = -newDirection * 0.6
 				beam.color = evt.incident.color
 				beam.power = evt.receivingPower
 				evt.continue(beam)

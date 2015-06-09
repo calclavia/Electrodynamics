@@ -1,5 +1,7 @@
 package com.calclavia.edx.optics.grid
 
+import java.util.Optional
+
 import com.calclavia.edx.core.EDX
 import com.calclavia.edx.optics.grid.OpticHandler.ReceiveBeamEvent
 import nova.core.component.Updater
@@ -73,7 +75,7 @@ abstract class Beam extends Storable with Updater {
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)
 
-		val opHit = rayTrace
+		var opHit = rayTrace
 
 		//Check with previous hit and compute hit time
 		if ((opHit.isPresent && prevHit != null && opHit.get().hit.equals(prevHit.hit)) || (!opHit.isPresent || prevHit == null)) {
@@ -90,8 +92,9 @@ abstract class Beam extends Storable with Updater {
 						 * Let the optic handler handle the beam
 						 */
 						case hitBlock if hitBlock.has(classOf[OpticHandler]) =>
-							hitBlock.get(classOf[OpticHandler]).onReceive.publish(new ReceiveBeamEvent(this, hit))
-
+							val event = new ReceiveBeamEvent(this, hit)
+							hitBlock.get(classOf[OpticHandler]).onReceive.publish(event)
+							opHit = Optional.of(event.hit)
 						/**
 						 * All beams refract and reflect
 						 */

@@ -86,6 +86,7 @@ class OpticGrid(val world: World) extends Updater {
 				graph.addVertex(laser)
 
 				if (from != null) {
+					graph.addVertex(from)
 					graph.addEdge(from, laser)
 				}
 				else if (EDX.network.isServer) {
@@ -119,7 +120,8 @@ class OpticGrid(val world: World) extends Updater {
 
 		timer += deltaTime
 
-		if (timer >= 1) {
+		//TODO: Reduce timer
+		if (timer >= 0.1) {
 			timer = 0
 
 			graph synchronized {
