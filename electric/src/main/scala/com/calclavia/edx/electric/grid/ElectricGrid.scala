@@ -333,25 +333,30 @@ class ElectricGrid {
 	}
 
 	var updateFuture: Future[Unit] = _
+	var enableThreading = true
 
 	def requestUpdate(resistorChanged: Boolean = true, sourceChanged: Boolean = true) {
-		if (updateFuture == null || updateFuture.isCompleted) {
-			updateFuture = Future {
-				update()
+		if (enableThreading) {
+			if (updateFuture == null || updateFuture.isCompleted) {
+				updateFuture = Future {
+					update()
+				}
+				updateFuture.onComplete {
+					case Success(nothing) => println("Circuit solved")
+					case Failure(ex) => println("Circuit failed: " + ex.printStackTrace)
+				}
 			}
-			updateFuture.onComplete {
-				case Success(nothing) => println("Circuit solved")
-				case Failure(ex) => println("Circuit failed: " + ex.printStackTrace)
+			else {
+				//	updateFuture.onComplete(f => requestUpdate())
 			}
-		}
-		else {
-			//	updateFuture.onComplete(f => requestUpdate())
+		} else {
+			update(resistorChanged, sourceChanged)
 		}
 	}
 
 	def update(resistorChanged: Boolean = true, sourceChanged: Boolean = true) {
 		electricGraph.synchronized {
-			//Reset all componets
+			//Reset all components
 			electricGraph.vertexSet().foreach {
 				case component: Component =>
 					component.component.voltage = 0
