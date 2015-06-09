@@ -2,24 +2,20 @@ package com.calclavia.edx.optics.content
 
 import com.calclavia.edx.core.Reference
 import com.calclavia.edx.optics.base.{ItemModule, Named}
-import com.calclavia.edx.optics.field.mobilize.BlockMobilizer
+import com.calclavia.edx.optics.beam.fx.EntityMagneticBeam
+import com.calclavia.edx.optics.beam.{BlockLaserEmitter, BlockLaserReceiver, BlockMirror}
 import com.calclavia.edx.optics.field.module._
 import com.calclavia.edx.optics.field.shape._
 import com.calclavia.edx.optics.field.{BlockForceField, BlockProjector}
-import com.calclavia.edx.optics.gui.GuiFortronCapacitor
+import com.calclavia.edx.optics.fx.{FXHologram, FXHologramProgress, FieldColor}
 import com.calclavia.edx.optics.item.ItemRemoteController
 import com.calclavia.edx.optics.item.card.{ItemCard, ItemCardFrequency, ItemCardInfinite, ItemCardLink}
-import com.calclavia.edx.optics.beam.fx.EntityMagneticBeam
-import com.calclavia.edx.optics.beam.{BlockMirror, BlockLaserReceiver, BlockLaserEmitter}
-import com.calclavia.edx.optics.fx.{FXHologram, FXHologramProgress, FieldColor}
-import com.calclavia.edx.optics.production.{BlockCoercionDeriver, BlockFortronCapacitor}
 import com.calclavia.edx.optics.security.BlockBiometric
 import com.calclavia.edx.optics.security.card.ItemCardIdentification
 import com.calclavia.edx.optics.security.module._
 import com.resonant.core.prefab.modcontent.ContentLoader
 import nova.core.block.BlockFactory
 import nova.core.entity.EntityFactory
-import nova.core.gui.factory.GuiFactory
 import nova.core.item.{Item, ItemFactory}
 
 /**
@@ -31,11 +27,8 @@ object OpticsContent extends ContentLoader {
 	/**
 	 * Blocks
 	 */
-	val coercionDeriver: BlockFactory = classOf[BlockCoercionDeriver]
-	val fortronCapacitor: BlockFactory = classOf[BlockFortronCapacitor]
 	val electromagneticProjector: BlockFactory = classOf[BlockProjector]
 	val biometricIdentifier: BlockFactory = classOf[BlockBiometric]
-	val forceMobilizer: BlockFactory = classOf[BlockMobilizer]
 	val forceField: BlockFactory = classOf[BlockForceField]
 
 	val laserEmitter: BlockFactory = classOf[BlockLaserEmitter]
@@ -80,11 +73,9 @@ object OpticsContent extends ContentLoader {
 	val moduleCamouflage: ItemFactory = () => (new ItemModule with Named).setName("moduleCamouflage").setCost(1.5f).setMaxCount(1)
 	val moduleApproximation: ItemFactory = () => (new ItemModule with Named).setName("moduleApproximation").setMaxCount(1).setCost(1f)
 	val moduleArray: ItemFactory = () => new ItemModuleArray().setCost(3f)
-	val moduleDisintegration: ItemFactory = classOf[ItemModuleDisintegration]
 	val moduleShock: ItemFactory = classOf[ItemModuleShock]
 	val moduleGlow: ItemFactory = () => (new ItemModule with Named).setName("moduleGlow")
 	val moduleSponge: ItemFactory = classOf[ItemModuleSponge]
-	val moduleStabilize: ItemFactory = classOf[ItemModuleStabilize]
 	val moduleRepulsion: ItemFactory = classOf[ItemModuleRepulsion]
 	val moduleAntiHostile: ItemFactory = () => new ItemModuleAntiHostile().setCost(10)
 	val moduleAntiFriendly: ItemFactory = () => new ItemModuleAntiFriendly().setCost(5)
@@ -98,8 +89,6 @@ object OpticsContent extends ContentLoader {
 	val fxFortronBeam: EntityFactory = () => new EntityMagneticBeam(FieldColor.blue, 40)
 	val fxHologram: EntityFactory = () => new FXHologram(FieldColor.blue, 40)
 	val fxHologramProgress: EntityFactory = () => new FXHologramProgress(FieldColor.blue, 40)
-	//GUI
-	val guiFortronCapacitor: GuiFactory = classOf[GuiFortronCapacitor]
 
 	override def id: String = Reference.id
 

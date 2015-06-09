@@ -1,7 +1,7 @@
 package com.calclavia.edx.optics.field.structure
 
 import com.resonant.core.structure.Structure
-import nova.core.util.transform.vector.Vector3d
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 /**
  * @author Calclavia
@@ -17,12 +17,12 @@ class StructureCylinder extends Structure {
 	 * The transformation should be default.
 	 * @return The result of the equation. Zero if the position satisfy the equation.
 	 */
-	override def surfaceEquation(position: Vector3d): Double = {
-		if ((position.y == 0 || position.y == height - 1) && (position.x * position.x + position.z * position.z + radiusExpansion) <= (radius * radius)) {
+	override def surfaceEquation(position: Vector3D): Double = {
+		if ((position.getY() == 0 || position.getY() == height - 1) && (position.getX() * position.getX() + position.getZ() * position.getZ() + radiusExpansion) <= (radius * radius)) {
 			return 1
 		}
 
-		if ((position.x * position.x + position.z * position.z + radiusExpansion) <= (radius * radius) && (position.x * position.x + position.z * position.z + radiusExpansion) >= ((radius - 1) * (radius - 1))) {
+		if ((position.getX() * position.getX() + position.getZ() * position.getZ() + radiusExpansion) <= (radius * radius) && (position.getX() * position.getX() + position.getZ() * position.getZ() + radiusExpansion) >= ((radius - 1) * (radius - 1))) {
 			return 1
 		}
 		return 0
@@ -33,8 +33,8 @@ class StructureCylinder extends Structure {
 	 * The transformation should be default.
 	 * @return The result of the equation. Zero if the position satisfy the equation.
 	 */
-	override def volumeEquation(position: Vector3d): Double = {
-		if (position.x * position.x + position.z * position.z + radiusExpansion <= radius * radius) {
+	override def volumeEquation(position: Vector3D): Double = {
+		if (position.getX() * position.getX() + position.getZ() * position.getZ() + radiusExpansion <= radius * radius) {
 			return 1
 		}
 

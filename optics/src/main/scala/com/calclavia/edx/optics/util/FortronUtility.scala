@@ -3,11 +3,12 @@ package com.calclavia.edx.optics.util
 import com.calclavia.edx.optics.Settings
 import com.calclavia.edx.optics.api.fortron.FortronFrequency
 import com.calclavia.edx.optics.base.BlockModuleHandler
+import com.calclavia.edx.optics.beam.fx.EntityMagneticBeam
 import com.calclavia.edx.optics.content.OpticsContent
 import com.calclavia.edx.optics.fx.FieldColor
-import com.calclavia.edx.optics.beam.fx.EntityMagneticBeam
 import nova.core.block.Block
 import nova.core.network.NetworkTarget.Side
+import nova.scala.wrapper.VectorWrapper._
 
 /**
  * A class with useful functions related to Fortron.
@@ -25,7 +26,7 @@ object FortronUtility {
 				transferMode match {
 					case TransferMode.equalize =>
 						frequencyBlocks.foreach(machine => {
-							val capacityPercentage = machine.getFortronCapacity.toDouble / totalCapacity.toDouble
+							val capacityPercentage = machine.getFortronCapacity / totalCapacity
 							val amountToSet = (totalFortron * capacityPercentage).toInt
 							doTransferFortron(source, machine, amountToSet - machine.getFortron, limit)
 						})
@@ -92,8 +93,8 @@ object FortronUtility {
 				toBeInjected = transferer.addFortron(receiver.removeFortron(toBeInjected, true), true)
 				if (Side.get().isClient && toBeInjected > 0 && !isCamo) {
 					val particle = world.addClientEntity(new EntityMagneticBeam(FieldColor.blue, 20))
-					particle.setPosition(block.position.toDouble + 0.5)
-					particle.setTarget(receiver.asInstanceOf[Block].position.toDouble + 0.5)
+					particle.setPosition(block.position + 0.5)
+					particle.setTarget(receiver.asInstanceOf[Block].position + 0.5)
 				}
 			}
 			else {
@@ -102,8 +103,8 @@ object FortronUtility {
 				toBeEjected = receiver.addFortron(transferer.removeFortron(toBeEjected, true), true)
 				if (Side.get().isClient && toBeEjected > 0 && !isCamo) {
 					val particle = world.addClientEntity(new EntityMagneticBeam(FieldColor.blue, 20))
-					particle.setTarget(block.position.toDouble + 0.5)
-					particle.setPosition(receiver.asInstanceOf[Block].position.toDouble + 0.5)
+					particle.setTarget(block.position + 0.5)
+					particle.setPosition(receiver.asInstanceOf[Block].position + 0.5)
 				}
 			}
 		}

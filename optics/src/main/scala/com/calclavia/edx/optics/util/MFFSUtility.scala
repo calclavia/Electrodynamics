@@ -1,5 +1,6 @@
 package com.calclavia.edx.optics.util
 
+import com.calclavia.edx.core.EDX
 import com.calclavia.edx.optics.GraphFrequency
 import com.calclavia.edx.optics.api.machine.Projector
 import com.calclavia.edx.optics.content.OpticsContent
@@ -9,14 +10,14 @@ import com.resonant.core.access.Permission
 import nova.core.block.{Block, BlockFactory}
 import nova.core.component.ComponentProvider
 import nova.core.entity.component.Player
-import com.calclavia.edx.core.EDX
 import nova.core.inventory.Inventory
 import nova.core.item.{Item, ItemBlock}
 import nova.core.network.NetworkTarget.Side
 import nova.core.util.Direction
-import nova.core.util.transform.matrix.Quaternion
-import nova.core.util.transform.vector.{Vector3d, Vector3i}
+import nova.core.util.math.RotationUtil
 import nova.core.world.World
+import nova.scala.wrapper.VectorWrapper._
+import org.apache.commons.math3.geometry.euclidean.threed.{Rotation, Vector3D}
 
 import scala.collection.convert.wrapAll._
 
@@ -80,7 +81,7 @@ object MFFSUtility {
 		return inventory.toSet.headOption.orNull
 	}
 
-	def getCamoBlock(proj: Projector, position: Vector3i): BlockFactory = {
+	def getCamoBlock(proj: Projector, position: Vector3D): BlockFactory = {
 		val projector = proj.asInstanceOf[BlockProjector]
 
 		if (projector != null) {
@@ -92,7 +93,7 @@ object MFFSUtility {
 						if (fieldMap != null) {
 							val fieldCenter = projector.position() + projector.getTranslation()
 							var relativePosition = position - fieldCenter
-							relativePosition = relativePosition.transform(Quaternion.fromEuler(-projector.getRotationYaw, -projector.getRotationPitch, 0))
+							relativePosition = new Rotation(RotationUtil.DEFAULT_ORDER, -projector.getRotationYaw, -projector.getRotationPitch, 0).applyTo(relativePosition)
 
 							val theBlock = fieldMap.getBlockFactory(relativePosition)
 
@@ -125,7 +126,7 @@ object MFFSUtility {
 		return null
 	}
 
-	def hasPermission(world: World, position: Vector3d, permission: Permission, player: Player): Boolean =
+	def hasPermission(world: World, position: Vector3D, permission: Permission, player: Player): Boolean =
 		hasPermission(world, position, permission, player.getID())
 
 	/*
@@ -133,14 +134,14 @@ object MFFSUtility {
 			getRelevantProjectors(world, position) forall (_.isAccessGranted(world, position, player, action))
 	*/
 
-	def hasPermission(world: World, position: Vector3d, permission: Permission, id: String): Boolean =
+	def hasPermission(world: World, position: Vector3D, permission: Permission, id: String): Boolean =
 		getRelevantProjectors(world, position)
 			.forall(_.hasPermission(id, permission))
 
 	/**
 	 * Gets the set of projectors that have an intersect in this position.
 	 */
-	def getRelevantProjectors(world: World, position: Vector3d): Set[BlockProjector] =
+	def getRelevantProjectors(world: World, position: Vector3D): Set[BlockProjector] =
 		GraphFrequency
 			.instance
 			.getNodes

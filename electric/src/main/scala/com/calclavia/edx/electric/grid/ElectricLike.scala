@@ -2,7 +2,8 @@ package com.calclavia.edx.electric.grid
 
 import com.calclavia.edx.electric.api.Electric
 import com.calclavia.edx.electric.api.Electric.ElectricChangeEvent
-import com.resonant.lib.WrapFunctions._
+import nova.scala.wrapper.FunctionalWrapper
+import FunctionalWrapper._
 import nova.core.block.Block.NeighborChangeEvent
 import nova.core.block.Stateful.{LoadEvent, UnloadEvent}
 import com.calclavia.edx.core.EDX

@@ -1,7 +1,8 @@
 package com.calclavia.edx.electric.circuit.source
 
 import com.resonant.core.energy.EnergyStorage
-import com.resonant.lib.WrapFunctions._
+import nova.scala.wrapper.FunctionalWrapper
+import FunctionalWrapper._
 import nova.core.block.BlockFactory
 import com.calclavia.edx.core.EDX
 import nova.core.item.Item.TooltipEvent

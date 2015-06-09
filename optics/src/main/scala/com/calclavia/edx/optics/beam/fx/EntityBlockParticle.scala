@@ -1,18 +1,18 @@
 package com.calclavia.edx.optics.beam.fx
 
-import com.resonant.lib.WrapFunctions._
+import com.calclavia.edx.core.EDX
 import nova.core.block.Block
 import nova.core.block.Stateful.LoadEvent
 import nova.core.component.misc.Collider
 import nova.core.component.renderer.DynamicRenderer
 import nova.core.entity.Entity
 import nova.core.entity.component.RigidBody
-import com.calclavia.edx.core.EDX
 import nova.core.render.model.{BlockModelUtil, Model}
-import nova.core.util.transform.vector.Vector3d
+import nova.core.util.math.Vector3DUtil
+import nova.scala.wrapper.FunctionalWrapper._
+import nova.scala.wrapper.VectorWrapper._
 
 import scala.util.Random
-
 /**
  * A block breaking particle effect
  * @author Calclavia
@@ -28,8 +28,8 @@ class EntityBlockParticle(block: Block) extends Entity {
 
 	loadEvent.add(
 		(evt: LoadEvent) => {
-			transform.setScale(Vector3d.one * randScale)
-			rigidBody.setVelocity(Vector3d.random)
+			transform.setScale(Vector3DUtil.ONE * randScale)
+			rigidBody.setVelocity(Vector3DUtil.random)
 		})
 
 	renderer.setOnRender(

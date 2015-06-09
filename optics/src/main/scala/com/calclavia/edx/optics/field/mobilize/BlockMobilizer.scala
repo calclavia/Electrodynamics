@@ -2,6 +2,7 @@ package com.calclavia.edx.optics.field.mobilize
 
 import java.util.{Set => JSet}
 
+import com.calclavia.edx.core.EDX
 import com.calclavia.edx.optics.api.MFFSEvent.EventForceMobilize
 import com.calclavia.edx.optics.api.card.CoordLink
 import com.calclavia.edx.optics.api.{Blacklist, MFFSEvent}
@@ -11,13 +12,11 @@ import com.calclavia.edx.optics.fx.{FXHologramProgress, FieldColor, IEffectContr
 import com.calclavia.edx.optics.security.{MFFSPermissions, PermissionHandler}
 import com.calclavia.edx.optics.util.MFFSUtility
 import com.calclavia.edx.optics.{Optics, Settings}
-import com.resonant.lib.WrapFunctions._
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.misc.Collider
 import nova.core.component.transform.Orientation
 import nova.core.entity.Entity
 import nova.core.entity.component.RigidBody
-import com.calclavia.edx.core.EDX
 import nova.core.inventory.InventorySimple
 import nova.core.item.Item
 import nova.core.network.NetworkTarget.Side
@@ -25,10 +24,11 @@ import nova.core.network.{Packet, Sync}
 import nova.core.render.model.Model
 import nova.core.retention.{Data, Storable, Store}
 import nova.core.util.Direction
-import nova.core.util.transform.matrix.MatrixStack
-import nova.core.util.transform.shape.Cuboid
-import nova.core.util.transform.vector.{Vector3d, Vector3i}
+import nova.core.util.shape.Cuboid
 import nova.core.world.World
+import nova.scala.wrapper.FunctionalWrapper._
+import nova.scala.wrapper.VectorWrapper._
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 import scala.collection.convert.wrapAll._
 
@@ -39,9 +39,9 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 
 	val packetRange = 60
 	val animationTime = 20
-	var failedPositions = Set.empty[Vector3i]
+	var failedPositions = Set.empty[Vector3D]
 	@Store
-	var anchor = new Vector3i()
+	var anchor = Vector3D.ZERO
 	/**
 	 * The display mode. 0 = none, 1 = minimal, 2 = maximal.
 	 */
@@ -64,13 +64,9 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 	get(classOf[StaticBlockRenderer])
 		.setOnRender(
 	    (model: Model) => {
-		    model.matrix = new MatrixStack()
-			    .loadMatrix(model.matrix)
-			    .rotate(get(classOf[Orientation]).orientation.rotation)
-			    .getMatrix
-
-			model.children.add(OpticsModels.mobilizer.getModel)
-			model.bindAll(if (isActive) OpticsTextures.mobilizerOn else OpticsTextures.mobilizerOff)
+		    model.matrix.rotate(get(classOf[Orientation]).orientation.rotation)
+		    model.children.add(OpticsModels.mobilizer.getModel)
+		    model.bindAll(if (isActive) OpticsTextures.mobilizerOn else OpticsTextures.mobilizerOff)
 	    }
 		)
 
@@ -232,7 +228,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 					packet <<< PacketBlock.effect
 
 					if (isTeleport) {
-						val targetPosition: Vector3i = {
+						val targetPosition: Vector3D = {
 							if (getTargetPosition._1 == null) {
 								getTargetPosition._2
 							}
@@ -286,7 +282,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 				val packet = EDX.network.newPacket()
 				packet <<< PacketBlock.effect
 				packet <<< 3
-				packet <<< failedPositions.asInstanceOf[JSet[Vector3i]]
+				packet <<< failedPositions.asInstanceOf[JSet[Vector3D]]
 				EDX.network.sendPacket(this, packet)
 				//				ModularForceFieldSystem.packetHandler.sendToAllAround(packet, world, position, packetRange)
 			}
@@ -296,9 +292,9 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 		}
 	}
 
-	override def generateField: JSet[Vector3i] = {
+	override def generateField: JSet[Vector3D] = {
 		if (!canMove) {
-			return Set.empty[Vector3i]
+			return Set.empty[Vector3D]
 		}
 		/*else
 			markFailMove()*/
@@ -333,7 +329,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 	 * @param target - The target position
 	 * @return True if the block can be moved.
 	 */
-	def canMove(startWorld: World, position: Vector3i, targetWorld: World, target: Vector3i): Boolean = {
+	def canMove(startWorld: World, position: Vector3D, targetWorld: World, target: Vector3D): Boolean = {
 		if (Blacklist.mobilizerBlacklist.contains(startWorld.getBlock(position).get())) {
 			return false
 		}
@@ -345,7 +341,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 		}
 
 		//TODO: Check the username ID for the Mobilizer
-		if (!MFFSUtility.hasPermission(startWorld, position.toDouble, MFFSPermissions.blockAlter, Optics.tempID) && !MFFSUtility.hasPermission(targetWorld, target.toDouble, MFFSPermissions.blockAlter, Optics.tempID)) {
+		if (!MFFSUtility.hasPermission(startWorld, position, MFFSPermissions.blockAlter, Optics.tempID) && !MFFSUtility.hasPermission(targetWorld, target, MFFSPermissions.blockAlter, Optics.tempID)) {
 			return false
 		}
 
@@ -368,7 +364,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 	 *
 	 * @return A vector of the target position.
 	 */
-	def getTargetPosition: (World, Vector3i) = {
+	def getTargetPosition: (World, Vector3D) = {
 		if (isTeleport) {
 			val cardStack = getLinkCard
 
@@ -401,9 +397,9 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 		}
 	}
 
-	def getAbsoluteAnchor: Vector3i = transform.position + anchor
+	def getAbsoluteAnchor: Vector3D = transform.position + anchor
 
-	def isVisibleToPlayer(position: Vector3i): Boolean = Direction.DIRECTIONS.count(dir => world.getBlock(position + dir.toVector).get.get(classOf[Collider]).isOpaqueCube.get()) < 6
+	def isVisibleToPlayer(position: Vector3D): Boolean = Direction.DIRECTIONS.count(dir => world.getBlock(position + dir.toVector).get.get(classOf[Collider]).isOpaqueCube.get()) < 6
 
 	override def read(packet: Packet) {
 		super.read(packet)
@@ -422,7 +418,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 							val isTeleportPacket = packet.readInt()
 							val vecSize = packet.readInt()
 
-							val hologramRenderPoints = packet.readSet[Vector3i]()
+							val hologramRenderPoints = packet.readSet[Vector3D]()
 
 							/**
 							 * Movement Rendering
@@ -448,7 +444,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 							val targetPosition = packet.readStorable()
 							val isPreview = packet.readBoolean()
 							val vecSize = packet.readInt()
-							val hologramRenderPoints = packet.readSet[Vector3i]()
+							val hologramRenderPoints = packet.readSet[Vector3D]()
 
 							val color = if (isPreview) FieldColor.blue else FieldColor.green
 
@@ -456,7 +452,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 								//Render teleport start
 								val hologramA = world.addClientEntity(OpticsContent.fxHologramProgress).asInstanceOf[FXHologramProgress]
 								hologramA.setColor(color)
-								hologramA.transform.setPosition(pos.toDouble + 0.5)
+								hologramA.transform.setPosition(pos + 0.5)
 								//TODO: Not clean
 								/*
 								if (targetPosition.world != null && targetPosition.world.getChunkProvider.chunkExists(targetPosition.xi, targetPosition.zi)) {
@@ -473,8 +469,8 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 							 * Fail hologram rendering
 							 */
 							val vecSize = packet.readInt()
-							val hologramRenderPoints = packet.readSet[Vector3i]()
-							hologramRenderPoints.foreach(p => world.addClientEntity(new FXHologramProgress(FieldColor.red, 30)).transform.setPosition(p.toDouble + 0.5))
+							val hologramRenderPoints = packet.readSet[Vector3D]()
+							hologramRenderPoints.foreach(p => world.addClientEntity(new FXHologramProgress(FieldColor.red, 30)).transform.setPosition(p + 0.5))
 						}
 					}
 				}
@@ -484,7 +480,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 				case PacketBlock.field =>
 					moveEntities()
 				case PacketBlock.description =>
-					anchor = packet.readStorable().asInstanceOf[Vector3i]
+					anchor = packet.readStorable().asInstanceOf[Vector3D]
 					previewMode = packet.readInt()
 					doAnchor = packet.readBoolean()
 					clientMoveTime = packet.readInt
@@ -494,7 +490,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 		else {
 			packet.getID match {
 				case PacketBlock.toggleMode =>
-					anchor = new Vector3i()
+					anchor = Vector3D.ZERO
 					markDirty()
 				case PacketBlock.toggleMode2 =>
 					previewMode = (previewMode + 1) % 3
@@ -519,7 +515,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 
 		if (bounds != null) {
 			val entities = world.getEntities(bounds)
-			entities.foreach(entity => moveEntity(entity, targetLocation._1, targetLocation._2.toDouble + 0.5 + entity.transform.position() - (getAbsoluteAnchor.toDouble + 0.5)))
+			entities.foreach(entity => moveEntity(entity, targetLocation._1, targetLocation._2 + 0.5 + entity.transform.position() - (getAbsoluteAnchor + 0.5)))
 		}
 	}
 
@@ -531,16 +527,16 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 		return new Cuboid(minScale, maxScale)
 	}
 
-	override def getTranslation: Vector3i = super.getTranslation + anchor
+	override def getTranslation: Vector3D = super.getTranslation + anchor
 
-	protected def moveEntity(entity: Entity, targetWorld: World, targetPos: Vector3d) {
+	protected def moveEntity(entity: Entity, targetWorld: World, targetPos: Vector3D) {
 		if (entity != null && targetPos != null) {
 			if (!entity.transform.world().sameType(targetWorld)) {
 				entity.transform.setWorld(targetWorld)
 				//entity.travelToDimension(targetPos.world.provider.dimensionId)
 			}
 
-			entity.get(classOf[RigidBody]).setVelocity(Vector3d.zero)
+			entity.get(classOf[RigidBody]).setVelocity(Vector3D.ZERO)
 		}
 	}
 
@@ -572,7 +568,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 		return animationTime
 	}
 
-	override def doGetFortronCost: Int = Math.round(super.doGetFortronCost + (if (this.anchor != null) this.anchor.magnitude * 1000 else 0)).toInt
+	override def doGetFortronCost: Int = Math.round(super.doGetFortronCost + (if (this.anchor != null) this.anchor.getNorm * 1000 else 0)).toInt
 
 	/*
 	override def isItemValidForSlot(slotID: Int, item: Item): Boolean = {
@@ -628,7 +624,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 	 * @param blockPositions - The set of block positions to be moved.
 	 * @return The set of block positions actually moved
 	 */
-	protected def moveBlocks(blockPositions: Set[Vector3i]): Set[Vector3i] = {
+	protected def moveBlocks(blockPositions: Set[Vector3D]): Set[Vector3D] = {
 		if (EDX.network.isServer) {
 			val actualMovables = blockPositions
 				.filter(blockPos => {
@@ -636,7 +632,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 				opBlock.isPresent && EDX.blocks.getAirBlock.sameType(opBlock.get()) && !sameType(opBlock.get())
 			})
 
-			var moveMap = Map.empty[(World, Vector3i), (World, Vector3i)]
+			var moveMap = Map.empty[(World, Vector3D), (World, Vector3D)]
 
 			actualMovables.foreach(blockPos => {
 				val relativePosition = blockPos - getAbsoluteAnchor
@@ -650,7 +646,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 		return Set.empty
 	}
 
-	private def doMove(moveMap: Map[(World, Vector3i), (World, Vector3i)]) {
+	private def doMove(moveMap: Map[(World, Vector3D), (World, Vector3D)]) {
 
 		//TODO: Check if parallel is ok.
 		//Time has passed. Check if we can still move the blocks.
@@ -670,7 +666,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 			return
 		}
 
-		var newDataMap = Map.empty[(World, Vector3i), (String, Data)]
+		var newDataMap = Map.empty[(World, Vector3D), (String, Data)]
 
 		//Do the pre-move, which sets all blocks to air first.
 		moveMap.foreach {

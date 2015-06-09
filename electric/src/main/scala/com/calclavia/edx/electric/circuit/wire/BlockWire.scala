@@ -3,25 +3,26 @@ package com.calclavia.edx.electric.circuit.wire
 import java.lang.{Iterable => JIterable}
 import java.util.{Optional, Set => JSet}
 
+import com.calclavia.edx.core.EDX
 import com.calclavia.edx.core.prefab.BlockEDX
 import com.calclavia.edx.electric.ElectricContent
 import com.calclavia.edx.electric.api.Electric
 import com.calclavia.edx.electric.api.Electric.GraphBuiltEvent
 import com.calclavia.edx.electric.grid.NodeElectricJunction
 import com.calclavia.microblock.micro.{Microblock, MicroblockContainer}
-import com.resonant.lib.WrapFunctions._
 import nova.core.block.Block.{BlockPlaceEvent, RightClickEvent}
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.misc.Collider
 import nova.core.component.renderer.ItemRenderer
-import com.calclavia.edx.core.EDX
-import nova.core.network.{Packet, Syncable, Sync}
+import nova.core.network.{Packet, Sync, Syncable}
 import nova.core.render.model.{BlockModelUtil, Model, StaticCubeTextureCoordinates}
 import nova.core.retention.{Storable, Store}
-import nova.core.util.transform.matrix.Quaternion
-import nova.core.util.transform.shape.Cuboid
-import nova.core.util.transform.vector.Vector3d
-import nova.core.util.{Direction, RotationUtil}
+import nova.core.util.Direction
+import nova.core.util.math.RotationUtil
+import nova.core.util.shape.Cuboid
+import nova.scala.wrapper.FunctionalWrapper._
+import nova.scala.wrapper.VectorWrapper._
+import org.apache.commons.math3.geometry.euclidean.threed.{Rotation, Vector3D}
 
 import scala.collection.convert.wrapAll._
 
@@ -44,21 +45,21 @@ object BlockWire {
 	def init() {
 		for (s <- 0 until 6) {
 			val rot = s match {
-				case 0 => Quaternion.identity
-				case 1 => Quaternion.fromAxis(Vector3d.xAxis, Math.PI)
-				case 2 => Quaternion.fromEuler(Math.PI, -Math.PI / 2)
-				case 3 => Quaternion.fromAxis(Vector3d.xAxis, -Math.PI / 2)
-				case 4 => Quaternion.fromEuler(-Math.PI / 2, -Math.PI / 2)
-				case 5 => Quaternion.fromEuler(Math.PI / 2, -Math.PI / 2)
+				case 0 => Rotation.IDENTITY
+				case 1 => new Rotation(Vector3D.PLUS_I, Math.PI)
+				case 2 => new Rotation(RotationUtil.DEFAULT_ORDER, Math.PI, -Math.PI / 2, 0)
+				case 3 => new Rotation(Vector3D.PLUS_I, -Math.PI / 2)
+				case 4 => new Rotation(RotationUtil.DEFAULT_ORDER, -Math.PI / 2, -Math.PI / 2, 0)
+				case 5 => new Rotation(RotationUtil.DEFAULT_ORDER, Math.PI / 2, -Math.PI / 2, 0)
 			}
 
-			val center = new Cuboid(width, 0, width, 1 - width, thickness, 1 - width) - 0.5
+			val center = new Cuboid(width, 0, width, 1 - width, thickness, 1 - width)
 
 			//Short sides
 			val sides = (0 until 4)
 				.map(RotationUtil.rotateSide(0, _))
 				.map(Direction.fromOrdinal)
-				.map(d => center + (d.toVector.toDouble * width))
+				.map(d => center + (d.toVector * width))
 				.toSeq
 
 			//Long sides
@@ -66,12 +67,12 @@ object BlockWire {
 				.map(RotationUtil.rotateSide(0, _))
 				.map(Direction.fromOrdinal)
 				.map(
-					d => {
-						val dir = d.toVector.toDouble
-						val min = if (d.toVector.x < 0 || d.toVector.y < 0 || d.toVector.z < 0) dir * thickness else Vector3d.zero
-						val max = if (d.toVector.x > 0 || d.toVector.y > 0 || d.toVector.z > 0) dir * thickness else Vector3d.zero
-						(center + (dir * width)) + new Cuboid(min, max)
-					}
+			    d => {
+				    val dir = d.toVector
+				    val min = if (d.toVector.x < 0 || d.toVector.y < 0 || d.toVector.z < 0) dir * thickness else Vector3D.ZERO
+				    val max = if (d.toVector.x > 0 || d.toVector.y > 0 || d.toVector.z > 0) dir * thickness else Vector3D.ZERO
+				    (center + (dir * width)) + new Cuboid(min, max)
+			    }
 				)
 				.toSeq
 
@@ -121,13 +122,12 @@ class BlockWire extends BlockEDX with Storable with Syncable {
 
 	private val microblock = add(new Microblock(this))
 		.setOnPlace(
-			(evt: BlockPlaceEvent) => {
-				this.side = evt.side.opposite.ordinal.toByte
-				//TODO: Fix wire material
-				BlockWire.init()
-				get(classOf[MaterialWire]).material = WireMaterial.COPPER
-				Optional.of(MicroblockContainer.sidePosition(Direction.fromOrdinal(this.side)))
-			}
+	    (evt: BlockPlaceEvent) => {
+		    this.side = evt.side.opposite.ordinal.toByte
+		    //TODO: Fix wire material
+		    get(classOf[MaterialWire]).material = WireMaterial.COPPER
+		    Optional.of(MicroblockContainer.sidePosition(Direction.fromOrdinal(this.side)))
+	    }
 		)
 	@Sync
 	@Store
@@ -135,29 +135,29 @@ class BlockWire extends BlockEDX with Storable with Syncable {
 
 	add(new StaticBlockRenderer(this))
 		.setOnRender(
-			(model: Model) => {
-				get(classOf[Collider]).occlusionBoxes.apply(Optional.empty()).foreach(cuboid => {
-					BlockModelUtil.drawCube(model, cuboid - 0.5, StaticCubeTextureCoordinates.instance)
-				})
+	    (model: Model) => {
+		    get(classOf[Collider]).occlusionBoxes.apply(Optional.empty()).foreach(cuboid => {
+			    BlockModelUtil.drawCube(model, cuboid - 0.5, StaticCubeTextureCoordinates.instance)
+		    })
 
-				model.faces.foreach(_.vertices.map(_.setColor(get(classOf[MaterialWire]).material.color)))
-				model.bindAll(ElectricContent.wireTexture)
-			}
+		    model.faces.foreach(_.vertices.map(_.setColor(get(classOf[MaterialWire]).material.color)))
+		    model.bindAll(ElectricContent.wireTexture)
+	    }
 		)
 
 	private val itemRenderer = add(new ItemRenderer(this))
 		.setOnRender(
-			(model: Model) => {
-				(0 until 5)
-					.map(dir => BlockWire.occlusionBounds(side)(dir))
-					.foreach(cuboid => {
-					BlockModelUtil.drawCube(model, cuboid, StaticCubeTextureCoordinates.instance)
-				})
+	    (model: Model) => {
+		    (0 until 5)
+			    .map(dir => BlockWire.occlusionBounds(side)(dir))
+			    .foreach(cuboid => {
+			    BlockModelUtil.drawCube(model, cuboid - 0.5, StaticCubeTextureCoordinates.instance)
+		    })
 
-				//TODO: Change color
-				model.faces.foreach(_.vertices.map(_.setColor(WireMaterial.COPPER.color)))
-				model.bindAll(ElectricContent.wireTexture)
-			}
+		    //TODO: Change color
+		    model.faces.foreach(_.vertices.map(_.setColor(WireMaterial.COPPER.color)))
+		    model.bindAll(ElectricContent.wireTexture)
+	    }
 		)
 
 	electricNode.setConnections(() => computeConnection)
@@ -178,17 +178,17 @@ class BlockWire extends BlockEDX with Storable with Syncable {
 	rightClickEvent.add((evt: RightClickEvent) => if (EDX.network.isServer) System.out.println(electricNode))
 
 	collider.setBoundingBox(() => {
-		BlockWire.occlusionBounds(side)(4) + 0.5
+		BlockWire.occlusionBounds(side)(4)
 	})
 		.setOcclusionBoxes(func(entity => {
 		var cuboids = Set.empty[Cuboid]
-		cuboids += BlockWire.occlusionBounds(side)(4) + 0.5
+		cuboids += BlockWire.occlusionBounds(side)(4)
 		cuboids ++= (0 until 4)
 			.collect {
 			case dir if (connectionMask & (1 << (dir * 2))) != 0 && (connectionMask & (1 << (dir * 2 + 1))) != 0 =>
-				BlockWire.occlusionBounds(side)(dir + 5) + 0.5
+				BlockWire.occlusionBounds(side)(dir + 5)
 			case dir if (connectionMask & (1 << (dir * 2))) != 0 || (connectionMask & (1 << (dir * 2 + 1))) != 0 =>
-				BlockWire.occlusionBounds(side)(dir) + 0.5
+				BlockWire.occlusionBounds(side)(dir)
 		}
 		cuboids
 	}))

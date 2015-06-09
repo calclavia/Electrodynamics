@@ -7,8 +7,9 @@ import java.util.Collections
 import com.calclavia.edx.core.extension.GraphExtension._
 import com.calclavia.edx.electric.api.Electric.{ElectricChangeEvent, GraphBuiltEvent}
 import com.calclavia.edx.electric.api.{Electric, ElectricComponent}
-import com.resonant.lib.WrapFunctions._
-import nova.core.util.transform.matrix.Matrix
+import nova.scala.wrapper.FunctionalWrapper._
+import nova.scala.wrapper.MatrixWrapper._
+import org.apache.commons.math3.linear.{LUDecomposition, MatrixUtils, RealMatrix}
 import org.jgrapht.alg.ConnectivityInspector
 import org.jgrapht.ext.{DOTExporter, VertexNameProvider}
 import org.jgrapht.graph.{DefaultDirectedGraph, DefaultEdge}
@@ -144,7 +145,7 @@ class ElectricGrid {
 	//The components in the circuit
 	var components = List.empty[Component]
 	//The modified nodal analysis matrix (A) in Ax=b linear equation.
-	var mna: Matrix = null
+	var mna: RealMatrix = null
 	//A list of voltage sources
 	var voltageSources = List.empty[Component]
 	//A list of current sources
@@ -152,7 +153,7 @@ class ElectricGrid {
 	//A list of resistors
 	var resistors = List.empty[Component]
 	//The source matrix (B)
-	protected[grid] var sourceMatrix: Matrix = null
+	protected[grid] var sourceMatrix: RealMatrix = null
 
 	/**
 	 * Finds all the nodes that are interconnected
@@ -325,32 +326,37 @@ class ElectricGrid {
 			//exportGraph(electricGraph, "Electric Grid " + gridID)
 			connectionGraph.vertexSet()
 				.foreach(
-					v => v.onGridBuilt.publish(new GraphBuiltEvent(connectionGraph.connectionsOf(v)))
+			    v => v.onGridBuilt.publish(new GraphBuiltEvent(connectionGraph.connectionsOf(v)))
 				)
 		}
 		return this
 	}
 
 	var updateFuture: Future[Unit] = _
+	var enableThreading = true
 
 	def requestUpdate(resistorChanged: Boolean = true, sourceChanged: Boolean = true) {
-		if (updateFuture == null || updateFuture.isCompleted) {
-			updateFuture = Future {
-				update()
+		if (enableThreading) {
+			if (updateFuture == null || updateFuture.isCompleted) {
+				updateFuture = Future {
+					update()
+				}
+				updateFuture.onComplete {
+					case Success(nothing) => println("Circuit solved")
+					case Failure(ex) => println("Circuit failed: " + ex.printStackTrace)
+				}
 			}
-			updateFuture.onComplete {
-				case Success(nothing) => println("Circuit solved")
-				case Failure(ex) => println("Circuit failed: " + ex.printStackTrace)
+			else {
+				//	updateFuture.onComplete(f => requestUpdate())
 			}
-		}
-		else {
-			//	updateFuture.onComplete(f => requestUpdate())
+		} else {
+			update(resistorChanged, sourceChanged)
 		}
 	}
 
 	def update(resistorChanged: Boolean = true, sourceChanged: Boolean = true) {
 		electricGraph.synchronized {
-			//Reset all componets
+			//Reset all components
 			electricGraph.vertexSet().foreach {
 				case component: Component =>
 					component.component.voltage = 0
@@ -411,7 +417,8 @@ class ElectricGrid {
 		voltageSources = components.collect { case source if source.component.genVoltage != 0 => source }
 		currentSources = components.collect { case source if source.component.genCurrent != 0 => source }
 		resistors = components diff voltageSources diff currentSources
-		mna = new Matrix(voltageSources.size + junctions.size)
+		val n = voltageSources.size + junctions.size
+		mna = MatrixUtils.createRealMatrix(n, n)
 	}
 
 	/**
@@ -482,17 +489,17 @@ class ElectricGrid {
 	 * It contains two parts. This matrix is only recalculated when sources change.
 	 */
 	def computeSourceMatrix() {
-		sourceMatrix = new Matrix(junctions.size + voltageSources.size, 1)
+		sourceMatrix = MatrixUtils.createRealMatrix(junctions.size + voltageSources.size, 1)
 
 		//Part one: The sum of current sources corresponding to a particular node
 		junctions.indices.foreach(i => {
 			//A set of current sources that is going into this junction
 			sourceMatrix(i, 0) = currentSources
 				.filter(
-					source =>
-						//TODO: note tested
-						(electricGraph.sourcesOf(source).contains(junctions(i)) && source.component.current > 0) ||
-							(electricGraph.targetsOf(source).contains(junctions(i)) && source.component.current < 0)
+			    source =>
+				    //TODO: note tested
+				    (electricGraph.sourcesOf(source).contains(junctions(i)) && source.component.current > 0) ||
+					    (electricGraph.targetsOf(source).contains(junctions(i)) && source.component.current < 0)
 				)
 				.map(_.component.current)
 				.sum
@@ -507,7 +514,7 @@ class ElectricGrid {
 	 */
 	def solve() {
 		if (electricGraph.vertexSet().size() > 2) {
-			val x = mna.solve(sourceMatrix)
+			val x = new LUDecomposition(mna).getSolver.solve(sourceMatrix)
 
 			//Retrieve the voltage of the junctions
 			junctions.indices.foreach(i => junctions(i).voltage = x(i, 0))

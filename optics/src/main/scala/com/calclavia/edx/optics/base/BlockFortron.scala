@@ -5,7 +5,8 @@ import java.util.{Collections, Set => JSet}
 import com.calclavia.edx.optics.GraphFrequency
 import com.calclavia.edx.optics.api.fortron.FortronFrequency
 import com.calclavia.edx.optics.util.{FortronUtility, TransferMode}
-import com.resonant.lib.WrapFunctions._
+import nova.scala.wrapper.FunctionalWrapper
+import FunctionalWrapper._
 import nova.core.block.Block
 import nova.core.block.Stateful.UnloadEvent
 import nova.core.event.EventBus

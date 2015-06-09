@@ -5,7 +5,7 @@ import com.calclavia.edx.optics.api.machine.Projector;
 import com.resonant.core.structure.Structure;
 import nova.core.block.Block;
 import nova.core.entity.Entity;
-import nova.core.util.transform.vector.Vector3i;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.Set;
 
@@ -18,11 +18,11 @@ public interface Module extends FortronCost {
 	 * @param projector
 	 * @return True to stop projecting.
 	 */
-	default boolean onCreateField(Projector projector, Set<Vector3i> field) {
+	default boolean onCreateField(Projector projector, Set<Vector3D> field) {
 		return false;
 	}
 
-	default boolean onDestroyField(Projector projector, Set<Vector3i> field) {
+	default boolean onDestroyField(Projector projector, Set<Vector3D> field) {
 		return false;
 	}
 
@@ -30,7 +30,7 @@ public interface Module extends FortronCost {
 	 * Called right before the projector creates a force field block.
 	 * @return The ProjectState, an instruction for the projector.
 	 */
-	default ProjectState onProject(Projector projector, Vector3i position) {
+	default ProjectState onProject(Projector projector, Vector3D position) {
 		return ProjectState.pass;
 	}
 

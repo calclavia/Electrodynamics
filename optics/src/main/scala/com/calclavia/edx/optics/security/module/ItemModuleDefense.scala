@@ -1,7 +1,8 @@
 package com.calclavia.edx.optics.security.module
 
 import com.calclavia.edx.optics.base.ItemModule
-import com.resonant.lib.WrapFunctions._
+import nova.scala.wrapper.FunctionalWrapper
+import FunctionalWrapper._
 import com.calclavia.edx.core.EDX
 import nova.core.item.Item.TooltipEvent
 

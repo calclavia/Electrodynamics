@@ -3,28 +3,27 @@ package com.calclavia.edx.optics.beam
 import java.util.function.Supplier
 import java.util.{Set => JSet}
 
+import com.calclavia.edx.core.EDX
 import com.calclavia.edx.core.prefab.BlockEDX
 import com.calclavia.edx.electric.api.{ConnectionBuilder, Electric}
 import com.calclavia.edx.electric.grid.NodeElectricComponent
 import com.calclavia.edx.optics.content.{OpticsModels, OpticsTextures}
 import com.calclavia.edx.optics.grid.{ElectromagneticBeam, OpticGrid, OpticHandler}
-import com.resonant.lib.WrapFunctions._
 import nova.core.block.Block.RightClickEvent
 import nova.core.block.Stateful
 import nova.core.block.component.{LightEmitter, StaticBlockRenderer}
 import nova.core.component.renderer.ItemRenderer
 import nova.core.component.transform.Orientation
 import nova.core.event.Event
-import com.calclavia.edx.core.EDX
-import nova.core.network.{Sync, Packet, Syncable}
+import nova.core.network.{Packet, Sync, Syncable}
 import nova.core.render.model.Model
-import nova.core.retention.{Store, Data, Storable}
-import nova.core.util.transform.matrix.Quaternion
-import nova.core.util.transform.vector.Vector3d
+import nova.core.retention.{Data, Storable, Store}
 import nova.core.util.{Direction, Ray}
 import nova.scala.component.IO
 import nova.scala.util.ExtendedUpdater
-
+import nova.scala.wrapper.FunctionalWrapper._
+import nova.scala.wrapper.VectorWrapper._
+import org.apache.commons.math3.geometry.euclidean.threed.{Rotation, Vector3D}
 /**
  * An emitter that shoots out lasers.
  *
@@ -86,22 +85,22 @@ class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater with
 	renderer.setOnRender(
 		(model: Model) => {
 			val rot = orientation.orientation match {
-				case Direction.UP => Quaternion.fromAxis(Vector3d.xAxis, -Math.PI / 2)
-				case Direction.DOWN => Quaternion.fromAxis(Vector3d.xAxis, Math.PI / 2)
-				case Direction.SOUTH => Quaternion.fromAxis(Vector3d.yAxis, Math.PI / 2)
-				case Direction.NORTH => Quaternion.fromAxis(Vector3d.yAxis, -Math.PI / 2)
-				case Direction.WEST => Quaternion.fromAxis(Vector3d.yAxis, Math.PI)
-				case Direction.EAST => Quaternion.fromAxis(Vector3d.yAxis, 0)
-				case _ => Quaternion.identity
+				case Direction.UP => new Rotation(Vector3D.PLUS_I, -Math.PI / 2)
+				case Direction.DOWN => new Rotation(Vector3D.PLUS_I, Math.PI / 2)
+				case Direction.SOUTH => new Rotation(Vector3D.PLUS_J, Math.PI / 2)
+				case Direction.NORTH => new Rotation(Vector3D.PLUS_J, -Math.PI / 2)
+				case Direction.WEST => new Rotation(Vector3D.PLUS_J, Math.PI)
+				case Direction.EAST => new Rotation(Vector3D.PLUS_J, 0)
+				case _ => Rotation.IDENTITY
 			}
 
-			model.rotate(rot)
+			model.matrix.rotate(rot)
 
 			if (orientation.orientation.y == 0) {
-				model.rotate(Vector3d.yAxis, -Math.PI / 2)
+				model.matrix.rotate(Vector3D.PLUS_J, -Math.PI / 2)
 			}
 			else {
-				model.rotate(Vector3d.xAxis, Math.PI)
+				model.matrix.rotate(Vector3D.PLUS_I, Math.PI)
 			}
 
 			model.children.add(OpticsModels.laserEmitterModel.getModel)
@@ -114,10 +113,10 @@ class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater with
 
 		if (EDX.network.isServer) {
 			if (electricNode.power > 0) {
-				val dir = orientation.orientation.toVector.toDouble
+				val dir = orientation.orientation.toVector
 				val beam = new ElectromagneticBeam()
 				beam.world = world
-				beam.source = new Ray(position.toDouble + 0.5 + dir * 0.51, dir)
+				beam.source = new Ray(position + 0.5 + dir * 0.51, dir)
 				beam.renderOffset = -dir * 0.31
 				beam.power = electricNode.power
 				optic.create(beam)

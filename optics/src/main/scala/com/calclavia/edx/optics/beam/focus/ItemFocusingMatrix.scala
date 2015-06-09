@@ -1,4 +1,6 @@
-package com.calclavia.edx.optics..circuit.component.laser.focus
+package com.calclavia.edx.optics.beam.focus
+
+import nova.core.item.Item
 
 import scala.util.Random
 

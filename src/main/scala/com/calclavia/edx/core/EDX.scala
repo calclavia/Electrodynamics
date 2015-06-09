@@ -1,6 +1,5 @@
 package com.calclavia.edx.core
 
-import nova.resources.ResourceFactory
 import nova.core.block.BlockManager
 import nova.core.component.ComponentManager
 import nova.core.entity.EntityManager
@@ -17,7 +16,7 @@ import nova.core.recipes.crafting.CraftingRecipeManager
 import nova.core.render.RenderManager
 import nova.core.util.{LanguageManager, RetentionManager}
 import nova.core.world.WorldManager
-import nova.internal.tick.UpdateTicker
+import nova.internal.core.tick.UpdateTicker
 import org.slf4j.Logger
 
 /**

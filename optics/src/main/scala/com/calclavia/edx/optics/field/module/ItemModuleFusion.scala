@@ -6,7 +6,7 @@ import com.calclavia.edx.optics.api.modules.Module.ProjectState
 import com.calclavia.edx.optics.base.ItemModule
 import com.calclavia.edx.optics.field.BlockProjector
 import nova.core.block.Block
-import nova.core.util.transform.vector.Vector3i
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 /**
  * The fusion module attempts to fuse a force field with another.
@@ -20,7 +20,7 @@ class ItemModuleFusion extends ItemModule {
 
 	override def getID: String = "moduleFusion"
 
-	override def onProject(projector: Projector, position: Vector3i): ProjectState = {
+	override def onProject(projector: Projector, position: Vector3D): ProjectState = {
 		if (GraphFrequency.instance
 			.get(projector.getFrequency)
 			.view
@@ -28,7 +28,7 @@ class ItemModuleFusion extends ItemModule {
 			.filter(_.world() == projector.asInstanceOf[Block].world())
 			.filter(_.isActive)
 			.filter(_.getShapeItem != null)
-			.exists(_.isInField(position.toDouble))) {
+			.exists(_.isInField(position))) {
 			return ProjectState.skip
 		}
 

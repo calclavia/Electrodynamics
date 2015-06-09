@@ -4,7 +4,7 @@ import com.calclavia.edx.optics.api.machine.Projector
 import com.calclavia.edx.optics.field.structure.StructureCylinder
 import com.resonant.core.structure.Structure
 import nova.core.render.model.{BlockModelUtil, Model}
-import nova.core.util.transform.vector.Vector3d
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 /**
  * A cylinder mode.
@@ -24,16 +24,16 @@ class ItemShapeCylinder extends ItemShape {
 		val detail = 0.5f
 		val radius = (1.5f * detail).toInt
 
-		model.scale(scale, scale, scale)
+		model.matrix.scale(scale, scale, scale)
 
 		var i = 0
 
 		for (renderX <- -radius to radius; renderY <- -radius to radius; renderZ <- -radius to radius) {
 			if (((renderX * renderX + renderZ * renderZ + radiusExpansion) <= (radius * radius) && (renderX * renderX + renderZ * renderZ + radiusExpansion) >= ((radius - 1) * (radius - 1))) || ((renderY == 0 || renderY == radius - 1) && (renderX * renderX + renderZ * renderZ + radiusExpansion) <= (radius * radius))) {
 				if (i % 2 == 0) {
-					val vector = new Vector3d(renderX / detail, renderY / detail, renderZ / detail)
+					val vector = new Vector3D(renderX / detail, renderY / detail, renderZ / detail)
 					val cube = BlockModelUtil.drawCube(new Model())
-					cube.translate(vector.x, vector.y, vector.z)
+					cube.matrix.translate(vector.getX(), vector.getY(), vector.getZ())
 					model.children.add(cube)
 				}
 				i += 1

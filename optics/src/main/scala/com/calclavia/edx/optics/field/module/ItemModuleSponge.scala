@@ -7,7 +7,7 @@ import com.calclavia.edx.optics.base.ItemModule
 import com.calclavia.edx.optics.field.BlockProjector
 import nova.core.fluid.FluidBlock
 import nova.core.network.NetworkTarget.Side
-import nova.core.util.transform.vector.Vector3i
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 import scala.collection.convert.wrapAll._
 
@@ -16,7 +16,7 @@ class ItemModuleSponge extends ItemModule {
 
 	override def getID: String = "moduleSponge"
 
-	override def onCreateField(projector: Projector, field: util.Set[Vector3i]): Boolean = {
+	override def onCreateField(projector: Projector, field: util.Set[Vector3D]): Boolean = {
 		val proj = projector.asInstanceOf[BlockProjector]
 
 		if (proj.getTicks % 60 == 0) {

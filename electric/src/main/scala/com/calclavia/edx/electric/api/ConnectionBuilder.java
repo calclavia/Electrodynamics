@@ -3,6 +3,7 @@ package com.calclavia.edx.electric.api;
 import com.calclavia.microblock.micro.MicroblockContainer;
 import nova.core.block.Block;
 import nova.core.util.Direction;
+import nova.core.util.math.Vector3DUtil;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -14,7 +15,6 @@ import java.util.stream.Collectors;
 
 /**
  * Builds connections
- *
  * @author Calclavia
  */
 public class ConnectionBuilder<T> {
@@ -69,7 +69,12 @@ public class ConnectionBuilder<T> {
 			.entrySet()
 			.stream()
 			.filter(entry -> entry.getValue().isPresent())
-			.collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().get()));
+			.collect(
+				Collectors.toMap(
+				Map.Entry::getKey,
+				entry -> entry.getValue().get()
+			)
+			);
 
 		Set<T> direct = blocks
 			.values()
@@ -95,17 +100,17 @@ public class ConnectionBuilder<T> {
 						.filter(
 							//Find all directions except the facing dir and its opposite
 							dir ->
-								!dir.toVector().toDouble().abs().equals(
-									//TODO: Use HashBiMap
-									blocks.entrySet()
-										.stream()
-										.filter(entry -> entry.getValue() == container.block)
-										.map(Map.Entry::getKey)
-										.findFirst()
-										.get()
-										.toVector()
-										.toDouble()
-										.abs()
+								!Vector3DUtil.abs(dir.toVector()).equals(
+									Vector3DUtil.abs(
+										//TODO: Use HashBiMap
+										blocks.entrySet()
+											.stream()
+											.filter(entry -> entry.getValue() == container.block)
+											.map(Map.Entry::getKey)
+											.findFirst()
+											.get()
+											.toVector()
+									)
 								)
 						)
 						.map(container::get)

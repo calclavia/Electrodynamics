@@ -3,7 +3,7 @@ package com.calclavia.graph.thermal
 import net.minecraft.block.material.Material
 import net.minecraft.world.World
 import net.minecraftforge.fluids.FluidStack
-import nova.core.util.transform.vector.Vector3d
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 /**
  * A thermal block manager
@@ -70,7 +70,7 @@ object ThermalPhysics {
 	}
 
 	def getRequiredBoilWaterEnergy(world: World, x: Int, z: Int, volume: Int): Double = {
-		val temperatureChange: Float = 373 - ThermalPhysics.getDefaultTemperature(world, new Vector3d(x, 0, z))
+		val temperatureChange: Float = 373 - ThermalPhysics.getDefaultTemperature(world, new Vector3D(x, 0, z))
 		val mass: Float = getMass(volume, 1)
 		return ThermalPhysics.getEnergyForTemperatureChange(mass, 4200, temperatureChange) + ThermalPhysics.getEnergyForStateChange(mass, 2257000)
 	}
@@ -80,8 +80,8 @@ object ThermalPhysics {
 	 *
 	 * @return The temperature of the coordinate in the world in kelvin.
 	 */
-	def getDefaultTemperature(world: World, vectorWorld: Vector3d): Int = {
-		val averageTemperature = 273 + ((world.getBiomeGenForCoords(vectorWorld.xi, vectorWorld.zi).getFloatTemperature(vectorWorld.xi, 0, vectorWorld.zi) - 0.4) * 50).toInt
+	def getDefaultTemperature(world: World, vectorWorld: Vector3D): Int = {
+		val averageTemperature = 273 + ((world.getBiomeGenForCoords(vectorWorld.getX, vectorWorld.getZ).getFloatTemperature(vectorWorld.getX, 0, vectorWorld.getZ) - 0.4) * 50).toInt
 		val dayNightVariance = averageTemperature * 0.05
 		return (averageTemperature + (if (world.isDaytime) dayNightVariance else -dayNightVariance)).toInt
 	}

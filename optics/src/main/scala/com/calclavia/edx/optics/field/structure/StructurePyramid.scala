@@ -1,8 +1,8 @@
 package com.calclavia.edx.optics.field.structure
 
 import com.resonant.core.structure.Structure
-import nova.core.util.transform.shape.Cuboid
-import nova.core.util.transform.vector.Vector3d
+import nova.core.util.shape.Cuboid
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 /**
  * @author Calclavia
@@ -21,11 +21,11 @@ class StructurePyramid extends Structure {
 	 * The transformation should be default.
 	 * @return The result of the equation. Zero if the position satisfy the equation.
 	 */
-	override def surfaceEquation(position: Vector3d): Double = {
+	override def surfaceEquation(position: Vector3D): Double = {
 
-		val yEquation = position.y - ySize / 2
-		val xEquation = position.x - (xSize - xDecr * (position.y + 0.5))
-		val zEquation = position.z - (zSize - zDecr * (position.y + 0.5))
+		val yEquation = position.getY() - ySize / 2
+		val xEquation = position.getX() - (xSize - xDecr * (position.getY() + 0.5))
+		val zEquation = position.getZ() - (zSize - zDecr * (position.getY() + 0.5))
 		return Math.max(Math.abs(yEquation), Math.max(Math.abs(xEquation), Math.abs(zEquation)))
 		/*
 		for (y <- -ySize to ySize) {
@@ -51,11 +51,11 @@ class StructurePyramid extends Structure {
 	 * The transformation should be default.
 	 * @return The result of the equation. Zero if the position satisfy the equation.
 	 */
-	override def volumeEquation(position: Vector3d): Double = {
+	override def volumeEquation(position: Vector3D): Double = {
 		val region: Cuboid = new Cuboid(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5)
 
-		if (region.intersects(position) && position.y > ySize / 2) {
-			if (1 - (Math.abs(position.x) / xSize) - (Math.abs(position.z) / zSize) > position.y / ySize) {
+		if (region.intersects(position) && position.getY() > ySize / 2) {
+			if (1 - (Math.abs(position.getX()) / xSize) - (Math.abs(position.getZ()) / zSize) > position.getY() / ySize) {
 				return 1
 			}
 		}

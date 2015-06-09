@@ -1,19 +1,18 @@
 package com.calclavia.edx.optics.item
 
+import com.calclavia.edx.core.EDX
 import com.calclavia.edx.optics.GraphFrequency
 import com.calclavia.edx.optics.api.MFFSEvent.EventForceMobilize
 import com.calclavia.edx.optics.api.card.CoordLink
 import com.calclavia.edx.optics.base.BlockFortron
-import com.calclavia.edx.optics.item.card.ItemCardFrequency
-import com.calclavia.edx.optics.fx.FieldColor
 import com.calclavia.edx.optics.beam.fx.EntityMagneticBeam
+import com.calclavia.edx.optics.fx.FieldColor
+import com.calclavia.edx.optics.item.card.ItemCardFrequency
 import com.calclavia.edx.optics.security.MFFSPermissions
 import com.calclavia.edx.optics.util.MFFSUtility
-import com.resonant.lib.WrapFunctions._
 import nova.core.block.Block
 import nova.core.entity.component.Player
 import nova.core.fluid.Fluid
-import com.calclavia.edx.core.EDX
 import nova.core.gui.InputManager.Key
 import nova.core.item.Item
 import nova.core.item.Item.{RightClickEvent, TooltipEvent, UseEvent}
@@ -21,9 +20,11 @@ import nova.core.network.NetworkTarget.Side
 import nova.core.retention.{Storable, Store}
 import nova.core.util.Direction
 import nova.core.util.collection.Tuple2
-import nova.core.util.transform.vector.{Vector3d, Vector3i}
 import nova.core.world.World
 import nova.energy.UnitDisplay
+import nova.scala.wrapper.FunctionalWrapper._
+import nova.scala.wrapper.VectorWrapper._
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 class ItemRemoteController extends ItemCardFrequency with CoordLink with Storable {
 	//TODO: Is this needed?
@@ -33,7 +34,7 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 	@Store
 	private var linkWorld: World = _
 	@Store
-	private var linkPos: Vector3i = _
+	private var linkPos: Vector3D = _
 
 	tooltipEvent.add(eventListener((evt: TooltipEvent) => {
 		if (linkWorld != null) {
@@ -42,7 +43,7 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 				//TODO: Get the real block name?
 				evt.tooltips.add(EDX.language.translate("info.item.linkedWith") + " " + block.get().getID)
 			}
-			evt.tooltips.add(linkPos.xi + ", " + linkPos.yi + ", " + linkPos.zi)
+			evt.tooltips.add(linkPos.getX + ", " + linkPos.getY + ", " + linkPos.getZ)
 			evt.tooltips.add(EDX.language.translate("info.item.dimension") + " '" + linkWorld.getID + "'")
 		}
 		else {
@@ -58,7 +59,7 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 			val block = linkWorld.getBlock(linkPos).get()
 
 			if (block != null) {
-				EDX.network.sendChat(evt.entity.asInstanceOf[Player], EDX.language.translate("message.remoteController.linked").replaceAll("#p", evt.position.x + ", " + evt.position.y + ", " + evt.position.z).replaceAll("#q", block.getID))
+				EDX.network.sendChat(evt.entity.asInstanceOf[Player], EDX.language.translate("message.remoteController.linked").replaceAll("#p", evt.position.getX() + ", " + evt.position.getY() + ", " + evt.position.getZ()).replaceAll("#q", block.getID))
 			}
 		}
 		evt.action = true
@@ -76,7 +77,7 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 					val player = evt.entity.get(classOf[Player])
 
 					var finished = false
-					if (MFFSUtility.hasPermission(linkWorld, linkPos.toDouble, MFFSPermissions.blockAccess, player) || MFFSUtility.hasPermission(linkWorld, linkPos.toDouble, MFFSPermissions.remoteControl, player)) {
+					if (MFFSUtility.hasPermission(linkWorld, linkPos, MFFSPermissions.blockAccess, player) || MFFSUtility.hasPermission(linkWorld, linkPos, MFFSPermissions.remoteControl, player)) {
 						val requiredEnergy = evt.entity.position().distance(linkPos) * (Fluid.bucketVolume / 100)
 						var receivedEnergy = 0
 						val fortronBlocks = GraphFrequency
@@ -92,14 +93,14 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 								if (Side.get().isServer) {
 									val newFX = evt.entity.world.addClientEntity(new EntityMagneticBeam(FieldColor.blue, 20))
 									newFX.setPosition(evt.entity.position /*.add(new Vector3d(0, entity.getEyeHeight - 0.2, 0))*/)
-									newFX.setTarget(fortronBlock.position.toDouble.add(0.5))
+									newFX.setTarget(fortronBlock.position + 0.5)
 								}
 								receivedEnergy += consumedEnergy
 							}
 
 							if (receivedEnergy >= requiredEnergy) {
 								try {
-									block.rightClickEvent.publish(new Block.RightClickEvent(evt.entity, Direction.UNKNOWN, Vector3d.zero))
+									block.rightClickEvent.publish(new Block.RightClickEvent(evt.entity, Direction.UNKNOWN, Vector3D.ZERO))
 								}
 								catch {
 									case e: Exception => {
@@ -125,7 +126,8 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 		linkWorld = null
 		linkPos = null
 	}
-	def getLink: Tuple2[World, Vector3i] = {
+
+	def getLink: Tuple2[World, Vector3D] = {
 		return new Tuple2(linkWorld, linkPos)
 	}
 
@@ -150,7 +152,7 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 		}
 	}
 
-	def setLink(world: World, pos: Vector3i) {
+	def setLink(world: World, pos: Vector3D) {
 		linkWorld = world
 		linkPos = pos
 	}

@@ -1,16 +1,12 @@
 package com.calclavia.edx.electric.grid
 
-import java.io.{File, FileWriter}
-
 import com.calclavia.edx.electric.api.Electric
-import com.resonant.lib.WrapFunctions._
 import nova.core.util.Profiler
-import nova.internal.launch.NovaLauncher
+import nova.internal.core.launch.NovaLauncher
+import nova.scala.wrapper.FunctionalWrapper._
 import nova.testutils.FakeBlock
 import nova.wrappertests.NovaLauncherTestFactory
 import org.assertj.core.api.Assertions._
-import org.jgrapht.Graph
-import org.jgrapht.ext.{DOTExporter, VertexNameProvider}
 import org.junit.{BeforeClass, Test}
 
 import scala.collection.convert.wrapAll._
@@ -83,8 +79,10 @@ class ElectricGridTest {
 
 		val profiler = new Profiler("Solving graph 1")
 
+		grid.enableThreading = false
+
 		for (trial <- 1 to 1000) {
-			val voltage = trial * 10d * Math.random()
+			val voltage = trial * 10d
 			battery.generateVoltage(voltage)
 			grid.update()
 
@@ -135,7 +133,7 @@ class ElectricGridTest {
 	def testSolve2() {
 		val profilerGen = new Profiler("Generate graph 2")
 
-		val graph = new ElectricGrid
+		val grid = new ElectricGrid
 
 		val battery = new DummyComponent("Battery")
 		val wire1 = new DummyWire("Wire 1")
@@ -150,22 +148,23 @@ class ElectricGridTest {
 		val components = connectInSeries(battery, wire1, wire2, resistor1, wire3, resistor2, wire4)
 		wire4.connect(battery)
 
-		components.foreach(graph.add)
+		components.foreach(grid.add)
 
-		graph.build()
+		grid.build()
 		profilerGen.end()
 
-		ElectricGrid.exportGraph(graph.electricGraph, "testSolve2")
+		ElectricGrid.exportGraph(grid.electricGraph, "testSolve2")
 
 		//One junction became the ground
-		assertThat(graph.junctions.size).isEqualTo(2)
+		assertThat(grid.junctions.size).isEqualTo(2)
 
 		val profiler = new Profiler("Solving graph 2")
+		grid.enableThreading = false
 
 		for (trial <- 1 to 1000) {
 			val voltage = trial * 10d
 			battery.generateVoltage(voltage)
-			graph.update()
+			grid.update()
 
 			val current = voltage / 3d
 			//Test battery
@@ -228,6 +227,7 @@ class ElectricGridTest {
 
 		//Using 1/R = 1/R1+1/R2+...
 		val totalResistance = 12 / 7d
+		grid.enableThreading = false
 
 		for (trial <- 1 to 1000) {
 			val voltage = trial * 10d * Math.random()
@@ -295,7 +295,7 @@ class ElectricGridTest {
 		battery1.connectNeg(wire2)
 		wire2.connect(battery1)
 
-		resistor1.connectNeg(wire1)
+		resistor1.connectNeg(wire2)
 		wire2.connect(resistor1)
 		resistor1.connectPos(wire3)
 		wire3.connect(resistor1)
@@ -326,14 +326,15 @@ class ElectricGridTest {
 		grid.add(wire4)
 
 		grid.build()
-		println(profilerGen)
+		profilerGen.end()
 
 		ElectricGrid.exportGraph(grid.electricGraph, "testSolve4")
 
 		val profiler = new Profiler("Solving graph 3")
+		grid.enableThreading = false
 
 		for (trial <- 1 to 1000) {
-			val voltage = trial * 10d * Math.random()
+			val voltage = trial * 10d
 			battery1.generateVoltage(voltage)
 			battery2.generateVoltage(voltage)
 			grid.update()
@@ -353,9 +354,10 @@ class ElectricGridTest {
 	def testSolve5() {
 		println("Conducting stress test.")
 
-		for (trial <- 10 to 1000 by 50) {
+		for (trial <- 100 to 2000 by 100) {
 
-			val graph = new ElectricGrid
+			val grid = new ElectricGrid
+			grid.enableThreading = false
 			val battery = new DummyComponent("Battery")
 			val resistors = (0 until trial).map(i => new DummyComponent("Resistor " + i)).toList
 
@@ -363,13 +365,13 @@ class ElectricGridTest {
 			connectInSeries(battery :: resistors: _*)
 			resistors.last.connectPos(battery)
 
-			graph.addRecursive(battery)
+			grid.addRecursive(battery)
 
 			val profilerGen = new Profiler("Generate graph with " + trial + " resistors").start()
-			graph.build()
+			grid.build()
 			profilerGen.end()
 
-			assertThat(graph.electricGraph.vertexSet().size()).isEqualTo((trial + 1) * 2)
+			assertThat(grid.electricGraph.vertexSet().size()).isEqualTo((trial + 1) * 2)
 
 			val voltage = trial * 10d * Math.random() + 0.1
 			battery.generateVoltage(voltage)
@@ -377,7 +379,7 @@ class ElectricGridTest {
 			//ElectricGrid.exportGraph(graph.electricGraph, "Stress Test " + trial)
 
 			val profiler = new Profiler("Solve circuit with " + trial + " resistors").start()
-			graph.update()
+			grid.update()
 			profiler.end()
 
 			val current = voltage / trial.toDouble
@@ -393,7 +395,6 @@ class ElectricGridTest {
 			})
 		}
 	}
-
 
 	class DummyComponent(val name: String = "Component") extends NodeElectricComponent(new FakeBlock("dummy")) {
 		var positivesCon = Set.empty[Electric]

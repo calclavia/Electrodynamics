@@ -1,10 +1,9 @@
-package com.resonant.wrapper.core.content
+package com.calclavia.edx.core.content
 
 import java.util.Optional
 
 import com.calclavia.edx.core.CoreContent
 import com.resonant.core.structure.Structure
-import com.resonant.lib.WrapFunctions._
 import nova.core.block.Block
 import nova.core.block.Block.RightClickEvent
 import nova.core.block.component.StaticBlockRenderer
@@ -12,7 +11,9 @@ import nova.core.component.Category
 import nova.core.component.transform.Orientation
 import nova.core.network.{Packet, Syncable}
 import nova.core.util.Direction
-import nova.internal.Game
+import nova.internal.core.Game
+import nova.scala.wrapper.FunctionalWrapper._
+import nova.scala.wrapper.VectorWrapper._
 
 object BlockCreativeBuilder {
 	var schematics: Seq[Structure] = Seq.empty

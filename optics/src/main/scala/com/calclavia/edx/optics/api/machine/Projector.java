@@ -1,8 +1,7 @@
 package com.calclavia.edx.optics.api.machine;
 
 import com.calclavia.edx.optics.api.Frequency;
-import nova.core.util.transform.vector.Vector3d;
-import nova.core.util.transform.vector.Vector3i;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.Set;
 
@@ -30,12 +29,12 @@ public interface Projector extends FieldMatrix, Frequency {
 	 * DO NOT modify this list. Read-only.
 	 * @return The actual force field block coordinates in the world.
 	 */
-	Set<Vector3i> getForceFields();
+	Set<Vector3D> getForceFields();
 
 	/**
 	 * Checks if this specific position is in the field.
 	 * @param pos World position
 	 * @return True if so
 	 */
-	boolean isInField(Vector3d pos);
+	boolean isInField(Vector3D pos);
 }

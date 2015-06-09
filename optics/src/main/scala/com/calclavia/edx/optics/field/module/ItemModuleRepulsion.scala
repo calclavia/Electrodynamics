@@ -7,8 +7,9 @@ import com.calclavia.edx.optics.base.ItemModule
 import com.calclavia.edx.optics.security.MFFSPermissions
 import nova.core.entity.Entity
 import nova.core.entity.component.{Player, RigidBody}
-import nova.core.util.transform.vector.{Vector3d, Vector3i}
-
+import nova.core.util.math.Vector3DUtil
+import nova.scala.wrapper.VectorWrapper._
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 /**
  * Generates a repulsion field instead of a solid one made out of blocks.
  * Entities are repelled from entering the force field.
@@ -19,8 +20,8 @@ class ItemModuleRepulsion extends ItemModule {
 
 	override def getID: String = "moduleRepulsion"
 
-	override def onCreateField(projector: Projector, field: JSet[Vector3i]): Boolean = {
-		val repellForce = Vector3d.one * Math.max(projector.getSidedModuleCount(factory()) / 20, 1.2)
+	override def onCreateField(projector: Projector, field: JSet[Vector3D]): Boolean = {
+		val repellForce = Vector3DUtil.ONE * Math.max(projector.getSidedModuleCount(factory()) / 20, 1.2)
 
 		getEntitiesInField(projector).par
 			.collect {
@@ -29,7 +30,7 @@ class ItemModuleRepulsion extends ItemModule {
 		}
 			.foreach(
 		    entity => {
-			    val repelDirection = entity.transform.position - (entity.transform.position.toInt.toDouble + 0.5).normalize
+			    val repelDirection = entity.transform.position - (entity.transform.position + 0.5).normalize
 			    val rigidBody = entity.get(classOf[RigidBody])
 			    val velocity = rigidBody.velocity
 			    val force = repelDirection * repellForce.max(velocity.abs)

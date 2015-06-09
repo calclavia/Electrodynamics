@@ -2,12 +2,12 @@ package com.calclavia.edx.optics.field
 
 import java.util.{Collections, Optional}
 
+import com.calclavia.edx.core.EDX
 import com.calclavia.edx.optics.api.machine.ForceField
 import com.calclavia.edx.optics.api.modules.Module
 import com.calclavia.edx.optics.content.{OpticsContent, OpticsTextures}
 import com.calclavia.edx.optics.security.MFFSPermissions
 import com.calclavia.edx.optics.util.MFFSUtility
-import com.resonant.lib.WrapFunctions._
 import nova.core.block.Block.DropEvent
 import nova.core.block.component.{LightEmitter, StaticBlockRenderer}
 import nova.core.block.{Block, BlockDefault}
@@ -16,13 +16,15 @@ import nova.core.component.misc.{Collider, Damageable}
 import nova.core.component.renderer.StaticRenderer
 import nova.core.entity.Entity
 import nova.core.entity.component.Player
-import com.calclavia.edx.core.EDX
 import nova.core.network.NetworkTarget.Side
-import nova.core.network.{Syncable, Sync}
+import nova.core.network.{Sync, Syncable}
 import nova.core.render.model.Model
 import nova.core.retention.{Storable, Store}
 import nova.core.util.Direction
-import nova.core.util.transform.vector.Vector3i
+import nova.scala.wrapper.FunctionalWrapper
+import nova.scala.wrapper.FunctionalWrapper._
+import nova.scala.wrapper.VectorWrapper._
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 class BlockForceField extends BlockDefault with Syncable with ForceField with Storable {
 
@@ -31,7 +33,7 @@ class BlockForceField extends BlockDefault with Syncable with ForceField with St
 	private var camoBlock: Block = null
 	@Store
 	@Sync
-	private var projector: Vector3i = null
+	private var projector: Vector3D = null
 
 	/**
 	 * Constructor
@@ -64,7 +66,7 @@ class BlockForceField extends BlockDefault with Syncable with ForceField with St
 			    if (projector.getModules().forall(stack => stack.asInstanceOf[Module].onFieldCollide(BlockForceField.this, entity))) {
 				    val biometricIdentifier = projector.getBiometricIdentifier
 
-				    if ((transform.position.toDouble + 0.5).distance(entity.transform.position) < 0.5) {
+					if ((transform.position + 0.5).distance(entity.transform.position) < 0.5) {
 					    if (Side.get().isServer && entity.has(classOf[Damageable])) {
 						    val entityLiving = entity.get(classOf[Damageable])
 
@@ -175,7 +177,7 @@ class BlockForceField extends BlockDefault with Syncable with ForceField with St
 		return null
 	}
 
-	def setProjector(position: Vector3i) {
+	def setProjector(position: Vector3D) {
 		projector = position
 
 		if (EDX.network.isServer) {

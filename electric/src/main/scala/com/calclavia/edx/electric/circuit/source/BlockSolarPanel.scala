@@ -3,20 +3,21 @@ package com.calclavia.edx.electric.circuit.source
 import java.util.function.Supplier
 import java.util.{Optional, Set => JSet}
 
+import com.calclavia.edx.core.EDX
 import com.calclavia.edx.core.prefab.BlockEDX
 import com.calclavia.edx.electric.ElectricContent
 import com.calclavia.edx.electric.api.{ConnectionBuilder, Electric}
 import com.calclavia.edx.electric.grid.NodeElectricComponent
-import com.resonant.lib.WrapFunctions._
 import nova.core.block.Stateful
 import nova.core.block.component.ConnectedTextureRenderer
 import nova.core.component.renderer.ItemRenderer
-import com.calclavia.edx.core.EDX
 import nova.core.render.model.{BlockModelUtil, Model}
 import nova.core.util.Direction
-import nova.core.util.transform.shape.Cuboid
+import nova.core.util.shape.Cuboid
 import nova.scala.component.IO
 import nova.scala.util.ExtendedUpdater
+import nova.scala.wrapper.FunctionalWrapper
+import nova.scala.wrapper.FunctionalWrapper._
 
 class BlockSolarPanel extends BlockEDX with ExtendedUpdater with Stateful {
 

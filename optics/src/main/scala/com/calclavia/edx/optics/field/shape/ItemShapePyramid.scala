@@ -4,7 +4,7 @@ import com.calclavia.edx.optics.api.machine.Projector
 import com.calclavia.edx.optics.field.structure.StructurePyramid
 import com.resonant.core.structure.Structure
 import nova.core.render.model.{Model, Vertex}
-import nova.core.util.transform.vector.Vector3d
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 class ItemShapePyramid extends ItemShape {
 	override def getID: String = "modePyramid"
@@ -16,15 +16,15 @@ class ItemShapePyramid extends ItemShape {
 		val width = 0.3f
 		val uvMaxX = 2
 		val uvMaxY = 2
-		val translation = new Vector3d(0, -0.4, 0)
-		model.rotate(new Vector3d(0, 0, 1), Math.PI)
+		val translation = new Vector3D(0, -0.4, 0)
+		model.matrix.rotate(new Vector3D(0, 0, 1), Math.PI)
 		val face = model.createFace()
-		face.drawVertex(new Vertex(0 + translation.x, 0 + translation.y, 0 + translation.z, 0, 0))
-		face.drawVertex(new Vertex(-width + translation.x, height + translation.y, -width + translation.z, -uvMaxX, -uvMaxY))
-		face.drawVertex(new Vertex(-width + translation.x, height + translation.y, width + translation.z, -uvMaxX, uvMaxY))
-		face.drawVertex(new Vertex(width + translation.x, height + translation.y, width + translation.z, uvMaxX, uvMaxY))
-		face.drawVertex(new Vertex(width + translation.x, height + translation.y, -width + translation.z, uvMaxX, -uvMaxY))
-		face.drawVertex(new Vertex(-width + translation.x, height + translation.y, -width + translation.z, -uvMaxX, -uvMaxY))
+		face.drawVertex(new Vertex(0 + translation.getX(), 0 + translation.getY(), 0 + translation.getZ(), 0, 0))
+		face.drawVertex(new Vertex(-width + translation.getX(), height + translation.getY(), -width + translation.getZ(), -uvMaxX, -uvMaxY))
+		face.drawVertex(new Vertex(-width + translation.getX(), height + translation.getY(), width + translation.getZ(), -uvMaxX, uvMaxY))
+		face.drawVertex(new Vertex(width + translation.getX(), height + translation.getY(), width + translation.getZ(), uvMaxX, uvMaxY))
+		face.drawVertex(new Vertex(width + translation.getX(), height + translation.getY(), -width + translation.getZ(), uvMaxX, -uvMaxY))
+		face.drawVertex(new Vertex(-width + translation.getX(), height + translation.getY(), -width + translation.getZ(), -uvMaxX, -uvMaxY))
 		model.drawFace(face)
 	}
 }
