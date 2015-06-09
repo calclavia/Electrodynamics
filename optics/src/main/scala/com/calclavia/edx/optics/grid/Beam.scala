@@ -1,16 +1,14 @@
 package com.calclavia.edx.optics.grid
 
-import java.util.stream.Collectors
-
+import com.calclavia.edx.core.EDX
 import com.calclavia.edx.optics.grid.OpticHandler.ReceiveBeamEvent
 import nova.core.component.Updater
-import com.calclavia.edx.core.EDX
 import nova.core.render.Color
 import nova.core.retention.{Data, Storable, Store}
 import nova.core.util.RayTracer.{RayTraceBlockResult, RayTraceEntityResult, RayTraceResult}
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 import nova.core.util.{Ray, RayTracer}
 import nova.core.world.World
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 /**
  * A wave can travel as a focused beam.
@@ -62,14 +60,14 @@ abstract class Beam extends Storable with Updater {
 		data.put("origin", source.origin)
 		data.put("dir", source.dir)
 		data.put("renderOffset", renderOffset)
-		data.put("color", color.rgba())
+		data.put("color", color.argb())
 	}
 
 	override def load(data: Data) {
 		super.load(data)
-		source = new Ray(data.getStorable("origin"), data.getStorable("dir"))
-		renderOffset = data.getStorable("renderOffset")
-		color = Color.rgba(data.get("color"))
+		source = new Ray(data.get("origin"), data.get("dir"))
+		renderOffset = data.get("renderOffset")
+		color = Color.argb(data.get("color"))
 	}
 
 	override def update(deltaTime: Double) {

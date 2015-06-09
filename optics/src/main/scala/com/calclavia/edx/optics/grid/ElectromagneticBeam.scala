@@ -62,6 +62,7 @@ class ElectromagneticBeam extends Beam {
 	 */
 	override def render(hit: RayTraceResult) {
 		if (hit != null) {
+
 			world.addClientEntity(new EntityLaserBeam(source.origin + renderOffset, hit.hit, color, power))
 
 			if (hit.isInstanceOf[RayTraceBlockResult]) {

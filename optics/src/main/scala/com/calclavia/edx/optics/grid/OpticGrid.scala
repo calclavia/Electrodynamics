@@ -2,16 +2,15 @@ package com.calclavia.edx.optics.grid
 
 import java.util
 
+import com.calclavia.edx.core.EDX
 import com.calclavia.edx.core.extension.GraphExtension._
 import nova.core.component.Updater
-import com.calclavia.edx.core.EDX
 import nova.core.world.World
 import org.jgrapht.alg.ConnectivityInspector
 import org.jgrapht.graph.{DefaultEdge, SimpleDirectedGraph}
 import org.jgrapht.traverse.BreadthFirstIterator
 
 import scala.collection.convert.wrapAll._
-
 /**
  * A grid that manages all waves produced in the world
  * @author Calclavia
@@ -117,12 +116,17 @@ class OpticGrid(val world: World) extends Updater {
 
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)
+
 		timer += deltaTime
 
-		if (timer >= 0.1) {
+		if (timer >= 1) {
 			timer = 0
 
 			graph synchronized {
+				/*if(graph.vertexSet().size == 0) {
+					EDX.syncTicker.preQueue(() => EDX.syncTicker.remove(this))
+				}
+				else {*/
 				val sources = waveSources
 
 				//Reset graph
@@ -139,7 +143,8 @@ class OpticGrid(val world: World) extends Updater {
 						EDX.network.sync(this)
 						graphChanged = false
 					}
-				}
+					}
+				//}
 			}
 		}
 	}

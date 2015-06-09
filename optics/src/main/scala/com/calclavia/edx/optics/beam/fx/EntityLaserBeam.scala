@@ -12,8 +12,7 @@ import nova.core.util.math.Vector3DUtil
 import nova.scala.wrapper.FunctionalWrapper._
 import nova.scala.wrapper.VectorWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.{Rotation, Vector3D}
-
-import scala.util.Random
+import org.apache.commons.math3.util.FastMath
 
 /**
  * The laser beam effect for electromagnetic waves
@@ -24,21 +23,25 @@ class EntityLaserBeam(start: Vector3D, end: Vector3D, color: Color, power: Doubl
 	val renderer = add(new DynamicRenderer)
 
 	val energyPercentage = Math.min(power / OpticGrid.maxPower, 1).toFloat
-	val detail = (6 + 14 * energyPercentage).toInt
+	val detail = (6 + 12 * energyPercentage).toInt
 	val rotationSpeed = 18
 
-	val rand = new Random()
-	val particleAlpha = 0.8 * energyPercentage + 0.2
-	val particleScale = 0.13f * energyPercentage + 0.03 * rand.nextDouble()
+	val particleAlpha = 0.5 * energyPercentage + 0.5
+	val particleScale = 0.13f * energyPercentage + 0.03 * FastMath.random()
 	val length = start.distance(end)
 	val endSize = particleScale
-	val modifierTranslation = (length / 2) + endSize
+	val renderColor = color.alpha((particleAlpha * 255).toInt)
+	val halfColor = renderColor.alpha(127)
+
+	val midPoint = end.midpoint(start)
+	val dir = (end - start).normalize
+	val rot = new Rotation(Vector3DUtil.FORWARD, dir)
+		.applyTo(new Rotation(Vector3D.PLUS_K, Math.PI / 2))
+		.applyTo(new Rotation(Vector3D.PLUS_J, Math.PI / 2))
+
 	/**
 	 * Set position
 	 */
-	val midPoint = end.midpoint(start)
-	val dir = (end - start).normalize
-
 	loadEvent.add((evt: LoadEvent) => {
 		setPosition(midPoint)
 	})
@@ -55,15 +58,10 @@ class EntityLaserBeam(start: Vector3D, end: Vector3D, color: Color, power: Doubl
 			//GL_ONE
 			model.blendDFactor = 0x1
 
-
 			/**
 			 * Rotate the beam
 			 */
-			model.matrix.rotate(new Rotation(Vector3DUtil.FORWARD, dir))
-			model.matrix.rotate(Vector3D.PLUS_K, Math.PI / 2)
-
-			val renderColor = color.alpha((particleAlpha * 255).toInt)
-			val halfColor = renderColor.alpha(127)
+			model.matrix.rotate(rot)
 
 			/**
 			 * Tessellate laser
@@ -100,8 +98,8 @@ class EntityLaserBeam(start: Vector3D, end: Vector3D, color: Color, power: Doubl
 				middleFace.drawVertex(new Vertex(particleScale, length / 2 - endSize, 0, 1, 1).setColor(halfColor))
 				middleFace.drawVertex(new Vertex(particleScale, -length / 2 + endSize, 0, 1, 0).setColor(halfColor))
 
-				middle.drawFace(middleFace)
 				middleFace.brightness = 1
+				middle.drawFace(middleFace)
 				middle.bindAll(OpticsTextures.laserMiddleTexture)
 				beam.children.add(middle)
 
