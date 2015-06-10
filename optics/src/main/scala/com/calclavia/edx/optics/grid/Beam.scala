@@ -66,8 +66,8 @@ abstract class Beam extends Storable {
 
 	override def load(data: Data) {
 		super.load(data)
-		source = new Ray(data.get("origin"), data.get("dir"))
-		renderOffset = data.get("renderOffset")
+		source = new Ray(data.getVector3D("origin"), data.getVector3D("dir"))
+		renderOffset = data.getVector3D("renderOffset")
 		color = Color.argb(data.get("color"))
 	}
 
