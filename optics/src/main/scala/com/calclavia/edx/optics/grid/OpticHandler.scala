@@ -6,7 +6,6 @@ import nova.core.block.Stateful.{LoadEvent, UnloadEvent}
 import nova.core.component.Component
 import nova.core.event.{Event, EventBus}
 import nova.core.util.RayTracer.RayTraceResult
-import nova.scala.wrapper.FunctionalWrapper
 import nova.scala.wrapper.FunctionalWrapper._
 
 /**
@@ -16,13 +15,11 @@ import nova.scala.wrapper.FunctionalWrapper._
 object OpticHandler {
 
 	class ReceiveBeamEvent(val incident: Beam, var hit: RayTraceResult) extends Event {
-		def receivingPower = incident.power - OpticGrid.minPower / 5 * hit.distance
+		def receivingPower = incident.power - OpticGrid.minPower / (5 * hit.distance)
 
 		//Continues the beam
 		def continue(outgoing: Beam) {
 			OpticGrid(incident.world).create(outgoing, incident)
-			//TODO: Offload to ticker
-			outgoing.update(0.05)
 		}
 	}
 

@@ -20,6 +20,9 @@ class EntityScorch(side: Int) extends Entity with EntityAgeLike {
 	val particleScale = 0.2f
 	var particleAlpha = 0d
 
+	val rot = Direction.fromOrdinal(side).rotation
+		.applyTo(new Rotation(Vector3D.PLUS_J, Math.PI))
+
 	override def maxAge: Double = 1
 
 	override def getID: String = "scortchFx"
@@ -40,20 +43,7 @@ class EntityScorch(side: Int) extends Entity with EntityAgeLike {
 			/**
 			 * Rotate the scorch effect
 			 */
-			model.matrix.rotate(new Rotation(Vector3D.PLUS_J, -Math.PI / 2))
-
-			val rot = Direction.fromOrdinal(side).rotation
-			/*match
-			{
-				case Direction.UNKNOWN =>
-				case Direction.UP => Quaternion.fromAxis(Vector3d.PLUS_I, Math.PI/2)
-				case Direction.DOWN => Quaternion.fromAxis(Vector3d.PLUS_I , -Math.PI/2)
-				case Direction.NORTH => Quaternion.identity
-				case Direction.SOUTH => Quaternion.fromAxis(180, 0, 1, 0)
-				case Direction.WEST => Quaternion.fromAxis(90, 0, 1, 0)
-				case Direction.EAST => Quaternion.fromAxis(-90, 0, 1, 0)
-			}*/
-
+			model.matrix.rotate(rot)
 			/**
 			 * Tessellate scorch
 			 */

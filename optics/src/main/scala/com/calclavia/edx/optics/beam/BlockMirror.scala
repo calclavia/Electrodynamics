@@ -19,6 +19,7 @@ import nova.core.util.math.Vector3DUtil
 import nova.scala.wrapper.FunctionalWrapper._
 import nova.scala.wrapper.VectorWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.{Rotation, Vector3D}
+
 /**
  * A mirror reflects lasers.
  *
@@ -72,10 +73,12 @@ class BlockMirror extends BlockEDX with Stateful with Syncable with Storable {
 			if (rotateAngle < Math.PI) {
 				//Emit beam
 				val newDirection = new Rotation(axisOfReflection, rotateAngle).applyTo(incidentDirection)
+				println(Math.toDegrees(angle))
 				val beam = new ElectromagneticBeam
 				beam.world = world
-				beam.source = new Ray(position + 0.5 + newDirection * 0.6, newDirection)
-				beam.renderOffset = -newDirection * 0.6
+				val traceStart = position + 0.5 + newDirection * 0.6
+				beam.source = new Ray(traceStart, newDirection)
+				beam.renderOffset = evt.hit.hit - traceStart
 				beam.color = evt.incident.color
 				beam.power = evt.receivingPower
 				evt.continue(beam)

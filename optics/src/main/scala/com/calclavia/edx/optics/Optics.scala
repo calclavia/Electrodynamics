@@ -1,18 +1,17 @@
 package com.calclavia.edx.optics
 
-import com.calclavia.edx.core.Reference
+import com.calclavia.edx.core.{EDX, Reference}
 import com.calclavia.edx.optics.api.fortron.Fortron
 import com.calclavia.edx.optics.content.{OpticsContent, OpticsModels, OpticsTextures}
-import com.calclavia.edx.optics.grid.OpticGridPacket
+import com.calclavia.edx.optics.grid.{OpticGrid, OpticGridPacket}
 import com.calclavia.edx.optics.security.MFFSPermissions
 import com.resonant.lib.MovementManager
-import nova.scala.wrapper.FunctionalWrapper
-import FunctionalWrapper._
 import nova.core.event.Event
 import nova.core.event.GlobalEvents.BlockChangeEvent
 import nova.core.fluid.Fluid
-import com.calclavia.edx.core.EDX
 import nova.core.loader.{Loadable, NovaMod}
+import nova.scala.wrapper.FunctionalWrapper
+import nova.scala.wrapper.FunctionalWrapper._
 
 @NovaMod(id = Reference.opticsID, name = Reference.name + ": Optics", version = Reference.version, novaVersion = "0.0.1", dependencies = Array("resonantengine", "nodeAPI"))
 object Optics extends Loadable {
@@ -32,6 +31,8 @@ object Optics extends Loadable {
 			GraphFrequency.client = new GraphFrequency
 			GraphFrequency.server = new GraphFrequency
 		})
+
+		EDX.events.serverStopping.add((evt: Event) => OpticGrid.clear())
 
 		EDX.fluids.register((args: Array[AnyRef]) => new Fluid(Fortron.fortronID))
 

@@ -26,7 +26,7 @@ class EntityLaserBeam(start: Vector3D, end: Vector3D, color: Color, power: Doubl
 	val detail = (6 + 12 * energyPercentage).toInt
 	val rotationSpeed = 18
 
-	val particleAlpha = 0.5 * energyPercentage + 0.5
+	val particleAlpha = 0.4 * energyPercentage + 0.6
 	val particleScale = 0.13f * energyPercentage + 0.03 * FastMath.random()
 	val length = start.distance(end)
 	val endSize = particleScale
@@ -35,9 +35,9 @@ class EntityLaserBeam(start: Vector3D, end: Vector3D, color: Color, power: Doubl
 
 	val midPoint = end.midpoint(start)
 	val dir = (end - start).normalize
-	val rot = new Rotation(Vector3DUtil.FORWARD, dir)
-		.applyTo(new Rotation(Vector3D.PLUS_K, Math.PI / 2))
+	val rot = new Rotation(Vector3D.PLUS_K, Math.PI / 2)
 		.applyTo(new Rotation(Vector3D.PLUS_J, Math.PI / 2))
+		.applyTo(new Rotation(Vector3DUtil.FORWARD, dir))
 
 	/**
 	 * Set position

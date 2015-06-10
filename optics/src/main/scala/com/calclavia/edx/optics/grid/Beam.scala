@@ -95,6 +95,7 @@ abstract class Beam extends Storable with Updater {
 							val event = new ReceiveBeamEvent(this, hit)
 							hitBlock.get(classOf[OpticHandler]).onReceive.publish(event)
 							opHit = Optional.of(event.hit)
+
 						/**
 						 * All beams refract and reflect
 						 */
@@ -132,15 +133,19 @@ abstract class Beam extends Storable with Updater {
 	 */
 	def render(hit: RayTraceResult)
 
-	override def equals(obj: scala.Any): Boolean = {
+	override def equals(obj: Any): Boolean = {
+		if (super.equals(obj))
+			return true
+
+		/*
 		if (obj.isInstanceOf[Beam]) {
-			val otherWave = obj.asInstanceOf[Beam]
-			return source.origin.equals(otherWave.source.origin) &&
-				source.dir.equals(otherWave.source.dir) &&
-				renderOffset.equals(otherWave.renderOffset) &&
-				color.equals(otherWave.color) &&
-				power.equals(otherWave.power)
-		}
+			val other = obj.asInstanceOf[Beam]
+			return source.origin.equals(other.source.origin) &&
+				source.dir.equals(other.source.dir) &&
+				renderOffset.equals(other.renderOffset) &&
+				color.equals(other.color) &&
+				power == other.power
+		}*/
 		return false
 	}
 }

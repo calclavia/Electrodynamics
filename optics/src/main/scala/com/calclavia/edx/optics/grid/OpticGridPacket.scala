@@ -3,7 +3,6 @@ package com.calclavia.edx.optics.grid
 import com.calclavia.edx.core.EDX
 import nova.core.network.Packet
 import nova.core.network.handler.PacketHandler
-import org.jgrapht.graph.{DefaultEdge, SimpleDirectedGraph}
 
 /**
  * @author Calclavia
@@ -19,8 +18,8 @@ class OpticGridPacket extends PacketHandler[OpticGrid] {
 			val world = opWorld.get
 			val grid = OpticGrid(world)
 
-			grid.graph.synchronized {
-				grid.graph = new SimpleDirectedGraph(classOf[DefaultEdge])
+			grid.sources.synchronized {
+				grid.sources = Set.empty
 
 				//Read graph
 				(0 until packet.readInt())
@@ -38,10 +37,10 @@ class OpticGridPacket extends PacketHandler[OpticGrid] {
 	}
 
 	override def write(handler: OpticGrid, packet: Packet) {
-		handler.graph synchronized {
+		handler.sources.synchronized {
 			packet.writeString(handler.world.getID)
 			//Write sources
-			val sources = handler.waveSources
+			val sources = handler.sources
 			packet.writeInt(sources.size)
 			sources.foreach(packet.writeStorable)
 		}
