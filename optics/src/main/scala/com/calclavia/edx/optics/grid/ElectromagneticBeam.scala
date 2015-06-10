@@ -60,12 +60,11 @@ class ElectromagneticBeam extends Beam {
 	 * Renders the beam
 	 * @param hit Null if nothing is hit.
 	 */
-	override def render(hit: RayTraceResult) {
+	override def render(hit: RayTraceResult, hasImpact: Boolean) {
 		if (hit != null) {
-
 			world.addClientEntity(new EntityLaserBeam(source.origin + renderOffset, hit.hit, color, power))
 
-			if (hit.isInstanceOf[RayTraceBlockResult]) {
+			if (hit.isInstanceOf[RayTraceBlockResult] && hasImpact) {
 				val scorch = new EntityScorch(hit.side.ordinal())
 				world.addClientEntity(scorch)
 				scorch.setPosition(hit.hit - source.dir * 0.01)

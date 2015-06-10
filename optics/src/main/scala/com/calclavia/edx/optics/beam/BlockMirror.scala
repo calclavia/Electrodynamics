@@ -35,8 +35,6 @@ class BlockMirror extends BlockEDX with Stateful with Syncable with Storable {
 	private val itemRenderer = add(new ItemRenderer(this))
 	private val optic = add(new OpticHandler(this))
 
-	private var cachedHits = List[Vector3D]()
-
 	renderer.setOnRender(
 		(model: Model) => {
 			model.matrix.rotate(new Rotation(Vector3DUtil.FORWARD, focus.normal).revert())
@@ -60,6 +58,7 @@ class BlockMirror extends BlockEDX with Stateful with Syncable with Storable {
 			val newHit = position + 0.5
 			val newBound = get(classOf[Collider]).boundingBox.get + position
 			evt.hit = new RayTraceBlockResult(newHit, evt.incident.source.origin.distance(newHit), evt.hit.side, newBound, this)
+			evt.hasImpact = false
 
 			/**
 			 * Calculate Reflection
@@ -75,7 +74,7 @@ class BlockMirror extends BlockEDX with Stateful with Syncable with Storable {
 				val newDirection = new Rotation(axisOfReflection, rotateAngle).applyTo(incidentDirection)
 				val beam = new ElectromagneticBeam
 				beam.world = world
-				val traceStart = position + 0.5 + newDirection * 0.51
+				val traceStart = position + 0.5 + newDirection * 0.52
 				beam.source = new Ray(traceStart, newDirection)
 				beam.renderOffset = evt.hit.hit - traceStart
 				beam.color = evt.incident.color

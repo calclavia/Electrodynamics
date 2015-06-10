@@ -83,6 +83,8 @@ abstract class Beam extends Storable with Updater {
 			prevHit = opHit.orElse(null)
 		}
 
+		var hasImpact = true
+
 		if (opHit.isPresent) {
 			opHit.get match {
 				case hit: RayTraceBlockResult =>
@@ -95,6 +97,7 @@ abstract class Beam extends Storable with Updater {
 							val event = new ReceiveBeamEvent(this, hit)
 							hitBlock.get(classOf[OpticHandler]).onReceive.publish(event)
 							opHit = Optional.of(event.hit)
+							hasImpact = event.hasImpact
 
 						/**
 						 * All beams refract and reflect
@@ -119,7 +122,7 @@ abstract class Beam extends Storable with Updater {
 		}
 
 		if (EDX.network.isClient) {
-			render(opHit.orElse(null))
+			render(opHit.orElse(null), hasImpact)
 		}
 	}
 
@@ -131,7 +134,7 @@ abstract class Beam extends Storable with Updater {
 	 * Renders the beam
 	 * @param hit Null if nothing is hit.
 	 */
-	def render(hit: RayTraceResult)
+	def render(hit: RayTraceResult, hasImpact: Boolean)
 
 	override def equals(obj: Any): Boolean = {
 		if (super.equals(obj))

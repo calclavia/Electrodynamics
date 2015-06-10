@@ -15,6 +15,8 @@ import nova.scala.wrapper.FunctionalWrapper._
 object OpticHandler {
 
 	class ReceiveBeamEvent(val incident: Beam, var hit: RayTraceResult) extends Event {
+		var hasImpact = true
+
 		def receivingPower = incident.power - OpticGrid.minPower / (5 * hit.distance)
 
 		//Continues the beam
