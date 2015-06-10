@@ -1,7 +1,7 @@
 package com.calclavia.edx.optics.field.module
 
 import com.calclavia.edx.optics.api.machine.FieldMatrix
-import com.calclavia.edx.optics.base.ItemModule
+import com.calclavia.edx.optics.component.ItemModule
 import com.resonant.core.structure.Structure
 
 class ItemModuleDome extends ItemModule {

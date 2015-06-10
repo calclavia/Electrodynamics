@@ -1,4 +1,4 @@
-package com.calclavia.edx.optics.base
+package com.calclavia.edx.optics.component
 
 import java.util.Optional
 
@@ -6,8 +6,6 @@ import com.calclavia.edx.core.{EDX, Placeholder}
 import com.calclavia.edx.optics.api.machine.IActivatable
 import com.calclavia.edx.optics.content.OpticsTextures
 import com.calclavia.minecraft.redstone.Redstone
-import nova.scala.wrapper.FunctionalWrapper
-import FunctionalWrapper._
 import nova.core.block.Block.RightClickEvent
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.block.{BlockDefault, Stateful}
@@ -20,13 +18,15 @@ import nova.core.network.NetworkTarget.Side
 import nova.core.network.{Packet, Syncable}
 import nova.core.retention.{Storable, Store}
 import nova.core.util.Direction
+import nova.scala.util.ExtendedUpdater
+import nova.scala.wrapper.FunctionalWrapper._
 
 /**
  * A base block class for all MFFS blocks to inherit.
  * @author Calclavia
  */
 //TODO: Redstone state is not properly saved
-abstract class BlockMachine extends BlockDefault with Syncable with IActivatable with Stateful with Storable {
+abstract class BlockMachine extends BlockDefault with Syncable with IActivatable with Stateful with Storable with ExtendedUpdater {
 	/**
 	 * Used for client side animations.
 	 */
@@ -71,7 +71,7 @@ abstract class BlockMachine extends BlockDefault with Syncable with IActivatable
 		super.read(packet)
 
 		if (Side.get().isClient) {
-			if (packet.getID == PacketBlock.description) {
+			if (packet.getID == BlockPacketID.description) {
 				val prevActive = active
 				active = packet.readBoolean()
 
@@ -85,7 +85,7 @@ abstract class BlockMachine extends BlockDefault with Syncable with IActivatable
 	override def write(packet: Packet) {
 		super.write(packet)
 
-		if (packet.getID == PacketBlock.description) {
+		if (packet.getID == BlockPacketID.description) {
 			packet <<< active
 		}
 	}
@@ -94,7 +94,7 @@ abstract class BlockMachine extends BlockDefault with Syncable with IActivatable
 
 	def setActive(flag: Boolean) {
 		active = flag
-		EDX.network.sync(PacketBlock.description, this)
+		EDX.network.sync(BlockPacketID.description, this)
 		world().markStaticRender(transform.position)
 	}
 

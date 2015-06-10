@@ -1,49 +1,32 @@
-package com.calclavia.edx.optics.base
+package com.calclavia.edx.optics.component
 
 import java.util.{Optional, Set => JSet}
 
 import com.calclavia.edx.optics.api.modules.Module
-import com.calclavia.edx.optics.content.OpticsContent
 import com.calclavia.edx.optics.util.CacheHandler
-import nova.core.fluid.Fluid
-import com.calclavia.edx.core.EDX
+import nova.core.block.Block
+import nova.core.component.Component
+import nova.core.inventory.Inventory
 import nova.core.item.{Item, ItemFactory}
-import nova.core.network.Packet
 
-abstract class BlockModuleHandler extends BlockFortron with CacheHandler {
+/**
+ * Handles crystal modules
+ */
+//@Require(classOf[Inventory])
+class CrystalHandler(val block: Block) extends Component with CacheHandler {
 
-	lazy val endModuleIndex = inventory.size() - 1
-	var startModuleIndex = 1
-	/**
-	 * Client side only.
-	 */
-	var clientFortronCost = 0
+	var startModuleIndex = 0
+	private lazy val inventory = block.get(classOf[Inventory])
+	private lazy val endModuleIndex = inventory.size() - 1
 
-	protected var capacityBase = 500
-	protected var capacityBoost = 5
+	var capacityBase = 500
+	var capacityBoost = 5
 
-	override def write(packet: Packet) {
-		super.write(packet)
+	def energyCost = getOrSetCache("energyCost", () => doGetEnergyCost)
 
-		if (packet.getID == PacketBlock.description) {
-			packet <<< getFortronCost
-		}
-	}
+	protected def doGetEnergyCost = getModules().foldLeft(0f)((a, b) => a + b.count * b.asInstanceOf[Module].getFortronCost(amplifier.toFloat))
 
-	/**
-	 * Returns Fortron cost in ticks.
-	 */
-	final def getFortronCost: Int = {
-		if (EDX.network.isClient) {
-			return clientFortronCost
-		}
-
-		return getOrSetCache("getFortronCost", doGetFortronCost)
-	}
-
-	protected def doGetFortronCost(): Int = Math.round(getModules().foldLeft(0f)((a, b) => a + b.count * b.asInstanceOf[Module].getFortronCost(getAmplifier)))
-
-	protected def getAmplifier: Float = 1f
+	protected def amplifier = 1d
 
 	/**
 	 * Gets all the modules in this block that are in specific slots
@@ -65,28 +48,6 @@ abstract class BlockModuleHandler extends BlockFortron with CacheHandler {
 			}
 		)
 
-	override def read(packet: Packet) {
-		super.read(packet)
-
-		if (packet.getID == PacketBlock.description) {
-			clientFortronCost = packet.readInt()
-		}
-	}
-
-	override def start() {
-		super.start()
-		refresh()
-	}
-
-	def markDirty() {
-		refresh()
-		clearCache()
-	}
-
-	def refresh() {
-		fortronTank.setCapacity((this.getModuleCount(OpticsContent.moduleCapacity) * this.capacityBoost + this.capacityBase) * Fluid.bucketVolume)
-	}
-
 	/**
 	 * Gets the number of modules in this block that are in specific slots
 	 * @param slots The slot IDs. Providing null will search all slots
@@ -107,10 +68,6 @@ abstract class BlockModuleHandler extends BlockFortron with CacheHandler {
 					.foldLeft(0)(_ + _.count)
 			}
 		)
-
-	def consumeCost() {
-		removeFortron(getFortronCost, true)
-	}
 
 	/**
 	 * Gets the module, if it exists, in this block based on a compareModule.

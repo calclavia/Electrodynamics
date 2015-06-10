@@ -1,4 +1,4 @@
-package com.calclavia.edx.optics.base
+package com.calclavia.edx.optics.component
 
 import java.util.{Optional, Set => JSet}
 
@@ -21,20 +21,23 @@ import scala.collection.convert.wrapAll._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
-abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with IPermissionProvider {
+
+abstract class BlockFieldMatrix extends BlockFrequency with FieldMatrix with IPermissionProvider with CacheHandler {
 	val _getModuleSlots = (14 until 25).toArray
 	protected val modeSlotID = 1
 
 	/**
 	 * Are the directions on the GUI absolute values?
 	 */
-	@Sync(ids = Array(PacketBlock.description, PacketBlock.toggleMode4))
+	@Sync(ids = Array(BlockPacketID.description, BlockPacketID.toggleMode4))
 	@Store
 	var absoluteDirection = false
 
 	protected var calculatedField: Set[Vector3D] = null
 
 	protected var isCalculating = false
+
+	val crystalHandler = add(new CrystalHandler(this))
 
 	add(new Orientation(this))
 
@@ -98,7 +101,7 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 	 * @param slots The slot IDs. Providing null will search all slots
 	 * @return The number of all item modules in the slots.
 	 */
-	override def getModuleCount(compareModule: ItemFactory, slots: Int*): Int = super[BlockModuleHandler].getModuleCount(compareModule, slots: _*)
+	override def getModuleCount(compareModule: ItemFactory, slots: Int*): Int = crystalHandler.getModuleCount(compareModule, slots: _*)
 
 	def getInteriorPoints: JSet[Vector3D] =
 		getOrSetCache("getInteriorPoints", () => {
@@ -107,7 +110,7 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 			}
 
 			val structure = getStructure
-			getModules().foreach(_.onCalculateInterior(this, structure))
+			crystalHandler.getModules().foreach(_.onCalculateInterior(this, structure))
 			return structure.getExteriorStructure
 		})
 
@@ -280,7 +283,7 @@ abstract class BlockFieldMatrix extends BlockModuleHandler with FieldMatrix with
 	protected def getExteriorPoints: JSet[Vector3D] = {
 		val structure = getStructure
 
-		getModules().foreach(_.onCalculateExterior(this, structure))
+		crystalHandler.getModules().foreach(_.onCalculateExterior(this, structure))
 
 		val field = {
 			if (getModuleCount(OpticsContent.moduleInvert) > 0) {

@@ -3,7 +3,7 @@ package com.calclavia.edx.optics.field.module
 import java.util.{Set => JSet}
 
 import com.calclavia.edx.optics.api.machine.FieldMatrix
-import com.calclavia.edx.optics.base.ItemModule
+import com.calclavia.edx.optics.component.ItemModule
 import com.resonant.core.structure.Structure
 import nova.core.util.Direction
 import nova.scala.wrapper.VectorWrapper._

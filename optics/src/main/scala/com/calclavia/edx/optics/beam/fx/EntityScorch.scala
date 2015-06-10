@@ -24,7 +24,7 @@ class EntityScorch(side: Int) extends Entity with EntityAgeLike {
 
 	override def maxAge: Double = 1
 
-	override def getID: String = "scortchFx"
+	override def getID: String = "scorchFx"
 
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)

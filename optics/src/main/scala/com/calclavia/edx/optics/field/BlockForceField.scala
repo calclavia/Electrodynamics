@@ -21,7 +21,6 @@ import nova.core.network.{Sync, Syncable}
 import nova.core.render.model.Model
 import nova.core.retention.{Storable, Store}
 import nova.core.util.Direction
-import nova.scala.wrapper.FunctionalWrapper
 import nova.scala.wrapper.FunctionalWrapper._
 import nova.scala.wrapper.VectorWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
@@ -63,7 +62,7 @@ class BlockForceField extends BlockDefault with Syncable with ForceField with St
 		    val projector = getProjector()
 		    val entity = evt.entity
 		    if (projector != null) {
-			    if (projector.getModules().forall(stack => stack.asInstanceOf[Module].onFieldCollide(BlockForceField.this, entity))) {
+			    if (projector.crystalHandler.getModules().forall(stack => stack.asInstanceOf[Module].onFieldCollide(BlockForceField.this, entity))) {
 				    val biometricIdentifier = projector.getBiometricIdentifier
 
 					if ((transform.position + 0.5).distance(entity.transform.position) < 0.5) {
@@ -137,10 +136,7 @@ class BlockForceField extends BlockDefault with Syncable with ForceField with St
 	override def weakenForceField(energy: Int) {
 		val projector = getProjector
 
-		if (projector != null) {
-			projector.addFortron(energy, true)
-		}
-
+		//TODO: Disable field
 		if (EDX.network.isServer) {
 			world.removeBlock(transform.position)
 		}

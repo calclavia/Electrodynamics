@@ -6,11 +6,12 @@ import com.calclavia.edx.core.EDX
 import com.calclavia.edx.optics.Settings
 import com.calclavia.edx.optics.api.machine.Projector
 import com.calclavia.edx.optics.api.modules.Module.ProjectState
-import com.calclavia.edx.optics.base.{BlockFieldMatrix, PacketBlock}
 import com.calclavia.edx.optics.beam.fx.EntityMagneticBeam
+import com.calclavia.edx.optics.component.{BlockFieldMatrix, BlockPacketID}
 import com.calclavia.edx.optics.content.{OpticsContent, OpticsModels, OpticsTextures}
 import com.calclavia.edx.optics.field.shape.ItemShapeCustom
 import com.calclavia.edx.optics.fx.{FXHologramProgress, FieldColor}
+import com.calclavia.edx.optics.grid.OpticHandler
 import com.calclavia.edx.optics.security.PermissionHandler
 import com.calclavia.edx.optics.util.CacheHandler
 import nova.core.block.Block
@@ -38,8 +39,9 @@ import scala.collection.convert.wrapAll._
 class BlockProjector extends BlockFieldMatrix with Projector with PermissionHandler {
 
 	@Store
-	@Sync(ids = Array(PacketBlock.description, PacketBlock.inventory))
+	@Sync(ids = Array(BlockPacketID.description, BlockPacketID.inventory))
 	override val inventory = new InventorySimple(1 + 25 + 6)
+	val opticHandler = add(new OpticHandler(this))
 	/** A set containing all positions of all force field blocks generated. */
 	var forceFields = Set.empty[Vector3D]
 	/** Marks the field for an update call */
@@ -49,10 +51,10 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 	/** True to make the field constantly tick */
 	private var fieldRequireTicks = false
 
-	capacityBase = 30
-	startModuleIndex = 1
+	crystalHandler.capacityBase = 30
+	crystalHandler.startModuleIndex = 1
 	/** Are the filters in the projector inverted? */
-	@Sync(ids = Array(PacketBlock.description))
+	@Sync(ids = Array(BlockPacketID.description))
 	private var isInverted = false
 
 	override def getID: String = "projector"
@@ -163,7 +165,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 		calculateField(postCalculation)
 	}
 
-	def postCalculation() = if (clientSideSimulationRequired) EDX.network.sync(PacketBlock.field, this)
+	def postCalculation() = if (clientSideSimulationRequired) EDX.network.sync(BlockPacketID.field, this)
 
 	private def clientSideSimulationRequired: Boolean = {
 		return getModuleCount(OpticsContent.moduleRepulsion) > 0
@@ -180,23 +182,23 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 
 			super.calculateField(callBack)
 			isCompleteConstructing = false
-			fieldRequireTicks = getModules().exists(_.requireTicks)
+			fieldRequireTicks = crystalHandler.getModules().exists(_.requireTicks)
 		}
 	}
 
 	override def write(packet: Packet) {
 		super.write(packet)
 		packet.getID match {
-			case PacketBlock.field =>
+			case BlockPacketID.field =>
 			/*
 			val nbt = new NBTTagCompound
 			val nbtList = new NBTTagList
 			calculatedField foreach (vec => nbtList.appendTag(vec.toNBT))
 			nbt.setTag("blockList", nbtList)
 			ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(this, PacketBlock.field.id: Integer, nbt))*/
-			case PacketBlock.effect =>
+			case BlockPacketID.effect =>
 				packet <<< transform.position
-			case PacketBlock.effect2 =>
+			case BlockPacketID.effect2 =>
 				packet <<< transform.position
 			case _ =>
 		}
@@ -206,7 +208,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 		super.read(packet)
 
 		if (EDX.network.isClient) {
-			if (packet.getID == PacketBlock.effect) {
+			if (packet.getID == BlockPacketID.effect) {
 				//Spawns a holographic beam
 				val packetType = packet.readInt
 				val target = new Vector3D(packet.readInt, packet.readInt, packet.readInt) + 0.5
@@ -221,7 +223,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 					world.addClientEntity(OpticsContent.fxHologramProgress).transform.setPosition(pos).asInstanceOf[FXHologramProgress].setColor(FieldColor.red)
 				}
 			}
-			else if (packet.getID == PacketBlock.field) {
+			else if (packet.getID == BlockPacketID.field) {
 				//Receives the entire force field
 				//				val nbt = PacketUtils.readTag(packet)
 				//				val nbtList = nbt.getTagList("blockList", 10)
@@ -229,7 +231,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 			}
 		}
 		else {
-			if (packet.getID == PacketBlock.toggleMode2) {
+			if (packet.getID == BlockPacketID.toggleMode2) {
 				isInverted = !isInverted
 			}
 		}
@@ -238,8 +240,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)
 
-		if (isActive && getShapeItem != null && removeFortron(getFortronCost, false) >= this.getFortronCost) {
-			consumeCost()
+		if (isActive && getShapeItem != null && opticHandler.energy > crystalHandler.energyCost) {
 
 			if (ticks % 10 == 0 || markFieldUpdate || fieldRequireTicks) {
 				if (calculatedField == null) {
@@ -251,7 +252,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 			}
 
 			if (isActive && EDX.network.isClient) {
-				animation += getFortronCost / 100f
+				animation += crystalHandler.energyCost / 100f
 			}
 
 			if (ticks % (2 * 20) == 0 && getModuleCount(OpticsContent.moduleSilence) <= 0) {
@@ -271,7 +272,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 		//TODO: We cannot construct a field if it intersects another field with different frequency.
 		if (!isCalculating) {
 			val potentialField = calculatedField
-			val relevantModules = getModules(getModuleSlots: _*)
+			val relevantModules = crystalHandler.getModules(getModuleSlots: _*)
 
 			if (!relevantModules.exists(_.onCreateField(this, potentialField))) {
 				if (!isCompleteConstructing || markFieldUpdate || fieldRequireTicks) {
@@ -344,17 +345,11 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 
 	def getProjectionSpeed: Int = 28 + 28 * getModuleCount(OpticsContent.moduleSpeed, getModuleSlots: _*)
 
-	override def markDirty() {
-		super.markDirty()
 
-		if (world != null) {
-			destroyField()
-		}
-	}
 
 	def destroyField() {
 		if (EDX.network.isServer && calculatedField != null && !isCalculating) {
-			getModules(getModuleSlots: _*).forall(!_.onDestroyField(this, calculatedField))
+			crystalHandler.getModules(getModuleSlots: _*).forall(!_.onDestroyField(this, calculatedField))
 			//TODO: Parallelism?
 			calculatedField
 				.view
@@ -395,12 +390,8 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 
 	def isInvertedFilter: Boolean = isInverted
 
-	/**
-	 * Returns Fortron cost in ticks.
-	 */
-	protected override def doGetFortronCost: Int = if (this.getShapeItem != null) Math.round(super.doGetFortronCost + this.getShapeItem.getFortronCost(this.getAmplifier)) else 0
-
-	protected override def getAmplifier: Float = {
+	//TODO: Useless
+	protected def amplifier: Float = {
 		if (getShapeItem.isInstanceOf[ItemShapeCustom]) {
 			return Math.max(getShapeItem.asInstanceOf[ItemShapeCustom].fieldSize / 100, 1)
 		}

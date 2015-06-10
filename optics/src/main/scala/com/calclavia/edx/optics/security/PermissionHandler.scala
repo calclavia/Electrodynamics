@@ -2,12 +2,12 @@ package com.calclavia.edx.optics.security
 
 import com.calclavia.edx.optics.GraphFrequency
 import com.calclavia.edx.optics.api.card.CoordLink
-import com.calclavia.edx.optics.base.BlockFrequency
+import com.calclavia.edx.optics.component.BlockFrequency
 import com.resonant.core.access.Permission
-import nova.scala.wrapper.FunctionalWrapper
-import FunctionalWrapper._
 import nova.core.block.Block.RightClickEvent
 import nova.core.entity.component.Player
+import nova.scala.wrapper.FunctionalWrapper
+import nova.scala.wrapper.FunctionalWrapper._
 /**
  * @author Calclavia
  */

@@ -1,6 +1,6 @@
 package com.calclavia.edx.optics.field.module
 
-import com.calclavia.edx.optics.base.ItemModule
+import com.calclavia.edx.optics.component.ItemModule
 import com.calclavia.edx.optics.field.BlockForceField
 import com.calclavia.edx.optics.security.MFFSPermissions
 import nova.core.block.Block

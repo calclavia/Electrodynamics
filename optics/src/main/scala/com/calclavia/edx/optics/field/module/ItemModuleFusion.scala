@@ -3,7 +3,7 @@ package com.calclavia.edx.optics.field.module
 import com.calclavia.edx.optics.GraphFrequency
 import com.calclavia.edx.optics.api.machine.Projector
 import com.calclavia.edx.optics.api.modules.Module.ProjectState
-import com.calclavia.edx.optics.base.ItemModule
+import com.calclavia.edx.optics.component.ItemModule
 import com.calclavia.edx.optics.field.BlockProjector
 import nova.core.block.Block
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D

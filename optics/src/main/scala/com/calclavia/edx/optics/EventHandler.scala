@@ -1,22 +1,12 @@
 package com.calclavia.edx.optics
 
-import com.calclavia.edx.optics.api.MFFSEvent.EventForceMobilize
-import com.calclavia.edx.optics.base.BlockFortron
+import com.calclavia.edx.core.EDX
 import com.calclavia.edx.optics.field.BlockProjector
 import nova.core.event.GlobalEvents
-import com.calclavia.edx.core.EDX
 
 import scala.collection.convert.wrapAll._
 
 object EventHandler {
-
-	def eventPreForceManipulate(evt: EventForceMobilize) {
-		val block = evt.worldBefore.getBlock(evt.before)
-
-		if (block.get().isInstanceOf[BlockFortron]) {
-			block.get().asInstanceOf[BlockFortron].markSendFortron = false
-		}
-	}
 
 	/**
 	 * Special stabilization cases.

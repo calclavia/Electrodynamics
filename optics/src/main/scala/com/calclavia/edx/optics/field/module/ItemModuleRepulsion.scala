@@ -3,7 +3,7 @@ package com.calclavia.edx.optics.field.module
 import java.util.{Set => JSet}
 
 import com.calclavia.edx.optics.api.machine.Projector
-import com.calclavia.edx.optics.base.ItemModule
+import com.calclavia.edx.optics.component.ItemModule
 import com.calclavia.edx.optics.security.MFFSPermissions
 import nova.core.entity.Entity
 import nova.core.entity.component.{Player, RigidBody}

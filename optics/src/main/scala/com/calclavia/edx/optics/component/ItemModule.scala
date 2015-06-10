@@ -1,4 +1,4 @@
-package com.calclavia.edx.optics.base
+package com.calclavia.edx.optics.component
 
 import java.util.{List => JList, Set => JSet}
 

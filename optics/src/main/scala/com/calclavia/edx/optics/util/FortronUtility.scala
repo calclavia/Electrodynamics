@@ -2,8 +2,8 @@ package com.calclavia.edx.optics.util
 
 import com.calclavia.edx.optics.Settings
 import com.calclavia.edx.optics.api.fortron.FortronFrequency
-import com.calclavia.edx.optics.base.BlockModuleHandler
 import com.calclavia.edx.optics.beam.fx.EntityMagneticBeam
+import com.calclavia.edx.optics.component.CrystalHandler
 import com.calclavia.edx.optics.content.OpticsContent
 import com.calclavia.edx.optics.fx.FieldColor
 import nova.core.block.Block
@@ -79,8 +79,8 @@ object FortronUtility {
 			val world = block.world()
 
 			val isCamo = {
-				if (transferer.isInstanceOf[BlockModuleHandler]) {
-					transferer.asInstanceOf[BlockModuleHandler].getModuleCount(OpticsContent.moduleCamouflage) > 0
+				if (transferer.isInstanceOf[CrystalHandler]) {
+					transferer.asInstanceOf[CrystalHandler].getModuleCount(OpticsContent.moduleCamouflage) > 0
 				}
 				else {
 					false

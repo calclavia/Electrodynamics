@@ -1,10 +1,10 @@
-package com.calclavia.edx.optics.base
+package com.calclavia.edx.optics.component
 
 /**
  * PacketType ids MFFS blocks
  * @author Calclavia
  */
-object PacketBlock {
+object BlockPacketID {
 	final val description = 1
 	final val frequency = 2
 	final val fortron = 3

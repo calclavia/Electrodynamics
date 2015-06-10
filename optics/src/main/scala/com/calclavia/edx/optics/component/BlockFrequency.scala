@@ -1,15 +1,15 @@
-package com.calclavia.edx.optics.base
+package com.calclavia.edx.optics.component
 
 import java.util.{Set => JSet}
 
 import com.calclavia.edx.optics.GraphFrequency
 import com.calclavia.edx.optics.api.Frequency
 import com.calclavia.edx.optics.item.card.ItemCardFrequency
-import nova.scala.wrapper.FunctionalWrapper
-import FunctionalWrapper._
 import nova.core.block.Stateful.{LoadEvent, UnloadEvent}
 import nova.core.inventory.InventorySimple
 import nova.core.item.Item
+import nova.scala.wrapper.FunctionalWrapper
+import nova.scala.wrapper.FunctionalWrapper._
 
 /**
  * All blocks that have a frequency value should extend this

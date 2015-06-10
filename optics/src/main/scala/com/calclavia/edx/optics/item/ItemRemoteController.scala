@@ -4,9 +4,9 @@ import com.calclavia.edx.core.EDX
 import com.calclavia.edx.optics.GraphFrequency
 import com.calclavia.edx.optics.api.MFFSEvent.EventForceMobilize
 import com.calclavia.edx.optics.api.card.CoordLink
-import com.calclavia.edx.optics.base.BlockFortron
 import com.calclavia.edx.optics.beam.fx.EntityMagneticBeam
 import com.calclavia.edx.optics.fx.FieldColor
+import com.calclavia.edx.optics.grid.OpticHandler
 import com.calclavia.edx.optics.item.card.ItemCardFrequency
 import com.calclavia.edx.optics.security.MFFSPermissions
 import com.calclavia.edx.optics.util.MFFSUtility
@@ -83,20 +83,18 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 						val fortronBlocks = GraphFrequency
 							.instance
 							.get(frequency)
-							.collect { case block: BlockFortron => block }
-							.filter(_.position().distance(evt.entity.position()) < 50)
+							.collect { case block: Block if block.has(classOf[OpticHandler]) => block.get(classOf[OpticHandler]) }
+							.filter(_.block.position.distance(evt.entity.position()) < 50)
 
 						for (fortronBlock <- fortronBlocks) {
-							val consumedEnergy = fortronBlock.removeFortron(Math.ceil(requiredEnergy / fortronBlocks.size).toInt, true)
-
-							if (consumedEnergy > 0) {
-								if (Side.get().isServer) {
-									val newFX = evt.entity.world.addClientEntity(new EntityMagneticBeam(FieldColor.blue, 20))
-									newFX.setPosition(evt.entity.position /*.add(new Vector3d(0, entity.getEyeHeight - 0.2, 0))*/)
-									newFX.setTarget(fortronBlock.position + 0.5)
-								}
-								receivedEnergy += consumedEnergy
+							//if (consumedEnergy > 0) {
+							if (Side.get().isServer) {
+								val newFX = evt.entity.world.addClientEntity(new EntityMagneticBeam(FieldColor.blue, 20))
+								newFX.setPosition(evt.entity.position /*.add(new Vector3d(0, entity.getEyeHeight - 0.2, 0))*/)
+								newFX.setTarget(fortronBlock.block.position + 0.5)
 							}
+							//		receivedEnergy += consumedEnergy
+							//	}
 
 							if (receivedEnergy >= requiredEnergy) {
 								try {

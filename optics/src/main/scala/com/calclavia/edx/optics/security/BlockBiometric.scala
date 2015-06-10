@@ -4,7 +4,7 @@ import java.util.{Set => JSet}
 
 import com.calclavia.edx.core.EDX
 import com.calclavia.edx.optics.api.card.AccessCard
-import com.calclavia.edx.optics.base.BlockFrequency
+import com.calclavia.edx.optics.component.BlockFrequency
 import com.calclavia.edx.optics.content.{OpticsModels, OpticsTextures}
 import com.resonant.core.access.Permission
 import nova.core.block.Block.{BlockPlaceEvent, RightClickEvent}
@@ -15,7 +15,6 @@ import nova.core.inventory.InventorySimple
 import nova.core.item.Item
 import nova.core.render.model.Model
 import nova.scala.util.ExtendedUpdater
-import nova.scala.wrapper.FunctionalWrapper
 import nova.scala.wrapper.FunctionalWrapper._
 
 import scala.collection.convert.wrapAll._

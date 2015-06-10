@@ -6,7 +6,7 @@ import com.calclavia.edx.core.EDX
 import com.calclavia.edx.optics.api.MFFSEvent.EventForceMobilize
 import com.calclavia.edx.optics.api.card.CoordLink
 import com.calclavia.edx.optics.api.{Blacklist, MFFSEvent}
-import com.calclavia.edx.optics.base.{BlockFieldMatrix, PacketBlock}
+import com.calclavia.edx.optics.component.{BlockFieldMatrix, BlockPacketID}
 import com.calclavia.edx.optics.content.{OpticsContent, OpticsModels, OpticsTextures}
 import com.calclavia.edx.optics.fx.{FXHologramProgress, FieldColor, IEffectController}
 import com.calclavia.edx.optics.security.{MFFSPermissions, PermissionHandler}
@@ -34,7 +34,7 @@ import scala.collection.convert.wrapAll._
 
 class BlockMobilizer extends BlockFieldMatrix with IEffectController with PermissionHandler {
 	@Store
-	@Sync(ids = Array(PacketBlock.description, PacketBlock.inventory))
+	@Sync(ids = Array(BlockPacketID.description, BlockPacketID.inventory))
 	override val inventory = add(new InventorySimple(1 + 25))
 
 	val packetRange = 60
@@ -127,7 +127,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 			 */
 			EDX.syncTicker.preQueue(new DelayedEvent(getMoveTime, () => {
 				moveEntities()
-				EDX.network.sync(PacketBlock.field, this)
+				EDX.network.sync(BlockPacketID.field, this)
 
 				if (!isTeleport && doAnchor) {
 					anchor += get(classOf[Orientation]).orientation.toVector
@@ -145,7 +145,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 				 * Packet Params: id, Type1, Type2, Size, the coordinate
 				 */
 				val packet = EDX.network.newPacket()
-				packet.setID(PacketBlock.effect)
+				packet.setID(BlockPacketID.effect)
 
 				if (!isTeleport) {
 					packet <<< 1
@@ -183,8 +183,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 
 	def whileMoving() {
 		if (EDX.network.isServer && performingMove) {
-			if (removeFortron(getFortronCost, false) >= getFortronCost) {
-				removeFortron(getFortronCost, true)
+			//if (removeFortron(getFortronCost, false) >= getFortronCost) {
 
 				if (moveTime > 0) {
 					if (isTeleport) {
@@ -202,7 +201,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 				}
 
 				return
-			}
+			//	}
 
 			markFailMove()
 		}
@@ -225,7 +224,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 						.take(Settings.maxForceFieldsPerTick)
 
 					val packet = EDX.network.newPacket()
-					packet <<< PacketBlock.effect
+					packet <<< BlockPacketID.effect
 
 					if (isTeleport) {
 						val targetPosition: Vector3D = {
@@ -251,7 +250,6 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 
 					packet <<< renderBlocks
 					EDX.network.sendPacket(this, packet)
-					markDirty()
 				}
 			}
 		}
@@ -280,7 +278,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 				 * Send failure coordinates to client
 				 */
 				val packet = EDX.network.newPacket()
-				packet <<< PacketBlock.effect
+				packet <<< BlockPacketID.effect
 				packet <<< 3
 				packet <<< failedPositions.asInstanceOf[JSet[Vector3D]]
 				EDX.network.sendPacket(this, packet)
@@ -406,7 +404,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 
 		if (Side.get().isClient) {
 			packet.getID match {
-				case PacketBlock.effect => {
+				case BlockPacketID.effect => {
 					packet.readInt() match {
 						case 1 =>
 
@@ -475,11 +473,11 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 					}
 				}
 
-				case PacketBlock.render =>
+				case BlockPacketID.render =>
 					canRenderMove = false
-				case PacketBlock.field =>
+				case BlockPacketID.field =>
 					moveEntities()
-				case PacketBlock.description =>
+				case BlockPacketID.description =>
 					anchor = packet.readStorable().asInstanceOf[Vector3D]
 					previewMode = packet.readInt()
 					doAnchor = packet.readBoolean()
@@ -489,23 +487,13 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 		}
 		else {
 			packet.getID match {
-				case PacketBlock.toggleMode =>
+				case BlockPacketID.toggleMode =>
 					anchor = Vector3D.ZERO
-					markDirty()
-				case PacketBlock.toggleMode2 =>
+				case BlockPacketID.toggleMode2 =>
 					previewMode = (previewMode + 1) % 3
-				case PacketBlock.toggleMode3 =>
+				case BlockPacketID.toggleMode3 =>
 					doAnchor = !doAnchor
 			}
-		}
-	}
-
-	override def markDirty() {
-		super.markDirty()
-
-		if (world != null) {
-			clearCache()
-			calculateField()
 		}
 	}
 
@@ -543,7 +531,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 	override def write(packet: Packet) {
 		super.write(packet)
 
-		if (packet.getID == PacketBlock.description) {
+		if (packet.getID == BlockPacketID.description) {
 			packet <<< anchor
 			packet <<< previewMode
 			packet <<< doAnchor
@@ -567,8 +555,6 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 		}
 		return animationTime
 	}
-
-	override def doGetFortronCost: Int = Math.round(super.doGetFortronCost + (if (this.anchor != null) this.anchor.getNorm * 1000 else 0)).toInt
 
 	/*
 	override def isItemValidForSlot(slotID: Int, item: Item): Boolean = {

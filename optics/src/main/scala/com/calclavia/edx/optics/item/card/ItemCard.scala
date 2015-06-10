@@ -1,7 +1,7 @@
 package com.calclavia.edx.optics.item.card
 
 import com.calclavia.edx.optics.api.card.Card
-import com.calclavia.edx.optics.base.CategoryMFFS
+import com.calclavia.edx.optics.component.CategoryMFFS
 import com.resonant.core.prefab.modcontent.AutoItemTexture
 import nova.core.item.Item
 

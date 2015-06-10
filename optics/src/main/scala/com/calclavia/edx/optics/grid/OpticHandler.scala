@@ -28,7 +28,7 @@ object OpticHandler {
 
 }
 
-class OpticHandler(block: Block) extends Component {
+class OpticHandler(val block: Block) extends Component {
 
 	/**
 	 * Called when the total energy due to incident waves changes
@@ -59,5 +59,8 @@ class OpticHandler(block: Block) extends Component {
 			emitting = null
 		}
 	}
+
+	//TODO: Implement
+	def energy = 0d
 
 }
