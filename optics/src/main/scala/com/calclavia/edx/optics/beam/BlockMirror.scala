@@ -83,28 +83,6 @@ class BlockMirror extends BlockEDX with Stateful with Syncable with Storable {
 			}
 		})
 
-	//TODO: Think of better ways to control mirror
-	/*
-	override def update() {
-		if (isPowered) {
-			for (a <- 0 to 5) {
-				val dir = Direction.getOrientation(a)
-				val axis = new Vector3d(dir)
-				val rotateAngle = world.getIndirectPowerLevelTo(x + axis.x.toInt, y + axis.y.toInt, z + axis.z.toInt, a) * 15
-
-				if (rotateAngle > 0) {
-					normal = normal.transform(new Quaternion(Math.toRadians(rotateAngle), axis)).normalize
-				}
-			}
-
-			world.markBlockForUpdate(x, y, z)
-		}
-
-		if (world.getTotalWorldTime % 20 == 0) {
-			cachedHits = List()
-		}
-	}*/
-
 	override def getID: String = "mirror"
 
 	override def read(packet: Packet) {
