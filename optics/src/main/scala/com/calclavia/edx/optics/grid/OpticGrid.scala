@@ -41,7 +41,6 @@ object OpticGrid {
 class OpticGrid(val world: World) extends Updater {
 
 	var sources = Set.empty[Beam]
-	var all = Set.empty[Beam]
 
 	private var graphChanged = true
 
@@ -50,16 +49,11 @@ class OpticGrid(val world: World) extends Updater {
 	/**
 	 * Creates a laser emission point
 	 */
-	def create(beam: Beam, from: Beam = null) {
+	def create(beam: Beam) {
 		sources.synchronized {
 			if (beam.power > OpticGrid.minPower) {
-				//Mark node in graph
-				all += beam
-
-				if (from == null) {
 					sources += beam
 					graphChanged = true
-				}
 			}
 		}
 	}
@@ -94,19 +88,7 @@ class OpticGrid(val world: World) extends Updater {
 					EDX.syncTicker.preQueue(() => EDX.syncTicker.remove(this))
 				}
 				else {*/
-				//Reset sources
-				all = Set.empty
-
-				//Regenerate graph based on sources
-				all ++= sources
-
-				var iterated = Set.empty[Beam]
-
-				while ((all -- iterated).nonEmpty) {
-					val diff = all -- iterated
-					diff.foreach(_.update(deltaTime))
-					iterated ++= diff
-				}
+				sources.foreach(_.update())
 
 				if (EDX.network.isServer) {
 					//Update client
@@ -116,7 +98,7 @@ class OpticGrid(val world: World) extends Updater {
 						graphChanged = false
 					}
 				}
-				graphChanged = true
+				//	graphChanged = true
 
 				//}
 			}

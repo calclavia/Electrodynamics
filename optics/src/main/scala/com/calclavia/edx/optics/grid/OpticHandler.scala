@@ -7,6 +7,7 @@ import nova.core.component.Component
 import nova.core.event.{Event, EventBus}
 import nova.core.util.RayTracer.RayTraceResult
 import nova.scala.wrapper.FunctionalWrapper._
+import org.apache.commons.math3.util.FastMath
 
 /**
  * Handles laser interaction
@@ -17,11 +18,11 @@ object OpticHandler {
 	class ReceiveBeamEvent(val incident: Beam, var hit: RayTraceResult) extends Event {
 		var hasImpact = true
 
-		def receivingPower = incident.power - OpticGrid.minPower / (5 * hit.distance)
+		def receivingPower = FastMath.max(incident.power - OpticGrid.minPower * hit.distance, 0)
 
 		//Continues the beam
 		def continue(outgoing: Beam) {
-			OpticGrid(incident.world).create(outgoing, incident)
+			outgoing.update()
 		}
 	}
 
@@ -42,7 +43,7 @@ class OpticHandler(block: Block) extends Component {
 
 	def create(laser: ElectromagneticBeam) {
 		if (emitting != null) {
-			if (emitting.equals(laser)) {
+			if (emitting.sameAs(laser)) {
 				return
 			}
 			destroy()

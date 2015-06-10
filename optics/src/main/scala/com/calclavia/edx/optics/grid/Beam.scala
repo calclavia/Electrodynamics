@@ -4,7 +4,6 @@ import java.util.Optional
 
 import com.calclavia.edx.core.EDX
 import com.calclavia.edx.optics.grid.OpticHandler.ReceiveBeamEvent
-import nova.core.component.Updater
 import nova.core.render.Color
 import nova.core.retention.{Data, Storable, Store}
 import nova.core.util.RayTracer.{RayTraceBlockResult, RayTraceEntityResult, RayTraceResult}
@@ -16,7 +15,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
  * A wave can travel as a focused beam.
  * @author Calclavia
  */
-abstract class Beam extends Storable with Updater {
+abstract class Beam extends Storable {
 
 	var world: World = _
 
@@ -72,9 +71,7 @@ abstract class Beam extends Storable with Updater {
 		color = Color.argb(data.get("color"))
 	}
 
-	override def update(deltaTime: Double) {
-		super.update(deltaTime)
-
+	def update() {
 		var opHit = rayTrace
 
 		//Check with previous hit and compute hit time
@@ -136,19 +133,11 @@ abstract class Beam extends Storable with Updater {
 	 */
 	def render(hit: RayTraceResult, hasImpact: Boolean)
 
-	override def equals(obj: Any): Boolean = {
-		if (super.equals(obj))
-			return true
+	def sameAs(other: Beam) =
+		source.origin.equals(other.source.origin) &&
+			source.dir.equals(other.source.dir) &&
+			renderOffset.equals(other.renderOffset) &&
+			color.equals(other.color) &&
+			power == other.power
 
-		/*
-		if (obj.isInstanceOf[Beam]) {
-			val other = obj.asInstanceOf[Beam]
-			return source.origin.equals(other.source.origin) &&
-				source.dir.equals(other.source.dir) &&
-				renderOffset.equals(other.renderOffset) &&
-				color.equals(other.color) &&
-				power == other.power
-		}*/
-		return false
-	}
 }
