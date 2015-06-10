@@ -20,8 +20,7 @@ class EntityScorch(side: Int) extends Entity with EntityAgeLike {
 	val particleScale = 0.2f
 	var particleAlpha = 0d
 
-	val rot = Direction.fromOrdinal(side).rotation
-		.applyTo(new Rotation(Vector3D.PLUS_J, Math.PI))
+	val rot = new Rotation(Vector3D.MINUS_K, Direction.fromOrdinal(side).toVector)
 
 	override def maxAge: Double = 1
 

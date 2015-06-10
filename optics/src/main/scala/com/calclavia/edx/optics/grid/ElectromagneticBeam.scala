@@ -62,15 +62,19 @@ class ElectromagneticBeam extends Beam {
 	 */
 	override def render(hit: RayTraceResult, hasImpact: Boolean) {
 		if (hit != null) {
-			world.addClientEntity(new EntityLaserBeam(source.origin + renderOffset, hit.hit, color, power))
+			val renderPos = source.origin + renderOffset
 
-			if (hit.isInstanceOf[RayTraceBlockResult] && hasImpact) {
-				val scorch = new EntityScorch(hit.side.ordinal())
-				world.addClientEntity(scorch)
-				scorch.setPosition(hit.hit - source.dir * 0.01)
-				val blockParticle = new EntityBlockParticle(hit.asInstanceOf[RayTraceBlockResult].block)
-				world.addClientEntity(blockParticle)
-				scorch.setPosition(hit.hit - source.dir * 0.01)
+			if (!renderPos.equals(hit.hit)) {
+				world.addClientEntity(new EntityLaserBeam(renderPos, hit.hit, color, power))
+
+				if (hit.isInstanceOf[RayTraceBlockResult] && hasImpact) {
+					val scorch = new EntityScorch(hit.side.ordinal())
+					world.addClientEntity(scorch)
+					scorch.setPosition(hit.hit - source.dir * 0.01)
+					val blockParticle = new EntityBlockParticle(hit.asInstanceOf[RayTraceBlockResult].block)
+					world.addClientEntity(blockParticle)
+					scorch.setPosition(hit.hit - source.dir * 0.01)
+				}
 			}
 		}
 	}
