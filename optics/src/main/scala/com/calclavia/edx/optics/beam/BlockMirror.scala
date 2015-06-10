@@ -73,10 +73,9 @@ class BlockMirror extends BlockEDX with Stateful with Syncable with Storable {
 			if (rotateAngle < Math.PI) {
 				//Emit beam
 				val newDirection = new Rotation(axisOfReflection, rotateAngle).applyTo(incidentDirection)
-				println(Math.toDegrees(angle))
 				val beam = new ElectromagneticBeam
 				beam.world = world
-				val traceStart = position + 0.5 + newDirection * 0.6
+				val traceStart = position + 0.5 + newDirection * 0.51
 				beam.source = new Ray(traceStart, newDirection)
 				beam.renderOffset = evt.hit.hit - traceStart
 				beam.color = evt.incident.color

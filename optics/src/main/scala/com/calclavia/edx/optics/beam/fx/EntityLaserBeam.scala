@@ -8,7 +8,6 @@ import nova.core.component.renderer.DynamicRenderer
 import nova.core.entity.Entity
 import nova.core.render.Color
 import nova.core.render.model.{Model, Vertex}
-import nova.core.util.math.Vector3DUtil
 import nova.scala.wrapper.FunctionalWrapper._
 import nova.scala.wrapper.VectorWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.{Rotation, Vector3D}
@@ -35,9 +34,7 @@ class EntityLaserBeam(start: Vector3D, end: Vector3D, color: Color, power: Doubl
 
 	val midPoint = end.midpoint(start)
 	val dir = (end - start).normalize
-	val rot = new Rotation(Vector3D.PLUS_K, Math.PI / 2)
-		.applyTo(new Rotation(Vector3D.PLUS_J, Math.PI / 2))
-		.applyTo(new Rotation(Vector3DUtil.FORWARD, dir))
+	val rot = new Rotation(Vector3D.PLUS_J, dir)
 
 	/**
 	 * Set position

@@ -86,7 +86,7 @@ class OpticGrid(val world: World) extends Updater {
 
 		timer += deltaTime
 
-		if (timer >= 0.5) {
+		if (timer >= 0.4) {
 			timer = 0
 
 			sources.synchronized {
@@ -111,7 +111,7 @@ class OpticGrid(val world: World) extends Updater {
 				if (EDX.network.isServer) {
 					//Update client
 					if (graphChanged) {
-						println("Sources: " + sources.size)
+						//println("Sources: " + sources.size)
 						EDX.network.sync(this)
 						graphChanged = false
 					}
