@@ -52,8 +52,8 @@ class OpticGrid(val world: World) extends Updater {
 	def create(beam: Beam) {
 		sources.synchronized {
 			if (beam.power > OpticGrid.minPower) {
-					sources += beam
-					graphChanged = true
+				sources += beam
+				graphChanged = true
 			}
 		}
 	}
@@ -83,24 +83,19 @@ class OpticGrid(val world: World) extends Updater {
 		if (timer >= 0.4) {
 			timer = 0
 
-			sources.synchronized {
-				/*if(graph.vertexSet().size == 0) {
-					EDX.syncTicker.preQueue(() => EDX.syncTicker.remove(this))
-				}
-				else {*/
-				sources.foreach(_.update())
+			if (!EDX.clientManager.isPaused) {
+				sources.synchronized {
+					sources.foreach(_.update())
 
-				if (EDX.network.isServer) {
-					//Update client
-					if (graphChanged) {
-						//println("Sources: " + sources.size)
-						EDX.network.sync(this)
-						graphChanged = false
+					if (EDX.network.isServer) {
+						//Update client
+						if (graphChanged) {
+							//println("Sources: " + sources.size)
+							EDX.network.sync(this)
+							graphChanged = false
+						}
 					}
 				}
-				//	graphChanged = true
-
-				//}
 			}
 		}
 	}
