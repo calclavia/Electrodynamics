@@ -80,7 +80,7 @@ class OpticGrid(val world: World) extends Updater {
 
 		timer += deltaTime
 
-		if (timer >= 0.4) {
+		if (timer >= 0.3) {
 			timer = 0
 
 			if (!EDX.clientManager.isPaused) {

@@ -40,7 +40,7 @@ class BlockCrystal extends BlockEDX with Stateful with Syncable with Storable {
 			model.blendSFactor = 0x302
 			//GL_ Minus One
 			model.blendDFactor = 0x303
-			model.matrix.rotate(new Rotation(new Vector3D(1, -1.1, 1), focus.normal))
+			model.matrix.rotate(new Rotation(new Vector3D(1, -1.5, 3), focus.normal).revert())
 			model.children.add(OpticsModels.crystal.getModel)
 			model.bindAll(OpticsTextures.crystal)
 		}
@@ -63,7 +63,7 @@ class BlockCrystal extends BlockEDX with Stateful with Syncable with Storable {
 			val newDirection = focus.normal
 			val beam = new ElectromagneticBeam
 			beam.world = world
-			val traceStart = position + 0.5 + newDirection * 0.52
+			val traceStart = position + 0.5 + newDirection * 0.55
 			beam.source = new Ray(traceStart, newDirection)
 			beam.renderOffset = evt.hit.hit - traceStart
 			beam.color = evt.incident.color
