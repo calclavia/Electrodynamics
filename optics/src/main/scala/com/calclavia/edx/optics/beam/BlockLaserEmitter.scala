@@ -103,8 +103,8 @@ class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater with
 				model.matrix.rotate(Vector3D.PLUS_I, Math.PI)
 			}
 
-			model.children.add(OpticsModels.laserEmitterModel.getModel)
-			model.bindAll(OpticsTextures.laserEmitterTexture)
+			model.children.add(OpticsModels.laserEmitter.getModel)
+			model.bindAll(OpticsTextures.laserEmitter)
 		}
 	)
 

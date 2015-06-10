@@ -16,9 +16,10 @@ object OpticsModels extends ContentLoader {
 	val mobilizer = new TechneModel(Reference.domain, "forceMobilizer")
 	val deriver = new TechneModel(Reference.domain, "coercionDeriver")
 
-	val laserReceiverModel = new TechneModel(Reference.domain, "laserReceiver")
-	val laserEmitterModel = new TechneModel(Reference.domain, "laserEmitter")
-	val mirrorModel = new TechneModel(Reference.domain, "mirror")
+	val laserReceiver = new TechneModel(Reference.domain, "laserReceiver")
+	val laserEmitter = new TechneModel(Reference.domain, "laserEmitter")
+	val mirror = new TechneModel(Reference.domain, "mirror")
+	val crystal = new TechneModel(Reference.domain, "crystal")
 
 	override def id: String = Reference.id
 }

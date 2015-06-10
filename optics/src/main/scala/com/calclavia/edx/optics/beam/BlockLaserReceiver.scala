@@ -98,8 +98,8 @@ class BlockLaserReceiver extends BlockEDX with Stateful with ExtendedUpdater wit
 				model.matrix.rotate(Vector3D.PLUS_I, Math.PI)
 			}
 
-			model.children.add(OpticsModels.laserReceiverModel.getModel)
-			model.bindAll(OpticsTextures.laserReceiverTexture)
+			model.children.add(OpticsModels.laserReceiver.getModel)
+			model.bindAll(OpticsTextures.laserReceiver)
 		}
 	)
 

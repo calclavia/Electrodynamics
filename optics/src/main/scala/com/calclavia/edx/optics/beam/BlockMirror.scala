@@ -27,6 +27,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.{Rotation, Vector3D}
  *
  * @author Calclavia
  */
+//TODO: Add wrench focus
 class BlockMirror extends BlockEDX with Stateful with Syncable with Storable {
 	@Store
 	@Sync
@@ -40,9 +41,9 @@ class BlockMirror extends BlockEDX with Stateful with Syncable with Storable {
 			model.matrix.rotate(new Rotation(Vector3DUtil.FORWARD, focus.normal).revert())
 			model.matrix.rotate(Vector3D.PLUS_I, Math.PI / 2)
 
-			val child = OpticsModels.mirrorModel.getModel.combineChildren("mirror", "mirror", "mirrorBacking", "standConnector")
+			val child = OpticsModels.mirror.getModel.combineChildren("mirror", "mirror", "mirrorBacking", "standConnector")
 			model.children.add(child)
-			model.bindAll(OpticsTextures.mirrorTexture)
+			model.bindAll(OpticsTextures.mirror)
 		}
 	)
 	collider.isCube(false)

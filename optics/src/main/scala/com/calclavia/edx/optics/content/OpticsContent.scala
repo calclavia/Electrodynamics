@@ -3,7 +3,7 @@ package com.calclavia.edx.optics.content
 import com.calclavia.edx.core.Reference
 import com.calclavia.edx.optics.base.{ItemModule, Named}
 import com.calclavia.edx.optics.beam.fx.EntityMagneticBeam
-import com.calclavia.edx.optics.beam.{BlockLaserEmitter, BlockLaserReceiver, BlockMirror}
+import com.calclavia.edx.optics.beam.{BlockCrystal, BlockLaserEmitter, BlockLaserReceiver, BlockMirror}
 import com.calclavia.edx.optics.field.module._
 import com.calclavia.edx.optics.field.shape._
 import com.calclavia.edx.optics.field.{BlockForceField, BlockProjector}
@@ -34,6 +34,7 @@ object OpticsContent extends ContentLoader {
 	val laserEmitter: BlockFactory = classOf[BlockLaserEmitter]
 	val laserReceiver: BlockFactory = classOf[BlockLaserReceiver]
 	val mirror: BlockFactory = classOf[BlockMirror]
+	val crystal: BlockFactory = classOf[BlockCrystal]
 
 	/**
 	 * Misc Items
