@@ -8,7 +8,6 @@ import nova.core.item.Item.{RightClickEvent, TooltipEvent}
 import nova.core.network.NetworkTarget.Side
 import nova.core.network.{Packet, Syncable}
 import nova.core.retention.Store
-import nova.scala.wrapper.FunctionalWrapper
 import nova.scala.wrapper.FunctionalWrapper._
 
 import scala.beans.BeanProperty

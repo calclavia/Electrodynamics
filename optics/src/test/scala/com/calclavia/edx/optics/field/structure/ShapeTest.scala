@@ -8,8 +8,6 @@ import nova.core.util.math.MathUtil._
 import nova.core.util.math.Vector3DUtil
 import nova.scala.wrapper.VectorWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.Test
 
 /**
  * @author Calclavia

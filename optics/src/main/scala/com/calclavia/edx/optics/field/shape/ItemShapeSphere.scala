@@ -6,6 +6,7 @@ import com.resonant.core.structure.Structure
 import nova.core.render.model.Model
 import nova.scala.wrapper.VectorWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
+
 class ItemShapeSphere extends ItemShape {
 
 	override def getID: String = "modeSphere"
