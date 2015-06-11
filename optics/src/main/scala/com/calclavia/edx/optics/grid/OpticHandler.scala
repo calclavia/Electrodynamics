@@ -38,8 +38,8 @@ class OpticHandler(val block: Block) extends Component {
 	private var emitting: ElectromagneticBeam = null
 
 	//Hook block events.
-	block.loadEvent.add(eventListener((evt: LoadEvent) => OpticGrid(block.world)))
-	block.unloadEvent.add((evt: UnloadEvent) => destroy())
+	block.events.add(eventListener((evt: LoadEvent) => OpticGrid(block.world)), classOf[LoadEvent])
+	block.events.add((evt: UnloadEvent) => destroy(), classOf[UnloadEvent])
 
 	def create(laser: ElectromagneticBeam) {
 		if (emitting != null) {

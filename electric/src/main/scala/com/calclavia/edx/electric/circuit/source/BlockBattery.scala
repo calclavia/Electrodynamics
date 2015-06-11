@@ -3,26 +3,25 @@ package com.calclavia.edx.electric.circuit.source
 import java.util.function.Supplier
 import java.util.{Collections, Set => JSet}
 
+import com.calclavia.edx.core.EDX
 import com.calclavia.edx.core.prefab.BlockEDX
 import com.calclavia.edx.electric.ElectricContent
 import com.calclavia.edx.electric.api.{ConnectionBuilder, Electric}
 import com.calclavia.edx.electric.grid.NodeElectricComponent
 import com.calclavia.minecraft.redstone.Redstone
 import com.resonant.core.energy.EnergyStorage
-import nova.scala.wrapper.FunctionalWrapper
-import FunctionalWrapper._
-import nova.core.block.Block.{BlockPlaceEvent, DropEvent, RightClickEvent}
+import nova.core.block.Block.{DropEvent, PlaceEvent, RightClickEvent}
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.renderer.ItemRenderer
 import nova.core.component.transform.Orientation
 import nova.core.event.Event
-import com.calclavia.edx.core.EDX
 import nova.core.item.Item
-import nova.core.network.{Syncable, Sync}
+import nova.core.network.{Sync, Syncable}
 import nova.core.render.model.Model
 import nova.core.retention.{Storable, Store}
 import nova.scala.component.IO
 import nova.scala.util.ExtendedUpdater
+import nova.scala.wrapper.FunctionalWrapper._
 
 /** A modular battery box that allows shared connections with boxes next to it.
   *
@@ -79,9 +78,12 @@ class BlockBattery extends BlockEDX with Syncable with Storable with ExtendedUpd
 	collider.isCube(false)
 	collider.isOpaqueCube(false)
 
-	placeEvent.add((evt: BlockPlaceEvent) => {
-		io.setIOAlternatingOrientation()
-	})
+	events.add(
+		(evt: PlaceEvent) => {
+			io.setIOAlternatingOrientation()
+		},
+		classOf[PlaceEvent]
+	)
 
 	staticRenderer.setOnRender(
 		(model: Model) => {
@@ -124,26 +126,30 @@ class BlockBattery extends BlockEDX with Syncable with Storable with ExtendedUpd
 	 */
 	io.changeEvent.add((evt: Event) => electricNode.rebuild())
 
-	placeEvent.add(
-		(evt: BlockPlaceEvent) => {
+	events.add(
+		(evt: PlaceEvent) => {
 			if (EDX.network.isServer) {
 				val item = evt.item.asInstanceOf[ItemBlockBattery]
 				tier = item.tier
 				energy = item.energy
 			}
-		})
+		},
+		classOf[PlaceEvent]
+	)
 
-	dropEvent.add((evt: DropEvent) => {
+	events.add((evt: DropEvent) => {
 		val item = new ItemBlockBattery(factory())
 		item.tier = tier
 		item.energy = energy
 		evt.drops = Collections.singleton(item)
-	})
+	},
+		classOf[DropEvent]
+	)
 
 	//TODO: Remove debug
 	@Store
 	var mode = 0
-	rightClickEvent.add((evt: RightClickEvent) => if (EDX.network.isServer) mode = (mode + 1) % 10)
+	events.add((evt: RightClickEvent) => if (EDX.network.isServer) mode = (mode + 1) % 10, classOf[RightClickEvent])
 
 	override def onRegister() {
 		EDX.items.register(func[Array[AnyRef], Item]((args: Array[AnyRef]) => new ItemBlockBattery(factory())))

@@ -10,7 +10,7 @@ import com.calclavia.edx.electric.api.Electric
 import com.calclavia.edx.electric.api.Electric.GraphBuiltEvent
 import com.calclavia.edx.electric.grid.NodeElectricJunction
 import com.calclavia.microblock.micro.{Microblock, MicroblockContainer}
-import nova.core.block.Block.{BlockPlaceEvent, RightClickEvent}
+import nova.core.block.Block.{PlaceEvent, RightClickEvent}
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.misc.Collider
 import nova.core.component.renderer.ItemRenderer
@@ -122,7 +122,7 @@ class BlockWire extends BlockEDX with Storable with Syncable {
 
 	private val microblock = add(new Microblock(this))
 		.setOnPlace(
-	    (evt: BlockPlaceEvent) => {
+	    (evt: PlaceEvent) => {
 		    this.side = evt.side.opposite.ordinal.toByte
 		    //TODO: Fix wire material
 		    get(classOf[MaterialWire]).material = WireMaterial.COPPER
@@ -175,7 +175,7 @@ class BlockWire extends BlockEDX with Storable with Syncable {
 		}
 	})
 
-	rightClickEvent.add((evt: RightClickEvent) => if (EDX.network.isServer) System.out.println(electricNode))
+	events.add((evt: RightClickEvent) => if (EDX.network.isServer) System.out.println(electricNode), classOf[RightClickEvent])
 
 	collider.setBoundingBox(() => {
 		BlockWire.occlusionBounds(side)(4)

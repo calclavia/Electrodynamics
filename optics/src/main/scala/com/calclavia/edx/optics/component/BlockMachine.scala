@@ -58,7 +58,7 @@ abstract class BlockMachine extends BlockDefault with Syncable with IActivatable
 		.isCube(false)
 		.isOpaqueCube(false)
 
-	rightClickEvent.add((evt: RightClickEvent) => onRightClick(evt))
+	events.add((evt: RightClickEvent) => onRightClick(evt), classOf[RightClickEvent])
 
 	//	stepSound = Block.soundTypeMetal
 	//	override def getExplosionResistance(entity: Entity): Float = 100

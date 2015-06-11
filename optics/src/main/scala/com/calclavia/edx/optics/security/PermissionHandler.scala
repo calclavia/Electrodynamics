@@ -6,14 +6,14 @@ import com.calclavia.edx.optics.component.BlockFrequency
 import com.resonant.core.access.Permission
 import nova.core.block.Block.RightClickEvent
 import nova.core.entity.component.Player
-import nova.scala.wrapper.FunctionalWrapper
 import nova.scala.wrapper.FunctionalWrapper._
+
 /**
  * @author Calclavia
  */
 trait PermissionHandler extends BlockFrequency {
 
-	rightClickEvent.add((evt: RightClickEvent) => onRightClick(evt))
+	events.add((evt: RightClickEvent) => onRightClick(evt), classOf[RightClickEvent])
 
 	final def hasPermission(playerID: String, permissions: Permission*): Boolean = permissions.forall(hasPermission(playerID, _))
 

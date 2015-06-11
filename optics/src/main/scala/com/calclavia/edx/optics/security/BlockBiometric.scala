@@ -7,7 +7,7 @@ import com.calclavia.edx.optics.api.card.AccessCard
 import com.calclavia.edx.optics.component.BlockFrequency
 import com.calclavia.edx.optics.content.{OpticsModels, OpticsTextures}
 import com.resonant.core.access.Permission
-import nova.core.block.Block.{BlockPlaceEvent, RightClickEvent}
+import nova.core.block.Block.{PlaceEvent, RightClickEvent}
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.renderer.DynamicRenderer
 import nova.core.component.transform.Orientation
@@ -43,10 +43,10 @@ class BlockBiometric extends BlockFrequency with ExtendedUpdater with Permission
 		.setOnRender(
 	    (model: Model) => {
 		    model.matrix.rotate(get(classOf[Orientation]).orientation.rotation)
-			val modelBiometric: Model = OpticsModels.biometric.getModel
+		    val modelBiometric: Model = OpticsModels.biometric.getModel
 		    modelBiometric.children.removeAll(modelBiometric.children.filter(_.name.equals("holoScreen")))
 		    model.children.add(modelBiometric)
-			model.bindAll(if (isActive) OpticsTextures.biometricOn else OpticsTextures.biometricOff)
+		    model.bindAll(if (isActive) OpticsTextures.biometricOn else OpticsTextures.biometricOff)
 	    }
 		)
 
@@ -58,13 +58,13 @@ class BlockBiometric extends BlockFrequency with ExtendedUpdater with Permission
 		     * Simulate flicker and, hovering
 		     */
 		    val t = System.currentTimeMillis()
-			val dist = position.distance(EDX.clientManager.getPlayer.position)
+		    val dist = position.distance(EDX.clientManager.getPlayer.position)
 
 		    if (dist < 3) {
 			    if (Math.random() > 0.05 || (lastFlicker - t) > 200) {
 				    model.matrix.translate(0, Math.sin(Math.toRadians(animation)) * 0.05, 0)
 				    //RenderUtility.enableBlending()
-					val screenModel = OpticsModels.biometric.getModel
+				    val screenModel = OpticsModels.biometric.getModel
 				    screenModel.children.removeAll(screenModel.filterNot(_.name.equals("holoScreen")))
 				    model.children.add(screenModel)
 				    //RenderUtility.disableBlending()
@@ -72,12 +72,12 @@ class BlockBiometric extends BlockFrequency with ExtendedUpdater with Permission
 			    }
 		    }
 
-			model.bindAll(if (isActive) OpticsTextures.biometricOn else OpticsTextures.biometricOff)
+		    model.bindAll(if (isActive) OpticsTextures.biometricOn else OpticsTextures.biometricOff)
 	    }
 		)
 
-	placeEvent.add((evt: BlockPlaceEvent) => world.markStaticRender(position))
-	rightClickEvent.add((evt: RightClickEvent) => world.markStaticRender(position))
+	events.add((evt: PlaceEvent) => world.markStaticRender(position), classOf[PlaceEvent])
+	events.add((evt: RightClickEvent) => world.markStaticRender(position), classOf[RightClickEvent])
 
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)

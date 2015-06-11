@@ -65,7 +65,7 @@ class BlockForceField extends BlockDefault with Syncable with ForceField with St
 			    if (projector.crystalHandler.getModules().forall(stack => stack.asInstanceOf[Module].onFieldCollide(BlockForceField.this, entity))) {
 				    val biometricIdentifier = projector.getBiometricIdentifier
 
-					if ((transform.position + 0.5).distance(entity.transform.position) < 0.5) {
+				    if ((transform.position + 0.5).distance(entity.transform.position) < 0.5) {
 					    if (Side.get().isServer && entity.has(classOf[Damageable])) {
 						    val entityLiving = entity.get(classOf[Damageable])
 
@@ -125,7 +125,7 @@ class BlockForceField extends BlockDefault with Syncable with ForceField with St
 	    }
 		)
 
-	dropEvent.add((evt: DropEvent) => evt.drops = Collections.emptySet())
+	events.add((evt: DropEvent) => evt.drops = Collections.emptySet(), classOf[DropEvent])
 
 	override def getHardness: Double = Double.PositiveInfinity
 

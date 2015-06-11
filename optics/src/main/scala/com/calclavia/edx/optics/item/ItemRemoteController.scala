@@ -98,7 +98,7 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 
 							if (receivedEnergy >= requiredEnergy) {
 								try {
-									block.rightClickEvent.publish(new Block.RightClickEvent(evt.entity, Direction.UNKNOWN, Vector3D.ZERO))
+									block.events.publish(new Block.RightClickEvent(evt.entity, Direction.UNKNOWN, Vector3D.ZERO))
 								}
 								catch {
 									case e: Exception => {

@@ -8,7 +8,6 @@ import com.calclavia.edx.optics.item.card.ItemCardFrequency
 import nova.core.block.Stateful.{LoadEvent, UnloadEvent}
 import nova.core.inventory.InventorySimple
 import nova.core.item.Item
-import nova.scala.wrapper.FunctionalWrapper
 import nova.scala.wrapper.FunctionalWrapper._
 
 /**
@@ -19,8 +18,8 @@ abstract class BlockFrequency extends BlockMachine with Frequency {
 	val inventory: InventorySimple
 	val frequencySlot = 0
 
-	loadEvent.add((evt: LoadEvent) => GraphFrequency.instance.add(this))
-	unloadEvent.add((evt: UnloadEvent) => GraphFrequency.instance.remove(this))
+	events.add((evt: LoadEvent) => GraphFrequency.instance.add(this), classOf[LoadEvent])
+	events.add((evt: UnloadEvent) => GraphFrequency.instance.remove(this), classOf[UnloadEvent])
 
 	override def getFrequency: Int = {
 		val frequencyCard = getFrequencyCard

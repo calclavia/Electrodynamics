@@ -1,13 +1,11 @@
 package com.calclavia.edx.electric.grid
 
+import com.calclavia.edx.core.EDX
 import com.calclavia.edx.electric.api.Electric
 import com.calclavia.edx.electric.api.Electric.ElectricChangeEvent
-import nova.scala.wrapper.FunctionalWrapper
-import FunctionalWrapper._
 import nova.core.block.Block.NeighborChangeEvent
 import nova.core.block.Stateful.{LoadEvent, UnloadEvent}
-import com.calclavia.edx.core.EDX
-import nova.core.network.NetworkTarget.Side
+import nova.scala.wrapper.FunctionalWrapper._
 
 import scala.collection.convert.wrapAll._
 
@@ -20,21 +18,23 @@ trait ElectricLike extends Electric with BlockConnectable[Electric] {
 	private var _resistance = 1d
 
 	//Hook block events.
-	block.loadEvent.add(
+	block.events.add(
 		(evt: LoadEvent) => {
 			//Wait for next tick
 			if (EDX.network.isServer) {
 				EDX.syncTicker.preQueue(() => build())
 			}
-		}
+		},
+		classOf[LoadEvent]
 	)
-	block.unloadEvent.add(
+	block.events.add(
 		(evt: UnloadEvent) => {
 			ElectricGrid.destroy(this)
-		}
+		},
+		classOf[UnloadEvent]
 	)
 
-	block.neighborChangeEvent.add((evt: NeighborChangeEvent) => rebuild())
+	block.events.add((evt: NeighborChangeEvent) => rebuild(), classOf[NeighborChangeEvent])
 
 	def rebuild() {
 		if (EDX.network.isServer) {

@@ -59,7 +59,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 
 	override def getID: String = "projector"
 
-	unloadEvent.add((evt: UnloadEvent) => destroyField(), EventBus.PRIORITY_DEFAULT + 1)
+	events.add((evt: UnloadEvent) => destroyField(), classOf[UnloadEvent], EventBus.PRIORITY_DEFAULT + 1)
 
 	get(classOf[Collider])
 		.isCube(false)
@@ -90,21 +90,11 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 			    val rot = Math.atan2(zDifference, xDifference)
 			    lightBeam.matrix.rotate(Vector3D.PLUS_J, -rot + Math.toRadians(27)).getMatrix
 
-			    /*
-			glDisable(GL_TEXTURE_2D)
-			glShadeModel(GL_SMOOTH)
-			glEnable(GL_BLEND)
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE)
-			glDisable(GL_ALPHA_TEST)
-			glEnable(GL_CULL_FACE)
-			glDepthMask(false)
-			glPushMatrix*/
 
 			    val height: Float = 2
 			    val width: Float = 2
 
 			    val face = lightBeam.createFace()
-			    //tessellator.setColorRGBA_I(0, 0)
 			    face.drawVertex(new Vertex(0, 0, 0, 0, 0))
 			    face.drawVertex(new Vertex(-0.866D * width, height, -0.5F * width, 0, 0))
 			    face.drawVertex(new Vertex(0.866D * width, height, -0.5F * width, 0, 0))
@@ -113,17 +103,6 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 			    face.vertices.foreach(_.setColor(Color.rgb(72, 198, 255)))
 			    lightBeam.drawFace(face)
 
-			    /*
-			glPopMatrix
-			glDepthMask(true)
-			glDisable(GL_CULL_FACE)
-			glDisable(GL_BLEND)
-			glShadeModel(GL_FLAT)
-			glColor4f(1.0F, 1.0F, 1.0F, 1.0F)
-			glEnable(GL_TEXTURE_2D)
-			glEnable(GL_ALPHA_TEST)
-			RenderHelper.enableStandardItemLighting
-			glPopMatrix*/
 
 			    model.children.add(lightBeam)
 
@@ -344,8 +323,6 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 	}
 
 	def getProjectionSpeed: Int = 28 + 28 * getModuleCount(OpticsContent.moduleSpeed, getModuleSlots: _*)
-
-
 
 	def destroyField() {
 		if (EDX.network.isServer && calculatedField != null && !isCalculating) {

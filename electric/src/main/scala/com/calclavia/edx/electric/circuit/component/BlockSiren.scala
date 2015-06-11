@@ -17,7 +17,6 @@ import nova.core.retention.Store
 import nova.core.util.Direction
 import nova.scala.component.IO
 import nova.scala.util.ExtendedUpdater
-import nova.scala.wrapper.FunctionalWrapper
 import nova.scala.wrapper.FunctionalWrapper._
 import nova.scala.wrapper.VectorWrapper._
 /**
@@ -50,7 +49,7 @@ class BlockSiren extends BlockEDX with ExtendedUpdater with Stateful {
 			.asInstanceOf[Supplier[JSet[Electric]]]
 	)
 
-	rightClickEvent.add((evt: RightClickEvent) => metadata = (metadata + 1) % 10)
+	events.add((evt: RightClickEvent) => metadata = (metadata + 1) % 10, classOf[RightClickEvent])
 
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)

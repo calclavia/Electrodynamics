@@ -9,7 +9,7 @@ import com.calclavia.edx.electric.grid.NodeElectricComponent
 import com.calclavia.edx.optics.content.{OpticsModels, OpticsTextures}
 import com.calclavia.edx.optics.grid.OpticHandler
 import com.calclavia.edx.optics.grid.OpticHandler.ReceiveBeamEvent
-import nova.core.block.Block.{BlockPlaceEvent, RightClickEvent}
+import nova.core.block.Block.{PlaceEvent, RightClickEvent}
 import nova.core.block.Stateful
 import nova.core.block.component.{LightEmitter, StaticBlockRenderer}
 import nova.core.component.renderer.ItemRenderer
@@ -22,7 +22,6 @@ import nova.scala.component.IO
 import nova.scala.util.ExtendedUpdater
 import nova.scala.wrapper.FunctionalWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.{Rotation, Vector3D}
-
 
 /**
  * A block that receives laser light and generates a voltage.
@@ -59,15 +58,20 @@ class BlockLaserReceiver extends BlockEDX with Stateful with ExtendedUpdater wit
 
 	electricNode.setResistance(100)
 
-	placeEvent.add((evt: BlockPlaceEvent) => {
-		io.setIOAlternatingOrientation()
-		world.markStaticRender(position)
-	})
+	events.add(
+		(evt: PlaceEvent) => {
+			io.setIOAlternatingOrientation()
+			world.markStaticRender(position)
+		}, classOf[PlaceEvent]
+	)
 
-	rightClickEvent.add((evt: RightClickEvent) => {
-		io.setIOAlternatingOrientation()
-		world.markStaticRender(position)
-	})
+	events.add(
+		(evt: RightClickEvent) => {
+			io.setIOAlternatingOrientation()
+			world.markStaticRender(position)
+		},
+		classOf[RightClickEvent]
+	)
 
 	laserHandler.onReceive.add((evt: ReceiveBeamEvent) => {
 		//if (hit.sideHit == getDirection.ordinal)
