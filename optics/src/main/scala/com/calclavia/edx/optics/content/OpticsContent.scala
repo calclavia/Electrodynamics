@@ -13,10 +13,10 @@ import com.calclavia.edx.optics.item.card.{ItemCard, ItemCardFrequency, ItemCard
 import com.calclavia.edx.optics.security.BlockBiometric
 import com.calclavia.edx.optics.security.card.ItemCardIdentification
 import com.calclavia.edx.optics.security.module._
-import com.resonant.core.prefab.modcontent.ContentLoader
 import nova.core.block.BlockFactory
 import nova.core.entity.EntityFactory
 import nova.core.item.{Item, ItemFactory}
+import nova.scala.modcontent.ContentLoader
 
 /**
  * The main mffs.content of MFFS

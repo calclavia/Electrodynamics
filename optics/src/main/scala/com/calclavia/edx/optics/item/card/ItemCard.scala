@@ -2,8 +2,8 @@ package com.calclavia.edx.optics.item.card
 
 import com.calclavia.edx.optics.api.card.Card
 import com.calclavia.edx.optics.component.CategoryMFFS
-import com.resonant.core.prefab.modcontent.AutoItemTexture
 import nova.core.item.Item
+import nova.scala.modcontent.AutoItemTexture
 
 class ItemCard extends Item with Card with AutoItemTexture {
 

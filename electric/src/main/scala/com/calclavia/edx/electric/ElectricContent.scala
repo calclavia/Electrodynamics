@@ -4,10 +4,10 @@ import com.calclavia.edx.core.Reference
 import com.calclavia.edx.electric.circuit.component.BlockSiren
 import com.calclavia.edx.electric.circuit.source.{BlockBattery, BlockSolarPanel, BlockThermopile}
 import com.calclavia.edx.electric.circuit.wire.BlockWire
-import com.resonant.core.prefab.modcontent.ContentLoader
 import nova.core.block.BlockFactory
 import nova.core.render.model.TechneModel
 import nova.core.render.texture.BlockTexture
+import nova.scala.modcontent.ContentLoader
 
 /**
  * @author Calclavia

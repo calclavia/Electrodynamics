@@ -1,13 +1,13 @@
 package com.calclavia.edx.electric.circuit.source
 
-import com.resonant.core.energy.EnergyStorage
-import nova.scala.wrapper.FunctionalWrapper
-import FunctionalWrapper._
-import nova.core.block.BlockFactory
 import com.calclavia.edx.core.EDX
+import nova.core.block.BlockFactory
 import nova.core.item.Item.TooltipEvent
 import nova.core.item.ItemBlock
 import nova.core.retention.{Storable, Store}
+import nova.energy.EnergyStorage
+import nova.scala.wrapper.FunctionalWrapper
+import nova.scala.wrapper.FunctionalWrapper._
 
 class ItemBlockBattery(blockFactory: BlockFactory) extends ItemBlock(blockFactory) with Storable {
   @Store

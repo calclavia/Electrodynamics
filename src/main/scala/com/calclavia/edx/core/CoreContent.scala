@@ -1,10 +1,10 @@
 package com.calclavia.edx.core
 
 import com.calclavia.edx.core.content.{BlockCreativeBuilder, ItemScrewdriver}
-import com.resonant.core.prefab.modcontent.ContentLoader
 import nova.core.block.BlockFactory
 import nova.core.item.ItemFactory
 import nova.core.render.texture.{BlockTexture, ItemTexture}
+import nova.scala.modcontent.ContentLoader
 ;
 
 /**

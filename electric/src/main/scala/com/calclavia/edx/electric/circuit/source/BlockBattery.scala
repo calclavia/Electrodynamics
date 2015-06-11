@@ -9,7 +9,6 @@ import com.calclavia.edx.electric.ElectricContent
 import com.calclavia.edx.electric.api.{ConnectionBuilder, Electric}
 import com.calclavia.edx.electric.grid.NodeElectricComponent
 import com.calclavia.minecraft.redstone.Redstone
-import com.resonant.core.energy.EnergyStorage
 import nova.core.block.Block.{DropEvent, PlaceEvent, RightClickEvent}
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.renderer.ItemRenderer
@@ -19,6 +18,7 @@ import nova.core.item.Item
 import nova.core.network.{Sync, Syncable}
 import nova.core.render.model.Model
 import nova.core.retention.{Storable, Store}
+import nova.energy.EnergyStorage
 import nova.scala.component.IO
 import nova.scala.util.ExtendedUpdater
 import nova.scala.wrapper.FunctionalWrapper._

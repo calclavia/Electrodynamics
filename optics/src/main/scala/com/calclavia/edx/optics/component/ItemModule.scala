@@ -7,13 +7,13 @@ import com.calclavia.edx.optics.api.machine.Projector
 import com.calclavia.edx.optics.api.modules.Module
 import com.calclavia.edx.optics.field.BlockProjector
 import com.resonant.core.prefab.itemblock.TooltipItem
-import com.resonant.core.prefab.modcontent.AutoItemTexture
 import nova.core.entity.Entity
 import nova.core.item.Item
 import nova.core.item.Item.TooltipEvent
 import nova.core.util.math.Vector3DUtil
 import nova.core.util.shape.Cuboid
 import nova.energy.UnitDisplay
+import nova.scala.modcontent.AutoItemTexture
 import nova.scala.wrapper.FunctionalWrapper._
 import nova.scala.wrapper.VectorWrapper._
 
