@@ -33,7 +33,7 @@ class BlockCreativeBuilder extends Block with Syncable {
 	 * Called when the block is right clicked by the player
 	 */
 	def onRightClick(evt: RightClickEvent) {
-		Game.gui.showGui("creativeBuilder", evt.entity, transform.position)
+		//EDX..gui.showGui("creativeBuilder", evt.entity, transform.position)
 		evt.result = true
 	}
 
