@@ -2,13 +2,13 @@ package com.calclavia.edx.optics.component
 
 import java.util.Optional
 
+import com.calclavia.edx.core.prefab.BlockEDX
 import com.calclavia.edx.core.{EDX, Placeholder}
 import com.calclavia.edx.optics.api.machine.IActivatable
 import com.calclavia.edx.optics.content.OpticsTextures
-import com.calclavia.minecraft.redstone.Redstone
 import nova.core.block.Block.RightClickEvent
+import nova.core.block.Stateful
 import nova.core.block.component.StaticBlockRenderer
-import nova.core.block.{BlockDefault, Stateful}
 import nova.core.component.Component
 import nova.core.component.misc.Collider
 import nova.core.component.renderer.ItemRenderer
@@ -18,6 +18,7 @@ import nova.core.network.NetworkTarget.Side
 import nova.core.network.{Packet, Syncable}
 import nova.core.retention.{Storable, Store}
 import nova.core.util.Direction
+import nova.minecraft.redstone.Redstone
 import nova.scala.util.ExtendedUpdater
 import nova.scala.wrapper.FunctionalWrapper._
 
@@ -26,7 +27,7 @@ import nova.scala.wrapper.FunctionalWrapper._
  * @author Calclavia
  */
 //TODO: Redstone state is not properly saved
-abstract class BlockMachine extends BlockDefault with Syncable with IActivatable with Stateful with Storable with ExtendedUpdater {
+abstract class BlockMachine extends BlockEDX with Syncable with IActivatable with Stateful with Storable with ExtendedUpdater {
 	/**
 	 * Used for client side animations.
 	 */
@@ -48,7 +49,7 @@ abstract class BlockMachine extends BlockDefault with Syncable with IActivatable
 			setActive(false)
 		}
 	})
-	add(new CategoryMFFS)
+	add(new CategoryEDXOptics)
 	add(redstoneNode.asInstanceOf[Component])
 	add(new ItemRenderer(this))
 	add(new StaticBlockRenderer(this))

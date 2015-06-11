@@ -23,7 +23,7 @@ abstract class ItemModule extends Item with TooltipItem with Module with AutoIte
 	private var fortronCost = 0.5f
 	private var maxCount = 64
 
-	add(new CategoryMFFS)
+	add(new CategoryEDXOptics)
 
 	events.add(eventListener((evt: TooltipEvent) => evt.tooltips.add(EDX.language.translate("info.item.fortron") + " " + new
 			UnitDisplay(UnitDisplay.Unit.LITER, getFortronCost(1) * 20) + "/s")), classOf[TooltipEvent])

@@ -8,13 +8,13 @@ import com.calclavia.edx.core.prefab.BlockEDX
 import com.calclavia.edx.electric.ElectricContent
 import com.calclavia.edx.electric.api.{ConnectionBuilder, Electric}
 import com.calclavia.edx.electric.grid.NodeElectricComponent
-import com.calclavia.minecraft.redstone.Redstone
 import nova.core.block.Block.RightClickEvent
 import nova.core.block.Stateful
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.renderer.ItemRenderer
 import nova.core.retention.Store
 import nova.core.util.Direction
+import nova.minecraft.redstone.Redstone
 import nova.scala.component.IO
 import nova.scala.util.ExtendedUpdater
 import nova.scala.wrapper.FunctionalWrapper._
