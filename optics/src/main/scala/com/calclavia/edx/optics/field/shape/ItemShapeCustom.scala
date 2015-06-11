@@ -13,7 +13,6 @@ import nova.core.gui.InputManager.Key
 import nova.core.item.Item.{RightClickEvent, TooltipEvent, UseEvent}
 import nova.core.render.model.Model
 import nova.core.retention.Store
-import nova.scala.wrapper.FunctionalWrapper
 import nova.scala.wrapper.FunctionalWrapper._
 import nova.scala.wrapper.VectorWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
@@ -35,7 +34,7 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 	@Store
 	var fieldSize = 0
 
-	tooltipEvent.add(eventListener((evt: TooltipEvent) => {
+	events.add(eventListener((evt: TooltipEvent) => {
 		evt.tooltips.add(EDX.language.translate("info.modeCustom.mode") + " " + (if (isAdditive) EDX.language.translate("info.modeCustom.additive") else EDX.language.translate("info.modeCustom.substraction")))
 		evt.tooltips.add(EDX.language.translate("info.modeCustom.point1") + " " + pointA.getX + ", " + pointA.getY + ", " + pointA.getZ)
 		evt.tooltips.add(EDX.language.translate("info.modeCustom.point2") + " " + pointB.getX + ", " + pointB.getY + ", " + pointB.getZ)
@@ -53,9 +52,9 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 		if (!EDX.input.isKeyDown(Key.KEY_LSHIFT)) {
 			evt.tooltips.add(EDX.language.translate("info.modeCustom.shift"))
 		}
-	}))
+	}), classOf[TooltipEvent])
 
-	useEvent.add((evt: UseEvent) => {
+	events.add((evt: UseEvent) => {
 		if (EDX.network.isServer) {
 
 			if (pointA == null) {
@@ -68,9 +67,9 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 			}
 		}
 		evt.action = true
-	})
+	}, classOf[UseEvent])
 
-	rightClickEvent.add((evt: RightClickEvent) => {
+	events.add((evt: RightClickEvent) => {
 		if (EDX.network.isServer) {
 			if (EDX.input.isKeyDown(Key.KEY_LSHIFT)) {
 				//Holding shift saves the item
@@ -125,7 +124,7 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 				//entityPlayer.addChatMessage(new ChatComponentText(EDX.get.language.translate("message.modeCustom.modeChange").replaceAll("#p", (if (nbt.getBoolean(NBT_MODE)) EDX.get.language.translate("info.modeCustom.substraction") else EDX.get.language.translate("info.modeCustom.additive")))))
 			}
 		}
-	})
+	}, classOf[RightClickEvent])
 
 	override def getID: String = "shapeCustom"
 

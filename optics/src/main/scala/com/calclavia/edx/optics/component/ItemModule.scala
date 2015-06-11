@@ -25,8 +25,8 @@ abstract class ItemModule extends Item with TooltipItem with Module with AutoIte
 
 	add(new CategoryMFFS)
 
-	tooltipEvent.add(eventListener((evt: TooltipEvent) => evt.tooltips.add(EDX.language.translate("info.item.fortron") + " " + new
-			UnitDisplay(UnitDisplay.Unit.LITER, getFortronCost(1) * 20) + "/s")))
+	events.add(eventListener((evt: TooltipEvent) => evt.tooltips.add(EDX.language.translate("info.item.fortron") + " " + new
+			UnitDisplay(UnitDisplay.Unit.LITER, getFortronCost(1) * 20) + "/s")), classOf[TooltipEvent])
 
 	override def getFortronCost(amplifier: Float) = fortronCost
 

@@ -1,13 +1,12 @@
 package com.calclavia.edx.optics.item.card
 
+import com.calclavia.edx.core.EDX
 import com.calclavia.edx.optics.api.Frequency
 import com.google.common.hash.Hashing
-import nova.scala.wrapper.FunctionalWrapper
-import FunctionalWrapper._
-import com.calclavia.edx.core.EDX
-import nova.core.item.Item.{RightClickEvent, TooltipEvent}
+import nova.core.item.Item.TooltipEvent
 import nova.core.retention.Store
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
+import nova.scala.wrapper.FunctionalWrapper
+import nova.scala.wrapper.FunctionalWrapper._
 
 import scala.beans.BeanProperty
 
@@ -17,7 +16,7 @@ class ItemCardFrequency extends ItemCard with Frequency {
 	@BeanProperty
 	var frequency: Int = 0
 
-	tooltipEvent.add(eventListener((evt: TooltipEvent) => evt.tooltips.add(EDX.language.translate("info.cardFrequency.freq") + " " + getEncodedFrequency)))
+	events.add(eventListener((evt: TooltipEvent) => evt.tooltips.add(EDX.language.translate("info.cardFrequency.freq") + " " + getEncodedFrequency)), classOf[TooltipEvent])
 
 	def getEncodedFrequency = Hashing.md5().hashInt(frequency).toString.take(12)
 

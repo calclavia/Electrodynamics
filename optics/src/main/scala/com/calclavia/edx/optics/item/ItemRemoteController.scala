@@ -36,7 +36,7 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 	@Store
 	private var linkPos: Vector3D = _
 
-	tooltipEvent.add(eventListener((evt: TooltipEvent) => {
+	events.add(eventListener((evt: TooltipEvent) => {
 		if (linkWorld != null) {
 			val block = linkWorld.getBlock(linkPos)
 			if (block.isPresent) {
@@ -49,10 +49,10 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 		else {
 			evt.tooltips.add(EDX.language.translate("info.item.notLinked"))
 		}
-	}))
+	}), classOf[TooltipEvent])
 
 
-	useEvent.add((evt: UseEvent) => {
+	events.add((evt: UseEvent) => {
 		if (Side.get().isServer && EDX.input.isKeyDown(Key.KEY_LSHIFT)) {
 			linkWorld = evt.entity.world
 			linkPos = evt.position
@@ -63,10 +63,10 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 			}
 		}
 		evt.action = true
-	})
+	}, classOf[UseEvent])
 
 
-	rightClickEvent.add((evt: RightClickEvent) => {
+	events.add((evt: RightClickEvent) => {
 		if (!EDX.input.isKeyDown(Key.KEY_LSHIFT)) {
 			if (linkPos != null) {
 				val op = linkWorld.getBlock(linkPos)
@@ -116,7 +116,7 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 				}
 			}
 		}
-	})
+	}, classOf[RightClickEvent])
 
 	def hasLink: Boolean = linkWorld != null
 
