@@ -39,9 +39,7 @@ class EntityLaserBeam(start: Vector3D, end: Vector3D, color: Color, power: Doubl
 	/**
 	 * Set position
 	 */
-	loadEvent.add((evt: LoadEvent) => {
-		setPosition(midPoint)
-	})
+	events.on(classOf[LoadEvent]).bind((evt: LoadEvent) => setPosition(midPoint))
 
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)

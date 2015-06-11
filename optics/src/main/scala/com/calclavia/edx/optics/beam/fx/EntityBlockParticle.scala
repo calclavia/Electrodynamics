@@ -26,7 +26,7 @@ class EntityBlockParticle(block: Block) extends Entity {
 	val random = new Random()
 	val randScale = random.nextDouble() * 0.1 + 0.5
 
-	loadEvent.add(
+	events.on(classOf[LoadEvent]).bind(
 		(evt: LoadEvent) => {
 			transform.setScale(Vector3DUtil.ONE * randScale)
 			rigidBody.setVelocity(Vector3DUtil.random)
