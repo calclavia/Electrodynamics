@@ -14,6 +14,7 @@ import nova.core.block.Stateful
 import nova.core.block.component.{LightEmitter, StaticBlockRenderer}
 import nova.core.component.renderer.ItemRenderer
 import nova.core.component.transform.Orientation
+import nova.core.component.transform.Orientation.OrientationChangeEvent
 import nova.core.event.Event
 import nova.core.network.{Packet, Sync, Syncable}
 import nova.core.render.model.Model
@@ -68,16 +69,18 @@ class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater with
 
 	lightEmitter.setEmittedLevel(supplier(() => (electricNode.power / OpticGrid.maxPower).toFloat))
 
-	orientation.onOrientationChange.add((evt: Event) => {
-		if (EDX.network.isServer) {
-			io.setIOAlternatingOrientation()
-			electricNode.rebuild()
-			EDX.network.sync(this)
+	orientation.events.on(classOf[OrientationChangeEvent]).bind(
+		(evt: Event) => {
+			if (EDX.network.isServer) {
+				io.setIOAlternatingOrientation()
+				electricNode.rebuild()
+				EDX.network.sync(this)
+			}
+			else {
+				world.markStaticRender(position)
+			}
 		}
-		else {
-			world.markStaticRender(position)
-		}
-	})
+	)
 
 	events.add(
 		(evt: RightClickEvent) => {
