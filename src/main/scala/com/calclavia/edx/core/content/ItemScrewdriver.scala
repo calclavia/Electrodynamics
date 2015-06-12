@@ -1,16 +1,14 @@
 package com.calclavia.edx.core.content
 
-import java.util.Optional
-
 import com.calclavia.edx.core.CoreContent
 import nova.core.component.Category
+import nova.core.component.renderer.ItemRenderer
 import nova.core.item.Item
-import nova.core.render.texture.ItemTexture
 
 class ItemScrewdriver extends Item {
 	add(new Category("tools"))
+	add(new ItemRenderer())
+		.setTexture(CoreContent.textureScrewdriver)
 
 	override def getID: String = "screwdriver"
-
-	override def getTexture: Optional[ItemTexture] = Optional.of(CoreContent.textureScrewdriver)
 }
