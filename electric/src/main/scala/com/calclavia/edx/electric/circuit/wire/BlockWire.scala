@@ -77,7 +77,10 @@ object BlockWire {
 				.toSeq
 
 			val face = Array((sides :+ center) ++ sideExtension: _*)
-			occlusionBounds(s) = face.map(_.transform(rot))
+			occlusionBounds(s) = face
+				.map(_ - 0.5)
+				.map(_.transform(rot))
+				.map(_ + 0.5)
 		}
 	}
 
