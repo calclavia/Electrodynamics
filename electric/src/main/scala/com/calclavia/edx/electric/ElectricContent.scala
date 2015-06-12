@@ -13,18 +13,6 @@ import nova.scala.modcontent.ContentLoader
  * @author Calclavia
  */
 object ElectricContent extends ContentLoader {
-	/**
-	 * Blocks
-	 */
-	val battery: BlockFactory = classOf[BlockBattery]
-	val wire: BlockFactory = classOf[BlockWire]
-	val thermopile: BlockFactory = classOf[BlockThermopile]
-	val solarPanel: BlockFactory = classOf[BlockSolarPanel]
-	val siren: BlockFactory = classOf[BlockSiren]
-
-	/**
-	 * Items
-	 */
 
 	/**
 	 * Textures
@@ -38,6 +26,19 @@ object ElectricContent extends ContentLoader {
 	val thermopileTextureTop = new BlockTexture(Reference.domain, "material_metal_top")
 	val thermopileTextureSide = new BlockTexture(Reference.domain, "thermopile")
 	val sirenTexture = new BlockTexture(Reference.domain, "siren")
+
+	/**
+	 * Blocks
+	 */
+	val battery: BlockFactory = classOf[BlockBattery]
+	val wire: BlockFactory = classOf[BlockWire]
+	val thermopile: BlockFactory = classOf[BlockThermopile]
+	val solarPanel: BlockFactory = classOf[BlockSolarPanel]
+	val siren: BlockFactory = classOf[BlockSiren]
+
+	/**
+	 * Items
+	 */
 
 	/**
 	 * Models

@@ -5,4 +5,4 @@ import nova.core.component.Category
 /**
  * @author Calclavia
  */
-class CategoryEDXOptics extends Category("optics")
+class CategoryEDXOptics extends Category("edx:optics")
