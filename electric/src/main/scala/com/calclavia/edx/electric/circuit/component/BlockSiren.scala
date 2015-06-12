@@ -1,7 +1,7 @@
 package com.calclavia.edx.electric.circuit.component
 
 import java.util.function.Supplier
-import java.util.{Optional, Set => JSet}
+import java.util.{Set => JSet}
 
 import com.calclavia.edx.core.EDX
 import com.calclavia.edx.core.prefab.BlockEDX
@@ -32,7 +32,7 @@ class BlockSiren extends BlockEDX with ExtendedUpdater with Stateful {
 	@Store
 	private var metadata = 0
 
-	renderer.setTexture(func(dir => Optional.of(ElectricContent.sirenTexture)))
+	renderer.setTexture(ElectricContent.sirenTexture)
 
 	electricNode.setPositiveConnections(
 		new ConnectionBuilder(classOf[Electric])

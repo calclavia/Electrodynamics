@@ -12,11 +12,11 @@ import nova.core.block.Stateful
 import nova.core.block.component.ConnectedTextureRenderer
 import nova.core.component.renderer.ItemRenderer
 import nova.core.render.model.{BlockModelUtil, Model}
+import nova.core.render.texture.Texture
 import nova.core.util.Direction
 import nova.core.util.shape.Cuboid
 import nova.scala.component.IO
 import nova.scala.util.ExtendedUpdater
-import nova.scala.wrapper.FunctionalWrapper
 import nova.scala.wrapper.FunctionalWrapper._
 
 class BlockSolarPanel extends BlockEDX with ExtendedUpdater with Stateful {
@@ -47,7 +47,7 @@ class BlockSolarPanel extends BlockEDX with ExtendedUpdater with Stateful {
 	)
 
 	renderer.setTexture(
-		func((dir: Direction) => {
+		func[Direction, Optional[Texture]]((dir: Direction) => {
 			dir match {
 				case Direction.DOWN => Optional.of(ElectricContent.solarPanelTextureBottom)
 				case Direction.UP => Optional.of(ElectricContent.solarPanelTextureTop)

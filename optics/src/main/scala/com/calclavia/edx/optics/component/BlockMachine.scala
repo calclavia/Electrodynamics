@@ -16,6 +16,7 @@ import nova.core.component.transform.Orientation
 import nova.core.gui.InputManager.Key
 import nova.core.network.NetworkTarget.Side
 import nova.core.network.{Packet, Syncable}
+import nova.core.render.texture.Texture
 import nova.core.retention.{Storable, Store}
 import nova.core.util.Direction
 import nova.minecraft.redstone.Redstone
@@ -49,11 +50,11 @@ abstract class BlockMachine extends BlockEDX with Syncable with IActivatable wit
 			setActive(false)
 		}
 	})
-	add(new CategoryEDXOptics)
+
 	add(redstoneNode.asInstanceOf[Component])
 	add(new ItemRenderer(this))
 	add(new StaticBlockRenderer(this))
-		.setTexture(func((side: Direction) => Optional.of(OpticsTextures.machine)))
+		.setTexture(func[Direction, Optional[Texture]]((side: Direction) => Optional.of(OpticsTextures.machine)))
 
 	get(classOf[Collider])
 		.isCube(false)

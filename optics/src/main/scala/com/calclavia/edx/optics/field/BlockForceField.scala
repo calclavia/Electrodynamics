@@ -113,7 +113,7 @@ class BlockForceField extends BlockDefault with Syncable with ForceField with St
 	    }
 	    )
 		)
-		.setTexture(func((dir: Direction) => Optional.of(OpticsTextures.forceField)))
+		.setTexture(OpticsTextures.forceField)
 		.setOnRender(
 	    (model: Model) => {
 		    val opRenderer = camoBlock.getOp(classOf[StaticRenderer])
