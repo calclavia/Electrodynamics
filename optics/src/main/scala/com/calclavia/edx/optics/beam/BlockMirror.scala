@@ -15,7 +15,6 @@ import nova.core.render.model.Model
 import nova.core.retention.{Storable, Store}
 import nova.core.util.Ray
 import nova.core.util.RayTracer.RayTraceBlockResult
-import nova.core.util.math.Vector3DUtil
 import nova.scala.wrapper.FunctionalWrapper._
 import nova.scala.wrapper.VectorWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.{Rotation, Vector3D}
@@ -38,8 +37,7 @@ class BlockMirror extends BlockEDX with Stateful with Syncable with Storable {
 
 	renderer.setOnRender(
 		(model: Model) => {
-			model.matrix.rotate(new Rotation(Vector3DUtil.FORWARD, focus.normal).revert())
-			model.matrix.rotate(Vector3D.PLUS_I, Math.PI / 2)
+			model.matrix.rotate(new Rotation(Vector3D.PLUS_J, focus.normal).revert())
 
 			val child = OpticsModels.mirror.getModel.combineChildren("mirror", "mirror", "mirrorBacking", "standConnector")
 			model.children.add(child)
