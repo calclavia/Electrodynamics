@@ -137,6 +137,7 @@ class BlockWire extends BlockEDX with Storable with Syncable {
 	private val material = add(new MaterialWire)
 
 	add(new StaticBlockRenderer(this))
+		.setTexture(ElectricContent.wireTexture)
 		.setOnRender(
 	    (model: Model) => {
 		    get(classOf[Collider]).occlusionBoxes.apply(Optional.empty()).foreach(cuboid => {
@@ -188,8 +189,8 @@ class BlockWire extends BlockEDX with Storable with Syncable {
 		cuboids += BlockWire.occlusionBounds(side)(4)
 		cuboids ++= (0 until 4)
 			.collect {
-			case dir if (connectionMask & (1 << (dir * 2))) != 0 && (connectionMask & (1 << (dir * 2 + 1))) != 0 =>
-				BlockWire.occlusionBounds(side)(dir + 5)
+			case dir if (connectionMask & (1 << (dir * 2))) != 0 && (connectionMask & (1 << (dir * 2 + 1))) != 0 && (side % 2 == 0 && dir % 2 != 0) =>
+				BlockWire.occlusionBounds(side)(dir + 5) //long connection TODO: Fix overlap rendering
 			case dir if (connectionMask & (1 << (dir * 2))) != 0 || (connectionMask & (1 << (dir * 2 + 1))) != 0 =>
 				BlockWire.occlusionBounds(side)(dir)
 		}
