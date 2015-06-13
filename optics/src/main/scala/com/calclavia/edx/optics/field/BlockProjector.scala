@@ -40,7 +40,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 
 	@Store
 	@Sync(ids = Array(BlockPacketID.description, BlockPacketID.inventory))
-	override val inventory = new InventorySimple(1 + 25 + 6)
+	override val inventory = add(new InventorySimple(1 + 25 + 6))
 	val opticHandler = add(new OpticHandler(this))
 	/** A set containing all positions of all force field blocks generated. */
 	var forceFields = Set.empty[Vector3D]

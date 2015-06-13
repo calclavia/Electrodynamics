@@ -37,7 +37,7 @@ class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater with
 	private val electricNode = add(new NodeElectricComponent(this))
 	@Store
 	@Sync
-	private val orientation = add(new Orientation(this)).hookBlockEvents()
+	private val orientation = add(new Orientation(this)).hookBasedOnEntity().hookRightClickRotate()
 	private val optic = add(new OpticHandler(this))
 	@Store
 	@Sync

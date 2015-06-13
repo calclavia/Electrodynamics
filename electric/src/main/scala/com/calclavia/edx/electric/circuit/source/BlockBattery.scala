@@ -47,7 +47,7 @@ class BlockBattery extends BlockEDX with Syncable with Storable with ExtendedUpd
 	@Store
 	private var energy = add(new EnergyStorage)
 	private val electricNode = add(new NodeElectricComponent(this))
-	private val orientation = add(new Orientation(this)).hookBlockEvents()
+	private val orientation = add(new Orientation(this)).hookBasedOnEntity().hookRightClickRotate()
 	@Store
 	private val io = add(new IO(this))
 	private val redstone = add(EDX.components.make(classOf[Redstone], this))

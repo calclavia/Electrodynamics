@@ -37,7 +37,7 @@ class BlockBiometric extends BlockFrequency with ExtendedUpdater with Permission
 	 */
 	var lastFlicker = 0L
 
-	add(new Orientation(this)).hookBlockEvents()
+	add(new Orientation(this)).hookBasedOnEntity().hookRightClickRotate()
 
 	get(classOf[StaticBlockRenderer])
 		.setOnRender(

@@ -29,7 +29,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.{Rotation, Vector3D}
  */
 class BlockLaserReceiver extends BlockEDX with Stateful with ExtendedUpdater with Storable with Syncable {
 	private val electricNode = new NodeElectricComponent(this)
-	private val orientation = add(new Orientation(this)).hookBlockEvents()
+	private val orientation = add(new Orientation(this)).hookBasedOnEntity().hookRightClickRotate()
 	private val laserHandler = add(new OpticHandler(this))
 	private val io = add(new IO(this))
 	private val renderer = add(new StaticBlockRenderer(this))
