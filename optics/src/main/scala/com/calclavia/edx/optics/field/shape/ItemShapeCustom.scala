@@ -36,16 +36,19 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 
 	events.add(eventListener((evt: TooltipEvent) => {
 		evt.tooltips.add(EDX.language.translate("info.modeCustom.mode") + " " + (if (isAdditive) EDX.language.translate("info.modeCustom.additive") else EDX.language.translate("info.modeCustom.substraction")))
-		evt.tooltips.add(EDX.language.translate("info.modeCustom.point1") + " " + pointA.getX + ", " + pointA.getY + ", " + pointA.getZ)
-		evt.tooltips.add(EDX.language.translate("info.modeCustom.point2") + " " + pointB.getX + ", " + pointB.getY + ", " + pointB.getZ)
 
-		if (saveID > 0) {
-			evt.tooltips.add(EDX.language.translate("info.modeCustom.modeID") + " " + saveID)
-			if (fieldSize > 0) {
-				evt.tooltips.add(EDX.language.translate("info.modeCustom.fieldSize") + " " + fieldSize)
-			}
-			else {
-				evt.tooltips.add(EDX.language.translate("info.modeCustom.notSaved"))
+		if (pointA != null && pointB != null) {
+			evt.tooltips.add(EDX.language.translate("info.modeCustom.point1") + " " + pointA.getX + ", " + pointA.getY + ", " + pointA.getZ)
+			evt.tooltips.add(EDX.language.translate("info.modeCustom.point2") + " " + pointB.getX + ", " + pointB.getY + ", " + pointB.getZ)
+
+			if (saveID > 0) {
+				evt.tooltips.add(EDX.language.translate("info.modeCustom.modeID") + " " + saveID)
+				if (fieldSize > 0) {
+					evt.tooltips.add(EDX.language.translate("info.modeCustom.fieldSize") + " " + fieldSize)
+				}
+				else {
+					evt.tooltips.add(EDX.language.translate("info.modeCustom.notSaved"))
+				}
 			}
 		}
 

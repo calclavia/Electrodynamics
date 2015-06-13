@@ -9,12 +9,13 @@ import com.calclavia.edx.optics.api.modules.Module.ProjectState
 import com.calclavia.edx.optics.beam.fx.EntityMagneticBeam
 import com.calclavia.edx.optics.component.{BlockFieldMatrix, BlockPacketID}
 import com.calclavia.edx.optics.content.{OpticsContent, OpticsModels, OpticsTextures}
-import com.calclavia.edx.optics.field.shape.ItemShapeCustom
+import com.calclavia.edx.optics.field.shape.{ItemShape, ItemShapeCustom}
 import com.calclavia.edx.optics.fx.{FXHologramProgress, FieldColor}
 import com.calclavia.edx.optics.grid.OpticHandler
 import com.calclavia.edx.optics.security.PermissionHandler
 import com.calclavia.edx.optics.util.CacheHandler
 import nova.core.block.Block
+import nova.core.block.Block.RightClickEvent
 import nova.core.block.Stateful.UnloadEvent
 import nova.core.block.component.{LightEmitter, StaticBlockRenderer}
 import nova.core.component.misc.Collider
@@ -77,13 +78,16 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 	add(new DynamicRenderer())
 		.setOnRender(
 	    (model: Model) => {
+		    //GL_SRC_ALPHA
+		    model.blendSFactor = 0x302
+		    //GL_ONE
+		    model.blendDFactor = 0x1
+
 		    /**
 		     * Render the light beam
 		     */
 		    if (getShapeItem != null) {
 			    val lightBeam = new Model()
-			    //TODO: Lighting, RenderHelper.disableStandardItemLighting
-
 			    val player = EDX.clientManager.getPlayer.asInstanceOf[Entity with Player]
 			    val xDifference: Double = player.transform.position.getX() - (x + 0.5)
 			    val zDifference: Double = player.transform.position.getZ() - (y + 0.5)
@@ -129,15 +133,38 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 
 	add(new LightEmitter().setEmittedLevel(supplier(() => if (getShapeItem() != null) 1f else 0f)))
 
-	/*
-	override def isItemValidForSlot(slotID: Int, Item: Item): Boolean = {
-		slotID match {
-			case 0 => Item.getItem.isInstanceOf[ItemCard]
-			case `modeSlotID` => Item.getItem.isInstanceOf[IProjectorMode]
-			case x: Int if x < 26 => Item.getItem.isInstanceOf[IModule]
-			case _ => true
-		}
-	}*/
+	events.on(classOf[RightClickEvent])
+		.bind(
+	    (evt: RightClickEvent) => {
+		    val opPlayer = evt.entity.getOp(classOf[Player])
+		    if (opPlayer.isPresent) {
+			    val player = opPlayer.get()
+			    val opItem = player.getInventory.getHeldItem
+
+			    if (opItem.isPresent) {
+				    val item = opItem.get
+
+				    //Placing shape crystals
+				    if (item.isInstanceOf[ItemShape]) {
+					    val swap = inventory.swap(0, item)
+
+					    if (swap.isPresent) {
+						    player.getInventory.set(player.getInventory.getHeldSlot, swap.get)
+					    } else {
+						    player.getInventory.remove(player.getInventory.getHeldSlot)
+					    }
+				    }
+			    }
+			    else {
+				    //Eject items
+				    val rem = inventory.remove(0)
+				    if (rem.isPresent)
+					    player.getInventory.set(player.getInventory.getHeldSlot, rem.get)
+			    }
+			    evt.result = true
+		    }
+	    }
+		)
 
 	override def start() {
 		super.start()
