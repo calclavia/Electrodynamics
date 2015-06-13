@@ -24,7 +24,7 @@ import scala.util.{Failure, Success}
 
 abstract class BlockFieldMatrix extends BlockFrequency with FieldMatrix with IPermissionProvider with CacheHandler {
 	val _getModuleSlots = (14 until 25).toArray
-	protected val modeSlotID = 1
+	protected val modeSlotID = 0
 
 	/**
 	 * Are the directions on the GUI absolute values?
@@ -61,8 +61,8 @@ abstract class BlockFieldMatrix extends BlockFrequency with FieldMatrix with IPe
 	def getShapeItem: Item with StructureProvider = {
 		val optional = inventory.get(modeSlotID)
 		if (optional.isPresent) {
-			if (optional.get().isInstanceOf[Item with StructureProvider]) {
-				return optional.asInstanceOf[Item with StructureProvider]
+			if (optional.get.isInstanceOf[Item with StructureProvider]) {
+				return optional.get.asInstanceOf[Item with StructureProvider]
 			}
 		}
 		return null

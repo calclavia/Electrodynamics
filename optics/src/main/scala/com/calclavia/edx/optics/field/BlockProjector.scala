@@ -10,7 +10,7 @@ import com.calclavia.edx.optics.beam.fx.EntityMagneticBeam
 import com.calclavia.edx.optics.component.{BlockFieldMatrix, BlockPacketID}
 import com.calclavia.edx.optics.content.{OpticsContent, OpticsModels, OpticsTextures}
 import com.calclavia.edx.optics.field.shape.{ItemShape, ItemShapeCustom}
-import com.calclavia.edx.optics.fx.{FXHologramProgress, FieldColor}
+import com.calclavia.edx.optics.fx.FXHologramProgress
 import com.calclavia.edx.optics.grid.OpticHandler
 import com.calclavia.edx.optics.security.PermissionHandler
 import com.calclavia.edx.optics.util.CacheHandler
@@ -21,7 +21,6 @@ import nova.core.block.component.{LightEmitter, StaticBlockRenderer}
 import nova.core.component.misc.Collider
 import nova.core.component.renderer.DynamicRenderer
 import nova.core.component.transform.Orientation
-import nova.core.entity.Entity
 import nova.core.entity.component.Player
 import nova.core.event.EventBus
 import nova.core.inventory.InventorySimple
@@ -78,17 +77,19 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 	add(new DynamicRenderer())
 		.setOnRender(
 	    (model: Model) => {
-		    //GL_SRC_ALPHA
-		    model.blendSFactor = 0x302
-		    //GL_ONE
-		    model.blendDFactor = 0x1
+
 
 		    /**
 		     * Render the light beam
 		     */
 		    if (getShapeItem != null) {
 			    val lightBeam = new Model()
-			    val player = EDX.clientManager.getPlayer.asInstanceOf[Entity with Player]
+			    //GL_SRC_ALPHA
+			    lightBeam.blendSFactor = 0x302
+			    //GL_ONE
+			    lightBeam.blendDFactor = 0x303
+
+			    val player = EDX.clientManager.getPlayer
 			    val xDifference: Double = player.transform.position.getX() - (x + 0.5)
 			    val zDifference: Double = player.transform.position.getZ() - (y + 0.5)
 			    val rot = Math.atan2(zDifference, xDifference)
@@ -107,25 +108,28 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 			    face.vertices.foreach(_.setColor(Color.rgb(72, 198, 255)))
 			    lightBeam.drawFace(face)
 
-
-			    model.children.add(lightBeam)
+			    // model.addChild(lightBeam)
 
 			    /**
 			     * Render hologram
 			     */
 			    if (Settings.highGraphics) {
-
-				    val hologram = new Model()
+				    val hologram = new Model("hologram")
+				    //GL_SRC_ALPHA
+				    hologram.blendSFactor = 0x302
+				    //GL_ONE
+				    hologram.blendDFactor = 0x303
 				    hologram.matrix
 					    .translate(0, 0.85 + Math.sin(Math.toRadians(ticks * 3)).toFloat / 7, 0)
 					    .rotate(Vector3D.PLUS_J, Math.toRadians(ticks * 4))
 					    .rotate(new Vector3D(0, 1, 1), Math.toRadians(36f + ticks * 4))
 
-				    getShapeItem.render(BlockProjector.this, model)
+				    getShapeItem.render(BlockProjector.this, hologram)
 
-				    val color = if (isActive) FieldColor.blue else FieldColor.red
-				    hologram.faces.foreach(_.vertices.foreach(_.setColor(color.alpha((Math.sin(ticks / 10) * 255).toInt))))
-				    hologram.bind(OpticsTextures.hologram)
+				    val color = if (isActive) Color.blue else Color.red
+				    hologram.faces.foreach(_.vertices.foreach(_.setColor(color.alpha((Math.sin(ticks / 10d) * 200 + 55).toInt))))
+				    hologram.bindAll(OpticsTextures.hologram)
+				    model.addChild(hologram)
 			    }
 		    }
 	    }
@@ -225,8 +229,8 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 					world.addClientEntity(OpticsContent.fxHologramProgress).transform.setPosition(pos)
 				}
 				else if (packetType == 2) {
-					world.addClientEntity(OpticsContent.fxFortronBeam).transform.setPosition(pos).asInstanceOf[EntityMagneticBeam].setTarget(target).setColor(FieldColor.red)
-					world.addClientEntity(OpticsContent.fxHologramProgress).transform.setPosition(pos).asInstanceOf[FXHologramProgress].setColor(FieldColor.red)
+					world.addClientEntity(OpticsContent.fxFortronBeam).transform.setPosition(pos).asInstanceOf[EntityMagneticBeam].setTarget(target).setColor(Color.red)
+					world.addClientEntity(OpticsContent.fxHologramProgress).transform.setPosition(pos).asInstanceOf[FXHologramProgress].setColor(Color.red)
 				}
 			}
 			else if (packet.getID == BlockPacketID.field) {

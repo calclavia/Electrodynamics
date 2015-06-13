@@ -5,7 +5,6 @@ import com.calclavia.edx.optics.GraphFrequency
 import com.calclavia.edx.optics.api.MFFSEvent.EventForceMobilize
 import com.calclavia.edx.optics.api.card.CoordLink
 import com.calclavia.edx.optics.beam.fx.EntityMagneticBeam
-import com.calclavia.edx.optics.fx.FieldColor
 import com.calclavia.edx.optics.grid.OpticHandler
 import com.calclavia.edx.optics.item.card.ItemCardFrequency
 import com.calclavia.edx.optics.security.MFFSPermissions
@@ -17,6 +16,7 @@ import nova.core.gui.InputManager.Key
 import nova.core.item.Item
 import nova.core.item.Item.{RightClickEvent, TooltipEvent, UseEvent}
 import nova.core.network.NetworkTarget.Side
+import nova.core.render.Color
 import nova.core.retention.{Storable, Store}
 import nova.core.util.Direction
 import nova.core.util.collection.Tuple2
@@ -89,7 +89,7 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 						for (fortronBlock <- fortronBlocks) {
 							//if (consumedEnergy > 0) {
 							if (Side.get().isServer) {
-								val newFX = evt.entity.world.addClientEntity(new EntityMagneticBeam(FieldColor.blue, 20))
+								val newFX = evt.entity.world.addClientEntity(new EntityMagneticBeam(Color.blue, 20))
 								newFX.setPosition(evt.entity.position /*.add(new Vector3d(0, entity.getEyeHeight - 0.2, 0))*/)
 								newFX.setTarget(fortronBlock.block.position + 0.5)
 							}

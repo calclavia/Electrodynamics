@@ -8,7 +8,7 @@ import com.calclavia.edx.optics.api.card.CoordLink
 import com.calclavia.edx.optics.api.{Blacklist, MFFSEvent}
 import com.calclavia.edx.optics.component.{BlockFieldMatrix, BlockPacketID}
 import com.calclavia.edx.optics.content.{OpticsContent, OpticsModels, OpticsTextures}
-import com.calclavia.edx.optics.fx.{FXHologramProgress, FieldColor, IEffectController}
+import com.calclavia.edx.optics.fx.{FXHologramProgress, IEffectController}
 import com.calclavia.edx.optics.security.{MFFSPermissions, PermissionHandler}
 import com.calclavia.edx.optics.util.MFFSUtility
 import com.calclavia.edx.optics.{Optics, Settings}
@@ -21,6 +21,7 @@ import nova.core.inventory.InventorySimple
 import nova.core.item.Item
 import nova.core.network.NetworkTarget.Side
 import nova.core.network.{Packet, Sync}
+import nova.core.render.Color
 import nova.core.render.model.Model
 import nova.core.retention.{Data, Storable, Store}
 import nova.core.util.Direction
@@ -185,22 +186,22 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 		if (EDX.network.isServer && performingMove) {
 			//if (removeFortron(getFortronCost, false) >= getFortronCost) {
 
-				if (moveTime > 0) {
-					if (isTeleport) {
-						if (getModuleCount(OpticsContent.moduleSilence) <= 0 && ticks % 10 == 0) {
-							val moveTime = getMoveTime
-							//worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, Reference.prefix + "fieldmove", 1.5f, 0.5f + 0.8f * (moveTime - this.moveTime) / moveTime)
-						}
+			if (moveTime > 0) {
+				if (isTeleport) {
+					if (getModuleCount(OpticsContent.moduleSilence) <= 0 && ticks % 10 == 0) {
+						val moveTime = getMoveTime
+						//worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, Reference.prefix + "fieldmove", 1.5f, 0.5f + 0.8f * (moveTime - this.moveTime) / moveTime)
+					}
 
-						moveTime -= 1
+					moveTime -= 1
 
-						if (moveTime <= 0) {
-							//worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, Reference.prefix + "teleport", 0.6f, 1 - this.worldObj.rand.nextFloat * 0.1f)
-						}
+					if (moveTime <= 0) {
+						//worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, Reference.prefix + "teleport", 0.6f, 1 - this.worldObj.rand.nextFloat * 0.1f)
 					}
 				}
+			}
 
-				return
+			return
 			//	}
 
 			markFailMove()
@@ -429,8 +430,8 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 										.addClientEntity(OpticsContent.fxHologramProgress).asInstanceOf[FXHologramProgress]
 										.setColor(
 									    isTeleportPacket match {
-										    case 1 => FieldColor.blue
-										    case 2 => FieldColor.green
+										    case 1 => Color.blue
+										    case 2 => Color.green
 									    }
 										))
 						case 2 => {
@@ -444,7 +445,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 							val vecSize = packet.readInt()
 							val hologramRenderPoints = packet.readSet[Vector3D]()
 
-							val color = if (isPreview) FieldColor.blue else FieldColor.green
+							val color = if (isPreview) Color.blue else Color.green
 
 							hologramRenderPoints.foreach(pos => {
 								//Render teleport start
@@ -468,7 +469,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 							 */
 							val vecSize = packet.readInt()
 							val hologramRenderPoints = packet.readSet[Vector3D]()
-							hologramRenderPoints.foreach(p => world.addClientEntity(new FXHologramProgress(FieldColor.red, 30)).transform.setPosition(p + 0.5))
+							hologramRenderPoints.foreach(p => world.addClientEntity(new FXHologramProgress(Color.red, 30)).transform.setPosition(p + 0.5))
 						}
 					}
 				}

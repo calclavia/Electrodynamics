@@ -7,7 +7,7 @@ import com.calclavia.edx.optics.component.{ItemModule, Named}
 import com.calclavia.edx.optics.field.module._
 import com.calclavia.edx.optics.field.shape._
 import com.calclavia.edx.optics.field.{BlockForceField, BlockProjector}
-import com.calclavia.edx.optics.fx.{FXHologram, FXHologramProgress, FieldColor}
+import com.calclavia.edx.optics.fx.{FXHologram, FXHologramProgress}
 import com.calclavia.edx.optics.item.ItemRemoteController
 import com.calclavia.edx.optics.item.card.{ItemCard, ItemCardFrequency, ItemCardInfinite, ItemCardLink}
 import com.calclavia.edx.optics.security.BlockBiometric
@@ -16,6 +16,7 @@ import com.calclavia.edx.optics.security.module._
 import nova.core.block.BlockFactory
 import nova.core.entity.EntityFactory
 import nova.core.item.{Item, ItemFactory}
+import nova.core.render.Color
 import nova.scala.modcontent.ContentLoader
 
 /**
@@ -87,9 +88,9 @@ object OpticsContent extends ContentLoader {
 	val moduleBlockAlter: ItemFactory = () => (new ItemModuleDefense with Named).setCost(15).setName("moduleBlockAlter")
 	val moduleAntiSpawn: ItemFactory = () => (new ItemModuleDefense with Named).setCost(10).setName("moduleAntiSpawn")
 	//TODO: Allow args.
-	val fxFortronBeam: EntityFactory = () => new EntityMagneticBeam(FieldColor.blue, 40)
-	val fxHologram: EntityFactory = () => new FXHologram(FieldColor.blue, 40)
-	val fxHologramProgress: EntityFactory = () => new FXHologramProgress(FieldColor.blue, 40)
+	val fxFortronBeam: EntityFactory = () => new EntityMagneticBeam(Color.blue, 40)
+	val fxHologram: EntityFactory = () => new FXHologram(Color.blue, 40)
+	val fxHologramProgress: EntityFactory = () => new FXHologramProgress(Color.blue, 40)
 
 	override def id: String = Reference.id
 
