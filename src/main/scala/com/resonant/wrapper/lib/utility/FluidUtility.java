@@ -104,7 +104,7 @@ public class FluidUtility {
 	}
 
 	/**
-	 * Fills a position in the world with a specific fluid.
+	 * Fills a position in the world withPriority a specific fluid.
 	 * @return The amount of fluid used.
 	 */
 	public static int fillBlock(World world, Vector3D pos, Fluid fluid, boolean doFill) {

@@ -18,7 +18,6 @@ import nova.core.block.Block
 import nova.core.block.Block.RightClickEvent
 import nova.core.block.Stateful.UnloadEvent
 import nova.core.block.component.{LightEmitter, StaticBlockRenderer}
-import nova.core.component.misc.Collider
 import nova.core.component.renderer.DynamicRenderer
 import nova.core.component.transform.Orientation
 import nova.core.entity.component.Player
@@ -27,7 +26,7 @@ import nova.core.inventory.InventorySimple
 import nova.core.item.Item
 import nova.core.network.{Packet, Sync}
 import nova.core.render.Color
-import nova.core.render.model.{Model, Vertex}
+import nova.core.render.model.Model
 import nova.core.retention.Store
 import nova.core.util.shape.Cuboid
 import nova.scala.wrapper.FunctionalWrapper._
@@ -57,13 +56,10 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 	@Sync(ids = Array(BlockPacketID.description))
 	private var isInverted = false
 
-	override def getID: String = "projector"
+	events.on(classOf[UnloadEvent]).withPriority(EventBus.PRIORITY_DEFAULT + 1).bind((evt: UnloadEvent) => destroyField())
 
-	events.add((evt: UnloadEvent) => destroyField(), classOf[UnloadEvent], EventBus.PRIORITY_DEFAULT + 1)
-
-	get(classOf[Collider])
-		.isCube(false)
-		.setBoundingBox(new Cuboid(0, 0, 0, 1, 0.8, 1))
+	collider.isCube(false)
+	collider.setBoundingBox(new Cuboid(0, 0, 0, 1, 0.8, 1))
 
 	get(classOf[StaticBlockRenderer])
 		.setOnRender(
@@ -78,38 +74,10 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 		.setOnRender(
 	    (model: Model) => {
 
-
 		    /**
 		     * Render the light beam
 		     */
 		    if (getShapeItem != null) {
-			    val lightBeam = new Model()
-			    //GL_SRC_ALPHA
-			    lightBeam.blendSFactor = 0x302
-			    //GL_ONE
-			    lightBeam.blendDFactor = 0x303
-
-			    val player = EDX.clientManager.getPlayer
-			    val xDifference: Double = player.transform.position.getX() - (x + 0.5)
-			    val zDifference: Double = player.transform.position.getZ() - (y + 0.5)
-			    val rot = Math.atan2(zDifference, xDifference)
-			    lightBeam.matrix.rotate(Vector3D.PLUS_J, -rot + Math.toRadians(27)).getMatrix
-
-
-			    val height: Float = 2
-			    val width: Float = 2
-
-			    val face = lightBeam.createFace()
-			    face.drawVertex(new Vertex(0, 0, 0, 0, 0))
-			    face.drawVertex(new Vertex(-0.866D * width, height, -0.5F * width, 0, 0))
-			    face.drawVertex(new Vertex(0.866D * width, height, -0.5F * width, 0, 0))
-			    face.drawVertex(new Vertex(0.0D, height, 1.0F * width, 0, 0))
-			    face.drawVertex(new Vertex(-0.866D * width, height, -0.5F * width, 0, 0))
-			    face.vertices.foreach(_.setColor(Color.rgb(72, 198, 255)))
-			    lightBeam.drawFace(face)
-
-			    // model.addChild(lightBeam)
-
 			    /**
 			     * Render hologram
 			     */
@@ -279,7 +247,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 	 * Projects a force field based on the calculations made.
 	 */
 	def projectField() {
-		//TODO: We cannot construct a field if it intersects another field with different frequency.
+		//TODO: We cannot construct a field if it intersects another field withPriority different frequency.
 		if (!isCalculating) {
 			val potentialField = calculatedField
 			val relevantModules = crystalHandler.getModules(getModuleSlots: _*)
@@ -397,6 +365,8 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 	def getFilterItems: Set[Item] = (26 until 32).map(inventory.get).collect { case op: Optional[Item] if op.isPresent => op.get }.toSet
 
 	def isInvertedFilter: Boolean = isInverted
+
+	override def getID: String = "projector"
 
 	//TODO: Useless
 	protected def amplifier: Float = {

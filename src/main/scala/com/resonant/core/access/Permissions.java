@@ -1,7 +1,7 @@
 package com.resonant.core.access;
 
 /**
- * Constants that represent permissions by which machines and entities used in combination with
+ * Constants that represent permissions by which machines and entities used in combination withPriority
  * ISpecialAccess to limit users on what they can do. These permissions should be used in the same
  * way by
  * all machines, entities, and other mods. Too change the meaning of the node will make it difficult
@@ -71,7 +71,7 @@ public class Permissions {
 	public static final Permission GROUP_USER = group.addChild("user");
 
 	/**
-	 * Gets the permission instance with the specific name.
+	 * Gets the permission instance withPriority the specific name.
 	 * @param name - The full name of the permission.
 	 * @return
 	 */

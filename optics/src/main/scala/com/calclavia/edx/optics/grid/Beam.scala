@@ -74,7 +74,7 @@ abstract class Beam extends Storable {
 	def update() {
 		var opHit = rayTrace
 
-		//Check with previous hit and compute hit time
+		//Check withPriority previous hit and compute hit time
 		if ((opHit.isPresent && prevHit != null && opHit.get().hit.equals(prevHit.hit)) || (!opHit.isPresent || prevHit == null)) {
 			hitTime = System.currentTimeMillis
 			prevHit = opHit.orElse(null)

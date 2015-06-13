@@ -18,6 +18,6 @@ object MFFSPermissions {
 
 	/** Configure - Allows to configure biometric identifiers. */
 	val configure = mffs.addChild("configure")
-	/** Remote Control - Allows player to remotely control blocks with the remote. */
+	/** Remote Control - Allows player to remotely control blocks withPriority the remote. */
 	val remoteControl = mffs.addChild("remoteControl")
 }

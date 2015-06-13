@@ -86,7 +86,7 @@ object BlockWire {
 
 }
 
-// with TWire with TFacePart with TNormalOcclusion
+// withPriority TWire withPriority TFacePart withPriority TNormalOcclusion
 class BlockWire extends BlockEDX with Storable with Syncable {
 
 	/**

@@ -2,22 +2,7 @@ package com.calclavia.edx.basic.fluid.grate
 
 import java.util.{Collections, Comparator, HashMap, PriorityQueue}
 
-import cpw.mods.fml.relauncher.{Side, SideOnly}
-import TileGrate._
-import edx.core.Reference
-import edx.core.prefab.node.{NodeFluidPressure, TileFluidProvider}
-import net.minecraft.block.material.Material
-import net.minecraft.client.renderer.texture.IIconRegister
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.util.{ChatComponentText, IIcon}
-import net.minecraft.world.IBlockAccess
-import net.minecraftforge.common.util.ForgeDirection
-import net.minecraftforge.fluids.{Fluid, FluidContainerRegistry, FluidRegistry, FluidStack}
-import resonantengine.lib.mod.config.Config
-import resonantengine.lib.transform.vector.Vector3
-import resonantengine.lib.utility.FluidUtility
-import resonantengine.prefab.block.impl.TRotatable
+import com.calclavia.edx.basic.fluid.grate.TileGrate._
 
 object TileGrate
 {
@@ -299,7 +284,7 @@ class TileGrate extends TileFluidProvider(Material.rock) with TRotatable
 
         if (!isConnected(fluidCoord.position))
         {
-          //The coordinate is not connected with the starting coordinate, therefore, we will not drain this.
+	        //The coordinate is not connected withPriority the starting coordinate, therefore, we will not drain this.
           TileGrate.this.resetPath()
           return new FluidStack(fluidType, drainedAmount)
         }

@@ -23,7 +23,7 @@ import nova.scala.component.IO
 import nova.scala.util.ExtendedUpdater
 import nova.scala.wrapper.FunctionalWrapper._
 
-/** A modular battery box that allows shared connections with boxes next to it.
+/** A modular battery box that allows shared connections withPriority boxes next to it.
   *
   * @author Calclavia
   */

@@ -9,8 +9,8 @@ import nova.core.block.Block
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 /**
- * The fusion module attempts to fuse a force field with another.
- * This is done by checking all other force fields with THE SAME FREQUENCY,
+ * The fusion module attempts to fuse a force field withPriority another.
+ * This is done by checking all other force fields withPriority THE SAME FREQUENCY,
  * and trying to fuse them together. 
  * @author Calclavia
  */

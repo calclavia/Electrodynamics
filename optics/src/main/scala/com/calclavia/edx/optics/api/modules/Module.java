@@ -35,9 +35,9 @@ public interface Module extends FortronCost {
 	}
 
 	/**
-	 * Called when an entity collides with a force field block.
-	 * @param block Block being collided with
-	 * @param entity Entity colliding with block
+	 * Called when an entity collides withPriority a force field block.
+	 * @param block Block being collided withPriority
+	 * @param entity Entity colliding withPriority block
 	 * @return False to stop the default process of entity collision.
 	 */
 	default boolean onFieldCollide(Block block, Entity entity) {

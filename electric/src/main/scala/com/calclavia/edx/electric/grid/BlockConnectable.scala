@@ -20,7 +20,7 @@ import scala.collection.convert.wrapAll._
 trait BlockConnectable[N] extends Connectable[N] {
 
 	/**
-	 * @return The block assosiated with this node.
+	 * @return The block assosiated withPriority this node.
 	 */
 	protected def block: Block
 

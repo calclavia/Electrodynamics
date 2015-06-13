@@ -1,8 +1,5 @@
 package com.calclavia.graph.thermal
 
-import net.minecraft.block.material.Material
-import net.minecraft.world.World
-import net.minecraftforge.fluids.FluidStack
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 /**
@@ -49,7 +46,7 @@ object ThermalPhysics {
 	register(Material.piston, 4500)
 
 	/**
-	 * Registers a block with a specific heating value
+	 * Registers a block withPriority a specific heating value
 	 * @param sch - The specific heat capacity in J/Kg K
 	 */
 	def register(mat: Material, sch: Int) {

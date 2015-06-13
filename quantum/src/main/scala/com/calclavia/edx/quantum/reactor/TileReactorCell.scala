@@ -3,37 +3,7 @@ package com.calclavia.edx.quantum.reactor
 import java.util
 import java.util.List
 
-import com.calclavia.edx.quantum.QuantumContent
-import cpw.mods.fml.relauncher.{Side, SideOnly}
-import edx.core.{Electrodynamics, Reference}
-import QuantumContent
-import net.minecraft.block.Block
-import net.minecraft.block.material.Material
-import net.minecraft.entity.EntityLiving
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.init.Blocks
-import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.tileentity.TileEntity
-import net.minecraft.util.{AxisAlignedBB, ResourceLocation}
-import net.minecraft.world.World
-import net.minecraftforge.client.model.AdvancedModelLoader
-import net.minecraftforge.common.util.ForgeDirection
-import org.lwjgl.opengl.GL11
-import resonantengine.api.edx.machine.{IReactor, IReactorComponent}
-import resonantengine.lib.grid.thermal.{GridThermal, ThermalPhysics}
-import resonantengine.lib.potion.PoisonRadiation
-import resonantengine.lib.render.RenderUtility
-import resonantengine.lib.render.model.ModelCube
-import resonantengine.lib.transform.vector.Vector3
-import resonantengine.lib.utility.inventory.InventoryUtility
-import resonantengine.prefab.block.mixed.TileInventory
-import resonantengine.prefab.block.multiblock.{IMultiBlockStructure, MultiBlockHandler}
-import resonantengine.prefab.network.{TPacketReceiver, TPacketSender}
-
-import scala.collection.convert.wrapAll._
-
-/** The primary reactor component cell used to build reactors with.
+/** The primary reactor component cell used to build reactors withPriority.
   *
   * @author Calclavia */
 object TileReactorCell

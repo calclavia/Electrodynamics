@@ -2,22 +2,6 @@ package com.calclavia.edx.quantum.machine.accelerator
 
 import java.util.List
 
-import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData
-import edx.core.{Electrodynamics, Reference}
-import io.netty.buffer.ByteBuf
-import net.minecraft.block.Block
-import net.minecraft.entity.{Entity, EntityLiving}
-import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.tileentity.TileEntity
-import net.minecraft.util.AxisAlignedBB
-import net.minecraft.world.{ChunkCoordIntPair, World}
-import net.minecraftforge.common.ForgeChunkManager
-import net.minecraftforge.common.ForgeChunkManager.Type
-import net.minecraftforge.common.util.ForgeDirection
-import resonantengine.api.tile.IElectromagnet
-import resonantengine.lib.potion.PoisonRadiation
-import resonantengine.lib.transform.vector.Vector3
-
 import scala.collection.JavaConversions._
 
 /**
@@ -187,7 +171,7 @@ class EntityParticle(par1World: World) extends Entity(par1World) with IEntityAdd
     this.worldObj.spawnParticle("largesmoke", this.posX, this.posY, this.posZ, 0, 0, 0)
     val radius: Float = 0.5f
 
-    // Handle collision with entities TODO turn into a ray trace call so we know what we hit
+	  // Handle collision withPriority entities TODO turn into a ray trace call so we know what we hit
     val bounds: AxisAlignedBB = AxisAlignedBB.getBoundingBox(this.posX - radius, this.posY - radius, this.posZ - radius, this.posX + radius, this.posY + radius, this.posZ + radius)
     val entitiesNearby: List[_] = this.worldObj.getEntitiesWithinAABB(classOf[Entity], bounds)
     if (entitiesNearby.size > 1)

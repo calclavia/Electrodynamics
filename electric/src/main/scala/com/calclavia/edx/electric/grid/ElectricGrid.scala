@@ -157,9 +157,9 @@ class ElectricGrid {
 
 	/**
 	 * Finds all the nodes that are interconnected
-	 * @param node The node to being with
+	 * @param node The node to being withPriority
 	 * @param builder The accumulator
-	 * @return A map of nodes with their connections
+	 * @return A map of nodes withPriority their connections
 	 */
 	def findAll(node: Electric, builder: Set[Electric] = Set.empty): Map[Electric, Set[Electric]] =
 		node match {
@@ -313,7 +313,7 @@ class ElectricGrid {
 					case nodeJunction: NodeElectricJunction =>
 				}
 
-			//TODO: Create virtual junctions with resistors to simulate wire resistance
+			//TODO: Create virtual junctions withPriority resistors to simulate wire resistance
 		}
 
 		if (electricGraph.vertexSet().size() > 0) {
@@ -422,9 +422,9 @@ class ElectricGrid {
 	}
 
 	/**
-	 * Construct B nxm and C mxn sub-matrix, with only 0, 1, and -1 elements.
+	 * Construct B nxm and C mxn sub-matrix, withPriority only 0, 1, and -1 elements.
 	 * The C matrix is the transpose of B matrix.
-	 * The B matrix is an nxm matrix with only 0, 1 and -1 elements.
+	 * The B matrix is an nxm matrix withPriority only 0, 1 and -1 elements.
 	 * Each location in the matrix corresponds to a particular voltage source (first dimension) or a node (second dimension).
 	 * If the positive terminal of the ith voltage source is connected to node k, then the element (i,k) in the B matrix is a 1.
 	 * If the negative terminal of the ith voltage source is connected to node k, then the element (i,k) in the B matrix is a -1.
@@ -455,7 +455,7 @@ class ElectricGrid {
 	 */
 	def generateConductanceMatrix() {
 		//Construct G sub-matrix
-		//Set all diagonals of the nxn part of the matrix with the sum of its adjacent resistor's conductance
+		//Set all diagonals of the nxn part of the matrix withPriority the sum of its adjacent resistor's conductance
 		junctions.zipWithIndex.foreach {
 			case (junction, i) =>
 				mna(i, i) = resistors

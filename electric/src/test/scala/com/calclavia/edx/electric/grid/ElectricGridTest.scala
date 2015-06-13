@@ -127,7 +127,7 @@ class ElectricGridTest {
 
 	/**
 	 * Graph 2.
-	 * Series circuit with more than one node.
+	 * Series circuit withPriority more than one node.
 	 */
 	@Test
 	def testSolve2() {
@@ -184,7 +184,7 @@ class ElectricGridTest {
 
 	/**
 	 * Graph 3.
-	 * Parallel circuit with more than one node and employing virtual junctions.
+	 * Parallel circuit withPriority more than one node and employing virtual junctions.
 	 * |-- -|+ ---|
 	 * |          |
 	 * |--||---||-|
@@ -263,7 +263,7 @@ class ElectricGridTest {
 	}
 
 	/**
-	 * A complex circuit with multiple batteries
+	 * A complex circuit withPriority multiple batteries
 	 *
 	 * |-|||- -|+ ------|
 	 * |                |
@@ -348,7 +348,7 @@ class ElectricGridTest {
 	/**
 	 * Series circuit stress test.
 	 * Test addRecursive
-	 * Attempt to generate graphs with more and more resistors.
+	 * Attempt to generate graphs withPriority more and more resistors.
 	 */
 	@Test
 	def testSolve5() {
@@ -367,7 +367,7 @@ class ElectricGridTest {
 
 			grid.addRecursive(battery)
 
-			val profilerGen = new Profiler("Generate graph with " + trial + " resistors").start()
+			val profilerGen = new Profiler("Generate graph withPriority " + trial + " resistors").start()
 			grid.build()
 			profilerGen.end()
 
@@ -378,7 +378,7 @@ class ElectricGridTest {
 
 			//ElectricGrid.exportGraph(graph.electricGraph, "Stress Test " + trial)
 
-			val profiler = new Profiler("Solve circuit with " + trial + " resistors").start()
+			val profiler = new Profiler("Solve circuit withPriority " + trial + " resistors").start()
 			grid.update()
 			profiler.end()
 

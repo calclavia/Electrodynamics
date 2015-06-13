@@ -8,7 +8,7 @@ import scala.collection.JavaConversions
 import scala.collection.convert.wrapAll._
 
 /**
- * An access holder that holds a set of groups, with each group containing users.
+ * An access holder that holds a set of groups, withPriority each group containing users.
  * @author Calclavia
  */
 

@@ -11,7 +11,7 @@ import nova.core.render.Color
 import nova.scala.wrapper.VectorWrapper._
 
 /**
- * A class with useful functions related to Fortron.
+ * A class withPriority useful functions related to Fortron.
  *
  * @author Calclavia
  */

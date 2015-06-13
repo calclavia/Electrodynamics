@@ -13,7 +13,7 @@ object Settings {
 	var maxForceFieldScale: Int = 200
 	//@Config
 	var fortronProductionMultiplier: Double = 1
-	//@Config(comment = "Should the interdiction matrix interact with creative players?.")
+	//@Config(comment = "Should the interdiction matrix interact withPriority creative players?.")
 	var interdictionInteractCreative: Boolean = true
 	//@Config(comment = "Set this to false to turn off the MFFS Chunkloading capabilities.")
 	var loadFieldChunks: Boolean = true

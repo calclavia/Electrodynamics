@@ -1,24 +1,5 @@
 package com.calclavia.edx.quantum.machine.quantum
 
-import com.calclavia.edx.quantum.QuantumContent
-import edx.core.Reference
-import QuantumContent
-import io.netty.buffer.ByteBuf
-import net.minecraft.block.material.Material
-import net.minecraft.entity.item.EntityItem
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.item.{Item, ItemStack}
-import net.minecraft.nbt.NBTTagCompound
-import resonantengine.api.edx.recipe.QuantumAssemblerRecipes
-import resonantengine.api.network.IPacketReceiver
-import resonantengine.core.network.discriminator.{PacketTile, PacketType}
-import resonantengine.lib.content.prefab.TInventory
-import resonantengine.lib.grid.energy.EnergyStorage
-import resonantengine.lib.grid.energy.electric.NodeElectricComponent
-import resonantengine.lib.modcontent.block.ResonantTile
-import resonantengine.lib.transform.vector.Vector3
-import resonantengine.prefab.block.impl.{TBlockNodeProvider, TEnergyProvider}
-
 /**
  * Atomic assembler of items *
  *
@@ -100,7 +81,7 @@ class TileQuantumAssembler extends ResonantTile(Material.iron) with TInventory w
       }
       if (this.ticks % 10 == 0)
       {
-        //TODO send packets to each player with the GUI open
+	      //TODO send packets to each player withPriority the GUI open
       }
     }
     else if (this.time > 0)

@@ -1,30 +1,5 @@
 package com.calclavia.edx.quantum.machine.accelerator
 
-import com.calclavia.edx.quantum.QuantumContent
-import com.calclavia.edx.quantum.items.ItemAntimatter
-import cpw.mods.fml.relauncher.{Side, SideOnly}
-import edx.core.{Electrodynamics, Reference, Settings}
-import QuantumContent
-import io.netty.buffer.ByteBuf
-import net.minecraft.block.Block
-import net.minecraft.block.material.Material
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.util.IIcon
-import net.minecraftforge.common.util.ForgeDirection
-import resonantengine.api.tile.{IElectromagnet, IRotatable}
-import resonantengine.core.network.discriminator.{PacketTile, PacketType}
-import resonantengine.lib.content.prefab.TInventory
-import resonantengine.lib.grid.energy.EnergyStorage
-import resonantengine.lib.modcontent.block.ResonantTile
-import resonantengine.lib.transform.vector.Vector3
-import resonantengine.lib.utility.BlockUtility
-import resonantengine.prefab.block.impl.TEnergyProvider
-import resonantengine.prefab.network.{TPacketReceiver, TPacketSender}
-
-import scala.collection.JavaConversions._
-
 class TileAccelerator extends ResonantTile(Material.iron) with TInventory with IElectromagnet with IRotatable with TPacketReceiver with TPacketSender with TEnergyProvider
 {
   final val DESC_PACKET_ID = 2
@@ -66,7 +41,7 @@ class TileAccelerator extends ResonantTile(Material.iron) with TInventory with I
         {
           if (entityParticle == null)
           {
-            //Create new particle if we have materials to spawn it with
+	          //Create new particle if we have materials to spawn it withPriority
             if (getStackInSlot(0) != null && lastSpawnTick >= 40)
             {
               val spawn_vec: Vector3 = position

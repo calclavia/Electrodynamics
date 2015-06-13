@@ -46,7 +46,7 @@ object MFFSUtility {
 				if (firstItemBlock != null) {
 					return firstItemBlock
 				}
-			//TODO: Check with Sided
+			//TODO: Check withPriority Sided
 			case invProvider: ComponentProvider if invProvider.has(classOf[Inventory]) =>
 				Direction.DIRECTIONS
 					.view

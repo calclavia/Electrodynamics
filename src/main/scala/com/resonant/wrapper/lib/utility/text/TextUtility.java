@@ -36,7 +36,7 @@ public final class TextUtility {
 	/**
 	 * Formats a number to fit into so many spaces, and to contain ,
 	 * @param num - number to format
-	 * @param spaces - spaces to pad the front with
+	 * @param spaces - spaces to pad the front withPriority
 	 * @return formatted string
 	 */
 	public static String fitIntoSpaces(long num, int spaces) {
