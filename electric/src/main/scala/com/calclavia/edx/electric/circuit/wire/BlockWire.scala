@@ -136,33 +136,36 @@ class BlockWire extends BlockEDX with Storable with Syncable {
 	@Store
 	private val material = add(new MaterialWire)
 
-	add(new StaticBlockRenderer(this))
-		.setTexture(ElectricContent.wireTexture)
-		.setOnRender(
-	    (model: Model) => {
-		    get(classOf[Collider]).occlusionBoxes.apply(Optional.empty()).foreach(cuboid => {
-			    BlockModelUtil.drawCube(model, cuboid - 0.5, StaticCubeTextureCoordinates.instance)
-		    })
+	private val blockRenderer = add(new StaticBlockRenderer(this))
 
-		    model.faces.foreach(_.vertices.map(_.setColor(get(classOf[MaterialWire]).material.color)))
-		    model.bindAll(ElectricContent.wireTexture)
-	    }
-		)
+	blockRenderer.setOnRender(
+		(model: Model) => {
+			get(classOf[Collider]).occlusionBoxes.apply(Optional.empty()).foreach(cuboid => {
+				BlockModelUtil.drawCube(model, cuboid - 0.5, StaticCubeTextureCoordinates.instance)
+			})
+
+			model.faces.foreach(_.vertices.map(_.setColor(get(classOf[MaterialWire]).material.color)))
+			model.bindAll(ElectricContent.wireTexture)
+		}
+	)
 
 	private val itemRenderer = add(new ItemRenderer(this))
-		.setOnRender(
-	    (model: Model) => {
-		    (0 until 5)
-			    .map(dir => BlockWire.occlusionBounds(side)(dir))
-			    .foreach(cuboid => {
-			    BlockModelUtil.drawCube(model, cuboid - 0.5, StaticCubeTextureCoordinates.instance)
-		    })
 
-		    //TODO: Change color
-		    model.faces.foreach(_.vertices.map(_.setColor(WireMaterial.COPPER.color)))
-		    model.bindAll(ElectricContent.wireTexture)
-	    }
-		)
+	itemRenderer.setTexture(ElectricContent.wireTexture)
+
+	itemRenderer.setOnRender(
+		(model: Model) => {
+			(0 until 5)
+				.map(dir => BlockWire.occlusionBounds(side)(dir))
+				.foreach(cuboid => {
+				BlockModelUtil.drawCube(model, cuboid - 0.5, StaticCubeTextureCoordinates.instance)
+			})
+
+			//TODO: Change color
+			model.faces.foreach(_.vertices.map(_.setColor(WireMaterial.COPPER.color)))
+			model.bindAll(ElectricContent.wireTexture)
+		}
+	)
 
 	electricNode.setConnections(() => computeConnection)
 	electricNode.onGridBuilt.add((evt: GraphBuiltEvent) => {
