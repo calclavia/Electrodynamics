@@ -11,7 +11,6 @@ import com.calclavia.edx.optics.component.{BlockFieldMatrix, BlockPacketID}
 import com.calclavia.edx.optics.content.{OpticsContent, OpticsModels, OpticsTextures}
 import com.calclavia.edx.optics.field.shape.{ItemShape, ItemShapeCustom}
 import com.calclavia.edx.optics.fx.FXHologramProgress
-import com.calclavia.edx.optics.grid.OpticHandler
 import com.calclavia.edx.optics.security.PermissionHandler
 import com.calclavia.edx.optics.util.CacheHandler
 import nova.core.block.Block
@@ -40,7 +39,6 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 	@Store
 	@Sync(ids = Array(BlockPacketID.description, BlockPacketID.inventory))
 	override val inventory = add(new InventorySimple(1 + 25 + 6))
-	val opticHandler = add(new OpticHandler(this)).accumulate()
 	/** A set containing all positions of all force field blocks generated. */
 	var forceFields = Set.empty[Vector3D]
 	/** Marks the field for an update call */
@@ -259,7 +257,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 	 * Projects a force field based on the calculations made.
 	 */
 	def projectField() {
-		//TODO: We cannot construct a field if it intersects another field withPriority different frequency.
+		//TODO: We cannot construct a field if it intersects another field with different frequency.
 		if (!isCalculating) {
 			val potentialField = calculatedField
 			val relevantModules = crystalHandler.getModules(getModuleSlots: _*)

@@ -6,6 +6,7 @@ import com.calclavia.edx.core.EDX
 import com.calclavia.edx.optics.api.machine.{FieldMatrix, IPermissionProvider}
 import com.calclavia.edx.optics.api.modules.StructureProvider
 import com.calclavia.edx.optics.content.OpticsContent
+import com.calclavia.edx.optics.grid.OpticHandler
 import com.calclavia.edx.optics.util.CacheHandler
 import com.resonant.core.structure.Structure
 import nova.core.component.transform.Orientation
@@ -41,17 +42,7 @@ abstract class BlockFieldMatrix extends BlockFrequency with FieldMatrix with IPe
 
 	protected val orientation = add(new Orientation(this))
 
-	/*
-	override def isItemValidForSlot(slotID: Int, Item: Item): Boolean = {
-		if (slotID == 0) {
-			return Item.getItem.isInstanceOf[ItemCard]
-		}
-		else if (slotID == modeSlotID) {
-			return Item.getItem.isInstanceOf[IProjectorMode]
-		}
-
-		return Item.getItem.isInstanceOf[IModule]
-	}*/
+	protected val opticHandler = add(new OpticHandler(this)).accumulate()
 
 	override def getShape: StructureProvider = getShapeItem
 

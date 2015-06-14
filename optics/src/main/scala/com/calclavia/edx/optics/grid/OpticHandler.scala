@@ -1,6 +1,5 @@
 package com.calclavia.edx.optics.grid
 
-import com.calclavia.edx.optics.grid.OpticHandler.ReceiveBeamEvent
 import nova.core.block.Block
 import nova.core.block.Stateful.{LoadEvent, UnloadEvent}
 import nova.core.component.Component
@@ -61,10 +60,5 @@ class OpticHandler(val block: Block) extends Component {
 			OpticGrid(block.world).destroy(emitting)
 			emitting = null
 		}
-	}
-
-	def accumulate(): this.type = {
-		events.on(classOf[ReceiveBeamEvent]).bind((evt: ReceiveBeamEvent) => power += evt.receivingPower)
-		return this
 	}
 }

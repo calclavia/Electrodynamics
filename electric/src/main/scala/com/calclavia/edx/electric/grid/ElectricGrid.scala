@@ -271,6 +271,7 @@ class ElectricGrid {
 			case nodeComponent: NodeElectricComponent =>
 				val component = new Component(nodeComponent)
 				//Check all mutual connections
+				//TODO: If there's no other connect on the other end, then make a virtual junction (for dead end points of a circuit)
 				(connectionGraph.connectionsOf(nodeComponent) & nodeComponent.positives().toSet)
 					.foreach {
 					case checkNodeComponent: NodeElectricComponent =>
