@@ -18,8 +18,8 @@ abstract class BlockFrequency extends BlockMachine with Frequency {
 	val inventory: InventorySimple
 	val frequencySlot = 0
 
-	events.add((evt: LoadEvent) => GraphFrequency.instance.add(this), classOf[LoadEvent])
-	events.add((evt: UnloadEvent) => GraphFrequency.instance.remove(this), classOf[UnloadEvent])
+	events.on(classOf[LoadEvent]).bind((evt: LoadEvent) => GraphFrequency.instance.add(this))
+	events.on(classOf[UnloadEvent]).bind((evt: UnloadEvent) => GraphFrequency.instance.remove(this))
 
 	override def getFrequency: Int = {
 		val frequencyCard = getFrequencyCard

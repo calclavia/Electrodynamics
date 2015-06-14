@@ -5,7 +5,7 @@ package com.calclavia.edx.optics.component
  * @author Calclavia
  */
 object BlockPacketID {
-	final val description = 1
+	final val description = 0
 	final val frequency = 2
 	final val fortron = 3
 	final val toggleActivation = 4

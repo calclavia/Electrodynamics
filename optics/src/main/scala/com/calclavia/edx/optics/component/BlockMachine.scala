@@ -9,8 +9,6 @@ import com.calclavia.edx.optics.content.OpticsTextures
 import nova.core.block.Block.RightClickEvent
 import nova.core.block.Stateful
 import nova.core.block.component.StaticBlockRenderer
-import nova.core.component.Component
-import nova.core.component.misc.Collider
 import nova.core.component.renderer.ItemRenderer
 import nova.core.component.transform.Orientation
 import nova.core.gui.InputManager.Key
@@ -34,7 +32,11 @@ abstract class BlockMachine extends BlockEDX with Syncable with IActivatable wit
 	 */
 	var animation = 0d
 
-	var redstoneNode = EDX.components.make(classOf[Redstone], this)
+	val redstoneNode = add(EDX.components.make(classOf[Redstone], this))
+
+	val itemRenderer = add(new ItemRenderer(this))
+
+	val staticRenderer = add(new StaticBlockRenderer(this))
 
 	/**
 	 * Is the machine active and working?
@@ -51,19 +53,12 @@ abstract class BlockMachine extends BlockEDX with Syncable with IActivatable wit
 		}
 	})
 
-	add(redstoneNode.asInstanceOf[Component])
-	add(new ItemRenderer(this))
-	add(new StaticBlockRenderer(this))
-		.setTexture(func[Direction, Optional[Texture]]((side: Direction) => Optional.of(OpticsTextures.machine)))
+	staticRenderer.setTexture(func[Direction, Optional[Texture]]((side: Direction) => Optional.of(OpticsTextures.machine)))
 
-	get(classOf[Collider])
-		.isCube(false)
-		.isOpaqueCube(false)
+	collider.isCube(false)
+	collider.isOpaqueCube(false)
 
-	events.add((evt: RightClickEvent) => onRightClick(evt), classOf[RightClickEvent])
-
-	//	stepSound = Block.soundTypeMetal
-	//	override def getExplosionResistance(entity: Entity): Float = 100
+	events.on(classOf[RightClickEvent]).bind((evt: RightClickEvent) => onRightClick(evt))
 
 	override def getHardness: Double = Double.PositiveInfinity
 
@@ -95,9 +90,12 @@ abstract class BlockMachine extends BlockEDX with Syncable with IActivatable wit
 	def isActive: Boolean = active
 
 	def setActive(flag: Boolean) {
-		active = flag
-		EDX.network.sync(BlockPacketID.description, this)
-		world().markStaticRender(transform.position)
+		if (active != flag) {
+			active = flag
+			if (EDX.network.isServer)
+				EDX.network.sync(BlockPacketID.description, this)
+			world().markStaticRender(transform.position)
+		}
 	}
 
 	def onRightClick(evt: RightClickEvent) {

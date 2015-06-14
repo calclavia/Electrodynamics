@@ -42,9 +42,19 @@ class OpticGrid(val world: World) extends Updater {
 
 	var sources = Set.empty[Beam]
 
+	var handlers = Set.empty[OpticHandler]
+
 	private var graphChanged = true
 
 	EDX.syncTicker.add(this)
+
+	def register(handler: OpticHandler) {
+		handlers += handler
+	}
+
+	def unregister(handler: OpticHandler) {
+		handlers -= handler
+	}
 
 	/**
 	 * Creates a laser emission point
@@ -85,15 +95,17 @@ class OpticGrid(val world: World) extends Updater {
 
 			if (!EDX.clientManager.isPaused) {
 				sources.synchronized {
+					handlers.foreach(_.power = 0)
 					sources.foreach(_.update())
 
 					if (EDX.network.isServer) {
 						//Update client
 						if (graphChanged) {
-							//println("Sources: " + sources.size)
 							EDX.network.sync(this)
 							graphChanged = false
 						}
+						//TODO: Remove
+						graphChanged = true
 					}
 				}
 			}

@@ -46,7 +46,7 @@ class BlockCrystal extends BlockEDX with Stateful with Syncable with Storable {
 		}
 	)
 
-	optic.onReceive.add(
+	optic.events.on(classOf[ReceiveBeamEvent]).bind(
 		(evt: ReceiveBeamEvent) => {
 			/**
 			 * Change incoming render laser position

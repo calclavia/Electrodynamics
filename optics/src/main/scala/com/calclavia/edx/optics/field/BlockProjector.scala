@@ -17,7 +17,7 @@ import com.calclavia.edx.optics.util.CacheHandler
 import nova.core.block.Block
 import nova.core.block.Block.RightClickEvent
 import nova.core.block.Stateful.UnloadEvent
-import nova.core.block.component.{LightEmitter, StaticBlockRenderer}
+import nova.core.block.component.LightEmitter
 import nova.core.component.renderer.DynamicRenderer
 import nova.core.component.transform.Orientation
 import nova.core.entity.component.Player
@@ -40,7 +40,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 	@Store
 	@Sync(ids = Array(BlockPacketID.description, BlockPacketID.inventory))
 	override val inventory = add(new InventorySimple(1 + 25 + 6))
-	val opticHandler = add(new OpticHandler(this))
+	val opticHandler = add(new OpticHandler(this)).accumulate()
 	/** A set containing all positions of all force field blocks generated. */
 	var forceFields = Set.empty[Vector3D]
 	/** Marks the field for an update call */
@@ -49,91 +49,94 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 	private var isCompleteConstructing = false
 	/** True to make the field constantly tick */
 	private var fieldRequireTicks = false
-
-	crystalHandler.capacityBase = 30
-	crystalHandler.startModuleIndex = 1
 	/** Are the filters in the projector inverted? */
 	@Sync(ids = Array(BlockPacketID.description))
 	private var isInverted = false
+	private val dynamicRenderer = add(new DynamicRenderer())
+	private val lightEmitter = add(new LightEmitter())
+
+	crystalHandler.capacityBase = 30
+	crystalHandler.startModuleIndex = 1
 
 	events.on(classOf[UnloadEvent]).withPriority(EventBus.PRIORITY_DEFAULT + 1).bind((evt: UnloadEvent) => destroyField())
 
 	collider.isCube(false)
 	collider.setBoundingBox(new Cuboid(0, 0, 0, 1, 0.8, 1))
 
-	get(classOf[StaticBlockRenderer])
-		.setOnRender(
-	    (model: Model) => {
-		    model.matrix.rotate(get(classOf[Orientation]).orientation.rotation)
-		    model.children.add(OpticsModels.projector.getModel)
-		    model.bindAll(if (isActive) OpticsTextures.projectorOn else OpticsTextures.projectorOff)
-	    }
-		)
+	staticRenderer.setOnRender(
+		(model: Model) => {
+			model.matrix.rotate(get(classOf[Orientation]).orientation.rotation)
+			model.children.add(OpticsModels.projector.getModel)
+			model.bindAll(if (isActive) OpticsTextures.projectorOn else OpticsTextures.projectorOff)
+		}
+	)
 
-	add(new DynamicRenderer())
-		.setOnRender(
-	    (model: Model) => {
+	dynamicRenderer.setOnRender(
+		(model: Model) => {
+			/**
+			 * Render the light beam
+			 */
+			if (getShapeItem != null) {
+				/**
+				 * Render hologram
+				 */
+				if (Settings.highGraphics) {
+					val hologram = new Model("hologram")
+					//GL_SRC_ALPHA
+					hologram.blendSFactor = 0x302
+					//GL_ONE
+					hologram.blendDFactor = 0x303
+					hologram.matrix
+						.translate(0, 0.85 + Math.sin(Math.toRadians(ticks * 3)).toFloat / 7, 0)
+						.rotate(Vector3D.PLUS_J, Math.toRadians(ticks * 4))
+						.rotate(new Vector3D(0, 1, 1), Math.toRadians(36f + ticks * 4))
 
-		    /**
-		     * Render the light beam
-		     */
-		    if (getShapeItem != null) {
-			    /**
-			     * Render hologram
-			     */
-			    if (Settings.highGraphics) {
-				    val hologram = new Model("hologram")
-				    //GL_SRC_ALPHA
-				    hologram.blendSFactor = 0x302
-				    //GL_ONE
-				    hologram.blendDFactor = 0x303
-				    hologram.matrix
-					    .translate(0, 0.85 + Math.sin(Math.toRadians(ticks * 3)).toFloat / 7, 0)
-					    .rotate(Vector3D.PLUS_J, Math.toRadians(ticks * 4))
-					    .rotate(new Vector3D(0, 1, 1), Math.toRadians(36f + ticks * 4))
+					getShapeItem.render(BlockProjector.this, hologram)
 
-				    getShapeItem.render(BlockProjector.this, hologram)
+					val color = if (isActive) Color.blue else Color.red
+					hologram.faces.foreach(_.vertices.foreach(_.setColor(color.alpha((Math.sin(ticks / 10d) * 200 + 55).toInt))))
+					hologram.bindAll(OpticsTextures.hologram)
+					model.addChild(hologram)
+				}
+			}
+		}
+	)
 
-				    val color = if (isActive) Color.blue else Color.red
-				    hologram.faces.foreach(_.vertices.foreach(_.setColor(color.alpha((Math.sin(ticks / 10d) * 200 + 55).toInt))))
-				    hologram.bindAll(OpticsTextures.hologram)
-				    model.addChild(hologram)
-			    }
-		    }
-	    }
-		)
-
-	add(new LightEmitter().setEmittedLevel(supplier(() => if (getShapeItem() != null) 1f else 0f)))
+	lightEmitter.setEmittedLevel(supplier(() => if (getShapeItem() != null) 1f else 0f))
 
 	events.on(classOf[RightClickEvent])
 		.bind(
 	    (evt: RightClickEvent) => {
-		    val opPlayer = evt.entity.getOp(classOf[Player])
-		    if (opPlayer.isPresent) {
-			    val player = opPlayer.get()
-			    val opItem = player.getInventory.getHeldItem
+		    if (EDX.network.isServer) {
+			    val opPlayer = evt.entity.getOp(classOf[Player])
+			    if (opPlayer.isPresent) {
+				    val player = opPlayer.get()
+				    val opItem = player.getInventory.getHeldItem
 
-			    if (opItem.isPresent) {
-				    val item = opItem.get
+				    if (opItem.isPresent) {
+					    val item = opItem.get
 
-				    //Placing shape crystals
-				    if (item.isInstanceOf[ItemShape]) {
-					    val swap = inventory.swap(0, item)
+					    //Placing shape crystals
+					    if (item.isInstanceOf[ItemShape]) {
+						    val swap = inventory.swap(0, item)
 
-					    if (swap.isPresent) {
-						    player.getInventory.set(player.getInventory.getHeldSlot, swap.get)
-					    } else {
-						    player.getInventory.remove(player.getInventory.getHeldSlot)
+						    if (swap.isPresent) {
+							    player.getInventory.set(player.getInventory.getHeldSlot, swap.get)
+						    } else {
+							    player.getInventory.remove(player.getInventory.getHeldSlot)
+						    }
 					    }
 				    }
+				    else {
+					    //Eject items
+					    val rem = inventory.remove(0)
+					    if (rem.isPresent)
+						    player.getInventory.set(player.getInventory.getHeldSlot, rem.get)
+				    }
+
+				    EDX.network.sync(BlockPacketID.inventory, this)
+				    evt.result = true
 			    }
-			    else {
-				    //Eject items
-				    val rem = inventory.remove(0)
-				    if (rem.isPresent)
-					    player.getInventory.set(player.getInventory.getHeldSlot, rem.get)
-			    }
-			    evt.result = true
 		    }
 	    }
 		)
@@ -218,8 +221,17 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)
 
-		if (isActive && getShapeItem != null && opticHandler.energy > crystalHandler.energyCost) {
+		if (EDX.network.isServer) {
+			//println(getShapeItem + " : " +opticHandler.power + " vs "+crystalHandler.powerCost)
+			if (getShapeItem != null && opticHandler.power > crystalHandler.powerCost) {
+				setActive(true)
+			}
+			else {
+				setActive(false)
+			}
+		}
 
+		if (isActive) {
 			if (ticks % 10 == 0 || markFieldUpdate || fieldRequireTicks) {
 				if (calculatedField == null) {
 					calculateField(postCalculation)
@@ -229,8 +241,8 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 				}
 			}
 
-			if (isActive && EDX.network.isClient) {
-				animation += crystalHandler.energyCost / 100f
+			if (EDX.network.isClient) {
+				animation += crystalHandler.powerCost / 100f
 			}
 
 			if (ticks % (2 * 20) == 0 && getModuleCount(OpticsContent.moduleSilence) <= 0) {

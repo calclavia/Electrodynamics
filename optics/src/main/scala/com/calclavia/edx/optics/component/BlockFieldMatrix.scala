@@ -37,9 +37,9 @@ abstract class BlockFieldMatrix extends BlockFrequency with FieldMatrix with IPe
 
 	protected var isCalculating = false
 
-	val crystalHandler = add(new CrystalHandler(this))
+	protected val crystalHandler = add(new CrystalHandler(this))
 
-	add(new Orientation(this))
+	protected val orientation = add(new Orientation(this))
 
 	/*
 	override def isItemValidForSlot(slotID: Int, Item: Item): Boolean = {

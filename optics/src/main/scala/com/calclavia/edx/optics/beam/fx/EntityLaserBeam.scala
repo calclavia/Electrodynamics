@@ -137,7 +137,7 @@ class EntityLaserBeam(start: Vector3D, end: Vector3D, color: Color, power: Doubl
 		}
 	)
 
-	override def maxAge: Double = 1
+	override def maxAge: Double = 0.5
 
 	override def getID: String = "laserFx"
 }

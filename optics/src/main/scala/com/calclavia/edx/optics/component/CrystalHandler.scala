@@ -22,7 +22,7 @@ class CrystalHandler(val block: Block) extends Component with CacheHandler {
 	var capacityBase = 500
 	var capacityBoost = 5
 
-	def energyCost = getOrSetCache("energyCost", () => doGetEnergyCost)
+	def powerCost = getOrSetCache("energyCost", () => doGetEnergyCost)
 
 	protected def doGetEnergyCost = getModules().foldLeft(0f)((a, b) => a + b.count * b.asInstanceOf[Module].getFortronCost(amplifier.toFloat))
 

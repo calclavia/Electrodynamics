@@ -4,7 +4,7 @@ import com.calclavia.edx.optics.grid.OpticHandler.ReceiveBeamEvent
 import nova.core.block.Block
 import nova.core.block.Stateful.{LoadEvent, UnloadEvent}
 import nova.core.component.Component
-import nova.core.event.{Event, EventBus}
+import nova.core.event.Event
 import nova.core.util.RayTracer.RayTraceResult
 import nova.scala.wrapper.FunctionalWrapper._
 import org.apache.commons.math3.util.FastMath
@@ -15,6 +15,9 @@ import org.apache.commons.math3.util.FastMath
  */
 object OpticHandler {
 
+	/**
+	 * Called when the total energy due to incident waves changes
+	 */
 	class ReceiveBeamEvent(val incident: Beam, var hit: RayTraceResult) extends Event {
 		var hasImpact = true
 
@@ -30,16 +33,16 @@ object OpticHandler {
 
 class OpticHandler(val block: Block) extends Component {
 
-	/**
-	 * Called when the total energy due to incident waves changes
-	 */
-	var onReceive = new EventBus[ReceiveBeamEvent]
-
 	private var emitting: ElectromagneticBeam = null
 
+	var power = 0d
+
 	//Hook block events.
-	block.events.add(eventListener((evt: LoadEvent) => OpticGrid(block.world)), classOf[LoadEvent])
-	block.events.add((evt: UnloadEvent) => destroy(), classOf[UnloadEvent])
+	block.events.on(classOf[LoadEvent]).bind((evt: LoadEvent) => OpticGrid(block.world).register(this))
+	block.events.on(classOf[UnloadEvent]).bind((evt: UnloadEvent) => {
+		destroy()
+		OpticGrid(block.world).unregister(this)
+	})
 
 	def create(laser: ElectromagneticBeam) {
 		if (emitting != null) {
@@ -60,7 +63,8 @@ class OpticHandler(val block: Block) extends Component {
 		}
 	}
 
-	//TODO: Implement
-	def energy = 0d
-
+	def accumulate(): this.type = {
+		events.on(classOf[ReceiveBeamEvent]).bind((evt: ReceiveBeamEvent) => power += evt.receivingPower)
+		return this
+	}
 }

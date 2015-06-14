@@ -33,7 +33,7 @@ class BlockMirror extends BlockEDX with Stateful with Syncable with Storable {
 	private val focus = add(new Focus(this))
 	private val renderer = add(new StaticBlockRenderer(this))
 	private val itemRenderer = add(new ItemRenderer(this))
-	private val optic = add(new OpticHandler(this))
+	private val opticHandler = add(new OpticHandler(this))
 
 	renderer.setOnRender(
 		(model: Model) => {
@@ -49,7 +49,7 @@ class BlockMirror extends BlockEDX with Stateful with Syncable with Storable {
 
 	events.add((evt: RightClickEvent) => EDX.network.sync(this), classOf[RightClickEvent])
 
-	optic.onReceive.add(
+	opticHandler.events.on(classOf[ReceiveBeamEvent]).bind(
 		(evt: ReceiveBeamEvent) => {
 			/**
 			 * Change incoming render laser position
