@@ -9,7 +9,7 @@ import scala.collection.convert.wrapAll._
  * A grid that manages the mechanical objects
  * @author Calclavia
  */
-class GridMechanical extends GridNode[NodeMechanical] with IUpdate
+class GridMechanical extends GridNode[MechanicalComponent] with IUpdate
 {
   /**
    * Determines if this grid is locked (invalid opposite gear connections)
@@ -19,22 +19,22 @@ class GridMechanical extends GridNode[NodeMechanical] with IUpdate
   /**
    * The nodes that the grid is currently recusing through
    */
-  private var allRecursed = Seq.empty[NodeMechanical]
-  private var allDistributed = Seq.empty[NodeMechanical]
+  private var allRecursed = Seq.empty[MechanicalComponent]
+  private var allDistributed = Seq.empty[MechanicalComponent]
 
-  nodeClass = classOf[NodeMechanical]
+  nodeClass = classOf[MechanicalComponent]
 
   /**
    * Rebuild the node list starting from the first node and recursively iterating through its connections.
    */
-  override def reconstruct(first: NodeMechanical)
+  override def reconstruct(first: MechanicalComponent)
   {
     super.reconstruct(first)
     UpdateTicker.world.addUpdater(this)
     isLocked = false
   }
 
-  override def deconstruct(first: NodeMechanical)
+  override def deconstruct(first: MechanicalComponent)
   {
     super.deconstruct(first)
     UpdateTicker.world.removeUpdater(this)
@@ -68,7 +68,7 @@ class GridMechanical extends GridNode[NodeMechanical] with IUpdate
         )
       }
 
-      allDistributed = Seq.empty[NodeMechanical]
+      allDistributed = Seq.empty[MechanicalComponent]
 
       resetNodes()
     }
@@ -96,7 +96,7 @@ class GridMechanical extends GridNode[NodeMechanical] with IUpdate
     )
   }
 
-  def calculateEquivalentInertia(passed: Seq[NodeMechanical]): Double =
+  def calculateEquivalentInertia(passed: Seq[MechanicalComponent]): Double =
   {
     val curr = passed.last
     allRecursed :+= curr
@@ -110,7 +110,7 @@ class GridMechanical extends GridNode[NodeMechanical] with IUpdate
     return inertia
   }
 
-  def recurse(passed: Seq[NodeMechanical], deltaTime: Double, torque: Double, angularVelocity: Double)
+  def recurse(passed: Seq[MechanicalComponent], deltaTime: Double, torque: Double, angularVelocity: Double)
   {
     val curr = passed.last
 

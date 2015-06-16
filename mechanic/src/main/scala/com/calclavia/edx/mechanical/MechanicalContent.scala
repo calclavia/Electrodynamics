@@ -7,7 +7,7 @@ import com.calclavia.edx.mechanical.machine.TileDetector
 import com.calclavia.edx.mechanical.machine.edit.{TilePlacer, TileBreaker}
 import com.calclavia.edx.mechanical.mech.gear.{ItemGear, PartGear}
 import com.calclavia.edx.mechanical.mech.gearshaft.{ItemGearShaft, PartGearShaft}
-import com.calclavia.edx.mechanical.mech.grid.NodeMechanical
+import com.calclavia.edx.mechanical.mech.grid.MechanicalComponent
 import com.calclavia.edx.mechanical.mech.process.crusher.TileMechanicalPiston
 import com.calclavia.edx.mechanical.mech.process.grinder.TileGrindingWheel
 import com.calclavia.edx.mechanical.mech.process.mixer.TileMixer

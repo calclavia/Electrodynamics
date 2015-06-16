@@ -1,6 +1,6 @@
 package com.calclavia.edx.mechanical.mech
 
-import com.calclavia.edx.mechanical.mech.grid.NodeMechanical
+import com.calclavia.edx.mechanical.mech.grid.MechanicalComponent
 import io.netty.buffer.ByteBuf
 import net.minecraft.block.material.Material
 import net.minecraft.entity.player.EntityPlayer
@@ -20,7 +20,7 @@ import scala.collection.convert.wrapAll._
 abstract class TileMechanical(material: Material) extends ResonantTile(material: Material) with TRotatable with TBlockNodeProvider with TPacketSender with TPacketReceiver
 {
   /** Node that handles most mechanical actions */
-  private var _mechanicalNode: NodeMechanical = null
+  private var _mechanicalNode: MechanicalComponent = null
 
   override def setDirection(direction: ForgeDirection): Unit =
   {
@@ -65,14 +65,14 @@ abstract class TileMechanical(material: Material) extends ResonantTile(material:
 
   def mechanicalNode = _mechanicalNode
 
-  def mechanicalNode_=(newNode: NodeMechanical)
+  def mechanicalNode_=(newNode: MechanicalComponent)
   {
     _mechanicalNode = newNode
     mechanicalNode.onVelocityChanged = () => sendPacket(1)
-    nodes.removeAll(nodes.filter(_.isInstanceOf[NodeMechanical]))
+    nodes.removeAll(nodes.filter(_.isInstanceOf[MechanicalComponent]))
     nodes.add(mechanicalNode)
   }
 
-  mechanicalNode = new NodeMechanical(this)
+  mechanicalNode = new MechanicalComponent(this)
 
 }

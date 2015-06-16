@@ -1,7 +1,7 @@
 package com.calclavia.edx.mechanical.mech.gearshaft
 
 import com.calclavia.edx.mechanical.mech.gear.{NodeGear, PartGear}
-import com.calclavia.edx.mechanical.mech.grid.NodeMechanical
+import com.calclavia.edx.mechanical.mech.grid.MechanicalComponent
 import edx.core.interfaces.TNodeMechanical
 import edx.mechanical.mech.gear.PartGear
 import net.minecraftforge.common.util.ForgeDirection
@@ -9,7 +9,7 @@ import resonantengine.api.graph.INodeProvider
 import resonantengine.lib.transform.vector.Vector3
 import resonantengine.lib.wrapper.ForgeDirectionWrapper._
 
-class NodeGearShaft(parent: PartGearShaft) extends NodeMechanical(parent)
+class NodeGearShaft(parent: PartGearShaft) extends MechanicalComponent(parent)
 {
   override def inertia: Double =
   {
@@ -31,7 +31,7 @@ class NodeGearShaft(parent: PartGearShaft) extends NodeMechanical(parent)
       var found = false
 
       ///Check within this block for another gear plate that will move this shaft
-      val otherNode = shaft.tile.asInstanceOf[INodeProvider].getNode(classOf[NodeMechanical], toDir)
+      val otherNode = shaft.tile.asInstanceOf[INodeProvider].getNode(classOf[MechanicalComponent], toDir)
 
       if (otherNode != null && otherNode != this && canConnect(otherNode, toDir) && otherNode.canConnect(this, toDir.getOpposite))
       {
@@ -46,7 +46,7 @@ class NodeGearShaft(parent: PartGearShaft) extends NodeMechanical(parent)
 
         if (checkTile.isInstanceOf[INodeProvider])
         {
-          val instance = checkTile.asInstanceOf[INodeProvider].getNode(classOf[NodeMechanical], toDir.getOpposite)
+          val instance = checkTile.asInstanceOf[INodeProvider].getNode(classOf[MechanicalComponent], toDir.getOpposite)
 
           if (instance != null && instance != this && instance.getParent.isInstanceOf[PartGearShaft] && canConnect(instance, toDir) && instance.canConnect(this, toDir.getOpposite))
           {
@@ -59,11 +59,11 @@ class NodeGearShaft(parent: PartGearShaft) extends NodeMechanical(parent)
 
   override def canConnect[B](other: B, from: ForgeDirection): Boolean =
   {
-    if (other.isInstanceOf[NodeMechanical])
+    if (other.isInstanceOf[MechanicalComponent])
     {
-      if (other.asInstanceOf[NodeMechanical].getParent.isInstanceOf[PartGear])
+      if (other.asInstanceOf[MechanicalComponent].getParent.isInstanceOf[PartGear])
       {
-        val gear = other.asInstanceOf[NodeMechanical].getParent.asInstanceOf[PartGear]
+        val gear = other.asInstanceOf[MechanicalComponent].getParent.asInstanceOf[PartGear]
         if (!(Math.abs(gear.placementSide.offsetX) == Math.abs(shaft.placementSide.offsetX) && Math.abs(gear.placementSide.offsetY) == Math.abs(shaft.placementSide.offsetY) && Math.abs(gear.placementSide.offsetZ) == Math.abs(shaft.placementSide.offsetZ)))
         {
           return false

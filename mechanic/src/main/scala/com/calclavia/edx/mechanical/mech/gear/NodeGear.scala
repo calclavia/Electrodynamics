@@ -3,7 +3,7 @@ package com.calclavia.edx.mechanical.mech.gear
 import codechicken.lib.vec.Rotation
 import codechicken.multipart.TileMultipart
 import com.calclavia.edx.mechanical.mech.gearshaft.{NodeGearShaft, PartGearShaft}
-import com.calclavia.edx.mechanical.mech.grid.NodeMechanical
+import com.calclavia.edx.mechanical.mech.grid.MechanicalComponent
 import edx.core.interfaces.TNodeMechanical
 import edx.mechanical.mech.gearshaft.PartGearShaft
 import net.minecraft.tileentity.TileEntity
@@ -17,7 +17,7 @@ import resonantengine.lib.wrapper.ForgeDirectionWrapper._
  *
  * @author Calclavia, Edited by: Darkguardsman
  */
-class NodeGear(parent: PartGear) extends NodeMechanical(parent: PartGear)
+class NodeGear(parent: PartGear) extends MechanicalComponent(parent: PartGear)
 {
   override def angleDisplacement = if (gear.getMultiBlock.isConstructed) Math.PI / 36 else Math.PI / 12
 
@@ -64,7 +64,7 @@ class NodeGear(parent: PartGear) extends NodeMechanical(parent: PartGear)
     val tileBehind = new Vector3(gear.tile).add(gear.placementSide).getTileEntity(world)
     if (tileBehind.isInstanceOf[INodeProvider])
     {
-      val other = tileBehind.asInstanceOf[INodeProvider].getNode(classOf[NodeMechanical], gear.placementSide.getOpposite)
+      val other = tileBehind.asInstanceOf[INodeProvider].getNode(classOf[MechanicalComponent], gear.placementSide.getOpposite)
 
       if (other != null && other != this && !other.getParent.isInstanceOf[PartGearShaft] && other.canConnect(this, gear.placementSide.getOpposite))
       {
@@ -85,7 +85,7 @@ class NodeGear(parent: PartGear) extends NodeMechanical(parent: PartGear)
 
       if (tile.isInstanceOf[INodeProvider])
       {
-        val other = tile.asInstanceOf[INodeProvider].getNode(classOf[NodeMechanical], if (toDir == gear.placementSide.getOpposite) ForgeDirection.UNKNOWN else toDir)
+        val other = tile.asInstanceOf[INodeProvider].getNode(classOf[MechanicalComponent], if (toDir == gear.placementSide.getOpposite) ForgeDirection.UNKNOWN else toDir)
 
         if (other != this && toDir != gear.placementSide && other != null && canConnect(other, toDir) && other.canConnect(this, toDir.getOpposite))
         {
@@ -105,7 +105,7 @@ class NodeGear(parent: PartGear) extends NodeMechanical(parent: PartGear)
 
       if (!directionMap.containsValue(toDir) && checkTile.isInstanceOf[INodeProvider])
       {
-        val other = checkTile.asInstanceOf[INodeProvider].getNode(classOf[NodeMechanical], gear.placementSide)
+        val other = checkTile.asInstanceOf[INodeProvider].getNode(classOf[MechanicalComponent], gear.placementSide)
 
         if (other != null && other != this && canConnect(other, toDir) && other.canConnect(this, toDir.getOpposite) && !other.isInstanceOf[NodeGearShaft])
         {
@@ -122,14 +122,14 @@ class NodeGear(parent: PartGear) extends NodeMechanical(parent: PartGear)
    * @param other - The source of the connection.
    * @return True is so.
    */
-  override def canConnect[B <: NodeMechanical](other: B, from: ForgeDirection): Boolean =
+  override def canConnect[B <: MechanicalComponent](other: B, from: ForgeDirection): Boolean =
   {
     if (!gear.getMultiBlock.isPrimary)
     {
       return false
     }
 
-    if (other.isInstanceOf[NodeMechanical])
+    if (other.isInstanceOf[MechanicalComponent])
     {
       val otherParent = other.getParent
 
@@ -155,7 +155,7 @@ class NodeGear(parent: PartGear) extends NodeMechanical(parent: PartGear)
         if (sourceTile.isInstanceOf[INodeProvider])
         {
           //Found a potential node. Check if it is actually adjacent to the gear.
-          val sourceInstance = sourceTile.asInstanceOf[INodeProvider].getNode(classOf[NodeMechanical], from)
+          val sourceInstance = sourceTile.asInstanceOf[INodeProvider].getNode(classOf[MechanicalComponent], from)
           return sourceInstance == other
         }
       }
@@ -255,7 +255,7 @@ class NodeGear(parent: PartGear) extends NodeMechanical(parent: PartGear)
 
   override def radius(other: TNodeMechanical): Double =
   {
-    val deltaPos = other.asInstanceOf[NodeMechanical].position - position
+    val deltaPos = other.asInstanceOf[MechanicalComponent].position - position
     val caseX = gear.placementSide.offsetX != 0 && deltaPos.y == 0 && deltaPos.z == 0
     val caseY = gear.placementSide.offsetY != 0 && deltaPos.x == 0 && deltaPos.z == 0
     val caseZ = gear.placementSide.offsetZ != 0 && deltaPos.x == 0 && deltaPos.y == 0

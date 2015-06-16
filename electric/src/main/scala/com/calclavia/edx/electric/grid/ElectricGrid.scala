@@ -5,6 +5,7 @@ import java.util
 import java.util.Collections
 
 import com.calclavia.edx.core.extension.GraphExtension._
+import com.calclavia.edx.core.grid.GridLike
 import com.calclavia.edx.electric.api.Electric.{ElectricChangeEvent, GraphBuiltEvent}
 import com.calclavia.edx.electric.api.{Electric, ElectricComponent}
 import nova.scala.wrapper.FunctionalWrapper._
@@ -124,7 +125,7 @@ object ElectricGrid {
 
 }
 
-class ElectricGrid {
+class ElectricGrid extends GridLike[Electric] {
 
 	import ElectricGrid._
 

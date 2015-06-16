@@ -1,6 +1,6 @@
 package com.calclavia.edx.mechanical.mech.turbine
 
-import com.calclavia.edx.mechanical.mech.grid.NodeMechanical
+import com.calclavia.edx.mechanical.mech.grid.MechanicalComponent
 import edx.core.interfaces.TNodeMechanical
 import net.minecraftforge.common.util.ForgeDirection
 
@@ -10,7 +10,7 @@ import net.minecraftforge.common.util.ForgeDirection
  *
  * @author Calclavia, Darkguardsman
  */
-class NodeTurbine(parent: TileTurbine) extends NodeMechanical(parent)
+class NodeTurbine(parent: TileTurbine) extends MechanicalComponent(parent)
 {
 
   /**
@@ -30,7 +30,7 @@ class NodeTurbine(parent: TileTurbine) extends NodeMechanical(parent)
    */
   override def radius(other: TNodeMechanical): Double =
   {
-    val deltaPos = other.asInstanceOf[NodeMechanical].position - position
+    val deltaPos = other.asInstanceOf[MechanicalComponent].position - position
 
     if (deltaPos.normalize.toForgeDirection == parent.getDirection)
       return super.radius(other)
@@ -38,9 +38,9 @@ class NodeTurbine(parent: TileTurbine) extends NodeMechanical(parent)
     return parent.multiBlockRadius
   }
 
-  override def canConnect[B <: NodeMechanical](other: B, from: ForgeDirection): Boolean =
+  override def canConnect[B <: MechanicalComponent](other: B, from: ForgeDirection): Boolean =
   {
-    return turbine.getMultiBlock.isPrimary && other.isInstanceOf[NodeMechanical] && !other.isInstanceOf[NodeTurbine] && canConnect(from)
+    return turbine.getMultiBlock.isPrimary && other.isInstanceOf[MechanicalComponent] && !other.isInstanceOf[NodeTurbine] && canConnect(from)
   }
 
   override def canConnect(from: ForgeDirection) = from == turbine.getDirection

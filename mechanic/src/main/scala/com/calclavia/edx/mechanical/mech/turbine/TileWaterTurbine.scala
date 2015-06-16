@@ -2,7 +2,7 @@ package com.calclavia.edx.mechanical.mech.turbine
 
 import java.util.List
 
-import com.calclavia.edx.mechanical.mech.grid.NodeMechanical
+import com.calclavia.edx.mechanical.mech.grid.MechanicalComponent
 import cpw.mods.fml.relauncher.ReflectionHelper
 import edx.core.Settings
 import net.minecraft.block.BlockLiquid
@@ -35,13 +35,13 @@ class TileWaterTurbine extends TileTurbine
   {
     override def canConnect[B](other: B, from: ForgeDirection): Boolean =
     {
-      if (other.isInstanceOf[NodeMechanical] && !other.isInstanceOf[TileTurbine])
+      if (other.isInstanceOf[MechanicalComponent] && !other.isInstanceOf[TileTurbine])
       {
         val sourceTile: TileEntity = position.add(from).getTileEntity
 
         if (sourceTile.isInstanceOf[INodeProvider])
         {
-          val sourceInstance: NodeMechanical = sourceTile.asInstanceOf[INodeProvider].getNode(classOf[NodeMechanical], from.getOpposite).asInstanceOf[NodeMechanical]
+          val sourceInstance: MechanicalComponent = sourceTile.asInstanceOf[INodeProvider].getNode(classOf[MechanicalComponent], from.getOpposite).asInstanceOf[MechanicalComponent]
           return sourceInstance == other && (from == getDirection.getOpposite || from == getDirection)
         }
       }
