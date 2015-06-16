@@ -118,10 +118,13 @@ abstract class BlockFieldMatrix extends BlockFrequency with FieldMatrix with IPe
 
 	def getPositiveScale: Vector3D =
 		getOrSetCache("getPositiveScale", () => {
-			var zScalePos = 0
-			var xScalePos = 0
-			var yScalePos = 0
+			//1 Kilowatt per meter
+			val distancePerWatt = 1 / 1000d
+			val zScalePos = (opticHandler.power(Direction.SOUTH) + opticHandler.power(Direction.NORTH)) * distancePerWatt
+			val xScalePos = (opticHandler.power(Direction.EAST) + opticHandler.power(Direction.EAST)) * distancePerWatt
+			val yScalePos = (opticHandler.power(Direction.UP) + opticHandler.power(Direction.DOWN)) * distancePerWatt
 
+			/*
 			if (absoluteDirection) {
 				zScalePos = getModuleCount(OpticsContent.moduleScale, getDirectionSlots(Direction.SOUTH): _*)
 				xScalePos = getModuleCount(OpticsContent.moduleScale, getDirectionSlots(Direction.EAST): _*)
@@ -140,6 +143,7 @@ abstract class BlockFieldMatrix extends BlockFrequency with FieldMatrix with IPe
 			zScalePos += omnidirectionalScale
 			xScalePos += omnidirectionalScale
 			yScalePos += omnidirectionalScale
+			*/
 
 			return new Vector3D(xScalePos, yScalePos, zScalePos)
 		})
