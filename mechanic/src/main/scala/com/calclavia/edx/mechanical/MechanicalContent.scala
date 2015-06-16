@@ -1,5 +1,6 @@
 package com.calclavia.edx.mechanical
 
+import com.calclavia.edx.core.Reference
 import com.calclavia.edx.mechanical.fluid.pipe.{ItemPipe, PipeMaterials, PartPipe}
 import com.calclavia.edx.mechanical.fluid.transport.TilePump
 import com.calclavia.edx.mechanical.machine.TileDetector
@@ -19,8 +20,8 @@ import edx.mechanical.mech.gear.ItemGear
 import edx.mechanical.mech.gearshaft.ItemGearShaft
 import edx.mechanical.mech.turbine.TileWindTurbine
 import net.minecraft.block.Block
-import net.minecraft.init.{Blocks, Items}
-import net.minecraft.item.{Item, ItemStack}
+import nova.core.block.BlockFactory
+import nova.core.item.{ItemFactory, Item}
 import resonantengine.api.graph.node.NodeRegistry
 import resonantengine.lib.schematic.{SchematicPlate, SchematicRegistry}
 import resonantengine.lib.utility.recipe.UniversalRecipe
@@ -30,27 +31,24 @@ import resonantengine.prefab.modcontent.ContentHolder
  * The core contents of Resonant Induction
  * @author Calclavia
  */
-object MechanicalContent extends ContentHolder
+object MechanicalContent extends ContentLoader
 {
-  //Constructor
-  manager.setTab(EDXCreativeTab)
-  manager.setPrefix(Reference.prefix)
+	//Items
+	var itemGear: ItemFactory = new ItemGear
+	var itemGearShaft: ItemFactory = new ItemGearShaft
+	var itemPipe: ItemFactory = new ItemPipe
 
-  //Content
-  var itemGear: Item = new ItemGear
-  var itemGearShaft: Item = new ItemGearShaft
-  var itemPipe: Item = new ItemPipe
-
-  var blockWindTurbine: Block = new TileWindTurbine
-  var blockWaterTurbine: Block = new TileWaterTurbine
-  var blockDetector: Block = new TileDetector
-  var blockPump: Block = new TilePump
-  var blockGrinderWheel: Block = new TileGrindingWheel
-  var blockMixer: Block = new TileMixer
-  var blockMechanicalPiston: Block = new TileMechanicalPiston
-  var blockTileBreaker: Block = new TileBreaker
-  var blockTilePlacer: Block = new TilePlacer
-
+	//Blocks
+	var blockWindTurbine: BlockFactory = new TileWindTurbine
+	var blockWaterTurbine: BlockFactory = new TileWaterTurbine
+	var blockDetector: BlockFactory = new TileDetector
+	var blockPump: BlockFactory = new TilePump
+	var blockGrinderWheel: BlockFactory = new TileGrindingWheel
+	var blockMixer: BlockFactory = new TileMixer
+	var blockMechanicalPiston: BlockFactory = new TileMechanicalPiston
+	var blockTileBreaker: BlockFactory = new TileBreaker
+	var blockTilePlacer: BlockFactory = new TilePlacer
+	/*
   override def preInit()
   {
     super.preInit()
@@ -105,5 +103,29 @@ object MechanicalContent extends ContentHolder
     recipes += shaped(blockMixer, "IGI", "IGI", "IGI", 'I', UniversalRecipe.PRIMARY_METAL.get, 'G', itemGear)
     recipes += shaped(blockTileBreaker, "CGC", "CPC", "CDC", 'C', Blocks.cobblestone, 'G', itemGear, 'P', Blocks.piston, 'D', Items.diamond_pickaxe)
     recipes += shaped(blockTilePlacer, "CGC", "CSC", "CRC", 'C', Blocks.cobblestone, 'G', itemGear, 'S', Items.iron_ingot, 'R', Blocks.redstone_block)
-  }
+  }*/
+
+	/**
+	 * @SubscribeEvent
+	@SideOnly(Side.CLIENT)
+  def drawBlockHighlight(event: DrawBlockHighlightEvent)
+  {
+    if (event.currentItem != null && event.currentItem.getItem.isInstanceOf[IHighlight] && event.target != null && event.target.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
+    {
+      GL11.glPushMatrix()
+      RenderUtils.translateToWorldCoords(event.player, event.partialTicks)
+      val hit: Vector3 = new Vector3(event.target.hitVec)
+      val t = event.currentItem.getItem.asInstanceOf[IHighlight].getHighlightType
+      if (t == 0)
+      {
+        FacePlacementGrid.render(hit, event.target.sideHit)
+      }
+      if (t == 1)
+      {
+        CornerPlacementGrid.render(hit, event.target.sideHit)
+      }
+      event.setCanceled(true)
+      GL11.glPopMatrix()
+    }
+	 */
 }
