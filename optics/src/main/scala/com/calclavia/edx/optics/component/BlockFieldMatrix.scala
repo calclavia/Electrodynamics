@@ -42,7 +42,7 @@ abstract class BlockFieldMatrix extends BlockFrequency with FieldMatrix with IPe
 
 	protected val orientation = add(new Orientation(this))
 
-	protected val opticHandler = add(new OpticHandler(this))
+	protected val opticHandler = add(new OpticHandler(this)).accumulate()
 
 	override def getShape: StructureProvider = getShapeItem
 

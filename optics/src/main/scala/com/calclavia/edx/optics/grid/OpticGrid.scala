@@ -95,7 +95,7 @@ class OpticGrid(val world: World) extends Updater {
 
 			if (!EDX.clientManager.isPaused) {
 				sources.synchronized {
-					handlers.foreach(_.power = 0)
+					handlers.foreach(_.reset())
 					sources.foreach(_.update())
 
 					if (EDX.network.isServer) {
