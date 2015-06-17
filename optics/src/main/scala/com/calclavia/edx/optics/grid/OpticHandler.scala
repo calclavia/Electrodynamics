@@ -69,7 +69,7 @@ class OpticHandler(val block: Block) extends Component {
 	 * Sets the optic handler to accumulate beams within it.
 	 */
 	def accumulate(): this.type = {
-		block.events
+		events
 			.on(classOf[ReceiveBeamEvent])
 			.bind((evt: ReceiveBeamEvent) => incoming += evt.incident)
 

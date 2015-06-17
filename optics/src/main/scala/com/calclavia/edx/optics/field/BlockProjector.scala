@@ -220,7 +220,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 		super.update(deltaTime)
 
 		if (EDX.network.isServer) {
-			//println(getShapeItem + " : " +opticHandler.power + " vs "+crystalHandler.powerCost)
+			//			println(getShapeItem + " : " +opticHandler.power + " vs "+crystalHandler.powerCost)
 			if (getShapeItem != null && opticHandler.power > crystalHandler.powerCost) {
 				setActive(true)
 			}
@@ -278,8 +278,8 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 					val evaluateField = potentialField
 						.view.par
 						.filter(!_.equals(transform.position))
-						.filter(v => !world.getBlock(v).isPresent || canReplaceBlock(v, world.getBlock(v).get()))
-						.filter(v => world.getBlock(v).isPresent && world.getBlock(v).get().sameType(OpticsContent.forceField))
+						.filter(v => world.getBlock(v).isPresent && world.getBlock(v).get().canReplace)
+						//.filter(v => world.getBlock(v).get().sameType(OpticsContent.forceField))
 						.take(constructionSpeed)
 
 					//The collection containing the coordinates to actually place the field blocks.
@@ -328,7 +328,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 				(getModuleCount(Content.moduleDisintegration) > 0 && block.getBlockHardness(this.worldObj, vector.xi, vector.yi, vector.zi) != -1) ||
 				(block.getMaterial.isLiquid || block == Blocks.snow || block == Blocks.vine || block == Blocks.tallgrass || block == Blocks.deadbush || block.isReplaceable(world, vector.xi, vector.yi, vector.zi))
 	*/
-		return true
+		return block.canReplace
 	}
 
 	def getProjectionSpeed: Int = 28 + 28 * getModuleCount(OpticsContent.moduleSpeed, getModuleSlots: _*)

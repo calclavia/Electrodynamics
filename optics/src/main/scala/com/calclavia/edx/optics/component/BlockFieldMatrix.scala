@@ -108,7 +108,7 @@ abstract class BlockFieldMatrix extends BlockFrequency with FieldMatrix with IPe
 	def getStructure: Structure = {
 		val structure = getShapeItem.getStructure
 		structure.setBlockFactory(Optional.of(OpticsContent.forceField))
-		structure.setTranslate((getTranslation + transform.position))
+		structure.setTranslate(getTranslation + transform.position)
 		structure.setScale(getScale)
 		structure.setRotation(getRotation)
 		return structure
@@ -119,10 +119,10 @@ abstract class BlockFieldMatrix extends BlockFrequency with FieldMatrix with IPe
 	def getPositiveScale: Vector3D =
 		getOrSetCache("getPositiveScale", () => {
 			//1 Kilowatt per meter
-			val distancePerWatt = 1 / 1000d
-			val zScalePos = (opticHandler.power(Direction.SOUTH) + opticHandler.power(Direction.NORTH)) * distancePerWatt
-			val xScalePos = (opticHandler.power(Direction.EAST) + opticHandler.power(Direction.EAST)) * distancePerWatt
-			val yScalePos = (opticHandler.power(Direction.UP) + opticHandler.power(Direction.DOWN)) * distancePerWatt
+			val distancePerWatt = 1 / 10000d
+			val zScalePos = opticHandler.power(Direction.SOUTH) * distancePerWatt + 1
+			val xScalePos = opticHandler.power(Direction.EAST) * distancePerWatt + 1
+			val yScalePos = opticHandler.power(Direction.UP) * distancePerWatt + 1
 
 			/*
 			if (absoluteDirection) {
@@ -150,10 +150,13 @@ abstract class BlockFieldMatrix extends BlockFrequency with FieldMatrix with IPe
 
 	def getNegativeScale: Vector3D =
 		getOrSetCache("getNegativeScale", () => {
-			var zScaleNeg = 0
-			var xScaleNeg = 0
-			var yScaleNeg = 0
+			//1 Kilowatt per meter
+			val distancePerWatt = 1 / 10000d
+			val zScaleNeg = opticHandler.power(Direction.NORTH) * distancePerWatt + 1
+			val xScaleNeg = opticHandler.power(Direction.WEST) * distancePerWatt + 1
+			val yScaleNeg = opticHandler.power(Direction.DOWN) * distancePerWatt + 1
 
+			/*
 			val direction = get(classOf[Orientation]).orientation
 
 			if (absoluteDirection) {
@@ -171,7 +174,7 @@ abstract class BlockFieldMatrix extends BlockFrequency with FieldMatrix with IPe
 			zScaleNeg += omnidirectionalScale
 			xScaleNeg += omnidirectionalScale
 			yScaleNeg += omnidirectionalScale
-
+*/
 			return new Vector3D(xScaleNeg, yScaleNeg, zScaleNeg)
 		})
 
@@ -260,10 +263,10 @@ abstract class BlockFieldMatrix extends BlockFrequency with FieldMatrix with IPe
 						isCalculating = false
 
 						if (callBack != null) {
-							callBack.apply()
+							callBack()
 						}
 					case Failure(t) =>
-						//println(getClass.getName + ": An error has occurred upon field calculation: " + t.getMessage)
+						println(getClass.getName + ": An error has occurred upon field calculation: " + t.getMessage)
 						isCalculating = false
 				}
 			}
@@ -280,15 +283,11 @@ abstract class BlockFieldMatrix extends BlockFrequency with FieldMatrix with IPe
 
 		crystalHandler.getModules().foreach(_.onCalculateExterior(this, structure))
 
-		val field = {
-			if (getModuleCount(OpticsContent.moduleInvert) > 0) {
-				structure.getInteriorStructure
-			}
-			else {
-				structure.getExteriorStructure
-			}
+		if (getModuleCount(OpticsContent.moduleInvert) > 0) {
+			return structure.getInteriorStructure
 		}
-
-		return field
+		else {
+			return structure.getExteriorStructure
+		}
 	}
 }

@@ -71,22 +71,26 @@ abstract class Structure extends Identifiable {
 	}
 
 	protected def getStructure(equation: (Vector3D) => Double): Set[Vector3D] = {
-		//TODO: Use negate matrix
-		val transformMatrix = new LUDecomposition(new MatrixStack().rotate(rotation).scale(scale).getMatrix).getSolver.getInverse
+		if (scale.getNorm > 0) {
+			val matrix = new MatrixStack().rotate(rotation).scale(scale).getMatrix
+			val transformMatrix = new LUDecomposition(matrix).getSolver.getInverse
 
-		/**
-		 * The equation has default transformations.
-		 * Therefore, we need to transform the test vector back into the default, to test against the equation
-		 */
-		val structure = searchSpace
-			.collect(preMapper)
-			.filter(v => DoubleMath.fuzzyEquals(equation(TransformUtil.transform(v, transformMatrix)), 0, error))
-			.map(_ + translate)
-			.collect(postMapper)
-			.seq
-			.toSet
+			/**
+			 * The equation has default transformations.
+			 * Therefore, we need to transform the test vector back into the default, to test against the equation
+			 */
+			val structure = searchSpace
+				.collect(preMapper)
+				.filter(v => DoubleMath.fuzzyEquals(equation(TransformUtil.transform(v, transformMatrix)), 0, error))
+				.map(_ + translate)
+				.map(_.floor)
+				.collect(postMapper)
+				.seq
+				.toSet
 
-		return postStructure(structure)
+			return postStructure(structure)
+		}
+		return Set.empty
 	}
 
 	/**

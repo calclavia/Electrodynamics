@@ -324,7 +324,7 @@ class ElectricGrid extends GridLike[Electric] {
 			junctions = junctions.splitAt(1)._2
 			ground.voltage = 0
 
-			println("Built grid successfully")
+			//println("Built grid successfully")
 			//exportGraph(electricGraph, "Electric Grid " + gridID)
 			connectionGraph.vertexSet()
 				.foreach(
@@ -344,7 +344,7 @@ class ElectricGrid extends GridLike[Electric] {
 					update()
 				}
 				updateFuture.onComplete {
-					case Success(nothing) => println("Circuit solved")
+					case Success(nothing) => //println("Circuit solved")
 					case Failure(ex) => println("Circuit failed: " + ex.printStackTrace)
 				}
 			}
@@ -377,7 +377,7 @@ class ElectricGrid extends GridLike[Electric] {
 				}
 
 				if (voltageSources.isEmpty && currentSources.isEmpty) {
-					println("No voltage or current source. Skipping.")
+					//println("No voltage or current source. Skipping.")
 					return
 				}
 
