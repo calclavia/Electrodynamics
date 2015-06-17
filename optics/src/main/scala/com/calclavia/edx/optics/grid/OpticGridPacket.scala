@@ -29,6 +29,13 @@ class OpticGridPacket extends PacketHandler[OpticGrid] {
 					grid.sources += newBeam
 				})
 			}
+
+			if (grid.sources.isEmpty) {
+				EDX.syncTicker.remove(grid)
+			}
+			else {
+				EDX.syncTicker.add(grid)
+			}
 		}
 		else {
 			throw new RuntimeException("Failed to read wave graph for invalid world: " + opWorld)

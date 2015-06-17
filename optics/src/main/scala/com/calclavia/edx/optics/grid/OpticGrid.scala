@@ -40,13 +40,9 @@ object OpticGrid {
 
 class OpticGrid(val world: World) extends Updater {
 
-	var sources = Set.empty[Beam]
+	protected[grid] var sources = Set.empty[Beam]
 
-	var handlers = Set.empty[OpticHandler]
-
-	private var graphChanged = true
-
-	EDX.syncTicker.add(this)
+	protected[grid] var handlers = Set.empty[OpticHandler]
 
 	def register(handler: OpticHandler) {
 		handlers += handler
@@ -63,9 +59,11 @@ class OpticGrid(val world: World) extends Updater {
 	def create(beam: Beam) {
 		sources.synchronized {
 			if (beam.power > OpticGrid.minPower) {
+				if (sources.isEmpty) {
+					EDX.syncTicker.add(this)
+				}
 				sources += beam
-				println("Created beam" + sources)
-				graphChanged = true
+				onGridChange()
 			}
 		}
 	}
@@ -79,8 +77,10 @@ class OpticGrid(val world: World) extends Updater {
 		sources.synchronized {
 			if (sources.contains(beam)) {
 				sources -= beam
-				println("Destroyed beam")
-				graphChanged = true
+				if (sources.isEmpty) {
+					EDX.syncTicker.remove(this)
+				}
+				onGridChange()
 			} else {
 				EDX.logger.error("Attempt to remove node that does not exist in wave grid.")
 			}
@@ -101,19 +101,15 @@ class OpticGrid(val world: World) extends Updater {
 				sources.synchronized {
 					handlers.foreach(_.reset())
 					sources.foreach(_.update())
-
-					if (EDX.network.isServer) {
-						println("Optic sources " + sources.size + " this " + this)
-						//Update client
-						if (graphChanged) {
-							EDX.network.sync(this)
-							graphChanged = false
-						}
-						//TODO: Remove
-						graphChanged = true
-					}
 				}
 			}
+		}
+	}
+
+	private def onGridChange() {
+		if (EDX.network.isServer) {
+			//Update client
+			EDX.network.sync(this)
 		}
 	}
 }
