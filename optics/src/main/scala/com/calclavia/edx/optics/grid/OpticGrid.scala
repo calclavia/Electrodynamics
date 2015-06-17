@@ -57,25 +57,29 @@ class OpticGrid(val world: World) extends Updater {
 	}
 
 	/**
-	 * Creates a laser emission point
+	 * Creates a beam source point.
+	 * Call server-side only.
 	 */
 	def create(beam: Beam) {
 		sources.synchronized {
 			if (beam.power > OpticGrid.minPower) {
 				sources += beam
+				println("Created beam" + sources)
 				graphChanged = true
 			}
 		}
 	}
 
 	/**
-	 * Destroys the laser, removing all verticies in the graph.
-	 * @param beam The laser to remove
+	 * Destroys a beam source point
+	 * Call server-side only.
+	 * @param beam The beam to remove
 	 */
 	def destroy(beam: Beam) {
 		sources.synchronized {
 			if (sources.contains(beam)) {
 				sources -= beam
+				println("Destroyed beam")
 				graphChanged = true
 			} else {
 				EDX.logger.error("Attempt to remove node that does not exist in wave grid.")
@@ -99,7 +103,7 @@ class OpticGrid(val world: World) extends Updater {
 					sources.foreach(_.update())
 
 					if (EDX.network.isServer) {
-						println("Optic sources " + sources.size)
+						println("Optic sources " + sources.size + " this " + this)
 						//Update client
 						if (graphChanged) {
 							EDX.network.sync(this)

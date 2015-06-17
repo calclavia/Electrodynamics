@@ -26,9 +26,8 @@ class OpticGridPacket extends PacketHandler[OpticGrid] {
 					.foreach(i => {
 					val newBeam = packet.readStorable().asInstanceOf[Beam]
 					newBeam.world = world
-					grid.create(newBeam)
+					grid.sources += newBeam
 				})
-
 			}
 		}
 		else {

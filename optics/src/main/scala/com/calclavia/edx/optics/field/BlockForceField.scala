@@ -137,7 +137,7 @@ class BlockForceField extends BlockEDX with Stateful with Syncable with ForceFie
 		}
 	)
 
-	events.add((evt: DropEvent) => evt.drops = Collections.emptySet(), classOf[DropEvent])
+	events.on(classOf[DropEvent]).bind((evt: DropEvent) => evt.drops = Collections.emptySet())
 
 	override def getHardness: Double = Double.PositiveInfinity
 
