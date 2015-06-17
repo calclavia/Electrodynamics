@@ -104,39 +104,40 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 
 	events.on(classOf[RightClickEvent])
 		.bind(
-	    (evt: RightClickEvent) => {
-		    if (EDX.network.isServer) {
-			    val opPlayer = evt.entity.getOp(classOf[Player])
-			    if (opPlayer.isPresent) {
-				    val player = opPlayer.get()
-				    val opItem = player.getInventory.getHeldItem
+			(evt: RightClickEvent) => {
+				if (EDX.network.isServer) {
+					val opPlayer = evt.entity.getOp(classOf[Player])
+					if (opPlayer.isPresent) {
+						val player = opPlayer.get()
+						val opItem = player.getInventory.getHeldItem
 
-				    if (opItem.isPresent) {
-					    val item = opItem.get
+						if (opItem.isPresent) {
+							val item = opItem.get
 
-					    //Placing shape crystals
-					    if (item.isInstanceOf[ItemShape]) {
-						    val swap = inventory.swap(0, item)
+							//Placing shape crystals
+							if (item.isInstanceOf[ItemShape]) {
+								val swap = inventory.swap(0, item)
 
-						    if (swap.isPresent) {
-							    player.getInventory.set(player.getInventory.getHeldSlot, swap.get)
-						    } else {
-							    player.getInventory.remove(player.getInventory.getHeldSlot)
-						    }
-					    }
-				    }
-				    else {
-					    //Eject items
-					    val rem = inventory.remove(0)
-					    if (rem.isPresent)
-						    player.getInventory.set(player.getInventory.getHeldSlot, rem.get)
-				    }
+								if (swap.isPresent) {
+									player.getInventory.set(player.getInventory.getHeldSlot, swap.get)
+								} else {
+									player.getInventory.remove(player.getInventory.getHeldSlot)
+								}
+							}
+						}
+						else {
+							//Eject items
+							val rem = inventory.remove(0)
+							if (rem.isPresent) {
+								player.getInventory.set(player.getInventory.getHeldSlot, rem.get)
+							}
+						}
 
-				    EDX.network.sync(BlockPacketID.inventory, this)
-				    evt.result = true
-			    }
-		    }
-	    }
+						EDX.network.sync(BlockPacketID.inventory, this)
+						evt.result = true
+					}
+				}
+			}
 		)
 
 	override def start() {
@@ -220,7 +221,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 		super.update(deltaTime)
 
 		if (EDX.network.isServer) {
-			//			println(getShapeItem + " : " +opticHandler.power + " vs "+crystalHandler.powerCost)
+			//println(getShapeItem + " : " +opticHandler.power + " vs "+crystalHandler.powerCost)
 			if (getShapeItem != null && opticHandler.power > crystalHandler.powerCost) {
 				setActive(true)
 			}
@@ -317,7 +318,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 							})
 					}
 
-					isCompleteConstructing = evaluateField.size == 0
+					isCompleteConstructing = evaluateField.isEmpty
 				}
 			}
 		}

@@ -99,6 +99,7 @@ class OpticGrid(val world: World) extends Updater {
 					sources.foreach(_.update())
 
 					if (EDX.network.isServer) {
+						println("Optic sources " + sources.size)
 						//Update client
 						if (graphChanged) {
 							EDX.network.sync(this)
