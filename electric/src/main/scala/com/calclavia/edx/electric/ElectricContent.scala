@@ -5,7 +5,7 @@ import com.calclavia.edx.electric.circuit.component.BlockSiren
 import com.calclavia.edx.electric.circuit.source.{BlockBattery, BlockSolarPanel, BlockThermopile}
 import com.calclavia.edx.electric.circuit.wire.BlockWire
 import nova.core.block.BlockFactory
-import nova.core.render.model.TechneModel
+import nova.core.render.model.TechneModelProvider
 import nova.core.render.texture.BlockTexture
 import nova.scala.modcontent.ContentLoader
 
@@ -43,7 +43,7 @@ object ElectricContent extends ContentLoader {
 	/**
 	 * Models
 	 */
-	val batteryModel = new TechneModel(Reference.domain, "battery")
+	val batteryModel = new TechneModelProvider(Reference.domain, "battery")
 
 	override def id: String = Reference.electricID
 }
