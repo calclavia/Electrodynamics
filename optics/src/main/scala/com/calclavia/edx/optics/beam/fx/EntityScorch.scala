@@ -10,6 +10,8 @@ import nova.core.util.Direction
 import nova.scala.wrapper.FunctionalWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.{Rotation, Vector3D}
 
+import scala.collection.convert.wrapAll._
+
 /**
  * An entity scorch effect
  * @author Calclavia
@@ -49,14 +51,15 @@ class EntityScorch(side: Int) extends Entity with EntityAgeLike {
 			val scorch = new Model()
 			val renderColor = Color.white
 
-			val endFace = scorch.createFace()
-			endFace.drawVertex(new Vertex(-particleScale, -particleScale, 0, 0, 0).setColor(renderColor))
-			endFace.drawVertex(new Vertex(-particleScale, particleScale, 0, 0, 1).setColor(renderColor))
-			endFace.drawVertex(new Vertex(particleScale, particleScale, 0, 1, 1).setColor(renderColor))
-			endFace.drawVertex(new Vertex(particleScale, -particleScale, 0, 1, 0).setColor(renderColor))
+			val face = scorch.createFace()
+			face.drawVertex(new Vertex(-particleScale, -particleScale, 0, 0, 0))
+			face.drawVertex(new Vertex(-particleScale, particleScale, 0, 0, 1))
+			face.drawVertex(new Vertex(particleScale, particleScale, 0, 1, 1))
+			face.drawVertex(new Vertex(particleScale, -particleScale, 0, 1, 0))
 
-			scorch.drawFace(endFace)
-			endFace.brightness = 1
+			face.vertices.foreach(_.color = renderColor)
+			scorch.drawFace(face)
+			face.brightness = 1
 			scorch.bindAll(OpticsTextures.scorchTexture)
 			model.children.add(scorch)
 		})

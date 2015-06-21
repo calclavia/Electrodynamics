@@ -97,7 +97,7 @@ abstract class FXBeam(texture: Texture, @BeanProperty var color: Color, maxAge: 
 			    face.drawVertex(new Vertex(var44, 0.0D, 0.0D, var33, var35))
 			    face.drawVertex(new Vertex(var17, 0.0D, 0.0D, var31, var35))
 			    face.drawVertex(new Vertex(var17b, var29, 0.0D, var31, var37))
-			    face.vertices.foreach(_.setColor(color.alpha((op * 255).toInt)))
+				face.vertices.foreach(_.color = (color.alpha((op * 255).toInt)))
 			    beamModel.drawFace(face)
 			    model.children.add(beamModel)
 		    }

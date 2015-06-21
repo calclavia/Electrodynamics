@@ -32,7 +32,7 @@ class FXHologramProgress(@BeanProperty var color: Color, maxAge: Double) extends
 		    //RenderUtility.enableBlending
 		    BlockModelUtil.drawCube(model)
 		    model.bindAll(OpticsTextures.hologram)
-		    model.faces.foreach(_.vertices.foreach(_.setColor(color.alpha((op * 255).toInt))))
+			model.faces.foreach(_.vertices.foreach(_.color = (color.alpha((op * 255).toInt))))
 		    //RenderUtility.disableBlending
 	    }
 		)

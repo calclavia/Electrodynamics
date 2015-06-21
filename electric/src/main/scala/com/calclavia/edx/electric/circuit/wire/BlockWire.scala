@@ -144,7 +144,7 @@ class BlockWire extends BlockEDX with Storable with Syncable {
 				BlockModelUtil.drawCube(model, cuboid - 0.5, StaticCubeTextureCoordinates.instance)
 			})
 
-			model.faces.foreach(_.vertices.map(_.setColor(get(classOf[MaterialWire]).material.color)))
+			model.faces.foreach(_.vertices.map(_.color = get(classOf[MaterialWire]).material.color))
 			model.bindAll(ElectricContent.wireTexture)
 		}
 	)
@@ -162,7 +162,7 @@ class BlockWire extends BlockEDX with Storable with Syncable {
 			})
 
 			//TODO: Change color
-			model.faces.foreach(_.vertices.map(_.setColor(WireMaterial.COPPER.color)))
+			model.faces.foreach(_.vertices.map(_.color = WireMaterial.COPPER.color))
 			model.bindAll(ElectricContent.wireTexture)
 		}
 	)

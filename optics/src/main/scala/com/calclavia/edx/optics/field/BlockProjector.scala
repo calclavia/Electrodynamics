@@ -92,7 +92,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 					getShapeItem.render(BlockProjector.this, hologram)
 
 					val color = if (isActive) Color.blue else Color.red
-					hologram.faces.foreach(_.vertices.foreach(_.setColor(color.alpha((Math.sin(ticks / 10d) * 200 + 55).toInt))))
+					hologram.faces.foreach(_.vertices.foreach(_.color = (color.alpha((Math.sin(ticks / 10d) * 200 + 55).toInt))))
 					hologram.bindAll(OpticsTextures.hologram)
 					model.addChild(hologram)
 				}
@@ -199,8 +199,8 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 					world.addClientEntity(OpticsContent.fxHologramProgress).transform.setPosition(pos)
 				}
 				else if (packetType == 2) {
-					world.addClientEntity(OpticsContent.fxFortronBeam).transform.setPosition(pos).asInstanceOf[EntityMagneticBeam].setTarget(target).setColor(Color.red)
-					world.addClientEntity(OpticsContent.fxHologramProgress).transform.setPosition(pos).asInstanceOf[FXHologramProgress].setColor(Color.red)
+					world.addClientEntity(OpticsContent.fxFortronBeam).transform.setPosition(pos).asInstanceOf[EntityMagneticBeam].setTarget(target).color = (Color.red)
+					world.addClientEntity(OpticsContent.fxHologramProgress).transform.setPosition(pos).asInstanceOf[FXHologramProgress].color = (Color.red)
 				}
 			}
 			else if (packet.getID == BlockPacketID.field) {

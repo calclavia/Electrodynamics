@@ -428,7 +428,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 								pos =>
 									world
 										.addClientEntity(OpticsContent.fxHologramProgress).asInstanceOf[FXHologramProgress]
-										.setColor(
+										.color = (
 									    isTeleportPacket match {
 										    case 1 => Color.blue
 										    case 2 => Color.green
@@ -450,7 +450,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 							hologramRenderPoints.foreach(pos => {
 								//Render teleport start
 								val hologramA = world.addClientEntity(OpticsContent.fxHologramProgress).asInstanceOf[FXHologramProgress]
-								hologramA.setColor(color)
+								hologramA.color = (color)
 								hologramA.transform.setPosition(pos + 0.5)
 								//TODO: Not clean
 								/*

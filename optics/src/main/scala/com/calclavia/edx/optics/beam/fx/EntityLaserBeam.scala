@@ -12,7 +12,7 @@ import nova.scala.wrapper.FunctionalWrapper._
 import nova.scala.wrapper.VectorWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.{Rotation, Vector3D}
 import org.apache.commons.math3.util.FastMath
-
+import scala.collection.convert.wrapAll._
 /**
  * The laser beam effect for electromagnetic waves
  * @author Calclavia
@@ -72,11 +72,13 @@ class EntityLaserBeam(start: Vector3D, end: Vector3D, color: Color, power: Doubl
 				cap.matrix.translate(new Vector3D(0, length / 2 - endSize, 0))
 
 				val capFace = cap.createFace()
-				capFace.drawVertex(new Vertex(-particleScale, -particleScale, 0, 0, 0).setColor(renderColor))
-				capFace.drawVertex(new Vertex(-particleScale, particleScale, 0, 0, 1).setColor(renderColor))
-				capFace.drawVertex(new Vertex(particleScale, particleScale, 0, 1, 1).setColor(renderColor))
-				capFace.drawVertex(new Vertex(particleScale, -particleScale, 0, 1, 0).setColor(renderColor))
+				capFace.drawVertex(new Vertex(-particleScale, -particleScale, 0, 0, 0))
+				capFace.drawVertex(new Vertex(-particleScale, particleScale, 0, 0, 1))
+				capFace.drawVertex(new Vertex(particleScale, particleScale, 0, 1, 1))
+				capFace.drawVertex(new Vertex(particleScale, -particleScale, 0, 1, 0))
 
+				capFace.vertices.foreach(_.color = renderColor)
+				
 				capFace.brightness = 1
 				cap.drawFace(capFace)
 				cap.bindAll(OpticsTextures.laserStartTexture)
@@ -88,11 +90,12 @@ class EntityLaserBeam(start: Vector3D, end: Vector3D, color: Color, power: Doubl
 				val middle = new Model()
 
 				val middleFace = middle.createFace()
-				middleFace.drawVertex(new Vertex(-particleScale, -length / 2 + endSize, 0, 0, 0).setColor(halfColor))
-				middleFace.drawVertex(new Vertex(-particleScale, length / 2 - endSize, 0, 0, 1).setColor(halfColor))
-				middleFace.drawVertex(new Vertex(particleScale, length / 2 - endSize, 0, 1, 1).setColor(halfColor))
-				middleFace.drawVertex(new Vertex(particleScale, -length / 2 + endSize, 0, 1, 0).setColor(halfColor))
+				middleFace.drawVertex(new Vertex(-particleScale, -length / 2 + endSize, 0, 0, 0))
+				middleFace.drawVertex(new Vertex(-particleScale, length / 2 - endSize, 0, 0, 1))
+				middleFace.drawVertex(new Vertex(particleScale, length / 2 - endSize, 0, 1, 1))
+				middleFace.drawVertex(new Vertex(particleScale, -length / 2 + endSize, 0, 1, 0))
 
+				middleFace.vertices.foreach(_.color = halfColor)
 				middleFace.brightness = 1
 				middle.drawFace(middleFace)
 				middle.bindAll(OpticsTextures.laserMiddleTexture)
@@ -105,11 +108,12 @@ class EntityLaserBeam(start: Vector3D, end: Vector3D, color: Color, power: Doubl
 				end.matrix.translate(new Vector3D(0, -length / 2 + endSize, 0))
 
 				val endFace = end.createFace()
-				endFace.drawVertex(new Vertex(-particleScale, -particleScale, 0, 0, 0).setColor(renderColor))
-				endFace.drawVertex(new Vertex(-particleScale, particleScale, 0, 0, 1).setColor(renderColor))
-				endFace.drawVertex(new Vertex(particleScale, particleScale, 0, 1, 1).setColor(renderColor))
-				endFace.drawVertex(new Vertex(particleScale, -particleScale, 0, 1, 0).setColor(renderColor))
+				endFace.drawVertex(new Vertex(-particleScale, -particleScale, 0, 0, 0))
+				endFace.drawVertex(new Vertex(-particleScale, particleScale, 0, 0, 1))
+				endFace.drawVertex(new Vertex(particleScale, particleScale, 0, 1, 1))
+				endFace.drawVertex(new Vertex(particleScale, -particleScale, 0, 1, 0))
 
+				endFace.vertices.foreach(_.color = renderColor)
 				end.drawFace(endFace)
 				endFace.brightness = 1
 				end.bindAll(OpticsTextures.laserEndTexture)
@@ -122,11 +126,12 @@ class EntityLaserBeam(start: Vector3D, end: Vector3D, color: Color, power: Doubl
 				val noise = new Model()
 
 				val noiseFace = noise.createFace()
-				noiseFace.drawVertex(new Vertex(-particleScale, -length / 2 + endSize, 0, 0, 0).setColor(halfColor))
-				noiseFace.drawVertex(new Vertex(-particleScale, length / 2 - endSize, 0, 0, 1).setColor(halfColor))
-				noiseFace.drawVertex(new Vertex(particleScale, length / 2 - endSize, 0, 1, 1).setColor(halfColor))
-				noiseFace.drawVertex(new Vertex(particleScale, -length / 2 + endSize, 0, 1, 0).setColor(halfColor))
+				noiseFace.drawVertex(new Vertex(-particleScale, -length / 2 + endSize, 0, 0, 0))
+				noiseFace.drawVertex(new Vertex(-particleScale, length / 2 - endSize, 0, 0, 1))
+				noiseFace.drawVertex(new Vertex(particleScale, length / 2 - endSize, 0, 1, 1))
+				noiseFace.drawVertex(new Vertex(particleScale, -length / 2 + endSize, 0, 1, 0))
 
+				noiseFace.vertices.foreach(_.color = halfColor)
 				noise.drawFace(noiseFace)
 				noiseFace.brightness = 1
 				noise.bindAll(OpticsTextures.noiseTexture)
