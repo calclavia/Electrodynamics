@@ -36,7 +36,7 @@ class ElectricGridTest {
 		/**
 		 * The most simple circuit
 		 */
-		val profilerGen = new Profiler("Generate graph 1")
+		val profilerGen = new Profiler("Generate graph 1").start()
 
 		val grid = new ElectricGrid
 
@@ -77,7 +77,7 @@ class ElectricGridTest {
 		assertThat(graph.containsEdge(grid.convert(wire1), grid.convert(battery))).isTrue
 		assertThat(graph.containsEdge(grid.convert(wire2), grid.convert(resistor1))).isTrue
 
-		val profiler = new Profiler("Solving graph 1")
+		val profiler = new Profiler("Solving graph 1").start()
 
 		grid.enableThreading = false
 
@@ -127,11 +127,11 @@ class ElectricGridTest {
 
 	/**
 	 * Graph 2.
-	 * Series circuit withPriority more than one node.
+	 * Series circuit with more than one node.
 	 */
 	@Test
 	def testSolve2() {
-		val profilerGen = new Profiler("Generate graph 2")
+		val profilerGen = new Profiler("Generate graph 2").start()
 
 		val grid = new ElectricGrid
 
@@ -158,7 +158,7 @@ class ElectricGridTest {
 		//One junction became the ground
 		assertThat(grid.junctions.size).isEqualTo(2)
 
-		val profiler = new Profiler("Solving graph 2")
+		val profiler = new Profiler("Solving graph 2").start()
 		grid.enableThreading = false
 
 		for (trial <- 1 to 1000) {
@@ -184,7 +184,7 @@ class ElectricGridTest {
 
 	/**
 	 * Graph 3.
-	 * Parallel circuit withPriority more than one node and employing virtual junctions.
+	 * Parallel circuit with more than one node and employing virtual junctions.
 	 * |-- -|+ ---|
 	 * |          |
 	 * |--||---||-|
@@ -223,7 +223,7 @@ class ElectricGridTest {
 
 		ElectricGrid.exportGraph(grid.electricGraph, "testSolve3")
 
-		val profiler = new Profiler("Solving graph 3")
+		val profiler = new Profiler("Solving graph 3").start()
 
 		//Using 1/R = 1/R1+1/R2+...
 		val totalResistance = 12 / 7d
@@ -263,7 +263,7 @@ class ElectricGridTest {
 	}
 
 	/**
-	 * A complex circuit withPriority multiple batteries
+	 * A complex circuit with multiple batteries
 	 *
 	 * |-|||- -|+ ------|
 	 * |                |
@@ -273,7 +273,7 @@ class ElectricGridTest {
 	 */
 	@Test
 	def testSolve4() {
-		val profilerGen = new Profiler("Generate graph 4")
+		val profilerGen = new Profiler("Generate graph 4").start()
 
 		val grid = new ElectricGrid
 
@@ -330,7 +330,7 @@ class ElectricGridTest {
 
 		ElectricGrid.exportGraph(grid.electricGraph, "testSolve4")
 
-		val profiler = new Profiler("Solving graph 3")
+		val profiler = new Profiler("Solving graph 3").start()
 		grid.enableThreading = false
 
 		for (trial <- 1 to 1000) {
@@ -348,7 +348,7 @@ class ElectricGridTest {
 	/**
 	 * Series circuit stress test.
 	 * Test addRecursive
-	 * Attempt to generate graphs withPriority more and more resistors.
+	 * Attempt to generate graphs with more and more resistors.
 	 */
 	@Test
 	def testSolve5() {
@@ -367,7 +367,7 @@ class ElectricGridTest {
 
 			grid.addRecursive(battery)
 
-			val profilerGen = new Profiler("Generate graph withPriority " + trial + " resistors").start()
+			val profilerGen = new Profiler("Generate graph with " + trial + " resistors").start()
 			grid.build()
 			profilerGen.end()
 
@@ -378,9 +378,10 @@ class ElectricGridTest {
 
 			//ElectricGrid.exportGraph(graph.electricGraph, "Stress Test " + trial)
 
-			val profiler = new Profiler("Solve circuit withPriority " + trial + " resistors").start()
+			val profiler = new Profiler("Solve circuit with " + trial + " resistors").start()
 			grid.update()
 			profiler.end()
+			println(profiler)
 
 			val current = voltage / trial.toDouble
 
