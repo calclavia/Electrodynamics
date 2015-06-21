@@ -324,14 +324,6 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 		}
 	}
 
-	private def canReplaceBlock(vector: Vector3D, block: Block): Boolean = {
-		/*	return block == null ||
-				(getModuleCount(Content.moduleDisintegration) > 0 && block.getBlockHardness(this.worldObj, vector.xi, vector.yi, vector.zi) != -1) ||
-				(block.getMaterial.isLiquid || block == Blocks.snow || block == Blocks.vine || block == Blocks.tallgrass || block == Blocks.deadbush || block.isReplaceable(world, vector.xi, vector.yi, vector.zi))
-	*/
-		return block.canReplace
-	}
-
 	def getProjectionSpeed: Int = 28 + 28 * getModuleCount(OpticsContent.moduleSpeed, getModuleSlots: _*)
 
 	def destroyField() {

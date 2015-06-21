@@ -1,10 +1,36 @@
 allprojects {
-	//The common Gradle config file for every subproject.
-	apply plugin: 'java'
+	plugins {
+		id "java" //This is a java project, scala and groovy plugins also exist
+		id "nova.gradle" version "0.2.0" //Use the NOVA Gradle plugin version 0.2.0
+	}
 
 	dependencies {
-		// The production code uses the SLF4J logging API at compile time
-		compile group: "nova.core", name: "NovaCore", version: nova_version, changing: true
-		compile "org.jgrapht:jgrapht-core:0.9.1"
+		//Dependencies of your project.
+		compile "nova.core:NovaCore:0.1.0-SNAPSHOT:api" //Depend on the NOVA API.
+
+		testCompile "org.assertj:assertj-core:3.0.0"
+		testCompile "junit:junit:4.12"
+		testCompile group: "nova.core", name: "NovaCore", version: novaVersion, classifier: "wrappertests", changing: true
+	}
+
+	nova {
+		//This block is used for configuring the NOVA Gradle plugin
+		wrappers {
+			//Configures wrapper profiles
+			/**
+			 * This profile is called "17", you can skip the quotes if it's not numbers.
+			 * This profile for example will generate the "run17Client" gradle task and create an IDEA
+			 * config of the same name.
+			 */
+			"17" {
+				//The maven identifier of the wrapper this wrapper profile will use.
+				wrapper "nova.wrapper.mc1710:NovaWrapper-MC1.7.10:0.1-SNAPSHOT"
+			}
+
+			//Wrapper profile for MC 1.8
+			"18" {
+				wrapper "nova.wrapper.mc18:NovaWrapper-MC1.8:0.1-SNAPSHOT"
+			}
+		}
 	}
 }
