@@ -327,9 +327,7 @@ class ElectricGrid extends GridLike[Electric] {
 			//println("Built grid successfully")
 			//exportGraph(electricGraph, "Electric Grid " + gridID)
 			connectionGraph.vertexSet()
-				.foreach(
-			    v => v.onGridBuilt.publish(new GraphBuiltEvent(connectionGraph.connectionsOf(v)))
-				)
+				.foreach(v => v.onGridBuilt.publish(new GraphBuiltEvent(connectionGraph.connectionsOf(v))))
 		}
 		return this
 	}
@@ -498,10 +496,10 @@ class ElectricGrid extends GridLike[Electric] {
 			//A set of current sources that is going into this junction
 			sourceMatrix(i, 0) = currentSources
 				.filter(
-			    source =>
-				    //TODO: note tested
-				    (electricGraph.sourcesOf(source).contains(junctions(i)) && source.component.current > 0) ||
-					    (electricGraph.targetsOf(source).contains(junctions(i)) && source.component.current < 0)
+					source =>
+						//TODO: note tested
+						(electricGraph.sourcesOf(source).contains(junctions(i)) && source.component.current > 0) ||
+							(electricGraph.targetsOf(source).contains(junctions(i)) && source.component.current < 0)
 				)
 				.map(_.component.current)
 				.sum

@@ -1,5 +1,6 @@
 Electrodynamics
 ======
+[![wercker status](https://app.wercker.com/status/c3128319e8571c8bba96643ff6775d78/s "wercker status")](https://app.wercker.com/project/bykey/c3128319e8571c8bba96643ff6775d78)
 Electrodynamics is a voxel game mod that features realistic, world-based technology advancement systems.
 
 Copyright (c) Calclavia
