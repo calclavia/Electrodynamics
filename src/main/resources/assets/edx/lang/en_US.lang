@@ -401,8 +401,8 @@ message.moduleAntiPersonnel.death=You have been disintegrated. Farewell.
 message.moduleConfiscate.confiscate=%s of your item(s) has been confiscated.
 message.moduleWarn.warn=Leave this zone immediately. You have no right to enter.
 message.interdictionMatrix.warn=Warning! You are near the scanning range!
-message.modeCustom.modeChange=Changed selection mode to #p
-message.modeCustom.saved=Field structure saved.
+message.shapeCustom.modeChange=Changed selection mode to #p
+message.shapeCustom.saved=Field structure saved.
 
 # Blocks
 block.fortronite.name=Fortronite

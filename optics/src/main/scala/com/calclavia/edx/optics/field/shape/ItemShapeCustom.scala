@@ -6,7 +6,7 @@ import java.util.{Set => JSet}
 import com.calclavia.edx.core.EDX
 import com.calclavia.edx.optics.Settings
 import com.calclavia.edx.optics.api.machine.Projector
-import com.calclavia.edx.optics.content.OpticsContent
+import com.calclavia.edx.optics.content.{OpticsContent, OpticsTextures}
 import com.calclavia.edx.optics.util.CacheHandler
 import com.resonant.core.structure.{Structure, StructureCustom}
 import nova.core.gui.InputManager.Key
@@ -33,6 +33,8 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 	var isAdditive = true
 	@Store
 	var fieldSize = 0
+
+	renderer.setTexture(OpticsTextures.customShape)
 
 	events.add(eventListener((evt: TooltipEvent) => {
 		evt.tooltips.add(EDX.language.translate("info.modeCustom.mode") + " " + (if (isAdditive) EDX.language.translate("info.modeCustom.additive") else EDX.language.translate("info.modeCustom.substraction")))

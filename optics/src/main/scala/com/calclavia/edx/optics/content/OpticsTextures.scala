@@ -1,7 +1,7 @@
 package com.calclavia.edx.optics.content
 
 import com.calclavia.edx.core.Reference
-import nova.core.render.texture.{BlockTexture, EntityTexture}
+import nova.core.render.texture.{ItemTexture, BlockTexture, EntityTexture}
 import nova.scala.modcontent.ContentLoader
 
 /**
@@ -10,6 +10,9 @@ import nova.scala.modcontent.ContentLoader
  */
 object OpticsTextures extends ContentLoader {
 
+	/**
+	 * Blocks
+	 */
 	val machine = new BlockTexture(Reference.domain, "machine")
 	val fortron = new BlockTexture(Reference.domain, "fortron")
 	val hologram = new BlockTexture(Reference.domain, "hologram")
@@ -29,6 +32,11 @@ object OpticsTextures extends ContentLoader {
 	val laserReceiver = new BlockTexture(Reference.domain, "laserReceiver")
 	val mirror = new BlockTexture(Reference.domain, "mirror")
 	val crystal = new BlockTexture(Reference.domain, "crystal")
+
+	/**
+	 * Items
+	 */
+	val customShape = new ItemTexture(Reference.domain, "modeCustom")
 
 	/**
 	 * Particle FX
