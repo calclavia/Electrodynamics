@@ -112,7 +112,6 @@ class ResourceFactory(domain: String) extends ContentLoader {
 		registerResourceItem("ingot", classOf[ItemIngot])
 
 		//Register texture
-		super.preInit()
 	}
 
 	def registerResourceBlock(name: String, clazz: Class[_ <: Block with Resource]) {

@@ -1,15 +1,22 @@
+plugins {
+	id "java"
+	id "scala"
+	id "nova.gradle" version "0.2.3"
+}
+
 allprojects {
-	plugins {
-		id "java" //This is a java project, scala and groovy plugins also exist
-		id "nova.gradle" version "0.2.0" //Use the NOVA Gradle plugin version 0.2.0
-	}
+	apply plugin: "java"
+	apply plugin: "scala"
+	apply plugin: "nova.gradle"
+
+	dependencies novaApi("0.1.0-SNAPSHOT")
 
 	dependencies {
-		//Dependencies of your project.
-		compile "nova.core:NovaCore:0.1.0-SNAPSHOT:api" //Depend on the NOVA API.
+		compile "org.scala-lang:scala-library:2.11.7"
 
 		testCompile "org.assertj:assertj-core:3.0.0"
 		testCompile "junit:junit:4.12"
+		testCompile group: "nova.core", name: "NovaCore", version: novaVersion
 		testCompile group: "nova.core", name: "NovaCore", version: novaVersion, classifier: "wrappertests", changing: true
 	}
 
