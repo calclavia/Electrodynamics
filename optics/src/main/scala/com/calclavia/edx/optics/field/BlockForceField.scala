@@ -15,6 +15,7 @@ import nova.core.block.component.{LightEmitter, StaticBlockRenderer}
 import nova.core.component.misc.Collider.CollideEvent
 import nova.core.component.misc.Damageable
 import nova.core.component.renderer.StaticRenderer
+import nova.core.component.transform.BlockTransform
 import nova.core.entity.Entity
 import nova.core.entity.component.Player
 import nova.core.network.NetworkTarget.Side
@@ -40,6 +41,8 @@ class BlockForceField extends BlockEDX with Stateful with Syncable with ForceFie
 	 */
 	private val superOcclusion = collider.occlusionBoxes
 
+	println("Force Field Block Generated: " + has(classOf[BlockTransform]))
+
 	collider.setOcclusionBoxes(
 		(entity: Optional[Entity]) => {
 			val projector = getProjector()
@@ -60,6 +63,7 @@ class BlockForceField extends BlockEDX with Stateful with Syncable with ForceFie
 	)
 
 	collider.isCube(false)
+	collider.isOpaqueCube(false)
 
 	collider.onCollide(
 		(evt: CollideEvent) => {
@@ -100,12 +104,12 @@ class BlockForceField extends BlockEDX with Stateful with Syncable with ForceFie
 	private val renderer = add(new StaticBlockRenderer(this))
 
 	renderer.setRenderSide(
-		func((side: Direction) => {
+		predicate((side: Direction) => {
 			if (camoBlock != null) {
 				try {
 					val opRenderer = camoBlock.getOp(classOf[StaticBlockRenderer])
 					if (opRenderer.isPresent) {
-						opRenderer.get.renderSide(side)
+						opRenderer.get.renderSide.test(side)
 					}
 				}
 				catch {
@@ -194,7 +198,7 @@ class BlockForceField extends BlockEDX with Stateful with Syncable with ForceFie
 
 	def refreshCamoBlock() {
 		if (getProjectorSafe != null) {
-			camoBlock = MFFSUtility.getCamoBlock(getProjector, transform.position).getDummy
+			//			camoBlock = MFFSUtility.getCamoBlock(getProjector, transform.position).getDummy
 		}
 	}
 

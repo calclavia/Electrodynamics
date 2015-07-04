@@ -92,7 +92,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 					getShapeItem.render(BlockProjector.this, hologram)
 
 					val color = if (isActive) Color.blue else Color.red
-					hologram.faces.foreach(_.vertices.foreach(_.color = (color.alpha((Math.sin(ticks / 10d) * 200 + 55).toInt))))
+					hologram.faces.foreach(_.vertices.foreach(_.color = color.alpha((Math.sin(ticks / 10d) * 100 + 155).toInt)))
 					hologram.bindAll(OpticsTextures.hologram)
 					model.addChild(hologram)
 				}
