@@ -44,7 +44,7 @@ abstract class BlockFrequency extends BlockMachine with Frequency {
 	}
 
 	/**
-	 * Gets a set of cards that define frequency or link connections.
+	 * Gets a set of cards that define frequency.
 	 */
-	def getConnectionCards: Set[Item] = Set(inventory.get(0).orElseGet(null))
+	def getConnectionCards: Set[Item] = Set(inventory.get(0).orElse(null))
 }

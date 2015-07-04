@@ -41,8 +41,6 @@ class BlockForceField extends BlockEDX with Stateful with Syncable with ForceFie
 	 */
 	private val superOcclusion = collider.occlusionBoxes
 
-	println("Force Field Block Generated: " + has(classOf[BlockTransform]))
-
 	collider.setOcclusionBoxes(
 		(entity: Optional[Entity]) => {
 			val projector = getProjector()
@@ -203,6 +201,17 @@ class BlockForceField extends BlockEDX with Stateful with Syncable with ForceFie
 	}
 
 	override def read(packet: Packet) {
+		if (packet.readBoolean()) {
+			//TODO: This is WRONG
+			camoBlock = packet.read(classOf[Block])
+		}
+
+		if (packet.readBoolean()) {
+			projector = packet.readVector3D()
+		}
+	}
+
+	override def write(packet: Packet) {
 		packet.write(camoBlock != null)
 		if (camoBlock != null) {
 			packet.write(camoBlock)
@@ -211,17 +220,6 @@ class BlockForceField extends BlockEDX with Stateful with Syncable with ForceFie
 		packet.write(projector != null)
 		if (projector != null) {
 			packet.write(projector)
-		}
-	}
-
-	override def write(packet: Packet) {
-		if (packet.readBoolean()) {
-			//TODO: This is WRONG
-			camoBlock = packet.read(classOf[Block])
-		}
-
-		if (packet.readBoolean()) {
-			projector = packet.readVector3D()
 		}
 	}
 }
