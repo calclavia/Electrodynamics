@@ -10,7 +10,7 @@ import com.calclavia.edx.optics.component.{BlockFieldMatrix, BlockPacketID}
 import com.calclavia.edx.optics.content.{OpticsContent, OpticsModels, OpticsTextures}
 import com.calclavia.edx.optics.fx.{FXHologramProgress, IEffectController}
 import com.calclavia.edx.optics.security.{MFFSPermissions, PermissionHandler}
-import com.calclavia.edx.optics.util.MFFSUtility
+import com.calclavia.edx.optics.util.OpticUtility
 import com.calclavia.edx.optics.{Optics, Settings}
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.misc.Collider
@@ -340,7 +340,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 		}
 
 		//TODO: Check the username ID for the Mobilizer
-		if (!MFFSUtility.hasPermission(startWorld, position, MFFSPermissions.blockAlter, Optics.tempID) && !MFFSUtility.hasPermission(targetWorld, target, MFFSPermissions.blockAlter, Optics.tempID)) {
+		if (!OpticUtility.hasPermission(startWorld, position, MFFSPermissions.blockAlter, Optics.tempID) && !OpticUtility.hasPermission(targetWorld, target, MFFSPermissions.blockAlter, Optics.tempID)) {
 			return false
 		}
 

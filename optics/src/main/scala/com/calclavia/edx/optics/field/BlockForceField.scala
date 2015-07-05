@@ -8,14 +8,12 @@ import com.calclavia.edx.optics.api.machine.ForceField
 import com.calclavia.edx.optics.api.modules.Module
 import com.calclavia.edx.optics.content.{OpticsContent, OpticsTextures}
 import com.calclavia.edx.optics.security.MFFSPermissions
-import com.calclavia.edx.optics.util.MFFSUtility
-import nova.core.block.{Stateful, Block}
 import nova.core.block.Block.DropEvent
 import nova.core.block.component.{LightEmitter, StaticBlockRenderer}
+import nova.core.block.{Block, Stateful}
 import nova.core.component.misc.Collider.CollideEvent
 import nova.core.component.misc.Damageable
 import nova.core.component.renderer.StaticRenderer
-import nova.core.component.transform.BlockTransform
 import nova.core.entity.Entity
 import nova.core.entity.component.Player
 import nova.core.network.NetworkTarget.Side
@@ -117,9 +115,8 @@ class BlockForceField extends BlockEDX with Stateful with Syncable with ForceFie
 			}
 
 			val block = world.getBlock(transform.position + side.toVector)
-			if (block.isPresent) sameType(block.get()) else true
-		}
-		)
+			if (block.isPresent) !sameType(block.get()) else true
+		})
 	)
 
 	renderer.setTexture(OpticsTextures.forceField)
@@ -175,7 +172,7 @@ class BlockForceField extends BlockEDX with Stateful with Syncable with ForceFie
 	def getProjectorSafe: BlockProjector = {
 		if (projector != null) {
 			val projBlock = world.getBlock(projector)
-			if (projBlock.isPresent) {
+			if (projBlock.isPresent && projBlock.get().isInstanceOf[BlockProjector]) {
 				val proj = projBlock.get().asInstanceOf[BlockProjector]
 				if (EDX.network.isClient || (proj.getCalculatedField != null && proj.getCalculatedField.contains(transform.position))) {
 					return proj

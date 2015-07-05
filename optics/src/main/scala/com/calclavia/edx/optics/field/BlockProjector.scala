@@ -328,6 +328,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 
 	def destroyField() {
 		if (EDX.network.isServer && calculatedField != null && !isCalculating) {
+			println("Destroyed field")
 			crystalHandler.getModules(getModuleSlots: _*).forall(!_.onDestroyField(this, calculatedField))
 			//TODO: Parallelism?
 			calculatedField

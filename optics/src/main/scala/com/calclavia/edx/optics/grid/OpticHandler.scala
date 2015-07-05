@@ -17,8 +17,8 @@ import org.apache.commons.math3.util.FastMath
 object OpticHandler {
 
 	/** w
-	 * Called when the total energy due to incident waves changes
-	 */
+	  * Called when the total energy due to incident waves changes
+	  */
 	class ReceiveBeamEvent(val incident: Beam, var hit: RayTraceResult) extends Event {
 		var hasImpact = true
 
@@ -91,11 +91,12 @@ class OpticHandler(val block: Block) extends Component {
 	def power(dir: Direction) = incoming
 		.filter(i => Direction.fromVector(i.source.dir).opposite() == dir)
 		.map(_.power)
-		.sum
+		.sum + 60000
 
+	//TODO: Remove power
 	/**
 	 * Calculates the total power
 	 * @return The power in watts
 	 */
-	def power = incoming.map(_.power).sum
+	def power = incoming.map(_.power).sum + 60000
 }

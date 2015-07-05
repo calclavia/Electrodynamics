@@ -61,6 +61,7 @@ class OpticGrid(val world: World) extends Updater {
 			if (beam.power > OpticGrid.minPower) {
 				if (sources.isEmpty) {
 					EDX.syncTicker.add(this)
+					println("Added optic grid to ticker")
 				}
 				sources += beam
 				onGridChange()

@@ -8,7 +8,7 @@ import com.calclavia.edx.optics.beam.fx.EntityMagneticBeam
 import com.calclavia.edx.optics.grid.OpticHandler
 import com.calclavia.edx.optics.item.card.ItemCardFrequency
 import com.calclavia.edx.optics.security.MFFSPermissions
-import com.calclavia.edx.optics.util.MFFSUtility
+import com.calclavia.edx.optics.util.OpticUtility
 import nova.core.block.Block
 import nova.core.entity.component.Player
 import nova.core.fluid.Fluid
@@ -77,7 +77,7 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 					val player = evt.entity.get(classOf[Player])
 
 					var finished = false
-					if (MFFSUtility.hasPermission(linkWorld, linkPos, MFFSPermissions.blockAccess, player) || MFFSUtility.hasPermission(linkWorld, linkPos, MFFSPermissions.remoteControl, player)) {
+					if (OpticUtility.hasPermission(linkWorld, linkPos, MFFSPermissions.blockAccess, player) || OpticUtility.hasPermission(linkWorld, linkPos, MFFSPermissions.remoteControl, player)) {
 						val requiredEnergy = evt.entity.position().distance(linkPos) * (Fluid.bucketVolume / 100)
 						var receivedEnergy = 0
 						val fortronBlocks = GraphFrequency

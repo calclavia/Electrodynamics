@@ -22,7 +22,7 @@ object Optics extends Loadable {
 		EDX.network.register(new OpticGridPacket)
 
 		//Hook block change event
-		EDX.events.events.add((evt: BlockChangeEvent) => EventHandler.onBlockChange(evt), classOf[BlockChangeEvent])
+		EDX.events.events.on(classOf[BlockChangeEvent]).bind((evt: BlockChangeEvent) => EventHandler.onBlockChange(evt))
 
 		//Init frequency grid1
 		EDX.events.events.add((evt: ServerStartingEvent) => {

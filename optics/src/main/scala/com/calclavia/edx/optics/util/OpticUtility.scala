@@ -26,7 +26,7 @@ import scala.collection.convert.wrapAll._
  *
  * @author Calclavia
  */
-object MFFSUtility {
+object OpticUtility {
 
 	/**
 	 * Gets the first Item that is an ItemBlock in this TileEntity or in nearby chests.
