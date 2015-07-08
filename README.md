@@ -24,9 +24,23 @@ To set up development workspace, you will need:
 * NOVA Scala
 * NOVA Microblocks
 
-Make sure the version of NOVA Minecraft Wrapper is the same as the Minecraft version you are testing the mod on.
+All these dependencies will be resolved automatically if you use Gradle and IntelliJ. Simply use the command:
 
-On IntelliJ, a simple way to set up a workspace for development would be to clone all the required repositories, and adding them as different modules. You will need to set up dependencies for modules such that this mod depends on Resonant Engine, and Resonant Engine will depend on NOVA Minecraft Wrapper and NOVA API. NOVA Minecraft Wrapper will depend on Minecraft Forge. Please also ensure that the dependencies are set to export mode.
+```
+gradlew idea
+```
+
+To run on Minecraft, for example, type:
+
+```
+gradlew run18Client
+```
+
+or
+
+```
+gradlew run17Client
+```
 
 ### Artist
 * CyanideX
