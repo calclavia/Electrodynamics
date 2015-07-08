@@ -1,6 +1,5 @@
 Electrodynamics
 ======
-[![wercker status](https://app.wercker.com/status/c3128319e8571c8bba96643ff6775d78/s "wercker status")](https://app.wercker.com/project/bykey/c3128319e8571c8bba96643ff6775d78)
 Electrodynamics is a voxel game mod that features realistic, world-based technology advancement systems.
 
 Copyright (c) Calclavia
@@ -20,12 +19,10 @@ http://calclavia.com/contribution-agreement/
 
 #### Set Up
 To set up development workspace, you will need:
-* NOVA API
-* Resonant Engine
-
-In order to test the mod with Minecraft, you also need to include:
-* Minecraft Forge
-* NOVA Minecraft Wrapper
+* NOVA Core
+* NOVA Minecraft
+* NOVA Scala
+* NOVA Microblocks
 
 Make sure the version of NOVA Minecraft Wrapper is the same as the Minecraft version you are testing the mod on.
 
