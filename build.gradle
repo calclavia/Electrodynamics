@@ -9,10 +9,15 @@ allprojects {
 	apply plugin: "scala"
 	apply plugin: "nova.gradle"
 
+	repositories {
+		mavenCentral()
+	}
+
 	dependencies novaApi("0.1.0-SNAPSHOT")
 
 	dependencies {
 		compile "org.scala-lang:scala-library:2.11.7"
+		compile "org.jgrapht:jgrapht-core:0.9.1"
 
 		testCompile "org.assertj:assertj-core:3.0.0"
 		testCompile "junit:junit:4.12"
