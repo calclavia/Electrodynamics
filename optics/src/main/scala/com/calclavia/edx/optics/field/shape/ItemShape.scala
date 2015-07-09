@@ -2,6 +2,7 @@ package com.calclavia.edx.optics.field.shape
 
 import com.calclavia.edx.core.CategoryEDX
 import com.calclavia.edx.optics.api.modules.StructureProvider
+import com.calclavia.edx.optics.content.OpticsTextures
 import nova.core.component.renderer.ItemRenderer
 import nova.core.item.Item
 

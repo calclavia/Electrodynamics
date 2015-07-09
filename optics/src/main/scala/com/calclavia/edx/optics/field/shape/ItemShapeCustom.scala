@@ -9,6 +9,7 @@ import com.calclavia.edx.optics.api.machine.Projector
 import com.calclavia.edx.optics.content.{OpticsContent, OpticsTextures}
 import com.calclavia.edx.optics.util.CacheHandler
 import com.resonant.core.structure.{Structure, StructureCustom}
+import nova.core.component.renderer.ItemRenderer
 import nova.core.gui.InputManager.Key
 import nova.core.item.Item.{RightClickEvent, TooltipEvent, UseEvent}
 import nova.core.render.model.Model
@@ -33,8 +34,6 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 	var isAdditive = true
 	@Store
 	var fieldSize = 0
-
-	renderer.setTexture(OpticsTextures.customShape)
 
 	events.add(eventListener((evt: TooltipEvent) => {
 		evt.tooltips.add(EDX.language.translate("info.modeCustom.mode") + " " + (if (isAdditive) EDX.language.translate("info.modeCustom.additive") else EDX.language.translate("info.modeCustom.substraction")))
@@ -155,9 +154,17 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 		return saveDirectory
 	}
 
-	override def render(projector: Projector, model: Model) {
-		modes(new Random().nextInt(modes.length - 1)).getDummy.asInstanceOf[ItemShape].render(projector, model)
-	}
+	renderer.setOnRender(
+		(model: Model) => {
+			modes(new Random().nextInt(modes.length - 1))
+				.getDummy
+				.asInstanceOf[ItemShape]
+				.get(classOf[ItemRenderer])
+				.onRender
+				.accept(model)
+			model.bindAll(OpticsTextures.hologram)
+		}
+	)
 
 	override def getFortronCost(amplifier: Float): Float = super.getFortronCost(amplifier) * amplifier
 }

@@ -17,7 +17,7 @@ import nova.core.block.Block
 import nova.core.block.Block.RightClickEvent
 import nova.core.block.Stateful.UnloadEvent
 import nova.core.block.component.LightEmitter
-import nova.core.component.renderer.DynamicRenderer
+import nova.core.component.renderer.{ItemRenderer, DynamicRenderer}
 import nova.core.component.transform.Orientation
 import nova.core.entity.component.Player
 import nova.core.event.EventBus
@@ -89,11 +89,10 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 						.rotate(Vector3D.PLUS_J, Math.toRadians(ticks * 4))
 						.rotate(new Vector3D(0, 1, 1), Math.toRadians(36f + ticks * 4))
 
-					getShapeItem.render(BlockProjector.this, hologram)
+					getShapeItem.get(classOf[ItemRenderer]).onRender.accept(hologram)
 
 					val color = if (isActive) Color.blue else Color.red
 					hologram.faces.foreach(_.vertices.foreach(_.color = color.alpha((Math.sin(ticks / 10d) * 100 + 155).toInt)))
-					hologram.bindAll(OpticsTextures.hologram)
 					model.addChild(hologram)
 				}
 			}
