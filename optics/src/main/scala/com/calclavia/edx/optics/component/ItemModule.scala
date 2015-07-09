@@ -2,7 +2,7 @@ package com.calclavia.edx.optics.component
 
 import java.util.{List => JList, Set => JSet}
 
-import com.calclavia.edx.core.EDX
+import com.calclavia.edx.core.{CategoryEDX, EDX}
 import com.calclavia.edx.optics.api.machine.Projector
 import com.calclavia.edx.optics.api.modules.Module
 import com.calclavia.edx.optics.field.BlockProjector
@@ -23,7 +23,7 @@ abstract class ItemModule extends Item with TooltipItem with Module with AutoIte
 	private var fortronCost = 0.5f
 	private var maxCount = 64
 
-	add(new CategoryEDXOptics)
+	add(new CategoryEDX)
 
 	events.add(eventListener((evt: TooltipEvent) => evt.tooltips.add(EDX.language.translate("info.item.fortron") + " " + new
 			UnitDisplay(UnitDisplay.Unit.LITER, getFortronCost(1) * 20) + "/s")), classOf[TooltipEvent])
