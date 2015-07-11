@@ -1,35 +1,45 @@
-# Compiled source #
-###################
-*.com
-*.class
-*.dll
-*.exe
-*.o
-*.so
-*.iml
-!*.obj
+# Ignore All
+/*
+/*/
 
-# Packages #
-############
-# it's better to unpack these files and commit the raw source
-# git has its own built in compression methods
-*.7z
-*.dmg
-*.gz
-*.iso
-*.jar
-*.rar
-*.tar
-*.zip
+# Sources
+!/src/
+!/archives/
+!/basic/
+!/electric/
+!/mechanic/
+!/optics/
+!/quantum/
 
-# Logs and databases #
-######################
-*.log
-*.sql
-*.sqlite
+**/build/**
 
-# OS generated files #
-######################
+#Libaries
+!/proguard/
+!/libs/
+
+# Github
+!/.gitignore
+!/README.md
+
+# Gradle
+!/gradle/
+!*.gradle
+!*.properties
+!gradlew
+!gradlew.*
+!*.pro
+
+# Forge
+**/config/**
+**/crash-reports/**
+
+# Checkstyle
+!/checkstyle*.xml
+
+# CI
+!.travis.yml
+
+# Wnwanted os-generated files
 .DS_Store
 .DS_Store?
 ._*
@@ -37,17 +47,15 @@
 .Trashes
 ehthumbs.db
 Thumbs.db
-/bin
-.classpath
-.gradle/
-.settings/
-build/
-eclipse/
-.project
-output/
-.cache
-*.ipr
-*.iws
-*.idea/
+*~
+
+# Unwanted IDE files
 *.iml
-.metadata/
+*.metadata
+*.classpath
+*.project
+*.log
+*.prefs
+*.class
+*.MF
+*.gz

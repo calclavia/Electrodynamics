@@ -19,16 +19,14 @@ class ShapeTest {
 	def testCube() {
 		val struct = new StructureCube
 
-		for (scale <- 1 to 500 by 25) {
-			val extStructProf = new Profiler("Cube " + scale)
-			for (trial <- 1 to 10) {
-				struct.setScale(Vector3DUtil.ONE * scale * 2)
-				val extStruct = struct.getExteriorStructure
-				extStruct.foreach(v => assertThat(max(abs(v.getX()), abs(v.getY()), abs(v.getZ()))).isEqualTo(scale))
-				assertThat(extStruct.size).isEqualTo(2 + (scale * scale * 4) * 6)
-				extStructProf.lap()
-			}
-			println(extStructProf.average)
+		for (scale <- 1 to 100 by 25) {
+			val extStructProf = new Profiler("Cube " + scale).start()
+			struct.setScale(Vector3DUtil.ONE * scale * 2)
+			val extStruct = struct.getExteriorStructure
+			extStruct.foreach(v => assertThat(max(abs(v.getX()), abs(v.getY()), abs(v.getZ()))).isEqualTo(scale))
+			assertThat(extStruct.size).isEqualTo(2 + (scale * scale * 4) * 6)
+			extStructProf.end()
+			println(extStructProf)
 		}
 		/*
 		iterateSpace(5, v => {
@@ -45,17 +43,15 @@ class ShapeTest {
 	def testSphere() {
 		val struct = new StructureSphere
 		struct.stepSize = 0.5
-		struct.error = 0.134
-		for (scale <- 10 to 500 by 25) {
-			val extStructProf = new Profiler("Sphere " + scale)
-			for (trial <- 1 to 10) {
-				struct.setScale(Vector3DUtil.ONE * scale)
-				val extStruct = struct.getExteriorStructure
-				extStruct.foreach(v => assertThat(v.getNorm()).isBetween(scale - 1d, scale + 1d))
-				assertThat(extStruct.size).isEqualTo(4 * Math.PI * scale * scale)
-				extStructProf.lap()
-			}
-			println(extStructProf.average)
+		struct.error = 0.13
+		for (scale <- 10 to 100 by 25) {
+			val extStructProf = new Profiler("Sphere " + scale).start()
+			struct.setScale(Vector3DUtil.ONE * scale)
+			val extStruct = struct.getExteriorStructure
+			extStruct.foreach(v => assertThat(v.getNorm).isBetween(scale - 2d, scale + 1d))
+			//assertThat(extStruct.size).isEqualTo(4 * Math.PI * scale * scale)
+			extStructProf.end()
+			println(extStructProf)
 		}
 	}
 

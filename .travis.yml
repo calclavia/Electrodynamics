@@ -14,3 +14,6 @@ cache:
 
 notifications:
   email: false
+  irc:
+    - "irc.esper.net#calclavia"
+    - "irc.esper.net#NovaAPI"
