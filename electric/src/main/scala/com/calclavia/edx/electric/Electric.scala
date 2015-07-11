@@ -1,8 +1,8 @@
 package com.calclavia.edx.electric
 
 import com.calclavia.edx.core.Reference
-import com.calclavia.microblock.injection.ComponentInjection
 import nova.core.loader.{Loadable, NovaMod}
+import nova.microblock.injection.ComponentInjection
 
 @NovaMod(
 	id = Reference.electricID,

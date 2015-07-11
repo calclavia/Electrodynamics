@@ -1,6 +1,6 @@
 package com.calclavia.edx.electric.api;
 
-import com.calclavia.microblock.micro.MicroblockContainer;
+import nova.microblock.micro.MicroblockContainer;
 import nova.core.block.Block;
 import nova.core.util.Direction;
 import nova.core.util.math.Vector3DUtil;

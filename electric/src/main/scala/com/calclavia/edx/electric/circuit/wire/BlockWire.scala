@@ -9,7 +9,7 @@ import com.calclavia.edx.electric.ElectricContent
 import com.calclavia.edx.electric.api.Electric
 import com.calclavia.edx.electric.api.Electric.GraphBuiltEvent
 import com.calclavia.edx.electric.grid.NodeElectricJunction
-import com.calclavia.microblock.micro.{Microblock, MicroblockContainer}
+import com.calclavia.microblock.micro.Microblock
 import nova.core.block.Block.{PlaceEvent, RightClickEvent}
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.misc.Collider
@@ -20,6 +20,7 @@ import nova.core.retention.{Storable, Store}
 import nova.core.util.Direction
 import nova.core.util.math.RotationUtil
 import nova.core.util.shape.Cuboid
+import nova.microblock.micro.{Microblock, MicroblockContainer}
 import nova.scala.wrapper.FunctionalWrapper._
 import nova.scala.wrapper.VectorWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.{Rotation, Vector3D}
