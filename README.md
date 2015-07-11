@@ -1,5 +1,8 @@
 Electrodynamics
 ======
+[![Build Status](https://img.shields.io/travis/calclavia/Electrodynamics.svg?style=flat-square)](https://travis-ci.org/calclavia/Electrodynamics)
+[![Coverage](https://img.shields.io/codecov/c/github/calclavia/Electrodynamics.svg?style=flat-square)](https://codecov.io/github/calclavia/Electrodynamics)
+
 Electrodynamics is a voxel game mod that features realistic, world-based technology advancement systems.
 
 Copyright (c) Calclavia

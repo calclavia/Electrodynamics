@@ -6,6 +6,7 @@ plugins {
 allprojects {
 	apply plugin: "scala"
 	apply plugin: "nova.gradle"
+	apply plugin: 'jacoco'
 
 	dependencies {
 		compile nova("0.1.0-SNAPSHOT")
@@ -41,6 +42,17 @@ allprojects {
 				wrapper "nova.wrapper.mc18:NovaWrapper-MC1.8:0.1-SNAPSHOT"
 			}
 		}
+	}
+
+	jacocoTestReport {
+		reports {
+			xml.enabled = true // coveralls plugin depends on xml format report
+			html.enabled = true
+		}
+	}
+
+	artifacts {
+		archives jar
 	}
 }
 

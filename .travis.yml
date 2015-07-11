@@ -6,7 +6,9 @@ before_install: chmod +x gradlew
 install:
   - ""
 script:
-  - ./gradlew build check
+  - ./gradlew build check jacocoTestReport
+  - bash <(curl -s https://codecov.io/bash)
+  - rm ~/.gradle/caches/modules-2/modules-2.lock
 
 cache:
   directories:
@@ -15,5 +17,6 @@ cache:
 notifications:
   email: false
   irc:
-    - "irc.esper.net#calclavia"
-    - "irc.esper.net#NovaAPI"
+    channels:
+      - "irc.esper.net#calclavia"
+    use_notice: true

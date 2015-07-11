@@ -23,7 +23,8 @@
 
 # Gradle
 !/gradle/
-!*.gradle
+!build.gradle
+!settings.gradle
 !*.properties
 !gradlew
 !gradlew.*
@@ -59,3 +60,4 @@ Thumbs.db
 *.class
 *.MF
 *.gz
+*.dot

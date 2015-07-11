@@ -354,7 +354,7 @@ class ElectricGridTest {
 	def testSolve5() {
 		println("Conducting stress test.")
 
-		for (trial <- 100 to 1000 by 100) {
+		for (trial <- 100 to 500 by 100) {
 
 			val grid = new ElectricGrid
 			grid.enableThreading = false
