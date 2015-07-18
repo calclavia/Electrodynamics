@@ -61,7 +61,9 @@ class BlockForceField extends BlockEDX with Stateful with Syncable with ForceFie
 	collider.isCube(false)
 	collider.isOpaqueCube(false)
 
-	collider.onCollide(
+	events
+		.on(classOf[CollideEvent])
+		.bind(
 		(evt: CollideEvent) => {
 			val projector = getProjector()
 			val entity = evt.entity

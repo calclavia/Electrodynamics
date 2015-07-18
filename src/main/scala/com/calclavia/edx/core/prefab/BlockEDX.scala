@@ -9,5 +9,5 @@ import nova.core.component.misc.Collider
  */
 abstract class BlockEDX extends Block {
 	protected val category = add(new CategoryEDX)
-	protected val collider = add(new Collider)
+	protected val collider = add(new Collider(this))
 }

@@ -73,7 +73,7 @@ class BlockLaserReceiver extends BlockEDX with Stateful with ExtendedUpdater wit
 		classOf[RightClickEvent]
 	)
 
-	opticHandler.events.on(classOf[ReceiveBeamEvent]).bind(
+	events.on(classOf[ReceiveBeamEvent]).bind(
 		(evt: ReceiveBeamEvent) => {
 		//if (hit.sideHit == getDirection.ordinal)
 		{

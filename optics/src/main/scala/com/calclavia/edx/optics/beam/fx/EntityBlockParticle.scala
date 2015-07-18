@@ -21,7 +21,7 @@ class EntityBlockParticle(block: Block) extends Entity {
 
 	val renderer = add(new DynamicRenderer)
 	val rigidBody = add(EDX.components.make(classOf[RigidBody], this))
-	val collider = add(new Collider)
+	val collider = add(new Collider(this))
 
 	val random = new Random()
 	val randScale = random.nextDouble() * 0.1 + 0.5

@@ -49,7 +49,7 @@ class BlockMirror extends BlockEDX with Stateful with Syncable with Storable {
 
 	events.add((evt: RightClickEvent) => EDX.network.sync(this), classOf[RightClickEvent])
 
-	opticHandler.events.on(classOf[ReceiveBeamEvent]).bind(
+	events.on(classOf[ReceiveBeamEvent]).bind(
 		(evt: ReceiveBeamEvent) => {
 			/**
 			 * Change incoming render laser position

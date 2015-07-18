@@ -69,7 +69,7 @@ class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater with
 
 	lightEmitter.setEmittedLevel(supplier(() => (electricNode.power / OpticGrid.maxPower).toFloat))
 
-	orientation.events.on(classOf[OrientationChangeEvent]).bind(
+	events.on(classOf[OrientationChangeEvent]).bind(
 		(evt: Event) => {
 			if (EDX.network.isServer) {
 				io.setIOAlternatingOrientation()
