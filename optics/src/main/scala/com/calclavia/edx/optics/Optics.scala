@@ -22,15 +22,15 @@ object Optics extends Loadable {
 		EDX.network.register(new OpticGridPacket)
 
 		//Hook block change event
-		EDX.events.events.on(classOf[BlockChangeEvent]).bind((evt: BlockChangeEvent) => EventHandler.onBlockChange(evt))
+		EDX.events.on(classOf[BlockChangeEvent]).bind((evt: BlockChangeEvent) => EventHandler.onBlockChange(evt))
 
 		//Init frequency grid1
-		EDX.events.events.add((evt: ServerStartingEvent) => {
+		EDX.events.add((evt: ServerStartingEvent) => {
 			GraphFrequency.client = new GraphFrequency
 			GraphFrequency.server = new GraphFrequency
 		}, classOf[ServerStartingEvent])
 
-		EDX.events.events.add((evt: ServerStoppingEvent) => OpticGrid.clear(), classOf[ServerStoppingEvent])
+		EDX.events.add((evt: ServerStoppingEvent) => OpticGrid.clear(), classOf[ServerStoppingEvent])
 
 		EDX.fluids.register((args: Array[AnyRef]) => new Fluid(Fortron.fortronID))
 
