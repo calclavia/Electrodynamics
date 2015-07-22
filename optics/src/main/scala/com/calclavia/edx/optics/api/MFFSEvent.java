@@ -11,12 +11,15 @@ import nova.core.world.World;
  */
 public class MFFSEvent {
 
+	@Deprecated
 	public static final MFFSEvent instance = new MFFSEvent();
-
+	@Deprecated
 	public EventBus<EventStabilize> stabilizeEventBus = new EventBus<>();
-
+	@Deprecated
 	public EventBus<EventForceMobilize> checkMobilize = new EventBus<>();
+	@Deprecated
 	public EventBus<EventForceMobilize> preMobilize = new EventBus<>();
+	@Deprecated
 	public EventBus<EventForceMobilize> postMobilize = new EventBus<>();
 
 	public static class EventStabilize {
@@ -31,7 +34,6 @@ public class MFFSEvent {
 		}
 	}
 
-	@CancelableEvent.Cancelable
 	public static class EventForceMobilize extends CancelableEvent {
 		public final World worldBefore;
 		public final Vector3D before;
@@ -45,5 +47,4 @@ public class MFFSEvent {
 			this.after = after;
 		}
 	}
-
 }
