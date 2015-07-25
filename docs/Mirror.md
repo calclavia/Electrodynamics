@@ -1,0 +1,2 @@
+# Mirror
+Mirrors are capable of reflecting beams. Right clicking a mirror will rotate the mirror to face you. For mirrors, it is important to know that the angle of incidence is equal to the angle of reflection. This means that if a beam is going towards a mirror in a certain angle, it will leave the beam in the same angle relative to the direction the mirror is facing. The best way to test mirrors is to focus a weak beam to prevent any block damage from occurring.

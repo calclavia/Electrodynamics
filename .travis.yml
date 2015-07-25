@@ -1,0 +1,13 @@
+sudo: false
+
+language: python
+install: pip install mkdocs
+script:
+  - git clone -b gh-pages https://${GH_TOKEN}@github.com/calclavia/Electrodynamics ../gh-pages > /dev/null 2>&1
+  - mkdocs build --clean --site-dir ../gh-pages
+  - cd ../gh-pages
+  - git add -A
+  - git config --global user.email "contact@travis-ci.org"
+  - git config --global user.name "Travis CI"
+  - git commit -am "CI Update"
+  - git push > /dev/null 2>&1
