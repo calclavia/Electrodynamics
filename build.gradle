@@ -24,20 +24,11 @@ allprojects {
 	}
 
 	nova {
-		//This block is used for configuring the NOVA Gradle plugin
 		wrappers {
-			//Configures wrapper profiles
-			/**
-			 * This profile is called "17", you can skip the quotes if it's not numbers.
-			 * This profile for example will generate the "run17Client" gradle task and create an IDEA
-			 * config of the same name.
-			 */
 			"17" {
-				//The maven identifier of the wrapper this wrapper profile will use.
 				wrapper "nova.wrapper.mc1710:NovaWrapper-MC1.7.10:0.1-SNAPSHOT"
 			}
 
-			//Wrapper profile for MC 1.8
 			"18" {
 				wrapper "nova.wrapper.mc18:NovaWrapper-MC1.8:0.1-SNAPSHOT"
 			}
@@ -66,4 +57,8 @@ project(":optics") {
 	dependencies {
 		compile project(":electric")
 	}
+}
+
+subprojects.each { Project p ->
+	rootProject.nova.wrappers*.runtime p
 }
