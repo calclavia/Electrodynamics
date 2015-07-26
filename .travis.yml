@@ -11,3 +11,10 @@ script:
   - git config --global user.name "Travis CI"
   - git commit -am "CI Update"
   - git push > /dev/null 2>&1
+
+notifications:
+  email: false
+  irc:
+    channels:
+      - "irc.esper.net#calclavia"
+    use_notice: true
