@@ -5,6 +5,7 @@ import org.jgrapht.DirectedGraph
 import scala.collection.convert.wrapAll._
 
 /**
+ * An implicit extension class for JGraphT
  * @author Calclavia
  */
 object GraphExtension {

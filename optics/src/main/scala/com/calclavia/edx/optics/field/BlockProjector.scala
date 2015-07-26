@@ -7,17 +7,16 @@ import com.calclavia.edx.optics.Settings
 import com.calclavia.edx.optics.api.machine.Projector
 import com.calclavia.edx.optics.api.modules.Module.ProjectState
 import com.calclavia.edx.optics.beam.fx.EntityMagneticBeam
-import com.calclavia.edx.optics.component.{BlockFieldMatrix, BlockPacketID}
+import com.calclavia.edx.optics.component.{BlockFieldMatrix, BlockPacketID, ItemModule}
 import com.calclavia.edx.optics.content.{OpticsContent, OpticsModels, OpticsTextures}
 import com.calclavia.edx.optics.field.shape.{ItemShape, ItemShapeCustom}
 import com.calclavia.edx.optics.fx.FXHologramProgress
 import com.calclavia.edx.optics.security.PermissionHandler
 import com.calclavia.edx.optics.util.CacheHandler
-import nova.core.block.Block
 import nova.core.block.Block.RightClickEvent
 import nova.core.block.Stateful.UnloadEvent
 import nova.core.block.component.LightEmitter
-import nova.core.component.renderer.{ItemRenderer, DynamicRenderer}
+import nova.core.component.renderer.{DynamicRenderer, ItemRenderer}
 import nova.core.component.transform.Orientation
 import nova.core.entity.component.Player
 import nova.core.event.EventBus
@@ -31,14 +30,23 @@ import nova.core.util.shape.Cuboid
 import nova.scala.wrapper.FunctionalWrapper._
 import nova.scala.wrapper.VectorWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D
 
 import scala.collection.convert.wrapAll._
 
 class BlockProjector extends BlockFieldMatrix with Projector with PermissionHandler {
 
+	/**
+	 * The inventory of the field matrix.
+	 *
+	 * 1: Shape
+	 * 1: Card
+	 * 4 * 6: 4 slots per side.
+	 */
 	@Store
 	@Sync(ids = Array(BlockPacketID.description, BlockPacketID.inventory))
-	override val inventory = add(new InventorySimple(1 + 25 + 6))
+	override val inventory = add(new InventorySimple(1 + 1 + 4 * 6))
+
 	/** A set containing all positions of all force field blocks generated. */
 	var forceFields = Set.empty[Vector3D]
 	/** Marks the field for an update call */
@@ -59,7 +67,6 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 	events.on(classOf[UnloadEvent]).withPriority(EventBus.PRIORITY_DEFAULT + 1).bind((evt: UnloadEvent) => destroyField())
 
 	collider.isCube(false)
-	collider.setBoundingBox(new Cuboid(0, 0, 0, 1, 0.8, 1))
 
 	staticRenderer.setOnRender(
 		(model: Model) => {
@@ -104,18 +111,40 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 	events.on(classOf[RightClickEvent])
 		.bind(
 			(evt: RightClickEvent) => {
+
 				if (EDX.network.isServer) {
 					val opPlayer = evt.entity.getOp(classOf[Player])
 					if (opPlayer.isPresent) {
 						val player = opPlayer.get()
 						val opItem = player.getInventory.getHeldItem
 
+						//The 2D position clicked relative to the face
+						val flatPos =
+							evt.side match {
+								case side if side.toVector.y != 0 =>
+									//Evaluating up and down
+									new Vector2D(evt.position.x, evt.position.z)
+								case side if side.toVector.z != 0 =>
+									//Evaluating north and south
+									new Vector2D(evt.position.x, evt.position.y)
+								case side if side.toVector.x != 0 =>
+									//Evaluating east and west
+									new Vector2D(evt.position.z, evt.position.y)
+							}
+
+						val sideSlot =
+							if (Math.abs(flatPos.x) > Math.abs(flatPos.y)) {
+								if (flatPos.x > 0) 2 else 4
+							}
+							else {
+								if (flatPos.y > 0) 1 else 3
+							}
+
 						if (opItem.isPresent) {
 							val item = opItem.get
 
-							//Placing shape crystals
-							if (item.isInstanceOf[ItemShape]) {
-								val swap = inventory.swap(0, item)
+							def swapSlot(slot: Int) {
+								val swap = inventory.swap(slot, item)
 
 								if (swap.isPresent) {
 									player.getInventory.set(player.getInventory.getHeldSlot, swap.get)
@@ -123,10 +152,23 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 									player.getInventory.remove(player.getInventory.getHeldSlot)
 								}
 							}
+
+							//Placing shape crystals
+							item match {
+								case item: ItemShape =>
+									swapSlot(0)
+								case item: ItemModule =>
+									//Prevent center click
+									if (flatPos.getNorm > 0.4) {
+
+										val slot = evt.side.ordinal * 4 + sideSlot
+										swapSlot(slot)
+									}
+							}
 						}
 						else {
-							//Eject items
-							val rem = inventory.remove(0)
+							//Eject items. Center click ejects shape crystal
+							val rem = inventory.remove(if (flatPos.getNorm > 0.4) sideSlot else 0)
 							if (rem.isPresent) {
 								player.getInventory.set(player.getInventory.getHeldSlot, rem.get)
 							}
@@ -146,9 +188,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 
 	def postCalculation() = if (clientSideSimulationRequired) EDX.network.sync(BlockPacketID.field, this)
 
-	private def clientSideSimulationRequired: Boolean = {
-		return getModuleCount(OpticsContent.moduleRepulsion) > 0
-	}
+	private def clientSideSimulationRequired: Boolean = getModuleCount(OpticsContent.moduleRepulsion) > 0
 
 	/**
 	 * Initiate a field calculation

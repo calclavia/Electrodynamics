@@ -43,13 +43,13 @@ class BlockForceField extends BlockEDX with Stateful with Syncable with ForceFie
 		(entity: Optional[Entity]) => {
 			val projector = getProjector()
 
-			if (projector != null && entity.isPresent && entity.get.getOp(classOf[Player]).isPresent) {
+			if (projector != null && entity.isPresent && entity.get.has(classOf[Player])) {
 				val biometricIdentifier = projector.getBiometricIdentifier
 				val entityPlayer = entity.get.get(classOf[Player])
 
 				if (biometricIdentifier != null) {
 					if (biometricIdentifier.hasPermission(entityPlayer.getPlayerID, MFFSPermissions.forceFieldWarp)) {
-						null
+						Set.empty
 					}
 				}
 			}
@@ -64,23 +64,24 @@ class BlockForceField extends BlockEDX with Stateful with Syncable with ForceFie
 	events
 		.on(classOf[CollideEvent])
 		.bind(
-		(evt: CollideEvent) => {
-			val projector = getProjector()
-			val entity = evt.entity
-			if (projector != null) {
-				if (projector.crystalHandler.getModules().forall(stack => stack.asInstanceOf[Module].onFieldCollide(BlockForceField.this, entity))) {
-					val biometricIdentifier = projector.getBiometricIdentifier
+			(evt: CollideEvent) => {
+				val projector = getProjector()
+				val entity = evt.entity
+				if (projector != null) {
+					if (projector.crystalHandler.getModules().forall(stack => stack.asInstanceOf[Module].onFieldCollide(BlockForceField.this, entity))) {
+						val biometricIdentifier = projector.getBiometricIdentifier
 
-					if ((transform.position + 0.5).distance(entity.transform.position) < 0.5) {
-						if (Side.get().isServer && entity.has(classOf[Damageable])) {
-							val entityLiving = entity.get(classOf[Damageable])
+						if ((transform.position + 0.5).distance(entity.transform.position) < 0.5) {
+							if (Side.get().isServer && entity.has(classOf[Damageable])) {
+								val entityLiving = entity.get(classOf[Damageable])
 
-							if (entity.getOp(classOf[Player]).isPresent) {
-								val player = entity.get(classOf[Player])
+								if (entity.getOp(classOf[Player]).isPresent) {
+									val player = entity.get(classOf[Player])
 
-								if (biometricIdentifier != null) {
-									if (biometricIdentifier.hasPermission(player.getID, MFFSPermissions.forceFieldWarp)) {
-										//Hurt player?
+									if (biometricIdentifier != null) {
+										if (biometricIdentifier.hasPermission(player.getID, MFFSPermissions.forceFieldWarp)) {
+											//Hurt player?
+										}
 									}
 								}
 							}
@@ -88,8 +89,7 @@ class BlockForceField extends BlockEDX with Stateful with Syncable with ForceFie
 					}
 				}
 			}
-		}
-	)
+		)
 
 	add(new LightEmitter().setEmittedLevel(supplier(() => {
 		val projector = getProjectorSafe
@@ -139,6 +139,7 @@ class BlockForceField extends BlockEDX with Stateful with Syncable with ForceFie
 	)
 
 	val itemRenderer = add(new ItemRenderer(this))
+		.setOnRender((model: Model) => superRender.accept(model))
 
 	events.on(classOf[DropEvent]).bind((evt: DropEvent) => evt.drops = Collections.emptySet())
 

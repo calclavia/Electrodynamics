@@ -10,6 +10,7 @@ import com.calclavia.edx.optics.grid.OpticHandler
 import com.calclavia.edx.optics.util.CacheHandler
 import com.resonant.core.structure.Structure
 import nova.core.component.transform.Orientation
+import nova.core.inventory.InventorySimple
 import nova.core.item.{Item, ItemFactory}
 import nova.core.network.Sync
 import nova.core.retention.Store
@@ -24,6 +25,7 @@ import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
 abstract class BlockFieldMatrix extends BlockFrequency with FieldMatrix with IPermissionProvider with CacheHandler {
+
 	val _getModuleSlots = (14 until 25).toArray
 	protected val modeSlotID = 0
 

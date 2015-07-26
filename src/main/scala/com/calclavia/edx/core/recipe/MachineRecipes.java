@@ -9,7 +9,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
-//TODO: Integrate withPriority NOVA Recipes
+//TODO: Integrate with NOVA Recipes
 public final class MachineRecipes {
 	public static MachineRecipes instance = new MachineRecipes();
 	private final Map<String, Map<RecipeResource[], RecipeResource[]>> recipes = new HashMap<String, Map<RecipeResource[], RecipeResource[]>>();
