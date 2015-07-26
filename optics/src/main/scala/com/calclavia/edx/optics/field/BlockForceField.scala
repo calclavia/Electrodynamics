@@ -13,7 +13,7 @@ import nova.core.block.component.{LightEmitter, StaticBlockRenderer}
 import nova.core.block.{Block, Stateful}
 import nova.core.component.misc.Collider.CollideEvent
 import nova.core.component.misc.Damageable
-import nova.core.component.renderer.StaticRenderer
+import nova.core.component.renderer.{ItemRenderer, StaticRenderer}
 import nova.core.entity.Entity
 import nova.core.entity.component.Player
 import nova.core.network.NetworkTarget.Side
@@ -137,6 +137,8 @@ class BlockForceField extends BlockEDX with Stateful with Syncable with ForceFie
 			}
 		}
 	)
+
+	val itemRenderer = add(new ItemRenderer(this))
 
 	events.on(classOf[DropEvent]).bind((evt: DropEvent) => evt.drops = Collections.emptySet())
 

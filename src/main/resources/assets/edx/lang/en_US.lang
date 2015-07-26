@@ -200,7 +200,7 @@ item.charger.name=Charging Plate
 item.insulation.name=Insulation
 block.laserEmitter.name=Laser Emitter
 block.laserReceiver.name=Laser Receiver
-block.focusCrystal.name=Focus Crystal
+block.crystal.name=Crystal
 block.mirror.name=Mirror
 
 tool.mode.set=Mode set to:
@@ -218,7 +218,7 @@ block.thermopile.tooltip=Generates a voltage proportional to local temperature d
 item.disk.name=Program Disk
 
 ## Energy
-item.wire.copper.name=Copper Wire
+block.blockContainer-electricWire.name=Electric Wire
 item.wire.tin.name=Tin Wire
 item.wire.iron.name=Iron Wire
 item.wire.aluminum.name=Aluminum Wire
@@ -436,8 +436,8 @@ item.modeTube.name=Tube Mode
 item.modeSphere.name=Sphere Mode
 item.modePyramid.name=Pyramid Mode
 item.modeCylinder.name=Cylinder Mode
-item.modeCustom.name=Custom Mode
-item.modeCustom.tooltip=Create your own mode by right clicking two points to define an area. Shift right click to save the area.
+item.shapeCustom.name=Custom Mode
+item.shapeCustom.tooltip=Create your own mode by right clicking two points to define an area. Shift right click to save the area.
 
 # Modules
 ## General Modules
