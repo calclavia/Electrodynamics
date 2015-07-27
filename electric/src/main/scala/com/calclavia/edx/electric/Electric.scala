@@ -6,10 +6,10 @@ import nova.microblock.injection.ComponentInjection
 
 @NovaMod(
 	id = Reference.electricID,
-	name = "Electrodynamics: Electric",
+	name = Reference.name + ": Electric",
 	version = Reference.version,
 	novaVersion = Reference.novaVersion,
-	dependencies = Array("microblock", "resonantengine"),
+	dependencies = Array("microblock"),
 	domains = Array("edx")
 )
 object Electric extends Loadable {

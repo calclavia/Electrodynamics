@@ -9,7 +9,7 @@ allprojects {
 	apply plugin: 'jacoco'
 
 	dependencies {
-		compile nova("0.1.0-SNAPSHOT")
+		compile nova(novaVersion)
 		compile "org.scala-lang:scala-library:2.11.7"
 		compile "org.jgrapht:jgrapht-core:0.9.1"
 		compile "org.jgrapht:jgrapht-ext:0.9.1"
@@ -33,6 +33,7 @@ allprojects {
 			"18" {
 				wrapper "nova.wrapper.mc18:NovaWrapper-MC1.8:0.1-SNAPSHOT"
 				runtime "nova.minecraft.wrapper.mc18:NovaMinecraft-Wrapper-MC1.8:0.0.1-SNAPSHOT"
+				runtime project(":optics")
 			}
 		}
 	}
@@ -61,6 +62,7 @@ project(":optics") {
 	}
 }
 
+//Add subprojects as runtime dependencies
 subprojects.each {Project p ->
 	rootProject.nova.wrappers*.runtime p
 }

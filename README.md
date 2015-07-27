@@ -30,7 +30,7 @@ To set up development workspace, you will need:
 All these dependencies will be resolved automatically if you use Gradle and IntelliJ. Simply use the command:
 
 ```
-gradlew idea
+gradlew idea --refresh-dependencies
 ```
 
 To run on Minecraft, for example, type:
