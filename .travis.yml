@@ -6,7 +6,8 @@ before_install: chmod +x gradlew
 install:
   - ""
 script:
-  - ./gradlew build check jacocoTestReport
+  - rm -rf ~/.gradle/caches/
+  - ./gradlew build check jacocoTestReport --refresh-dependencies
   - bash <(curl -s https://codecov.io/bash)
   - rm ~/.gradle/caches/modules-2/modules-2.lock
 
@@ -16,7 +17,3 @@ cache:
 
 notifications:
   email: false
-  irc:
-    channels:
-      - "irc.esper.net#calclavia"
-    use_notice: true
