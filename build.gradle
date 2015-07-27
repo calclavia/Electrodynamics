@@ -27,10 +27,12 @@ allprojects {
 		wrappers {
 			"17" {
 				wrapper "nova.wrapper.mc1710:NovaWrapper-MC1.7.10:0.1-SNAPSHOT"
+				runtime "nova.minecraft.wrapper.mc17:NovaMinecraft-Wrapper-MC1.7.10:0.0.1-SNAPSHOT"
 			}
 
 			"18" {
 				wrapper "nova.wrapper.mc18:NovaWrapper-MC1.8:0.1-SNAPSHOT"
+				runtime "nova.minecraft.wrapper.mc18:NovaMinecraft-Wrapper-MC1.8:0.0.1-SNAPSHOT"
 			}
 		}
 	}
@@ -59,6 +61,6 @@ project(":optics") {
 	}
 }
 
-subprojects.each { Project p ->
+subprojects.each {Project p ->
 	rootProject.nova.wrappers*.runtime p
 }
