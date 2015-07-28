@@ -88,13 +88,19 @@ class BlockGear extends BlockEDX with Storable with Syncable{
 
 	private[this] val blockRenderer = add(new DynamicRenderer())
 	blockRenderer.setOnRender((m: Model) => {
-		m.addChild(BlockGear.models(_side))
+		m.addChild(model)
 		rotation += speed * watch.update() / 1000
 		rotation %= Math.PI * 2
-		m.matrix rotate new Rotation(side.toVector, rotation)
-	})
 
-	lazy val model = BlockGear.models(_side)
+		model.matrix popMatrix()
+		model.matrix pushMatrix()
+		model.matrix rotate new Rotation(side.toVector, rotation)
+	})
+	lazy val model = {
+		val tmp = BlockGear.models(_side).clone()
+		tmp.matrix pushMatrix()
+		tmp
+	}
 
 
 	collider.setBoundingBox(() => {
