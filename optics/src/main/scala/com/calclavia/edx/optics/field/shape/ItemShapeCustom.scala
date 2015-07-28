@@ -5,12 +5,11 @@ import java.util.{Set => JSet}
 
 import com.calclavia.edx.core.EDX
 import com.calclavia.edx.optics.Settings
-import com.calclavia.edx.optics.api.machine.Projector
 import com.calclavia.edx.optics.content.{OpticsContent, OpticsTextures}
 import com.calclavia.edx.optics.util.CacheHandler
 import com.resonant.core.structure.{Structure, StructureCustom}
 import nova.core.component.renderer.ItemRenderer
-import nova.core.gui.InputManager.Key
+import nova.core.game.InputManager.Key
 import nova.core.item.Item.{RightClickEvent, TooltipEvent, UseEvent}
 import nova.core.render.model.Model
 import nova.core.retention.Store

@@ -671,13 +671,13 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 					newDataMap += (toWorld, toPos) ->(id, null)
 				}
 
-				Optics.movementManager.setSneaky(fromWorld, fromPos, EDX.blocks.getAirBlock)
+			//Optics.movementManager.setSneaky(fromWorld, fromPos, EDX.blocks.getAirBlock)
 		}
 
 		//Do the post-move, which sets all blocks to what they should be
 		newDataMap.foreach {
 			case ((world, pos), (id, data)) =>
-				Optics.movementManager.setSneaky(world, pos, EDX.blocks.get(id).get(), data)
+			//Optics.movementManager.setSneaky(world, pos, EDX.blocks.get(id).get(), data)
 		}
 
 		//Notify block chang in both the old and new positions

@@ -12,7 +12,7 @@ import com.calclavia.edx.optics.util.OpticUtility
 import nova.core.block.Block
 import nova.core.entity.component.Player
 import nova.core.fluid.Fluid
-import nova.core.gui.InputManager.Key
+import nova.core.game.InputManager.Key
 import nova.core.item.Item
 import nova.core.item.Item.{RightClickEvent, TooltipEvent, UseEvent}
 import nova.core.network.NetworkTarget.Side

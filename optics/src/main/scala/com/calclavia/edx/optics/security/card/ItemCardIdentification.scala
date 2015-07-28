@@ -3,7 +3,7 @@ package com.calclavia.edx.optics.security.card
 import com.calclavia.edx.core.EDX
 import com.resonant.core.access.{AbstractAccess, AccessUser, Permissions}
 import nova.core.entity.component.Player
-import nova.core.gui.InputManager.Key
+import nova.core.game.InputManager.Key
 import nova.core.item.Item.{RightClickEvent, TooltipEvent}
 import nova.core.network.NetworkTarget.Side
 import nova.core.network.{Packet, Syncable}
