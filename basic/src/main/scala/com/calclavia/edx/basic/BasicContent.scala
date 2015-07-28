@@ -9,7 +9,7 @@ import com.calclavia.edx.basic.process.mixing.TileGlassJar
 import com.calclavia.edx.basic.process.sifting.TileSieve
 import com.calclavia.edx.basic.process.smelting.TileCastingMold
 import com.calclavia.edx.basic.process.smelting.firebox.{TileHotPlate, TileFirebox}
-import com.calclavia.edx.mechanical.mech.gear.ItemHandCrank
+import com.calclavia.edx.mechanical.content.gear.ItemHandCrank
 import edx.basic.blocks.TileImprinter
 import edx.basic.process.grinding.ItemHammer
 import edx.basic.process.smelting.firebox.TileHotPlate

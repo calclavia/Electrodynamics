@@ -1,4 +1,4 @@
-package com.calclavia.edx.mechanical.mech.gearshaft
+package com.calclavia.edx.mechanical.content.axle
 
 import java.util.Optional
 
@@ -20,7 +20,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.{Vector3D, Rotation}
 import nova.scala.wrapper.FunctionalWrapper._
 import nova.scala.wrapper.VectorWrapper._
 
-object BlockGearshaft {
+object BlockAxle {
 	val thickness = 2 / 16d
 	def occlusionBounds = {
 		val center = {
@@ -47,9 +47,8 @@ object BlockGearshaft {
 
 }
 
-
-class BlockGearshaft extends BlockEDX with Storable with Syncable {
-	override def getID: String = "gearshaft"
+class BlockAxle extends BlockEDX with Storable with Syncable {
+	override def getID: String = "axle"
 
 	@Sync
 	@Store
@@ -57,7 +56,7 @@ class BlockGearshaft extends BlockEDX with Storable with Syncable {
 
 	def dir = Direction.fromOrdinal(_dir.asInstanceOf[Int])
 	def dir_=(direction: Direction): Unit = {
-		_dir = BlockGearshaft.normalizeDir(direction).ordinal().asInstanceOf[Byte]
+		_dir = BlockAxle.normalizeDir(direction).ordinal().asInstanceOf[Byte]
 	}
 
 	private[this] val microblock = add(new Microblock(this))
@@ -88,14 +87,14 @@ class BlockGearshaft extends BlockEDX with Storable with Syncable {
 
 	lazy val model = {
 		val res = new Model("gearshaft")
-		BlockModelUtil.drawCube(res, BlockGearshaft.occlusionBounds(dir) - 0.5, StaticCubeTextureCoordinates.instance)
+		BlockModelUtil.drawCube(res, BlockAxle.occlusionBounds(dir) - 0.5, StaticCubeTextureCoordinates.instance)
 		res.bind(MechanicContent.gearshaftTexture)
 		res.matrix pushMatrix()
 		res
 	}
 
 	collider.setBoundingBox(() => {
-		BlockGearshaft.occlusionBounds(dir)
+		BlockAxle.occlusionBounds(dir)
 	})
 
 	collider.isCube(false)

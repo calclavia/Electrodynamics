@@ -132,13 +132,8 @@ info.waila.tank.empty=Empty
 
 ### Mechanical Module
 ## Energy
-item.gear.0.name=Wooden Gear
-item.gear.1.name=Stone Gear
-item.gear.2.name=Metal Gear
-
-item.gearShaft.0.name=Wooden Gear Shaft
-item.gearShaft.1.name=Stone Gear Shaft
-item.gearShaft.2.name=Metal Gear Shaft
+block.blockContainer-gear.name=Gear
+block.blockContainer-axle.name=Axle
 
 block.windTurbine.name=Wind Turbine
 block.windTurbine.0.name=Wooden Wind Turbine

@@ -1,4 +1,4 @@
-package com.calclavia.edx.mechanical.mech.gear
+package com.calclavia.edx.mechanical.content.gear
 
 import java.util.Optional
 
@@ -59,7 +59,7 @@ object BlockGear {
 
 class BlockGear extends BlockEDX with Storable with Syncable{
 
-	override def getID: String = "mechanicalGear"
+	override def getID: String = "gear"
 
 	@Sync
 	@Store(key = "side")

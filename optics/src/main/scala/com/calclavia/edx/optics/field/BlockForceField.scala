@@ -1,5 +1,6 @@
 package com.calclavia.edx.optics.field
 
+import java.util.function.Consumer
 import java.util.{Collections, Optional}
 
 import com.calclavia.edx.core.EDX
@@ -125,6 +126,9 @@ class BlockForceField extends BlockEDX with Stateful with Syncable with ForceFie
 
 	private val superRender = renderer.onRender
 
+	/*	val itemRenderer = add(new ItemRenderer(this))
+			.setOnRender((model: Model) => superRender.accept(model))
+	*/
 	renderer.setOnRender(
 		(model: Model) => {
 			val opRenderer = if (camoBlock != null) camoBlock.getOp(classOf[StaticRenderer]) else Optional.empty
@@ -137,9 +141,6 @@ class BlockForceField extends BlockEDX with Stateful with Syncable with ForceFie
 			}
 		}
 	)
-
-	val itemRenderer = add(new ItemRenderer(this))
-		.setOnRender((model: Model) => superRender.accept(model))
 
 	events.on(classOf[DropEvent]).bind((evt: DropEvent) => evt.drops = Collections.emptySet())
 

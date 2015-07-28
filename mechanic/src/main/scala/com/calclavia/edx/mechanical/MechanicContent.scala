@@ -1,8 +1,8 @@
 package com.calclavia.edx.mechanical
 
 import com.calclavia.edx.core.Reference
-import com.calclavia.edx.mechanical.mech.gear.BlockGear
-import com.calclavia.edx.mechanical.mech.gearshaft.BlockGearshaft
+import com.calclavia.edx.mechanical.content.gear.BlockGear
+import com.calclavia.edx.mechanical.content.axle.BlockAxle
 import nova.core.block.BlockFactory
 import nova.core.render.model.WavefrontObjectModelProvider
 import nova.core.render.texture.BlockTexture
@@ -20,5 +20,5 @@ object MechanicContent extends ContentLoader {
 
 	//Blocks
 	var blockGear: BlockFactory = classOf[BlockGear]
-	var blockGearshaft: BlockFactory = classOf[BlockGearshaft]
+	var blockGearshaft: BlockFactory = classOf[BlockAxle]
 }
