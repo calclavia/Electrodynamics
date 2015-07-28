@@ -5,8 +5,7 @@ import nova.core.component.ComponentManager
 import nova.core.entity.EntityManager
 import nova.core.event.GlobalEvents
 import nova.core.fluid.FluidManager
-import nova.core.game.{ClientManager, GameInfo}
-import nova.core.gui.InputManager
+import nova.core.game.{ClientManager, GameInfo, InputManager}
 import nova.core.item.{ItemDictionary, ItemManager}
 import nova.core.loader.{Loadable, NovaMod}
 import nova.core.nativewrapper.NativeManager
@@ -22,7 +21,7 @@ import org.slf4j.Logger
 /**
  * @author Calclavia
  */
-@NovaMod(id = "edx", name = "Electrodynamics", version = Reference.version, novaVersion = Reference.novaVersion)
+@NovaMod(id = Reference.coreID, name = Reference.name, version = Reference.version, novaVersion = Reference.novaVersion)
 object EDX extends Loadable {
 	val logger: Logger = null
 	val gameInfo: GameInfo = null

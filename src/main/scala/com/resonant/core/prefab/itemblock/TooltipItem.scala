@@ -1,6 +1,6 @@
 package com.resonant.core.prefab.itemblock
 
-import nova.core.gui.InputManager.Key
+import nova.core.game.InputManager.Key
 import nova.core.item.Item
 import nova.core.item.Item.TooltipEvent
 import nova.core.render.Color
