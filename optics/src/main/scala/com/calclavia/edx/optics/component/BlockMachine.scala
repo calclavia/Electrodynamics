@@ -11,7 +11,7 @@ import nova.core.block.Stateful
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.renderer.ItemRenderer
 import nova.core.component.transform.Orientation
-import nova.core.gui.InputManager.Key
+import nova.core.game.InputManager.Key
 import nova.core.network.NetworkTarget.Side
 import nova.core.network.{Packet, Syncable}
 import nova.core.render.texture.Texture
@@ -92,8 +92,9 @@ abstract class BlockMachine extends BlockEDX with Syncable with IActivatable wit
 	def setActive(flag: Boolean) {
 		if (active != flag) {
 			active = flag
-			if (EDX.network.isServer)
+			if (EDX.network.isServer) {
 				EDX.network.sync(BlockPacketID.description, this)
+			}
 			world().markStaticRender(transform.position)
 		}
 	}

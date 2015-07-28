@@ -4,7 +4,7 @@ import com.calclavia.edx.core.EDX
 import nova.core.block.Block
 import nova.core.block.Block.{PlaceEvent, RightClickEvent}
 import nova.core.component.Component
-import nova.core.gui.InputManager.Key
+import nova.core.game.InputManager.Key
 import nova.core.network.{Sync, Syncable}
 import nova.core.retention.{Storable, Store}
 import nova.core.util.math.Vector3DUtil
