@@ -10,17 +10,18 @@ import nova.core.network.{Packet, Syncable, Sync}
 import nova.core.render.model.{StaticCubeTextureCoordinates, BlockModelUtil, Model}
 import nova.core.retention.{Store, Storable}
 import nova.core.util.Direction
-import nova.core.util.math.{Vector3DUtil, RotationUtil}
+import nova.core.util.math.{MatrixStack, Vector3DUtil, RotationUtil}
 import nova.core.util.shape.Cuboid
 import nova.microblock.micro.{MicroblockContainer, Microblock}
 import nova.scala.wrapper.FunctionalWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.{Vector3D, Rotation}
+import org.apache.commons.math3.linear.RealMatrix
 
 
 object BlockGear {
 	val thickness = 2 / 16d
 	val occlusionBounds = Array.ofDim[Cuboid](6)
-	val models = Array.ofDim[Model](6)
+	val matrixes = Array.ofDim[RealMatrix](6)
 
 	{
 		val oneByRoot2 = 1 / Math.sqrt(2)
@@ -39,19 +40,12 @@ object BlockGear {
 
 			occlusionBounds(dir.ordinal) = center transform bySideRotation add 0.5
 
-			val model = new Model(s"Side $dir")
+			val matrix = new MatrixStack()
 			// For some reason rotation of model works differently than in case of cuboids.
-			model.matrix rotate new Rotation(Vector3D.PLUS_J, Math.PI)
-			
-			model.matrix rotate bySideRotation
-			model.matrix rotate new Rotation(Vector3D.PLUS_J, Math.PI / 4)
-			model.matrix scale(oneByRoot2, 1, oneByRoot2)
+			matrix rotate new Rotation(Vector3D.PLUS_J, Math.PI)
 
-			BlockModelUtil.drawCube(model, center, StaticCubeTextureCoordinates.instance)
-			model bind MechanicContent.gearTexture
-
-
-			models(dir.ordinal) = model
+			matrix rotate bySideRotation
+			matrixes(dir.ordinal) = matrix.getMatrix
 
 		}
 	}
@@ -68,6 +62,10 @@ class BlockGear extends BlockEDX with Storable with Syncable{
 	@Sync(ids = Array(0, 1))
 	@Store(key = "isMaser")
 	var isMaser: Boolean = true
+
+	@Sync(ids = Array(0, 1))
+	@Store(key = "masterOffset")
+	var masterOffset = null
 
 
 	def side = Direction.fromOrdinal(_side.asInstanceOf[Int])
@@ -96,8 +94,13 @@ class BlockGear extends BlockEDX with Storable with Syncable{
 		model.matrix pushMatrix()
 		model.matrix rotate new Rotation(side.toVector, rotation)
 	})
+
 	lazy val model = {
-		val tmp = BlockGear.models(_side).clone()
+		val tmp = new Model()
+		val optional = MechanicContent.modelGear.getModel.stream().filter((model: Model) => "SmallGear".equals(model.name)).findFirst()
+
+		tmp.addChild(optional.orElseThrow(() => new IllegalStateException("Model is missing")))
+		tmp.matrix transform BlockGear.matrixes(_side)
 		tmp.matrix pushMatrix()
 		tmp
 	}
@@ -112,8 +115,8 @@ class BlockGear extends BlockEDX with Storable with Syncable{
 
 	private[this] val itemRenderer = add(new ItemRenderer(this))
 
-	itemRenderer.onRender = (model: Model) => {
-		model.addChild(BlockGear.models(3))
+	itemRenderer.onRender = (m: Model) => {
+		m.addChild(model)
 	}
 
 	this.events.on(classOf[RightClickEvent]).bind((event: RightClickEvent) => {
