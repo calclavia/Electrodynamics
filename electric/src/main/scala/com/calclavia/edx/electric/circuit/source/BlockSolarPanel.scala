@@ -62,7 +62,7 @@ class BlockSolarPanel extends BlockEDX with ExtendedUpdater with Stateful {
 		super.update(deltaTime)
 
 		if (EDX.network.isServer) {
-			//if (world.canBlockSeeTheSky(xCoord, yCoord + 1, zCoord) && !this.worldObj.provider.hasNoSky) {
+			//if (world.canBlockSeeTheSky(xCoord, yCoord + 1, zCoord) && !this.worldObj.block.hasNoSky) {
 			//if (world.isDaytime) {
 			//if (!(world.isThundering || world.isRaining)) {
 			electricNode.generateVoltage(15)

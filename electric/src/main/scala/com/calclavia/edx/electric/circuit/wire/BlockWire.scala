@@ -9,13 +9,14 @@ import com.calclavia.edx.electric.ElectricContent
 import com.calclavia.edx.electric.api.Electric
 import com.calclavia.edx.electric.api.Electric.GraphBuiltEvent
 import com.calclavia.edx.electric.grid.NodeElectricJunction
+import nova.core.render.block.StaticCubeTextureCoordinates
 import nova.microblock.micro.Microblock
 import nova.core.block.Block.{PlaceEvent, RightClickEvent}
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.misc.Collider
 import nova.core.component.renderer.ItemRenderer
 import nova.core.network.{Packet, Sync, Syncable}
-import nova.core.render.model.{BlockModelUtil, Model, StaticCubeTextureCoordinates}
+import nova.core.render.model.{BlockModelUtil, Model}
 import nova.core.retention.{Storable, Store}
 import nova.core.util.Direction
 import nova.core.util.math.RotationUtil

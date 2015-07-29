@@ -522,7 +522,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 		if (entity != null && targetPos != null) {
 			if (!entity.transform.world().sameType(targetWorld)) {
 				entity.transform.setWorld(targetWorld)
-				//entity.travelToDimension(targetPos.world.provider.dimensionId)
+				//entity.travelToDimension(targetPos.world.block.dimensionId)
 			}
 
 			entity.get(classOf[RigidBody]).setVelocity(Vector3D.ZERO)
