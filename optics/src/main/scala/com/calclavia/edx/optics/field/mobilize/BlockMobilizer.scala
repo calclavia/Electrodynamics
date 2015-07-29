@@ -12,8 +12,8 @@ import com.calclavia.edx.optics.fx.{FXHologramProgress, IEffectController}
 import com.calclavia.edx.optics.security.{MFFSPermissions, PermissionHandler}
 import com.calclavia.edx.optics.util.OpticUtility
 import com.calclavia.edx.optics.{Optics, Settings}
-import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.misc.Collider
+import nova.core.component.renderer.StaticRenderer
 import nova.core.component.transform.Orientation
 import nova.core.entity.Entity
 import nova.core.entity.component.RigidBody
@@ -62,13 +62,14 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 	private var moveTime = 0
 	private var canRenderMove = true
 
-	get(classOf[StaticBlockRenderer])
+	get(classOf[StaticRenderer])
 		.setOnRender(
-	    (model: Model) => {
-		    model.matrix.rotate(get(classOf[Orientation]).orientation.rotation)
-		    model.children.add(OpticsModels.mobilizer.getModel)
-		    model.bindAll(if (isActive) OpticsTextures.mobilizerOn else OpticsTextures.mobilizerOff)
-	    }
+			(model: Model) => {
+				model.matrix.rotate(get(classOf[Orientation]).orientation.rotation)
+				val subModel = OpticsModels.mobilizer.getModel
+				model.children.add(subModel)
+				subModel.bindAll(if (isActive) OpticsTextures.mobilizerOn else OpticsTextures.mobilizerOff)
+			}
 		)
 
 	get(classOf[Orientation]).setMask(63)
@@ -429,10 +430,10 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 									world
 										.addClientEntity(OpticsContent.fxHologramProgress).asInstanceOf[FXHologramProgress]
 										.color = (
-									    isTeleportPacket match {
-										    case 1 => Color.blue
-										    case 2 => Color.green
-									    }
+										isTeleportPacket match {
+											case 1 => Color.blue
+											case 2 => Color.green
+										}
 										))
 						case 2 => {
 							/**

@@ -3,14 +3,13 @@ package com.calclavia.edx.electric.circuit.source
 import java.util.function.Supplier
 import java.util.{Optional, Set => JSet}
 
-import com.calclavia.edx.core.{CoreContent, EDX}
+import com.calclavia.edx.core.EDX
 import com.calclavia.edx.core.prefab.BlockEDX
 import com.calclavia.edx.electric.ElectricContent
 import com.calclavia.edx.electric.api.{ConnectionBuilder, Electric}
 import com.calclavia.edx.electric.grid.NodeElectricComponent
 import nova.core.block.Stateful
-import nova.core.block.component.StaticBlockRenderer
-import nova.core.component.renderer.{StaticRenderer, ItemRenderer}
+import nova.core.component.renderer.{ItemRenderer, StaticRenderer}
 import nova.core.render.pipeline.{BlockRenderer, RenderStream}
 import nova.core.render.texture.Texture
 import nova.core.util.Direction
@@ -18,6 +17,7 @@ import nova.scala.component.IO
 import nova.scala.util.ExtendedUpdater
 import nova.scala.wrapper.FunctionalWrapper._
 import nova.scala.wrapper.VectorWrapper._
+
 class BlockThermopile extends BlockEDX with ExtendedUpdater with Stateful {
 	/**
 	 * The amount of ticks the thermopile will use the temperature differences before turning all
@@ -50,6 +50,7 @@ class BlockThermopile extends BlockEDX with ExtendedUpdater with Stateful {
 			.adjacentWireSupplier()
 			.asInstanceOf[Supplier[JSet[Electric]]]
 	)
+
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)
 

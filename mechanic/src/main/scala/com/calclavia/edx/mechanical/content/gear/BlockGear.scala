@@ -3,21 +3,19 @@ package com.calclavia.edx.mechanical.content.gear
 import java.util.Optional
 
 import com.calclavia.edx.core.prefab.BlockEDX
-import com.calclavia.edx.mechanical.{Watch, MechanicContent}
-import nova.core.block.Block.{RightClickEvent, PlaceEvent}
-import nova.core.component.renderer.{DynamicRenderer, StaticRenderer, ItemRenderer}
-import nova.core.network.{Packet, Syncable, Sync}
-import nova.core.render.pipeline.StaticCubeTextureCoordinates
-import nova.core.render.model.{BlockModelUtil, Model}
-import nova.core.retention.{Store, Storable}
+import com.calclavia.edx.mechanical.{MechanicContent, Watch}
+import nova.core.block.Block.{PlaceEvent, RightClickEvent}
+import nova.core.component.renderer.{DynamicRenderer, ItemRenderer}
+import nova.core.network.{Packet, Sync, Syncable}
+import nova.core.render.model.{Model, VertexModel}
+import nova.core.retention.{Storable, Store}
 import nova.core.util.Direction
-import nova.core.util.math.{MatrixStack, Vector3DUtil, RotationUtil}
+import nova.core.util.math.{MatrixStack, Vector3DUtil}
 import nova.core.util.shape.Cuboid
-import nova.microblock.micro.{MicroblockContainer, Microblock}
+import nova.microblock.micro.{Microblock, MicroblockContainer}
 import nova.scala.wrapper.FunctionalWrapper._
-import org.apache.commons.math3.geometry.euclidean.threed.{Vector3D, Rotation}
+import org.apache.commons.math3.geometry.euclidean.threed.{Rotation, Vector3D}
 import org.apache.commons.math3.linear.RealMatrix
-
 
 object BlockGear {
 	val thickness = 2 / 16d
@@ -35,7 +33,7 @@ object BlockGear {
 				case Direction.NORTH => new Rotation(Vector3D.PLUS_I, Math.PI / 2)
 				case Direction.SOUTH => new Rotation(Vector3D.PLUS_I, -Math.PI / 2)
 				case Direction.WEST => new Rotation(Vector3DUtil.FORWARD, Math.PI / 2)
-				case Direction.EAST => new Rotation(Vector3DUtil.FORWARD, - Math.PI / 2)
+				case Direction.EAST => new Rotation(Vector3DUtil.FORWARD, -Math.PI / 2)
 				case Direction.UNKNOWN => throw new IllegalStateException()
 			}
 
@@ -52,7 +50,7 @@ object BlockGear {
 	}
 }
 
-class BlockGear extends BlockEDX with Storable with Syncable{
+class BlockGear extends BlockEDX with Storable with Syncable {
 
 	override def getID: String = "gear"
 
@@ -67,7 +65,6 @@ class BlockGear extends BlockEDX with Storable with Syncable{
 	@Sync(ids = Array(0, 1))
 	@Store(key = "masterOffset")
 	var masterOffset = null
-
 
 	def side = Direction.fromOrdinal(_side.asInstanceOf[Int])
 
@@ -97,7 +94,7 @@ class BlockGear extends BlockEDX with Storable with Syncable{
 	})
 
 	lazy val model = {
-		val tmp = new Model()
+		val tmp = new VertexModel()
 		val optional = MechanicContent.modelGear.getModel.stream().filter((model: Model) => "SmallGear".equals(model.name)).findFirst()
 
 		tmp.addChild(optional.orElseThrow(() => new IllegalStateException("Model is missing")))
@@ -105,7 +102,6 @@ class BlockGear extends BlockEDX with Storable with Syncable{
 		tmp.matrix pushMatrix()
 		tmp
 	}
-
 
 	collider.setBoundingBox(() => {
 		BlockGear.occlusionBounds(_side)

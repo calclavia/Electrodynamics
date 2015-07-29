@@ -8,12 +8,12 @@ import com.calclavia.edx.optics.api.machine.IActivatable
 import com.calclavia.edx.optics.content.OpticsTextures
 import nova.core.block.Block.RightClickEvent
 import nova.core.block.Stateful
-import nova.core.block.component.StaticBlockRenderer
-import nova.core.component.renderer.ItemRenderer
+import nova.core.component.renderer.{ItemRenderer, StaticRenderer}
 import nova.core.component.transform.Orientation
 import nova.core.game.InputManager.Key
 import nova.core.network.NetworkTarget.Side
 import nova.core.network.{Packet, Syncable}
+import nova.core.render.pipeline.{BlockRenderer, RenderStream}
 import nova.core.render.texture.Texture
 import nova.core.retention.{Storable, Store}
 import nova.core.util.Direction
@@ -36,7 +36,7 @@ abstract class BlockMachine extends BlockEDX with Syncable with IActivatable wit
 
 	val itemRenderer = add(new ItemRenderer(this))
 
-	val staticRenderer = add(new StaticBlockRenderer(this))
+	val staticRenderer = add(new StaticRenderer(this))
 
 	/**
 	 * Is the machine active and working?
@@ -53,7 +53,11 @@ abstract class BlockMachine extends BlockEDX with Syncable with IActivatable wit
 		}
 	})
 
-	staticRenderer.setTexture(func[Direction, Optional[Texture]]((side: Direction) => Optional.of(OpticsTextures.machine)))
+	staticRenderer.setOnRender(
+		RenderStream.of(new BlockRenderer(this))
+			.withTexture(func[Direction, Optional[Texture]]((side: Direction) => Optional.of(OpticsTextures.machine)))
+			.build()
+	)
 
 	collider.isCube(false)
 	collider.isOpaqueCube(false)

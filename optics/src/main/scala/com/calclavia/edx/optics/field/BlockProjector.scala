@@ -24,7 +24,7 @@ import nova.core.inventory.InventorySimple
 import nova.core.item.Item
 import nova.core.network.{Packet, Sync}
 import nova.core.render.Color
-import nova.core.render.model.Model
+import nova.core.render.model.{VertexModel, Model}
 import nova.core.retention.Store
 import nova.core.util.shape.Cuboid
 import nova.scala.wrapper.FunctionalWrapper._
@@ -71,8 +71,9 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 	staticRenderer.setOnRender(
 		(model: Model) => {
 			model.matrix.rotate(get(classOf[Orientation]).orientation.rotation)
-			model.children.add(OpticsModels.projector.getModel)
-			model.bindAll(if (isActive) OpticsTextures.projectorOn else OpticsTextures.projectorOff)
+			val subModel = OpticsModels.projector.getModel
+			model.children.add(subModel)
+			subModel.bindAll(if (isActive) OpticsTextures.projectorOn else OpticsTextures.projectorOff)
 		}
 	)
 
@@ -86,7 +87,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 				 * Render hologram
 				 */
 				if (Settings.highGraphics) {
-					val hologram = new Model("hologram")
+					val hologram = new VertexModel("hologram")
 					//GL_SRC_ALPHA
 					hologram.blendSFactor = 0x302
 					//GL_ONE

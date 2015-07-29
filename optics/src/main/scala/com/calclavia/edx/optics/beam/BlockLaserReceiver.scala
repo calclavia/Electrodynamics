@@ -11,8 +11,8 @@ import com.calclavia.edx.optics.grid.OpticHandler
 import com.calclavia.edx.optics.grid.OpticHandler.ReceiveBeamEvent
 import nova.core.block.Block.{PlaceEvent, RightClickEvent}
 import nova.core.block.Stateful
-import nova.core.block.component.{LightEmitter, StaticBlockRenderer}
-import nova.core.component.renderer.ItemRenderer
+import nova.core.block.component.LightEmitter
+import nova.core.component.renderer.{ItemRenderer, StaticRenderer}
 import nova.core.component.transform.Orientation
 import nova.core.network.Syncable
 import nova.core.render.model.Model
@@ -32,7 +32,7 @@ class BlockLaserReceiver extends BlockEDX with Stateful with ExtendedUpdater wit
 	private val orientation = add(new Orientation(this)).hookBasedOnEntity().hookRightClickRotate()
 	private val opticHandler = add(new OpticHandler(this))
 	private val io = add(new IO(this))
-	private val renderer = add(new StaticBlockRenderer(this))
+	private val renderer = add(new StaticRenderer(this))
 	private val itemRenderer = add(new ItemRenderer(this))
 	private val lightEmitter = add(new LightEmitter())
 
@@ -75,12 +75,12 @@ class BlockLaserReceiver extends BlockEDX with Stateful with ExtendedUpdater wit
 
 	events.on(classOf[ReceiveBeamEvent]).bind(
 		(evt: ReceiveBeamEvent) => {
-		//if (hit.sideHit == getDirection.ordinal)
-		{
-			//TODO: Change voltage until power = energy
-			electricNode.generateVoltage(evt.receivingPower)
-		}
-	})
+			//if (hit.sideHit == getDirection.ordinal)
+			{
+				//TODO: Change voltage until power = energy
+				electricNode.generateVoltage(evt.receivingPower)
+			}
+		})
 
 	renderer.setOnRender(
 		(model: Model) => {
@@ -103,8 +103,9 @@ class BlockLaserReceiver extends BlockEDX with Stateful with ExtendedUpdater wit
 				model.matrix.rotate(Vector3D.PLUS_I, Math.PI)
 			}
 
-			model.children.add(OpticsModels.laserReceiver.getModel)
-			model.bindAll(OpticsTextures.laserReceiver)
+			val subModel = OpticsModels.laserReceiver.getModel
+			model.children.add(subModel)
+			subModel.bindAll(OpticsTextures.laserReceiver)
 		}
 	)
 

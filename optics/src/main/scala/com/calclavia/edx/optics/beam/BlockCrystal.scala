@@ -8,7 +8,7 @@ import nova.core.block.Stateful
 import nova.core.component.misc.Collider
 import nova.core.component.renderer.{DynamicRenderer, ItemRenderer}
 import nova.core.network.{Sync, Syncable}
-import nova.core.render.model.Model
+import nova.core.render.model.{VertexModel, Model}
 import nova.core.retention.{Storable, Store}
 import nova.core.util.Ray
 import nova.core.util.RayTracer.RayTraceBlockResult
@@ -36,13 +36,14 @@ class BlockCrystal extends BlockEDX with Stateful with Syncable with Storable {
 
 	renderer.setOnRender(
 		(model: Model) => {
+			val subModel = OpticsModels.crystal.getModel
 			//GL_SRC_ALPHA
 			model.blendSFactor = 0x302
 			//GL_ Minus One
 			model.blendDFactor = 0x303
 			model.matrix.rotate(new Rotation(new Vector3D(1, -1.5, 3), focus.normal).revert())
-			model.children.add(OpticsModels.crystal.getModel)
-			model.bindAll(OpticsTextures.crystal)
+			model.children.add(subModel)
+			subModel.bindAll(OpticsTextures.crystal)
 		}
 	)
 

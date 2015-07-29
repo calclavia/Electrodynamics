@@ -9,15 +9,12 @@ import com.calclavia.edx.electric.ElectricContent
 import com.calclavia.edx.electric.api.Electric
 import com.calclavia.edx.electric.api.Electric.GraphBuiltEvent
 import com.calclavia.edx.electric.grid.NodeElectricJunction
-import nova.core.render.pipeline.{BlockRenderer, RenderStream, StaticCubeTextureCoordinates}
-import nova.core.render.texture.Texture
-import nova.microblock.micro.Microblock
 import nova.core.block.Block.{PlaceEvent, RightClickEvent}
-import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.misc.Collider
-import nova.core.component.renderer.{StaticRenderer, ItemRenderer}
+import nova.core.component.renderer.{ItemRenderer, StaticRenderer}
 import nova.core.network.{Packet, Sync, Syncable}
-import nova.core.render.model.{VertexModel, BlockModelUtil, Model}
+import nova.core.render.model.{Model, VertexModel}
+import nova.core.render.pipeline.{BlockRenderer, StaticCubeTextureCoordinates}
 import nova.core.retention.{Storable, Store}
 import nova.core.util.Direction
 import nova.core.util.math.RotationUtil
@@ -70,12 +67,12 @@ object BlockWire {
 				.map(RotationUtil.rotateSide(0, _))
 				.map(Direction.fromOrdinal)
 				.map(
-			    d => {
-				    val dir = d.toVector
-				    val min = if (d.toVector.x < 0 || d.toVector.y < 0 || d.toVector.z < 0) dir * thickness else Vector3D.ZERO
-				    val max = if (d.toVector.x > 0 || d.toVector.y > 0 || d.toVector.z > 0) dir * thickness else Vector3D.ZERO
-				    (center + (dir * width)) + new Cuboid(min, max)
-			    }
+					d => {
+						val dir = d.toVector
+						val min = if (d.toVector.x < 0 || d.toVector.y < 0 || d.toVector.z < 0) dir * thickness else Vector3D.ZERO
+						val max = if (d.toVector.x > 0 || d.toVector.y > 0 || d.toVector.z > 0) dir * thickness else Vector3D.ZERO
+						(center + (dir * width)) + new Cuboid(min, max)
+					}
 				)
 				.toSeq
 
@@ -128,12 +125,12 @@ class BlockWire extends BlockEDX with Storable with Syncable {
 
 	private val microblock = add(new Microblock(this))
 		.setOnPlace(
-	    (evt: PlaceEvent) => {
-		    this.side = evt.side.opposite.ordinal.toByte
-		    //TODO: Fix wire material
-		    get(classOf[MaterialWire]).material = WireMaterial.COPPER
-		    Optional.of(MicroblockContainer.sidePosition(Direction.fromOrdinal(this.side)))
-	    }
+			(evt: PlaceEvent) => {
+				this.side = evt.side.opposite.ordinal.toByte
+				//TODO: Fix wire material
+				get(classOf[MaterialWire]).material = WireMaterial.COPPER
+				Optional.of(MicroblockContainer.sidePosition(Direction.fromOrdinal(this.side)))
+			}
 		)
 	@Sync
 	@Store

@@ -7,11 +7,10 @@ import com.calclavia.edx.optics.grid.OpticHandler.ReceiveBeamEvent
 import com.calclavia.edx.optics.grid.{ElectromagneticBeam, OpticHandler}
 import nova.core.block.Block.RightClickEvent
 import nova.core.block.Stateful
-import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.misc.Collider
-import nova.core.component.renderer.ItemRenderer
+import nova.core.component.renderer.{ItemRenderer, StaticRenderer}
 import nova.core.network.{Packet, Sync, Syncable}
-import nova.core.render.model.Model
+import nova.core.render.model.{Model, VertexModel}
 import nova.core.retention.{Storable, Store}
 import nova.core.util.Ray
 import nova.core.util.RayTracer.RayTraceBlockResult
@@ -31,7 +30,7 @@ class BlockMirror extends BlockEDX with Stateful with Syncable with Storable {
 	@Store
 	@Sync
 	private val focus = add(new Focus(this))
-	private val renderer = add(new StaticBlockRenderer(this))
+	private val renderer = add(new StaticRenderer(this))
 	private val itemRenderer = add(new ItemRenderer(this))
 	private val opticHandler = add(new OpticHandler(this))
 
@@ -39,9 +38,9 @@ class BlockMirror extends BlockEDX with Stateful with Syncable with Storable {
 		(model: Model) => {
 			model.matrix.rotate(new Rotation(Vector3D.PLUS_J, focus.normal).revert())
 
-			val child = OpticsModels.mirror.getModel.combineChildren("mirror", "mirror", "mirrorBacking", "standConnector")
+			val child = OpticsModels.mirror.getModel.combineChildren("mirror", "mirror", "mirrorBacking", "standConnector").asInstanceOf[VertexModel]
 			model.children.add(child)
-			model.bindAll(OpticsTextures.mirror)
+			child.bindAll(OpticsTextures.mirror)
 		}
 	)
 	collider.isCube(false)

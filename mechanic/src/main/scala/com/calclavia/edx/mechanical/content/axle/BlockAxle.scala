@@ -3,26 +3,22 @@ package com.calclavia.edx.mechanical.content.axle
 import java.util.Optional
 
 import com.calclavia.edx.core.prefab.BlockEDX
-import com.calclavia.edx.mechanical.{Watch, MechanicContent}
+import com.calclavia.edx.mechanical.{MechanicContent, Watch}
 import nova.core.block.Block.PlaceEvent
-import nova.core.block.component.StaticBlockRenderer
-import nova.core.component.renderer.{DynamicRenderer, ItemRenderer, StaticRenderer}
-import nova.core.network.{Sync, Packet, Syncable}
-import nova.core.render.pipeline.StaticCubeTextureCoordinates
-import nova.core.render.model.{BlockModelUtil, Model}
-import nova.core.retention.{Store, Storable}
+import nova.core.component.renderer.{DynamicRenderer, ItemRenderer}
+import nova.core.network.{Packet, Sync, Syncable}
+import nova.core.render.model.{Model, VertexModel}
+import nova.core.render.pipeline.{BlockRenderer, RenderStream, StaticCubeTextureCoordinates}
+import nova.core.retention.{Storable, Store}
 import nova.core.util.Direction
-import nova.core.util.math.Vector3DUtil
 import nova.core.util.shape.Cuboid
-import nova.internal.core.tick.UpdateTicker
-import nova.microblock.micro.{MicroblockContainer, Microblock}
-import nova.microblock.multi.Multiblock
-import org.apache.commons.math3.geometry.euclidean.threed.{Vector3D, Rotation}
+import nova.microblock.micro.{Microblock, MicroblockContainer}
 import nova.scala.wrapper.FunctionalWrapper._
-import nova.scala.wrapper.VectorWrapper._
+import org.apache.commons.math3.geometry.euclidean.threed.{Rotation, Vector3D}
 
 object BlockAxle {
 	val thickness = 2 / 16d
+
 	def occlusionBounds = {
 		val center = {
 			val small = 0.0001d
@@ -36,7 +32,7 @@ object BlockAxle {
 				case Direction.NORTH => Rotation.IDENTITY
 				case Direction.WEST => new Rotation(Vector3D.MINUS_J, Math.PI / 2)
 
-				case _ => throw new IllegalStateException()// should not happen
+				case _ => throw new IllegalStateException() // should not happen
 			}
 			(dir, center transform rotation add 0.5)
 		}
@@ -53,9 +49,10 @@ class BlockAxle extends BlockEDX with Storable with Syncable {
 
 	@Sync
 	@Store
-	var _dir: Byte = 2  // For item renderer
+	var _dir: Byte = 2 // For item renderer
 
 	def dir = Direction.fromOrdinal(_dir.asInstanceOf[Int])
+
 	def dir_=(direction: Direction): Unit = {
 		_dir = BlockAxle.normalizeDir(direction).ordinal().asInstanceOf[Byte]
 	}
@@ -87,8 +84,8 @@ class BlockAxle extends BlockEDX with Storable with Syncable {
 	})
 
 	lazy val model = {
-		val res = new Model("gearshaft")
-		BlockModelUtil.drawCube(res, BlockAxle.occlusionBounds(dir) - 0.5, StaticCubeTextureCoordinates.instance)
+		val res = new VertexModel("gearshaft")
+		BlockRenderer.drawCube(res, BlockAxle.occlusionBounds(dir) - 0.5, StaticCubeTextureCoordinates.instance)
 		res.bind(MechanicContent.gearshaftTexture)
 		res.matrix pushMatrix()
 		res

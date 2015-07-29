@@ -5,7 +5,7 @@ import com.calclavia.edx.optics.content.OpticsTextures
 import nova.core.component.renderer.DynamicRenderer
 import nova.core.entity.Entity
 import nova.core.render.Color
-import nova.core.render.model.{Model, Vertex}
+import nova.core.render.model.{Face, VertexModel, Model, Vertex}
 import nova.core.util.Direction
 import nova.scala.wrapper.FunctionalWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.{Rotation, Vector3D}
@@ -48,10 +48,10 @@ class EntityScorch(side: Int) extends Entity with EntityAgeLike {
 			/**
 			 * Tessellate scorch
 			 */
-			val scorch = new Model()
+			val scorch = new VertexModel()
 			val renderColor = Color.white
 
-			val face = scorch.createFace()
+			val face = new Face()
 			face.drawVertex(new Vertex(-particleScale, -particleScale, 0, 0, 0))
 			face.drawVertex(new Vertex(-particleScale, particleScale, 0, 0, 1))
 			face.drawVertex(new Vertex(particleScale, particleScale, 0, 1, 1))

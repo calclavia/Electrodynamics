@@ -1,6 +1,5 @@
 package com.calclavia.edx.optics.field
 
-import java.util.function.Consumer
 import java.util.{Collections, Optional}
 
 import com.calclavia.edx.core.EDX
@@ -10,16 +9,17 @@ import com.calclavia.edx.optics.api.modules.Module
 import com.calclavia.edx.optics.content.{OpticsContent, OpticsTextures}
 import com.calclavia.edx.optics.security.MFFSPermissions
 import nova.core.block.Block.DropEvent
-import nova.core.block.component.{LightEmitter, StaticBlockRenderer}
+import nova.core.block.component.LightEmitter
 import nova.core.block.{Block, Stateful}
 import nova.core.component.misc.Collider.CollideEvent
 import nova.core.component.misc.Damageable
-import nova.core.component.renderer.{ItemRenderer, StaticRenderer}
+import nova.core.component.renderer.StaticRenderer
 import nova.core.entity.Entity
 import nova.core.entity.component.Player
 import nova.core.network.NetworkTarget.Side
 import nova.core.network.{Packet, Sync, Syncable}
 import nova.core.render.model.Model
+import nova.core.render.pipeline.{BlockRenderer, RenderStream}
 import nova.core.retention.{Storable, Store}
 import nova.core.util.Direction
 import nova.scala.wrapper.FunctionalWrapper._
@@ -100,29 +100,32 @@ class BlockForceField extends BlockEDX with Stateful with Syncable with ForceFie
 		0f
 	})))
 
-	private val renderer = add(new StaticBlockRenderer(this))
+	private val renderer = add(new StaticRenderer(this))
 
-	renderer.setRenderSide(
-		predicate((side: Direction) => {
-			if (camoBlock != null) {
-				try {
-					val opRenderer = camoBlock.getOp(classOf[StaticBlockRenderer])
-					if (opRenderer.isPresent) {
-						opRenderer.get.renderSide.test(side)
-					}
-				}
-				catch {
-					case e: Exception =>
-						e.printStackTrace()
-				}
-			}
+	renderer.setOnRender(
+		RenderStream.of(new BlockRenderer(this))
+			.filter(
+				predicate((side: Direction) => {
+					//					if (camoBlock != null) {
+					//						try {
+					//							val opRenderer = camoBlock.getOp(classOf[StaticRenderer])
+					//							if (opRenderer.isPresent) {
+					//								opRenderer.get.renderSide.test(side)
+					//							}
+					//						}
+					//						catch {
+					//							case e: Exception =>
+					//								e.printStackTrace()
+					//						}
+					//					}
 
-			val block = world.getBlock(transform.position + side.toVector)
-			if (block.isPresent) !sameType(block.get()) else true
-		})
+					val block = world.getBlock(transform.position + side.toVector)
+					if (block.isPresent) !sameType(block.get()) else true
+				})
+			)
+			.withTexture(OpticsTextures.forceField)
+			.build()
 	)
-
-	renderer.setTexture(OpticsTextures.forceField)
 
 	private val superRender = renderer.onRender
 

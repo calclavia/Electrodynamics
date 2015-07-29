@@ -7,12 +7,14 @@ import nova.core.block.Stateful.LoadEvent
 import nova.core.component.renderer.DynamicRenderer
 import nova.core.entity.Entity
 import nova.core.render.Color
-import nova.core.render.model.{Model, Vertex}
+import nova.core.render.model.{Face, Model, Vertex, VertexModel}
 import nova.scala.wrapper.FunctionalWrapper._
 import nova.scala.wrapper.VectorWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.{Rotation, Vector3D}
 import org.apache.commons.math3.util.FastMath
+
 import scala.collection.convert.wrapAll._
+
 /**
  * The laser beam effect for electromagnetic waves
  * @author Calclavia
@@ -62,23 +64,23 @@ class EntityLaserBeam(start: Vector3D, end: Vector3D, color: Color, power: Doubl
 			 * Tessellate laser
 			 */
 			for (a <- 0 to detail) {
-				val beam = new Model()
+				val beam = new VertexModel()
 				beam.matrix.rotate(Vector3D.PLUS_J, a * Math.PI * 2 / detail)
 
 				/**
 				 * Render Cap
 				 */
-				val cap = new Model()
+				val cap = new VertexModel()
 				cap.matrix.translate(new Vector3D(0, length / 2 - endSize, 0))
 
-				val capFace = cap.createFace()
+				val capFace = new Face()
 				capFace.drawVertex(new Vertex(-particleScale, -particleScale, 0, 0, 0))
 				capFace.drawVertex(new Vertex(-particleScale, particleScale, 0, 0, 1))
 				capFace.drawVertex(new Vertex(particleScale, particleScale, 0, 1, 1))
 				capFace.drawVertex(new Vertex(particleScale, -particleScale, 0, 1, 0))
 
 				capFace.vertices.foreach(_.color = renderColor)
-				
+
 				capFace.brightness = 1
 				cap.drawFace(capFace)
 				cap.bindAll(OpticsTextures.laserStartTexture)
@@ -87,9 +89,9 @@ class EntityLaserBeam(start: Vector3D, end: Vector3D, color: Color, power: Doubl
 				/**
 				 * Render Middle
 				 */
-				val middle = new Model()
+				val middle = new VertexModel()
 
-				val middleFace = middle.createFace()
+				val middleFace = new Face()
 				middleFace.drawVertex(new Vertex(-particleScale, -length / 2 + endSize, 0, 0, 0))
 				middleFace.drawVertex(new Vertex(-particleScale, length / 2 - endSize, 0, 0, 1))
 				middleFace.drawVertex(new Vertex(particleScale, length / 2 - endSize, 0, 1, 1))
@@ -104,10 +106,10 @@ class EntityLaserBeam(start: Vector3D, end: Vector3D, color: Color, power: Doubl
 				/**
 				 * Render End
 				 */
-				val end = new Model()
+				val end = new VertexModel()
 				end.matrix.translate(new Vector3D(0, -length / 2 + endSize, 0))
 
-				val endFace = end.createFace()
+				val endFace = new Face()
 				endFace.drawVertex(new Vertex(-particleScale, -particleScale, 0, 0, 0))
 				endFace.drawVertex(new Vertex(-particleScale, particleScale, 0, 0, 1))
 				endFace.drawVertex(new Vertex(particleScale, particleScale, 0, 1, 1))
@@ -123,9 +125,9 @@ class EntityLaserBeam(start: Vector3D, end: Vector3D, color: Color, power: Doubl
 				/**
 				 * Render Noise
 				 */
-				val noise = new Model()
+				val noise = new VertexModel()
 
-				val noiseFace = noise.createFace()
+				val noiseFace = new Face()
 				noiseFace.drawVertex(new Vertex(-particleScale, -length / 2 + endSize, 0, 0, 0))
 				noiseFace.drawVertex(new Vertex(-particleScale, length / 2 - endSize, 0, 0, 1))
 				noiseFace.drawVertex(new Vertex(particleScale, length / 2 - endSize, 0, 1, 1))

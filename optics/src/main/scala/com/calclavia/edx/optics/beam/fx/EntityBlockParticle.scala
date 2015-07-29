@@ -7,12 +7,13 @@ import nova.core.component.misc.Collider
 import nova.core.component.renderer.DynamicRenderer
 import nova.core.entity.Entity
 import nova.core.entity.component.RigidBody
-import nova.core.render.model.{BlockModelUtil, Model}
+import nova.core.render.pipeline.{BlockRenderer, RenderStream}
 import nova.core.util.math.Vector3DUtil
 import nova.scala.wrapper.FunctionalWrapper._
 import nova.scala.wrapper.VectorWrapper._
 
 import scala.util.Random
+
 /**
  * A block breaking particle effect
  * @author Calclavia
@@ -33,11 +34,10 @@ class EntityBlockParticle(block: Block) extends Entity {
 		})
 
 	renderer.setOnRender(
-		(model: Model) => {
-			//Renders a small version of the block
-			//TODO: Does not work yet.
-			BlockModelUtil.drawBlock(model, block)
-		}
+		//Renders a small version of the block
+		//TODO: Does not work yet.
+		RenderStream.of(new BlockRenderer(block))
+			.build()
 	)
 
 	/*
