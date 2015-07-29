@@ -9,7 +9,7 @@ import com.calclavia.edx.electric.ElectricContent
 import com.calclavia.edx.electric.api.Electric
 import com.calclavia.edx.electric.api.Electric.GraphBuiltEvent
 import com.calclavia.edx.electric.grid.NodeElectricJunction
-import nova.core.render.block.StaticCubeTextureCoordinates
+import nova.core.render.pipeline.StaticCubeTextureCoordinates
 import nova.microblock.micro.Microblock
 import nova.core.block.Block.{PlaceEvent, RightClickEvent}
 import nova.core.block.component.StaticBlockRenderer

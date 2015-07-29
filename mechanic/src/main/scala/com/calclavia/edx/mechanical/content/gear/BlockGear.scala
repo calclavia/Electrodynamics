@@ -7,7 +7,7 @@ import com.calclavia.edx.mechanical.{Watch, MechanicContent}
 import nova.core.block.Block.{RightClickEvent, PlaceEvent}
 import nova.core.component.renderer.{DynamicRenderer, StaticRenderer, ItemRenderer}
 import nova.core.network.{Packet, Syncable, Sync}
-import nova.core.render.block.StaticCubeTextureCoordinates
+import nova.core.render.pipeline.StaticCubeTextureCoordinates
 import nova.core.render.model.{BlockModelUtil, Model}
 import nova.core.retention.{Store, Storable}
 import nova.core.util.Direction

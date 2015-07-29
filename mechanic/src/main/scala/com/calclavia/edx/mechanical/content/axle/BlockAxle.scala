@@ -8,7 +8,7 @@ import nova.core.block.Block.PlaceEvent
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.renderer.{DynamicRenderer, ItemRenderer, StaticRenderer}
 import nova.core.network.{Sync, Packet, Syncable}
-import nova.core.render.block.StaticCubeTextureCoordinates
+import nova.core.render.pipeline.StaticCubeTextureCoordinates
 import nova.core.render.model.{BlockModelUtil, Model}
 import nova.core.retention.{Store, Storable}
 import nova.core.util.Direction
