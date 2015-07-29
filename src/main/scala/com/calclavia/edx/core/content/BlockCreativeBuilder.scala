@@ -4,10 +4,11 @@ import com.calclavia.edx.core.CoreContent
 import com.resonant.core.structure.Structure
 import nova.core.block.Block
 import nova.core.block.Block.RightClickEvent
-import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.Category
+import nova.core.component.renderer.StaticRenderer
 import nova.core.component.transform.Orientation
 import nova.core.network.{Packet, Syncable}
+import nova.core.render.pipeline.{BlockRenderer, RenderStream}
 import nova.internal.core.Game
 import nova.scala.wrapper.FunctionalWrapper._
 import nova.scala.wrapper.VectorWrapper._
@@ -20,7 +21,13 @@ class BlockCreativeBuilder extends Block with Syncable {
 
 	add(new Orientation(this).setMask(0x3F))
 
-	add(new StaticBlockRenderer(this).setTexture(CoreContent.textureCreativeBuilder))
+	add(new StaticRenderer(this)
+		.setOnRender(
+			RenderStream.of(new BlockRenderer(this))
+				.withTexture(CoreContent.textureCreativeBuilder)
+				.build()
+		)
+	)
 
 	add(new Category("tools"))
 

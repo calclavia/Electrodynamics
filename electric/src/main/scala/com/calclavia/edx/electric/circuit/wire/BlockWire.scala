@@ -9,14 +9,15 @@ import com.calclavia.edx.electric.ElectricContent
 import com.calclavia.edx.electric.api.Electric
 import com.calclavia.edx.electric.api.Electric.GraphBuiltEvent
 import com.calclavia.edx.electric.grid.NodeElectricJunction
-import nova.core.render.pipeline.StaticCubeTextureCoordinates
+import nova.core.render.pipeline.{BlockRenderer, RenderStream, StaticCubeTextureCoordinates}
+import nova.core.render.texture.Texture
 import nova.microblock.micro.Microblock
 import nova.core.block.Block.{PlaceEvent, RightClickEvent}
 import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.misc.Collider
-import nova.core.component.renderer.ItemRenderer
+import nova.core.component.renderer.{StaticRenderer, ItemRenderer}
 import nova.core.network.{Packet, Sync, Syncable}
-import nova.core.render.model.{BlockModelUtil, Model}
+import nova.core.render.model.{VertexModel, BlockModelUtil, Model}
 import nova.core.retention.{Storable, Store}
 import nova.core.util.Direction
 import nova.core.util.math.RotationUtil
@@ -138,34 +139,37 @@ class BlockWire extends BlockEDX with Storable with Syncable {
 	@Store
 	private val material = add(new MaterialWire)
 
-	private val blockRenderer = add(new StaticBlockRenderer(this))
+	private val blockRenderer = add(new StaticRenderer(this))
 
 	blockRenderer.setOnRender(
 		(model: Model) => {
+			val subModel = new VertexModel()
 			get(classOf[Collider]).occlusionBoxes.apply(Optional.empty()).foreach(cuboid => {
-				BlockModelUtil.drawCube(model, cuboid - 0.5, StaticCubeTextureCoordinates.instance)
+				BlockRenderer.drawCube(subModel, cuboid - 0.5, StaticCubeTextureCoordinates.instance)
 			})
 
-			model.faces.foreach(_.vertices.map(_.color = get(classOf[MaterialWire]).material.color))
-			model.bindAll(ElectricContent.wireTexture)
+			subModel.faces.foreach(_.vertices.map(_.color = get(classOf[MaterialWire]).material.color))
+			subModel.bindAll(ElectricContent.wireTexture)
+			model.addChild(subModel)
 		}
 	)
-
 	private val itemRenderer = add(new ItemRenderer(this))
 
 	itemRenderer.setTexture(ElectricContent.wireTexture)
 
 	itemRenderer.setOnRender(
 		(model: Model) => {
+			val subModel = new VertexModel()
 			(0 until 5)
 				.map(dir => BlockWire.occlusionBounds(side)(dir))
 				.foreach(cuboid => {
-				BlockModelUtil.drawCube(model, cuboid - 0.5, StaticCubeTextureCoordinates.instance)
+				BlockRenderer.drawCube(subModel, cuboid - 0.5, StaticCubeTextureCoordinates.instance)
 			})
 
 			//TODO: Change color
-			model.faces.foreach(_.vertices.map(_.color = WireMaterial.COPPER.color))
-			model.bindAll(ElectricContent.wireTexture)
+			subModel.faces.foreach(_.vertices.map(_.color = get(classOf[MaterialWire]).material.color))
+			subModel.bindAll(ElectricContent.wireTexture)
+			model.addChild(subModel)
 		}
 	)
 

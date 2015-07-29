@@ -3,14 +3,15 @@ package com.calclavia.edx.electric.circuit.source
 import java.util.function.Supplier
 import java.util.{Optional, Set => JSet}
 
-import com.calclavia.edx.core.EDX
+import com.calclavia.edx.core.{CoreContent, EDX}
 import com.calclavia.edx.core.prefab.BlockEDX
 import com.calclavia.edx.electric.ElectricContent
 import com.calclavia.edx.electric.api.{ConnectionBuilder, Electric}
 import com.calclavia.edx.electric.grid.NodeElectricComponent
 import nova.core.block.Stateful
 import nova.core.block.component.StaticBlockRenderer
-import nova.core.component.renderer.ItemRenderer
+import nova.core.component.renderer.{StaticRenderer, ItemRenderer}
+import nova.core.render.pipeline.{BlockRenderer, RenderStream}
 import nova.core.render.texture.Texture
 import nova.core.util.Direction
 import nova.scala.component.IO
@@ -26,10 +27,14 @@ class BlockThermopile extends BlockEDX with ExtendedUpdater with Stateful {
 	private val electricNode = add(new NodeElectricComponent(this))
 	private var ticksUsed = 0
 	private val io = add(new IO(this))
-	private val staticRenderer = add(new StaticBlockRenderer(this))
+	private val staticRenderer = add(new StaticRenderer(this))
 	private val itemRenderer = add(new ItemRenderer(this))
 
-	staticRenderer.setTexture(func[Direction, Optional[Texture]]((dir: Direction) => if (dir == Direction.UP) Optional.of(ElectricContent.thermopileTextureTop) else Optional.of(ElectricContent.thermopileTextureSide)))
+	staticRenderer.setOnRender(
+		RenderStream.of(new BlockRenderer(this))
+			.withTexture(func[Direction, Optional[Texture]]((dir: Direction) => if (dir == Direction.UP) Optional.of(ElectricContent.thermopileTextureTop) else Optional.of(ElectricContent.thermopileTextureSide)))
+			.build()
+	)
 
 	electricNode.setPositiveConnections(
 		new ConnectionBuilder(classOf[Electric])

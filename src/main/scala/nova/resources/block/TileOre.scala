@@ -10,7 +10,7 @@ import nova.resources.Resource
 class TileOre extends Block with Resource {
 	var renderingForeground = false
 	/*
-		add(new StaticBlockRenderer(this))
+		add(new StaticRenderer(this))
 			.setColorMultiplier((side: Direction) => if (renderingForeground) Color.argb(ResourceFactory.getColor(material)) else Color.white)
 			.setTexture(func((side: Direction) => if (renderingForeground) Optional.of(ResourceFactory.oreForeground) else Optional.of(ResourceFactory.oreBackground)))
 			.setOnRender(

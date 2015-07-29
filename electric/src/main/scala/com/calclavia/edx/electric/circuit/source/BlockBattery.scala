@@ -9,8 +9,7 @@ import com.calclavia.edx.electric.ElectricContent
 import com.calclavia.edx.electric.api.{ConnectionBuilder, Electric}
 import com.calclavia.edx.electric.grid.NodeElectricComponent
 import nova.core.block.Block.{DropEvent, PlaceEvent, RightClickEvent}
-import nova.core.block.component.StaticBlockRenderer
-import nova.core.component.renderer.ItemRenderer
+import nova.core.component.renderer.{ItemRenderer, StaticRenderer}
 import nova.core.component.transform.Orientation
 import nova.core.event.Event
 import nova.core.item.Item
@@ -51,7 +50,7 @@ class BlockBattery extends BlockEDX with Syncable with Storable with ExtendedUpd
 	@Store
 	private val io = add(new IO(this))
 	private val redstone = add(EDX.components.make(classOf[Redstone], this))
-	private val staticRenderer = add(new StaticBlockRenderer(this))
+	private val staticRenderer = add(new StaticRenderer(this))
 	private val itemRenderer = add(new ItemRenderer(this))
 
 	/**
@@ -88,8 +87,9 @@ class BlockBattery extends BlockEDX with Syncable with Storable with ExtendedUpd
 	staticRenderer.setOnRender(
 		(model: Model) => {
 			//TODO: Switch the model
-			model.children.add(ElectricContent.batteryModel.getModel)
-			model.bindAll(ElectricContent.batteryTexture)
+			val subModel = ElectricContent.batteryModel.getModel
+			model.children.add(subModel)
+			subModel.bindAll(ElectricContent.batteryTexture)
 		}
 	)
 	/*
