@@ -89,7 +89,7 @@ class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater with
 		classOf[RightClickEvent]
 	)
 
-	renderer.setOnRender(
+	renderer.onRender(
 		(model: Model) => {
 			val rot = orientation.orientation match {
 				case Direction.UP => new Rotation(Vector3D.PLUS_I, -Math.PI / 2)

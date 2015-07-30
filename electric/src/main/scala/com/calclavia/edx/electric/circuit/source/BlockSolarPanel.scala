@@ -11,7 +11,7 @@ import com.calclavia.edx.electric.grid.NodeElectricComponent
 import nova.core.block.Stateful
 import nova.core.component.renderer.{ItemRenderer, StaticRenderer}
 import nova.core.render.model.Model
-import nova.core.render.pipeline.{BlockRenderer, ConnectedTextureRenderer, RenderStream}
+import nova.core.render.pipeline.{BlockRenderStream, ConnectedTextureRenderStream, RenderStream}
 import nova.core.render.texture.Texture
 import nova.core.util.Direction
 import nova.core.util.shape.Cuboid
@@ -34,8 +34,8 @@ class BlockSolarPanel extends BlockEDX with ExtendedUpdater with Stateful {
 		}
 	}
 
-	renderer.setOnRender(
-		RenderStream.of(new ConnectedTextureRenderer(this, ElectricContent.solarPanelTextureEdge))
+	renderer.onRender(
+		new ConnectedTextureRenderStream(this, ElectricContent.solarPanelTextureEdge)
 			.withFaceMask(2)
 			.withTexture(texture)
 			.build()
@@ -60,8 +60,8 @@ class BlockSolarPanel extends BlockEDX with ExtendedUpdater with Stateful {
 			.asInstanceOf[Supplier[JSet[Electric]]]
 	)
 
-	itemRenderer.setOnRender((model: Model) =>
-		RenderStream.of(new BlockRenderer(this))
+	itemRenderer.onRender((model: Model) =>
+		new BlockRenderStream(this)
 			.withTexture(texture)
 			.build()
 	)

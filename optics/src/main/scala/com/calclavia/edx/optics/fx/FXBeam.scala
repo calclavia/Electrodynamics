@@ -38,7 +38,7 @@ abstract class FXBeam(texture: Texture, @BeanProperty var color: Color, maxAge: 
 	private var prevPos: Vector3D = null
 
 	add(new DynamicRenderer())
-		.setOnRender(
+		.onRender(
 			(model: Model) => {
 
 				//		GL11.glPushMatrix

@@ -83,7 +83,7 @@ class BlockGear extends BlockEDX with Storable with Syncable {
 	val watch = new Watch()
 
 	private[this] val blockRenderer = add(new DynamicRenderer())
-	blockRenderer.setOnRender((m: Model) => {
+	blockRenderer.onRender((m: Model) => {
 		m.addChild(model)
 		rotation += speed * watch.update() / 1000
 		rotation %= Math.PI * 2

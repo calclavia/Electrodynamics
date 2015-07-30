@@ -34,7 +34,7 @@ class BlockMirror extends BlockEDX with Stateful with Syncable with Storable {
 	private val itemRenderer = add(new ItemRenderer(this))
 	private val opticHandler = add(new OpticHandler(this))
 
-	renderer.setOnRender(
+	renderer.onRender(
 		(model: Model) => {
 			model.matrix.rotate(new Rotation(Vector3D.PLUS_J, focus.normal).revert())
 

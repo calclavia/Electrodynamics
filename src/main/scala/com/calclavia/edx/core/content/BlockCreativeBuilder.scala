@@ -8,7 +8,7 @@ import nova.core.component.Category
 import nova.core.component.renderer.StaticRenderer
 import nova.core.component.transform.Orientation
 import nova.core.network.{Packet, Syncable}
-import nova.core.render.pipeline.{BlockRenderer, RenderStream}
+import nova.core.render.pipeline.{BlockRenderStream, RenderStream}
 import nova.internal.core.Game
 import nova.scala.wrapper.FunctionalWrapper._
 import nova.scala.wrapper.VectorWrapper._
@@ -22,8 +22,8 @@ class BlockCreativeBuilder extends Block with Syncable {
 	add(new Orientation(this).setMask(0x3F))
 
 	add(new StaticRenderer(this)
-		.setOnRender(
-			RenderStream.of(new BlockRenderer(this))
+		.onRender(
+			new BlockRenderStream(this)
 				.withTexture(CoreContent.textureCreativeBuilder)
 				.build()
 		)

@@ -4,7 +4,7 @@ import com.calclavia.edx.optics.content.OpticsTextures
 import nova.core.component.renderer.DynamicRenderer
 import nova.core.render.Color
 import nova.core.render.model.{Model, VertexModel}
-import nova.core.render.pipeline.BlockRenderer
+import nova.core.render.pipeline.BlockRenderStream
 import nova.scala.util.ExtendedUpdater
 import nova.scala.wrapper.FunctionalWrapper._
 
@@ -15,7 +15,7 @@ class FXHologramProgress(@BeanProperty var color: Color, maxAge: Double) extends
 	var age = 0d
 
 	add(new DynamicRenderer())
-		.setOnRender(
+		.onRender(
 			(model: Model) => {
 				//		GL11.glPushMatrix
 				val completion = age / maxAge
@@ -31,7 +31,7 @@ class FXHologramProgress(@BeanProperty var color: Color, maxAge: Double) extends
 
 				//OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F)
 				//RenderUtility.enableBlending
-				val cube = BlockRenderer.drawCube(new VertexModel())
+				val cube = BlockRenderStream.drawCube(new VertexModel())
 				cube.bindAll(OpticsTextures.hologram)
 				cube.faces.foreach(_.vertices.foreach(_.color = (color.alpha((op * 255).toInt))))
 				model.addChild(cube)

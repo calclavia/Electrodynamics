@@ -39,7 +39,7 @@ class BlockBiometric extends BlockFrequency with ExtendedUpdater with Permission
 	add(new Orientation(this)).hookBasedOnEntity().hookRightClickRotate()
 
 	get(classOf[StaticRenderer])
-		.setOnRender(
+		.onRender(
 			(model: Model) => {
 				model.matrix.rotate(get(classOf[Orientation]).orientation.rotation)
 				val modelBiometric = OpticsModels.biometric.getModel
@@ -50,7 +50,7 @@ class BlockBiometric extends BlockFrequency with ExtendedUpdater with Permission
 		)
 
 	add(new DynamicRenderer())
-		.setOnRender(
+		.onRender(
 			(model: Model) => {
 				model.matrix.rotate(get(classOf[Orientation]).orientation.rotation)
 				/**

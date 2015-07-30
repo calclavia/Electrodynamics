@@ -151,7 +151,7 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 		return saveDirectory
 	}
 
-	renderer.setOnRender(
+	renderer.onRender(
 		(model: Model) => {
 			val subModel = new VertexModel()
 			modes(new Random().nextInt(modes.length - 1))

@@ -12,7 +12,7 @@ class ItemShapePyramid extends ItemShape {
 
 	override def getStructure: Structure = new StructurePyramid
 
-	renderer.setOnRender(
+	renderer.onRender(
 		(model: Model) => {
 			val subModel = new VertexModel()
 			val height = 0.5f

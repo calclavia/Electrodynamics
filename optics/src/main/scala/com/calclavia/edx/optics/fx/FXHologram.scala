@@ -5,7 +5,7 @@ import nova.core.component.renderer.DynamicRenderer
 import nova.core.entity.component.RigidBody
 import nova.core.render.Color
 import nova.core.render.model.{Model, VertexModel}
-import nova.core.render.pipeline.BlockRenderer
+import nova.core.render.pipeline.BlockRenderStream
 import nova.scala.wrapper.FunctionalWrapper._
 import nova.scala.wrapper.VectorWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
@@ -17,7 +17,7 @@ class FXHologram(color: Color, maxAge: Double) extends FXMFFS {
 	private var targetPosition: Vector3D = null
 
 	add(new DynamicRenderer())
-		.setOnRender(
+		.onRender(
 			(model: Model) => {
 				model.matrix.scale(1.01, 1.01, 1.01)
 
@@ -29,7 +29,7 @@ class FXHologram(color: Color, maxAge: Double) extends FXMFFS {
 
 				//OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F)
 				//RenderUtility.enableBlending
-				val cube = BlockRenderer.drawCube(new VertexModel())
+				val cube = BlockRenderStream.drawCube(new VertexModel())
 				cube.bindAll(OpticsTextures.hologram)
 				cube.faces.foreach(_.vertices.foreach(_.color = (color.alpha((op * 255).toInt))))
 				model.addChild(cube)

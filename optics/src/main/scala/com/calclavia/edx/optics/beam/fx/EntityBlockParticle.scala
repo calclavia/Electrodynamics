@@ -7,7 +7,7 @@ import nova.core.component.misc.Collider
 import nova.core.component.renderer.DynamicRenderer
 import nova.core.entity.Entity
 import nova.core.entity.component.RigidBody
-import nova.core.render.pipeline.{BlockRenderer, RenderStream}
+import nova.core.render.pipeline.{BlockRenderStream, RenderStream}
 import nova.core.util.math.Vector3DUtil
 import nova.scala.wrapper.FunctionalWrapper._
 import nova.scala.wrapper.VectorWrapper._
@@ -33,10 +33,10 @@ class EntityBlockParticle(block: Block) extends Entity {
 			rigidBody.setVelocity(Vector3DUtil.random)
 		})
 
-	renderer.setOnRender(
+	renderer.onRender(
 		//Renders a small version of the block
 		//TODO: Does not work yet.
-		RenderStream.of(new BlockRenderer(block))
+		new BlockRenderStream(block)
 			.build()
 	)
 

@@ -63,7 +63,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 	private var canRenderMove = true
 
 	get(classOf[StaticRenderer])
-		.setOnRender(
+		.onRender(
 			(model: Model) => {
 				model.matrix.rotate(get(classOf[Orientation]).orientation.rotation)
 				val subModel = OpticsModels.mobilizer.getModel

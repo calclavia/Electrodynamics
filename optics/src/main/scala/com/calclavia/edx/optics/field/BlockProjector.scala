@@ -68,7 +68,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 
 	collider.isCube(false)
 
-	staticRenderer.setOnRender(
+	staticRenderer.onRender(
 		(model: Model) => {
 			model.matrix.rotate(get(classOf[Orientation]).orientation.rotation)
 			val subModel = OpticsModels.projector.getModel
@@ -77,7 +77,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 		}
 	)
 
-	dynamicRenderer.setOnRender(
+	dynamicRenderer.onRender(
 		(model: Model) => {
 			/**
 			 * Render the light beam

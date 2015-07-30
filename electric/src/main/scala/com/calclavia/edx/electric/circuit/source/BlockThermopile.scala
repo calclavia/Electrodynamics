@@ -10,7 +10,7 @@ import com.calclavia.edx.electric.api.{ConnectionBuilder, Electric}
 import com.calclavia.edx.electric.grid.NodeElectricComponent
 import nova.core.block.Stateful
 import nova.core.component.renderer.{ItemRenderer, StaticRenderer}
-import nova.core.render.pipeline.{BlockRenderer, RenderStream}
+import nova.core.render.pipeline.{BlockRenderStream, RenderStream}
 import nova.core.render.texture.Texture
 import nova.core.util.Direction
 import nova.scala.component.IO
@@ -30,8 +30,8 @@ class BlockThermopile extends BlockEDX with ExtendedUpdater with Stateful {
 	private val staticRenderer = add(new StaticRenderer(this))
 	private val itemRenderer = add(new ItemRenderer(this))
 
-	staticRenderer.setOnRender(
-		RenderStream.of(new BlockRenderer(this))
+	staticRenderer.onRender(
+		new BlockRenderStream(this)
 			.withTexture(func[Direction, Optional[Texture]]((dir: Direction) => if (dir == Direction.UP) Optional.of(ElectricContent.thermopileTextureTop) else Optional.of(ElectricContent.thermopileTextureSide)))
 			.build()
 	)

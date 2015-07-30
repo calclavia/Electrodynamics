@@ -33,7 +33,7 @@ class EntityScorch(side: Int) extends Entity with EntityAgeLike {
 		particleAlpha = 1 - (time / maxAge) * (time / maxAge)
 	}
 
-	renderer.setOnRender(
+	renderer.onRender(
 		(model: Model) => {
 
 			//GL_SRC_ALPHA

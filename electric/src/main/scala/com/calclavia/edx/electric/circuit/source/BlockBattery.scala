@@ -84,7 +84,7 @@ class BlockBattery extends BlockEDX with Syncable with Storable with ExtendedUpd
 		classOf[PlaceEvent]
 	)
 
-	staticRenderer.setOnRender(
+	staticRenderer.onRender(
 		(model: Model) => {
 			//TODO: Switch the model
 			val subModel = ElectricContent.batteryModel.getModel

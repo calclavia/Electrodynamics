@@ -4,7 +4,7 @@ import com.calclavia.edx.optics.content.OpticsTextures
 import com.calclavia.edx.optics.field.structure.StructureCylinder
 import com.resonant.core.structure.Structure
 import nova.core.render.model.{Model, VertexModel}
-import nova.core.render.pipeline.BlockRenderer
+import nova.core.render.pipeline.BlockRenderStream
 import nova.scala.wrapper.FunctionalWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
@@ -21,7 +21,7 @@ class ItemShapeCylinder extends ItemShape {
 
 	override def getStructure: Structure = new StructureCylinder
 
-	renderer.setOnRender(
+	renderer.onRender(
 		(model: Model) => {
 			val scale = 0.15f
 			val detail = 0.5f
@@ -35,7 +35,7 @@ class ItemShapeCylinder extends ItemShape {
 				if (((renderX * renderX + renderZ * renderZ + radiusExpansion) <= (radius * radius) && (renderX * renderX + renderZ * renderZ + radiusExpansion) >= ((radius - 1) * (radius - 1))) || ((renderY == 0 || renderY == radius - 1) && (renderX * renderX + renderZ * renderZ + radiusExpansion) <= (radius * radius))) {
 					if (i % 2 == 0) {
 						val vector = new Vector3D(renderX / detail, renderY / detail, renderZ / detail)
-						val cube = BlockRenderer.drawCube(new VertexModel())
+						val cube = BlockRenderStream.drawCube(new VertexModel())
 						cube.matrix.translate(vector.getX(), vector.getY(), vector.getZ())
 						model.children.add(cube)
 						cube.bindAll(OpticsTextures.hologram)

@@ -34,7 +34,7 @@ class BlockCrystal extends BlockEDX with Stateful with Syncable with Storable {
 	collider.isCube(false)
 	collider.isOpaqueCube(false)
 
-	renderer.setOnRender(
+	renderer.onRender(
 		(model: Model) => {
 			val subModel = OpticsModels.crystal.getModel
 			//GL_SRC_ALPHA

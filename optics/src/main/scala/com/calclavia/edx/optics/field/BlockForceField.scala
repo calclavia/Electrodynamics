@@ -19,7 +19,7 @@ import nova.core.entity.component.Player
 import nova.core.network.NetworkTarget.Side
 import nova.core.network.{Packet, Sync, Syncable}
 import nova.core.render.model.Model
-import nova.core.render.pipeline.{BlockRenderer, RenderStream}
+import nova.core.render.pipeline.{BlockRenderStream, RenderStream}
 import nova.core.retention.{Storable, Store}
 import nova.core.util.Direction
 import nova.scala.wrapper.FunctionalWrapper._
@@ -102,8 +102,8 @@ class BlockForceField extends BlockEDX with Stateful with Syncable with ForceFie
 
 	private val renderer = add(new StaticRenderer(this))
 
-	renderer.setOnRender(
-		RenderStream.of(new BlockRenderer(this))
+	renderer.onRender(
+		new BlockRenderStream(this)
 			.filter(
 				predicate((side: Direction) => {
 					//					if (camoBlock != null) {
@@ -132,7 +132,7 @@ class BlockForceField extends BlockEDX with Stateful with Syncable with ForceFie
 	/*	val itemRenderer = add(new ItemRenderer(this))
 			.setOnRender((model: Model) => superRender.accept(model))
 	*/
-	renderer.setOnRender(
+	renderer.onRender(
 		(model: Model) => {
 			val opRenderer = if (camoBlock != null) camoBlock.getOp(classOf[StaticRenderer]) else Optional.empty
 

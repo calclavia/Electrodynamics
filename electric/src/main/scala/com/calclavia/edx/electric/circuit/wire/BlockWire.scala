@@ -14,7 +14,7 @@ import nova.core.component.misc.Collider
 import nova.core.component.renderer.{ItemRenderer, StaticRenderer}
 import nova.core.network.{Packet, Sync, Syncable}
 import nova.core.render.model.{Model, VertexModel}
-import nova.core.render.pipeline.{BlockRenderer, StaticCubeTextureCoordinates}
+import nova.core.render.pipeline.{BlockRenderStream, StaticCubeTextureCoordinates}
 import nova.core.retention.{Storable, Store}
 import nova.core.util.Direction
 import nova.core.util.math.RotationUtil
@@ -138,11 +138,11 @@ class BlockWire extends BlockEDX with Storable with Syncable {
 
 	private val blockRenderer = add(new StaticRenderer(this))
 
-	blockRenderer.setOnRender(
+	blockRenderer.onRender(
 		(model: Model) => {
 			val subModel = new VertexModel()
 			get(classOf[Collider]).occlusionBoxes.apply(Optional.empty()).foreach(cuboid => {
-				BlockRenderer.drawCube(subModel, cuboid - 0.5, StaticCubeTextureCoordinates.instance)
+				BlockRenderStream.drawCube(subModel, cuboid - 0.5, StaticCubeTextureCoordinates.instance)
 			})
 
 			subModel.faces.foreach(_.vertices.map(_.color = get(classOf[MaterialWire]).material.color))
@@ -154,13 +154,13 @@ class BlockWire extends BlockEDX with Storable with Syncable {
 
 	itemRenderer.setTexture(ElectricContent.wireTexture)
 
-	itemRenderer.setOnRender(
+	itemRenderer.onRender(
 		(model: Model) => {
 			val subModel = new VertexModel()
 			(0 until 5)
 				.map(dir => BlockWire.occlusionBounds(side)(dir))
 				.foreach(cuboid => {
-				BlockRenderer.drawCube(subModel, cuboid - 0.5, StaticCubeTextureCoordinates.instance)
+				BlockRenderStream.drawCube(subModel, cuboid - 0.5, StaticCubeTextureCoordinates.instance)
 			})
 
 			//TODO: Change color

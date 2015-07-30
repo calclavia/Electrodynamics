@@ -48,7 +48,7 @@ class EntityLaserBeam(start: Vector3D, end: Vector3D, color: Color, power: Doubl
 		//setRotation(rotation.crossProduct(Quaternion.fromAxis(Vector3d.PLUS_K, time % (Math.PI * 2 / rotationSpeed) * rotationSpeed + rotationSpeed * deltaTime)))
 	}
 
-	renderer.setOnRender(
+	renderer.onRender(
 		(model: Model) => {
 			//GL_SRC_ALPHA
 			model.blendSFactor = 0x302

@@ -13,7 +13,7 @@ import nova.core.component.transform.Orientation
 import nova.core.game.InputManager.Key
 import nova.core.network.NetworkTarget.Side
 import nova.core.network.{Packet, Syncable}
-import nova.core.render.pipeline.{BlockRenderer, RenderStream}
+import nova.core.render.pipeline.{BlockRenderStream, RenderStream}
 import nova.core.render.texture.Texture
 import nova.core.retention.{Storable, Store}
 import nova.core.util.Direction
@@ -53,8 +53,8 @@ abstract class BlockMachine extends BlockEDX with Syncable with IActivatable wit
 		}
 	})
 
-	staticRenderer.setOnRender(
-		RenderStream.of(new BlockRenderer(this))
+	staticRenderer.onRender(
+		new BlockRenderStream(this)
 			.withTexture(func[Direction, Optional[Texture]]((side: Direction) => Optional.of(OpticsTextures.machine)))
 			.build()
 	)

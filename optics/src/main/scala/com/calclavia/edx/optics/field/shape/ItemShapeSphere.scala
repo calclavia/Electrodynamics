@@ -14,7 +14,7 @@ class ItemShapeSphere extends ItemShape {
 
 	override def getStructure: Structure = new StructureSphere
 
-	renderer.setOnRender(
+	renderer.onRender(
 		(model: Model) => {
 			val scale = 0.2f
 			val radius = 0.8f

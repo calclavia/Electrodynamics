@@ -8,7 +8,7 @@ import nova.core.block.Block.PlaceEvent
 import nova.core.component.renderer.{DynamicRenderer, ItemRenderer}
 import nova.core.network.{Packet, Sync, Syncable}
 import nova.core.render.model.{Model, VertexModel}
-import nova.core.render.pipeline.{BlockRenderer, RenderStream, StaticCubeTextureCoordinates}
+import nova.core.render.pipeline.{BlockRenderStream, RenderStream, StaticCubeTextureCoordinates}
 import nova.core.retention.{Storable, Store}
 import nova.core.util.Direction
 import nova.core.util.shape.Cuboid
@@ -73,7 +73,7 @@ class BlockAxle extends BlockEDX with Storable with Syncable {
 	var rotation = 0D
 	private[this] val watch = new Watch()
 
-	blockRenderer.setOnRender((m: Model) => {
+	blockRenderer.onRender((m: Model) => {
 		m.addChild(model)
 		rotation += speed * watch.update() / 1000
 		rotation %= Math.PI * 2
@@ -85,7 +85,7 @@ class BlockAxle extends BlockEDX with Storable with Syncable {
 
 	lazy val model = {
 		val res = new VertexModel("gearshaft")
-		BlockRenderer.drawCube(res, BlockAxle.occlusionBounds(dir) - 0.5, StaticCubeTextureCoordinates.instance)
+		BlockRenderStream.drawCube(res, BlockAxle.occlusionBounds(dir) - 0.5, StaticCubeTextureCoordinates.instance)
 		res.bind(MechanicContent.gearshaftTexture)
 		res.matrix pushMatrix()
 		res
