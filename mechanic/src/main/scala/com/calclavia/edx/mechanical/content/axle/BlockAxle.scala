@@ -3,7 +3,9 @@ package com.calclavia.edx.mechanical.content.axle
 import java.util.Optional
 
 import com.calclavia.edx.core.prefab.BlockEDX
-import com.calclavia.edx.mechanical.{MechanicContent, Watch}
+
+import com.calclavia.edx.mechanical.physic.{RotationalComponent, MechanicalMaterial}
+import com.calclavia.edx.mechanical.{Watch, MechanicContent}
 import nova.core.block.Block.PlaceEvent
 import nova.core.component.renderer.{DynamicRenderer, ItemRenderer}
 import nova.core.network.{Packet, Sync, Syncable}
@@ -66,21 +68,18 @@ class BlockAxle extends BlockEDX with Storable with Syncable {
 		)
 
 	private[this] val blockRenderer = add(new DynamicRenderer())
+	add(MechanicalMaterial.metal)
 
-	@Sync(ids = Array(1))
-	var speed = Math.PI / 4
-	@Sync(ids = Array(1))
-	var rotation = 0D
-	private[this] val watch = new Watch()
+	private[this] val rotational = add(new RotationalComponent(this))
+
+
 
 	blockRenderer.onRender((m: Model) => {
 		m.addChild(model)
-		rotation += speed * watch.update() / 1000
-		rotation %= Math.PI * 2
 
 		model.matrix popMatrix()
 		model.matrix pushMatrix()
-		model.matrix rotate new Rotation(dir.toVector, rotation)
+		model.matrix rotate new Rotation(dir.toVector, rotational.rotation)
 	})
 
 	lazy val model = {
