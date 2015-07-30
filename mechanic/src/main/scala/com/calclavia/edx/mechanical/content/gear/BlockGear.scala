@@ -95,11 +95,11 @@ class BlockGear extends BlockEDX with Storable with Syncable {
 
 	lazy val model = {
 		val tmp = new VertexModel()
-		val optional = MechanicContent.modelGear.getModel.stream().filter((model: Model) => "SmallGear".equals(model.name)).findFirst()
+		/*val optional = MechanicContent.modelGear.getModel.stream().filter((model: Model) => "SmallGear".equals(model.name)).findFirst()
 
 		tmp.addChild(optional.orElseThrow(() => new IllegalStateException("Model is missing")))
 		tmp.matrix transform BlockGear.matrixes(_side)
-		tmp.matrix pushMatrix()
+		tmp.matrix pushMatrix()*/
 		tmp
 	}
 

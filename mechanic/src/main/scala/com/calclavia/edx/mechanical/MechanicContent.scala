@@ -16,7 +16,7 @@ object MechanicContent extends ContentLoader {
 	lazy val gearshaftTexture = gearTexture
 
 	//Models
-	val modelGear = new WavefrontObjectModelProvider(Reference.domain, "gears")
+	//val modelGear = new WavefrontObjectModelProvider(Reference.domain, "gears")
 
 	//Blocks
 	var blockGear: BlockFactory = classOf[BlockGear]
