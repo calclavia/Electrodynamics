@@ -24,7 +24,7 @@ import nova.core.inventory.InventorySimple
 import nova.core.item.Item
 import nova.core.network.{Packet, Sync}
 import nova.core.render.Color
-import nova.core.render.model.{VertexModel, Model}
+import nova.core.render.model.{MeshModel, Model}
 import nova.core.retention.Store
 import nova.core.util.shape.Cuboid
 import nova.scala.wrapper.FunctionalWrapper._
@@ -87,7 +87,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 				 * Render hologram
 				 */
 				if (Settings.highGraphics) {
-					val hologram = new VertexModel("hologram")
+					val hologram = new MeshModel("hologram")
 					//GL_SRC_ALPHA
 					hologram.blendSFactor = 0x302
 					//GL_ONE

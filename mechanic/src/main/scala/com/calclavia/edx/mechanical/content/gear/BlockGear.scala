@@ -7,7 +7,7 @@ import com.calclavia.edx.mechanical.{MechanicContent, Watch}
 import nova.core.block.Block.{PlaceEvent, RightClickEvent}
 import nova.core.component.renderer.{DynamicRenderer, ItemRenderer}
 import nova.core.network.{Packet, Sync, Syncable}
-import nova.core.render.model.{Model, VertexModel}
+import nova.core.render.model.{Model, MeshModel}
 import nova.core.retention.{Storable, Store}
 import nova.core.util.Direction
 import nova.core.util.math.{MatrixStack, Vector3DUtil}
@@ -94,7 +94,7 @@ class BlockGear extends BlockEDX with Storable with Syncable {
 	})
 
 	lazy val model = {
-		val tmp = new VertexModel()
+		val tmp = new MeshModel()
 		/*val optional = MechanicContent.modelGear.getModel.stream().filter((model: Model) => "SmallGear".equals(model.name)).findFirst()
 
 		tmp.addChild(optional.orElseThrow(() => new IllegalStateException("Model is missing")))

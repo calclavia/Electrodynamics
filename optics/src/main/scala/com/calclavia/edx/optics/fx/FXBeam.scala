@@ -3,7 +3,7 @@ package com.calclavia.edx.optics.fx
 import nova.core.component.renderer.DynamicRenderer
 import nova.core.entity.Entity
 import nova.core.render.Color
-import nova.core.render.model.{Face, Model, Vertex, VertexModel}
+import nova.core.render.model.{Face, Model, Vertex, MeshModel}
 import nova.core.render.texture.Texture
 import nova.scala.util.ExtendedUpdater
 import nova.scala.wrapper.FunctionalWrapper._
@@ -90,7 +90,7 @@ abstract class FXBeam(texture: Texture, @BeanProperty var color: Color, maxAge: 
 					val var35: Double = -1.0F + var12 + t / 3.0F
 					val var37: Double = length * size * var9 + var35
 
-					val beamModel = new VertexModel()
+					val beamModel = new MeshModel()
 					beamModel.matrix.rotate(Vector3D.PLUS_J, Math.PI / 3)
 					val face = new Face()
 					face.drawVertex(new Vertex(var44b, var29, 0.0D, var33, var37))

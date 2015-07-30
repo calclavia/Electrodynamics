@@ -4,7 +4,7 @@ import com.calclavia.edx.optics.content.OpticsTextures
 import nova.core.component.renderer.DynamicRenderer
 import nova.core.entity.component.RigidBody
 import nova.core.render.Color
-import nova.core.render.model.{Model, VertexModel}
+import nova.core.render.model.{Model, MeshModel}
 import nova.core.render.pipeline.BlockRenderStream
 import nova.scala.wrapper.FunctionalWrapper._
 import nova.scala.wrapper.VectorWrapper._
@@ -29,7 +29,7 @@ class FXHologram(color: Color, maxAge: Double) extends FXMFFS {
 
 				//OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F)
 				//RenderUtility.enableBlending
-				val cube = BlockRenderStream.drawCube(new VertexModel())
+				val cube = BlockRenderStream.drawCube(new MeshModel())
 				cube.bindAll(OpticsTextures.hologram)
 				cube.faces.foreach(_.vertices.foreach(_.color = (color.alpha((op * 255).toInt))))
 				model.addChild(cube)

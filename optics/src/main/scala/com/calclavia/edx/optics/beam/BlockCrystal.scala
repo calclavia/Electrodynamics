@@ -8,7 +8,7 @@ import nova.core.block.Stateful
 import nova.core.component.misc.Collider
 import nova.core.component.renderer.{DynamicRenderer, ItemRenderer}
 import nova.core.network.{Sync, Syncable}
-import nova.core.render.model.{VertexModel, Model}
+import nova.core.render.model.{MeshModel, Model}
 import nova.core.retention.{Storable, Store}
 import nova.core.util.Ray
 import nova.core.util.RayTracer.RayTraceBlockResult

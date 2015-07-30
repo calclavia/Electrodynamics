@@ -3,7 +3,7 @@ package com.calclavia.edx.optics.field.shape
 import com.calclavia.edx.optics.content.OpticsTextures
 import com.calclavia.edx.optics.field.structure.StructurePyramid
 import com.resonant.core.structure.Structure
-import nova.core.render.model.{VertexModel, Face, Model, Vertex}
+import nova.core.render.model.{MeshModel, Face, Model, Vertex}
 import nova.scala.wrapper.FunctionalWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
@@ -14,7 +14,7 @@ class ItemShapePyramid extends ItemShape {
 
 	renderer.onRender(
 		(model: Model) => {
-			val subModel = new VertexModel()
+			val subModel = new MeshModel()
 			val height = 0.5f
 			val width = 0.3f
 			val uvMaxX = 2

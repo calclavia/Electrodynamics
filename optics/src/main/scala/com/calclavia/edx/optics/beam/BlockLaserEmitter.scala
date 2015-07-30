@@ -82,12 +82,13 @@ class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater with
 		}
 	)
 
-	events.add(
-		(evt: RightClickEvent) => {
-			optic.destroy()
-		},
-		classOf[RightClickEvent]
-	)
+	events
+		.on(classOf[RightClickEvent])
+		.bind(
+			(evt: RightClickEvent) => {
+				optic.destroy()
+			}
+		)
 
 	renderer.onRender(
 		(model: Model) => {

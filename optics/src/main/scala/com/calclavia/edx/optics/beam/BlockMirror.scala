@@ -10,7 +10,7 @@ import nova.core.block.Stateful
 import nova.core.component.misc.Collider
 import nova.core.component.renderer.{ItemRenderer, StaticRenderer}
 import nova.core.network.{Packet, Sync, Syncable}
-import nova.core.render.model.{Model, VertexModel}
+import nova.core.render.model.{Model, MeshModel}
 import nova.core.retention.{Storable, Store}
 import nova.core.util.Ray
 import nova.core.util.RayTracer.RayTraceBlockResult
@@ -38,7 +38,7 @@ class BlockMirror extends BlockEDX with Stateful with Syncable with Storable {
 		(model: Model) => {
 			model.matrix.rotate(new Rotation(Vector3D.PLUS_J, focus.normal).revert())
 
-			val child = OpticsModels.mirror.getModel.combineChildren("mirror", "mirror", "mirrorBacking", "standConnector").asInstanceOf[VertexModel]
+			val child = OpticsModels.mirror.getModel.combineChildren("mirror", "mirror", "mirrorBacking", "standConnector").asInstanceOf[MeshModel]
 			model.children.add(child)
 			child.bindAll(OpticsTextures.mirror)
 		}

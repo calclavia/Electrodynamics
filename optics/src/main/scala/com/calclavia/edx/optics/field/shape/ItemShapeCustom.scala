@@ -11,7 +11,7 @@ import com.resonant.core.structure.{Structure, StructureCustom}
 import nova.core.component.renderer.ItemRenderer
 import nova.core.game.InputManager.Key
 import nova.core.item.Item.{RightClickEvent, TooltipEvent, UseEvent}
-import nova.core.render.model.{Model, VertexModel}
+import nova.core.render.model.{Model, MeshModel}
 import nova.core.retention.Store
 import nova.scala.wrapper.FunctionalWrapper._
 import nova.scala.wrapper.VectorWrapper._
@@ -153,7 +153,7 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 
 	renderer.onRender(
 		(model: Model) => {
-			val subModel = new VertexModel()
+			val subModel = new MeshModel()
 			modes(new Random().nextInt(modes.length - 1))
 				.getDummy
 				.asInstanceOf[ItemShape]

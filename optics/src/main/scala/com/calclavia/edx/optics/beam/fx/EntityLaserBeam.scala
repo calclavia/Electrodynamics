@@ -7,7 +7,7 @@ import nova.core.block.Stateful.LoadEvent
 import nova.core.component.renderer.DynamicRenderer
 import nova.core.entity.Entity
 import nova.core.render.Color
-import nova.core.render.model.{Face, Model, Vertex, VertexModel}
+import nova.core.render.model.{Face, Model, Vertex, MeshModel}
 import nova.scala.wrapper.FunctionalWrapper._
 import nova.scala.wrapper.VectorWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.{Rotation, Vector3D}
@@ -64,13 +64,13 @@ class EntityLaserBeam(start: Vector3D, end: Vector3D, color: Color, power: Doubl
 			 * Tessellate laser
 			 */
 			for (a <- 0 to detail) {
-				val beam = new VertexModel()
+				val beam = new MeshModel()
 				beam.matrix.rotate(Vector3D.PLUS_J, a * Math.PI * 2 / detail)
 
 				/**
 				 * Render Cap
 				 */
-				val cap = new VertexModel()
+				val cap = new MeshModel()
 				cap.matrix.translate(new Vector3D(0, length / 2 - endSize, 0))
 
 				val capFace = new Face()
@@ -89,7 +89,7 @@ class EntityLaserBeam(start: Vector3D, end: Vector3D, color: Color, power: Doubl
 				/**
 				 * Render Middle
 				 */
-				val middle = new VertexModel()
+				val middle = new MeshModel()
 
 				val middleFace = new Face()
 				middleFace.drawVertex(new Vertex(-particleScale, -length / 2 + endSize, 0, 0, 0))
@@ -106,7 +106,7 @@ class EntityLaserBeam(start: Vector3D, end: Vector3D, color: Color, power: Doubl
 				/**
 				 * Render End
 				 */
-				val end = new VertexModel()
+				val end = new MeshModel()
 				end.matrix.translate(new Vector3D(0, -length / 2 + endSize, 0))
 
 				val endFace = new Face()
@@ -125,7 +125,7 @@ class EntityLaserBeam(start: Vector3D, end: Vector3D, color: Color, power: Doubl
 				/**
 				 * Render Noise
 				 */
-				val noise = new VertexModel()
+				val noise = new MeshModel()
 
 				val noiseFace = new Face()
 				noiseFace.drawVertex(new Vertex(-particleScale, -length / 2 + endSize, 0, 0, 0))

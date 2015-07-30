@@ -14,9 +14,9 @@ import nova.core.block.Stateful
 import nova.core.block.component.LightEmitter
 import nova.core.component.renderer.{ItemRenderer, StaticRenderer}
 import nova.core.component.transform.Orientation
-import nova.core.network.Syncable
+import nova.core.network.{Sync, Syncable}
 import nova.core.render.model.Model
-import nova.core.retention.Storable
+import nova.core.retention.{Store, Storable}
 import nova.core.util.Direction
 import nova.scala.component.IO
 import nova.scala.util.ExtendedUpdater
@@ -29,8 +29,12 @@ import org.apache.commons.math3.geometry.euclidean.threed.{Rotation, Vector3D}
  */
 class BlockLaserReceiver extends BlockEDX with Stateful with ExtendedUpdater with Storable with Syncable {
 	private val electricNode = new NodeElectricComponent(this)
+	@Store
+	@Sync
 	private val orientation = add(new Orientation(this)).hookBasedOnEntity().hookRightClickRotate()
 	private val opticHandler = add(new OpticHandler(this))
+	@Store
+	@Sync
 	private val io = add(new IO(this))
 	private val renderer = add(new StaticRenderer(this))
 	private val itemRenderer = add(new ItemRenderer(this))
