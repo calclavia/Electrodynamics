@@ -1,6 +1,6 @@
 package com.calclavia.edx.optics.field
 
-import java.util.{Optional, Set => JSet}
+import java.util.{Optional, Random, Set => JSet}
 
 import com.calclavia.edx.core.EDX
 import com.calclavia.edx.optics.Settings
@@ -26,16 +26,14 @@ import nova.core.network.{Packet, Sync}
 import nova.core.render.Color
 import nova.core.render.model.{MeshModel, Model}
 import nova.core.retention.Store
-import nova.core.sound.{Sound, SoundFactory}
 import nova.core.util.math.Vector3DUtil
-import nova.core.util.shape.Cuboid
 import nova.scala.wrapper.FunctionalWrapper._
 import nova.scala.wrapper.VectorWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D
 
 import scala.collection.convert.wrapAll._
-import nova.scala.wrapper.FunctionalWrapper._
+
 class BlockProjector extends BlockFieldMatrix with Projector with PermissionHandler {
 
 	/**
@@ -287,9 +285,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 			}
 
 			if (ticks % (2 * 20) == 0 && getModuleCount(OpticsContent.moduleSilence) <= 0) {
-				world.playSoundAtPosition(position + (Vector3DUtil.ONE * 0.5), OpticsContent.fieldSoundfactory)
-				//TODO: Fix world sound effects
-				//worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, Reference.prefix + "field", 0.6f, (1 - this.worldObj.rand.nextFloat * 0.1f))
+				world.playSoundAtPosition(position + (Vector3DUtil.ONE * 0.5), OpticsContent.soundField.withVolume(0.6f).withPitch(1 - new Random().nextFloat * 0.1f))
 			}
 		}
 		else if (EDX.network.isServer) {

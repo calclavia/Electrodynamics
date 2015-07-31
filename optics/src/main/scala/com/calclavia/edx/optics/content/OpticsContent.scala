@@ -17,7 +17,7 @@ import nova.core.block.BlockFactory
 import nova.core.entity.EntityFactory
 import nova.core.item.{Item, ItemFactory}
 import nova.core.render.Color
-import nova.core.sound.{SoundManager, Sound, SoundFactory}
+import nova.core.sound.Sound
 import nova.scala.modcontent.ContentLoader
 import nova.scala.wrapper.FunctionalWrapper._
 
@@ -94,15 +94,9 @@ object OpticsContent extends ContentLoader {
 	val fxHologram: EntityFactory = () => new FXHologram(Color.blue, 40)
 	val fxHologramProgress: EntityFactory = () => new FXHologramProgress(Color.blue, 40)
 
-	//Sound
-	val fieldSoundfactory = new SoundFactory(func(args => new Sound("edx", "field")))
+	val soundField = new Sound("edx", "field")
 
 	override def id: String = Reference.id
-
-	override def preInit() {
-		super.preInit()
-
-	}
 
 	override def postInit() {
 		/**
