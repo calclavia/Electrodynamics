@@ -72,7 +72,7 @@ class ResourceFactory(domain: String) extends ContentLoader {
 		generatedBlocks += (resourceType, material) -> result
 
 		//Register ore dictionary
-		Game.itemDictionary.add(resourceType + material.capitalizeFirst, result.getID)
+		//itemDictionary.add(resourceType + material.capitalizeFirst, result.getID)
 		return result
 	}
 
@@ -94,7 +94,7 @@ class ResourceFactory(domain: String) extends ContentLoader {
 		generatedItems += (resourceType, material) -> result
 
 		//Register ore dictionary
-		Game.itemDictionary.add(resourceType + material.capitalizeFirst, result.getID)
+		//itemDictionary.add(resourceType + material.capitalizeFirst, result.getID)
 		return result
 	}
 
