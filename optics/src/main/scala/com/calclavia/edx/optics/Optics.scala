@@ -7,10 +7,10 @@ import com.calclavia.edx.optics.grid.{OpticGrid, OpticGridPacket}
 import com.calclavia.edx.optics.security.MFFSPermissions
 import nova.core.event.GlobalEvents.{BlockChangeEvent, ServerStartingEvent, ServerStoppingEvent}
 import nova.core.fluid.Fluid
-import nova.core.loader.{Loadable, NovaMod}
+import nova.core.loader.{Loadable, Mod}
 import nova.scala.wrapper.FunctionalWrapper._
 
-@NovaMod(
+@Mod(
 	id = Reference.opticsID,
 	name = Reference.name + ": Optics",
 	version = Reference.version,
