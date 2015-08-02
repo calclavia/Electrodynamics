@@ -65,7 +65,6 @@ class MechanicalGrid {
 			}
 
 			def updateSpeed(node: MechanicalNode, newSpeed: Double): Option[RecalculateResult] = {
-				println(s"Old: ${node.relativeSpeed}, New: $newSpeed")
 				node.relativeSpeed match {
 					case Some(x) if x != newSpeed => Some(Loop(node))
 					case None => node.relativeSpeed = Some(newSpeed); None
@@ -80,7 +79,6 @@ class MechanicalGrid {
 			for (node <- nodes) {
 				node match {
 					case (gear: MechanicalNodeGear, gear2: MechanicalNodeGear, forward) =>
-						println(s"1: ${gear.size}, 2: ${gear2.size}")
 						val newSpeed = gear.relativeSpeed.get * gear.size / gear2.size * (if (forward) 1 else -1)
 						updateSpeed(gear2, newSpeed) match {
 							case Some(x) => return x
