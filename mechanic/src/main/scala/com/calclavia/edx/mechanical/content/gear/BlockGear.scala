@@ -7,6 +7,7 @@ import com.calclavia.edx.core.prefab.BlockEDX
 
 import com.calclavia.edx.mechanical.physic.{ MechanicalMaterial}
 import com.calclavia.edx.mechanical.{Watch, MechanicContent}
+import nova.core.block.Block
 import nova.core.block.Block.{RightClickEvent, PlaceEvent}
 import nova.core.component.renderer.{DynamicRenderer, StaticRenderer, ItemRenderer}
 import nova.core.network.{Packet, Syncable, Sync}
@@ -119,7 +120,7 @@ class BlockGear extends BlockEDX with Storable with Syncable {
 		m.addChild(model)
 	}
 
-	this.events.on(classOf[RightClickEvent]).bind((event: RightClickEvent) => {
+	this.events.on(classOf[Block.RightClickEvent]).bind((event: RightClickEvent) => {
 
 	})
 

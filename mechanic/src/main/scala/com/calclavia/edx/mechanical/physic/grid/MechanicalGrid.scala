@@ -22,6 +22,8 @@ object MechanicalGrid {
 		val message = s"Loop detected. Faulty node $node"
 	}
 
+	def merge(grids: Seq[MechanicalGrid]): MechanicalGrid = ???
+
 }
 
 class MechanicalGrid {

@@ -17,7 +17,6 @@ import nova.scala.wrapper.VectorWrapper._
 import scala.collection.JavaConversions._
 
 
-
 object MechanicalNode {
 
 	@Require(classOf[MechanicalMaterial])
@@ -54,11 +53,32 @@ abstract class MechanicalNode(val block: Block) extends Connectable[MechanicalNo
 
 	private[grid] var relativeSpeed: Option[Double] = None
 
-	val connectionFilter = (other: MechanicalNode) => this.canConnect(other) && other.canConnect(this)
+	def isReverse(other: MechanicalNode) = false
+
+	val onPlace : (Block.PlaceEvent => Unit) = (event: Block.PlaceEvent) => {
+		val conns = connections().toSeq
+		var grids: List[MechanicalGrid] = Nil
+		conns.flatMap(_.grid).foreach(grid => grids = grid :: grids)
+
+		this.grid = grids match {
+			case head :: Nil => Some(head)
+			case more => Some(MechanicalGrid.merge(more))
+			case Nil => Some(new MechanicalGrid())
+		}
+
+		this.grid.foreach(_.add(this, conns.map(conn => (conn, isReverse(conn)))))
+		this.grid.foreach(_.recalculate())
+	}
+
+
+	this.block.events.on(classOf[Block.PlaceEvent]).bind(onPlace)
+
+
+	val connectionFilter = (other: MechanicalNode) => other != this && this.canConnect(other) && other.canConnect(this)
 
 	connections = supplier(() => {
 		var res = Set.empty[MechanicalNode]
-		adjacentBlocks.foreach {
+		blocksToCheck.foreach {
 			case (dir, Some(aBlock)) =>
 				aBlock.getOp(classOf[MechanicalNode]).toOption.filter(connectionFilter).foreach(res += _)
 				aBlock.getOp(classOf[MicroblockContainer]).toOption
@@ -70,7 +90,7 @@ abstract class MechanicalNode(val block: Block) extends Connectable[MechanicalNo
 	})
 
 
-	protected def adjacentBlocks = Direction.DIRECTIONS.map(dir => (dir, block.world.getBlock(block.transform.position + dir.toVector).toOption)).toMap
+	protected def blocksToCheck = Direction.values().map(dir => (dir, block.world.getBlock(block.transform.position + dir.toVector).toOption)).toMap
 }
 
 @Require(classOf[MechanicalMaterial])
@@ -82,9 +102,13 @@ class MechanicalNodeGear(block: BlockGear) extends MechanicalNode(block) with Me
 			val diff = other.block.position - this.block.position
 			if (diff.getNormSq != 0)
 				Direction.fromVector(diff) == this.block.side
-			else
-				// If two unit vecotrs are perpendiclular to each other lenght between hem has to be equal sqrt(2)
-				this.block.microblock.position.distanceSq(other.block.get(classOf[Microblock]).position) == 2
+			else {
+				val otherMicro = other.block.get(classOf[Microblock])
+
+				// If two unit vectors are perpendicular to each other length between them  has to be equal sqrt(2)
+				otherMicro.position.equals(MicroblockContainer.centerPosition) || this.block.microblock.position.distanceSq(otherMicro.position) == 2
+
+			}
 		}
 	}
 
