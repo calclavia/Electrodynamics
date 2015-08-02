@@ -63,17 +63,13 @@ class BlockGear extends BlockEDX with Storable with Syncable {
 	@Store(key = "side")
 	var _side: Byte = 0
 
-	@Sync(ids = Array(0, 1))
-	@Store(key = "isMaser")
-	var isMaser: Boolean = true
-
-	//@Sync(ids = Array(0, 1))
-	//@Store(key = "masterOffset")
-	var masterOffset: Vector3D = null
+	@Sync
+	@Store(key = "size")
+	var size = 1
 
 	def side = Direction.fromOrdinal(_side.asInstanceOf[Int])
 
-	private[this] val microblock = add(new Microblock(this))
+	val microblock = add(new Microblock(this))
 		.setOnPlace(
 			(evt: PlaceEvent) => {
 				println(evt.hit)
@@ -81,6 +77,7 @@ class BlockGear extends BlockEDX with Storable with Syncable {
 				Optional.of(MicroblockContainer.sidePosition(this.side))
 			}
 		)
+
 
 	add(MechanicalMaterial.metal)
 

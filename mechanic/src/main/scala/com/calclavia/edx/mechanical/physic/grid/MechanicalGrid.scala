@@ -18,7 +18,7 @@ object MechanicalGrid {
 		override val toString = message
 	}
 
-	case class Loop(node: RotationalNode) extends Failure {
+	case class Loop(node: MechanicalNode) extends Failure {
 		val message = s"Loop detected. Faulty node $node"
 	}
 
@@ -26,21 +26,21 @@ object MechanicalGrid {
 
 class MechanicalGrid {
 
-	val graph = new ListenableUndirectedGraph(new Multigraph[RotationalNode, RotationalEdge](classOf[RotationalEdge]))
-	val neighborIndex = new NeighborIndex[RotationalNode, RotationalEdge](graph)
+	val graph = new ListenableUndirectedGraph(new Multigraph[MechanicalNode, RotationalEdge](classOf[RotationalEdge]))
+	val neighborIndex = new NeighborIndex[MechanicalNode, RotationalEdge](graph)
 
-	var rootNode: Option[RotationalNode] = None
+	var rootNode: Option[MechanicalNode] = None
 	graph.addGraphListener(neighborIndex)
 	graph.addVertexSetListener(neighborIndex)
 
-	def add(node: RotationalNode, connections: Seq[(RotationalNode, Boolean)]): Unit = {
+	def add(node: MechanicalNode, connections: Seq[(MechanicalNode, Boolean)]): Unit = {
 		graph.addVertex(node)
 		connections.foreach {
 			case (n, forward) => graph addEdge(node, n, RotationalEdge(node, n, forward))
 		}
 	}
 
-	def remove(node: RotationalNode): Unit = {
+	def remove(node: MechanicalNode): Unit = {
 		graph.removeVertex(node)
 	}
 
@@ -56,13 +56,13 @@ class MechanicalGrid {
 
 		//From unknown reasons this function is not tail recursive
 		//@tailrec
-		def walk(it: BreadthFirstIterator[RotationalNode, RotationalEdge]): RecalculateResult = {
+		def walk(it: BreadthFirstIterator[MechanicalNode, RotationalEdge]): RecalculateResult = {
 			it.hasNext match {
 				case false => return Success
 				case true =>
 			}
 
-			def updateSpeed(node: RotationalNode, newSpeed: Double): Option[RecalculateResult] = {
+			def updateSpeed(node: MechanicalNode, newSpeed: Double): Option[RecalculateResult] = {
 				println(s"Old: ${node.relativeSpeed}, New: $newSpeed")
 				node.relativeSpeed match {
 					case Some(x) if x != newSpeed => Some(Loop(node))
@@ -77,7 +77,7 @@ class MechanicalGrid {
 
 			for (node <- nodes) {
 				node match {
-					case (gear: GearNode, gear2: GearNode, forward) =>
+					case (gear: MechanicalNodeGear, gear2: MechanicalNodeGear, forward) =>
 						println(s"1: ${gear.size}, 2: ${gear2.size}")
 						val newSpeed = gear.relativeSpeed.get * gear.size / gear2.size * (if (forward) 1 else -1)
 						updateSpeed(gear2, newSpeed) match {

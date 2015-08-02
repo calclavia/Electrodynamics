@@ -59,7 +59,7 @@ class BlockAxle extends BlockEDX with Storable with Syncable {
 		_dir = BlockAxle.normalizeDir(direction).ordinal().asInstanceOf[Byte]
 	}
 
-	private[this] val microblock = add(new Microblock(this))
+	val microblock = add(new Microblock(this))
 		.setOnPlace(
 			(evt: PlaceEvent) => {
 				this.dir = evt.side
