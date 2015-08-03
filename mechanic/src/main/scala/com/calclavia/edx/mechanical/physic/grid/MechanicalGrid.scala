@@ -1,7 +1,7 @@
 package com.calclavia.edx.mechanical.physic.grid
 
 
-import com.calclavia.edx.mechanical.Watch
+import com.calclavia.edx.mechanical.{DynamicValue, Watch}
 import org.jgrapht.alg.NeighborIndex
 import org.jgrapht.graph.{ListenableUndirectedGraph, DefaultListenableGraph, DefaultEdge, Multigraph}
 import org.jgrapht.traverse.{BreadthFirstIterator, DepthFirstIterator}
@@ -39,6 +39,10 @@ class MechanicalGrid {
 
 	private[this] var angularSpeed = Math.PI / 4 //TODO: Calculate that.
 	private[this] var systemRotation = 0D
+
+
+	private[this] var systemMass: Double = 0
+	private[this] var systemFriction: DynamicValue[Double] = null
 
 	private[this] val watch = {
 		import scala.concurrent.duration._
@@ -82,6 +86,9 @@ class MechanicalGrid {
 		rootNode.foreach(_.relativeSpeed = Some(1))
 		val it = new BreadthFirstIterator(graph, rootNode.get)
 
+		var flatFriction: Double = 0D
+		var dynamicFriction: List[() => Double] = Nil
+
 
 		//From unknown reasons this function is not tail recursive
 		//@tailrec
@@ -100,8 +107,14 @@ class MechanicalGrid {
 			}
 
 			val spinning = it.next
-			val nodes = neighborIndex.neighborListOf(spinning) map (neigh => (spinning, neigh, graph.getEdge(spinning, neigh).forward))
 
+			systemMass += spinning.mass
+			spinning match {
+				case node: MechanicalNode.MechanicalNodeConstantFriction => flatFriction += node.friction
+				case node: MechanicalNode => dynamicFriction = node.friction _ :: dynamicFriction
+			}
+
+			val nodes = neighborIndex.neighborListOf(spinning) map (neigh => (spinning, neigh, graph.getEdge(spinning, neigh).forward))
 
 			for (node <- nodes) {
 				node match {
@@ -123,7 +136,10 @@ class MechanicalGrid {
 			walk(it)
 		}
 
-		walk(it)
+		walk(it) match {
+			case Success => systemFriction = DynamicValue(flatFriction, dynamicFriction); Success
+			case x => x
+		}
 	}
 }
 

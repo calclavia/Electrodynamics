@@ -20,34 +20,26 @@ import scala.collection.JavaConversions._
 object MechanicalNode {
 
 	@Require(classOf[MechanicalMaterial])
-	trait Material extends MechanicalNodeConstantMassAndFriction {
+	trait Material extends MechanicalNodeConstantFriction {
 
 		val size: Double
 		lazy val material: MechanicalMaterial =  block.get(classOf[MechanicalMaterial])
 
-		lazy val constantMass = size * material.density
+		lazy val mass = size * material.density
 		lazy val constantFriction = mass * material.friction
 
 	}
 
 	trait MechanicalNodeConstantFriction extends MechanicalNode {
 		final def friction: Double = constantFriction
-		val constantFriction: Double
+		protected val constantFriction: Double
 	}
-
-	trait MechanicalNodeConstantMass extends MechanicalNode {
-		final def mass: Double = constantMass
-		val constantMass: Double
-	}
-
-	trait MechanicalNodeConstantMassAndFriction extends MechanicalNodeConstantFriction with MechanicalNodeConstantMass
-
 }
 
 case class RotationalEdge(src: AnyRef, tar: AnyRef, forward: Boolean)
 
 abstract class MechanicalNode(val block: Block) extends Connectable[MechanicalNode] {
-	def mass: Double
+	val mass: Double
 	def friction: Double
 	var grid: Option[MechanicalGrid] = None
 

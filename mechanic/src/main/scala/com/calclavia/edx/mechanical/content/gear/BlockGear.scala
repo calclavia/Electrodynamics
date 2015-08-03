@@ -83,7 +83,7 @@ class BlockGear extends BlockEDX with Storable with Syncable {
 	add(MechanicalMaterial.metal)
 
 	private[this] val rotational = add(new MechanicalNodeGear(this))
-	
+
 	private[this] val blockRenderer = add(new DynamicRenderer())
 	blockRenderer.onRender((m: Model) => {
 		m.addChild(model)
