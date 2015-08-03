@@ -1,6 +1,7 @@
 package com.calclavia.edx.mechanical.physic.grid
 
 
+import com.calclavia.edx.mechanical.Watch
 import org.jgrapht.alg.NeighborIndex
 import org.jgrapht.graph.{ListenableUndirectedGraph, DefaultListenableGraph, DefaultEdge, Multigraph}
 import org.jgrapht.traverse.{BreadthFirstIterator, DepthFirstIterator}
@@ -24,16 +25,25 @@ object MechanicalGrid {
 
 	def merge(grids: Seq[MechanicalGrid]): MechanicalGrid = ???
 
+	def split(grid: MechanicalGrid): Seq[MechanicalGrid] = ???
 }
 
 class MechanicalGrid {
 
-	val graph = new ListenableUndirectedGraph(new Multigraph[MechanicalNode, RotationalEdge](classOf[RotationalEdge]))
-	val neighborIndex = new NeighborIndex[MechanicalNode, RotationalEdge](graph)
+	private[this] val graph = new ListenableUndirectedGraph(new Multigraph[MechanicalNode, RotationalEdge](classOf[RotationalEdge]))
+	private[this] val neighborIndex = new NeighborIndex[MechanicalNode, RotationalEdge](graph)
 
-	var rootNode: Option[MechanicalNode] = None
+	private[this] var rootNode: Option[MechanicalNode] = None
 	graph.addGraphListener(neighborIndex)
 	graph.addVertexSetListener(neighborIndex)
+
+	private[this] var angularSpeed = Math.PI / 4 //TODO: Calculate that.
+	private[this] var systemRotation = 0D
+
+	private[this] val watch = {
+		import scala.concurrent.duration._
+		new Watch(Some((1/20).seconds))
+	}
 
 	def add(node: MechanicalNode, connections: Seq[(MechanicalNode, Boolean)]): Unit = {
 		graph.addVertex(node)
@@ -44,6 +54,23 @@ class MechanicalGrid {
 
 	def remove(node: MechanicalNode): Unit = {
 		graph.removeVertex(node)
+	}
+
+	def rotation(node: MechanicalNode) = {
+		update()
+
+		node.relativeSpeed.map(_ * systemRotation).getOrElse(0D)
+	}
+
+	private[this] def update(): Unit = {
+		import scala.concurrent.duration._
+		if (watch.shouldUpdate) {
+			val diff = watch.timeDiff
+			systemRotation += angularSpeed * diff.toUnit(SECONDS)
+			//TODO: friction and force logic
+			//TODO: dynamic friction and force logic.
+			watch.update()
+		}
 	}
 
 	import MechanicalGrid._

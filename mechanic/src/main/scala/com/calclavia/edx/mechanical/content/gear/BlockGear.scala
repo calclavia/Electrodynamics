@@ -3,6 +3,7 @@ package com.calclavia.edx.mechanical.content.gear
 import java.util.Optional
 
 import com.calclavia.edx.core.prefab.BlockEDX
+import com.calclavia.edx.mechanical.physic.grid.MechanicalNodeGear
 
 
 import com.calclavia.edx.mechanical.physic.{ MechanicalMaterial}
@@ -73,7 +74,6 @@ class BlockGear extends BlockEDX with Storable with Syncable {
 	val microblock = add(new Microblock(this))
 		.setOnPlace(
 			(evt: PlaceEvent) => {
-				println(evt.hit)
 				this._side = evt.side.opposite.ordinal.asInstanceOf[Byte]
 				Optional.of(MicroblockContainer.sidePosition(this.side))
 			}
@@ -82,17 +82,17 @@ class BlockGear extends BlockEDX with Storable with Syncable {
 
 	add(MechanicalMaterial.metal)
 
-	//private[this] val rotational = add(new RotationalComponent(this))
-
-
-
+	private[this] val rotational = add(new MechanicalNodeGear(this))
+	
 	private[this] val blockRenderer = add(new DynamicRenderer())
 	blockRenderer.onRender((m: Model) => {
 		m.addChild(model)
 
 		model.matrix popMatrix()
 		model.matrix pushMatrix()
-		//model.matrix rotate new Rotation(side.toVector, rotational.rotation)
+		println(rotational.grid)
+		println(rotational.rotation)
+		model.matrix rotate new Rotation(side.toVector, rotational.rotation)
 	})
 
 	lazy val model = {
@@ -104,7 +104,7 @@ class BlockGear extends BlockEDX with Storable with Syncable {
 		tmp.bind(MechanicContent.gearTexture)
 		//tmp.matrix transform BlockGear.matrixes(_side)
 		tmp.matrix pushMatrix()
-				tmp
+		tmp
 	}
 
 	collider.setBoundingBox(() => {

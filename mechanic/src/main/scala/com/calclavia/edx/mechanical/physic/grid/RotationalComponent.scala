@@ -51,9 +51,12 @@ abstract class MechanicalNode(val block: Block) extends Connectable[MechanicalNo
 	def friction: Double
 	var grid: Option[MechanicalGrid] = None
 
+
 	private[grid] var relativeSpeed: Option[Double] = None
 
 	def isReverse(other: MechanicalNode) = false
+
+	final def rotation : Double = grid.map(_.rotation(this)).getOrElse(0)
 
 	val onPlace : (Block.PlaceEvent => Unit) = (event: Block.PlaceEvent) => {
 		val conns = connections().toSeq
@@ -62,8 +65,8 @@ abstract class MechanicalNode(val block: Block) extends Connectable[MechanicalNo
 
 		this.grid = grids match {
 			case head :: Nil => Some(head)
-			case more => Some(MechanicalGrid.merge(more))
 			case Nil => Some(new MechanicalGrid())
+			case more => Some(MechanicalGrid.merge(more))
 		}
 
 		this.grid.foreach(_.add(this, conns.map(conn => (conn, isReverse(conn)))))

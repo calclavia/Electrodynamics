@@ -3,6 +3,7 @@ package com.calclavia.edx.mechanical.content.axle
 import java.util.Optional
 
 import com.calclavia.edx.core.prefab.BlockEDX
+import com.calclavia.edx.mechanical.physic.grid.MechanicalNodeAxle
 
 import com.calclavia.edx.mechanical.physic.{MechanicalMaterial}
 import com.calclavia.edx.mechanical.{Watch, MechanicContent}
@@ -70,7 +71,7 @@ class BlockAxle extends BlockEDX with Storable with Syncable {
 	private[this] val blockRenderer = add(new DynamicRenderer())
 	add(MechanicalMaterial.metal)
 
-	//private[this] val rotational = add(new RotationalComponent(this))
+	private[this] val rotational = add(new MechanicalNodeAxle(this))
 
 
 
@@ -79,7 +80,7 @@ class BlockAxle extends BlockEDX with Storable with Syncable {
 
 		model.matrix popMatrix()
 		model.matrix pushMatrix()
-		//model.matrix rotate new Rotation(dir.toVector, rotational.rotation)
+		model.matrix rotate new Rotation(dir.toVector, rotational.rotation)
 	})
 
 	lazy val model = {
