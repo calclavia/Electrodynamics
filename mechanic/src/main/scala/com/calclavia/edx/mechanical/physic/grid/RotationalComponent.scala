@@ -89,7 +89,7 @@ abstract class MechanicalNode(val block: Block) extends Connectable[MechanicalNo
 }
 
 @Require(classOf[MechanicalMaterial])
-class MechanicalNodeGear(block: BlockGear) extends MechanicalNode(block) with MechanicalNode.MechanicalNodeConstantMassAndFriction with MechanicalNode.Material {
+class MechanicalNodeGear(block: BlockGear) extends MechanicalNode(block) with MechanicalNode.MechanicalNodeConstantFriction with MechanicalNode.Material {
 	val size: Double = block.size
 
 	canConnect = func {
@@ -109,7 +109,7 @@ class MechanicalNodeGear(block: BlockGear) extends MechanicalNode(block) with Me
 
 }
 @Require(classOf[MechanicalMaterial])
-class MechanicalNodeAxle(block: BlockAxle) extends MechanicalNode(block) with MechanicalNode.MechanicalNodeConstantMassAndFriction with MechanicalNode.Material {
+class MechanicalNodeAxle(block: BlockAxle) extends MechanicalNode(block) with MechanicalNode.MechanicalNodeConstantFriction with MechanicalNode.Material {
 	val size = 0.25D
 
 	canConnect = func {
