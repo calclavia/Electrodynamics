@@ -1,8 +1,7 @@
 package com.calclavia.edx.mechanical
 
 import com.calclavia.edx.core.Reference
-import com.calclavia.edx.mechanical.content.gear.BlockGear
-import com.calclavia.edx.mechanical.content.axle.BlockAxle
+import com.calclavia.edx.mechanical.content.{BlockAxle, BlockGear}
 import nova.core.block.BlockFactory
 import nova.core.render.model.WavefrontObjectModelProvider
 import nova.core.render.texture.BlockTexture

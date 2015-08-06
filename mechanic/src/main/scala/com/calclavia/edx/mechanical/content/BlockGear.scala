@@ -1,26 +1,25 @@
-package com.calclavia.edx.mechanical.content.gear
+package com.calclavia.edx.mechanical.content
 
 import java.util.Optional
 
 import com.calclavia.edx.core.prefab.BlockEDX
+import com.calclavia.edx.mechanical.MechanicContent
+import com.calclavia.edx.mechanical.physic.MechanicalMaterial
 import com.calclavia.edx.mechanical.physic.grid.MechanicalNodeGear
-
-
-import com.calclavia.edx.mechanical.physic.{ MechanicalMaterial}
-import com.calclavia.edx.mechanical.{Watch, MechanicContent}
 import nova.core.block.Block
-import nova.core.block.Block.{RightClickEvent, PlaceEvent}
-import nova.core.component.renderer.{DynamicRenderer, StaticRenderer, ItemRenderer}
-import nova.core.network.{Packet, Syncable, Sync}
+import nova.core.block.Block.{PlaceEvent, RightClickEvent}
+import nova.core.component.renderer.{DynamicRenderer, ItemRenderer}
+import nova.core.network.{Packet, Sync, Syncable}
 import nova.core.render.model.{MeshModel, Model}
 import nova.core.render.pipeline.{BlockRenderStream, StaticCubeTextureCoordinates}
-import nova.core.retention.{Store, Storable}
-
+import nova.core.retention.{Storable, Store}
 import nova.core.util.Direction
 import nova.core.util.math.{MatrixStack, Vector3DUtil}
 import nova.core.util.shape.Cuboid
 import nova.microblock.micro.{Microblock, MicroblockContainer}
 import nova.scala.wrapper.FunctionalWrapper._
+import nova.scala.wrapper.VectorWrapper._
+import nova.scala.wrapper.OptionWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.{Rotation, Vector3D}
 import org.apache.commons.math3.linear.RealMatrix
 
@@ -69,7 +68,16 @@ class BlockGear extends BlockEDX with Storable with Syncable {
 	@Store(key = "size")
 	var size = 1
 
+	@Sync
+	@Store(key = "master")
+	var master = true
+
+	@Sync
+	@Store(key = "masterVector")
+	var masterVector = Vector3D.ZERO
+
 	def side = Direction.fromOrdinal(_side.asInstanceOf[Int])
+
 
 	val microblock = add(new Microblock(this))
 		.setOnPlace(
@@ -79,6 +87,7 @@ class BlockGear extends BlockEDX with Storable with Syncable {
 			}
 		)
 
+	events.on(classOf[Block.PlaceEvent]).bind((event: Block.PlaceEvent) => println(event))
 
 	add(MechanicalMaterial.metal)
 
@@ -86,23 +95,39 @@ class BlockGear extends BlockEDX with Storable with Syncable {
 
 	private[this] val blockRenderer = add(new DynamicRenderer())
 	blockRenderer.onRender((m: Model) => {
-		m.addChild(model)
+		if (this.master) {
+			m.addChild(model)
 
-		model.matrix popMatrix()
-		model.matrix pushMatrix()
-		println(rotational.grid)
-		println(rotational.rotation)
-		model.matrix rotate new Rotation(side.toVector, rotational.rotation)
+			model.matrix popMatrix()
+			model.matrix pushMatrix()
+			model.matrix scale(size, size, size)
+
+			model.matrix rotate new Rotation(side.toVector, rotational.rotation)
+		}
 	})
 
-	lazy val model = {
+	var _model: Option[Model] = None
+
+	def model: Model = {
+		_model match {
+			case None => _model = Some(createModel); _model.get
+			case Some(model) => model
+		}
+	}
+
+	def createModel = {
 		val tmp = new MeshModel()
 		//val optional = MechanicContent.modelGear.getModel.stream().filter((model: Model) => "SmallGear".equals(model.name)).findFirst()
 
 		//tmp.addChild(optional.orElseThrow(() => new IllegalStateException("Model is missing")))
-		BlockRenderStream.drawCube(tmp, BlockGear.occlusionBounds(_side) - 0.5 , StaticCubeTextureCoordinates.instance)
+		var box = collider.boundingBox()//.multiply(Math.sqrt(size))
+		box = box - box.center()
+
+
+		BlockRenderStream.drawCube(tmp, box, StaticCubeTextureCoordinates.instance)
 		tmp.bind(MechanicContent.gearTexture)
 		//tmp.matrix transform BlockGear.matrixes(_side)
+		tmp.matrix translate ((side.toVector / 2d) - side.toVector *2 / 16d)
 		tmp.matrix pushMatrix()
 		tmp
 	}
@@ -121,7 +146,24 @@ class BlockGear extends BlockEDX with Storable with Syncable {
 	}
 
 	this.events.on(classOf[Block.RightClickEvent]).bind((event: RightClickEvent) => {
+		def check() : Boolean = {
+			for (f <- Direction.DIRECTIONS if f != side && f != side.opposite()) {
+				for (s <- Direction.values() if s != side && s != side.opposite()
+						&& s != f && s != f.opposite()) {
+					val offset = f.toVector + s.toVector
+					val pos = this.position + offset
+					val blockOp = this.world.getBlock(pos).toOption
+					val part = blockOp.flatMap(_.getOp(classOf[MicroblockContainer])).flatMap(_.get(side))
+					part.exists(_.block.sameType(this)) match {
+						case true =>
+						case false => return false
+					}
+				}
+			}
+			true
+		}
 
+		println(check())
 	})
 
 	override def read(packet: Packet): Unit = {

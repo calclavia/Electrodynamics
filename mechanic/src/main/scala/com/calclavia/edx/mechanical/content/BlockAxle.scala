@@ -1,17 +1,16 @@
-package com.calclavia.edx.mechanical.content.axle
+package com.calclavia.edx.mechanical.content
 
 import java.util.Optional
 
 import com.calclavia.edx.core.prefab.BlockEDX
+import com.calclavia.edx.mechanical.MechanicContent
+import com.calclavia.edx.mechanical.physic.MechanicalMaterial
 import com.calclavia.edx.mechanical.physic.grid.MechanicalNodeAxle
-
-import com.calclavia.edx.mechanical.physic.{MechanicalMaterial}
-import com.calclavia.edx.mechanical.{Watch, MechanicContent}
 import nova.core.block.Block.PlaceEvent
 import nova.core.component.renderer.{DynamicRenderer, ItemRenderer}
 import nova.core.network.{Packet, Sync, Syncable}
-import nova.core.render.model.{Model, MeshModel}
-import nova.core.render.pipeline.{BlockRenderStream, RenderStream, StaticCubeTextureCoordinates}
+import nova.core.render.model.{MeshModel, Model}
+import nova.core.render.pipeline.{BlockRenderStream, StaticCubeTextureCoordinates}
 import nova.core.retention.{Storable, Store}
 import nova.core.util.Direction
 import nova.core.util.shape.Cuboid

@@ -1,13 +1,12 @@
 package com.calclavia.edx.mechanical.physic.grid
 
 import java.util.stream.Collectors
-
-import com.calclavia.edx.mechanical.content.axle.BlockAxle
-import com.calclavia.edx.mechanical.content.gear.BlockGear
+import com.calclavia.edx.mechanical.content.{BlockAxle, BlockGear}
 import com.calclavia.edx.mechanical.physic.MechanicalMaterial
-import nova.core.block.Block
+import nova.core.block.{Stateful, Block}
 import nova.core.block.component.Connectable
 import nova.core.component.Require
+import nova.core.event.Event
 import nova.core.util.Direction
 import nova.microblock.micro.{Microblock, MicroblockContainer}
 import nova.scala.wrapper.FunctionalWrapper._
@@ -50,23 +49,29 @@ abstract class MechanicalNode(val block: Block) extends Connectable[MechanicalNo
 
 	final def rotation : Double = grid.map(_.rotation(this)).getOrElse(0)
 
-	val onPlace : (Block.PlaceEvent => Unit) = (event: Block.PlaceEvent) => {
-		val conns = connections().toSeq
-		var grids: List[MechanicalGrid] = Nil
-		conns.flatMap(_.grid).foreach(grid => grids = grid :: grids)
+	val onPlace : (Event => Unit) = (event: Event) => {
+		println("WORKSS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
-		this.grid = grids match {
-			case head :: Nil => Some(head)
-			case Nil => Some(new MechanicalGrid())
-			case more => Some(MechanicalGrid.merge(more))
+		if (grid.isEmpty) {
+
+			val conns = connections().toSeq
+			var grids: List[MechanicalGrid] = Nil
+			conns.flatMap(_.grid).foreach(grid => grids = grid :: grids)
+
+			this.grid = grids match {
+				case head :: Nil => Some(head)
+				case Nil => Some(new MechanicalGrid())
+				case more => Some(MechanicalGrid.merge(more))
+			}
+
+			this.grid.foreach(_.add(this, conns.map(conn => (conn, isReverse(conn)))))
+			this.grid.foreach(_.recalculate())
 		}
-
-		this.grid.foreach(_.add(this, conns.map(conn => (conn, isReverse(conn)))))
-		this.grid.foreach(_.recalculate())
 	}
 
 
-	this.block.events.on(classOf[Block.PlaceEvent]).bind(onPlace)
+	//this.block.events.on(classOf[Block.PlaceEvent]).bind(onPlace)
+	//this.block.events.on(classOf[Stateful.LoadEvent]).bind(onPlace)
 
 
 	val connectionFilter = (other: MechanicalNode) => other != this && this.canConnect(other) && other.canConnect(this)
@@ -81,11 +86,15 @@ abstract class MechanicalNode(val block: Block) extends Connectable[MechanicalNo
 						.map(_.filter(connectionFilter)).foreach(res ++= _)
 			case _ =>
 		}
+
+		this.block.getOp(classOf[MicroblockContainer]).toOption
+				.map(_.microblocks(classOf[MechanicalNode]).collect(Collectors.toSet()))
+				.map(_.filter(_ != this).filter(connectionFilter)).foreach(res ++= _)
 		res
 	})
 
 
-	protected def blocksToCheck = Direction.values().map(dir => (dir, block.world.getBlock(block.transform.position + dir.toVector).toOption)).toMap
+	protected def blocksToCheck = Direction.DIRECTIONS.map(dir => (dir, block.world.getBlock(block.transform.position + dir.toVector).toOption)).toMap
 }
 
 @Require(classOf[MechanicalMaterial])
@@ -102,7 +111,6 @@ class MechanicalNodeGear(block: BlockGear) extends MechanicalNode(block) with Me
 
 				// If two unit vectors are perpendicular to each other length between them  has to be equal sqrt(2)
 				otherMicro.position.equals(MicroblockContainer.centerPosition) || this.block.microblock.position.distanceSq(otherMicro.position) == 2
-
 			}
 		}
 	}
