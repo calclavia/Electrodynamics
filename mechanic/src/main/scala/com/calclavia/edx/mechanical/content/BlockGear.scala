@@ -58,7 +58,7 @@ object BlockGear {
 	val bigGearMap: Map[Direction, Seq[Vector3D]] = {
 		val (templateVector, templateList) = {
 			var list = List.empty[Vector3D]
-			for(x <- -1 to 1; z <- -1 to 1 if x != 0 && z != 0){
+			for(x <- -1 to 1; z <- -1 to 1 if !(x == 0 && z == 0)){
 				list = new Vector3D(x, 0, z) :: list
 			}
 			(new Vector3D(0, -1, 0), list)
@@ -167,10 +167,10 @@ class BlockGear extends BlockEDX with Storable with Syncable {
 		m.addChild(model)
 	}
 
-	def checkBigGear(): Unit = {
-		val res = possibleSubGears().map(o => o.collect { case b: BlockGear => b }.exists(_.master)).forall(b => b)
+	def checkBigGear(validate: Boolean = true): Unit = {
+		val res = possibleSubGears().map(o => o.collect { case b: BlockGear => b }.exists(gear => gear.master || this.position == gear.position + gear.masterVector)).forall(b => b)
 		res match {
-			case true => this.validateBigGear()
+			case true if validate => this.validateBigGear()
 			case false => this.invalidateBigGear()
 		}
 	}
@@ -186,6 +186,8 @@ class BlockGear extends BlockEDX with Storable with Syncable {
 	private[this] def validateBigGear(): Unit = {
 		this.master = true
 		this.masterVector = Vector3D.ZERO
+		this.size = 3
+		this._model = None
 		possibleSubGears().flatten.map(_.asInstanceOf[BlockGear]).foreach {
 			gear =>
 				gear.masterVector = this.position - gear.position
@@ -194,7 +196,11 @@ class BlockGear extends BlockEDX with Storable with Syncable {
 	}
 
 	private[this] def invalidateBigGear(): Unit = {
+		println("Invalidate")
 		this.master = true
+		this.masterVector = Vector3D.ZERO
+		this.size = 1
+		this._model = None
 		possibleSubGears().flatten.collect { case b: BlockGear => b }.foreach {
 			gear =>
 				gear.masterVector = Vector3D.ZERO
@@ -204,6 +210,12 @@ class BlockGear extends BlockEDX with Storable with Syncable {
 
 	this.events.on(classOf[Block.RightClickEvent]).bind((event: RightClickEvent) => {
 			checkBigGear()
+	})
+
+	this.events.on(classOf[Block.NeighborChangeEvent]).bind((event: Block.NeighborChangeEvent) => {
+		if (!this.master) {
+			world.getBlock(this.position + this.masterVector).collect { case b: BlockGear => b} foreach(_.checkBigGear(validate = false))
+		}
 	})
 
 	override def read(packet: Packet): Unit = {
