@@ -14,7 +14,7 @@ import nova.core.render.model.{MeshModel, Model}
 import nova.core.render.pipeline.{BlockRenderStream, StaticCubeTextureCoordinates}
 import nova.core.retention.{Storable, Store}
 import nova.core.util.Direction
-import nova.core.util.math.{MatrixStack, Vector3DUtil}
+import nova.core.util.math.{RotationUtil, MatrixStack, Vector3DUtil}
 import nova.core.util.shape.Cuboid
 import nova.microblock.micro.{Microblock, MicroblockContainer}
 import nova.scala.wrapper.FunctionalWrapper._
@@ -54,6 +54,28 @@ object BlockGear {
 
 		}
 	}
+
+	val bigGearMap: Map[Direction, Seq[Vector3D]] = {
+		val (templateVector, templateList) = {
+			var list = List.empty[Vector3D]
+			for(x <- -1 to 1; z <- -1 to 1 if x != 0 && z != 0){
+				list = new Vector3D(x, 0, z) :: list
+			}
+			(new Vector3D(0, -1, 0), list)
+		}
+		var res: Map[Direction, Seq[Vector3D]] = Map.empty
+
+		for (i <- Direction.DIRECTIONS) {
+			val rot = new Rotation(templateVector, i.toVector)
+			res += i -> templateList.map(rot.applyTo)
+		}
+		res
+	}
+
+}
+
+object Test extends App {
+	println(BlockGear.bigGearMap)
 }
 
 class BlockGear extends BlockEDX with Storable with Syncable {
@@ -145,25 +167,43 @@ class BlockGear extends BlockEDX with Storable with Syncable {
 		m.addChild(model)
 	}
 
-	this.events.on(classOf[Block.RightClickEvent]).bind((event: RightClickEvent) => {
-		def check() : Boolean = {
-			for (f <- Direction.DIRECTIONS if f != side && f != side.opposite()) {
-				for (s <- Direction.values() if s != side && s != side.opposite()
-						&& s != f && s != f.opposite()) {
-					val offset = f.toVector + s.toVector
-					val pos = this.position + offset
-					val blockOp = this.world.getBlock(pos).toOption
-					val part = blockOp.flatMap(_.getOp(classOf[MicroblockContainer])).flatMap(_.get(side))
-					part.exists(_.block.sameType(this)) match {
-						case true =>
-						case false => return false
-					}
-				}
-			}
-			true
+	def checkBigGear(): Unit = {
+		val res = possibleSubGears().map(o => o.collect { case b: BlockGear => b }.exists(_.master)).forall _
+		res match {
+			case true => this.validateBigGear()
+			case false => this.invalidateBigGear()
 		}
+	}
+	private[this] def possibleSubGears() = {
+		for(offset <- BlockGear.bigGearMap(side)) yield {
+			val pos = this.position + offset
+			val blockOp = this.world.getBlock(pos).toOption
+			val part = blockOp.flatMap(_.getOp(classOf[MicroblockContainer])).flatMap(_.get(side))
+			part.map(_.block)
+		}
+	}
 
-		println(check())
+	private[this] def validateBigGear(): Unit = {
+		this.master = true
+		this.masterVector = Vector3D.ZERO
+		possibleSubGears().flatten.map(_.asInstanceOf[BlockGear]).foreach {
+			gear =>
+				gear.masterVector = this.position - gear.position
+				gear.master = false
+		}
+	}
+
+	private[this] def invalidateBigGear(): Unit = {
+		this.master = true
+		possibleSubGears().flatten.collect { case b: BlockGear => b }.foreach {
+			gear =>
+				gear.masterVector = Vector3D.ZERO
+				gear.master = true
+		}
+	}
+
+	this.events.on(classOf[Block.RightClickEvent]).bind((event: RightClickEvent) => {
+			checkBigGear()
 	})
 
 	override def read(packet: Packet): Unit = {
