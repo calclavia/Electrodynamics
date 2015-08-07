@@ -72,6 +72,18 @@ object BlockGear {
 		res
 	}
 
+	def at(block: Option[Block], side: Direction): Option[BlockGear] = {
+		block match {
+			case Some(gear: BlockGear) if gear.side == side => Some(gear)
+			case Some(block: Block) if block.has(classOf[MicroblockContainer]) =>
+				block.getOp(classOf[MicroblockContainer]).toOption.flatMap(_.get(side)).map(_.block).collect(gearCollector(side))
+			case _ => None
+		}
+	}
+
+	def gearCollector(side: Direction = Direction.UNKNOWN): PartialFunction[Block, BlockGear] = {
+		case gear: BlockGear if side == Direction.UNKNOWN || gear.side == side => gear
+	}
 }
 
 object Test extends App {
@@ -91,13 +103,15 @@ class BlockGear extends BlockEDX with Storable with Syncable {
 	var size = 1
 
 	@Sync
-	@Store(key = "master")
-	var master = true
+	@Store(key = "isMaster")
+	var isMaster = true
 
 	@Sync
-	@Store(key = "masterVector")
-	var masterVector = Vector3D.ZERO
+	@Store(key = "masterOffset")
+	var masterOffset = Vector3D.ZERO
 
+
+	def master = BlockGear.at(world.getBlock(position + masterOffset), side)
 	def side = Direction.fromOrdinal(_side.asInstanceOf[Int])
 
 
@@ -109,7 +123,6 @@ class BlockGear extends BlockEDX with Storable with Syncable {
 			}
 		)
 
-	events.on(classOf[Block.PlaceEvent]).bind((event: Block.PlaceEvent) => println(event))
 
 	add(MechanicalMaterial.metal)
 
@@ -117,7 +130,7 @@ class BlockGear extends BlockEDX with Storable with Syncable {
 
 	private[this] val blockRenderer = add(new DynamicRenderer())
 	blockRenderer.onRender((m: Model) => {
-		if (this.master) {
+		if (this.isMaster) {
 			m.addChild(model)
 
 			model.matrix popMatrix()
@@ -168,10 +181,11 @@ class BlockGear extends BlockEDX with Storable with Syncable {
 	}
 
 	def checkBigGear(validate: Boolean = true): Unit = {
-		val res = possibleSubGears().map(o => o.collect { case b: BlockGear => b }.exists(gear => gear.master || this.position == gear.position + gear.masterVector)).forall(b => b)
+		val res = possibleSubGears().map(o => o.collect(BlockGear.gearCollector(side)).exists(gear => gear.isMaster || gear.master.contains(this))).forall(b => b)
 		res match {
-			case true if validate => this.validateBigGear()
-			case false => this.invalidateBigGear()
+			case true if validate && isMaster => this.validateBigGear()
+			case false if isMaster => this.invalidateBigGear()
+			case _ =>
 		}
 	}
 	private[this] def possibleSubGears() = {
@@ -184,28 +198,29 @@ class BlockGear extends BlockEDX with Storable with Syncable {
 	}
 
 	private[this] def validateBigGear(): Unit = {
-		this.master = true
-		this.masterVector = Vector3D.ZERO
+		this.isMaster = true
+		this.masterOffset = Vector3D.ZERO
 		this.size = 3
 		this._model = None
-		possibleSubGears().flatten.map(_.asInstanceOf[BlockGear]).foreach {
+		possibleSubGears().flatten.collect(BlockGear.gearCollector()).foreach {
 			gear =>
-				gear.masterVector = this.position - gear.position
-				gear.master = false
+				gear.masterOffset = this.position - gear.position
+				gear.isMaster = false
 		}
 	}
 
 	private[this] def invalidateBigGear(): Unit = {
 		println("Invalidate")
-		this.master = true
-		this.masterVector = Vector3D.ZERO
+		this.isMaster = true
+		this.masterOffset = Vector3D.ZERO
 		this.size = 1
 		this._model = None
-		possibleSubGears().flatten.collect { case b: BlockGear => b }.foreach {
-			gear =>
-				gear.masterVector = Vector3D.ZERO
-				gear.master = true
-		}
+		possibleSubGears().flatten.collect(BlockGear.gearCollector()).filter(_.master.contains(this))
+				.foreach {
+					gear =>
+						gear.masterOffset = Vector3D.ZERO
+						gear.isMaster = true
+				}
 	}
 
 	this.events.on(classOf[Block.RightClickEvent]).bind((event: RightClickEvent) => {
@@ -213,8 +228,8 @@ class BlockGear extends BlockEDX with Storable with Syncable {
 	})
 
 	this.events.on(classOf[Block.NeighborChangeEvent]).bind((event: Block.NeighborChangeEvent) => {
-		if (!this.master) {
-			world.getBlock(this.position + this.masterVector).collect { case b: BlockGear => b} foreach(_.checkBigGear(validate = false))
+		if (!this.isMaster) {
+			world.getBlock(this.position + this.masterOffset).collect { case b: BlockGear => b} foreach(_.checkBigGear(validate = false))
 		}
 	})
 
