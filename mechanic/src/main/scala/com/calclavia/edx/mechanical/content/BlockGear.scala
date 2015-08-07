@@ -168,7 +168,7 @@ class BlockGear extends BlockEDX with Storable with Syncable {
 	}
 
 	def checkBigGear(): Unit = {
-		val res = possibleSubGears().map(o => o.collect { case b: BlockGear => b }.exists(_.master)).forall _
+		val res = possibleSubGears().map(o => o.collect { case b: BlockGear => b }.exists(_.master)).forall(b => b)
 		res match {
 			case true => this.validateBigGear()
 			case false => this.invalidateBigGear()

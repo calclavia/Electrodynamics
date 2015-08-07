@@ -1,6 +1,6 @@
 plugins {
 	id "scala"
-	id "nova.gradle" version "0.2.4"
+	id "nova.gradle" version "0.2.5"
 }
 
 allprojects {
@@ -13,27 +13,26 @@ allprojects {
 		compile "org.scala-lang:scala-library:2.11.7"
 		compile "org.jgrapht:jgrapht-core:0.9.1"
 		compile "org.jgrapht:jgrapht-ext:0.9.1"
-		compile "nova.minecraft:NovaMinecraft:0.0.1-SNAPSHOT"
+		compile "nova.minecraft:NOVA-Minecraft:0.0.1-SNAPSHOT"
 		compile "nova.scala:NovaScala:0.0.1-SNAPSHOT"
 		compile "nova.microblock:NovaMicroblock:0.0.1-SNAPSHOT"
 
 		testCompile "org.assertj:assertj-core:3.0.0"
 		testCompile "junit:junit:4.12"
-		testCompile group: "nova.core", name: "NovaCore", version: novaVersion
-		testCompile group: "nova.core", name: "NovaCore", version: novaVersion, classifier: "wrappertests", changing: true
+		testCompile group: "nova.core", name: "NOVA-Core", version: novaVersion
+		testCompile group: "nova.core", name: "NOVA-Core", version: novaVersion, classifier: "wrappertests", changing: true
 	}
 
 	nova {
 		wrappers {
 			"17" {
-				wrapper "nova.wrapper.mc1710:NovaWrapper-MC1.7.10:0.1-SNAPSHOT"
-				runtime "nova.minecraft.wrapper.mc17:NovaMinecraft-Wrapper-MC1.7.10:0.0.1-SNAPSHOT"
+				wrapper "nova.core:NOVA-Core-Wrapper-MC1.7:$novaVersion"
+				runtime "nova.minecraft:NOVA-Minecraft-Wrapper-MC1.7:0.0.1-SNAPSHOT"
 			}
 
 			"18" {
-				wrapper "nova.wrapper.mc18:NovaWrapper-MC1.8:0.1-SNAPSHOT"
-				runtime "nova.minecraft.wrapper.mc18:NovaMinecraft-Wrapper-MC1.8:0.0.1-SNAPSHOT"
-				runtime project(":optics")
+				wrapper "nova.core:NOVA-Core-Wrapper-MC1.8:$novaVersion"
+				runtime "nova.minecraft:NOVA-Minecraft-Wrapper-MC1.8:0.0.1-SNAPSHOT"
 			}
 		}
 	}
