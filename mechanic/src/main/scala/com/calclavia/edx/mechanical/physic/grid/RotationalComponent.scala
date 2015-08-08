@@ -20,12 +20,12 @@ object MechanicalNode {
 
 	trait MechanicalNodeConstantFriction extends MechanicalNode {
 		final def friction: Double = constantFriction
-		abstract protected val constantFriction: Double
+		protected val constantFriction: Double
 	}
 
 	trait MechanicalNodeConstantMass extends MechanicalNode {
 		final def mass: Double = constantMass
-		abstract protected val constantMass: Double
+		protected val constantMass: Double
 	}
 }
 
