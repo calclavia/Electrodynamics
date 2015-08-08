@@ -18,27 +18,21 @@ import scala.collection.JavaConversions._
 
 object MechanicalNode {
 
-	@Require(classOf[MechanicalMaterial])
-	trait Material extends MechanicalNodeConstantFriction {
-
-		val size: Double
-		lazy val material: MechanicalMaterial =  block.get(classOf[MechanicalMaterial])
-
-		lazy val mass = size * material.density
-		lazy val constantFriction = mass * material.friction
-
-	}
-
 	trait MechanicalNodeConstantFriction extends MechanicalNode {
 		final def friction: Double = constantFriction
-		protected val constantFriction: Double
+		abstract protected val constantFriction: Double
+	}
+
+	trait MechanicalNodeConstantMass extends MechanicalNode {
+		final def mass: Double = constantMass
+		abstract protected val constantMass: Double
 	}
 }
 
 case class RotationalEdge(src: AnyRef, tar: AnyRef, forward: Boolean)
 
 abstract class MechanicalNode(val block: Block) extends Connectable[MechanicalNode] {
-	val mass: Double
+	def mass: Double
 	def friction: Double
 	var grid: Option[MechanicalGrid] = None
 
@@ -50,7 +44,6 @@ abstract class MechanicalNode(val block: Block) extends Connectable[MechanicalNo
 	final def rotation : Double = grid.map(_.rotation(this)).getOrElse(0)
 
 	val onPlace : (Event => Unit) = (event: Event) => {
-		println("WORKSS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
 		if (grid.isEmpty) {
 
@@ -98,8 +91,13 @@ abstract class MechanicalNode(val block: Block) extends Connectable[MechanicalNo
 }
 
 @Require(classOf[MechanicalMaterial])
-class MechanicalNodeGear(block: BlockGear) extends MechanicalNode(block) with MechanicalNode.MechanicalNodeConstantFriction with MechanicalNode.Material {
-	val size: Double = block.size
+class MechanicalNodeGear(block: BlockGear) extends MechanicalNode(block) with MechanicalNode.MechanicalNodeConstantFriction {
+	def material = block.get(classOf[MechanicalMaterial])
+
+	def size: Double = block.size
+	def mass = size * material.density
+
+	val constantFriction = material.breakingForce * 1
 
 	canConnect = func {
 		(other: MechanicalNode) => {
@@ -117,8 +115,12 @@ class MechanicalNodeGear(block: BlockGear) extends MechanicalNode(block) with Me
 
 }
 @Require(classOf[MechanicalMaterial])
-class MechanicalNodeAxle(block: BlockAxle) extends MechanicalNode(block) with MechanicalNode.MechanicalNodeConstantFriction with MechanicalNode.Material {
+class MechanicalNodeAxle(block: BlockAxle) extends MechanicalNode(block) with MechanicalNode.MechanicalNodeConstantFriction with MechanicalNode.MechanicalNodeConstantMass {
+	def material = block.get(classOf[MechanicalMaterial])
+
 	val size = 0.25D
+	val constantMass = material.density * size
+	val constantFriction = material.breakingForce * size
 
 	canConnect = func {
 		(other: MechanicalNode) => {

@@ -41,7 +41,7 @@ class MechanicalGrid {
 	private[this] var systemRotation = 0D
 
 
-	private[this] var systemMass: Double = 0
+	private[this] var systemMass: DynamicValue[Double] = null
 	private[this] var systemFriction: DynamicValue[Double] = null
 
 	private[this] val watch = {
@@ -88,7 +88,8 @@ class MechanicalGrid {
 
 		var flatFriction: Double = 0D
 		var dynamicFriction: List[() => Double] = Nil
-
+		var flatMass: Double = 0D
+		var dynamicMass: List[() => Double] = Nil
 
 		//From unknown reasons this function is not tail recursive
 		//@tailrec
@@ -108,10 +109,15 @@ class MechanicalGrid {
 
 			val spinning = it.next
 
-			systemMass += spinning.mass
+
 			spinning match {
 				case node: MechanicalNode.MechanicalNodeConstantFriction => flatFriction += node.friction
 				case node: MechanicalNode => dynamicFriction = node.friction _ :: dynamicFriction
+			}
+
+			spinning match {
+				case node: MechanicalNode.MechanicalNodeConstantMass => flatMass += node.mass
+				case node: MechanicalNode => dynamicFriction = node.mass _ :: dynamicFriction
 			}
 
 			val nodes = neighborIndex.neighborListOf(spinning) map (neigh => (spinning, neigh, graph.getEdge(spinning, neigh).forward))
@@ -137,7 +143,11 @@ class MechanicalGrid {
 		}
 
 		walk(it) match {
-			case Success => systemFriction = DynamicValue(flatFriction, dynamicFriction); Success
+			case Success => {
+				systemFriction = DynamicValue(flatFriction, dynamicFriction)
+				systemMass = DynamicValue(flatMass, dynamicMass)
+				Success
+			}
 			case x => x
 		}
 	}
