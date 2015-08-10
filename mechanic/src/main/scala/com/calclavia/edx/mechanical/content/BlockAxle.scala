@@ -7,7 +7,7 @@ import com.calclavia.edx.mechanical.MechanicContent
 import com.calclavia.edx.mechanical.physic.MechanicalMaterial
 import com.calclavia.edx.mechanical.physic.grid.MechanicalNodeAxle
 import nova.core.block.Block.PlaceEvent
-import nova.core.component.renderer.{DynamicRenderer, ItemRenderer}
+import nova.core.component.renderer.DynamicRenderer
 import nova.core.network.{Packet, Sync, Syncable}
 import nova.core.render.Color
 import nova.core.render.model.{MeshModel, Model}
@@ -18,6 +18,7 @@ import nova.core.util.shape.Cuboid
 import nova.microblock.micro.{Microblock, MicroblockContainer}
 import nova.scala.wrapper.FunctionalWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.{Rotation, Vector3D}
+
 import scala.collection.JavaConversions._
 
 object BlockAxle {
@@ -25,8 +26,7 @@ object BlockAxle {
 
 	def occlusionBounds = {
 		val center = {
-			val small = 0.0001d
-			val tmp = new Cuboid(0, 0, 0 + small, thickness, thickness, 1 - small)
+			val tmp = new Cuboid(0, 0, 0, thickness, thickness, 1)
 			tmp - tmp.center
 		}
 
@@ -66,7 +66,7 @@ abstract class BlockAxle extends BlockEDX with Storable with Syncable {
 
 	@Sync
 	@Store
-	var _dir: Byte = 2 // For item renderer
+	var _dir: Byte
 
 	def dir = Direction.fromOrdinal(_dir.asInstanceOf[Int])
 
@@ -76,6 +76,9 @@ abstract class BlockAxle extends BlockEDX with Storable with Syncable {
 
 	add(material)
 
+	override def onRegister(): Unit = {
+		dir = Direction.NORTH
+	}
 	val microblock = add(new Microblock(this))
 		.setOnPlace(
 			(evt: PlaceEvent) => {

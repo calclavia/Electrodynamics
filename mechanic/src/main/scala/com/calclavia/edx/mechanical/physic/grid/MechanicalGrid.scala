@@ -3,9 +3,9 @@ package com.calclavia.edx.mechanical.physic.grid
 
 import com.calclavia.edx.mechanical.{DynamicValue, Watch}
 import org.jgrapht.alg.NeighborIndex
-import org.jgrapht.graph.{ListenableUndirectedGraph, DefaultListenableGraph, DefaultEdge, Multigraph}
-import org.jgrapht.traverse.{BreadthFirstIterator, DepthFirstIterator}
-import scala.annotation.tailrec
+import org.jgrapht.graph.{ListenableUndirectedGraph, Multigraph}
+import org.jgrapht.traverse.BreadthFirstIterator
+
 import scala.collection.JavaConversions._
 
 object MechanicalGrid {
@@ -95,8 +95,8 @@ class MechanicalGrid {
 		//@tailrec
 		def walk(it: BreadthFirstIterator[MechanicalNode, RotationalEdge]): RecalculateResult = {
 			it.hasNext match {
-				case false => return Success
 				case true =>
+				case false => return Success
 			}
 
 			def updateSpeed(node: MechanicalNode, newSpeed: Double): Option[RecalculateResult] = {
