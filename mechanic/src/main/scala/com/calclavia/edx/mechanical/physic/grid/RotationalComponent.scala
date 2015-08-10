@@ -74,12 +74,14 @@ abstract class MechanicalNode(val block: Block) extends Connectable[MechanicalNo
 		blocksToCheck.foreach {
 			case (dir, Some(aBlock)) =>
 				aBlock.getOp(classOf[MechanicalNode]).toOption.filter(connectionFilter).foreach(res += _)
+				//noinspection JavaAccessorMethodCalledAsEmptyParen
 				aBlock.getOp(classOf[MicroblockContainer]).toOption
-						.map(_.microblocks(classOf[MechanicalNode]).collect(Collectors.toSet()))
+					.map(_.microblocks(classOf[MechanicalNode]).collect(Collectors.toSet()))
 						.map(_.filter(connectionFilter)).foreach(res ++= _)
 			case _ =>
 		}
 
+		//noinspection JavaAccessorMethodCalledAsEmptyParen
 		this.block.getOp(classOf[MicroblockContainer]).toOption
 				.map(_.microblocks(classOf[MechanicalNode]).collect(Collectors.toSet()))
 				.map(_.filter(_ != this).filter(connectionFilter)).foreach(res ++= _)
