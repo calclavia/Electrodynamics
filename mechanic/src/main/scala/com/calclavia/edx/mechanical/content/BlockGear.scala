@@ -10,6 +10,7 @@ import nova.core.block.Block
 import nova.core.block.Block.{PlaceEvent, RightClickEvent}
 import nova.core.component.renderer.{DynamicRenderer, ItemRenderer}
 import nova.core.network.{Packet, Sync, Syncable}
+import nova.core.render.Color
 import nova.core.render.model.{MeshModel, Model}
 import nova.core.render.pipeline.{BlockRenderStream, StaticCubeTextureCoordinates}
 import nova.core.retention.{Storable, Store}
@@ -22,6 +23,7 @@ import nova.scala.wrapper.VectorWrapper._
 import nova.scala.wrapper.OptionWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.{Rotation, Vector3D}
 import org.apache.commons.math3.linear.RealMatrix
+import scala.collection.JavaConversions._
 
 object BlockGear {
 	val thickness = 2 / 16d
@@ -84,15 +86,29 @@ object BlockGear {
 	def gearCollector(side: Direction = Direction.UNKNOWN): PartialFunction[Block, BlockGear] = {
 		case gear: BlockGear if side == Direction.UNKNOWN || gear.side == side => gear
 	}
+
+	class Stone extends BlockGear {
+		val material = MechanicalMaterial.stone
+	}
+
+	class Wood extends BlockGear {
+		val material = MechanicalMaterial.wood
+	}
+
+	class Metal extends BlockGear {
+		val material = MechanicalMaterial.metal
+	}
 }
 
 object Test extends App {
 	println(BlockGear.bigGearMap)
 }
 
-class BlockGear extends BlockEDX with Storable with Syncable {
+abstract private class BlockGear extends BlockEDX with Storable with Syncable {
 
-	override def getID: String = "gear"
+	abstract def material: MechanicalMaterial
+
+	override def getID: String = s"gear-$material"
 
 	@Sync
 	@Store(key = "side")
@@ -160,6 +176,8 @@ class BlockGear extends BlockEDX with Storable with Syncable {
 
 
 		BlockRenderStream.drawCube(tmp, box, StaticCubeTextureCoordinates.instance)
+		// TODO: Remove that after textures are made.
+		tmp.faces.foreach(face => face.vertices.foreach(v => v.color = Color.rgb(material.hashCode())))
 		tmp.bind(MechanicContent.gearTexture)
 		//tmp.matrix transform BlockGear.matrixes(_side)
 		tmp.matrix translate ((side.toVector / 2d) - side.toVector *2 / 16d)

@@ -9,6 +9,7 @@ import com.calclavia.edx.mechanical.physic.grid.MechanicalNodeAxle
 import nova.core.block.Block.PlaceEvent
 import nova.core.component.renderer.{DynamicRenderer, ItemRenderer}
 import nova.core.network.{Packet, Sync, Syncable}
+import nova.core.render.Color
 import nova.core.render.model.{MeshModel, Model}
 import nova.core.render.pipeline.{BlockRenderStream, StaticCubeTextureCoordinates}
 import nova.core.retention.{Storable, Store}
@@ -17,6 +18,7 @@ import nova.core.util.shape.Cuboid
 import nova.microblock.micro.{Microblock, MicroblockContainer}
 import nova.scala.wrapper.FunctionalWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.{Rotation, Vector3D}
+import scala.collection.JavaConversions._
 
 object BlockAxle {
 	val thickness = 2 / 16d
@@ -44,10 +46,23 @@ object BlockAxle {
 
 	def normalizeDir(dir: Direction) = Direction.fromOrdinal(dir.ordinal() & 0xFE)
 
+	class Stone extends BlockAxle {
+		val material = MechanicalMaterial.stone
+	}
+
+	class Wood extends BlockAxle {
+		val material = MechanicalMaterial.wood
+	}
+
+	class Metal extends BlockAxle {
+		val material = MechanicalMaterial.metal
+	}
 }
 
-class BlockAxle extends BlockEDX with Storable with Syncable {
-	override def getID: String = "axle"
+abstract private class BlockAxle extends BlockEDX with Storable with Syncable {
+	abstract def material: MechanicalMaterial
+
+	override def getID: String = s"axle-$material"
 
 	@Sync
 	@Store
@@ -58,6 +73,8 @@ class BlockAxle extends BlockEDX with Storable with Syncable {
 	def dir_=(direction: Direction): Unit = {
 		_dir = BlockAxle.normalizeDir(direction).ordinal().asInstanceOf[Byte]
 	}
+
+	add(material)
 
 	val microblock = add(new Microblock(this))
 		.setOnPlace(
@@ -72,8 +89,6 @@ class BlockAxle extends BlockEDX with Storable with Syncable {
 
 	private[this] val rotational = add(new MechanicalNodeAxle(this))
 
-
-
 	blockRenderer.onRender((m: Model) => {
 		m.addChild(model)
 
@@ -86,6 +101,8 @@ class BlockAxle extends BlockEDX with Storable with Syncable {
 		val res = new MeshModel("gearshaft")
 		BlockRenderStream.drawCube(res, BlockAxle.occlusionBounds(dir) - 0.5, StaticCubeTextureCoordinates.instance)
 		res.bind(MechanicContent.gearshaftTexture)
+		// TODO: Remove that after textures are made.
+		res.faces.foreach(face => face.vertices.foreach(v => v.color = Color.rgb(material.hashCode())))
 		res.matrix pushMatrix()
 		res
 	}

@@ -18,6 +18,10 @@ object MechanicContent extends ContentLoader {
 	//val modelGear = new WavefrontObjectModelProvider(Reference.domain, "gears")
 
 	//Blocks
-	var blockGear: BlockFactory = classOf[BlockGear]
-	var blockGearshaft: BlockFactory = classOf[BlockAxle]
+	var blockGearWood: BlockFactory = classOf[BlockGear.Wood]
+	var blockGearStone: BlockFactory = classOf[BlockGear.Stone]
+	var blockGearMetal: BlockFactory = classOf[BlockGear.Metal]
+	var blockGearshaftWood: BlockFactory = classOf[BlockAxle.Wood]
+	var blockGearshaftStone: BlockFactory = classOf[BlockAxle.Stone]
+	var blockGearshaftMetal: BlockFactory = classOf[BlockAxle.Metal]
 }
