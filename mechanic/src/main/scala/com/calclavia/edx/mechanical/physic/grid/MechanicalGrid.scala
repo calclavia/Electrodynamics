@@ -143,11 +143,10 @@ class MechanicalGrid {
 		}
 
 		walk(it) match {
-			case Success => {
+			case Success =>
 				systemFriction = DynamicValue(flatFriction, dynamicFriction)
 				systemMass = DynamicValue(flatMass, dynamicMass)
 				Success
-			}
 			case x => x
 		}
 	}

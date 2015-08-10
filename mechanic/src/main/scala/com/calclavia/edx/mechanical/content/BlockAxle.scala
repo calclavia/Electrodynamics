@@ -30,7 +30,7 @@ object BlockAxle {
 			tmp - tmp.center
 		}
 
-		val array = for (dir <- Direction.DIRECTIONS if dir.ordinal() % 2 == 0) yield {
+		val array = for (dir <- Direction.VALID_DIRECTIONS if dir.ordinal() % 2 == 0) yield {
 			val rotation = dir match {
 				case Direction.DOWN => new Rotation(Vector3D.MINUS_I, Math.PI / 2)
 				case Direction.NORTH => Rotation.IDENTITY
@@ -113,8 +113,6 @@ abstract class BlockAxle extends BlockEDX with Storable with Syncable {
 
 	collider.isCube(false)
 	collider.isOpaqueCube(false)
-
-	add(new ItemRenderer(this))
 
 	override def read(packet: Packet): Unit = {
 		super[Syncable].read(packet)

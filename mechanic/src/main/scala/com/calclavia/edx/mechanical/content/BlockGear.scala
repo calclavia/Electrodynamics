@@ -34,7 +34,7 @@ object BlockGear {
 		val oneByRoot2 = 1 / Math.sqrt(2)
 		val center = new Cuboid(0, 0, 0, 1, thickness, 1) - 0.5
 
-		for (dir <- Direction.DIRECTIONS) {
+		for (dir <- Direction.VALID_DIRECTIONS) {
 			val bySideRotation = dir match {
 				case Direction.DOWN => Rotation.IDENTITY
 				case Direction.UP => new Rotation(Vector3D.PLUS_I, Math.PI)
@@ -67,7 +67,7 @@ object BlockGear {
 		}
 		var res: Map[Direction, Seq[Vector3D]] = Map.empty
 
-		for (i <- Direction.DIRECTIONS) {
+		for (i <- Direction.VALID_DIRECTIONS) {
 			val rot = new Rotation(templateVector, i.toVector)
 			res += i -> templateList.map(rot.applyTo)
 		}
@@ -190,12 +190,6 @@ abstract class BlockGear extends BlockEDX with Storable with Syncable {
 
 	collider.isCube(false)
 	collider.isOpaqueCube(false)
-
-	private[this] val itemRenderer = add(new ItemRenderer(this))
-
-	itemRenderer.onRender = (m: Model) => {
-		m.addChild(model)
-	}
 
 	def checkBigGear(validate: Boolean = true): Unit = {
 		val res = possibleSubGears().map(o => o.collect(BlockGear.gearCollector(side)).exists(gear => gear.isMaster || gear.master.contains(this))).forall(b => b)

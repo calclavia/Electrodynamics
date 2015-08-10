@@ -87,7 +87,7 @@ abstract class MechanicalNode(val block: Block) extends Connectable[MechanicalNo
 	})
 
 
-	protected def blocksToCheck = Direction.DIRECTIONS.map(dir => (dir, block.world.getBlock(block.transform.position + dir.toVector).toOption)).toMap
+	protected def blocksToCheck = Direction.VALID_DIRECTIONS.map(dir => (dir, block.world.getBlock(block.transform.position + dir.toVector).toOption)).toMap
 }
 
 @Require(classOf[MechanicalMaterial])
