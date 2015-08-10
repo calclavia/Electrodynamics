@@ -117,7 +117,7 @@ class MechanicalGrid {
 
 			spinning match {
 				case node: MechanicalNode.MechanicalNodeConstantMass => flatMass += node.mass
-				case node: MechanicalNode => dynamicFriction = node.mass _ :: dynamicFriction
+				case node: MechanicalNode => dynamicMass = node.mass _ :: dynamicMass
 			}
 
 			val nodes = neighborIndex.neighborListOf(spinning) map (neigh => (spinning, neigh, graph.getEdge(spinning, neigh).forward))
