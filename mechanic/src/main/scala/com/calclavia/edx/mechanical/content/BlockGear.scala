@@ -103,8 +103,7 @@ object BlockGear {
 object Test extends App {
 	println(BlockGear.bigGearMap)
 }
-
-abstract private class BlockGear extends BlockEDX with Storable with Syncable {
+abstract class BlockGear extends BlockEDX with Storable with Syncable {
 
 	abstract def material: MechanicalMaterial
 
