@@ -66,7 +66,7 @@ abstract class BlockAxle extends BlockEDX with Storable with Syncable {
 
 	@Sync
 	@Store
-	var _dir: Byte
+	var _dir: Byte = 0
 
 	def dir = Direction.fromOrdinal(_dir.asInstanceOf[Int])
 
