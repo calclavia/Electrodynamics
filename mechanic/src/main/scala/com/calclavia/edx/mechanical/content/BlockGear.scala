@@ -105,7 +105,7 @@ object Test extends App {
 }
 abstract class BlockGear extends BlockEDX with Storable with Syncable {
 
-	abstract def material: MechanicalMaterial
+	def material: MechanicalMaterial
 
 	override def getID: String = s"gear-$material"
 

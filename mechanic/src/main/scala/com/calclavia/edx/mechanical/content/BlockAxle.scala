@@ -60,7 +60,7 @@ object BlockAxle {
 }
 
 abstract class BlockAxle extends BlockEDX with Storable with Syncable {
-	abstract def material: MechanicalMaterial
+	def material: MechanicalMaterial
 
 	override def getID: String = s"axle-$material"
 
