@@ -190,7 +190,9 @@ abstract class BlockGear extends BlockEDX with Storable with Syncable {
 	collider.isOpaqueCube(false)
 
 	def checkBigGear(validate: Boolean = true): Unit = {
-		val res = possibleSubGears().map(o => o.collect(BlockGear.gearCollector(side)).exists(gear => gear.isMaster || gear.master.contains(this))).forall(b => b)
+		val gears = possibleSubGears()
+
+		val res = gears.map(_.filter(gear => gear.material == this.material && (gear.isMaster || gear.master.contains(this)))).forall(_.isDefined)
 		res match {
 			case true if validate && isMaster => this.validateBigGear()
 			case false if isMaster => this.invalidateBigGear()
@@ -202,7 +204,7 @@ abstract class BlockGear extends BlockEDX with Storable with Syncable {
 			val pos = this.position + offset
 			val blockOp = this.world.getBlock(pos).toOption
 			val part = blockOp.flatMap(_.getOp(classOf[MicroblockContainer])).flatMap(_.get(side))
-			part.map(_.block)
+			part.map(_.block).collect(BlockGear.gearCollector(side))
 		}
 	}
 
