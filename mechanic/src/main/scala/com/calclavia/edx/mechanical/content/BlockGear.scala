@@ -88,15 +88,15 @@ object BlockGear {
 	}
 
 	class Stone extends BlockGear {
-		val material = MechanicalMaterial.stone
+		override def material = MechanicalMaterial.stone
 	}
 
 	class Wood extends BlockGear {
-		val material = MechanicalMaterial.wood
+		override def material = MechanicalMaterial.wood
 	}
 
 	class Metal extends BlockGear {
-		val material = MechanicalMaterial.metal
+		override def material = MechanicalMaterial.metal
 	}
 }
 
@@ -106,6 +106,7 @@ object Test extends App {
 abstract class BlockGear extends BlockEDX with Storable with Syncable {
 
 	def material: MechanicalMaterial
+	add(material)
 
 	override def getID: String = s"gear-$material"
 
@@ -137,9 +138,6 @@ abstract class BlockGear extends BlockEDX with Storable with Syncable {
 				Optional.of(MicroblockContainer.sidePosition(this.side))
 			}
 		)
-
-
-	add(MechanicalMaterial.metal)
 
 	private[this] val rotational = add(new MechanicalNodeGear(this))
 

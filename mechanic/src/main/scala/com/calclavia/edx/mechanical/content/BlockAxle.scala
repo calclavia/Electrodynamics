@@ -47,20 +47,22 @@ object BlockAxle {
 	def normalizeDir(dir: Direction) = Direction.fromOrdinal(dir.ordinal() & 0xFE)
 
 	class Stone extends BlockAxle {
-		val material = MechanicalMaterial.stone
+		override def material = MechanicalMaterial.stone
 	}
 
 	class Wood extends BlockAxle {
-		val material = MechanicalMaterial.wood
+		override def material = MechanicalMaterial.wood
 	}
 
 	class Metal extends BlockAxle {
-		val material = MechanicalMaterial.metal
+		override def material = MechanicalMaterial.metal
 	}
 }
 
 abstract class BlockAxle extends BlockEDX with Storable with Syncable {
+
 	def material: MechanicalMaterial
+	add(material)
 
 	override def getID: String = s"axle-$material"
 
@@ -74,8 +76,6 @@ abstract class BlockAxle extends BlockEDX with Storable with Syncable {
 		_dir = BlockAxle.normalizeDir(direction).ordinal().asInstanceOf[Byte]
 	}
 
-	add(material)
-
 	override def onRegister(): Unit = {
 		dir = Direction.NORTH
 	}
@@ -88,7 +88,6 @@ abstract class BlockAxle extends BlockEDX with Storable with Syncable {
 		)
 
 	private[this] val blockRenderer = add(new DynamicRenderer())
-	add(MechanicalMaterial.metal)
 
 	private[this] val rotational = add(new MechanicalNodeAxle(this))
 
