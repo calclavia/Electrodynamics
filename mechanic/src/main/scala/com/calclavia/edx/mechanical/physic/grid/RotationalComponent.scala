@@ -6,7 +6,7 @@ import com.calclavia.edx.mechanical.physic.MechanicalMaterial
 import nova.core.block.{Stateful, Block}
 import nova.core.block.component.Connectable
 import nova.core.component.Require
-import nova.core.event.Event
+import nova.core.event.bus.Event
 import nova.core.util.Direction
 import nova.microblock.micro.{Microblock, MicroblockContainer}
 import nova.scala.wrapper.FunctionalWrapper._

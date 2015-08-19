@@ -3,7 +3,7 @@ package com.calclavia.edx.core
 import nova.core.block.BlockManager
 import nova.core.component.ComponentManager
 import nova.core.entity.EntityManager
-import nova.core.event.GlobalEvents
+import nova.core.event.bus.GlobalEvents
 import nova.core.fluid.FluidManager
 import nova.core.game.{ClientManager, GameInfo, InputManager}
 import nova.core.item.{ItemDictionary, ItemManager}

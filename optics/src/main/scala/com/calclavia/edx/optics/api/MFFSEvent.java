@@ -1,7 +1,7 @@
 package com.calclavia.edx.optics.api;
 
-import nova.core.event.CancelableEvent;
-import nova.core.event.EventBus;
+import nova.core.event.bus.CancelableEvent;
+import nova.core.event.bus.EventBus;
 import nova.core.item.Item;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import nova.core.world.World;

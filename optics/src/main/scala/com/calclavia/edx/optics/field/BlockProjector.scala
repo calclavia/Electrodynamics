@@ -19,7 +19,7 @@ import nova.core.block.component.LightEmitter
 import nova.core.component.renderer.{DynamicRenderer, ItemRenderer}
 import nova.core.component.transform.Orientation
 import nova.core.entity.component.Player
-import nova.core.event.EventBus
+import nova.core.event.bus.EventBus
 import nova.core.inventory.InventorySimple
 import nova.core.item.Item
 import nova.core.network.{Packet, Sync}

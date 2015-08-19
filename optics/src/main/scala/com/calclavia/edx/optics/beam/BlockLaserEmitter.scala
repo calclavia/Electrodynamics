@@ -15,7 +15,7 @@ import nova.core.block.component.LightEmitter
 import nova.core.component.renderer.{ItemRenderer, StaticRenderer}
 import nova.core.component.transform.Orientation
 import nova.core.component.transform.Orientation.OrientationChangeEvent
-import nova.core.event.Event
+import nova.core.event.bus.Event
 import nova.core.network.{Packet, Sync, Syncable}
 import nova.core.render.model.Model
 import nova.core.retention.{Data, Storable, Store}
