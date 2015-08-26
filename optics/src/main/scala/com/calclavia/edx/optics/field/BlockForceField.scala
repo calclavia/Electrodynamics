@@ -19,7 +19,7 @@ import nova.core.entity.component.Player
 import nova.core.network.NetworkTarget.Side
 import nova.core.network.{Packet, Sync, Syncable}
 import nova.core.render.model.Model
-import nova.core.render.pipeline.{BlockRenderStream, RenderStream}
+import nova.core.render.pipeline.BlockRenderStream
 import nova.core.retention.{Storable, Store}
 import nova.core.util.Direction
 import nova.scala.wrapper.FunctionalWrapper._
@@ -28,17 +28,12 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 class BlockForceField extends BlockEDX with Stateful with Syncable with ForceField with Storable {
 
-	@Store
-	@Sync
-	private var camoBlock: Block = null
-	@Store
-	@Sync
-	private var projector: Vector3D = null
-
 	/**
 	 * Constructor
 	 */
 	private val superOcclusion = collider.occlusionBoxes
+	private val renderer = add(new StaticRenderer())
+	private val superRender = renderer.onRender
 
 	collider.setOcclusionBoxes(
 		(entity: Optional[Entity]) => {
@@ -99,8 +94,9 @@ class BlockForceField extends BlockEDX with Stateful with Syncable with ForceFie
 		}
 		0f
 	})))
-
-	private val renderer = add(new StaticRenderer(this))
+	@Store
+	@Sync
+	private var camoBlock: Block = null
 
 	renderer.onRender(
 		new BlockRenderStream(this)
@@ -126,8 +122,9 @@ class BlockForceField extends BlockEDX with Stateful with Syncable with ForceFie
 			.withTexture(OpticsTextures.forceField)
 			.build()
 	)
-
-	private val superRender = renderer.onRender
+	@Store
+	@Sync
+	private var projector: Vector3D = null
 
 	/*	val itemRenderer = add(new ItemRenderer(this))
 			.setOnRender((model: Model) => superRender.accept(model))

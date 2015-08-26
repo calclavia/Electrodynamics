@@ -27,7 +27,7 @@ class BlockSiren extends BlockEDX with ExtendedUpdater with Stateful {
 	private val electricNode = add(new NodeElectricComponent(this))
 	private val io = add(new IO(this))
 	private val redstone = add(EDX.components.make(classOf[Redstone], this))
-	private val renderer = add(new StaticRenderer(this))
+	private val renderer = add(new StaticRenderer())
 	private val itemRenderer = add(new ItemRenderer(this))
 
 	@Store

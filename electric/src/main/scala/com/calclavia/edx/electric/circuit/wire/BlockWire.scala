@@ -13,7 +13,7 @@ import nova.core.block.Block.{PlaceEvent, RightClickEvent}
 import nova.core.component.misc.Collider
 import nova.core.component.renderer.{ItemRenderer, StaticRenderer}
 import nova.core.network.{Packet, Sync, Syncable}
-import nova.core.render.model.{Model, MeshModel}
+import nova.core.render.model.{MeshModel, Model}
 import nova.core.render.pipeline.{BlockRenderStream, StaticCubeTextureCoordinates}
 import nova.core.retention.{Storable, Store}
 import nova.core.util.Direction
@@ -90,12 +90,29 @@ object BlockWire {
 class BlockWire extends BlockEDX with Storable with Syncable {
 
 	/**
+	 * Add components
+	 */
+	private val electricNode = add(new NodeElectricJunction(this))
+	private val microblock = add(new Microblock(this))
+		.setOnPlace(
+			(evt: PlaceEvent) => {
+				this.side = evt.side.opposite.ordinal.toByte
+				//TODO: Fix wire material
+				get(classOf[MaterialWire]).material = WireMaterial.COPPER
+				Optional.of(MicroblockContainer.sidePosition(Direction.fromOrdinal(this.side)))
+			}
+		)
+	@Sync
+	@Store
+	private val material = add(new MaterialWire)
+	private val blockRenderer = add(new StaticRenderer())
+	private val itemRenderer = add(new ItemRenderer(this))
+	/**
 	 * The side the wire is placed on.
 	 */
 	@Sync
 	@Store
 	private var side: Byte = 0
-
 	/**
 	 * A map of the connections relative to the {@link side}. Split into four 2-bits.
 	 *
@@ -113,31 +130,6 @@ class BlockWire extends BlockEDX with Storable with Syncable {
 	@Sync(ids = Array(0, 1))
 	private var connectionMask = 0x00
 
-	/**
-	 * Caches the sidem ask and electric nodes
-	 */
-	private var connectionCache = Map.empty[Electric, Int].withDefaultValue(0)
-
-	/**
-	 * Add components
-	 */
-	private val electricNode = add(new NodeElectricJunction(this))
-
-	private val microblock = add(new Microblock(this))
-		.setOnPlace(
-			(evt: PlaceEvent) => {
-				this.side = evt.side.opposite.ordinal.toByte
-				//TODO: Fix wire material
-				get(classOf[MaterialWire]).material = WireMaterial.COPPER
-				Optional.of(MicroblockContainer.sidePosition(Direction.fromOrdinal(this.side)))
-			}
-		)
-	@Sync
-	@Store
-	private val material = add(new MaterialWire)
-
-	private val blockRenderer = add(new StaticRenderer(this))
-
 	blockRenderer.onRender(
 		(model: Model) => {
 			val subModel = new MeshModel()
@@ -150,7 +142,10 @@ class BlockWire extends BlockEDX with Storable with Syncable {
 			model.addChild(subModel)
 		}
 	)
-	private val itemRenderer = add(new ItemRenderer(this))
+	/**
+	 * Caches the sidem ask and electric nodes
+	 */
+	private var connectionCache = Map.empty[Electric, Int].withDefaultValue(0)
 
 	itemRenderer.setTexture(ElectricContent.wireTexture)
 

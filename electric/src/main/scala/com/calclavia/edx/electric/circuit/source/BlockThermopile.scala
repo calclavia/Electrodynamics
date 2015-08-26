@@ -10,7 +10,7 @@ import com.calclavia.edx.electric.api.{ConnectionBuilder, Electric}
 import com.calclavia.edx.electric.grid.NodeElectricComponent
 import nova.core.block.Stateful
 import nova.core.component.renderer.{ItemRenderer, StaticRenderer}
-import nova.core.render.pipeline.{BlockRenderStream, RenderStream}
+import nova.core.render.pipeline.BlockRenderStream
 import nova.core.render.texture.Texture
 import nova.core.util.Direction
 import nova.scala.component.IO
@@ -25,10 +25,10 @@ class BlockThermopile extends BlockEDX with ExtendedUpdater with Stateful {
 	 */
 	private val maxTicks = 120 * 20
 	private val electricNode = add(new NodeElectricComponent(this))
-	private var ticksUsed = 0
 	private val io = add(new IO(this))
-	private val staticRenderer = add(new StaticRenderer(this))
+	private val staticRenderer = add(new StaticRenderer())
 	private val itemRenderer = add(new ItemRenderer(this))
+	private var ticksUsed = 0
 
 	staticRenderer.onRender(
 		new BlockRenderStream(this)

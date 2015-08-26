@@ -16,7 +16,7 @@ import nova.core.component.renderer.{ItemRenderer, StaticRenderer}
 import nova.core.component.transform.Orientation
 import nova.core.network.{Sync, Syncable}
 import nova.core.render.model.Model
-import nova.core.retention.{Store, Storable}
+import nova.core.retention.{Storable, Store}
 import nova.core.util.Direction
 import nova.scala.component.IO
 import nova.scala.util.ExtendedUpdater
@@ -36,7 +36,7 @@ class BlockLaserReceiver extends BlockEDX with Stateful with ExtendedUpdater wit
 	@Store
 	@Sync
 	private val io = add(new IO(this))
-	private val renderer = add(new StaticRenderer(this))
+	private val renderer = add(new StaticRenderer())
 	private val itemRenderer = add(new ItemRenderer(this))
 	private val lightEmitter = add(new LightEmitter())
 

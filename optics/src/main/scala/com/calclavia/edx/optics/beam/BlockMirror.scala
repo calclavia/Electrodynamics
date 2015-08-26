@@ -10,7 +10,7 @@ import nova.core.block.Stateful
 import nova.core.component.misc.Collider
 import nova.core.component.renderer.{ItemRenderer, StaticRenderer}
 import nova.core.network.{Packet, Sync, Syncable}
-import nova.core.render.model.{Model, MeshModel}
+import nova.core.render.model.{MeshModel, Model}
 import nova.core.retention.{Storable, Store}
 import nova.core.util.Ray
 import nova.core.util.RayTracer.RayTraceBlockResult
@@ -30,7 +30,7 @@ class BlockMirror extends BlockEDX with Stateful with Syncable with Storable {
 	@Store
 	@Sync
 	private val focus = add(new Focus(this))
-	private val renderer = add(new StaticRenderer(this))
+	private val renderer = add(new StaticRenderer())
 	private val itemRenderer = add(new ItemRenderer(this))
 	private val opticHandler = add(new OpticHandler(this))
 

@@ -42,7 +42,7 @@ class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater with
 	@Store
 	@Sync
 	private val io = add(new IO(this))
-	private val renderer = add(new StaticRenderer(this))
+	private val renderer = add(new StaticRenderer())
 	private val itemRenderer = add(new ItemRenderer(this))
 	private val lightEmitter = add(new LightEmitter())
 

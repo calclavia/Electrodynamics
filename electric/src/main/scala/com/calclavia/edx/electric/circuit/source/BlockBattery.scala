@@ -39,19 +39,20 @@ object BlockBattery {
 
 class BlockBattery extends BlockEDX with Syncable with Storable with ExtendedUpdater {
 
-	@Store
-	@Sync
-	private var tier = 0
-	private var energyRenderLevel = 0
-	@Store
-	private var energy = add(new EnergyStorage)
 	private val electricNode = add(new NodeElectricComponent(this))
 	private val orientation = add(new Orientation(this)).hookBasedOnEntity().hookRightClickRotate()
 	@Store
 	private val io = add(new IO(this))
 	private val redstone = add(EDX.components.make(classOf[Redstone], this))
-	private val staticRenderer = add(new StaticRenderer(this))
+	private val staticRenderer = add(new StaticRenderer())
 	private val itemRenderer = add(new ItemRenderer(this))
+	//TODO: Remove debug
+	@Store
+	var mode = 0
+	@Store
+	@Sync
+	private var tier = 0
+	private var energyRenderLevel = 0
 
 	/**
 	 * Components
@@ -145,10 +146,8 @@ class BlockBattery extends BlockEDX with Syncable with Storable with ExtendedUpd
 	},
 		classOf[DropEvent]
 	)
-
-	//TODO: Remove debug
 	@Store
-	var mode = 0
+	private var energy = add(new EnergyStorage)
 	events.add((evt: RightClickEvent) => if (EDX.network.isServer) mode = (mode + 1) % 10, classOf[RightClickEvent])
 
 	override def onRegister() {
