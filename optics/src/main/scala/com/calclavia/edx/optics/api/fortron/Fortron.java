@@ -1,9 +1,9 @@
 package com.calclavia.edx.optics.api.fortron;
 
-import nova.core.fluid.Fluid;
-import nova.core.fluid.SidedTankProvider;
-import nova.core.fluid.component.Tank;
 import com.calclavia.edx.core.EDX;
+import nova.core.component.fluid.Fluid;
+import nova.core.component.fluid.SidedTankProvider;
+import nova.core.component.fluid.Tank;
 
 import java.util.Optional;
 

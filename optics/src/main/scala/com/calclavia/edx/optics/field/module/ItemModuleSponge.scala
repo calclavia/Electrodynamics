@@ -5,7 +5,7 @@ import java.util
 import com.calclavia.edx.optics.api.machine.Projector
 import com.calclavia.edx.optics.component.ItemModule
 import com.calclavia.edx.optics.field.BlockProjector
-import nova.core.fluid.FluidBlock
+import nova.core.component.fluid.FluidBlock
 import nova.core.network.NetworkTarget.Side
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 

@@ -6,7 +6,7 @@ import com.calclavia.edx.optics.api.modules.Module
 import com.calclavia.edx.optics.util.CacheHandler
 import nova.core.block.Block
 import nova.core.component.Component
-import nova.core.inventory.Inventory
+import nova.core.component.inventory.Inventory
 import nova.core.item.{Item, ItemFactory}
 
 /**
@@ -15,10 +15,9 @@ import nova.core.item.{Item, ItemFactory}
 //@Require(classOf[Inventory])
 class CrystalHandler(val block: Block) extends Component with CacheHandler {
 
-	var startModuleIndex = 0
 	private lazy val inventory = block.get(classOf[Inventory])
 	private lazy val endModuleIndex = inventory.size() - 1
-
+	var startModuleIndex = 0
 	var capacityBase = 500
 	var capacityBoost = 5
 
@@ -27,26 +26,6 @@ class CrystalHandler(val block: Block) extends Component with CacheHandler {
 	protected def doGetEnergyCost = getModules().foldLeft(0f)((a, b) => a + b.count * b.asInstanceOf[Module].getFortronCost(amplifier.toFloat))
 
 	protected def amplifier = 1d
-
-	/**
-	 * Gets all the modules in this block that are in specific slots
-	 * @param slots The slot IDs. Providing null will search all slots
-	 * @return The set of all item modules in the slots.
-	 */
-	def getModules(slots: Int*): Set[Item with Module] =
-		getOrSetCache(
-			"getModules_" + (if (slots != null) slots.hashCode() else ""),
-			() => {
-				val iterSlots = if (slots == null || slots.length <= 0) startModuleIndex until endModuleIndex else slots
-
-				return iterSlots
-					.view
-					.map(inventory.get)
-					.collect { case item: Optional[Item] if item.isPresent => item.get() }
-					.collect { case item: Item with Module => item }
-					.toSet
-			}
-		)
 
 	/**
 	 * Gets the number of modules in this block that are in specific slots
@@ -86,6 +65,26 @@ class CrystalHandler(val block: Block) extends Component with CacheHandler {
 				else {
 					return null
 				}
+			}
+		)
+
+	/**
+	 * Gets all the modules in this block that are in specific slots
+	 * @param slots The slot IDs. Providing null will search all slots
+	 * @return The set of all item modules in the slots.
+	 */
+	def getModules(slots: Int*): Set[Item with Module] =
+		getOrSetCache(
+			"getModules_" + (if (slots != null) slots.hashCode() else ""),
+			() => {
+				val iterSlots = if (slots == null || slots.length <= 0) startModuleIndex until endModuleIndex else slots
+
+				return iterSlots
+					.view
+					.map(inventory.get)
+					.collect { case item: Optional[Item] if item.isPresent => item.get() }
+					.collect { case item: Item with Module => item }
+					.toSet
 			}
 		)
 }

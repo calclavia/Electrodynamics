@@ -10,7 +10,6 @@ import com.calclavia.edx.optics.grid.OpticHandler
 import com.calclavia.edx.optics.util.CacheHandler
 import com.resonant.core.structure.Structure
 import nova.core.component.transform.Orientation
-import nova.core.inventory.InventorySimple
 import nova.core.item.{Item, ItemFactory}
 import nova.core.network.Sync
 import nova.core.retention.Store
@@ -27,24 +26,18 @@ import scala.util.{Failure, Success}
 abstract class BlockFieldMatrix extends BlockFrequency with FieldMatrix with IPermissionProvider with CacheHandler {
 
 	val _getModuleSlots = (14 until 25).toArray
+	val crystalHandler = add(new CrystalHandler(this))
 	protected val modeSlotID = 0
-
+	protected val orientation = add(new Orientation(this))
+	protected val opticHandler = add(new OpticHandler(this)).accumulate()
 	/**
 	 * Are the directions on the GUI absolute values?
 	 */
 	@Sync(ids = Array(BlockPacketID.description, BlockPacketID.toggleMode4))
 	@Store
 	var absoluteDirection = false
-
 	protected var calculatedField: Set[Vector3D] = null
-
 	protected var isCalculating = false
-
-	val crystalHandler = add(new CrystalHandler(this))
-
-	protected val orientation = add(new Orientation(this))
-
-	protected val opticHandler = add(new OpticHandler(this)).accumulate()
 
 	override def getShape: StructureProvider = getShapeItem
 
@@ -70,31 +63,6 @@ abstract class BlockFieldMatrix extends BlockFrequency with FieldMatrix with IPe
 
 		return actualDirs.foldLeft(0)((b, a) => b + getModuleCount(module, getDirectionSlots(a): _*))
 	}
-
-	override def getDirectionSlots(direction: Direction): Array[Int] =
-		direction match {
-			case Direction.UP =>
-				Array(10, 11)
-			case Direction.DOWN =>
-				Array(12, 13)
-			case Direction.SOUTH =>
-				Array(2, 3)
-			case Direction.NORTH =>
-				Array(4, 5)
-			case Direction.WEST =>
-				Array(6, 7)
-			case Direction.EAST =>
-				Array(8, 9)
-			case _ =>
-				Array[Int]()
-		}
-
-	/**
-	 * Gets the number of modules in this block that are in specific slots
-	 * @param slots The slot IDs. Providing null will search all slots
-	 * @return The number of all item modules in the slots.
-	 */
-	override def getModuleCount(compareModule: ItemFactory, slots: Int*): Int = crystalHandler.getModuleCount(compareModule, slots: _*)
 
 	def getInteriorPoints: JSet[Vector3D] =
 		getOrSetCache("getInteriorPoints", () => {
@@ -180,8 +148,6 @@ abstract class BlockFieldMatrix extends BlockFrequency with FieldMatrix with IPe
 			return new Vector3D(xScaleNeg, yScaleNeg, zScaleNeg)
 		})
 
-	def getModuleSlots: Array[Int] = _getModuleSlots
-
 	def getTranslation: Vector3D =
 		getOrSetCache("getTranslation", () => {
 
@@ -240,6 +206,33 @@ abstract class BlockFieldMatrix extends BlockFrequency with FieldMatrix with IPe
 			val verticalRotation = getModuleCount(OpticsContent.moduleRotate, getDirectionSlots(Direction.UP): _*) - getModuleCount(OpticsContent.moduleRotate, getDirectionSlots(Direction.DOWN): _*)
 			return verticalRotation * 2
 		})
+
+	override def getDirectionSlots(direction: Direction): Array[Int] =
+		direction match {
+			case Direction.UP =>
+				Array(10, 11)
+			case Direction.DOWN =>
+				Array(12, 13)
+			case Direction.SOUTH =>
+				Array(2, 3)
+			case Direction.NORTH =>
+				Array(4, 5)
+			case Direction.WEST =>
+				Array(6, 7)
+			case Direction.EAST =>
+				Array(8, 9)
+			case _ =>
+				Array[Int]()
+		}
+
+	/**
+	 * Gets the number of modules in this block that are in specific slots
+	 * @param slots The slot IDs. Providing null will search all slots
+	 * @return The number of all item modules in the slots.
+	 */
+	override def getModuleCount(compareModule: ItemFactory, slots: Int*): Int = crystalHandler.getModuleCount(compareModule, slots: _*)
+
+	def getModuleSlots: Array[Int] = _getModuleSlots
 
 	def getCalculatedField: JSet[Vector3D] = if (calculatedField != null) calculatedField else Set.empty[Vector3D]
 

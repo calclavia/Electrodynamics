@@ -9,8 +9,8 @@ import com.calclavia.edx.optics.field.shape.ItemShapeCustom
 import com.resonant.core.access.Permission
 import nova.core.block.{Block, BlockFactory}
 import nova.core.component.ComponentProvider
+import nova.core.component.inventory.Inventory
 import nova.core.entity.component.Player
-import nova.core.inventory.Inventory
 import nova.core.item.{Item, ItemBlock}
 import nova.core.network.NetworkTarget.Side
 import nova.core.util.Direction

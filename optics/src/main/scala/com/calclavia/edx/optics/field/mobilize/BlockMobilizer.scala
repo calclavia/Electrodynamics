@@ -12,12 +12,12 @@ import com.calclavia.edx.optics.fx.{FXHologramProgress, IEffectController}
 import com.calclavia.edx.optics.security.{MFFSPermissions, PermissionHandler}
 import com.calclavia.edx.optics.util.OpticUtility
 import com.calclavia.edx.optics.{Optics, Settings}
+import nova.core.component.inventory.InventorySimple
 import nova.core.component.misc.Collider
 import nova.core.component.renderer.StaticRenderer
 import nova.core.component.transform.Orientation
 import nova.core.entity.Entity
 import nova.core.entity.component.RigidBody
-import nova.core.inventory.InventorySimple
 import nova.core.item.Item
 import nova.core.network.NetworkTarget.Side
 import nova.core.network.{Packet, Sync}
@@ -359,46 +359,6 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 		return EDX.blocks.getAirBlock.sameType(targetBlock)
 	}
 
-	/**
-	 * Gets the position in which the manipulator will try to translate the field into.
-	 *
-	 * @return A vector of the target position.
-	 */
-	def getTargetPosition: (World, Vector3D) = {
-		if (isTeleport) {
-			val cardStack = getLinkCard
-
-			if (cardStack != null) {
-				val link = cardStack.asInstanceOf[CoordLink].getLink
-				return (link._1, link._2)
-			}
-		}
-
-		return (world(), getAbsoluteAnchor + get(classOf[Orientation]).orientation.toVector)
-	}
-
-	private def isTeleport: Boolean = {
-		if (Settings.allowForceManipulatorTeleport) {
-			val cardStack = getLinkCard
-
-			if (cardStack != null) {
-				return cardStack.asInstanceOf[CoordLink].getLink != null
-			}
-		}
-		return false
-	}
-
-	def getLinkCard: Item = {
-		inventory
-			.filter(_ != null)
-			.find(_.isInstanceOf[CoordLink]) match {
-			case Some(item) => return item
-			case _ => return null
-		}
-	}
-
-	def getAbsoluteAnchor: Vector3D = transform.position + anchor
-
 	def isVisibleToPlayer(position: Vector3D): Boolean = Direction.DIRECTIONS.count(dir => world.getBlock(position + dir.toVector).get.get(classOf[Collider]).isOpaqueCube.get()) < 6
 
 	override def read(packet: Packet) {
@@ -508,6 +468,46 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 			entities.foreach(entity => moveEntity(entity, targetLocation._1, targetLocation._2 + 0.5 + entity.transform.position() - (getAbsoluteAnchor + 0.5)))
 		}
 	}
+
+	/**
+	 * Gets the position in which the manipulator will try to translate the field into.
+	 *
+	 * @return A vector of the target position.
+	 */
+	def getTargetPosition: (World, Vector3D) = {
+		if (isTeleport) {
+			val cardStack = getLinkCard
+
+			if (cardStack != null) {
+				val link = cardStack.asInstanceOf[CoordLink].getLink
+				return (link._1, link._2)
+			}
+		}
+
+		return (world(), getAbsoluteAnchor + get(classOf[Orientation]).orientation.toVector)
+	}
+
+	private def isTeleport: Boolean = {
+		if (Settings.allowForceManipulatorTeleport) {
+			val cardStack = getLinkCard
+
+			if (cardStack != null) {
+				return cardStack.asInstanceOf[CoordLink].getLink != null
+			}
+		}
+		return false
+	}
+
+	def getLinkCard: Item = {
+		inventory
+			.filter(_ != null)
+			.find(_.isInstanceOf[CoordLink]) match {
+			case Some(item) => return item
+			case _ => return null
+		}
+	}
+
+	def getAbsoluteAnchor: Vector3D = transform.position + anchor
 
 	def getSearchBounds: Cuboid = {
 		val positiveScale = transform.position + getTranslation + getPositiveScale + 1

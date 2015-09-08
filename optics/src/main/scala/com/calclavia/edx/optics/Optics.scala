@@ -5,8 +5,8 @@ import com.calclavia.edx.optics.api.fortron.Fortron
 import com.calclavia.edx.optics.content.{OpticsContent, OpticsModels, OpticsTextures}
 import com.calclavia.edx.optics.grid.{OpticGrid, OpticGridPacket}
 import com.calclavia.edx.optics.security.MFFSPermissions
-import nova.core.event.{ServerEvent, BlockEvent}
-import nova.core.fluid.Fluid
+import nova.core.component.fluid.Fluid
+import nova.core.event.{BlockEvent, ServerEvent}
 import nova.core.loader.{Loadable, Mod}
 import nova.scala.wrapper.FunctionalWrapper._
 

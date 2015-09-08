@@ -1,6 +1,6 @@
 package com.calclavia.edx.core.recipe;
 
-import nova.core.fluid.Fluid;
+import nova.core.component.fluid.Fluid;
 import nova.core.item.Item;
 
 public abstract class RecipeResource {

@@ -8,9 +8,9 @@ import com.calclavia.edx.optics.component.BlockFrequency
 import com.calclavia.edx.optics.content.{OpticsModels, OpticsTextures}
 import com.resonant.core.access.Permission
 import nova.core.block.Block.{PlaceEvent, RightClickEvent}
+import nova.core.component.inventory.InventorySimple
 import nova.core.component.renderer.{DynamicRenderer, StaticRenderer}
 import nova.core.component.transform.Orientation
-import nova.core.inventory.InventorySimple
 import nova.core.item.Item
 import nova.core.render.model.Model
 import nova.scala.util.ExtendedUpdater

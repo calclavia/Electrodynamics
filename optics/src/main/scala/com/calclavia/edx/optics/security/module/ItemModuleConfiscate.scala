@@ -2,12 +2,12 @@ package com.calclavia.edx.optics.security.module
 
 import java.util
 
+import com.calclavia.edx.core.EDX
 import com.calclavia.edx.optics.api.machine.Projector
 import com.calclavia.edx.optics.field.BlockProjector
 import com.calclavia.edx.optics.security.MFFSPermissions
+import nova.core.component.inventory.Inventory
 import nova.core.entity.component.Player
-import com.calclavia.edx.core.EDX
-import nova.core.inventory.Inventory
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 class ItemModuleConfiscate extends ItemModuleDefense {

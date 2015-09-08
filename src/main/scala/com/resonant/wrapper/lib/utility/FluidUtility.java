@@ -1,10 +1,10 @@
 package com.resonant.wrapper.lib.utility;
 
 import nova.core.block.Block;
-import nova.core.fluid.Fluid;
-import nova.core.fluid.FluidBlock;
-import nova.core.fluid.SidedTankProvider;
-import nova.core.fluid.component.Tank;
+import nova.core.component.fluid.Fluid;
+import nova.core.component.fluid.FluidBlock;
+import nova.core.component.fluid.SidedTankProvider;
+import nova.core.component.fluid.Tank;
 import nova.core.util.Direction;
 import nova.core.world.World;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
