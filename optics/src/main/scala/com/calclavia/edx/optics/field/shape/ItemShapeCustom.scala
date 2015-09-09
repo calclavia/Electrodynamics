@@ -1,17 +1,17 @@
 package com.calclavia.edx.optics.field.shape
 
 import java.io.File
-import java.util.{Set => JSet, Random}
+import java.util.{Random, Set => JSet}
 
 import com.calclavia.edx.core.EDX
 import com.calclavia.edx.optics.Settings
-import com.calclavia.edx.optics.content.{OpticsTextures, OpticsContent}
+import com.calclavia.edx.optics.content.{OpticsContent, OpticsTextures}
 import com.calclavia.edx.optics.util.CacheHandler
 import com.resonant.core.structure.{Structure, StructureCustom}
 import nova.core.component.renderer.ItemRenderer
 import nova.core.game.InputManager.Key
 import nova.core.item.Item.{RightClickEvent, TooltipEvent, UseEvent}
-import nova.core.render.model.{Model, MeshModel}
+import nova.core.render.model.{MeshModel, Model}
 import nova.core.retention.Store
 import nova.scala.wrapper.FunctionalWrapper._
 import nova.scala.wrapper.VectorWrapper._
@@ -155,7 +155,7 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 		(model: Model) => {
 			val subModel = new MeshModel()
 			modes(new Random().nextInt(modes.length - 1))
-				.getDummy
+				.build()
 				.asInstanceOf[ItemShape]
 				.get(classOf[ItemRenderer])
 				.onRender

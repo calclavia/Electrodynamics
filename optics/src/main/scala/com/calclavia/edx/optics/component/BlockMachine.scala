@@ -27,7 +27,7 @@ import nova.scala.wrapper.FunctionalWrapper._
  */
 //TODO: Redstone state is not properly saved
 abstract class BlockMachine extends BlockEDX with Syncable with IActivatable with Stateful with Storable with ExtendedUpdater {
-	val redstoneNode = add(EDX.components.make(classOf[Redstone], this))
+	val redstoneNode = add(classOf[Redstone])
 	val itemRenderer = add(new ItemRenderer(this))
 	val staticRenderer = add(new StaticRenderer())
 	/**

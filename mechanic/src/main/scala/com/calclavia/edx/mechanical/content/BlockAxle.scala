@@ -57,12 +57,15 @@ object BlockAxle {
 	class Metal extends BlockAxle {
 		override def material = MechanicalMaterial.metal
 	}
+
 }
 
 abstract class BlockAxle extends BlockEDX with Storable with Syncable {
 
-	def material: MechanicalMaterial
 	add(material)
+	dir = Direction.NORTH
+
+	def material: MechanicalMaterial
 
 	override def getID: String = s"axle-$material"
 
@@ -76,9 +79,6 @@ abstract class BlockAxle extends BlockEDX with Storable with Syncable {
 		_dir = BlockAxle.normalizeDir(direction).ordinal().asInstanceOf[Byte]
 	}
 
-	override def onRegister(): Unit = {
-		dir = Direction.NORTH
-	}
 	val microblock = add(new Microblock(this))
 		.setOnPlace(
 			(evt: PlaceEvent) => {

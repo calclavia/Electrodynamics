@@ -12,7 +12,6 @@ import nova.core.block.Block.{DropEvent, PlaceEvent, RightClickEvent}
 import nova.core.component.renderer.{ItemRenderer, StaticRenderer}
 import nova.core.component.transform.Orientation
 import nova.core.event.bus.Event
-import nova.core.item.Item
 import nova.core.network.{Sync, Syncable}
 import nova.core.render.model.Model
 import nova.core.retention.{Storable, Store}
@@ -43,7 +42,7 @@ class BlockBattery extends BlockEDX with Syncable with Storable with ExtendedUpd
 	private val orientation = add(new Orientation(this)).hookBasedOnEntity().hookRightClickRotate()
 	@Store
 	private val io = add(new IO(this))
-	private val redstone = add(EDX.components.make(classOf[Redstone], this))
+	private val redstone = add(classOf[Redstone])
 	private val staticRenderer = add(new StaticRenderer())
 	private val itemRenderer = add(new ItemRenderer(this))
 	//TODO: Remove debug
@@ -149,10 +148,6 @@ class BlockBattery extends BlockEDX with Syncable with Storable with ExtendedUpd
 	@Store
 	private var energy = add(new EnergyStorage)
 	events.add((evt: RightClickEvent) => if (EDX.network.isServer) mode = (mode + 1) % 10, classOf[RightClickEvent])
-
-	override def onRegister() {
-		EDX.items.register(func[Array[AnyRef], Item]((args: Array[AnyRef]) => new ItemBlockBattery(factory())))
-	}
 
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)

@@ -3,7 +3,6 @@ package com.calclavia.edx.electric.circuit.component
 import java.util.function.Supplier
 import java.util.{Set => JSet}
 
-import com.calclavia.edx.core.EDX
 import com.calclavia.edx.core.prefab.BlockEDX
 import com.calclavia.edx.electric.ElectricContent
 import com.calclavia.edx.electric.api.{ConnectionBuilder, Electric}
@@ -26,7 +25,7 @@ import nova.scala.wrapper.VectorWrapper._
 class BlockSiren extends BlockEDX with ExtendedUpdater with Stateful {
 	private val electricNode = add(new NodeElectricComponent(this))
 	private val io = add(new IO(this))
-	private val redstone = add(EDX.components.make(classOf[Redstone], this))
+	private val redstone = add(classOf[Redstone])
 	private val renderer = add(new StaticRenderer())
 	private val itemRenderer = add(new ItemRenderer(this))
 
