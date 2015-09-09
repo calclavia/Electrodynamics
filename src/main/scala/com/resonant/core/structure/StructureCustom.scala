@@ -29,7 +29,7 @@ class StructureCustom(val name: String) extends Structure with Storable {
 		val matrix = new MatrixStack().translate(translate).scale(scale).rotate(rotation).getMatrix
 		return structure
 			.filter(kv => Game.blocks.get(kv._2).isPresent)
-			.map(e => (TransformUtil.transform(e._1, matrix), Game.blocks.getFactory(e._2).get()))
+			.map(e => (TransformUtil.transform(e._1, matrix), Game.blocks.get(e._2).get()))
 	}
 
 	override def load(data: Data) {
