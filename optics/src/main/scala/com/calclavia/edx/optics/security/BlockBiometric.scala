@@ -8,10 +8,9 @@ import com.calclavia.edx.optics.component.BlockFrequency
 import com.calclavia.edx.optics.content.{OpticsModels, OpticsTextures}
 import com.resonant.core.access.Permission
 import nova.core.block.Block.{PlaceEvent, RightClickEvent}
-import nova.core.block.component.StaticBlockRenderer
-import nova.core.component.renderer.DynamicRenderer
+import nova.core.component.inventory.InventorySimple
+import nova.core.component.renderer.{DynamicRenderer, StaticRenderer}
 import nova.core.component.transform.Orientation
-import nova.core.inventory.InventorySimple
 import nova.core.item.Item
 import nova.core.render.model.Model
 import nova.scala.util.ExtendedUpdater
@@ -39,41 +38,40 @@ class BlockBiometric extends BlockFrequency with ExtendedUpdater with Permission
 
 	add(new Orientation(this)).hookBasedOnEntity().hookRightClickRotate()
 
-	get(classOf[StaticBlockRenderer])
-		.setOnRender(
-	    (model: Model) => {
-		    model.matrix.rotate(get(classOf[Orientation]).orientation.rotation)
-		    val modelBiometric: Model = OpticsModels.biometric.getModel
-		    modelBiometric.children.removeAll(modelBiometric.children.filter(_.name.equals("holoScreen")))
-		    model.children.add(modelBiometric)
-		    model.bindAll(if (isActive) OpticsTextures.biometricOn else OpticsTextures.biometricOff)
-	    }
+	get(classOf[StaticRenderer])
+		.onRender(
+			(model: Model) => {
+				model.matrix.rotate(get(classOf[Orientation]).orientation.rotation)
+				val modelBiometric = OpticsModels.biometric.getModel
+				modelBiometric.children.removeAll(modelBiometric.children.filter(_.name.equals("holoScreen")))
+				model.children.add(modelBiometric)
+				modelBiometric.bindAll(if (isActive) OpticsTextures.biometricOn else OpticsTextures.biometricOff)
+			}
 		)
 
 	add(new DynamicRenderer())
-		.setOnRender(
-	    (model: Model) => {
-		    model.matrix.rotate(get(classOf[Orientation]).orientation.rotation)
-		    /**
-		     * Simulate flicker and, hovering
-		     */
-		    val t = System.currentTimeMillis()
-		    val dist = position.distance(EDX.clientManager.getPlayer.position)
+		.onRender(
+			(model: Model) => {
+				model.matrix.rotate(get(classOf[Orientation]).orientation.rotation)
+				/**
+				 * Simulate flicker and, hovering
+				 */
+				val t = System.currentTimeMillis()
+				val dist = position.distance(EDX.clientManager.getPlayer.position)
 
-		    if (dist < 3) {
-			    if (Math.random() > 0.05 || (lastFlicker - t) > 200) {
-				    model.matrix.translate(0, Math.sin(Math.toRadians(animation)) * 0.05, 0)
-				    //RenderUtility.enableBlending()
-				    val screenModel = OpticsModels.biometric.getModel
-				    screenModel.children.removeAll(screenModel.filterNot(_.name.equals("holoScreen")))
-				    model.children.add(screenModel)
-				    //RenderUtility.disableBlending()
-				    lastFlicker = t
-			    }
-		    }
-
-		    model.bindAll(if (isActive) OpticsTextures.biometricOn else OpticsTextures.biometricOff)
-	    }
+				if (dist < 3) {
+					if (Math.random() > 0.05 || (lastFlicker - t) > 200) {
+						model.matrix.translate(0, Math.sin(Math.toRadians(animation)) * 0.05, 0)
+						//RenderUtility.enableBlending()
+						val screenModel = OpticsModels.biometric.getModel
+						screenModel.children.removeAll(screenModel.filterNot(_.name.equals("holoScreen")))
+						model.children.add(screenModel)
+						//RenderUtility.disableBlending()
+						lastFlicker = t
+						screenModel.bindAll(if (isActive) OpticsTextures.biometricOn else OpticsTextures.biometricOff)
+					}
+				}
+			}
 		)
 
 	events.add((evt: PlaceEvent) => world.markStaticRender(position), classOf[PlaceEvent])

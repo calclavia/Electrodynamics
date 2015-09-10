@@ -1,7 +1,6 @@
 package com.calclavia.edx.optics.item.card
 
-import nova.core.fluid.Fluid
-import nova.core.fluid.component.{FluidHandler, TankSimple}
+import nova.core.component.fluid.{Fluid, FluidHandler, TankSimple}
 
 /**
  * A card used by admins or players to cheat infinite energy.

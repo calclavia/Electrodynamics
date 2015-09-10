@@ -2,12 +2,12 @@ package com.calclavia.edx.core
 
 import nova.core.block.BlockManager
 import nova.core.component.ComponentManager
+import nova.core.component.fluid.FluidManager
 import nova.core.entity.EntityManager
-import nova.core.event.GlobalEvents
-import nova.core.fluid.FluidManager
+import nova.core.event.bus.GlobalEvents
 import nova.core.game.{ClientManager, GameInfo, InputManager}
 import nova.core.item.{ItemDictionary, ItemManager}
-import nova.core.loader.{Loadable, NovaMod}
+import nova.core.loader.{Loadable, Mod}
 import nova.core.nativewrapper.NativeManager
 import nova.core.network.NetworkManager
 import nova.core.recipes.RecipeManager
@@ -21,7 +21,7 @@ import org.slf4j.Logger
 /**
  * @author Calclavia
  */
-@NovaMod(id = Reference.coreID, name = Reference.name, version = Reference.version, novaVersion = Reference.novaVersion)
+@Mod(id = Reference.coreID, name = Reference.name, version = Reference.version, novaVersion = Reference.novaVersion)
 object EDX extends Loadable {
 	val logger: Logger = null
 	val gameInfo: GameInfo = null

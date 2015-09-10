@@ -30,7 +30,7 @@ trait BlockConnectable[N] extends Connectable[N] {
 		val adjacentBlocks: Map[Direction, Optional[Block]] = this.adjacentBlocks
 		val adjacentNodes: Map[Direction, N] =
 			adjacentBlocks
-				.filter { case (k, v) => v.isPresent && v.get.getClass().isAssignableFrom(compareClass) }
+				.filter { case (k, v) => v.isPresent && v.get.getClass.isAssignableFrom(compareClass) }
 				.map { case (k, v) => (k, getNodeFromBlock(v.get(), k)) }
 
 		val connectedMap = adjacentNodes
@@ -53,7 +53,7 @@ trait BlockConnectable[N] extends Connectable[N] {
 	/**
 	 * @return The set of blocks adjacent to this block
 	 */
-	protected def adjacentBlocks: Map[Direction, Optional[Block]] = Direction.DIRECTIONS.map(dir => (dir, world.getBlock(position + dir.toVector))).toMap
+	protected def adjacentBlocks: Map[Direction, Optional[Block]] = Direction.VALID_DIRECTIONS.map(dir => (dir, world.getBlock(position + dir.toVector))).toMap
 
 	protected def getNodeFromBlock(block: Block, from: Direction): N = block.getOp(compareClass).orElse(null.asInstanceOf[N])
 

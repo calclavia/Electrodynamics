@@ -9,13 +9,12 @@ import com.calclavia.edx.electric.ElectricContent
 import com.calclavia.edx.electric.api.Electric
 import com.calclavia.edx.electric.api.Electric.GraphBuiltEvent
 import com.calclavia.edx.electric.grid.NodeElectricJunction
-import nova.microblock.micro.Microblock
 import nova.core.block.Block.{PlaceEvent, RightClickEvent}
-import nova.core.block.component.StaticBlockRenderer
 import nova.core.component.misc.Collider
-import nova.core.component.renderer.ItemRenderer
+import nova.core.component.renderer.{ItemRenderer, StaticRenderer}
 import nova.core.network.{Packet, Sync, Syncable}
-import nova.core.render.model.{BlockModelUtil, Model, StaticCubeTextureCoordinates}
+import nova.core.render.model.{MeshModel, Model}
+import nova.core.render.pipeline.{BlockRenderStream, StaticCubeTextureCoordinates}
 import nova.core.retention.{Storable, Store}
 import nova.core.util.Direction
 import nova.core.util.math.RotationUtil
@@ -68,12 +67,12 @@ object BlockWire {
 				.map(RotationUtil.rotateSide(0, _))
 				.map(Direction.fromOrdinal)
 				.map(
-			    d => {
-				    val dir = d.toVector
-				    val min = if (d.toVector.x < 0 || d.toVector.y < 0 || d.toVector.z < 0) dir * thickness else Vector3D.ZERO
-				    val max = if (d.toVector.x > 0 || d.toVector.y > 0 || d.toVector.z > 0) dir * thickness else Vector3D.ZERO
-				    (center + (dir * width)) + new Cuboid(min, max)
-			    }
+					d => {
+						val dir = d.toVector
+						val min = if (d.toVector.x < 0 || d.toVector.y < 0 || d.toVector.z < 0) dir * thickness else Vector3D.ZERO
+						val max = if (d.toVector.x > 0 || d.toVector.y > 0 || d.toVector.z > 0) dir * thickness else Vector3D.ZERO
+						(center + (dir * width)) + new Cuboid(min, max)
+					}
 				)
 				.toSeq
 
@@ -91,12 +90,29 @@ object BlockWire {
 class BlockWire extends BlockEDX with Storable with Syncable {
 
 	/**
+	 * Add components
+	 */
+	private val electricNode = add(new NodeElectricJunction(this))
+	private val microblock = add(new Microblock(this))
+		.setOnPlace(
+			(evt: PlaceEvent) => {
+				this.side = evt.side.opposite.ordinal.toByte
+				//TODO: Fix wire material
+				get(classOf[MaterialWire]).material = WireMaterial.COPPER
+				Optional.of(MicroblockContainer.sidePosition(Direction.fromOrdinal(this.side)))
+			}
+		)
+	@Sync
+	@Store
+	private val material = add(new MaterialWire)
+	private val blockRenderer = add(new StaticRenderer())
+	private val itemRenderer = add(new ItemRenderer(this))
+	/**
 	 * The side the wire is placed on.
 	 */
 	@Sync
 	@Store
 	private var side: Byte = 0
-
 	/**
 	 * A map of the connections relative to the {@link side}. Split into four 2-bits.
 	 *
@@ -114,57 +130,38 @@ class BlockWire extends BlockEDX with Storable with Syncable {
 	@Sync(ids = Array(0, 1))
 	private var connectionMask = 0x00
 
+	blockRenderer.onRender(
+		(model: Model) => {
+			val subModel = new MeshModel()
+			get(classOf[Collider]).occlusionBoxes.apply(Optional.empty()).foreach(cuboid => {
+				BlockRenderStream.drawCube(subModel, cuboid - 0.5, StaticCubeTextureCoordinates.instance)
+			})
+
+			subModel.faces.foreach(_.vertices.map(_.color = get(classOf[MaterialWire]).material.color))
+			subModel.bindAll(ElectricContent.wireTexture)
+			model.addChild(subModel)
+		}
+	)
 	/**
 	 * Caches the sidem ask and electric nodes
 	 */
 	private var connectionCache = Map.empty[Electric, Int].withDefaultValue(0)
 
-	/**
-	 * Add components
-	 */
-	private val electricNode = add(new NodeElectricJunction(this))
-
-	private val microblock = add(new Microblock(this))
-		.setOnPlace(
-	    (evt: PlaceEvent) => {
-		    this.side = evt.side.opposite.ordinal.toByte
-		    //TODO: Fix wire material
-		    get(classOf[MaterialWire]).material = WireMaterial.COPPER
-		    Optional.of(MicroblockContainer.sidePosition(Direction.fromOrdinal(this.side)))
-	    }
-		)
-	@Sync
-	@Store
-	private val material = add(new MaterialWire)
-
-	private val blockRenderer = add(new StaticBlockRenderer(this))
-
-	blockRenderer.setOnRender(
-		(model: Model) => {
-			get(classOf[Collider]).occlusionBoxes.apply(Optional.empty()).foreach(cuboid => {
-				BlockModelUtil.drawCube(model, cuboid - 0.5, StaticCubeTextureCoordinates.instance)
-			})
-
-			model.faces.foreach(_.vertices.map(_.color = get(classOf[MaterialWire]).material.color))
-			model.bindAll(ElectricContent.wireTexture)
-		}
-	)
-
-	private val itemRenderer = add(new ItemRenderer(this))
-
 	itemRenderer.setTexture(ElectricContent.wireTexture)
 
-	itemRenderer.setOnRender(
+	itemRenderer.onRender(
 		(model: Model) => {
+			val subModel = new MeshModel()
 			(0 until 5)
 				.map(dir => BlockWire.occlusionBounds(side)(dir))
 				.foreach(cuboid => {
-				BlockModelUtil.drawCube(model, cuboid - 0.5, StaticCubeTextureCoordinates.instance)
+				BlockRenderStream.drawCube(subModel, cuboid - 0.5, StaticCubeTextureCoordinates.instance)
 			})
 
 			//TODO: Change color
-			model.faces.foreach(_.vertices.map(_.color = WireMaterial.COPPER.color))
-			model.bindAll(ElectricContent.wireTexture)
+			subModel.faces.foreach(_.vertices.map(_.color = get(classOf[MaterialWire]).material.color))
+			subModel.bindAll(ElectricContent.wireTexture)
+			model.addChild(subModel)
 		}
 	)
 

@@ -30,7 +30,7 @@ class Permission(val id: String) extends TreeNode[Permission] {
 	}
 
 	override def toString: String = {
-		val list: List[Permission] = getHierarchy
+		val list: List[Permission] = hierarchy
 		val builder: StringBuilder = new StringBuilder
 		for (perm <- list) {
 			builder.append(perm.id)

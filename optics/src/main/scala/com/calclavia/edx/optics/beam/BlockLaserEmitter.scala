@@ -11,11 +11,11 @@ import com.calclavia.edx.optics.content.{OpticsModels, OpticsTextures}
 import com.calclavia.edx.optics.grid.{ElectromagneticBeam, OpticGrid, OpticHandler}
 import nova.core.block.Block.RightClickEvent
 import nova.core.block.Stateful
-import nova.core.block.component.{LightEmitter, StaticBlockRenderer}
-import nova.core.component.renderer.ItemRenderer
+import nova.core.block.component.LightEmitter
+import nova.core.component.renderer.{ItemRenderer, StaticRenderer}
 import nova.core.component.transform.Orientation
 import nova.core.component.transform.Orientation.OrientationChangeEvent
-import nova.core.event.Event
+import nova.core.event.bus.Event
 import nova.core.network.{Packet, Sync, Syncable}
 import nova.core.render.model.Model
 import nova.core.retention.{Data, Storable, Store}
@@ -42,7 +42,7 @@ class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater with
 	@Store
 	@Sync
 	private val io = add(new IO(this))
-	private val renderer = add(new StaticBlockRenderer(this))
+	private val renderer = add(new StaticRenderer())
 	private val itemRenderer = add(new ItemRenderer(this))
 	private val lightEmitter = add(new LightEmitter())
 
@@ -82,14 +82,15 @@ class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater with
 		}
 	)
 
-	events.add(
-		(evt: RightClickEvent) => {
-			optic.destroy()
-		},
-		classOf[RightClickEvent]
-	)
+	events
+		.on(classOf[RightClickEvent])
+		.bind(
+			(evt: RightClickEvent) => {
+				optic.destroy()
+			}
+		)
 
-	renderer.setOnRender(
+	renderer.onRender(
 		(model: Model) => {
 			val rot = orientation.orientation match {
 				case Direction.UP => new Rotation(Vector3D.PLUS_I, -Math.PI / 2)
@@ -110,8 +111,9 @@ class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater with
 				model.matrix.rotate(Vector3D.PLUS_I, Math.PI)
 			}
 
-			model.children.add(OpticsModels.laserEmitter.getModel)
-			model.bindAll(OpticsTextures.laserEmitter)
+			val subModel = OpticsModels.laserEmitter.getModel
+			model.children.add(subModel)
+			subModel.bindAll(OpticsTextures.laserEmitter)
 		}
 	)
 

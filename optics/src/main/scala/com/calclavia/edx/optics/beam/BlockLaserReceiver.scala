@@ -11,12 +11,12 @@ import com.calclavia.edx.optics.grid.OpticHandler
 import com.calclavia.edx.optics.grid.OpticHandler.ReceiveBeamEvent
 import nova.core.block.Block.{PlaceEvent, RightClickEvent}
 import nova.core.block.Stateful
-import nova.core.block.component.{LightEmitter, StaticBlockRenderer}
-import nova.core.component.renderer.ItemRenderer
+import nova.core.block.component.LightEmitter
+import nova.core.component.renderer.{ItemRenderer, StaticRenderer}
 import nova.core.component.transform.Orientation
-import nova.core.network.Syncable
+import nova.core.network.{Sync, Syncable}
 import nova.core.render.model.Model
-import nova.core.retention.Storable
+import nova.core.retention.{Storable, Store}
 import nova.core.util.Direction
 import nova.scala.component.IO
 import nova.scala.util.ExtendedUpdater
@@ -29,10 +29,14 @@ import org.apache.commons.math3.geometry.euclidean.threed.{Rotation, Vector3D}
  */
 class BlockLaserReceiver extends BlockEDX with Stateful with ExtendedUpdater with Storable with Syncable {
 	private val electricNode = new NodeElectricComponent(this)
+	@Store
+	@Sync
 	private val orientation = add(new Orientation(this)).hookBasedOnEntity().hookRightClickRotate()
 	private val opticHandler = add(new OpticHandler(this))
+	@Store
+	@Sync
 	private val io = add(new IO(this))
-	private val renderer = add(new StaticBlockRenderer(this))
+	private val renderer = add(new StaticRenderer())
 	private val itemRenderer = add(new ItemRenderer(this))
 	private val lightEmitter = add(new LightEmitter())
 
@@ -75,14 +79,14 @@ class BlockLaserReceiver extends BlockEDX with Stateful with ExtendedUpdater wit
 
 	events.on(classOf[ReceiveBeamEvent]).bind(
 		(evt: ReceiveBeamEvent) => {
-		//if (hit.sideHit == getDirection.ordinal)
-		{
-			//TODO: Change voltage until power = energy
-			electricNode.generateVoltage(evt.receivingPower)
-		}
-	})
+			//if (hit.sideHit == getDirection.ordinal)
+			{
+				//TODO: Change voltage until power = energy
+				electricNode.generateVoltage(evt.receivingPower)
+			}
+		})
 
-	renderer.setOnRender(
+	renderer.onRender(
 		(model: Model) => {
 			val rot = orientation.orientation match {
 				case Direction.UP => new Rotation(Vector3D.PLUS_I, -Math.PI / 2)
@@ -103,8 +107,9 @@ class BlockLaserReceiver extends BlockEDX with Stateful with ExtendedUpdater wit
 				model.matrix.rotate(Vector3D.PLUS_I, Math.PI)
 			}
 
-			model.children.add(OpticsModels.laserReceiver.getModel)
-			model.bindAll(OpticsTextures.laserReceiver)
+			val subModel = OpticsModels.laserReceiver.getModel
+			model.children.add(subModel)
+			subModel.bindAll(OpticsTextures.laserReceiver)
 		}
 	)
 

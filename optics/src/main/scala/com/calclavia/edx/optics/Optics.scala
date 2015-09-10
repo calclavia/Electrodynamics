@@ -5,12 +5,12 @@ import com.calclavia.edx.optics.api.fortron.Fortron
 import com.calclavia.edx.optics.content.{OpticsContent, OpticsModels, OpticsTextures}
 import com.calclavia.edx.optics.grid.{OpticGrid, OpticGridPacket}
 import com.calclavia.edx.optics.security.MFFSPermissions
-import nova.core.event.GlobalEvents.{BlockChangeEvent, ServerStartingEvent, ServerStoppingEvent}
-import nova.core.fluid.Fluid
-import nova.core.loader.{Loadable, NovaMod}
+import nova.core.component.fluid.Fluid
+import nova.core.event.{BlockEvent, ServerEvent}
+import nova.core.loader.{Loadable, Mod}
 import nova.scala.wrapper.FunctionalWrapper._
 
-@NovaMod(
+@Mod(
 	id = Reference.opticsID,
 	name = Reference.name + ": Optics",
 	version = Reference.version,
@@ -28,21 +28,21 @@ object Optics extends Loadable {
 		EDX.network.register(new OpticGridPacket)
 
 		//Hook block change event
-		EDX.events.on(classOf[BlockChangeEvent]).bind((evt: BlockChangeEvent) => EventHandler.onBlockChange(evt))
+		EDX.events.on(classOf[BlockEvent.Change]).bind((evt: BlockEvent.Change) => EventHandler.onBlockChange(evt))
 
 		//Init frequency grid1
 		EDX.events
-			.on(classOf[ServerStartingEvent])
-			.bind((evt: ServerStartingEvent) => {
+			.on(classOf[ServerEvent.Start])
+			.bind((evt: ServerEvent.Start) => {
 			GraphFrequency.client = new GraphFrequency
 			GraphFrequency.server = new GraphFrequency
 		})
 
 		EDX.events
-			.on(classOf[ServerStoppingEvent])
-			.bind((evt: ServerStoppingEvent) => OpticGrid.clear())
+			.on(classOf[ServerEvent.Stop])
+			.bind((evt: ServerEvent.Stop) => OpticGrid.clear())
 
-		EDX.fluids.register((args: Array[AnyRef]) => new Fluid(Fortron.fortronID))
+		EDX.fluids.register(() => new Fluid(Fortron.fortronID))
 
 		OpticsContent.preInit()
 		OpticsModels.preInit()

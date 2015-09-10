@@ -10,7 +10,6 @@ import com.calclavia.edx.optics.grid.OpticHandler
 import com.calclavia.edx.optics.util.CacheHandler
 import com.resonant.core.structure.Structure
 import nova.core.component.transform.Orientation
-import nova.core.inventory.InventorySimple
 import nova.core.item.{Item, ItemFactory}
 import nova.core.network.Sync
 import nova.core.retention.Store
@@ -27,45 +26,26 @@ import scala.util.{Failure, Success}
 abstract class BlockFieldMatrix extends BlockFrequency with FieldMatrix with IPermissionProvider with CacheHandler {
 
 	val _getModuleSlots = (14 until 25).toArray
+	val crystalHandler = add(new CrystalHandler(this))
 	protected val modeSlotID = 0
-
+	protected val orientation = add(new Orientation(this))
+	protected val opticHandler = add(new OpticHandler(this)).accumulate()
 	/**
 	 * Are the directions on the GUI absolute values?
 	 */
 	@Sync(ids = Array(BlockPacketID.description, BlockPacketID.toggleMode4))
 	@Store
 	var absoluteDirection = false
-
 	protected var calculatedField: Set[Vector3D] = null
-
 	protected var isCalculating = false
 
-	val crystalHandler = add(new CrystalHandler(this))
-
-	protected val orientation = add(new Orientation(this))
-
-	protected val opticHandler = add(new OpticHandler(this)).accumulate()
-
 	override def getShape: StructureProvider = getShapeItem
-
-	/**
-	 * @return Gets the item that provides a shape
-	 */
-	def getShapeItem: Item with StructureProvider = {
-		val optional = inventory.get(modeSlotID)
-		if (optional.isPresent) {
-			if (optional.get.isInstanceOf[Item with StructureProvider]) {
-				return optional.get.asInstanceOf[Item with StructureProvider]
-			}
-		}
-		return null
-	}
 
 	override def getSidedModuleCount(module: ItemFactory, directions: Direction*): Int = {
 		var actualDirs = directions
 
 		if (directions == null || directions.length > 0) {
-			actualDirs = Direction.DIRECTIONS
+			actualDirs = Direction.VALID_DIRECTIONS
 		}
 
 		return actualDirs.foldLeft(0)((b, a) => b + getModuleCount(module, getDirectionSlots(a): _*))
@@ -114,6 +94,19 @@ abstract class BlockFieldMatrix extends BlockFrequency with FieldMatrix with IPe
 		structure.setScale(getScale)
 		structure.setRotation(getRotation)
 		return structure
+	}
+
+	/**
+	 * @return Gets the item that provides a shape
+	 */
+	def getShapeItem: Item with StructureProvider = {
+		val optional = inventory.get(modeSlotID)
+		if (optional.isPresent) {
+			if (optional.get.isInstanceOf[Item with StructureProvider]) {
+				return optional.get.asInstanceOf[Item with StructureProvider]
+			}
+		}
+		return null
 	}
 
 	def getScale = (getPositiveScale + getNegativeScale) / 2
@@ -180,8 +173,6 @@ abstract class BlockFieldMatrix extends BlockFrequency with FieldMatrix with IPe
 			return new Vector3D(xScaleNeg, yScaleNeg, zScaleNeg)
 		})
 
-	def getModuleSlots: Array[Int] = _getModuleSlots
-
 	def getTranslation: Vector3D =
 		getOrSetCache("getTranslation", () => {
 
@@ -240,6 +231,8 @@ abstract class BlockFieldMatrix extends BlockFrequency with FieldMatrix with IPe
 			val verticalRotation = getModuleCount(OpticsContent.moduleRotate, getDirectionSlots(Direction.UP): _*) - getModuleCount(OpticsContent.moduleRotate, getDirectionSlots(Direction.DOWN): _*)
 			return verticalRotation * 2
 		})
+
+	def getModuleSlots: Array[Int] = _getModuleSlots
 
 	def getCalculatedField: JSet[Vector3D] = if (calculatedField != null) calculatedField else Set.empty[Vector3D]
 

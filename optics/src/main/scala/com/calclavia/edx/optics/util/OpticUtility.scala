@@ -9,8 +9,8 @@ import com.calclavia.edx.optics.field.shape.ItemShapeCustom
 import com.resonant.core.access.Permission
 import nova.core.block.{Block, BlockFactory}
 import nova.core.component.ComponentProvider
+import nova.core.component.inventory.Inventory
 import nova.core.entity.component.Player
-import nova.core.inventory.Inventory
 import nova.core.item.{Item, ItemBlock}
 import nova.core.network.NetworkTarget.Side
 import nova.core.util.Direction
@@ -48,7 +48,7 @@ object OpticUtility {
 				}
 			//TODO: Check withPriority Sided
 			case invProvider: ComponentProvider if invProvider.has(classOf[Inventory]) =>
-				Direction.DIRECTIONS
+				Direction.VALID_DIRECTIONS
 					.view
 					//TODO: Check all inventories
 					.collect { case dir if invProvider.get(classOf[Inventory]).size() > 0 => invProvider.get(classOf[Inventory]) }
@@ -60,7 +60,7 @@ object OpticUtility {
 		}
 
 		if (recur) {
-			Direction.DIRECTIONS.foreach(
+			Direction.VALID_DIRECTIONS.foreach(
 				direction => {
 					val checkPos = block.position() + direction.toVector
 					val checkBlock = block.world.getBlock(checkPos)

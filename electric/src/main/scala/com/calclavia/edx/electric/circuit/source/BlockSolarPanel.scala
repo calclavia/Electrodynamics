@@ -9,9 +9,9 @@ import com.calclavia.edx.electric.ElectricContent
 import com.calclavia.edx.electric.api.{ConnectionBuilder, Electric}
 import com.calclavia.edx.electric.grid.NodeElectricComponent
 import nova.core.block.Stateful
-import nova.core.block.component.ConnectedTextureRenderer
-import nova.core.component.renderer.ItemRenderer
-import nova.core.render.model.{BlockModelUtil, Model}
+import nova.core.component.renderer.{ItemRenderer, StaticRenderer}
+import nova.core.render.model.Model
+import nova.core.render.pipeline.{BlockRenderStream, ConnectedTextureRenderStream}
 import nova.core.render.texture.Texture
 import nova.core.util.Direction
 import nova.core.util.shape.Cuboid
@@ -23,9 +23,23 @@ class BlockSolarPanel extends BlockEDX with ExtendedUpdater with Stateful {
 
 	private val electricNode = add(new NodeElectricComponent(this))
 	private val io = add(new IO(this))
-	private val renderer = add(new ConnectedTextureRenderer(this, ElectricContent.solarPanelTextureEdge)).setFaceMask(2)
+	private val renderer = add(new StaticRenderer())
 	private val itemRenderer = add(new ItemRenderer(this))
 
+	private val texture = func[Direction, Optional[Texture]] { dir =>
+		dir match {
+			case Direction.DOWN => Optional.of(ElectricContent.solarPanelTextureBottom)
+			case Direction.UP => Optional.of(ElectricContent.solarPanelTextureTop)
+			case _ => Optional.of(ElectricContent.solarPanelTextureSide)
+		}
+	}
+
+	renderer.onRender(
+		new ConnectedTextureRenderStream(this, ElectricContent.solarPanelTextureEdge)
+			.withFaceMask(2)
+			.withTexture(texture)
+			.build()
+	)
 	collider.setBoundingBox(new Cuboid(0, 0, 0, 1, 0.3f, 1))
 	collider.isCube(false)
 	collider.isOpaqueCube(false)
@@ -46,23 +60,17 @@ class BlockSolarPanel extends BlockEDX with ExtendedUpdater with Stateful {
 			.asInstanceOf[Supplier[JSet[Electric]]]
 	)
 
-	renderer.setTexture(
-		func[Direction, Optional[Texture]]((dir: Direction) => {
-			dir match {
-				case Direction.DOWN => Optional.of(ElectricContent.solarPanelTextureBottom)
-				case Direction.UP => Optional.of(ElectricContent.solarPanelTextureTop)
-				case _ => Optional.of(ElectricContent.solarPanelTextureSide)
-			}
-		})
+	itemRenderer.onRender((model: Model) =>
+		new BlockRenderStream(this)
+			.withTexture(texture)
+			.build()
 	)
-
-	itemRenderer.setOnRender((model: Model) => BlockModelUtil.drawBlock(model, this))
 
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)
 
 		if (EDX.network.isServer) {
-			//if (world.canBlockSeeTheSky(xCoord, yCoord + 1, zCoord) && !this.worldObj.provider.hasNoSky) {
+			//if (world.canBlockSeeTheSky(xCoord, yCoord + 1, zCoord) && !this.worldObj.block.hasNoSky) {
 			//if (world.isDaytime) {
 			//if (!(world.isThundering || world.isRaining)) {
 			electricNode.generateVoltage(15)

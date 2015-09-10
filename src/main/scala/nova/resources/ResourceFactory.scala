@@ -2,7 +2,6 @@ package nova.resources
 
 import java.util.function.{Function => JFunction}
 
-import nova.core
 import nova.core.block.{Block, BlockFactory}
 import nova.core.item.{Item, ItemFactory}
 import nova.core.render.texture.{BlockTexture, ItemTexture}
@@ -10,6 +9,7 @@ import nova.internal.core.Game
 import nova.resources.block.TileOre
 import nova.resources.item.ItemIngot
 import nova.scala.modcontent.ContentLoader
+import nova.scala.wrapper.FunctionalWrapper._
 import nova.scala.wrapper.StringWrapper._
 
 /**
@@ -61,18 +61,18 @@ class ResourceFactory(domain: String) extends ContentLoader {
 	def requestBlock(resourceType: String, material: String): BlockFactory = {
 		assert(materials.contains(material))
 
-		val result = Game.blocks.register(new JFunction[Array[AnyRef], Block] {
-			override def apply(args: Array[AnyRef]): Block = {
+		val result = Game.blocks.register(
+			supplier[Block](() => {
 				val newResource = resourceBlocks(resourceType).newInstance()
 				newResource.id = resourceType + material.capitalizeFirst
 				newResource.asInstanceOf[Resource].material = material
-				return newResource
-			}
-		})
+				newResource.asInstanceOf[Block]
+			})
+		)
 		generatedBlocks += (resourceType, material) -> result
 
 		//Register ore dictionary
-		Game.itemDictionary.add(resourceType + material.capitalizeFirst, result.getID)
+		//itemDictionary.add(resourceType + material.capitalizeFirst, result.getID)
 		return result
 	}
 
@@ -82,19 +82,19 @@ class ResourceFactory(domain: String) extends ContentLoader {
 
 	def requestItem(resourceType: String, material: String): ItemFactory = {
 		assert(materials.contains(material))
-		val result = Game.items.register(new JFunction[Array[AnyRef], core.item.Item] {
-			override def apply(args: Array[AnyRef]): Item = {
+		val result = Game.items.register(
+			supplier[Item](() => {
 				val newResource = resourceItems(resourceType).newInstance()
 				newResource.id = resourceType + material.capitalizeFirst
 				newResource.material = material
-				return newResource
-			}
-		})
+				newResource
+			})
+		)
 
 		generatedItems += (resourceType, material) -> result
 
 		//Register ore dictionary
-		Game.itemDictionary.add(resourceType + material.capitalizeFirst, result.getID)
+		//itemDictionary.add(resourceType + material.capitalizeFirst, result.getID)
 		return result
 	}
 

@@ -1,6 +1,6 @@
 package com.calclavia.edx.optics.field
 
-import java.util.{Optional, Set => JSet}
+import java.util.{Optional, Random, Set => JSet}
 
 import com.calclavia.edx.core.EDX
 import com.calclavia.edx.optics.Settings
@@ -16,17 +16,17 @@ import com.calclavia.edx.optics.util.CacheHandler
 import nova.core.block.Block.RightClickEvent
 import nova.core.block.Stateful.UnloadEvent
 import nova.core.block.component.LightEmitter
+import nova.core.component.inventory.InventorySimple
 import nova.core.component.renderer.{DynamicRenderer, ItemRenderer}
 import nova.core.component.transform.Orientation
 import nova.core.entity.component.Player
-import nova.core.event.EventBus
-import nova.core.inventory.InventorySimple
+import nova.core.event.bus.EventBus
 import nova.core.item.Item
 import nova.core.network.{Packet, Sync}
 import nova.core.render.Color
-import nova.core.render.model.Model
+import nova.core.render.model.{MeshModel, Model}
 import nova.core.retention.Store
-import nova.core.util.shape.Cuboid
+import nova.core.util.math.Vector3DUtil
 import nova.scala.wrapper.FunctionalWrapper._
 import nova.scala.wrapper.VectorWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
@@ -46,7 +46,8 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 	@Store
 	@Sync(ids = Array(BlockPacketID.description, BlockPacketID.inventory))
 	override val inventory = add(new InventorySimple(1 + 1 + 4 * 6))
-
+	private val dynamicRenderer = add(new DynamicRenderer())
+	private val lightEmitter = add(new LightEmitter())
 	/** A set containing all positions of all force field blocks generated. */
 	var forceFields = Set.empty[Vector3D]
 	/** Marks the field for an update call */
@@ -58,8 +59,6 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 	/** Are the filters in the projector inverted? */
 	@Sync(ids = Array(BlockPacketID.description))
 	private var isInverted = false
-	private val dynamicRenderer = add(new DynamicRenderer())
-	private val lightEmitter = add(new LightEmitter())
 
 	crystalHandler.capacityBase = 30
 	crystalHandler.startModuleIndex = 1
@@ -68,15 +67,16 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 
 	collider.isCube(false)
 
-	staticRenderer.setOnRender(
+	staticRenderer.onRender(
 		(model: Model) => {
 			model.matrix.rotate(get(classOf[Orientation]).orientation.rotation)
-			model.children.add(OpticsModels.projector.getModel)
-			model.bindAll(if (isActive) OpticsTextures.projectorOn else OpticsTextures.projectorOff)
+			val subModel = OpticsModels.projector.getModel
+			model.children.add(subModel)
+			subModel.bindAll(if (isActive) OpticsTextures.projectorOn else OpticsTextures.projectorOff)
 		}
 	)
 
-	dynamicRenderer.setOnRender(
+	dynamicRenderer.onRender(
 		(model: Model) => {
 			/**
 			 * Render the light beam
@@ -86,7 +86,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 				 * Render hologram
 				 */
 				if (Settings.highGraphics) {
-					val hologram = new Model("hologram")
+					val hologram = new MeshModel("hologram")
 					//GL_SRC_ALPHA
 					hologram.blendSFactor = 0x302
 					//GL_ONE
@@ -186,25 +186,6 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 		calculateField(postCalculation)
 	}
 
-	def postCalculation() = if (clientSideSimulationRequired) EDX.network.sync(BlockPacketID.field, this)
-
-	private def clientSideSimulationRequired: Boolean = getModuleCount(OpticsContent.moduleRepulsion) > 0
-
-	/**
-	 * Initiate a field calculation
-	 */
-	protected override def calculateField(callBack: () => Unit = null) {
-		if (EDX.network.isServer && !isCalculating) {
-			if (getShapeItem != null) {
-				forceFields = Set.empty
-			}
-
-			super.calculateField(callBack)
-			isCompleteConstructing = false
-			fieldRequireTicks = crystalHandler.getModules().exists(_.requireTicks)
-		}
-	}
-
 	override def write(packet: Packet) {
 		super.write(packet)
 		packet.getID match {
@@ -284,12 +265,30 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 			}
 
 			if (ticks % (2 * 20) == 0 && getModuleCount(OpticsContent.moduleSilence) <= 0) {
-				//TODO: Fix world sound effects
-				//worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, Reference.prefix + "field", 0.6f, (1 - this.worldObj.rand.nextFloat * 0.1f))
+				world.playSoundAtPosition(position + (Vector3DUtil.ONE * 0.5), OpticsContent.soundField.withVolume(0.6f).withPitch(1 - new Random().nextFloat * 0.1f))
 			}
 		}
 		else if (EDX.network.isServer) {
 			destroyField()
+		}
+	}
+
+	def postCalculation() = if (clientSideSimulationRequired) EDX.network.sync(BlockPacketID.field, this)
+
+	private def clientSideSimulationRequired: Boolean = getModuleCount(OpticsContent.moduleRepulsion) > 0
+
+	/**
+	 * Initiate a field calculation
+	 */
+	protected override def calculateField(callBack: () => Unit = null) {
+		if (EDX.network.isServer && !isCalculating) {
+			if (getShapeItem != null) {
+				forceFields = Set.empty
+			}
+
+			super.calculateField(callBack)
+			isCompleteConstructing = false
+			fieldRequireTicks = crystalHandler.getModules().exists(_.requireTicks)
 		}
 	}
 

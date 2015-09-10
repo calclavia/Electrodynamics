@@ -2,7 +2,8 @@ package com.calclavia.edx.optics
 
 import com.calclavia.edx.core.EDX
 import com.calclavia.edx.optics.field.BlockProjector
-import nova.core.event.GlobalEvents
+import nova.core.event.BlockEvent
+import nova.core.event.bus.GlobalEvents
 
 import scala.collection.convert.wrapAll._
 
@@ -80,7 +81,7 @@ object EventHandler {
 	/**
 	 * When a block breaks, mark force field projectors for an update.
 	 */
-	def onBlockChange(evt: GlobalEvents.BlockChangeEvent) {
+	def onBlockChange(evt: BlockEvent.Change) {
 		if (EDX.network.isServer && evt.newBlock.sameType(EDX.blocks.getAirBlock)) {
 			GraphFrequency.instance
 				.getNodes

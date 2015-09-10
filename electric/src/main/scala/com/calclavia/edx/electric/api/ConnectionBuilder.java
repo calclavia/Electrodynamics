@@ -1,9 +1,9 @@
 package com.calclavia.edx.electric.api;
 
-import nova.microblock.micro.MicroblockContainer;
 import nova.core.block.Block;
 import nova.core.util.Direction;
 import nova.core.util.math.Vector3DUtil;
+import nova.microblock.micro.MicroblockContainer;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -20,8 +20,8 @@ import java.util.stream.Collectors;
 public class ConnectionBuilder<T> {
 
 	private final Class<T> componentType;
-	private Block block;
 	public Supplier<Integer> connectMask = () -> 0x3f;
+	private Block block;
 
 	public ConnectionBuilder(Class<T> componentType) {
 		this.componentType = componentType;
@@ -96,7 +96,7 @@ public class ConnectionBuilder<T> {
 			.map(Optional::get)
 			.flatMap(container ->
 					//Check the sides of the microblock instead. We only want to connect to appropriate sides
-					Arrays.stream(Direction.DIRECTIONS)
+					Arrays.stream(Direction.VALID_DIRECTIONS)
 						.filter(
 							//Find all directions except the facing dir and its opposite
 							dir ->
@@ -133,6 +133,6 @@ public class ConnectionBuilder<T> {
 	}
 
 	protected Map<Direction, Optional<Block>> adjacentBlocks() {
-		return Arrays.stream(Direction.DIRECTIONS).collect(Collectors.toMap(Function.identity(), dir -> block.world().getBlock(block.position().add(dir.toVector()))));
+		return Arrays.stream(Direction.VALID_DIRECTIONS).collect(Collectors.toMap(Function.identity(), dir -> block.world().getBlock(block.position().add(dir.toVector()))));
 	}
 }

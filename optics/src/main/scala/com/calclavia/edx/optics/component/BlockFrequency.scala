@@ -6,7 +6,7 @@ import com.calclavia.edx.optics.GraphFrequency
 import com.calclavia.edx.optics.api.Frequency
 import com.calclavia.edx.optics.item.card.ItemCardFrequency
 import nova.core.block.Stateful.{LoadEvent, UnloadEvent}
-import nova.core.inventory.InventorySimple
+import nova.core.component.inventory.InventorySimple
 import nova.core.item.Item
 import nova.scala.wrapper.FunctionalWrapper._
 

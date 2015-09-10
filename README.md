@@ -48,6 +48,7 @@ gradlew run17Client
 ### Artist
 * CyanideX
 * Archadia
+* Razz
 
 ### Download
 The mod can be found and downloaded at: http://calclavia.com/electrodynamics/

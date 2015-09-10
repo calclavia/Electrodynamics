@@ -2,7 +2,8 @@ package com.calclavia.edx.optics.field.shape
 
 import com.calclavia.edx.optics.content.OpticsTextures
 import com.resonant.core.structure.{Structure, StructureCube}
-import nova.core.render.model.{BlockModelUtil, Model}
+import nova.core.render.model.{Model, MeshModel}
+import nova.core.render.pipeline.BlockRenderStream
 import nova.scala.wrapper.FunctionalWrapper._
 
 class ItemShapeCube extends ItemShape {
@@ -11,11 +12,13 @@ class ItemShapeCube extends ItemShape {
 
 	override def getStructure: Structure = new StructureCube
 
-	renderer.setOnRender(
+	renderer.onRender(
 		(model: Model) => {
 			model.matrix.scale(0.5, 0.5, 0.5)
-			BlockModelUtil.drawCube(model)
-			model.bindAll(OpticsTextures.hologram)
+			val subModel = new MeshModel()
+			BlockRenderStream.drawCube(subModel)
+			subModel.bindAll(OpticsTextures.hologram)
+			model.addChild(subModel)
 		}
 	)
 }

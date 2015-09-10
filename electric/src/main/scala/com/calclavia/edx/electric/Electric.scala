@@ -1,10 +1,10 @@
 package com.calclavia.edx.electric
 
 import com.calclavia.edx.core.Reference
-import nova.core.loader.{Loadable, NovaMod}
+import nova.core.loader.{Loadable, Mod}
 import nova.microblock.injection.ComponentInjection
 
-@NovaMod(
+@Mod(
 	id = Reference.electricID,
 	name = Reference.name + ": Electric",
 	version = Reference.version,

@@ -9,14 +9,15 @@ import com.calclavia.edx.electric.ElectricContent
 import com.calclavia.edx.electric.api.{ConnectionBuilder, Electric}
 import com.calclavia.edx.electric.grid.NodeElectricComponent
 import nova.core.block.Stateful
-import nova.core.block.component.StaticBlockRenderer
-import nova.core.component.renderer.ItemRenderer
+import nova.core.component.renderer.{ItemRenderer, StaticRenderer}
+import nova.core.render.pipeline.BlockRenderStream
 import nova.core.render.texture.Texture
 import nova.core.util.Direction
 import nova.scala.component.IO
 import nova.scala.util.ExtendedUpdater
 import nova.scala.wrapper.FunctionalWrapper._
 import nova.scala.wrapper.VectorWrapper._
+
 class BlockThermopile extends BlockEDX with ExtendedUpdater with Stateful {
 	/**
 	 * The amount of ticks the thermopile will use the temperature differences before turning all
@@ -24,12 +25,16 @@ class BlockThermopile extends BlockEDX with ExtendedUpdater with Stateful {
 	 */
 	private val maxTicks = 120 * 20
 	private val electricNode = add(new NodeElectricComponent(this))
-	private var ticksUsed = 0
 	private val io = add(new IO(this))
-	private val staticRenderer = add(new StaticBlockRenderer(this))
+	private val staticRenderer = add(new StaticRenderer())
 	private val itemRenderer = add(new ItemRenderer(this))
+	private var ticksUsed = 0
 
-	staticRenderer.setTexture(func[Direction, Optional[Texture]]((dir: Direction) => if (dir == Direction.UP) Optional.of(ElectricContent.thermopileTextureTop) else Optional.of(ElectricContent.thermopileTextureSide)))
+	staticRenderer.onRender(
+		new BlockRenderStream(this)
+			.withTexture(func[Direction, Optional[Texture]]((dir: Direction) => if (dir == Direction.UP) Optional.of(ElectricContent.thermopileTextureTop) else Optional.of(ElectricContent.thermopileTextureSide)))
+			.build()
+	)
 
 	electricNode.setPositiveConnections(
 		new ConnectionBuilder(classOf[Electric])
@@ -45,6 +50,7 @@ class BlockThermopile extends BlockEDX with ExtendedUpdater with Stateful {
 			.adjacentWireSupplier()
 			.asInstanceOf[Supplier[JSet[Electric]]]
 	)
+
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)
 
@@ -54,7 +60,7 @@ class BlockThermopile extends BlockEDX with ExtendedUpdater with Stateful {
 
 			//TODO: Check blocks ids.
 
-			for (dir <- Direction.DIRECTIONS) {
+			for (dir <- Direction.VALID_DIRECTIONS) {
 				val checkPos = position + dir.toVector
 				val block = world.getBlock(checkPos).get
 
@@ -86,7 +92,7 @@ class BlockThermopile extends BlockEDX with ExtendedUpdater with Stateful {
 				ticksUsed += 1
 
 				if (ticksUsed >= maxTicks) {
-					for (dir <- Direction.DIRECTIONS) {
+					for (dir <- Direction.VALID_DIRECTIONS) {
 						val checkPos = position + dir.toVector
 						val block = world.getBlock(checkPos).get
 

@@ -3,7 +3,7 @@ package com.calclavia.edx.optics.field.shape
 import com.calclavia.edx.optics.content.OpticsTextures
 import com.calclavia.edx.optics.field.structure.StructureSphere
 import com.resonant.core.structure.Structure
-import nova.core.render.model.Model
+import nova.core.render.model.{MeshModel, Model}
 import nova.scala.wrapper.FunctionalWrapper._
 import nova.scala.wrapper.VectorWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
@@ -14,7 +14,7 @@ class ItemShapeSphere extends ItemShape {
 
 	override def getStructure: Structure = new StructureSphere
 
-	renderer.setOnRender(
+	renderer.onRender(
 		(model: Model) => {
 			val scale = 0.2f
 			val radius = 0.8f
@@ -25,10 +25,10 @@ class ItemShapeSphere extends ItemShape {
 				val phi = Math.PI * 2 / steps * phi_n
 				val theta = Math.PI / steps * theta_n
 				val vector = new Vector3D(Math.sin(theta) * Math.cos(phi), Math.cos(theta), Math.sin(theta) * Math.sin(phi)) * radius
-				val cube = new Model()
+				val cube = new MeshModel()
 				cube.matrix.translate(vector)
 				model.children.add(cube)
+				cube.bindAll(OpticsTextures.hologram)
 			}
-			model.bindAll(OpticsTextures.hologram)
 		})
 }

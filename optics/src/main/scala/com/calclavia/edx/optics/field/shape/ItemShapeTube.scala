@@ -3,8 +3,11 @@ package com.calclavia.edx.optics.field.shape
 import com.calclavia.edx.optics.content.OpticsTextures
 import com.calclavia.edx.optics.field.structure.StructureTube
 import com.resonant.core.structure.Structure
-import nova.core.render.model.{BlockModelUtil, Model}
+import nova.core.render.model.{Model, MeshModel}
+import nova.core.render.pipeline.BlockRenderStream
 import nova.scala.wrapper.FunctionalWrapper._
+
+import scala.collection.convert.wrapAll._
 
 class ItemShapeTube extends ItemShape {
 
@@ -12,36 +15,36 @@ class ItemShapeTube extends ItemShape {
 
 	override def getStructure: Structure = new StructureTube
 
-	renderer.setOnRender(
+	renderer.onRender(
 		(model: Model) => {
 			/**
 			 * Create 4 small planes
 			 */
-			val planeA = new Model()
+			val planeA = new MeshModel()
 			planeA.matrix.scale(0.5, 0.5, 0.5)
 			planeA.matrix.translate(0, 0.5, 0)
-			BlockModelUtil.drawCube(planeA)
+			BlockRenderStream.drawCube(planeA)
 
-			val planeB = new Model()
+			val planeB = new MeshModel()
 			planeB.matrix.scale(0.5, 0.5, 0.5)
 			planeB.matrix.translate(0, -0.5, 0)
-			BlockModelUtil.drawCube(planeB)
+			BlockRenderStream.drawCube(planeB)
 
-			val planeC = new Model()
+			val planeC = new MeshModel()
 			planeC.matrix.scale(0.5, 0.5, 0.5)
 			planeC.matrix.translate(0, 0, 0.5)
-			BlockModelUtil.drawCube(planeC)
+			BlockRenderStream.drawCube(planeC)
 
-			val planeD = new Model()
+			val planeD = new MeshModel()
 			planeD.matrix.scale(0.5, 0.5, 0.5)
 			planeD.matrix.translate(0, 0, -0.5)
-			BlockModelUtil.drawCube(planeD)
+			BlockRenderStream.drawCube(planeD)
 
 			model.children.add(planeA)
 			model.children.add(planeB)
 			model.children.add(planeC)
 			model.children.add(planeD)
-			model.bindAll(OpticsTextures.hologram)
+			model.children.collect { case m: MeshModel => m.bindAll(OpticsTextures.hologram) }
 		}
 	)
 }

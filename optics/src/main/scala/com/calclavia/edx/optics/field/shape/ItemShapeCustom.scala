@@ -1,7 +1,7 @@
 package com.calclavia.edx.optics.field.shape
 
 import java.io.File
-import java.util.{Set => JSet}
+import java.util.{Random, Set => JSet}
 
 import com.calclavia.edx.core.EDX
 import com.calclavia.edx.optics.Settings
@@ -11,13 +11,11 @@ import com.resonant.core.structure.{Structure, StructureCustom}
 import nova.core.component.renderer.ItemRenderer
 import nova.core.game.InputManager.Key
 import nova.core.item.Item.{RightClickEvent, TooltipEvent, UseEvent}
-import nova.core.render.model.Model
+import nova.core.render.model.{MeshModel, Model}
 import nova.core.retention.Store
 import nova.scala.wrapper.FunctionalWrapper._
 import nova.scala.wrapper.VectorWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
-
-import scala.util.Random
 
 class ItemShapeCustom extends ItemShape with CacheHandler {
 
@@ -153,15 +151,17 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 		return saveDirectory
 	}
 
-	renderer.setOnRender(
+	renderer.onRender(
 		(model: Model) => {
+			val subModel = new MeshModel()
 			modes(new Random().nextInt(modes.length - 1))
-				.getDummy
+				.build()
 				.asInstanceOf[ItemShape]
 				.get(classOf[ItemRenderer])
 				.onRender
-				.accept(model)
-			model.bindAll(OpticsTextures.hologram)
+				.accept(subModel)
+			subModel.bindAll(OpticsTextures.hologram)
+			model.addChild(subModel)
 		}
 	)
 

@@ -1,7 +1,7 @@
 package com.calclavia.edx.electric.api;
 
 import nova.core.block.component.Connectable;
-import nova.core.event.EventBus;
+import nova.core.event.bus.EventBus;
 
 import java.util.Set;
 

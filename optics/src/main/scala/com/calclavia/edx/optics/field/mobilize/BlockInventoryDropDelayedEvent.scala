@@ -4,7 +4,7 @@ import com.calclavia.edx.core.EDX
 import nova.core.block.Block
 import nova.core.block.Block.DropEvent
 import nova.core.component.ComponentProvider
-import nova.core.inventory.Inventory
+import nova.core.component.inventory.Inventory
 import nova.core.world.World
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 

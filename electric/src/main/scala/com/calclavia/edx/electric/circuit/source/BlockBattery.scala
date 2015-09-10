@@ -9,11 +9,9 @@ import com.calclavia.edx.electric.ElectricContent
 import com.calclavia.edx.electric.api.{ConnectionBuilder, Electric}
 import com.calclavia.edx.electric.grid.NodeElectricComponent
 import nova.core.block.Block.{DropEvent, PlaceEvent, RightClickEvent}
-import nova.core.block.component.StaticBlockRenderer
-import nova.core.component.renderer.ItemRenderer
+import nova.core.component.renderer.{ItemRenderer, StaticRenderer}
 import nova.core.component.transform.Orientation
-import nova.core.event.Event
-import nova.core.item.Item
+import nova.core.event.bus.Event
 import nova.core.network.{Sync, Syncable}
 import nova.core.render.model.Model
 import nova.core.retention.{Storable, Store}
@@ -40,19 +38,20 @@ object BlockBattery {
 
 class BlockBattery extends BlockEDX with Syncable with Storable with ExtendedUpdater {
 
-	@Store
-	@Sync
-	private var tier = 0
-	private var energyRenderLevel = 0
-	@Store
-	private var energy = add(new EnergyStorage)
 	private val electricNode = add(new NodeElectricComponent(this))
 	private val orientation = add(new Orientation(this)).hookBasedOnEntity().hookRightClickRotate()
 	@Store
 	private val io = add(new IO(this))
-	private val redstone = add(EDX.components.make(classOf[Redstone], this))
-	private val staticRenderer = add(new StaticBlockRenderer(this))
+	private val redstone = add(classOf[Redstone])
+	private val staticRenderer = add(new StaticRenderer())
 	private val itemRenderer = add(new ItemRenderer(this))
+	//TODO: Remove debug
+	@Store
+	var mode = 0
+	@Store
+	@Sync
+	private var tier = 0
+	private var energyRenderLevel = 0
 
 	/**
 	 * Components
@@ -85,11 +84,12 @@ class BlockBattery extends BlockEDX with Syncable with Storable with ExtendedUpd
 		classOf[PlaceEvent]
 	)
 
-	staticRenderer.setOnRender(
+	staticRenderer.onRender(
 		(model: Model) => {
 			//TODO: Switch the model
-			model.children.add(ElectricContent.batteryModel.getModel)
-			model.bindAll(ElectricContent.batteryTexture)
+			val subModel = ElectricContent.batteryModel.getModel
+			model.children.add(subModel)
+			subModel.bindAll(ElectricContent.batteryTexture)
 		}
 	)
 	/*
@@ -145,15 +145,9 @@ class BlockBattery extends BlockEDX with Syncable with Storable with ExtendedUpd
 	},
 		classOf[DropEvent]
 	)
-
-	//TODO: Remove debug
 	@Store
-	var mode = 0
+	private var energy = add(new EnergyStorage)
 	events.add((evt: RightClickEvent) => if (EDX.network.isServer) mode = (mode + 1) % 10, classOf[RightClickEvent])
-
-	override def onRegister() {
-		EDX.items.register(func[Array[AnyRef], Item]((args: Array[AnyRef]) => new ItemBlockBattery(factory())))
-	}
 
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)

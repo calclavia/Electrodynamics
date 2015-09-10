@@ -4,7 +4,7 @@ import com.calclavia.edx.optics.grid.OpticHandler.ReceiveBeamEvent
 import nova.core.block.Block
 import nova.core.block.Stateful.{LoadEvent, UnloadEvent}
 import nova.core.component.Component
-import nova.core.event.Event
+import nova.core.event.bus.Event
 import nova.core.util.Direction
 import nova.core.util.RayTracer.RayTraceResult
 import nova.scala.wrapper.FunctionalWrapper._
