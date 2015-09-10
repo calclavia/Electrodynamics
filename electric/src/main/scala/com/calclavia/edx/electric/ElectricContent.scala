@@ -4,7 +4,8 @@ import com.calclavia.edx.core.{EDX, Reference}
 import com.calclavia.edx.electric.circuit.component.BlockSiren
 import com.calclavia.edx.electric.circuit.source.{BlockBattery, BlockSolarPanel, BlockThermopile, ItemBlockBattery}
 import com.calclavia.edx.electric.circuit.wire.BlockWire
-import nova.core.block.{Block, BlockFactory}
+import nova.core.block.BlockFactory
+import nova.core.event.BlockEvent
 import nova.core.item.Item
 import nova.core.render.model.TechneModelProvider
 import nova.core.render.texture.BlockTexture
@@ -32,13 +33,7 @@ object ElectricContent extends ContentLoader {
 	/**
 	 * Blocks
 	 */
-	val battery: BlockFactory = new BlockFactory(
-		() => new BlockBattery,
-		func((b: Block) => {
-			EDX.items.register(supplier[Item](() => new ItemBlockBattery(b.factory())))
-			b
-		})
-	)
+	val battery: BlockFactory = new BlockFactory(() => new BlockBattery, eventListener((evt: BlockEvent.Register) => EDX.items.register(supplier[Item](() => new ItemBlockBattery(evt.blockFactory)))))
 
 	val wire: BlockFactory = classOf[BlockWire]
 	val thermopile: BlockFactory = classOf[BlockThermopile]
