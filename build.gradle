@@ -14,8 +14,8 @@ allprojects {
 		compile "org.jgrapht:jgrapht-core:0.9.1"
 		compile "org.jgrapht:jgrapht-ext:0.9.1"
 		compile "nova.minecraft:NOVA-Minecraft:0.0.1-SNAPSHOT"
-		compile "nova.scala:NovaScala:0.0.1-SNAPSHOT"
-		compile "nova.microblock:NovaMicroblock:0.0.1-SNAPSHOT"
+		compile "nova.scala:NOVA-Scala:0.0.1-SNAPSHOT"
+		compile "nova.microblock:NOVA-Microblock:0.0.1-SNAPSHOT"
 
 		testCompile "org.assertj:assertj-core:3.0.0"
 		testCompile "junit:junit:4.12"
