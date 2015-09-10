@@ -2,9 +2,9 @@ package com.calclavia.graph.thermal
 
 import com.calclavia.edx.core.EDX
 import nova.core.util.Direction
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 import nova.core.world.World
 import nova.scala.util.ExtendedUpdater
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 import scala.collection.mutable
 
@@ -96,7 +96,7 @@ class GridThermal(val world: World) extends ExtendedUpdater {
 					 */
 					val temperature = getTemperature(pos)
 
-					Direction.DIRECTIONS
+					Direction.VALID_DIRECTIONS
 						.map(pos + _.toVector)
 						.foreach(
 					    adj => {

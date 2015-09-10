@@ -17,6 +17,10 @@ class ItemModuleArray extends ItemModule {
 		generateArray(projector, structure)
 	}
 
+	override def onCalculateInterior(projector: FieldMatrix, structure: Structure) {
+		generateArray(projector, structure)
+	}
+
 	def generateArray(projector: FieldMatrix, structure: Structure) {
 		structure.postStructure = structure.postStructure.compose(
 			(field: Set[Vector3D]) => {
@@ -24,7 +28,7 @@ class ItemModuleArray extends ItemModule {
 				val longestDirectional = getDirectionWidthMap(field)
 
 				//TODO: Execute concurrently. Test speed.
-				Direction.DIRECTIONS.foreach(
+				Direction.VALID_DIRECTIONS.foreach(
 					dir => {
 						val copyAmount = projector.getSidedModuleCount(factory(), dir)
 						val directionalDisplacement = Math.abs(longestDirectional(dir)) + Math.abs(longestDirectional(dir.opposite)) + 1
@@ -81,10 +85,6 @@ class ItemModuleArray extends ItemModule {
 		}
 
 		return longestDirectional
-	}
-
-	override def onCalculateInterior(projector: FieldMatrix, structure: Structure) {
-		generateArray(projector, structure)
 	}
 
 	override def getFortronCost(amplifier: Float): Float = super.getFortronCost(amplifier) + (super.getFortronCost(amplifier) * amplifier) / 100f

@@ -41,28 +41,40 @@ abstract class BlockFieldMatrix extends BlockFrequency with FieldMatrix with IPe
 
 	override def getShape: StructureProvider = getShapeItem
 
-	/**
-	 * @return Gets the item that provides a shape
-	 */
-	def getShapeItem: Item with StructureProvider = {
-		val optional = inventory.get(modeSlotID)
-		if (optional.isPresent) {
-			if (optional.get.isInstanceOf[Item with StructureProvider]) {
-				return optional.get.asInstanceOf[Item with StructureProvider]
-			}
-		}
-		return null
-	}
-
 	override def getSidedModuleCount(module: ItemFactory, directions: Direction*): Int = {
 		var actualDirs = directions
 
 		if (directions == null || directions.length > 0) {
-			actualDirs = Direction.DIRECTIONS
+			actualDirs = Direction.VALID_DIRECTIONS
 		}
 
 		return actualDirs.foldLeft(0)((b, a) => b + getModuleCount(module, getDirectionSlots(a): _*))
 	}
+
+	override def getDirectionSlots(direction: Direction): Array[Int] =
+		direction match {
+			case Direction.UP =>
+				Array(10, 11)
+			case Direction.DOWN =>
+				Array(12, 13)
+			case Direction.SOUTH =>
+				Array(2, 3)
+			case Direction.NORTH =>
+				Array(4, 5)
+			case Direction.WEST =>
+				Array(6, 7)
+			case Direction.EAST =>
+				Array(8, 9)
+			case _ =>
+				Array[Int]()
+		}
+
+	/**
+	 * Gets the number of modules in this block that are in specific slots
+	 * @param slots The slot IDs. Providing null will search all slots
+	 * @return The number of all item modules in the slots.
+	 */
+	override def getModuleCount(compareModule: ItemFactory, slots: Int*): Int = crystalHandler.getModuleCount(compareModule, slots: _*)
 
 	def getInteriorPoints: JSet[Vector3D] =
 		getOrSetCache("getInteriorPoints", () => {
@@ -82,6 +94,19 @@ abstract class BlockFieldMatrix extends BlockFrequency with FieldMatrix with IPe
 		structure.setScale(getScale)
 		structure.setRotation(getRotation)
 		return structure
+	}
+
+	/**
+	 * @return Gets the item that provides a shape
+	 */
+	def getShapeItem: Item with StructureProvider = {
+		val optional = inventory.get(modeSlotID)
+		if (optional.isPresent) {
+			if (optional.get.isInstanceOf[Item with StructureProvider]) {
+				return optional.get.asInstanceOf[Item with StructureProvider]
+			}
+		}
+		return null
 	}
 
 	def getScale = (getPositiveScale + getNegativeScale) / 2
@@ -206,31 +231,6 @@ abstract class BlockFieldMatrix extends BlockFrequency with FieldMatrix with IPe
 			val verticalRotation = getModuleCount(OpticsContent.moduleRotate, getDirectionSlots(Direction.UP): _*) - getModuleCount(OpticsContent.moduleRotate, getDirectionSlots(Direction.DOWN): _*)
 			return verticalRotation * 2
 		})
-
-	override def getDirectionSlots(direction: Direction): Array[Int] =
-		direction match {
-			case Direction.UP =>
-				Array(10, 11)
-			case Direction.DOWN =>
-				Array(12, 13)
-			case Direction.SOUTH =>
-				Array(2, 3)
-			case Direction.NORTH =>
-				Array(4, 5)
-			case Direction.WEST =>
-				Array(6, 7)
-			case Direction.EAST =>
-				Array(8, 9)
-			case _ =>
-				Array[Int]()
-		}
-
-	/**
-	 * Gets the number of modules in this block that are in specific slots
-	 * @param slots The slot IDs. Providing null will search all slots
-	 * @return The number of all item modules in the slots.
-	 */
-	override def getModuleCount(compareModule: ItemFactory, slots: Int*): Int = crystalHandler.getModuleCount(compareModule, slots: _*)
 
 	def getModuleSlots: Array[Int] = _getModuleSlots
 

@@ -60,7 +60,7 @@ class BlockThermopile extends BlockEDX with ExtendedUpdater with Stateful {
 
 			//TODO: Check blocks ids.
 
-			for (dir <- Direction.DIRECTIONS) {
+			for (dir <- Direction.VALID_DIRECTIONS) {
 				val checkPos = position + dir.toVector
 				val block = world.getBlock(checkPos).get
 
@@ -92,7 +92,7 @@ class BlockThermopile extends BlockEDX with ExtendedUpdater with Stateful {
 				ticksUsed += 1
 
 				if (ticksUsed >= maxTicks) {
-					for (dir <- Direction.DIRECTIONS) {
+					for (dir <- Direction.VALID_DIRECTIONS) {
 						val checkPos = position + dir.toVector
 						val block = world.getBlock(checkPos).get
 

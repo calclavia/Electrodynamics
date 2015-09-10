@@ -359,7 +359,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 		return EDX.blocks.getAirBlock.sameType(targetBlock)
 	}
 
-	def isVisibleToPlayer(position: Vector3D): Boolean = Direction.DIRECTIONS.count(dir => world.getBlock(position + dir.toVector).get.get(classOf[Collider]).isOpaqueCube.get()) < 6
+	def isVisibleToPlayer(position: Vector3D): Boolean = Direction.VALID_DIRECTIONS.count(dir => world.getBlock(position + dir.toVector).get.get(classOf[Collider]).isOpaqueCube.get()) < 6
 
 	override def read(packet: Packet) {
 		super.read(packet)
