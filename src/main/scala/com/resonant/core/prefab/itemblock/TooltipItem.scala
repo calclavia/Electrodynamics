@@ -12,7 +12,9 @@ import nova.scala.wrapper.FunctionalWrapper._
  */
 trait TooltipItem extends Item {
 
-	events.add(eventListener((evt: TooltipEvent) => {
+	events
+		.on(classOf[TooltipEvent])
+		.bind(eventListener((evt: TooltipEvent) => {
 		val tooltipID = getID + ".tooltip"
 		val tooltip = Game.language().translate(tooltipID)
 
@@ -25,5 +27,5 @@ trait TooltipItem extends Item {
 				//evt.tooltips.addAll(tooltip.listWrap(20))
 			}
 		}
-	}), classOf[TooltipEvent])
+	}))
 }

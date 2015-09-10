@@ -31,7 +31,7 @@ class BlockCreativeBuilder extends Block with Syncable {
 
 	add(new Category("tools"))
 
-	events.add((evt: RightClickEvent) => onRightClick(evt), classOf[RightClickEvent])
+	events.on(classOf[RightClickEvent]).bind((evt: RightClickEvent) => onRightClick(evt))
 
 	/**
 	 * Called when the block is right clicked by the player

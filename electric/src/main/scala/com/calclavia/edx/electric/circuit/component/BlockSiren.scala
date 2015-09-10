@@ -53,7 +53,7 @@ class BlockSiren extends BlockEDX with ExtendedUpdater with Stateful {
 			.asInstanceOf[Supplier[JSet[Electric]]]
 	)
 
-	events.add((evt: RightClickEvent) => metadata = (metadata + 1) % 10, classOf[RightClickEvent])
+	events.on(classOf[RightClickEvent]).bind((evt: RightClickEvent) => metadata = (metadata + 1) % 10)
 
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)

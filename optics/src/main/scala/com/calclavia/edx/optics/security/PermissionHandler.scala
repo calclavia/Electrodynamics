@@ -13,7 +13,7 @@ import nova.scala.wrapper.FunctionalWrapper._
  */
 trait PermissionHandler extends BlockFrequency {
 
-	events.add((evt: RightClickEvent) => onRightClick(evt), classOf[RightClickEvent])
+	events.on(classOf[RightClickEvent]).bind((evt: RightClickEvent) => onRightClick(evt))
 
 	final def hasPermission(playerID: String, permissions: Permission*): Boolean = permissions.forall(hasPermission(playerID, _))
 

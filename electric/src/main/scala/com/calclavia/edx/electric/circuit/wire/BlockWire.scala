@@ -166,7 +166,9 @@ class BlockWire extends BlockEDX with Storable with Syncable {
 	)
 
 	electricNode.setConnections(() => computeConnection)
-	electricNode.onGridBuilt.add((evt: GraphBuiltEvent) => {
+	electricNode.onGridBuilt
+		.on(classOf[GraphBuiltEvent])
+		.bind((evt: GraphBuiltEvent) => {
 		//The new 8-bit connection mask
 		val newConnectionMask = evt.connections
 			.map(connectionCache)
@@ -180,7 +182,9 @@ class BlockWire extends BlockEDX with Storable with Syncable {
 		}
 	})
 
-	events.add((evt: RightClickEvent) => if (EDX.network.isServer) System.out.println(electricNode), classOf[RightClickEvent])
+	events
+		.on(classOf[RightClickEvent])
+		.bind((evt: RightClickEvent) => if (EDX.network.isServer) System.out.println(electricNode))
 
 	collider.setBoundingBox(() => {
 		BlockWire.occlusionBounds(side)(4)

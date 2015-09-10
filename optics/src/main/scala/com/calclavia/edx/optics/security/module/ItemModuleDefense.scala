@@ -6,7 +6,7 @@ import nova.core.item.Item.TooltipEvent
 import nova.scala.wrapper.FunctionalWrapper._
 
 class ItemModuleDefense extends ItemModule {
-	events.add(eventListener((evt: TooltipEvent) => evt.tooltips.add("\u00a74" + EDX.language.translate("info.module.defense"))), classOf[TooltipEvent])
+	events.on(classOf[TooltipEvent]).bind(eventListener((evt: TooltipEvent) => evt.tooltips.add("\u00a74" + EDX.language.translate("info.module.defense"))))
 
 	override def getID: String = "moduleDefense"
 }

@@ -74,8 +74,8 @@ class BlockBiometric extends BlockFrequency with ExtendedUpdater with Permission
 			}
 		)
 
-	events.add((evt: PlaceEvent) => world.markStaticRender(position), classOf[PlaceEvent])
-	events.add((evt: RightClickEvent) => world.markStaticRender(position), classOf[RightClickEvent])
+	events.on(classOf[PlaceEvent]).bind((evt: PlaceEvent) => world.markStaticRender(position))
+	events.on(classOf[RightClickEvent]).bind((evt: RightClickEvent) => world.markStaticRender(position))
 
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)

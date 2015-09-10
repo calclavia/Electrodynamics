@@ -77,11 +77,10 @@ class BlockBattery extends BlockEDX with Syncable with Storable with ExtendedUpd
 	collider.isCube(false)
 	collider.isOpaqueCube(false)
 
-	events.add(
+	events.on(classOf[PlaceEvent]).bind(
 		(evt: PlaceEvent) => {
 			io.setIOAlternatingOrientation()
-		},
-		classOf[PlaceEvent]
+		}
 	)
 
 	staticRenderer.onRender(
@@ -124,30 +123,28 @@ class BlockBattery extends BlockEDX with Syncable with Storable with ExtendedUpd
 	/**
 	 * Events
 	 */
-	io.changeEvent.add((evt: Event) => electricNode.rebuild())
+	io.changeEvent.on().bind((evt: Event) => electricNode.rebuild())
 
-	events.add(
+	events.on(classOf[PlaceEvent]).bind(
 		(evt: PlaceEvent) => {
 			if (EDX.network.isServer) {
 				val item = evt.item.asInstanceOf[ItemBlockBattery]
 				tier = item.tier
 				energy = item.energy
 			}
-		},
-		classOf[PlaceEvent]
+		}
 	)
 
-	events.add((evt: DropEvent) => {
+	events.on(classOf[DropEvent]).bind((evt: DropEvent) => {
 		val item = new ItemBlockBattery(factory())
 		item.tier = tier
 		item.energy = energy
 		evt.drops = Collections.singleton(item)
-	},
-		classOf[DropEvent]
-	)
+	})
+
 	@Store
 	private var energy = add(new EnergyStorage)
-	events.add((evt: RightClickEvent) => if (EDX.network.isServer) mode = (mode + 1) % 10, classOf[RightClickEvent])
+	events.on(classOf[RightClickEvent]).bind((evt: RightClickEvent) => if (EDX.network.isServer) mode = (mode + 1) % 10)
 
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)

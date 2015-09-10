@@ -15,11 +15,10 @@ class ItemBlockBattery(blockFactory: BlockFactory) extends ItemBlock(blockFactor
 	@Store
 	var energy = add(new EnergyStorage().setMax(BlockBattery.getEnergyForTier(tier)))
 
-	events.add(
+	events.on(classOf[TooltipEvent]).bind(
 		eventListener((evt: TooltipEvent) => {
 			evt.tooltips.add(EDX.language.translate("tooltip.tier") + ": " + (tier + 1))
 		})
-		, classOf[TooltipEvent]
 	)
 
 	override def getMaxCount: Int = 1

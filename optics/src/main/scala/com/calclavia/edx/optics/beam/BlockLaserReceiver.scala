@@ -62,19 +62,18 @@ class BlockLaserReceiver extends BlockEDX with Stateful with ExtendedUpdater wit
 
 	electricNode.setResistance(100)
 
-	events.add(
+	events.on(classOf[PlaceEvent]).bind(
 		(evt: PlaceEvent) => {
 			io.setIOAlternatingOrientation()
 			world.markStaticRender(position)
-		}, classOf[PlaceEvent]
+		}
 	)
 
-	events.add(
+	events.on(classOf[RightClickEvent]).bind(
 		(evt: RightClickEvent) => {
 			io.setIOAlternatingOrientation()
 			world.markStaticRender(position)
-		},
-		classOf[RightClickEvent]
+		}
 	)
 
 	events.on(classOf[ReceiveBeamEvent]).bind(

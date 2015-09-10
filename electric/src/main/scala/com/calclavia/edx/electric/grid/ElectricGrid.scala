@@ -137,8 +137,6 @@ class ElectricGrid extends GridLike[Electric] {
 	 * The graph disregards positive and negative terminals
 	 */
 	protected[grid] val connectionGraph = new DefaultDirectedGraph[Electric, DefaultEdge](classOf[DefaultEdge])
-	//The graph of all electric elements. In this directed graph the arrow points from positive to negative in potential difference.
-	protected[grid] var electricGraph: DefaultDirectedGraph[ElectricElement, DefaultEdge] = null
 	// There should always at least (node.size - 1) amount of junctions.
 	var junctions = List.empty[Junction]
 	//The reference ground junction where voltage is zero.
@@ -153,6 +151,10 @@ class ElectricGrid extends GridLike[Electric] {
 	var currentSources = List.empty[Component]
 	//A list of resistors
 	var resistors = List.empty[Component]
+	var updateFuture: Future[Unit] = _
+	var enableThreading = true
+	//The graph of all electric elements. In this directed graph the arrow points from positive to negative in potential difference.
+	protected[grid] var electricGraph: DefaultDirectedGraph[ElectricElement, DefaultEdge] = null
 	//The source matrix (B)
 	protected[grid] var sourceMatrix: RealMatrix = null
 
@@ -201,7 +203,9 @@ class ElectricGrid extends GridLike[Electric] {
 		node match {
 			case node: NodeElectricComponent =>
 
-				node.onResistanceChange.add((evt: ElectricChangeEvent) => {
+				node.onResistanceChange
+					.on(classOf[ElectricChangeEvent])
+					.bind((evt: ElectricChangeEvent) => {
 					requestUpdate(resistorChanged = true)
 				})
 				node.onInternalVoltageChange :+= ((source: Electric) => {
@@ -215,125 +219,6 @@ class ElectricGrid extends GridLike[Electric] {
 
 		return this
 	}
-
-	def has(node: Electric) = connectionGraph.vertexSet().contains(node)
-
-	/**
-	 * Converts a node electric into an electric element
-	 */
-	def convert(nodeElectric: NodeElectricComponent) = components.find(c => c.component.equals(nodeElectric)).getOrElse(new Component(nodeElectric))
-
-	/**
-	 * Creates or gets an existing Junction
-	 */
-	def convert(nodeJunction: NodeElectricJunction): Junction = {
-		val find = junctions.find(j => j.wires.contains(nodeJunction))
-
-		if (find.isDefined) {
-			return find.get
-		}
-
-		if (ground != null && ground.wires.contains(nodeJunction)) {
-			return ground
-		}
-
-		val newJunction = new Junction
-
-		val clonedGraph = connectionGraph.clone.asInstanceOf[DirectedGraph[Electric, DefaultEdge]]
-		clonedGraph.vertexSet()
-			.filterNot(_.isInstanceOf[NodeElectricJunction])
-			.foreach(clonedGraph.removeVertex)
-
-		val inspector = new ConnectivityInspector(clonedGraph)
-		newJunction.wires ++= inspector.connectedSetOf(nodeJunction).map(_.asInstanceOf[NodeElectricJunction])
-		junctions :+= newJunction
-		return newJunction
-	}
-
-	/**
-	 * Builds the MNA matrix and prepares graph for simulation
-	 */
-	def build(): this.type = {
-		/**
-		 * Clean all variables
-		 */
-		junctions = List.empty
-		components = List.empty
-		ground = null
-		mna = null
-		sourceMatrix = null
-		electricGraph = new DefaultDirectedGraph[ElectricElement, DefaultEdge](classOf[DefaultEdge])
-
-		/**
-		 * Builds the electric graph.
-		 * The directed graph indicate current flow from positive terminal to negative terminal.
-		 */
-		connectionGraph.vertexSet().foreach {
-			case nodeComponent: NodeElectricComponent =>
-				val component = new Component(nodeComponent)
-				//Check all mutual connections
-				//TODO: If there's no other connect on the other end, then make a virtual junction (for dead end points of a circuit)
-				(connectionGraph.connectionsOf(nodeComponent) & nodeComponent.positives().toSet)
-					.foreach {
-					case checkNodeComponent: NodeElectricComponent =>
-						//Let the checkComponent connect to this. Don't need to check negative terminal for incoming connections
-						//TODO: Cache the terminal. It's expensive calculation!
-						val junction = new VirtualJunction
-						val checkComponent = convert(checkNodeComponent)
-
-						electricGraph.addVertex(component)
-						electricGraph.addVertex(junction)
-						electricGraph.addVertex(checkComponent)
-
-						//It's a negative terminal connection, so point this component to the checkComponent
-						electricGraph.addEdge(component, junction)
-						electricGraph.addEdge(junction, checkComponent)
-						electricGraph.addEdge(junction, component)
-
-						junctions :+= junction
-
-					case nodeJunction: NodeElectricJunction =>
-						val junction = convert(nodeJunction)
-						electricGraph.addVertex(component)
-						electricGraph.addVertex(junction)
-						electricGraph.addEdge(component, junction)
-				}
-				components :+= component
-			case nodeJunction: NodeElectricJunction =>
-				val junction = convert(nodeJunction)
-
-				electricGraph.addVertex(junction)
-
-				//Connect the junction to all of this NodeElectricJunction's nodes. These are mutual connections as defined by #connectionOf.
-				connectionGraph
-					.connectionsOf(nodeJunction)
-					.foreach {
-					case nodeComponent: NodeElectricComponent =>
-						val component = convert(nodeComponent)
-						electricGraph.addVertex(component)
-						electricGraph.addEdge(junction, component)
-					case nodeJunction: NodeElectricJunction =>
-				}
-
-			//TODO: Create virtual junctions withPriority resistors to simulate wire resistance
-		}
-
-		if (electricGraph.vertexSet().size() > 0) {
-			//Select reference ground
-			ground = junctions.head
-			junctions = junctions.splitAt(1)._2
-			ground.voltage = 0
-
-			//println("Built grid successfully")
-			//exportGraph(electricGraph, "Electric Grid " + gridID)
-			connectionGraph.vertexSet()
-				.foreach(v => v.onGridBuilt.publish(new GraphBuiltEvent(connectionGraph.connectionsOf(v))))
-		}
-		return this
-	}
-
-	var updateFuture: Future[Unit] = _
-	var enableThreading = true
 
 	def requestUpdate(resistorChanged: Boolean = true, sourceChanged: Boolean = true) {
 		if (enableThreading) {
@@ -544,5 +429,121 @@ class ElectricGrid extends GridLike[Electric] {
 					}
 			}
 		}
+	}
+
+	def has(node: Electric) = connectionGraph.vertexSet().contains(node)
+
+	/**
+	 * Builds the MNA matrix and prepares graph for simulation
+	 */
+	def build(): this.type = {
+		/**
+		 * Clean all variables
+		 */
+		junctions = List.empty
+		components = List.empty
+		ground = null
+		mna = null
+		sourceMatrix = null
+		electricGraph = new DefaultDirectedGraph[ElectricElement, DefaultEdge](classOf[DefaultEdge])
+
+		/**
+		 * Builds the electric graph.
+		 * The directed graph indicate current flow from positive terminal to negative terminal.
+		 */
+		connectionGraph.vertexSet().foreach {
+			case nodeComponent: NodeElectricComponent =>
+				val component = new Component(nodeComponent)
+				//Check all mutual connections
+				//TODO: If there's no other connect on the other end, then make a virtual junction (for dead end points of a circuit)
+				(connectionGraph.connectionsOf(nodeComponent) & nodeComponent.positives().toSet)
+					.foreach {
+					case checkNodeComponent: NodeElectricComponent =>
+						//Let the checkComponent connect to this. Don't need to check negative terminal for incoming connections
+						//TODO: Cache the terminal. It's expensive calculation!
+						val junction = new VirtualJunction
+						val checkComponent = convert(checkNodeComponent)
+
+						electricGraph.addVertex(component)
+						electricGraph.addVertex(junction)
+						electricGraph.addVertex(checkComponent)
+
+						//It's a negative terminal connection, so point this component to the checkComponent
+						electricGraph.addEdge(component, junction)
+						electricGraph.addEdge(junction, checkComponent)
+						electricGraph.addEdge(junction, component)
+
+						junctions :+= junction
+
+					case nodeJunction: NodeElectricJunction =>
+						val junction = convert(nodeJunction)
+						electricGraph.addVertex(component)
+						electricGraph.addVertex(junction)
+						electricGraph.addEdge(component, junction)
+				}
+				components :+= component
+			case nodeJunction: NodeElectricJunction =>
+				val junction = convert(nodeJunction)
+
+				electricGraph.addVertex(junction)
+
+				//Connect the junction to all of this NodeElectricJunction's nodes. These are mutual connections as defined by #connectionOf.
+				connectionGraph
+					.connectionsOf(nodeJunction)
+					.foreach {
+					case nodeComponent: NodeElectricComponent =>
+						val component = convert(nodeComponent)
+						electricGraph.addVertex(component)
+						electricGraph.addEdge(junction, component)
+					case nodeJunction: NodeElectricJunction =>
+				}
+
+			//TODO: Create virtual junctions withPriority resistors to simulate wire resistance
+		}
+
+		if (electricGraph.vertexSet().size() > 0) {
+			//Select reference ground
+			ground = junctions.head
+			junctions = junctions.splitAt(1)._2
+			ground.voltage = 0
+
+			//println("Built grid successfully")
+			//exportGraph(electricGraph, "Electric Grid " + gridID)
+			connectionGraph.vertexSet()
+				.foreach(v => v.onGridBuilt.publish(new GraphBuiltEvent(connectionGraph.connectionsOf(v))))
+		}
+		return this
+	}
+
+	/**
+	 * Converts a node electric into an electric element
+	 */
+	def convert(nodeElectric: NodeElectricComponent) = components.find(c => c.component.equals(nodeElectric)).getOrElse(new Component(nodeElectric))
+
+	/**
+	 * Creates or gets an existing Junction
+	 */
+	def convert(nodeJunction: NodeElectricJunction): Junction = {
+		val find = junctions.find(j => j.wires.contains(nodeJunction))
+
+		if (find.isDefined) {
+			return find.get
+		}
+
+		if (ground != null && ground.wires.contains(nodeJunction)) {
+			return ground
+		}
+
+		val newJunction = new Junction
+
+		val clonedGraph = connectionGraph.clone.asInstanceOf[DirectedGraph[Electric, DefaultEdge]]
+		clonedGraph.vertexSet()
+			.filterNot(_.isInstanceOf[NodeElectricJunction])
+			.foreach(clonedGraph.removeVertex)
+
+		val inspector = new ConnectivityInspector(clonedGraph)
+		newJunction.wires ++= inspector.connectedSetOf(nodeJunction).map(_.asInstanceOf[NodeElectricJunction])
+		junctions :+= newJunction
+		return newJunction
 	}
 }

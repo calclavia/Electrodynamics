@@ -26,16 +26,20 @@ class ItemCardIdentification extends ItemCardAccess with Syncable {
 	@Store
 	override var access: AbstractAccess = null
 
-	events.add(eventListener((evt: TooltipEvent) => {
+	events
+		.on(classOf[TooltipEvent])
+		.bind(eventListener((evt: TooltipEvent) => {
 		if (access != null) {
 			evt.tooltips.add(EDX.language.translate("info.cardIdentification.username") + " " + access.asInstanceOf[AccessUser].username)
 		}
 		else {
 			evt.tooltips.add(EDX.language.translate("info.cardIdentification.empty"))
 		}
-	}), classOf[TooltipEvent])
+	}))
 
-	events.add((evt: RightClickEvent) => {
+	events
+		.on(classOf[RightClickEvent])
+		.bind((evt: RightClickEvent) => {
 		if (Side.get.isServer) {
 			if (evt.entity.has(classOf[Player])) {
 				val player = evt.entity.get(classOf[Player])
@@ -56,7 +60,7 @@ class ItemCardIdentification extends ItemCardAccess with Syncable {
 				}
 			}
 		}
-	}, classOf[RightClickEvent])
+	})
 
 	override def read(packet: Packet) {
 		super.read(packet)

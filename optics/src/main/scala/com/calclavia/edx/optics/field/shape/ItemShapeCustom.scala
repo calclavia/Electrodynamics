@@ -32,7 +32,9 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 	@Store
 	var fieldSize = 0
 
-	events.add(eventListener((evt: TooltipEvent) => {
+	events
+		.on(classOf[TooltipEvent])
+		.bind(eventListener((evt: TooltipEvent) => {
 		evt.tooltips.add(EDX.language.translate("info.modeCustom.mode") + " " + (if (isAdditive) EDX.language.translate("info.modeCustom.additive") else EDX.language.translate("info.modeCustom.substraction")))
 
 		if (pointA != null && pointB != null) {
@@ -53,9 +55,11 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 		if (!EDX.input.isKeyDown(Key.KEY_LSHIFT)) {
 			evt.tooltips.add(EDX.language.translate("info.modeCustom.shift"))
 		}
-	}), classOf[TooltipEvent])
+	}))
 
-	events.add((evt: UseEvent) => {
+	events
+		.on(classOf[UseEvent])
+		.bind((evt: UseEvent) => {
 		if (EDX.network.isServer) {
 
 			if (pointA == null) {
@@ -68,9 +72,11 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 			}
 		}
 		evt.action = true
-	}, classOf[UseEvent])
+	})
 
-	events.add((evt: RightClickEvent) => {
+	events
+		.on(classOf[RightClickEvent])
+		.bind((evt: RightClickEvent) => {
 		if (EDX.network.isServer) {
 			if (EDX.input.isKeyDown(Key.KEY_LSHIFT)) {
 				//Holding shift saves the item
@@ -125,7 +131,7 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 				//entityPlayer.addChatMessage(new ChatComponentText(EDX.get.language.translate("message.modeCustom.modeChange").replaceAll("#p", (if (nbt.getBoolean(NBT_MODE)) EDX.get.language.translate("info.modeCustom.substraction") else EDX.get.language.translate("info.modeCustom.additive")))))
 			}
 		}
-	}, classOf[RightClickEvent])
+	})
 
 	override def getID: String = "shapeCustom"
 

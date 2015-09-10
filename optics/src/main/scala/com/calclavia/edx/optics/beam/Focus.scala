@@ -24,16 +24,16 @@ class Focus(val block: Block) extends Component with Storable with Syncable {
 	@Sync
 	var normal = Vector3DUtil.FORWARD
 
-	block.events.add((evt: PlaceEvent) => {
+	block.events.on(classOf[PlaceEvent]).bind((evt: PlaceEvent) => {
 		normal = evt.placer.rotation.applyTo(Vector3DUtil.FORWARD)
-	}, classOf[PlaceEvent])
+	})
 
-	block.events.add((evt: RightClickEvent) => {
+	block.events.on(classOf[RightClickEvent]).bind((evt: RightClickEvent) => {
 		if (EDX.input.isKeyDown(Key.KEY_LSHIFT)) {
 			lookAt(evt.side.toVector + block.position)
 		}
 		lookAt(evt.position + block.position)
-	}, classOf[RightClickEvent])
+	})
 
 	def lookAt(pos: Vector3D) {
 		normal = (pos - (block.position + 0.5)).normalize

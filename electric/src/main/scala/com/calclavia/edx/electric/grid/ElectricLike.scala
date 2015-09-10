@@ -18,23 +18,21 @@ trait ElectricLike extends Electric with BlockConnectable[Electric] {
 	private var _resistance = 1d
 
 	//Hook block events.
-	block.events.add(
+	block.events.on(classOf[LoadEvent]).bind(
 		(evt: LoadEvent) => {
 			//Wait for next tick
 			if (EDX.network.isServer) {
 				EDX.syncTicker.preQueue(() => build())
 			}
-		},
-		classOf[LoadEvent]
+		}
 	)
-	block.events.add(
+	block.events.on(classOf[UnloadEvent]).bind(
 		(evt: UnloadEvent) => {
 			ElectricGrid.destroy(this)
-		},
-		classOf[UnloadEvent]
+		}
 	)
 
-	block.events.add((evt: NeighborChangeEvent) => rebuild(), classOf[NeighborChangeEvent])
+	block.events.on(classOf[NeighborChangeEvent]).bind((evt: NeighborChangeEvent) => rebuild())
 
 	def rebuild() {
 		if (EDX.network.isServer) {

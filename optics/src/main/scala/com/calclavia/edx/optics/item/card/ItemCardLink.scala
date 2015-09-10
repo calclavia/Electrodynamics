@@ -6,7 +6,6 @@ import nova.core.item.Item.{TooltipEvent, UseEvent}
 import nova.core.retention.{Storable, Store}
 import nova.core.util.collection.Tuple2
 import nova.core.world.World
-import nova.scala.wrapper.FunctionalWrapper
 import nova.scala.wrapper.FunctionalWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
@@ -29,7 +28,9 @@ class ItemCardLink extends ItemCard with CoordLink with Storable {
 
 	override def getLink: Tuple2[World, Vector3D] = new Tuple2(linkWorld, linkPos)
 
-	events.add(eventListener((evt: TooltipEvent) => {
+	events
+		.on(classOf[TooltipEvent])
+		.bind(eventListener((evt: TooltipEvent) => {
 		if (linkWorld != null && linkPos != null) {
 			val block = linkWorld.getBlock(linkPos)
 
@@ -43,9 +44,11 @@ class ItemCardLink extends ItemCard with CoordLink with Storable {
 		else {
 			evt.tooltips.add(EDX.language.translate("info.item.notLinked"))
 		}
-	}), classOf[TooltipEvent])
+	}))
 
-	events.add((evt: UseEvent) => {
+	events
+		.on(classOf[UseEvent])
+		.bind((evt: UseEvent) => {
 		if (EDX.network.isServer) {
 
 			val block = evt.entity.world.getBlock(evt.position)
@@ -57,7 +60,7 @@ class ItemCardLink extends ItemCard with CoordLink with Storable {
 			}
 		}
 		evt.action = true
-	}, classOf[UseEvent])
+	})
 
 	override def getID: String = "cardLink"
 }

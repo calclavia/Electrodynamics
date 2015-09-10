@@ -46,7 +46,7 @@ class BlockMirror extends BlockEDX with Stateful with Syncable with Storable {
 	collider.isCube(false)
 	collider.isOpaqueCube(false)
 
-	events.add((evt: RightClickEvent) => EDX.network.sync(this), classOf[RightClickEvent])
+	events.on(classOf[RightClickEvent]).bind((evt: RightClickEvent) => EDX.network.sync(this))
 
 	events.on(classOf[ReceiveBeamEvent]).bind(
 		(evt: ReceiveBeamEvent) => {

@@ -18,7 +18,9 @@ trait ItemEnergy extends Item with EnergyItem with Storable {
 	@Store
 	protected var energy = 0d
 
-	events.add(eventListener((evt: TooltipEvent) => {
+	events
+		.on(classOf[TooltipEvent])
+		.bind(eventListener((evt: TooltipEvent) => {
 		val color = {
 			if (energy <= maxEnergy / 3) {
 				"\u00a74"
@@ -32,7 +34,7 @@ trait ItemEnergy extends Item with EnergyItem with Storable {
 		}
 
 		evt.tooltips.add(color + new UnitDisplay(UnitDisplay.Unit.JOULES, energy) + "/" + new UnitDisplay(UnitDisplay.Unit.JOULES, maxEnergy).symbol)
-	}), classOf[TooltipEvent])
+	}))
 
 	override def getMaxCount: Int = 1
 
