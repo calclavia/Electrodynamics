@@ -11,8 +11,6 @@ import nova.core.entity.component.Player
 
 class ItemModuleShock extends ItemModule {
 
-	override def getID: String = "moduleShock"
-
 	override def onFieldCollide(block: Block, entity: Entity): Boolean = {
 		if (entity.has(classOf[Damageable]) && entity.has(classOf[Player])) {
 			val player = entity.get(classOf[Player])

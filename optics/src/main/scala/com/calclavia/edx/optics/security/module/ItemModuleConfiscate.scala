@@ -47,6 +47,4 @@ class ItemModuleConfiscate extends ItemModuleDefense {
 		    })
 		return false
 	}
-
-	override def getID: String = "moduleConfiscate"
 }

@@ -8,7 +8,7 @@ import nova.core.block.Stateful
 import nova.core.component.misc.Collider
 import nova.core.component.renderer.{DynamicRenderer, ItemRenderer}
 import nova.core.network.{Sync, Syncable}
-import nova.core.render.model.{MeshModel, Model}
+import nova.core.render.model.Model
 import nova.core.retention.{Storable, Store}
 import nova.core.util.Ray
 import nova.core.util.RayTracer.RayTraceBlockResult
@@ -70,7 +70,6 @@ class BlockCrystal extends BlockEDX with Stateful with Syncable with Storable {
 			beam.color = evt.incident.color
 			beam.power = evt.receivingPower
 			evt.continue(beam)
-		})
-
-	override def getID: String = "crystal"
+		}
+	)
 }

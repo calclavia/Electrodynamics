@@ -53,6 +53,4 @@ class BlockCreativeBuilder extends Block with Syncable {
 			})
 		}
 	}
-
-	override def getID: String = "creativeBuilder"
 }

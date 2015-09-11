@@ -10,8 +10,6 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 class ItemShapeSphere extends ItemShape {
 
-	override def getID: String = "modeSphere"
-
 	override def getStructure: Structure = new StructureSphere
 
 	renderer.onRender(

@@ -11,6 +11,4 @@ class ItemCardInfinite extends ItemCard {
 	val tank = new TankSimple(Fluid.bucketVolume)
 
 	add(new FluidHandler(tank))
-
-	override def getID: String = "cardInfinite"
 }

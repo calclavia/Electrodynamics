@@ -3,7 +3,7 @@ package com.calclavia.edx.optics.fx
 import com.calclavia.edx.optics.content.OpticsTextures
 import nova.core.component.renderer.DynamicRenderer
 import nova.core.render.Color
-import nova.core.render.model.{Model, MeshModel}
+import nova.core.render.model.{MeshModel, Model}
 import nova.core.render.pipeline.BlockRenderStream
 import nova.scala.util.ExtendedUpdater
 import nova.scala.wrapper.FunctionalWrapper._
@@ -38,8 +38,6 @@ class FXHologramProgress(@BeanProperty var color: Color, maxAge: Double) extends
 				//RenderUtility.disableBlending
 			}
 		)
-
-	override def getID: String = "hologramMoving"
 
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)

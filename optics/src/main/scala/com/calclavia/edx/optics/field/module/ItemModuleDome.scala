@@ -5,8 +5,6 @@ import com.calclavia.edx.optics.component.ItemModule
 import com.resonant.core.structure.Structure
 
 class ItemModuleDome extends ItemModule {
-	override def getID: String = "moduleDome"
-
 	override def getMaxCount: Int = 1
 
 	override def onCalculateInterior(projector: FieldMatrix, structure: Structure) {

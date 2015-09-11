@@ -9,6 +9,4 @@ class ItemScrewdriver extends Item {
 	add(new Category("tools"))
 	add(new ItemRenderer())
 		.setTexture(CoreContent.textureScrewdriver)
-
-	override def getID: String = "screwdriver"
 }

@@ -19,6 +19,4 @@ class ItemModuleAntiHostile extends ItemModuleDefense {
 
 		return false
 	}
-
-	override def getID: String = "moduleAntiHostile"
 }

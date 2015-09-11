@@ -7,7 +7,7 @@ import nova.core.block.Stateful.LoadEvent
 import nova.core.component.renderer.DynamicRenderer
 import nova.core.entity.Entity
 import nova.core.render.Color
-import nova.core.render.model.{Face, Model, Vertex, MeshModel}
+import nova.core.render.model.{Face, MeshModel, Model, Vertex}
 import nova.scala.wrapper.FunctionalWrapper._
 import nova.scala.wrapper.VectorWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.{Rotation, Vector3D}
@@ -145,6 +145,4 @@ class EntityLaserBeam(start: Vector3D, end: Vector3D, color: Color, power: Doubl
 	)
 
 	override def maxAge: Double = 0.5
-
-	override def getID: String = "laserFx"
 }

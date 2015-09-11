@@ -408,8 +408,6 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 
 	def isInvertedFilter: Boolean = isInverted
 
-	override def getID: String = "projector"
-
 	//TODO: Useless
 	protected def amplifier: Float = {
 		if (getShapeItem.isInstanceOf[ItemShapeCustom]) {

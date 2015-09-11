@@ -79,6 +79,4 @@ class BlockSolarPanel extends BlockEDX with ExtendedUpdater with Stateful {
 			//}
 		}
 	}
-
-	override def getID: String = "solarPanel"
 }

@@ -160,6 +160,4 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 		linkWorld = world
 		linkPos = pos
 	}
-
-	override def getID: String = "remote"
 }

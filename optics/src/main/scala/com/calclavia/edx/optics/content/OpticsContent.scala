@@ -3,7 +3,7 @@ package com.calclavia.edx.optics.content
 import com.calclavia.edx.core.Reference
 import com.calclavia.edx.optics.beam.fx.EntityMagneticBeam
 import com.calclavia.edx.optics.beam.{BlockCrystal, BlockLaserEmitter, BlockLaserReceiver, BlockMirror}
-import com.calclavia.edx.optics.component.{ItemModule, Named}
+import com.calclavia.edx.optics.component.ItemModule
 import com.calclavia.edx.optics.field.module._
 import com.calclavia.edx.optics.field.shape._
 import com.calclavia.edx.optics.field.{BlockForceField, BlockProjector}
@@ -43,7 +43,7 @@ object OpticsContent extends ContentLoader {
 	 * Misc Items
 	 */
 	val remoteController: ItemFactory = classOf[ItemRemoteController]
-	val focusMatrix: ItemFactory = () => (new Item with Named).setName("focusMatrix")
+	val focusMatrix: ItemFactory = new ItemFactory("focusMatrix", () => new Item())
 	/**
 	 * Cards
 	 */
@@ -64,21 +64,21 @@ object OpticsContent extends ContentLoader {
 	/**
 	 * Modules
 	 */
-	val moduleTranslate: ItemFactory = () => (new ItemModule with Named).setName("moduleTranslate").setCost(3f)
-	val moduleScale: ItemFactory = () => (new ItemModule with Named).setName("moduleScale").setCost(2.5f)
-	val moduleRotate: ItemFactory = () => (new ItemModule with Named).setName("moduleRotate").setCost(0.5f)
-	val moduleSpeed: ItemFactory = () => (new ItemModule with Named).setName("moduleSpeed").setCost(1.5f)
-	val moduleCapacity: ItemFactory = () => (new ItemModule with Named).setName("moduleCapacity").setCost(0.5f)
-	val moduleCollection: ItemFactory = () => (new ItemModule with Named).setName("moduleCollection").setMaxCount(1).setCost(15)
-	val moduleInvert: ItemFactory = () => (new ItemModule with Named).setName("moduleInvert").setMaxCount(1).setCost(15)
-	val moduleSilence: ItemFactory = () => (new ItemModule with Named).setName("moduleSilence").setMaxCount(1).setCost(1)
+	val moduleTranslate: ItemFactory = new ItemFactory("moduleTranslate", () => new ItemModule().setCost(3f))
+	val moduleScale: ItemFactory = new ItemFactory("moduleScale", () => new ItemModule().setCost(2.5f))
+	val moduleRotate: ItemFactory = new ItemFactory("moduleRotate", () => new ItemModule().setCost(0.5f))
+	val moduleSpeed: ItemFactory = new ItemFactory("moduleSpeed", () => new ItemModule().setCost(1.5f))
+	val moduleCapacity: ItemFactory = new ItemFactory("moduleCapacity", () => new ItemModule().setCost(0.5f))
+	val moduleCollection: ItemFactory = new ItemFactory("moduleCollection", () => new ItemModule().setMaxCount(1).setCost(15))
+	val moduleInvert: ItemFactory = new ItemFactory("moduleInvert", () => new ItemModule().setMaxCount(1).setCost(15))
+	val moduleSilence: ItemFactory = new ItemFactory("moduleSilence", () => new ItemModule().setMaxCount(1).setCost(1))
 	val moduleFusion: ItemFactory = classOf[ItemModuleFusion]
 	val moduleDome: ItemFactory = classOf[ItemModuleDome]
-	val moduleCamouflage: ItemFactory = () => (new ItemModule with Named).setName("moduleCamouflage").setCost(1.5f).setMaxCount(1)
-	val moduleApproximation: ItemFactory = () => (new ItemModule with Named).setName("moduleApproximation").setMaxCount(1).setCost(1f)
+	val moduleCamouflage: ItemFactory = new ItemFactory("moduleCamouflage", () => new ItemModule().setCost(1.5f).setMaxCount(1))
+	val moduleApproximation: ItemFactory = new ItemFactory("moduleApproximation", () => new ItemModule().setMaxCount(1).setCost(1f))
 	val moduleArray: ItemFactory = () => new ItemModuleArray().setCost(3f)
 	val moduleShock: ItemFactory = classOf[ItemModuleShock]
-	val moduleGlow: ItemFactory = () => (new ItemModule with Named).setName("moduleGlow")
+	val moduleGlow: ItemFactory = new ItemFactory("moduleGlow", () => new ItemModule())
 	val moduleSponge: ItemFactory = classOf[ItemModuleSponge]
 	val moduleRepulsion: ItemFactory = classOf[ItemModuleRepulsion]
 	val moduleAntiHostile: ItemFactory = () => new ItemModuleAntiHostile().setCost(10)
@@ -86,9 +86,9 @@ object OpticsContent extends ContentLoader {
 	val moduleAntiPersonnel: ItemFactory = () => new ItemModuleAntiPersonnel().setCost(15)
 	val moduleConfiscate: ItemFactory = classOf[ItemModuleConfiscate]
 	val moduleWarn: ItemFactory = classOf[ItemModuleBroadcast]
-	val moduleBlockAccess: ItemFactory = () => (new ItemModuleDefense with Named).setCost(10).setName("moduleBlockAccess")
-	val moduleBlockAlter: ItemFactory = () => (new ItemModuleDefense with Named).setCost(15).setName("moduleBlockAlter")
-	val moduleAntiSpawn: ItemFactory = () => (new ItemModuleDefense with Named).setCost(10).setName("moduleAntiSpawn")
+	val moduleBlockAccess: ItemFactory = new ItemFactory("moduleBlockAccess", () => (new ItemModuleDefense).setCost(10))
+	val moduleBlockAlter: ItemFactory = new ItemFactory("moduleBlockAlter", () => (new ItemModuleDefense).setCost(15))
+	val moduleAntiSpawn: ItemFactory = new ItemFactory("moduleAntiSpawn", () => (new ItemModuleDefense).setCost(10))
 	//TODO: Allow args.
 	val fxFortronBeam: EntityFactory = () => new EntityMagneticBeam(Color.blue, 40)
 	val fxHologram: EntityFactory = () => new FXHologram(Color.blue, 40)

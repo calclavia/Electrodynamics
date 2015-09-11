@@ -8,21 +8,22 @@ import com.calclavia.edx.mechanical.physic.MechanicalMaterial
 import com.calclavia.edx.mechanical.physic.grid.MechanicalNodeGear
 import nova.core.block.Block
 import nova.core.block.Block.{PlaceEvent, RightClickEvent}
-import nova.core.component.renderer.{DynamicRenderer, ItemRenderer}
+import nova.core.component.renderer.DynamicRenderer
 import nova.core.network.{Packet, Sync, Syncable}
 import nova.core.render.Color
 import nova.core.render.model.{MeshModel, Model}
 import nova.core.render.pipeline.{BlockRenderStream, StaticCubeTextureCoordinates}
 import nova.core.retention.{Storable, Store}
 import nova.core.util.Direction
-import nova.core.util.math.{RotationUtil, MatrixStack, Vector3DUtil}
+import nova.core.util.math.{MatrixStack, Vector3DUtil}
 import nova.core.util.shape.Cuboid
 import nova.microblock.micro.{Microblock, MicroblockContainer}
 import nova.scala.wrapper.FunctionalWrapper._
-import nova.scala.wrapper.VectorWrapper._
 import nova.scala.wrapper.OptionWrapper._
+import nova.scala.wrapper.VectorWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.{Rotation, Vector3D}
 import org.apache.commons.math3.linear.RealMatrix
+
 import scala.collection.JavaConversions._
 
 object BlockGear {
@@ -107,8 +108,6 @@ abstract class BlockGear extends BlockEDX with Storable with Syncable {
 
 	def material: MechanicalMaterial
 	add(material)
-
-	override def getID: String = s"gear-$material"
 
 	@Sync
 	@Store(key = "side")

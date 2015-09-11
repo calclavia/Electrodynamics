@@ -3,7 +3,7 @@ package com.calclavia.edx.optics.fx
 import nova.core.component.renderer.DynamicRenderer
 import nova.core.entity.Entity
 import nova.core.render.Color
-import nova.core.render.model.{Face, Model, Vertex, MeshModel}
+import nova.core.render.model.{Face, MeshModel, Model, Vertex}
 import nova.core.render.texture.Texture
 import nova.scala.util.ExtendedUpdater
 import nova.scala.wrapper.FunctionalWrapper._
@@ -125,8 +125,6 @@ abstract class FXBeam(texture: Texture, @BeanProperty var color: Color, maxAge: 
 		this.prevPitch = this.rotPitch
 		return this
 	}
-
-	override def getID: String = "fxBeam"
 
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)

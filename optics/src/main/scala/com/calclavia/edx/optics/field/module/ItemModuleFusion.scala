@@ -18,8 +18,6 @@ class ItemModuleFusion extends ItemModule {
 	setCost(1f)
 	setMaxCount(1)
 
-	override def getID: String = "moduleFusion"
-
 	override def onProject(projector: Projector, position: Vector3D): ProjectState = {
 		if (GraphFrequency.instance
 			.get(projector.getFrequency)

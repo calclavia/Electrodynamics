@@ -109,7 +109,4 @@ class BlockBiometric extends BlockFrequency with ExtendedUpdater with Permission
 	override def getInventoryStackLimit: Int = 1*/
 
 	override def getBiometricIdentifiers: Set[BlockBiometric] = Set(this)
-
-	override def getID: String = "biometric"
-
 }

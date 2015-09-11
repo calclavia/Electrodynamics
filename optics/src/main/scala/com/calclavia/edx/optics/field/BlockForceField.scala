@@ -148,8 +148,6 @@ class BlockForceField extends BlockEDX with Stateful with Syncable with ForceFie
 
 	override def getResistance: Double = Double.PositiveInfinity
 
-	override def getID: String = "forceField"
-
 	override def weakenForceField(energy: Int) {
 		val projector = getProjector
 

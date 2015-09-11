@@ -33,7 +33,11 @@ object ElectricContent extends ContentLoader {
 	/**
 	 * Blocks
 	 */
-	val battery: BlockFactory = new BlockFactory(() => new BlockBattery, eventListener((evt: BlockEvent.Register) => EDX.items.register(supplier[Item](() => new ItemBlockBattery(evt.blockFactory)))))
+	val battery: BlockFactory = new BlockFactory(
+		"battery",
+		() => new BlockBattery,
+		eventListener((evt: BlockEvent.Register) => EDX.items.register("battery", supplier[Item](() => new ItemBlockBattery(evt.blockFactory))))
+	)
 
 	val wire: BlockFactory = classOf[BlockWire]
 	val thermopile: BlockFactory = classOf[BlockThermopile]

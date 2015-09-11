@@ -145,6 +145,4 @@ class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater with
 		super.read(packet)
 		world.markStaticRender(position)
 	}
-
-	override def getID: String = "laserEmitter"
 }

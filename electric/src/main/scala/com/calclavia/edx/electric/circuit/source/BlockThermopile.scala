@@ -119,6 +119,4 @@ class BlockThermopile extends BlockEDX with ExtendedUpdater with Stateful {
 			}
 		}
 	}
-
-	override def getID: String = "thermopile"
 }

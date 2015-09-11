@@ -3,7 +3,7 @@ package com.calclavia.edx.optics.field.shape
 import com.calclavia.edx.optics.content.OpticsTextures
 import com.calclavia.edx.optics.field.structure.StructureCylinder
 import com.resonant.core.structure.Structure
-import nova.core.render.model.{Model, MeshModel}
+import nova.core.render.model.{MeshModel, Model}
 import nova.core.render.pipeline.BlockRenderStream
 import nova.scala.wrapper.FunctionalWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
@@ -16,8 +16,6 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 class ItemShapeCylinder extends ItemShape {
 	private val step = 1
 	private val radiusExpansion: Int = 0
-
-	override def getID: String = "modeCylinder"
 
 	override def getStructure: Structure = new StructureCylinder
 

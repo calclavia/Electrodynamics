@@ -42,7 +42,7 @@ object Optics extends Loadable {
 			.on(classOf[ServerEvent.Stop])
 			.bind((evt: ServerEvent.Stop) => OpticGrid.clear())
 
-		EDX.fluids.register(() => new Fluid(Fortron.fortronID))
+		EDX.fluids.register(Fortron.fortronID, () => new Fluid())
 
 		OpticsContent.preInit()
 		OpticsModels.preInit()

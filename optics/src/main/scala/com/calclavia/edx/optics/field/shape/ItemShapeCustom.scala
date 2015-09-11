@@ -133,8 +133,6 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 		}
 	})
 
-	override def getID: String = "shapeCustom"
-
 	override def getStructure: Structure =
 		getOrSetCache("shapeCustom", () => {
 			val custom = new StructureCustom("shapeCustom")

@@ -14,8 +14,6 @@ import scala.collection.convert.wrapAll._
 class ItemModuleSponge extends ItemModule {
 	setMaxCount(1)
 
-	override def getID: String = "moduleSponge"
-
 	override def onCreateField(projector: Projector, field: util.Set[Vector3D]): Boolean = {
 		val proj = projector.asInstanceOf[BlockProjector]
 

@@ -18,10 +18,8 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 class ItemModuleRepulsion extends ItemModule {
 	setCost(8)
 
-	override def getID: String = "moduleRepulsion"
-
 	override def onCreateField(projector: Projector, field: JSet[Vector3D]): Boolean = {
-		val repellForce = Vector3DUtil.ONE * Math.max(projector.getSidedModuleCount(factory()) / 20, 1.2)
+		val repellForce = Vector3DUtil.ONE * Math.max(projector.getSidedModuleCount(getFactory()) / 20, 1.2)
 
 		getEntitiesInField(projector).par
 			.collect {

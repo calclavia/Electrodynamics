@@ -83,5 +83,4 @@ class EntityBlockParticle(block: Block) extends Entity {
 		par1Tessellator.addVertexWithUV((f11 + par3 * f10 - par6 * f10).asInstanceOf[Double], (f12 - par4 * f10).asInstanceOf[Double], (f13 + par5 * f10 - par7 * f10).asInstanceOf[Double], f7.asInstanceOf[Double], f9.asInstanceOf[Double])
 	}
 	*/
-	override def getID: String = "blockParticle"
 }

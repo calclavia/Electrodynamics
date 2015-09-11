@@ -77,8 +77,6 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 
 	def markFailMove() = failedMove = true
 
-	override def getID: String = "mobilizer"
-
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)
 

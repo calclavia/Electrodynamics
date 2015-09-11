@@ -2,11 +2,11 @@ package com.calclavia.edx.optics.security.module
 
 import java.util
 
+import com.calclavia.edx.core.EDX
 import com.calclavia.edx.optics.api.machine.Projector
 import com.calclavia.edx.optics.field.BlockProjector
 import com.calclavia.edx.optics.security.MFFSPermissions
 import nova.core.entity.component.Player
-import com.calclavia.edx.core.EDX
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 class ItemModuleBroadcast extends ItemModuleDefense {
@@ -22,6 +22,4 @@ class ItemModuleBroadcast extends ItemModuleDefense {
 			.foreach(EDX.network.sendChat(_, EDX.language.translate("message.moduleWarn.warn")))
 		return false
 	}
-
-	override def getID: String = "moduleBroadcast"
 }

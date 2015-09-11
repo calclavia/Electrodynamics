@@ -11,8 +11,6 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 class ItemModuleArray extends ItemModule {
 
-	override def getID: String = "moduleArray"
-
 	override def onCalculateExterior(projector: FieldMatrix, structure: Structure) {
 		generateArray(projector, structure)
 	}
@@ -30,7 +28,7 @@ class ItemModuleArray extends ItemModule {
 				//TODO: Execute concurrently. Test speed.
 				Direction.VALID_DIRECTIONS.foreach(
 					dir => {
-						val copyAmount = projector.getSidedModuleCount(factory(), dir)
+						val copyAmount = projector.getSidedModuleCount(getFactory(), dir)
 						val directionalDisplacement = Math.abs(longestDirectional(dir)) + Math.abs(longestDirectional(dir.opposite)) + 1
 
 						(0 until copyAmount).foreach(

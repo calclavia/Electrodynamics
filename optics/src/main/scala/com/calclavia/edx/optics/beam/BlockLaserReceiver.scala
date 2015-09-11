@@ -111,6 +111,4 @@ class BlockLaserReceiver extends BlockEDX with Stateful with ExtendedUpdater wit
 			subModel.bindAll(OpticsTextures.laserReceiver)
 		}
 	)
-
-	override def getID: String = "laserReceiver"
 }

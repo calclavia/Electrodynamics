@@ -96,6 +96,4 @@ class ItemCardIdentification extends ItemCardAccess with Syncable {
 			}
 		}
 	}
-
-	override def getID: String = "cardIdentification"
 }

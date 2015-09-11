@@ -80,6 +80,4 @@ class BlockSiren extends BlockEDX with ExtendedUpdater with Stateful {
 			}*/
 		}
 	}
-
-	override def getID: String = "siren"
 }

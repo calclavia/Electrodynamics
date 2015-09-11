@@ -2,13 +2,11 @@ package com.calclavia.edx.optics.field.shape
 
 import com.calclavia.edx.optics.content.OpticsTextures
 import com.resonant.core.structure.{Structure, StructureCube}
-import nova.core.render.model.{Model, MeshModel}
+import nova.core.render.model.{MeshModel, Model}
 import nova.core.render.pipeline.BlockRenderStream
 import nova.scala.wrapper.FunctionalWrapper._
 
 class ItemShapeCube extends ItemShape {
-
-	override def getID: String = "modeCube"
 
 	override def getStructure: Structure = new StructureCube
 

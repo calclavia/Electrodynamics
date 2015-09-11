@@ -19,7 +19,7 @@ import nova.scala.wrapper.VectorWrapper._
 
 import scala.collection.convert.wrapAll._
 
-abstract class ItemModule extends Item with TooltipItem with Module with AutoItemTexture {
+class ItemModule extends Item with TooltipItem with Module with AutoItemTexture {
 	private var fortronCost = 0.5f
 	private var maxCount = 64
 

@@ -26,8 +26,6 @@ class EntityScorch(side: Int) extends Entity with EntityAgeLike {
 
 	override def maxAge: Double = 1
 
-	override def getID: String = "scorchFx"
-
 	override def update(deltaTime: Double) {
 		super.update(deltaTime)
 		particleAlpha = 1 - (time / maxAge) * (time / maxAge)

@@ -3,15 +3,13 @@ package com.calclavia.edx.optics.field.shape
 import com.calclavia.edx.optics.content.OpticsTextures
 import com.calclavia.edx.optics.field.structure.StructureTube
 import com.resonant.core.structure.Structure
-import nova.core.render.model.{Model, MeshModel}
+import nova.core.render.model.{MeshModel, Model}
 import nova.core.render.pipeline.BlockRenderStream
 import nova.scala.wrapper.FunctionalWrapper._
 
 import scala.collection.convert.wrapAll._
 
 class ItemShapeTube extends ItemShape {
-
-	override def getID: String = "modeTube"
 
 	override def getStructure: Structure = new StructureTube
 

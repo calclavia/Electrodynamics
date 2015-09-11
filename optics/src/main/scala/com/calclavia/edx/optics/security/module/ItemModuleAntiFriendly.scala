@@ -22,7 +22,4 @@ class ItemModuleAntiFriendly extends ItemModuleDefense {
 
 		return false
 	}
-
-	override def getID: String = "moduleAntiFriendly"
-
 }

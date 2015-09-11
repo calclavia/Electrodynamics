@@ -334,6 +334,4 @@ class BlockWire extends BlockEDX with Storable with Syncable {
 
 		return connections
 	}
-
-	override def getID: String = "electricWire"
 }

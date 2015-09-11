@@ -79,9 +79,8 @@ class BlockMirror extends BlockEDX with Stateful with Syncable with Storable {
 				beam.power = evt.receivingPower
 				evt.continue(beam)
 			}
-		})
-
-	override def getID: String = "mirror"
+		}
+	)
 
 	override def read(packet: Packet) {
 		super.read(packet)

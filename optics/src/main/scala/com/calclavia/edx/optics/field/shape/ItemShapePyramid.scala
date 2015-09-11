@@ -3,12 +3,11 @@ package com.calclavia.edx.optics.field.shape
 import com.calclavia.edx.optics.content.OpticsTextures
 import com.calclavia.edx.optics.field.structure.StructurePyramid
 import com.resonant.core.structure.Structure
-import nova.core.render.model.{MeshModel, Face, Model, Vertex}
+import nova.core.render.model.{Face, MeshModel, Model, Vertex}
 import nova.scala.wrapper.FunctionalWrapper._
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D
 
 class ItemShapePyramid extends ItemShape {
-	override def getID: String = "modePyramid"
 
 	override def getStructure: Structure = new StructurePyramid
 

@@ -10,6 +10,4 @@ class ItemCard extends Item with Card with AutoItemTexture {
 	add(new CategoryEDX)
 
 	override def getMaxCount: Int = 1
-
-	override def getID: String = "cardBlank"
 }

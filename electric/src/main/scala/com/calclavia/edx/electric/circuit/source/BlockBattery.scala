@@ -136,7 +136,7 @@ class BlockBattery extends BlockEDX with Syncable with Storable with ExtendedUpd
 	)
 
 	events.on(classOf[DropEvent]).bind((evt: DropEvent) => {
-		val item = new ItemBlockBattery(factory())
+		val item = new ItemBlockBattery(getFactory())
 		item.tier = tier
 		item.energy = energy
 		evt.drops = Collections.singleton(item)
@@ -186,7 +186,5 @@ class BlockBattery extends BlockEDX with Syncable with Storable with ExtendedUpd
 			 */
 		}
 	}
-
-	override def getID: String = "battery"
 
 }
