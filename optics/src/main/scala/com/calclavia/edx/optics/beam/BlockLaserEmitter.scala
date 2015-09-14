@@ -34,17 +34,17 @@ import org.apache.commons.math3.geometry.euclidean.threed.{Rotation, Vector3D}
  * @author Calclavia
  */
 class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater with Storable with Syncable {
-	private val electricNode = add(new NodeElectricComponent(this))
+	private val electricNode = components.add(new NodeElectricComponent(this))
 	@Store
 	@Sync
-	private val orientation = add(new Orientation(this)).hookBasedOnEntity().hookRightClickRotate()
-	private val optic = add(new OpticHandler(this))
+	private val orientation = components.add(new Orientation(this)).hookBasedOnEntity().hookRightClickRotate()
+	private val optic = components.add(new OpticHandler(this))
 	@Store
 	@Sync
-	private val io = add(new IO(this))
-	private val renderer = add(new StaticRenderer())
-	private val itemRenderer = add(new ItemRenderer(this))
-	private val lightEmitter = add(new LightEmitter())
+	private val io = components.add(new IO(this))
+	private val renderer = components.add(new StaticRenderer())
+	private val itemRenderer = components.add(new ItemRenderer(this))
+	private val lightEmitter = components.add(new LightEmitter())
 
 	orientation.setMask(0x3F)
 
@@ -85,9 +85,9 @@ class BlockLaserEmitter extends BlockEDX with Stateful with ExtendedUpdater with
 	events
 		.on(classOf[RightClickEvent])
 		.bind(
-			(evt: RightClickEvent) => {
-				optic.destroy()
-			}
+	    (evt: RightClickEvent) => {
+		    optic.destroy()
+	    }
 		)
 
 	renderer.onRender(

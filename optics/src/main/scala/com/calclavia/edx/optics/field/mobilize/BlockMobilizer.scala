@@ -36,7 +36,7 @@ import scala.collection.convert.wrapAll._
 class BlockMobilizer extends BlockFieldMatrix with IEffectController with PermissionHandler {
 	@Store
 	@Sync(ids = Array(BlockPacketID.description, BlockPacketID.inventory))
-	override val inventory = add(new InventorySimple(1 + 25))
+	override val inventory = components.add(new InventorySimple(1 + 25))
 
 	val packetRange = 60
 	val animationTime = 20
@@ -62,18 +62,18 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 	private var moveTime = 0
 	private var canRenderMove = true
 
-	get(classOf[StaticRenderer])
+	components.get(classOf[StaticRenderer])
 		.onRender(
 			(model: Model) => {
-				model.matrix.rotate(get(classOf[Orientation]).orientation.rotation)
+				model.matrix.rotate(components.get(classOf[Orientation]).orientation.rotation)
 				val subModel = OpticsModels.mobilizer.getModel
 				model.children.add(subModel)
 				subModel.bindAll(if (isActive) OpticsTextures.mobilizerOn else OpticsTextures.mobilizerOff)
 			}
 		)
 
-	get(classOf[Orientation]).setMask(63)
-	get(classOf[Collider]).isCube(false)
+	components.get(classOf[Orientation]).setMask(63)
+	components.get(classOf[Collider]).isCube(false)
 
 	def markFailMove() = failedMove = true
 
@@ -130,7 +130,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 				EDX.network.sync(BlockPacketID.field, this)
 
 				if (!isTeleport && doAnchor) {
-					anchor += get(classOf[Orientation]).orientation.toVector
+					anchor += components.get(classOf[Orientation]).orientation.toVector
 				}
 			}))
 
@@ -357,7 +357,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 		return EDX.blocks.getAirBlock.sameType(targetBlock)
 	}
 
-	def isVisibleToPlayer(position: Vector3D): Boolean = Direction.VALID_DIRECTIONS.count(dir => world.getBlock(position + dir.toVector).get.get(classOf[Collider]).isOpaqueCube.get()) < 6
+	def isVisibleToPlayer(position: Vector3D): Boolean = Direction.VALID_DIRECTIONS.count(dir => world.getBlock(position + dir.toVector).get.components.get(classOf[Collider]).isOpaqueCube.get()) < 6
 
 	override def read(packet: Packet) {
 		super.read(packet)
@@ -381,7 +381,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 							/**
 							 * Movement Rendering
 							 */
-							val direction = get(classOf[Orientation]).orientation
+							val direction = components.get(classOf[Orientation]).orientation
 
 							hologramRenderPoints.foreach(
 								pos =>
@@ -482,7 +482,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 			}
 		}
 
-		return (world(), getAbsoluteAnchor + get(classOf[Orientation]).orientation.toVector)
+		return (world(), getAbsoluteAnchor + components.get(classOf[Orientation]).orientation.toVector)
 	}
 
 	private def isTeleport: Boolean = {
@@ -524,7 +524,7 @@ class BlockMobilizer extends BlockFieldMatrix with IEffectController with Permis
 				//entity.travelToDimension(targetPos.world.block.dimensionId)
 			}
 
-			entity.get(classOf[RigidBody]).setVelocity(Vector3D.ZERO)
+			entity.components.get(classOf[RigidBody]).setVelocity(Vector3D.ZERO)
 		}
 	}
 

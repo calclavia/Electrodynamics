@@ -17,7 +17,7 @@ import scala.collection.convert.wrapAll._
  * @author Calclavia
  */
 class EntityScorch(side: Int) extends Entity with EntityAgeLike {
-	val renderer = add(new DynamicRenderer)
+	val renderer = components.add(new DynamicRenderer)
 
 	val particleScale = 0.2f
 	var particleAlpha = 0d

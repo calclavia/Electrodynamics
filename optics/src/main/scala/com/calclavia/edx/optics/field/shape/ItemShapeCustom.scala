@@ -161,7 +161,7 @@ class ItemShapeCustom extends ItemShape with CacheHandler {
 			modes(new Random().nextInt(modes.length - 1))
 				.build()
 				.asInstanceOf[ItemShape]
-				.get(classOf[ItemRenderer])
+				.components.get(classOf[ItemRenderer])
 				.onRender
 				.accept(subModel)
 			subModel.bindAll(OpticsTextures.hologram)

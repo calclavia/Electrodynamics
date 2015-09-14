@@ -8,7 +8,7 @@ import nova.core.component.Category
 import nova.core.component.renderer.StaticRenderer
 import nova.core.component.transform.Orientation
 import nova.core.network.{Packet, Syncable}
-import nova.core.render.pipeline.BlockRenderStream
+import nova.core.render.pipeline.BlockRenderPipeline
 import nova.internal.core.Game
 import nova.scala.wrapper.FunctionalWrapper._
 import nova.scala.wrapper.VectorWrapper._
@@ -18,18 +18,17 @@ object BlockCreativeBuilder {
 }
 
 class BlockCreativeBuilder extends Block with Syncable {
+	components.add(new Orientation(this).setMask(0x3F))
 
-	add(new Orientation(this).setMask(0x3F))
-
-	add(new StaticRenderer()
+	components.add(new StaticRenderer()
 		.onRender(
-			new BlockRenderStream(this)
-				.withTexture(CoreContent.textureCreativeBuilder)
-				.build()
+	    new BlockRenderPipeline(this)
+		    .withTexture(CoreContent.textureCreativeBuilder)
+		    .build()
 		)
 	)
 
-	add(new Category("tools"))
+	components.add(new Category("tools"))
 
 	events.on(classOf[RightClickEvent]).bind((evt: RightClickEvent) => onRightClick(evt))
 

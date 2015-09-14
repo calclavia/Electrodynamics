@@ -52,7 +52,7 @@ public class ConnectionBuilder<T> {
 			.stream()
 			.filter(Optional::isPresent)
 			.map(Optional::get)
-			.map(block -> block.getOp(componentType))
+			.map(block -> block.components.getOp(componentType))
 			.filter(Optional::isPresent)
 			.map(Optional::get)
 			.collect(Collectors.toSet());
@@ -79,7 +79,7 @@ public class ConnectionBuilder<T> {
 		Set<T> direct = blocks
 			.values()
 			.stream()
-			.map(block -> block.getOp(componentType))
+			.map(block -> block.components.getOp(componentType))
 			.filter(Optional::isPresent)
 			.map(Optional::get)
 			.collect(Collectors.toSet());
@@ -91,7 +91,7 @@ public class ConnectionBuilder<T> {
 		return blocks
 			.values()
 			.stream()
-			.map(block -> block.getOp(MicroblockContainer.class))
+			.map(block -> block.components.getOp(MicroblockContainer.class))
 			.filter(Optional::isPresent)
 			.map(Optional::get)
 			.flatMap(container ->
@@ -118,7 +118,7 @@ public class ConnectionBuilder<T> {
 						.map(Optional::get)
 			)
 			.map(microblock -> microblock.block)
-			.map(block -> block.getOp(componentType))
+			.map(block -> block.components.getOp(componentType))
 			.filter(Optional::isPresent)
 			.map(Optional::get)
 			.collect(Collectors.toSet());

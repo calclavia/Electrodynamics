@@ -19,7 +19,7 @@ import nova.core.entity.component.Player
 import nova.core.network.NetworkTarget.Side
 import nova.core.network.{Packet, Sync, Syncable}
 import nova.core.render.model.Model
-import nova.core.render.pipeline.BlockRenderStream
+import nova.core.render.pipeline.BlockRenderPipeline
 import nova.core.retention.{Storable, Store}
 import nova.core.util.Direction
 import nova.scala.wrapper.FunctionalWrapper._
@@ -32,16 +32,16 @@ class BlockForceField extends BlockEDX with Stateful with Syncable with ForceFie
 	 * Constructor
 	 */
 	private val superOcclusion = collider.occlusionBoxes
-	private val renderer = add(new StaticRenderer())
+	private val renderer = components.add(new StaticRenderer())
 	private val superRender = renderer.onRender
 
 	collider.setOcclusionBoxes(
 		(entity: Optional[Entity]) => {
 			val projector = getProjector()
 
-			if (projector != null && entity.isPresent && entity.get.has(classOf[Player])) {
+			if (projector != null && entity.isPresent && entity.get.components.has(classOf[Player])) {
 				val biometricIdentifier = projector.getBiometricIdentifier
-				val entityPlayer = entity.get.get(classOf[Player])
+				val entityPlayer = entity.get.components.get(classOf[Player])
 
 				if (biometricIdentifier != null) {
 					if (biometricIdentifier.hasPermission(entityPlayer.getPlayerID, MFFSPermissions.forceFieldWarp)) {
@@ -60,34 +60,34 @@ class BlockForceField extends BlockEDX with Stateful with Syncable with ForceFie
 	events
 		.on(classOf[CollideEvent])
 		.bind(
-			(evt: CollideEvent) => {
-				val projector = getProjector()
-				val entity = evt.entity
-				if (projector != null) {
-					if (projector.crystalHandler.getModules().forall(stack => stack.asInstanceOf[Module].onFieldCollide(BlockForceField.this, entity))) {
-						val biometricIdentifier = projector.getBiometricIdentifier
+	    (evt: CollideEvent) => {
+		    val projector = getProjector()
+		    val entity = evt.entity
+		    if (projector != null) {
+			    if (projector.crystalHandler.getModules().forall(stack => stack.asInstanceOf[Module].onFieldCollide(BlockForceField.this, entity))) {
+				    val biometricIdentifier = projector.getBiometricIdentifier
 
-						if ((transform.position + 0.5).distance(entity.transform.position) < 0.5) {
-							if (Side.get().isServer && entity.has(classOf[Damageable])) {
-								val entityLiving = entity.get(classOf[Damageable])
+				    if ((transform.position + 0.5).distance(entity.transform.position) < 0.5) {
+					    if (Side.get().isServer && entity.components.has(classOf[Damageable])) {
+						    val entityLiving = entity.components.get(classOf[Damageable])
 
-								if (entity.getOp(classOf[Player]).isPresent) {
-									val player = entity.get(classOf[Player])
+						    if (entity.components.getOp(classOf[Player]).isPresent) {
+							    val player = entity.components.get(classOf[Player])
 
-									if (biometricIdentifier != null) {
-										if (biometricIdentifier.hasPermission(player.getID, MFFSPermissions.forceFieldWarp)) {
-											//Hurt player?
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
+							    if (biometricIdentifier != null) {
+								    if (biometricIdentifier.hasPermission(player.getID, MFFSPermissions.forceFieldWarp)) {
+									    //Hurt player?
+								    }
+							    }
+						    }
+					    }
+				    }
+			    }
+		    }
+	    }
 		)
 
-	add(new LightEmitter().setEmittedLevel(supplier(() => {
+	components.add(new LightEmitter().setEmittedLevel(supplier(() => {
 		val projector = getProjectorSafe
 		if (projector != null) {
 			Math.min(projector.getModuleCount(OpticsContent.moduleGlow), 64) / 64f
@@ -99,25 +99,25 @@ class BlockForceField extends BlockEDX with Stateful with Syncable with ForceFie
 	private var camoBlock: Block = null
 
 	renderer.onRender(
-		new BlockRenderStream(this)
+		new BlockRenderPipeline(this)
 			.filter(
-				predicate((side: Direction) => {
-					//					if (camoBlock != null) {
-					//						try {
-					//							val opRenderer = camoBlock.getOp(classOf[StaticRenderer])
-					//							if (opRenderer.isPresent) {
-					//								opRenderer.get.renderSide.test(side)
-					//							}
-					//						}
-					//						catch {
-					//							case e: Exception =>
-					//								e.printStackTrace()
-					//						}
-					//					}
+		    predicate((side: Direction) => {
+			    //					if (camoBlock != null) {
+			    //						try {
+			    //							val opRenderer = camoBlock.getOp(classOf[StaticRenderer])
+			    //							if (opRenderer.isPresent) {
+			    //								opRenderer.get.renderSide.test(side)
+			    //							}
+			    //						}
+			    //						catch {
+			    //							case e: Exception =>
+			    //								e.printStackTrace()
+			    //						}
+			    //					}
 
-					val block = world.getBlock(transform.position + side.toVector)
-					if (block.isPresent) !sameType(block.get()) else true
-				})
+			    val block = world.getBlock(transform.position + side.toVector)
+			    if (block.isPresent) !sameType(block.get()) else true
+		    })
 			)
 			.withTexture(OpticsTextures.forceField)
 			.build()
@@ -131,7 +131,7 @@ class BlockForceField extends BlockEDX with Stateful with Syncable with ForceFie
 	*/
 	renderer.onRender(
 		(model: Model) => {
-			val opRenderer = if (camoBlock != null) camoBlock.getOp(classOf[StaticRenderer]) else Optional.empty
+			val opRenderer = if (camoBlock != null) camoBlock.components.getOp(classOf[StaticRenderer]) else Optional.empty
 
 			if (opRenderer.isPresent) {
 				opRenderer.get.onRender.accept(model)

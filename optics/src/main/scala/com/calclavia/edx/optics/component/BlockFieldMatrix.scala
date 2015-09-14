@@ -26,10 +26,10 @@ import scala.util.{Failure, Success}
 abstract class BlockFieldMatrix extends BlockFrequency with FieldMatrix with IPermissionProvider with CacheHandler {
 
 	val _getModuleSlots = (14 until 25).toArray
-	val crystalHandler = add(new CrystalHandler(this))
+	val crystalHandler = components.add(new CrystalHandler(this))
 	protected val modeSlotID = 0
-	protected val orientation = add(new Orientation(this))
-	protected val opticHandler = add(new OpticHandler(this)).accumulate()
+	protected val orientation = components.add(new Orientation(this))
+	protected val opticHandler = components.add(new OpticHandler(this)).accumulate()
 	/**
 	 * Are the directions on the GUI absolute values?
 	 */
@@ -176,7 +176,7 @@ abstract class BlockFieldMatrix extends BlockFrequency with FieldMatrix with IPe
 	def getTranslation: Vector3D =
 		getOrSetCache("getTranslation", () => {
 
-			val direction = get(classOf[Orientation]).orientation
+			val direction = components.get(classOf[Orientation]).orientation
 
 			var zTranslationNeg = 0
 			var zTranslationPos = 0
@@ -214,7 +214,7 @@ abstract class BlockFieldMatrix extends BlockFrequency with FieldMatrix with IPe
 		getOrSetCache("getRotationYaw", () => {
 
 			var horizontalRotation = 0
-			val direction = get(classOf[Orientation]).orientation
+			val direction = components.get(classOf[Orientation]).orientation
 
 			if (this.absoluteDirection) {
 				horizontalRotation = getModuleCount(OpticsContent.moduleRotate, getDirectionSlots(Direction.EAST): _*) - getModuleCount(OpticsContent.moduleRotate, getDirectionSlots(Direction.WEST): _*) + getModuleCount(OpticsContent.moduleRotate, this.getDirectionSlots(Direction.SOUTH): _*) - this.getModuleCount(OpticsContent.moduleRotate, getDirectionSlots(Direction.NORTH): _*)

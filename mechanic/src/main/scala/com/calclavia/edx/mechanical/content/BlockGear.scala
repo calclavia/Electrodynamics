@@ -12,7 +12,7 @@ import nova.core.component.renderer.DynamicRenderer
 import nova.core.network.{Packet, Sync, Syncable}
 import nova.core.render.Color
 import nova.core.render.model.{MeshModel, Model}
-import nova.core.render.pipeline.{BlockRenderStream, StaticCubeTextureCoordinates}
+import nova.core.render.pipeline.{BlockRenderPipeline, StaticCubeTextureCoordinates}
 import nova.core.retention.{Storable, Store}
 import nova.core.util.Direction
 import nova.core.util.math.{MatrixStack, Vector3DUtil}
@@ -61,7 +61,7 @@ object BlockGear {
 	val bigGearMap: Map[Direction, Seq[Vector3D]] = {
 		val (templateVector, templateList) = {
 			var list = List.empty[Vector3D]
-			for(x <- -1 to 1; z <- -1 to 1 if !(x == 0 && z == 0)){
+			for (x <- -1 to 1; z <- -1 to 1 if !(x == 0 && z == 0)) {
 				list = new Vector3D(x, 0, z) :: list
 			}
 			(new Vector3D(0, -1, 0), list)
@@ -78,8 +78,8 @@ object BlockGear {
 	def at(block: Option[Block], side: Direction): Option[BlockGear] = {
 		block match {
 			case Some(gear: BlockGear) if gear.side == side => Some(gear)
-			case Some(block: Block) if block.has(classOf[MicroblockContainer]) =>
-				block.getOp(classOf[MicroblockContainer]).toOption.flatMap(_.get(side)).map(_.block).collect(gearCollector(side))
+			case Some(block: Block) if block.components.has(classOf[MicroblockContainer]) =>
+				block.components.getOp(classOf[MicroblockContainer]).toOption.flatMap(_.get(side)).map(_.block).collect(gearCollector(side))
 			case _ => None
 		}
 	}
@@ -99,15 +99,18 @@ object BlockGear {
 	class Metal extends BlockGear {
 		override def material = MechanicalMaterial.metal
 	}
+
 }
 
 object Test extends App {
 	println(BlockGear.bigGearMap)
 }
+
 abstract class BlockGear extends BlockEDX with Storable with Syncable {
 
 	def material: MechanicalMaterial
-	add(material)
+
+	components.add(material)
 
 	@Sync
 	@Store(key = "side")
@@ -125,22 +128,21 @@ abstract class BlockGear extends BlockEDX with Storable with Syncable {
 	@Store(key = "masterOffset")
 	var masterOffset = Vector3D.ZERO
 
-
 	def master = BlockGear.at(world.getBlock(position + masterOffset), side)
+
 	def side = Direction.fromOrdinal(_side.asInstanceOf[Int])
 
-
-	val microblock = add(new Microblock(this))
+	val microblock = components.add(new Microblock(this))
 		.setOnPlace(
-			(evt: PlaceEvent) => {
-				this._side = evt.side.opposite.ordinal.asInstanceOf[Byte]
-				Optional.of(MicroblockContainer.sidePosition(this.side))
-			}
+	    (evt: PlaceEvent) => {
+		    this._side = evt.side.opposite.ordinal.asInstanceOf[Byte]
+		    Optional.of(MicroblockContainer.sidePosition(this.side))
+	    }
 		)
 
-	private[this] val rotational = add(new MechanicalNodeGear(this))
+	private[this] val rotational = components.add(new MechanicalNodeGear(this))
 
-	private[this] val blockRenderer = add(new DynamicRenderer())
+	private[this] val blockRenderer = components.add(new DynamicRenderer())
 	blockRenderer.onRender((m: Model) => {
 		if (this.isMaster) {
 			m.addChild(model)
@@ -167,16 +169,16 @@ abstract class BlockGear extends BlockEDX with Storable with Syncable {
 		//val optional = MechanicContent.modelGear.getModel.stream().filter((model: Model) => "SmallGear".equals(model.name)).findFirst()
 
 		//tmp.addChild(optional.orElseThrow(() => new IllegalStateException("Model is missing")))
-		var box = collider.boundingBox()//.multiply(Math.sqrt(size))
+		var box = collider.boundingBox() //.multiply(Math.sqrt(size))
 		box = box - box.center()
 
 
-		BlockRenderStream.drawCube(tmp, box, StaticCubeTextureCoordinates.instance)
+		BlockRenderPipeline.drawCube(tmp, box, StaticCubeTextureCoordinates.instance)
 		// TODO: Remove that after textures are made.
 		tmp.faces.foreach(face => face.vertices.foreach(v => v.color = Color.rgb(material.hashCode())))
 		tmp.bind(MechanicContent.gearTexture)
 		//tmp.matrix transform BlockGear.matrixes(_side)
-		tmp.matrix translate ((side.toVector / 2d) - side.toVector *2 / 16d)
+		tmp.matrix translate ((side.toVector / 2d) - side.toVector * 2 / 16d)
 		tmp.matrix pushMatrix()
 		tmp
 	}
@@ -198,11 +200,12 @@ abstract class BlockGear extends BlockEDX with Storable with Syncable {
 			case _ =>
 		}
 	}
+
 	private[this] def possibleSubGears() = {
-		for(offset <- BlockGear.bigGearMap(side)) yield {
+		for (offset <- BlockGear.bigGearMap(side)) yield {
 			val pos = this.position + offset
 			val blockOp = this.world.getBlock(pos).toOption
-			val part = blockOp.flatMap(_.getOp(classOf[MicroblockContainer])).flatMap(_.get(side))
+			val part = blockOp.flatMap(_.components.getOp(classOf[MicroblockContainer])).flatMap(_.get(side))
 			part.map(_.block).collect(BlockGear.gearCollector(side))
 		}
 	}
@@ -226,20 +229,20 @@ abstract class BlockGear extends BlockEDX with Storable with Syncable {
 		this.size = 1
 		this._model = None
 		possibleSubGears().flatten.collect(BlockGear.gearCollector()).filter(_.master.contains(this))
-				.foreach {
-					gear =>
-						gear.masterOffset = Vector3D.ZERO
-						gear.isMaster = true
-				}
+			.foreach {
+			gear =>
+				gear.masterOffset = Vector3D.ZERO
+				gear.isMaster = true
+		}
 	}
 
 	this.events.on(classOf[Block.RightClickEvent]).bind((event: RightClickEvent) => {
-			checkBigGear()
+		checkBigGear()
 	})
 
 	this.events.on(classOf[Block.NeighborChangeEvent]).bind((event: Block.NeighborChangeEvent) => {
 		if (!this.isMaster) {
-			world.getBlock(this.position + this.masterOffset).collect { case b: BlockGear => b} foreach(_.checkBigGear(validate = false))
+			world.getBlock(this.position + this.masterOffset).collect { case b: BlockGear => b } foreach (_.checkBigGear(validate = false))
 		}
 	})
 

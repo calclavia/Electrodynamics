@@ -37,7 +37,7 @@ trait PermissionHandler extends BlockFrequency {
 	}
 
 	override def onRightClick(evt: RightClickEvent) {
-		val opPlayer = evt.entity.getOp(classOf[Player])
+		val opPlayer = evt.entity.components.getOp(classOf[Player])
 		if (opPlayer.isPresent) {
 			if (!hasPermission(opPlayer.get().getPlayerID, MFFSPermissions.configure)) {
 				//TODO: Add chat

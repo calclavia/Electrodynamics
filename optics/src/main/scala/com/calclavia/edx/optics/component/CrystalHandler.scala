@@ -15,7 +15,7 @@ import nova.core.item.{Item, ItemFactory}
 //@Require(classOf[Inventory])
 class CrystalHandler(val block: Block) extends Component with CacheHandler {
 
-	private lazy val inventory = block.get(classOf[Inventory])
+	private lazy val inventory = block.components.get(classOf[Inventory])
 	private lazy val endModuleIndex = inventory.size() - 1
 	var startModuleIndex = 0
 	var capacityBase = 500

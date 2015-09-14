@@ -12,13 +12,13 @@ import nova.core.entity.component.Player
 class ItemModuleShock extends ItemModule {
 
 	override def onFieldCollide(block: Block, entity: Entity): Boolean = {
-		if (entity.has(classOf[Damageable]) && entity.has(classOf[Player])) {
-			val player = entity.get(classOf[Player])
+		if (entity.components.has(classOf[Damageable]) && entity.components.has(classOf[Player])) {
+			val player = entity.components.get(classOf[Player])
 			if (block.asInstanceOf[BlockForceField].getProjector.hasPermission(player.getUsername, MFFSPermissions.forceFieldWarp)) {
 				return true
 			}
 
-			entity.get(classOf[Damageable]).damage(count(), DamageType.generic)
+			entity.components.get(classOf[Damageable]).damage(count(), DamageType.generic)
 		}
 
 		return true

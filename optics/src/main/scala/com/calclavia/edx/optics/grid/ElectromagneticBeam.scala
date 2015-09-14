@@ -17,7 +17,7 @@ class ElectromagneticBeam extends Beam {
 
 			if (fireTime > 0) {
 				//hit.entity.setFire (fireTime)
-				rayTrace.entity.getOp(classOf[Damageable]).ifPresent(consumer(d => d.damage(20 * (power / OpticGrid.maxPower))))
+				rayTrace.entity.components.getOp(classOf[Damageable]).ifPresent(consumer(d => d.damage(20 * (power / OpticGrid.maxPower))))
 			}
 		}
 	}

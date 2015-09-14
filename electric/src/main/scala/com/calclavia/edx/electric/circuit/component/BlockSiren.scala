@@ -10,7 +10,7 @@ import com.calclavia.edx.electric.grid.NodeElectricComponent
 import nova.core.block.Block.RightClickEvent
 import nova.core.block.Stateful
 import nova.core.component.renderer.{ItemRenderer, StaticRenderer}
-import nova.core.render.pipeline.BlockRenderStream
+import nova.core.render.pipeline.BlockRenderPipeline
 import nova.core.retention.Store
 import nova.core.util.Direction
 import nova.minecraft.redstone.Redstone
@@ -23,17 +23,17 @@ import nova.scala.wrapper.VectorWrapper._
  * Siren block
  */
 class BlockSiren extends BlockEDX with ExtendedUpdater with Stateful {
-	private val electricNode = add(new NodeElectricComponent(this))
-	private val io = add(new IO(this))
-	private val redstone = add(classOf[Redstone])
-	private val renderer = add(new StaticRenderer())
-	private val itemRenderer = add(new ItemRenderer(this))
+	private val electricNode = components.add(new NodeElectricComponent(this))
+	private val io = components.add(new IO(this))
+	private val redstone = components.add(classOf[Redstone])
+	private val renderer = components.add(new StaticRenderer())
+	private val itemRenderer = components.add(new ItemRenderer(this))
 
 	@Store
 	private var metadata = 0
 
 	renderer.onRender(
-		new BlockRenderStream(this)
+		new BlockRenderPipeline(this)
 			.withTexture(ElectricContent.sirenTexture)
 			.build()
 	)

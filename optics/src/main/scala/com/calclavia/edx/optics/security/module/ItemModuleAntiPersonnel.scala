@@ -18,24 +18,24 @@ class ItemModuleAntiPersonnel extends ItemModuleDefense {
 		val entities = getEntitiesInField(projector)
 
 		entities.view
-			.collect { case entity if entity.has(classOf[Player]) && entity.has(classOf[Damageable]) => entity }
+			.collect { case entity if entity.components.has(classOf[Player]) && entity.components.has(classOf[Damageable]) => entity }
 			.filter(p => !projector.hasPermission(p.getID, MFFSPermissions.defense))
 			.foreach(
 		    entity => {
-			    val player = entity.get(classOf[Player])
+			    val player = entity.components.get(classOf[Player])
 			    (0 until player.getInventory.size())
 				    .filter(player.getInventory.get(_) != null)
 				    .foreach(
 			        i => {
 				        val stackInSlot = player.getInventory.get(i)
 				        if (stackInSlot.isPresent) {
-					        proj.get(classOf[Inventory]).add(stackInSlot.get)
+					        proj.components.get(classOf[Inventory]).add(stackInSlot.get)
 					        player.getInventory.remove(i, stackInSlot.get().count)
 				        }
 			        }
 				    )
 
-			    entity.get(classOf[Damageable]).damage(1000)
+			    entity.components.get(classOf[Damageable]).damage(1000)
 				EDX.network.sendChat(player, EDX.language.translate("message.moduleAntiPersonnel.death"))
 		    }
 			)

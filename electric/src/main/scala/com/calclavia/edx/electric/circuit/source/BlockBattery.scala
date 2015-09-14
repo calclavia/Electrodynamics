@@ -38,13 +38,13 @@ object BlockBattery {
 
 class BlockBattery extends BlockEDX with Syncable with Storable with ExtendedUpdater {
 
-	private val electricNode = add(new NodeElectricComponent(this))
-	private val orientation = add(new Orientation(this)).hookBasedOnEntity().hookRightClickRotate()
+	private val electricNode = components.add(new NodeElectricComponent(this))
+	private val orientation = components.add(new Orientation(this)).hookBasedOnEntity().hookRightClickRotate()
 	@Store
-	private val io = add(new IO(this))
-	private val redstone = add(classOf[Redstone])
-	private val staticRenderer = add(new StaticRenderer())
-	private val itemRenderer = add(new ItemRenderer(this))
+	private val io = components.add(new IO(this))
+	private val redstone = components.add(classOf[Redstone])
+	private val staticRenderer = components.add(new StaticRenderer())
+	private val itemRenderer = components.add(new ItemRenderer(this))
 	//TODO: Remove debug
 	@Store
 	var mode = 0
@@ -143,7 +143,7 @@ class BlockBattery extends BlockEDX with Syncable with Storable with ExtendedUpd
 	})
 
 	@Store
-	private var energy = add(new EnergyStorage)
+	private var energy = components.add(new EnergyStorage)
 	events.on(classOf[RightClickEvent]).bind((evt: RightClickEvent) => if (EDX.network.isServer) mode = (mode + 1) % 10)
 
 	override def update(deltaTime: Double) {

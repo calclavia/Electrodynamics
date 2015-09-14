@@ -55,7 +55,7 @@ trait BlockConnectable[N] extends Connectable[N] {
 	 */
 	protected def adjacentBlocks: Map[Direction, Optional[Block]] = Direction.VALID_DIRECTIONS.map(dir => (dir, world.getBlock(position + dir.toVector))).toMap
 
-	protected def getNodeFromBlock(block: Block, from: Direction): N = block.getOp(compareClass).orElse(null.asInstanceOf[N])
+	protected def getNodeFromBlock(block: Block, from: Direction): N = block.components.getOp(compareClass).orElse(null.asInstanceOf[N])
 
 	def world: World = block.world()
 

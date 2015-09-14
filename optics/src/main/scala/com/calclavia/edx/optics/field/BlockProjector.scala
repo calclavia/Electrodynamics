@@ -45,9 +45,9 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 	 */
 	@Store
 	@Sync(ids = Array(BlockPacketID.description, BlockPacketID.inventory))
-	override val inventory = add(new InventorySimple(1 + 1 + 4 * 6))
-	private val dynamicRenderer = add(new DynamicRenderer())
-	private val lightEmitter = add(new LightEmitter())
+	override val inventory = components.add(new InventorySimple(1 + 1 + 4 * 6))
+	private val dynamicRenderer = components.add(new DynamicRenderer())
+	private val lightEmitter = components.add(new LightEmitter())
 	/** A set containing all positions of all force field blocks generated. */
 	var forceFields = Set.empty[Vector3D]
 	/** Marks the field for an update call */
@@ -69,7 +69,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 
 	staticRenderer.onRender(
 		(model: Model) => {
-			model.matrix.rotate(get(classOf[Orientation]).orientation.rotation)
+			model.matrix.rotate(components.get(classOf[Orientation]).orientation.rotation)
 			val subModel = OpticsModels.projector.getModel
 			model.children.add(subModel)
 			subModel.bindAll(if (isActive) OpticsTextures.projectorOn else OpticsTextures.projectorOff)
@@ -96,7 +96,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 						.rotate(Vector3D.PLUS_J, Math.toRadians(ticks * 4))
 						.rotate(new Vector3D(0, 1, 1), Math.toRadians(36f + ticks * 4))
 
-					getShapeItem.get(classOf[ItemRenderer]).onRender.accept(hologram)
+					getShapeItem.components.get(classOf[ItemRenderer]).onRender.accept(hologram)
 
 					val color = if (isActive) Color.blue else Color.red
 					hologram.faces.foreach(_.vertices.foreach(_.color = color.alpha((Math.sin(ticks / 10d) * 100 + 155).toInt)))
@@ -113,7 +113,7 @@ class BlockProjector extends BlockFieldMatrix with Projector with PermissionHand
 			(evt: RightClickEvent) => {
 
 				if (EDX.network.isServer) {
-					val opPlayer = evt.entity.getOp(classOf[Player])
+					val opPlayer = evt.entity.components.getOp(classOf[Player])
 					if (opPlayer.isPresent) {
 						val player = opPlayer.get()
 						val opItem = player.getInventory.getHeldItem

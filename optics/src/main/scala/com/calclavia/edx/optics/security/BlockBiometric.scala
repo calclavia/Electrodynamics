@@ -36,12 +36,12 @@ class BlockBiometric extends BlockFrequency with ExtendedUpdater with Permission
 	 */
 	var lastFlicker = 0L
 
-	add(new Orientation(this)).hookBasedOnEntity().hookRightClickRotate()
+	components.add(new Orientation(this)).hookBasedOnEntity().hookRightClickRotate()
 
-	get(classOf[StaticRenderer])
+	components.get(classOf[StaticRenderer])
 		.onRender(
 			(model: Model) => {
-				model.matrix.rotate(get(classOf[Orientation]).orientation.rotation)
+				model.matrix.rotate(components.get(classOf[Orientation]).orientation.rotation)
 				val modelBiometric = OpticsModels.biometric.getModel
 				modelBiometric.children.removeAll(modelBiometric.children.filter(_.name.equals("holoScreen")))
 				model.children.add(modelBiometric)
@@ -49,10 +49,10 @@ class BlockBiometric extends BlockFrequency with ExtendedUpdater with Permission
 			}
 		)
 
-	add(new DynamicRenderer())
+	components.add(new DynamicRenderer())
 		.onRender(
 			(model: Model) => {
-				model.matrix.rotate(get(classOf[Orientation]).orientation.rotation)
+				model.matrix.rotate(components.get(classOf[Orientation]).orientation.rotation)
 				/**
 				 * Simulate flicker and, hovering
 				 */

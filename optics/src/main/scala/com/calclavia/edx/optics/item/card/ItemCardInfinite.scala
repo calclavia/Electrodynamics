@@ -10,5 +10,5 @@ import nova.core.component.fluid.{Fluid, FluidHandler, TankSimple}
 class ItemCardInfinite extends ItemCard {
 	val tank = new TankSimple(Fluid.bucketVolume)
 
-	add(new FluidHandler(tank))
+	components.add(new FluidHandler(tank))
 }

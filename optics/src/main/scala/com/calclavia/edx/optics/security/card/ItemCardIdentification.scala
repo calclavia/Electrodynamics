@@ -41,8 +41,8 @@ class ItemCardIdentification extends ItemCardAccess with Syncable {
 		.on(classOf[RightClickEvent])
 		.bind((evt: RightClickEvent) => {
 		if (Side.get.isServer) {
-			if (evt.entity.has(classOf[Player])) {
-				val player = evt.entity.get(classOf[Player])
+			if (evt.entity.components.has(classOf[Player])) {
+				val player = evt.entity.components.get(classOf[Player])
 				if (EDX.input.isKeyDown(Key.KEY_LSHIFT)) {
 
 					if (access != null) {

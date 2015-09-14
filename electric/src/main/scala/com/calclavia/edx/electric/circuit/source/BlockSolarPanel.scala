@@ -11,7 +11,7 @@ import com.calclavia.edx.electric.grid.NodeElectricComponent
 import nova.core.block.Stateful
 import nova.core.component.renderer.{ItemRenderer, StaticRenderer}
 import nova.core.render.model.Model
-import nova.core.render.pipeline.{BlockRenderStream, ConnectedTextureRenderStream}
+import nova.core.render.pipeline.{BlockRenderPipeline, ConnectedTextureRenderPipeline}
 import nova.core.render.texture.Texture
 import nova.core.util.Direction
 import nova.core.util.shape.Cuboid
@@ -21,10 +21,10 @@ import nova.scala.wrapper.FunctionalWrapper._
 
 class BlockSolarPanel extends BlockEDX with ExtendedUpdater with Stateful {
 
-	private val electricNode = add(new NodeElectricComponent(this))
-	private val io = add(new IO(this))
-	private val renderer = add(new StaticRenderer())
-	private val itemRenderer = add(new ItemRenderer(this))
+	private val electricNode = components.add(new NodeElectricComponent(this))
+	private val io = components.add(new IO(this))
+	private val renderer = components.add(new StaticRenderer())
+	private val itemRenderer = components.add(new ItemRenderer(this))
 
 	private val texture = func[Direction, Optional[Texture]] { dir =>
 		dir match {
@@ -35,7 +35,7 @@ class BlockSolarPanel extends BlockEDX with ExtendedUpdater with Stateful {
 	}
 
 	renderer.onRender(
-		new ConnectedTextureRenderStream(this, ElectricContent.solarPanelTextureEdge)
+		new ConnectedTextureRenderPipeline(this, ElectricContent.solarPanelTextureEdge)
 			.withFaceMask(2)
 			.withTexture(texture)
 			.build()
@@ -61,7 +61,7 @@ class BlockSolarPanel extends BlockEDX with ExtendedUpdater with Stateful {
 	)
 
 	itemRenderer.onRender((model: Model) =>
-		new BlockRenderStream(this)
+		new BlockRenderPipeline(this)
 			.withTexture(texture)
 			.build()
 	)

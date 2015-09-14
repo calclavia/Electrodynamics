@@ -21,7 +21,7 @@ import scala.collection.convert.wrapAll._
  */
 class EntityLaserBeam(start: Vector3D, end: Vector3D, color: Color, power: Double) extends Entity with EntityAgeLike {
 
-	val renderer = add(new DynamicRenderer)
+	val renderer = components.add(new DynamicRenderer)
 
 	val energyPercentage = Math.min(power / OpticGrid.maxPower, 1).toFloat
 	val detail = (6 + 12 * energyPercentage).toInt

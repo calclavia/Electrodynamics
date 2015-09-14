@@ -7,7 +7,7 @@ import nova.scala.modcontent.AutoItemTexture
 
 class ItemCard extends Item with Card with AutoItemTexture {
 
-	add(new CategoryEDX)
+	components.add(new CategoryEDX)
 
 	override def getMaxCount: Int = 1
 }

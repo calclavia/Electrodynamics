@@ -29,10 +29,10 @@ import org.apache.commons.math3.geometry.euclidean.threed.{Rotation, Vector3D}
 class BlockMirror extends BlockEDX with Stateful with Syncable with Storable {
 	@Store
 	@Sync
-	private val focus = add(new Focus(this))
-	private val renderer = add(new StaticRenderer())
-	private val itemRenderer = add(new ItemRenderer(this))
-	private val opticHandler = add(new OpticHandler(this))
+	private val focus = components.add(new Focus(this))
+	private val renderer = components.add(new StaticRenderer())
+	private val itemRenderer = components.add(new ItemRenderer(this))
+	private val opticHandler = components.add(new OpticHandler(this))
 
 	renderer.onRender(
 		(model: Model) => {
@@ -54,7 +54,7 @@ class BlockMirror extends BlockEDX with Stateful with Syncable with Storable {
 			 * Change incoming render laser position
 			 */
 			val newHit = position + 0.5
-			val newBound = get(classOf[Collider]).boundingBox.get + position
+			val newBound = components.get(classOf[Collider]).boundingBox.get + position
 			evt.hit = new RayTraceBlockResult(newHit, evt.incident.source.origin.distance(newHit), evt.hit.side, newBound, this)
 			evt.hasImpact = false
 

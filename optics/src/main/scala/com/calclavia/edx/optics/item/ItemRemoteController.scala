@@ -80,7 +80,7 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 				if (op.isPresent) {
 					val block = op.get()
 
-					val player = evt.entity.get(classOf[Player])
+					val player = evt.entity.components.get(classOf[Player])
 
 					var finished = false
 					if (OpticUtility.hasPermission(linkWorld, linkPos, MFFSPermissions.blockAccess, player) || OpticUtility.hasPermission(linkWorld, linkPos, MFFSPermissions.remoteControl, player)) {
@@ -89,7 +89,7 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 						val fortronBlocks = GraphFrequency
 							.instance
 							.get(frequency)
-							.collect { case block: Block if block.has(classOf[OpticHandler]) => block.get(classOf[OpticHandler]) }
+							.collect { case block: Block if block.components.has(classOf[OpticHandler]) => block.components.get(classOf[OpticHandler]) }
 							.filter(_.block.position.distance(evt.entity.position()) < 50)
 
 						for (fortronBlock <- fortronBlocks) {
@@ -115,7 +115,7 @@ class ItemRemoteController extends ItemCardFrequency with CoordLink with Storabl
 							}
 						}
 						if (!finished && Side.get().isServer) {
-							EDX.network.sendChat(evt.entity.get(classOf[Player]), EDX.language.translate("message.remoteController.fail").replaceAll("#p", new
+							EDX.network.sendChat(evt.entity.components.get(classOf[Player]), EDX.language.translate("message.remoteController.fail").replaceAll("#p", new
 									UnitDisplay(UnitDisplay.Unit.JOULES, requiredEnergy).toString))
 						}
 					}

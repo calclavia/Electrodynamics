@@ -11,7 +11,7 @@ import nova.core.component.renderer.DynamicRenderer
 import nova.core.network.{Packet, Sync, Syncable}
 import nova.core.render.Color
 import nova.core.render.model.{MeshModel, Model}
-import nova.core.render.pipeline.{BlockRenderStream, StaticCubeTextureCoordinates}
+import nova.core.render.pipeline.{BlockRenderPipeline, StaticCubeTextureCoordinates}
 import nova.core.retention.{Storable, Store}
 import nova.core.util.Direction
 import nova.core.util.shape.Cuboid
@@ -61,8 +61,7 @@ object BlockAxle {
 }
 
 abstract class BlockAxle extends BlockEDX with Storable with Syncable {
-
-	add(material)
+	components.add(material)
 	dir = Direction.NORTH
 
 	def material: MechanicalMaterial
@@ -77,17 +76,17 @@ abstract class BlockAxle extends BlockEDX with Storable with Syncable {
 		_dir = BlockAxle.normalizeDir(direction).ordinal().asInstanceOf[Byte]
 	}
 
-	val microblock = add(new Microblock(this))
+	val microblock = components.add(new Microblock(this))
 		.setOnPlace(
-			(evt: PlaceEvent) => {
-				this.dir = evt.side
-				Optional.of(MicroblockContainer.centerPosition)
-			}
+	    (evt: PlaceEvent) => {
+		    this.dir = evt.side
+		    Optional.of(MicroblockContainer.centerPosition)
+	    }
 		)
 
-	private[this] val blockRenderer = add(new DynamicRenderer())
+	private[this] val blockRenderer = components.add(new DynamicRenderer())
 
-	private[this] val rotational = add(new MechanicalNodeAxle(this))
+	private[this] val rotational = components.add(new MechanicalNodeAxle(this))
 
 	blockRenderer.onRender((m: Model) => {
 		m.addChild(model)
@@ -99,7 +98,7 @@ abstract class BlockAxle extends BlockEDX with Storable with Syncable {
 
 	lazy val model = {
 		val res = new MeshModel("gearshaft")
-		BlockRenderStream.drawCube(res, BlockAxle.occlusionBounds(dir) - 0.5, StaticCubeTextureCoordinates.instance)
+		BlockRenderPipeline.drawCube(res, BlockAxle.occlusionBounds(dir) - 0.5, StaticCubeTextureCoordinates.instance)
 		res.bind(MechanicContent.gearshaftTexture)
 		// TODO: Remove that after textures are made.
 		res.faces.foreach(face => face.vertices.foreach(v => v.color = Color.rgb(material.hashCode())))

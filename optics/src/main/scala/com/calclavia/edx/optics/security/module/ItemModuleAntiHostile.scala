@@ -13,8 +13,8 @@ class ItemModuleAntiHostile extends ItemModuleDefense {
 
 		//Check entity IDs.
 		entities.view
-			.filter(entity => entity.has(classOf[Damageable]) /* && entity.isInstanceOf[IMob] && !entity.isInstanceOf[INpc]*/)
-			.map(_.get(classOf[Damageable]))
+			.filter(entity => entity.components.has(classOf[Damageable]) /* && entity.isInstanceOf[IMob] && !entity.isInstanceOf[INpc]*/)
+			.map(_.components.get(classOf[Damageable]))
 			.foreach(_.damage(20))
 
 		return false

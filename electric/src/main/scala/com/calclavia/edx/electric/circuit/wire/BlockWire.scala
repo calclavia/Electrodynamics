@@ -14,7 +14,7 @@ import nova.core.component.misc.Collider
 import nova.core.component.renderer.{ItemRenderer, StaticRenderer}
 import nova.core.network.{Packet, Sync, Syncable}
 import nova.core.render.model.{MeshModel, Model}
-import nova.core.render.pipeline.{BlockRenderStream, StaticCubeTextureCoordinates}
+import nova.core.render.pipeline.{BlockRenderPipeline, StaticCubeTextureCoordinates}
 import nova.core.retention.{Storable, Store}
 import nova.core.util.Direction
 import nova.core.util.math.RotationUtil
@@ -67,12 +67,12 @@ object BlockWire {
 				.map(RotationUtil.rotateSide(0, _))
 				.map(Direction.fromOrdinal)
 				.map(
-					d => {
-						val dir = d.toVector
-						val min = if (d.toVector.x < 0 || d.toVector.y < 0 || d.toVector.z < 0) dir * thickness else Vector3D.ZERO
-						val max = if (d.toVector.x > 0 || d.toVector.y > 0 || d.toVector.z > 0) dir * thickness else Vector3D.ZERO
-						(center + (dir * width)) + new Cuboid(min, max)
-					}
+			    d => {
+				    val dir = d.toVector
+				    val min = if (d.toVector.x < 0 || d.toVector.y < 0 || d.toVector.z < 0) dir * thickness else Vector3D.ZERO
+				    val max = if (d.toVector.x > 0 || d.toVector.y > 0 || d.toVector.z > 0) dir * thickness else Vector3D.ZERO
+				    (center + (dir * width)) + new Cuboid(min, max)
+			    }
 				)
 				.toSeq
 
@@ -92,21 +92,21 @@ class BlockWire extends BlockEDX with Storable with Syncable {
 	/**
 	 * Add components
 	 */
-	private val electricNode = add(new NodeElectricJunction(this))
-	private val microblock = add(new Microblock(this))
+	private val electricNode = components.add(new NodeElectricJunction(this))
+	private val microblock = components.add(new Microblock(this))
 		.setOnPlace(
-			(evt: PlaceEvent) => {
-				this.side = evt.side.opposite.ordinal.toByte
-				//TODO: Fix wire material
-				get(classOf[MaterialWire]).material = WireMaterial.COPPER
-				Optional.of(MicroblockContainer.sidePosition(Direction.fromOrdinal(this.side)))
-			}
+	    (evt: PlaceEvent) => {
+		    this.side = evt.side.opposite.ordinal.toByte
+		    //TODO: Fix wire material
+		    components.get(classOf[MaterialWire]).material = WireMaterial.COPPER
+		    Optional.of(MicroblockContainer.sidePosition(Direction.fromOrdinal(this.side)))
+	    }
 		)
 	@Sync
 	@Store
-	private val material = add(new MaterialWire)
-	private val blockRenderer = add(new StaticRenderer())
-	private val itemRenderer = add(new ItemRenderer(this))
+	private val material = components.add(new MaterialWire)
+	private val blockRenderer = components.add(new StaticRenderer())
+	private val itemRenderer = components.add(new ItemRenderer(this))
 	/**
 	 * The side the wire is placed on.
 	 */
@@ -133,11 +133,11 @@ class BlockWire extends BlockEDX with Storable with Syncable {
 	blockRenderer.onRender(
 		(model: Model) => {
 			val subModel = new MeshModel()
-			get(classOf[Collider]).occlusionBoxes.apply(Optional.empty()).foreach(cuboid => {
-				BlockRenderStream.drawCube(subModel, cuboid - 0.5, StaticCubeTextureCoordinates.instance)
+			components.get(classOf[Collider]).occlusionBoxes.apply(Optional.empty()).foreach(cuboid => {
+				BlockRenderPipeline.drawCube(subModel, cuboid - 0.5, StaticCubeTextureCoordinates.instance)
 			})
 
-			subModel.faces.foreach(_.vertices.map(_.color = get(classOf[MaterialWire]).material.color))
+			subModel.faces.foreach(_.vertices.map(_.color = components.get(classOf[MaterialWire]).material.color))
 			subModel.bindAll(ElectricContent.wireTexture)
 			model.addChild(subModel)
 		}
@@ -155,11 +155,11 @@ class BlockWire extends BlockEDX with Storable with Syncable {
 			(0 until 5)
 				.map(dir => BlockWire.occlusionBounds(side)(dir))
 				.foreach(cuboid => {
-				BlockRenderStream.drawCube(subModel, cuboid - 0.5, StaticCubeTextureCoordinates.instance)
+				BlockRenderPipeline.drawCube(subModel, cuboid - 0.5, StaticCubeTextureCoordinates.instance)
 			})
 
 			//TODO: Change color
-			subModel.faces.foreach(_.vertices.map(_.color = get(classOf[MaterialWire]).material.color))
+			subModel.faces.foreach(_.vertices.map(_.color = components.get(classOf[MaterialWire]).material.color))
 			subModel.bindAll(ElectricContent.wireTexture)
 			model.addChild(subModel)
 		}
@@ -234,10 +234,10 @@ class BlockWire extends BlockEDX with Storable with Syncable {
 		 * @return True if a connection is found
 		 */
 		def computeInnerConnection(relativeSide: Int, absSide: Int): Boolean = {
-			val opMicroblock = get(classOf[Microblock]).containers.head.get(Direction.fromOrdinal(absSide))
+			val opMicroblock = components.get(classOf[Microblock]).containers.head.get(Direction.fromOrdinal(absSide))
 			if (opMicroblock.isPresent) {
 				val otherMicroblock = opMicroblock.get()
-				val opElectric = otherMicroblock.block.getOp(classOf[Electric])
+				val opElectric = otherMicroblock.block.components.getOp(classOf[Electric])
 
 				if (opElectric.isPresent) {
 					val electric = opElectric.get
@@ -260,12 +260,12 @@ class BlockWire extends BlockEDX with Storable with Syncable {
 
 			if (checkBlock.isPresent) {
 				//First check for microblocks for another wire
-				val opMicroblockHolder = checkBlock.get.getOp(classOf[MicroblockContainer])
+				val opMicroblockHolder = checkBlock.get.components.getOp(classOf[MicroblockContainer])
 				if (opMicroblockHolder.isPresent) {
 					//Try to find the microblock that is has the component NodeElectric
 					val opMicroblock = opMicroblockHolder.get().get(Direction.fromOrdinal(this.side))
 					if (opMicroblock.isPresent) {
-						val opElectric = opMicroblock.get.block.getOp(classOf[Electric])
+						val opElectric = opMicroblock.get.block.components.getOp(classOf[Electric])
 
 						if (opElectric.isPresent) {
 							val electric = opElectric.get
@@ -277,7 +277,7 @@ class BlockWire extends BlockEDX with Storable with Syncable {
 				}
 
 				//A microblock is not present. Try checking if the block is electric
-				val opElectric = checkBlock.get.getOp(classOf[Electric])
+				val opElectric = checkBlock.get.components.getOp(classOf[Electric])
 
 				if (opElectric.isPresent) {
 					val electric = opElectric.get
@@ -302,13 +302,13 @@ class BlockWire extends BlockEDX with Storable with Syncable {
 			val checkBlock = world.getBlock(checkPos)
 
 			if (checkBlock.isPresent) {
-				val opMicroblockHolder = checkBlock.get.getOp(classOf[MicroblockContainer])
+				val opMicroblockHolder = checkBlock.get.components.getOp(classOf[MicroblockContainer])
 				if (opMicroblockHolder.isPresent) {
 					//Try to find the microblock that is has the component NodeElectric
 					//We look for opposite of the side we are checking, as the block has to be flat placed onto the same block this wire is flat-placed on.
 					val opMicroblock = opMicroblockHolder.get().get(Direction.fromOrdinal(absSide).opposite())
 					if (opMicroblock.isPresent) {
-						val opElectric = opMicroblock.get.block.getOp(classOf[Electric])
+						val opElectric = opMicroblock.get.block.components.getOp(classOf[Electric])
 
 						if (opElectric.isPresent) {
 							val electric = opElectric.get

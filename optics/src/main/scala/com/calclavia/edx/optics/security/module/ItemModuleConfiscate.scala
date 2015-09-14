@@ -17,8 +17,8 @@ class ItemModuleConfiscate extends ItemModuleDefense {
 		val entities = getEntitiesInField(projector)
 
 		entities.view
-			.filter(_.has(classOf[Player]))
-			.map(_.get(classOf[Player]))
+			.filter(_.components.has(classOf[Player]))
+			.map(_.components.get(classOf[Player]))
 			.filter(player => !proj.hasPermission(player.getPlayerID, MFFSPermissions.bypassConfiscation))
 			.foreach(
 		    player => {
@@ -36,7 +36,7 @@ class ItemModuleConfiscate extends ItemModuleDefense {
 			    relevantSlots foreach (i => {
 				    val opItem = inventory.get(i)
 				    if (opItem.isPresent) {
-					    proj.get(classOf[Inventory]).add(opItem.get())
+					    proj.components.get(classOf[Inventory]).add(opItem.get())
 					    inventory.remove(i, opItem.get().count())
 				    }
 

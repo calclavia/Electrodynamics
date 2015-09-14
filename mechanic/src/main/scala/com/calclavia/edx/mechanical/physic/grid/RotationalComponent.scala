@@ -1,9 +1,10 @@
 package com.calclavia.edx.mechanical.physic.grid
 
 import java.util.stream.Collectors
+
 import com.calclavia.edx.mechanical.content.{BlockAxle, BlockGear}
 import com.calclavia.edx.mechanical.physic.MechanicalMaterial
-import nova.core.block.{Stateful, Block}
+import nova.core.block.Block
 import nova.core.block.component.Connectable
 import nova.core.component.Require
 import nova.core.event.bus.Event
@@ -73,16 +74,16 @@ abstract class MechanicalNode(val block: Block) extends Connectable[MechanicalNo
 		var res = Set.empty[MechanicalNode]
 		blocksToCheck.foreach {
 			case (dir, Some(aBlock)) =>
-				aBlock.getOp(classOf[MechanicalNode]).toOption.filter(connectionFilter).foreach(res += _)
+				aBlock.components.getOp(classOf[MechanicalNode]).toOption.filter(connectionFilter).foreach(res += _)
 				//noinspection JavaAccessorMethodCalledAsEmptyParen
-				aBlock.getOp(classOf[MicroblockContainer]).toOption
+				aBlock.components.getOp(classOf[MicroblockContainer]).toOption
 					.map(_.microblocks(classOf[MechanicalNode]).collect(Collectors.toSet()))
 						.map(_.filter(connectionFilter)).foreach(res ++= _)
 			case _ =>
 		}
 
 		//noinspection JavaAccessorMethodCalledAsEmptyParen
-		this.block.getOp(classOf[MicroblockContainer]).toOption
+		this.block.components.getOp(classOf[MicroblockContainer]).toOption
 				.map(_.microblocks(classOf[MechanicalNode]).collect(Collectors.toSet()))
 				.map(_.filter(_ != this).filter(connectionFilter)).foreach(res ++= _)
 		res
@@ -94,7 +95,7 @@ abstract class MechanicalNode(val block: Block) extends Connectable[MechanicalNo
 
 @Require(classOf[MechanicalMaterial])
 class MechanicalNodeGear(block: BlockGear) extends MechanicalNode(block) with MechanicalNode.MechanicalNodeConstantFriction {
-	def material = block.get(classOf[MechanicalMaterial])
+	def material = block.components.get(classOf[MechanicalMaterial])
 
 	def size: Double = block.size
 	def mass = size * material.density
@@ -107,7 +108,7 @@ class MechanicalNodeGear(block: BlockGear) extends MechanicalNode(block) with Me
 			if (diff.getNormSq != 0)
 				Direction.fromVector(diff) == this.block.side
 			else {
-				val otherMicro = other.block.get(classOf[Microblock])
+				val otherMicro = other.block.components.get(classOf[Microblock])
 
 				// If two unit vectors are perpendicular to each other length between them  has to be equal sqrt(2)
 				otherMicro.position.equals(MicroblockContainer.centerPosition) || this.block.microblock.position.distanceSq(otherMicro.position) == 2
@@ -118,7 +119,7 @@ class MechanicalNodeGear(block: BlockGear) extends MechanicalNode(block) with Me
 }
 @Require(classOf[MechanicalMaterial])
 class MechanicalNodeAxle(block: BlockAxle) extends MechanicalNode(block) with MechanicalNode.MechanicalNodeConstantFriction with MechanicalNode.MechanicalNodeConstantMass {
-	def material = block.get(classOf[MechanicalMaterial])
+	def material = block.components.get(classOf[MechanicalMaterial])
 
 	val size = 0.25D
 	val constantMass = material.density * size
@@ -128,7 +129,7 @@ class MechanicalNodeAxle(block: BlockAxle) extends MechanicalNode(block) with Me
 		(other: MechanicalNode) => {
 			var diff = this.block.position - other.block.position
 			if (diff.getNormSq == 0)
-					diff = other.block.get(classOf[Microblock]).position - block.microblock.position
+				diff = other.block.components.get(classOf[Microblock]).position - block.microblock.position
 
 			BlockAxle.normalizeDir(Direction.fromVector(diff)) == this.block.dir
 		}

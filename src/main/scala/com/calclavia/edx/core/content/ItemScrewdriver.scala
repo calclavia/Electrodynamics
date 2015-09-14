@@ -6,7 +6,7 @@ import nova.core.component.renderer.ItemRenderer
 import nova.core.item.Item
 
 class ItemScrewdriver extends Item {
-	add(new Category("tools"))
-	add(new ItemRenderer())
+	components.add(new Category("tools"))
+	components.add(new ItemRenderer())
 		.setTexture(CoreContent.textureScrewdriver)
 }

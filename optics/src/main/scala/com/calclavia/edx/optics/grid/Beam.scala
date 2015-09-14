@@ -90,7 +90,7 @@ abstract class Beam extends Storable {
 						/**
 						 * Let the optic handler handle the beam
 						 */
-						case hitBlock if hitBlock.has(classOf[OpticHandler]) =>
+						case hitBlock if hitBlock.components.has(classOf[OpticHandler]) =>
 							val event = new ReceiveBeamEvent(this, hit)
 							hitBlock.events.publish(event)
 							opHit = Optional.of(event.hit)

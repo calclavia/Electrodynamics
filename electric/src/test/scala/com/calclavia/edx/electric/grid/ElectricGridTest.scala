@@ -1,10 +1,10 @@
 package com.calclavia.edx.electric.grid
 
 import com.calclavia.edx.electric.api.Electric
+import nova.core.block.Block
 import nova.core.util.Profiler
 import nova.internal.core.launch.NovaLauncher
 import nova.scala.wrapper.FunctionalWrapper._
-import nova.testutils.FakeBlock
 import nova.wrappertests.NovaLauncherTestFactory
 import org.assertj.core.api.Assertions._
 import org.junit.{BeforeClass, Test}
@@ -397,7 +397,7 @@ class ElectricGridTest {
 		}
 	}
 
-	class DummyComponent(val name: String = "Component") extends NodeElectricComponent(new FakeBlock("dummy")) {
+	class DummyComponent(val name: String = "Component") extends NodeElectricComponent(new Block()) {
 		var positivesCon = Set.empty[Electric]
 		var negativesCon = Set.empty[Electric]
 
@@ -417,7 +417,7 @@ class ElectricGridTest {
 		override def toString: String = name
 	}
 
-	class DummyWire(val name: String = "Wire") extends NodeElectricJunction(new FakeBlock("dummy")) {
+	class DummyWire(val name: String = "Wire") extends NodeElectricJunction(new Block()) {
 		var _connections = Set.empty[Electric]
 		connections = supplier(() => _connections)
 

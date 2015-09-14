@@ -6,7 +6,7 @@ import nova.core.component.misc.Collider
 import nova.core.component.renderer.DynamicRenderer
 import nova.core.entity.Entity
 import nova.core.entity.component.RigidBody
-import nova.core.render.pipeline.BlockRenderStream
+import nova.core.render.pipeline.BlockRenderPipeline
 import nova.core.util.math.Vector3DUtil
 import nova.scala.wrapper.FunctionalWrapper._
 import nova.scala.wrapper.VectorWrapper._
@@ -19,9 +19,9 @@ import scala.util.Random
  */
 class EntityBlockParticle(block: Block) extends Entity {
 
-	val renderer = add(new DynamicRenderer)
-	val rigidBody = add(classOf[RigidBody])
-	val collider = add(new Collider(this))
+	val renderer = components.add(new DynamicRenderer)
+	val rigidBody = components.add(classOf[RigidBody])
+	val collider = components.add(new Collider(this))
 
 	val random = new Random()
 	val randScale = random.nextDouble() * 0.1 + 0.5
@@ -35,7 +35,7 @@ class EntityBlockParticle(block: Block) extends Entity {
 	renderer.onRender(
 		//Renders a small version of the block
 		//TODO: Does not work yet.
-		new BlockRenderStream(block)
+		new BlockRenderPipeline(block)
 			.build()
 	)
 

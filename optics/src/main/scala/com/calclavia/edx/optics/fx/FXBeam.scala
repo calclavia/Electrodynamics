@@ -37,7 +37,7 @@ abstract class FXBeam(texture: Texture, @BeanProperty var color: Color, maxAge: 
 
 	private var prevPos: Vector3D = null
 
-	add(new DynamicRenderer())
+	components.add(new DynamicRenderer())
 		.onRender(
 			(model: Model) => {
 

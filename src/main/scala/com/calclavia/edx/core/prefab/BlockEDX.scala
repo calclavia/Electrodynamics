@@ -8,6 +8,6 @@ import nova.core.component.misc.Collider
  * @author Calclavia
  */
 abstract class BlockEDX extends Block {
-	protected val category = add(new CategoryEDX)
-	protected val collider = add(new Collider(this))
+	protected val category = components.add(new CategoryEDX)
+	protected val collider = components.add(new Collider(this))
 }

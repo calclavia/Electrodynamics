@@ -23,7 +23,7 @@ class ItemModule extends Item with TooltipItem with Module with AutoItemTexture 
 	private var fortronCost = 0.5f
 	private var maxCount = 64
 
-	add(new CategoryEDX)
+	components.add(new CategoryEDX)
 
 	events
 		.on(classOf[TooltipEvent])

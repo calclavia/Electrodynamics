@@ -37,7 +37,7 @@ object OpticUtility {
 				val firstItemBlock = projector
 					.getModuleSlots()
 					.view
-					.map(projector.get(classOf[Inventory]).get)
+					.map(projector.components.get(classOf[Inventory]).get)
 					.collect { case op if op.isPresent => op.get() }
 					.collect { case item: ItemBlock => item }
 					.headOption
@@ -47,11 +47,11 @@ object OpticUtility {
 					return firstItemBlock
 				}
 			//TODO: Check withPriority Sided
-			case invProvider: ComponentProvider if invProvider.has(classOf[Inventory]) =>
+			case invProvider: ComponentProvider if invProvider.components.has(classOf[Inventory]) =>
 				Direction.VALID_DIRECTIONS
 					.view
 					//TODO: Check all inventories
-					.collect { case dir if invProvider.get(classOf[Inventory]).size() > 0 => invProvider.get(classOf[Inventory]) }
+					.collect { case dir if invProvider.components.get(classOf[Inventory]).size() > 0 => invProvider.components.get(classOf[Inventory]) }
 					.flatten
 					.headOption match {
 					case Some(entry) => return entry

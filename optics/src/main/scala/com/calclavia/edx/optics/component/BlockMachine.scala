@@ -13,7 +13,7 @@ import nova.core.component.transform.Orientation
 import nova.core.game.InputManager.Key
 import nova.core.network.NetworkTarget.Side
 import nova.core.network.{Packet, Syncable}
-import nova.core.render.pipeline.BlockRenderStream
+import nova.core.render.pipeline.BlockRenderPipeline
 import nova.core.render.texture.Texture
 import nova.core.retention.{Storable, Store}
 import nova.core.util.Direction
@@ -27,9 +27,9 @@ import nova.scala.wrapper.FunctionalWrapper._
  */
 //TODO: Redstone state is not properly saved
 abstract class BlockMachine extends BlockEDX with Syncable with IActivatable with Stateful with Storable with ExtendedUpdater {
-	val redstoneNode = add(classOf[Redstone])
-	val itemRenderer = add(new ItemRenderer(this))
-	val staticRenderer = add(new StaticRenderer())
+	val redstoneNode = components.add(classOf[Redstone])
+	val itemRenderer = components.add(new ItemRenderer(this))
+	val staticRenderer = components.add(new StaticRenderer())
 	/**
 	 * Used for client side animations.
 	 */
@@ -50,7 +50,7 @@ abstract class BlockMachine extends BlockEDX with Syncable with IActivatable wit
 	})
 
 	staticRenderer.onRender(
-		new BlockRenderStream(this)
+		new BlockRenderPipeline(this)
 			.withTexture(func[Direction, Optional[Texture]]((side: Direction) => Optional.of(OpticsTextures.machine)))
 			.build()
 	)
@@ -115,7 +115,7 @@ abstract class BlockMachine extends BlockEDX with Syncable with IActivatable wit
 			}
 		}
 
-		val opOriented = getOp(classOf[Orientation])
+		val opOriented = components.getOp(classOf[Orientation])
 
 		if (opOriented.isPresent) {
 			evt.result = opOriented.get().rotate(evt.side.ordinal(), evt.position)
