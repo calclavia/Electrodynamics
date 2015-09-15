@@ -13,7 +13,7 @@ import nova.core.network.NetworkManager
 import nova.core.recipes.RecipeManager
 import nova.core.recipes.crafting.CraftingRecipeManager
 import nova.core.render.RenderManager
-import nova.core.util.{LanguageManager, RetentionManager}
+import nova.core.util.registry.{LanguageManager, RetentionManager}
 import nova.core.world.WorldManager
 import nova.internal.core.tick.UpdateTicker
 import org.slf4j.Logger
