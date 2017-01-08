@@ -4,6 +4,9 @@ Electrodynamics
 
 Electrodynamics is a voxel game mod that features realistic, world-based technology advancement systems.
 
+Release Archive:
+https://www.dropbox.com/sh/3ty5viy6dycnmdi/AADc9_zkxHTRZ8AWWLfbwPj1a?dl=0
+
 Copyright (c) Calclavia
 
 ### Founder
