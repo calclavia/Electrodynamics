@@ -7,7 +7,7 @@ Electrodynamics is a voxel game mod that features realistic, world-based technol
 Release Archive:
 https://www.dropbox.com/sh/3ty5viy6dycnmdi/AADc9_zkxHTRZ8AWWLfbwPj1a?dl=0
 
-Copyright (c) Calclavia
+Copyright (c) Calclavia. The source code in this repository is under LGPL v3 license. See LICENSE.txt for more information.
 
 ### Founder
 * Calclavia
